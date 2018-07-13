@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:104:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\planmanagement\packagelist\index.html";i:1529910104;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1529910104;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1529910104;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1529910104;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:98:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\index.html";i:1531487792;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1529910104;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1529910104;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1529910104;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -52,40 +52,45 @@
                             <div class="content">
                                 <div class="panel panel-default panel-intro">
     <div class="panel-heading">
-        <div class="panel-lead"><em>以租代购&二手车&全款方案</em></div>
+        <div class="panel-lead"><em>客户池，导入客户资源，分配给内勤，同时可以展示销售反馈回来的信息</em></div>
         <ul class="nav nav-tabs" >
-            <li class="active text-center" style="width: 150px;"><a href="#first" data-toggle="tab" style="color:coral;font-weight: bold"><i class="fa fa-flag-o"></i> 以租代购</a></li>
+            <li class="active text-center" style="width: 150px;"><a href="#new_customer" data-toggle="tab" style="color:coral;font-weight: bold"><i class="fa fa-flag-o"></i> 新客户</a></li>
             <li><a href="#second" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center" ><i class="fa fa-flag-o"></i> 二手车</a></li>
             <li><a href="#planfull" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center"><i class="fa fa-flag-o"></i> 全款</a></li>
         </ul>
     </div>
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
-            <!--一组代购-->
+            <!--新客户-->
             
-            <div class="tab-pane fade active in" id="first">
+            <div class="tab-pane fade active in" id="new_customer">
                 <div id="toolbar1" class="toolbar">
                        
-                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="<?php echo __('Refresh'); ?>" ><i class="fa fa-refresh"></i> </a>
-                        <a href="javascript:;" class="btn btn-success btn-add <?php echo $auth->check('plan/planacar/add')?'':'hide'; ?>" title="<?php echo __('Add'); ?>" ><i class="fa fa-plus"></i> <?php echo __('Add'); ?></a>
-                        <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled <?php echo $auth->check('plan/planacar/edit')?'':'hide'; ?>" title="<?php echo __('Edit'); ?>" ><i class="fa fa-pencil"></i> <?php echo __('Edit'); ?></a>
-                        <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled <?php echo $auth->check('plan/planacar/del')?'':'hide'; ?>" title="<?php echo __('Delete'); ?>" ><i class="fa fa-trash"></i> <?php echo __('Delete'); ?></a>
-                        <a href="javascript:;" class="btn btn-danger btn-import <?php echo $auth->check('plan/planacar/import')?'':'hide'; ?>" title="<?php echo __('Import'); ?>" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入EXCEL</a>
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="<?php echo __('Refresh'); ?>" ><i class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-success btn-add <?php echo $auth->check('customer/customerresource/add')?'':'hide'; ?>" title="<?php echo __('Add'); ?>" ><i class="fa fa-plus"></i> <?php echo __('Add'); ?></a>
+                    <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled <?php echo $auth->check('customer/customerresource/edit')?'':'hide'; ?>" title="<?php echo __('Edit'); ?>" ><i class="fa fa-pencil"></i> <?php echo __('Edit'); ?></a>
+                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled <?php echo $auth->check('customer/customerresource/del')?'':'hide'; ?>" title="<?php echo __('Delete'); ?>" ><i class="fa fa-trash"></i> <?php echo __('Delete'); ?></a>
+                    <a href="javascript:;" class="btn btn-danger btn-import <?php echo $auth->check('customer/customerresource/import')?'':'hide'; ?>" title="<?php echo __('Import'); ?>" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> <?php echo __('Import'); ?></a>
 
-                        <div class="dropdown btn-group <?php echo $auth->check('plan/planacar/multi')?'':'hide'; ?>">
-                            <a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> <?php echo __('More'); ?></a>
-                            <ul class="dropdown-menu text-left" role="menu">
-                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="ismenu=1"><i class="fa fa-eye"></i> 批量上架</a></li>
-                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="ismenu=0"><i class="fa fa-eye-slash"></i> 批量下架</a></li>
-                            </ul>
-                        </div>
+                    <div class="dropdown btn-group <?php echo $auth->check('customer/customerresource/multi')?'':'hide'; ?>">
+                        <a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> <?php echo __('More'); ?></a>
+                        <ul class="dropdown-menu text-left" role="menu">
+                            <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=normal"><i class="fa fa-eye"></i> <?php echo __('Set to normal'); ?></a></li>
+                            <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=hidden"><i class="fa fa-eye-slash"></i> <?php echo __('Set to hidden'); ?></a></li>
+                        </ul>
+                    </div>
                 </div>
                 <!-- <table id="table1" class="table table-striped table-bordered table-hover" width="100%">
                 </table> -->
-                <table id="table1" class="table table-striped table-bordered table-hover table-nowrap"
+                <!-- <table id="table1" class="table table-striped table-bordered table-hover table-nowrap"
                            data-operate-edit="<?php echo $auth->check('plan/planacar/edit'); ?>" 
                            data-operate-del="<?php echo $auth->check('plan/planacar/del'); ?>" 
                            width="100%">
+                </table> -->
+                <table id="newCustomer" class="table table-striped table-bordered table-hover table-nowrap"
+                        data-operate-edit="<?php echo $auth->check('customer/customerresource/edit'); ?>" 
+                        data-operate-del="<?php echo $auth->check('customer/customerresource/del'); ?>" 
+                        width="100%">
                 </table>
             </div>
             <!--二手车-->

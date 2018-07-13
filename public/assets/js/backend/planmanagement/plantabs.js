@@ -29,7 +29,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var table1 = $("#table1"); 
                  // 初始化表格
             table1.bootstrapTable({
-                url: 'planmanagement/packagelist/table1',
+                url: 'planmanagement/plantabs/table1',
                 extend: {
                     index_url: 'plan/planacar/index',
                     add_url: 'plan/planacar/add',
@@ -71,7 +71,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格2
                 var table2 = $("#table2");
                 table2.bootstrapTable({
-                    url: 'planmanagement/packagelist/table2',
+                    url: 'planmanagement/plantabs/table2',
                     extend: {
                         index_url: 'plan/planusedcar/index',
                         add_url: 'plan/planusedcar/add',
@@ -121,7 +121,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格3
                 var table3 = $("#table3");
                 table3.bootstrapTable({
-                    url: 'planmanagement/packagelist/table3',
+                    url: 'planmanagement/plantabs/table3',
                     extend: {
                         index_url: 'plan/planfull/index',
                         add_url: 'plan/planfull/add',
