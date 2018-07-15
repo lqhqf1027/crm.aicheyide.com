@@ -23,7 +23,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
+        dstribution:function(){
+            Table.api.init({
+               
+            });
+            Controller.api.bindevent();
+            console.log(Config.id);
+        },
         table: {
+         
             new_customer: function () {
                 // 表格1
                 var newCustomer = $("#newCustomer"); 
@@ -59,7 +67,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         // {field: 'feedback', title: __('Feedback')},
                         // {field: 'note', title: __('Note')},
-                        {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
+                        buttons: [
+                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog', url: 'promote/customertabs/dstribution'}
+                                ],
+                        formatter: Table.api.formatter.operate}
                     ]
                 ]
             });

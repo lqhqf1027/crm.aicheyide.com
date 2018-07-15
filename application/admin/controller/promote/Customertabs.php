@@ -3,7 +3,7 @@
 namespace app\admin\controller\promote;
 
 use app\common\controller\Backend;
-
+use think\Db;
 /**
  * 多表格示例
  *
@@ -28,11 +28,10 @@ class Customertabs extends Backend
     {
        
         $this->loadlang('customer/customerresource');
-        // $this->loadlang('plan/planusedcar');
-        // $this->loadlang('plan/planfull');
+        
         return $this->view->fetch();
     }
-
+    //新客户
     public function newCustomer()
     {
         $this->model = model('CustomerResource');
@@ -74,7 +73,23 @@ class Customertabs extends Backend
        
         return $this->view->fetch('index');
     }
+    //分配客户资源给内勤
+    //单个分配
+    //内勤  message13=>内勤一部，message20=>内勤二部
+    public function dstribution($ids=NULL){
+        $this->model = model('CustomerResource');
+        $id = $this->model->get(['id' => $ids]);
+   
+        $backoffice =Db::name('admin')->field('nickname,rule_message')->where(function($query) {
+              $query->where('rule_message','message20')->whereOr('rule_message','message13');
+        })->select();
+      
+        $this->assignconfig('id',$id->id);
+        $this->view->assign('backoffice',$backoffice);
+        
+        return $this->view->fetch();
 
+    }
     // public function table2()
     // {
         

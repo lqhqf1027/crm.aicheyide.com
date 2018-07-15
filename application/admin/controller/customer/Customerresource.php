@@ -3,7 +3,7 @@
 namespace app\admin\controller\customer;
 
 use app\common\controller\Backend;
-
+use think\Db;
 /**
  * 客户资源列管理
  *
@@ -73,4 +73,5 @@ class Customerresource extends Backend
         }
         return $this->view->fetch();
     }
+   
 }

@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:98:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\index.html";i:1531487792;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1529910104;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1529910104;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1529910104;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:98:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\index.html";i:1531662060;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531656681;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531656681;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531656681;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -65,20 +65,14 @@
             
             <div class="tab-pane fade active in" id="new_customer">
                 <div id="toolbar1" class="toolbar">
-                       
+                   
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="<?php echo __('Refresh'); ?>" ><i class="fa fa-refresh"></i> </a>
                     <a href="javascript:;" class="btn btn-success btn-add <?php echo $auth->check('customer/customerresource/add')?'':'hide'; ?>" title="<?php echo __('Add'); ?>" ><i class="fa fa-plus"></i> <?php echo __('Add'); ?></a>
                     <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled <?php echo $auth->check('customer/customerresource/edit')?'':'hide'; ?>" title="<?php echo __('Edit'); ?>" ><i class="fa fa-pencil"></i> <?php echo __('Edit'); ?></a>
                     <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled <?php echo $auth->check('customer/customerresource/del')?'':'hide'; ?>" title="<?php echo __('Delete'); ?>" ><i class="fa fa-trash"></i> <?php echo __('Delete'); ?></a>
                     <a href="javascript:;" class="btn btn-danger btn-import <?php echo $auth->check('customer/customerresource/import')?'':'hide'; ?>" title="<?php echo __('Import'); ?>" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> <?php echo __('Import'); ?></a>
-
-                    <div class="dropdown btn-group <?php echo $auth->check('customer/customerresource/multi')?'':'hide'; ?>">
-                        <a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> <?php echo __('More'); ?></a>
-                        <ul class="dropdown-menu text-left" role="menu">
-                            <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=normal"><i class="fa fa-eye"></i> <?php echo __('Set to normal'); ?></a></li>
-                            <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=hidden"><i class="fa fa-eye-slash"></i> <?php echo __('Set to hidden'); ?></a></li>
-                        </ul>
-                    </div>
+                    <a class="btn btn-info btn-multi btn-disabled disabled" href="javascript:;" ><i class="fa fa-eye"></i> <?php echo __('Distribution'); ?></a>
+                   
                 </div>
                 <!-- <table id="table1" class="table table-striped table-bordered table-hover" width="100%">
                 </table> -->

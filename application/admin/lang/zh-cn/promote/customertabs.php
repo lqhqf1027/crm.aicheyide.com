@@ -14,5 +14,6 @@ return [
     'Updatetime'  =>  '更新时间',
     'Feedback'  =>  '反馈结果',
     'Note'  =>  '备注',
-    'Platform.name'  =>  '平台名称'
+    'Platform.name'  =>  '平台名称',
+    'Distribution'=>'批量分配'
 ];

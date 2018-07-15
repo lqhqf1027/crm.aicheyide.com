@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:94:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\promote\platform\index.html";i:1531656681;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531656681;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531656681;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531656681;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:88:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\auth\admin\index.html";i:1531656681;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531656681;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531656681;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531656681;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -58,23 +58,11 @@
             <div class="tab-pane fade active in" id="one">
                 <div class="widget-body no-padding">
                     <div id="toolbar" class="toolbar">
-                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="<?php echo __('Refresh'); ?>" ><i class="fa fa-refresh"></i> </a>
-                        <a href="javascript:;" class="btn btn-success btn-add <?php echo $auth->check('promote/platform/add')?'':'hide'; ?>" title="<?php echo __('Add'); ?>" ><i class="fa fa-plus"></i> <?php echo __('Add'); ?></a>
-                        <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled <?php echo $auth->check('promote/platform/edit')?'':'hide'; ?>" title="<?php echo __('Edit'); ?>" ><i class="fa fa-pencil"></i> <?php echo __('Edit'); ?></a>
-                        <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled <?php echo $auth->check('promote/platform/del')?'':'hide'; ?>" title="<?php echo __('Delete'); ?>" ><i class="fa fa-trash"></i> <?php echo __('Delete'); ?></a>
-                        <a href="javascript:;" class="btn btn-danger btn-import <?php echo $auth->check('promote/platform/import')?'':'hide'; ?>" title="<?php echo __('Import'); ?>" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> <?php echo __('Import'); ?></a>
-
-                        <div class="dropdown btn-group <?php echo $auth->check('promote/platform/multi')?'':'hide'; ?>">
-                            <a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> <?php echo __('More'); ?></a>
-                            <ul class="dropdown-menu text-left" role="menu">
-                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=normal"><i class="fa fa-eye"></i> <?php echo __('Set to normal'); ?></a></li>
-                                <li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="status=hidden"><i class="fa fa-eye-slash"></i> <?php echo __('Set to hidden'); ?></a></li>
-                            </ul>
-                        </div>
+                        <?php echo build_toolbar('refresh,add,delete'); ?>
                     </div>
-                    <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
-                           data-operate-edit="<?php echo $auth->check('promote/platform/edit'); ?>" 
-                           data-operate-del="<?php echo $auth->check('promote/platform/del'); ?>" 
+                    <table id="table" class="table table-striped table-bordered table-hover" 
+                           data-operate-edit="<?php echo $auth->check('auth/admin/edit'); ?>" 
+                           data-operate-del="<?php echo $auth->check('auth/admin/del'); ?>" 
                            width="100%">
                     </table>
                 </div>
@@ -83,7 +71,6 @@
         </div>
     </div>
 </div>
-
                             </div>
                         </div>
                     </div>
