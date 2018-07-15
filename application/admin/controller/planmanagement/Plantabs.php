@@ -10,7 +10,7 @@ use app\common\controller\Backend;
  * @icon fa fa-table
  * @remark 当一个页面上存在多个Bootstrap-table时该如何控制按钮和表格
  */
-class Packagelist extends Backend
+class Plantabs extends Backend
 {
 
     protected $model = null;
@@ -76,7 +76,7 @@ class Packagelist extends Backend
              return json($result);
          }
        
-        return $this->view->fetch();
+        return $this->view->fetch('index');
     }
 
     public function table2()

@@ -63,9 +63,8 @@ class Customerresource extends Backend
                     ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id','backoffice_id','sales_id','username','phone','age','genderdata','createtime','updatetime','feedback','note']);
-                $row->visible(['platform']);
-				$row->getRelation('platform')->visible(['name']);
+                
+                $row->getRelation('platform')->visible(['name']);
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
