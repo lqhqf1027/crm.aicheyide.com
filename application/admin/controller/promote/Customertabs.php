@@ -51,6 +51,7 @@ class Customertabs extends Backend
              $total = $this->model
                      ->with(['platform'])
                      ->where($where)
+                     ->where('backoffice_id',NULL)
                      ->order($sort, $order)
                      ->count();
  
@@ -58,6 +59,7 @@ class Customertabs extends Backend
                      ->with(['platform'])
                      ->where($where)
                      ->order($sort, $order)
+                     ->where('backoffice_id',NULL)
                      ->limit($offset, $limit)
                      ->select();
  
@@ -80,13 +82,43 @@ class Customertabs extends Backend
         $this->model = model('CustomerResource');
         $id = $this->model->get(['id' => $ids]);
    
-        $backoffice =Db::name('admin')->field('nickname,rule_message')->where(function($query) {
+        $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
               $query->where('rule_message','message20')->whereOr('rule_message','message13');
-        })->select();
-      
+        })->select(); 
+        $backofficeList = array();
+        foreach($backoffice as $k=>$v){
+            switch($v['rule_message']){
+                case 'message20':
+                $backofficeList['message20']['nickname'] = $v['nickname']; 
+                $backofficeList['message20']['id'] = $v['id'];  
+                break;
+                case 'message13':
+                $backofficeList['message13']['nickname'] = $v['nickname']; 
+                $backofficeList['message13']['id'] = $v['id'];  
+                break;
+            }
+        }
+
+        $this->view->assign('backofficeList',$backofficeList);
         $this->assignconfig('id',$id->id);
-        $this->view->assign('backoffice',$backoffice);
         
+        if ($this->request->isPost())
+        {
+            
+             
+            $params = $this->request->post('row/a');
+            $result = $this->model->save(['backoffice_id'=>$params['id']],function($query) use ($id){
+                $query->where('id',$id->id);
+            }); 
+            if($result){
+                $this->success();
+
+            }
+            else{
+                $this->error(); 
+            }
+        }
+       
         return $this->view->fetch();
 
     }

@@ -23,6 +23,7 @@ class Customerresource extends Backend
         parent::_initialize();
         $this->model = model('CustomerResource');
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        // dump( $this->model->getGenderdataList());die;
     }
     
     /**
@@ -41,8 +42,7 @@ class Customerresource extends Backend
         $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
+        
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField'))
             {
@@ -52,12 +52,15 @@ class Customerresource extends Backend
             $total = $this->model
                     ->with(['platform'])
                     ->where($where)
+                    ->where('backoffice_id','neq','')
+                   
                     ->order($sort, $order)
                     ->count();
 
             $list = $this->model
                     ->with(['platform'])
                     ->where($where)
+                    ->where('backoffice_id','neq','')
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -66,11 +69,12 @@ class Customerresource extends Backend
                 
                 $row->getRelation('platform')->visible(['name']);
             }
+            
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
-        }
+         
         return $this->view->fetch();
     }
    
