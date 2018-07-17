@@ -2,6 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
+            
             // 初始化表格参数配置
             Table.api.init({
                
@@ -24,17 +25,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
         dstribution:function(){
+            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
-            Controller.api.bindevent();
-            console.log(Config.id);
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+            
         },
         table: {
          
             new_customer: function () {
                 // 表格1
                 var newCustomer = $("#newCustomer"); 
+                newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["30%", "30%"]);
+                });
                  // 初始化表格
                  newCustomer.bootstrapTable({
                 url: 'promote/Customertabs/newCustomer',
@@ -69,9 +86,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'note', title: __('Note')},
                         {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
                         buttons: [
-                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog', url: 'promote/customertabs/dstribution'}
+                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer', url: 'promote/customertabs/dstribution',
+                                        success:function(data, ret){
+                                        }, 
+                                        error:function(data,ret){
+
+                                        }
+                                    }
                                 ],
-                        formatter: Table.api.formatter.operate}
+                                
+                                 events: Table.api.events.operate,formatter: Table.api.formatter.operate}
                     ]
                 ]
             });
@@ -166,6 +190,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         add: function () {
             Controller.api.bindevent();
+           
         },
         edit: function () {
             Controller.api.bindevent();

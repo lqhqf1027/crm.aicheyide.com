@@ -58,5 +58,6 @@ return array (
     'message18' => '修理厂维护',
     'message19' => '行政',
     'message20' => '内勤（二部）',
+    'message21' => '超级管理员',
   ),
 );

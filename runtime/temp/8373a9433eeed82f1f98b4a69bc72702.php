@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:104:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\dstribution.html";i:1531673324;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531656681;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531656681;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531656681;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:104:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\dstribution.html";i:1531820275;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1529910104;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1529910104;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1529910104;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -50,23 +50,17 @@
                             <!-- END RIBBON -->
                             <?php endif; ?>
                             <div class="content">
-                                <form id="dstribution-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2"><?php echo __('Name'); ?>:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-name" data-rule="required" class="form-control" name="row[name]" type="text">
-        </div>
-    </div>
+                                <form id="dstribution-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" data-area='["600px","400px"]'>
+    
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2"><?php echo __('选择内勤人员'); ?>:</label>
         <div class="col-xs-12 col-sm-8">
-
+           
             <div class="radio">
-                <?php if(is_array($backoffice) || $backoffice instanceof \think\Collection || $backoffice instanceof \think\Paginator): if( count($backoffice)==0 ) : echo "" ;else: foreach($backoffice as $key=>$vo): ?>
-                <label for="row[rule_message]-<?php echo $key; ?>">
-                    <input id="row[rule_message]-<?php echo $key; ?>" name="row[rule_message]" type="radio"  /> <?php echo $vo['nickname']; ?></label>
-                <?php endforeach; endif; else: echo "" ;endif; ?>
-            </div>
+                <?php foreach($backofficeList as $k=>$v): ?>
+                <label ><input name="row[id]" type="radio" value="<?php echo $v['id']; ?>" checked /> <?php echo $v['nickname']; ?></label> 
+                <?php endforeach; ?>
+                </div>
 
         </div>
     </div>
