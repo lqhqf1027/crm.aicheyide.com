@@ -25,6 +25,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
         dstribution:function(){
+ 
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
@@ -43,6 +44,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // Controller.api.bindevent();
             // console.log(Config.id);
             
+ 
         },
         table: {
          
