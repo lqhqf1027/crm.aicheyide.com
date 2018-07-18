@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:101:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\customer\customerresource\add.html";i:1531656681;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531656681;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531656681;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531656681;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:101:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\customer\customerresource\add.html";i:1531893569;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1529910104;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1529910104;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1529910104;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -85,7 +85,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2"><?php echo __('Age'); ?>:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-age" class="form-control" name="row[age]" type="number">
+            <input id="c-age" class="form-control" name="row[age]" type="number" placeholder="选填">
         </div>
     </div>
     <div class="form-group">
@@ -94,22 +94,22 @@
             
             <div class="radio">
             <?php if(is_array($genderdataList) || $genderdataList instanceof \think\Collection || $genderdataList instanceof \think\Paginator): if( count($genderdataList)==0 ) : echo "" ;else: foreach($genderdataList as $key=>$vo): ?>
-            <label for="row[genderdata]-<?php echo $key; ?>"><input id="row[genderdata]-<?php echo $key; ?>" name="row[genderdata]" type="radio" value="<?php echo $key; ?>" <?php if(in_array(($key), explode(',',"male"))): ?>checked<?php endif; ?> /> <?php echo $vo; ?></label> 
+            <label for="row[genderdata]-<?php echo $key; ?>"><input id="row[genderdata]-<?php echo $key; ?>" name="row[genderdata]" type="radio" value="<?php echo $key; ?>" <?php if(in_array(($key), explode(',',"male"))): ?>checked<?php endif; ?> placeholder="选填"/> <?php echo $vo; ?></label> 
             <?php endforeach; endif; else: echo "" ;endif; ?>
             </div>
 
         </div>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2"><?php echo __('Feedback'); ?>:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-feedback" class="form-control" name="row[feedback]" type="text">
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2"><?php echo __('Note'); ?>:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-note" class="form-control" name="row[note]" type="text">
+            <input id="c-note" class="form-control" name="row[note]" type="text" placeholder="选填">
         </div>
     </div>
     <div class="form-group layer-footer">

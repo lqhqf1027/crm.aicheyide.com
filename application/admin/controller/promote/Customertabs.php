@@ -100,7 +100,7 @@ class Customertabs extends Backend
         }
 
         $this->view->assign('backofficeList',$backofficeList);
-        $this->assignconfig('id',$id->id);
+        $this->assignconfig('id',$id->id); 
         
         if ($this->request->isPost())
         {
