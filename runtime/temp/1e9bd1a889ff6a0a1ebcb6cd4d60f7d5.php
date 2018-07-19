@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:85:"D:\wamp64\www\crm.aicheyide.com\public/../application/admin\view\dashboard\index.html";i:1531717379;s:74:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531717379;s:71:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531717379;s:73:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\common\script.html";i:1531717379;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:85:"D:\wamp64\www\crm.aicheyide.com\public/../application/admin\view\dashboard\index.html";i:1531990437;s:74:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531990437;s:71:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531990437;s:73:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\common\script.html";i:1531990437;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
