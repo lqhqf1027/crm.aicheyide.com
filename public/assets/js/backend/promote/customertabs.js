@@ -104,47 +104,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
             },
-            second: function () {
+            new_allocation: function () {
                 // 表格2
-                var table2 = $("#table2");
-                table2.bootstrapTable({
-                    url: 'planmanagement/plantabs/table2',
-                    extend: {
-                        index_url: 'plan/planusedcar/index',
-                        add_url: 'plan/planusedcar/add',
-                        edit_url: 'plan/planusedcar/edit',
-                        del_url: 'plan/planusedcar/del',
-                        multi_url: 'plan/planusedcar/multi',
-                        table: 'plan_used_car',
-                    },
+                var newAllocation = $("#newAllocation");
+                newAllocation.bootstrapTable({
+                    url: 'promote/Customertabs/newAllocation',
+                    // extend: {
+                    //     index_url: 'plan/planusedcar/index',
+                    //     add_url: 'plan/planusedcar/add',
+                    //     edit_url: 'plan/planusedcar/edit',
+                    //     del_url: 'plan/planusedcar/del',
+                    //     multi_url: 'plan/planusedcar/multi',
+                    //     table: 'plan_used_car',
+                    // },
                     toolbar: '#toolbar2',
-                    sortName: 'id,statusdata',
-                    
+                    pk: 'id',
+                    sortName: 'id',
                     columns: [
                         [
                             {checkbox: true},
                             {field: 'id', title: __('Id')},
-                            {field: 'models.name', title: '销售车型'},
-                            {field: 'financialplatform.name', title: '所属金融平台'},
+                            // {field: 'platform_id', title: __('Platform_id')},
+                            // {field: 'backoffice_id', title: __('Backoffice_id')},
+                            {field: 'platform.name', title: __('所属平台')},
                             
-                            {field: 'the_door', title: __('The_door')},
-                            {field: 'new_payment', title: __('New_payment'), operate:'BETWEEN'},
-                            {field: 'new_monthly', title: __('New_monthly'), operate:'BETWEEN'},
-                            {field: 'nperlist', title: __('Nperlist'), visible:false, searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}},
-                            {field: 'nperlist_text', title: __('Nperlist'), operate:false},
-                            {field: 'new_total_price', title: __('New_total_price'), operate:'BETWEEN'},
-                            {field: 'mileage', title: __('Mileage')},
-                            {field: 'contrarytodata', title: __('Contrarytodata'),   searchList: {"1":__('Contrarytodata 1'),"2":__('Contrarytodata 2')},formatter:function(value, row, index){
-
-                               
-                              return value==1?'对公':'非对公';
-                            }},
-                             
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
+                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
                             {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'statusdata', title: __('Statusdata'),  formatter: Table.api.formatter.statusdata,sortable: true},
-                       
-                            {field: 'operate', title: __('Operate'), table: table2, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                            // {field: 'feedback', title: __('Feedback')},
+                            // {field: 'note', title: __('Note')},
+                            // {field: 'operate', title: __('Operate'), table: newAllocation, events: Table.api.events.operate,formatter: Table.api.formatter.operate}
                         ]
                     ]
 
@@ -152,21 +146,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
                 // 为表格2绑定事件
-                Table.api.bindevent(table2);
+                Table.api.bindevent(newAllocation);
             },
-            planfull: function () {
+            new_feedback: function () {
                 // 表格3
-                var table3 = $("#table3");
-                table3.bootstrapTable({
-                    url: 'planmanagement/plantabs/table3',
-                    extend: {
-                        index_url: 'plan/planfull/index',
-                        add_url: 'plan/planfull/add',
-                        edit_url: 'plan/planfull/edit',
-                        del_url: 'plan/planfull/del',
-                        multi_url: 'plan/planfull/multi',
-                        table: 'plan_full',
-                    },
+                var newFeedback = $("#newFeedback");
+                newFeedback.bootstrapTable({
+                    url: 'promote/Customertabs/newFeedback',
+                    // extend: {
+                    //     index_url: 'plan/planfull/index',
+                    //     add_url: 'plan/planfull/add',
+                    //     edit_url: 'plan/planfull/edit',
+                    //     del_url: 'plan/planfull/del',
+                    //     multi_url: 'plan/planfull/multi',
+                    //     table: 'plan_full',
+                    // },
                     toolbar: '#toolbar3',
                     pk: 'id',
                     sortName: 'id',
@@ -174,20 +168,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('Id')},
-                            {field: 'models.name', title: '销售车型'},
+                            // {field: 'platform_id', title: __('Platform_id')},
+                            // {field: 'backoffice_id', title: __('Backoffice_id')},
+                            {field: 'platform.name', title: __('所属平台')},
                             
-                            {field: 'full_total_price', title: __('Full_total_price'), operate:'BETWEEN'},
-                        
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
+                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
                             {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'ismenu', title: __('Ismenu'), formatter: Table.api.formatter.toggle},
-                            
-                            {field: 'operate', title: __('Operate'), table: table3, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                            {field: 'feedback', title: __('Feedback')},
+                            // {field: 'feedback', title: __('Feedback')},
+                            // {field: 'note', title: __('Note')},
+                            // {field: 'operate', title: __('Operate'), table: newFeedback, events: Table.api.events.operate,formatter: Table.api.formatter.operate}
                         ]
                     ]
                 });
                 // 为表格3绑定事件
-                Table.api.bindevent(table3);
+                Table.api.bindevent(newFeedback);
             }
         },
         add: function () {
