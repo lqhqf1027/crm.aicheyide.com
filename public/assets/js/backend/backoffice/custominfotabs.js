@@ -1,55 +1,3 @@
-// define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
-//
-//     var Controller = {
-//         index: function () {
-//             // 初始化表格参数配置
-//             Table.api.init({
-//                 extend: {
-//                     index_url: 'backoffice/custominfotabs/index',
-//                     add_url: 'backoffice/custominfotabs/add',
-//                     edit_url: 'backoffice/custominfotabs/edit',
-//                     del_url: 'backoffice/custominfotabs/del',
-//                     multi_url: 'backoffice/custominfotabs/multi',
-//                     table: 'custominfotabs',
-//                 }
-//             });
-//
-//             var table = $("#table");
-//
-//             // 初始化表格
-//             table.bootstrapTable({
-//                 url: $.fn.bootstrapTable.defaults.extend.index_url,
-//                 pk: 'id',
-//                 sortName: 'id',
-//                 columns: [
-//                     [
-//                         {checkbox: true},
-//                         {field: 'id', title: __('Id')},
-//                         {field: 'name', title: __('Name')},
-//                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
-//                     ]
-//                 ]
-//             });
-//
-//             // 为表格绑定事件
-//             Table.api.bindevent(table);
-//         },
-//         add: function () {
-//             Controller.api.bindevent();
-//         },
-//         edit: function () {
-//             Controller.api.bindevent();
-//         },
-//         api: {
-//             bindevent: function () {
-//                 Form.api.bindevent($("form[role=form]"));
-//             }
-//         }
-//     };
-//     return Controller;
-// });
-
-
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
     var Controller = {
@@ -76,28 +24,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
-        dstribution:function(){
-
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                Fast.api.close(data);//这里是重点
-                // console.log(data);
-                // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
-                // console.log(data);
-
-                Toastr.success("失败");
-
-            });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-
-
-        },
+        // dstribution:function(){
+        //
+        //     // $(".btn-add").data("area", ["300px","200px"]);
+        //     Table.api.init({
+        //
+        //     });
+        //     Form.api.bindevent($("form[role=form]"), function(data, ret){
+        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+        //         Fast.api.close(data);//这里是重点
+        //         // console.log(data);
+        //         // Toastr.success("成功");//这个可有可无
+        //     }, function(data, ret){
+        //         // console.log(data);
+        //
+        //         Toastr.success("失败");
+        //
+        //     });
+        //     // Controller.api.bindevent();
+        //     // console.log(Config.id);
+        //
+        //
+        // },
         table: {
 
             new_customer: function () {
@@ -108,7 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
-                    url: 'promote/Customertabs/newCustomer',
+                    url: 'backoffice/Custominfotabs/newCustomer',
                     extend: {
                         index_url: 'customer/customerresource/index',
                         add_url: 'customer/customerresource/add',
@@ -118,6 +66,64 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         table: 'customer_resource',
                     },
                     toolbar: '#toolbar1',
+                    pk: 'id',
+                    sortName: 'id',
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id')},
+                            // {field: 'platform_id', title: __('Platform_id')},
+                            // {field: 'backoffice_id', title: __('Backoffice_id')},
+                            {field: 'platform.name', title: __('所属平台')},
+
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
+                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
+                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            // {field: 'feedback', title: __('Feedback')},
+                            // {field: 'note', title: __('Note')},
+                            {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
+                                buttons: [
+                                    {name: 'detail', text: '分配', title: __('Allocation'), icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer', url: 'backoffice/custominfotabs/admeasure',
+                                        success:function(data, ret){
+                                        },
+                                        error:function(data,ret){
+
+                                        }
+                                    }
+                                ],
+
+                                events: Table.api.events.operate,formatter: Table.api.formatter.operate}
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(newCustomer);
+            },
+
+
+            assigned_customers: function () {
+                // 表格2
+                var assignedCustomers = $("#assignedCustomers");
+                assignedCustomers.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["30%", "30%"]);
+                });
+                // 初始化表格
+                assignedCustomers.bootstrapTable({
+                    url: 'backoffice/Custominfotabs/assignedCustomers',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'customer/customerresource/add',
+                        edit_url: 'customer/customerresource/edit',
+                        del_url: 'customer/customerresource/del',
+                        multi_url: 'customer/customerresource/multi',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
                     columns: [
@@ -138,110 +144,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
-                            {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
-                                buttons: [
-                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer', url: 'promote/customertabs/dstribution',
-                                        success:function(data, ret){
-                                        },
-                                        error:function(data,ret){
-
-                                        }
-                                    }
-                                ],
+                            {field: 'operate', title: __('Operate'), table: assignedCustomers, events: Table.api.events.operate,
+                                // buttons: [
+                                //     {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer', url: 'backoffice/custominfotabs/admeasure',
+                                //         success:function(data, ret){
+                                //         },
+                                //         error:function(data,ret){
+                                //
+                                //         }
+                                //     }
+                                // ],
 
                                 events: Table.api.events.operate,formatter: Table.api.formatter.operate}
                         ]
                     ]
                 });
-                // 为表格1绑定事件
-                Table.api.bindevent(newCustomer);
+                // 为表格2绑定事件
+                Table.api.bindevent(assignedCustomers);
             },
-            // new_allocation: function () {
-            //     // 表格2
-            //     var newAllocation = $("#newAllocation");
-            //     newAllocation.bootstrapTable({
-            //         url: 'promote/Customertabs/newAllocation',
-            //         // extend: {
-            //         //     index_url: 'plan/planusedcar/index',
-            //         //     add_url: 'plan/planusedcar/add',
-            //         //     edit_url: 'plan/planusedcar/edit',
-            //         //     del_url: 'plan/planusedcar/del',
-            //         //     multi_url: 'plan/planusedcar/multi',
-            //         //     table: 'plan_used_car',
-            //         // },
-            //         toolbar: '#toolbar2',
-            //         pk: 'id',
-            //         sortName: 'id',
-            //         columns: [
-            //             [
-            //                 {checkbox: true},
-            //                 {field: 'id', title: __('Id')},
-            //                 // {field: 'platform_id', title: __('Platform_id')},
-            //                 // {field: 'backoffice_id', title: __('Backoffice_id')},
-            //                 {field: 'platform.name', title: __('所属平台')},
-            //
-            //                 // {field: 'sales_id', title: __('Sales_id')},
-            //                 {field: 'username', title: __('Username')},
-            //                 {field: 'phone', title: __('Phone')},
-            //                 {field: 'age', title: __('Age')},
-            //                 {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-            //                 {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-            //                 {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-            //                 {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-            //                 // {field: 'feedback', title: __('Feedback')},
-            //                 // {field: 'note', title: __('Note')},
-            //                 // {field: 'operate', title: __('Operate'), table: newAllocation, events: Table.api.events.operate,formatter: Table.api.formatter.operate}
-            //             ]
-            //         ]
-            //
-            //
-            //     });
-            //
-            //     // 为表格2绑定事件
-            //     Table.api.bindevent(newAllocation);
-            // },
-            // new_feedback: function () {
-            //     // 表格3
-            //     var newFeedback = $("#newFeedback");
-            //     newFeedback.bootstrapTable({
-            //         url: 'promote/Customertabs/newFeedback',
-            //         // extend: {
-            //         //     index_url: 'plan/planfull/index',
-            //         //     add_url: 'plan/planfull/add',
-            //         //     edit_url: 'plan/planfull/edit',
-            //         //     del_url: 'plan/planfull/del',
-            //         //     multi_url: 'plan/planfull/multi',
-            //         //     table: 'plan_full',
-            //         // },
-            //         toolbar: '#toolbar3',
-            //         pk: 'id',
-            //         sortName: 'id',
-            //         columns: [
-            //             [
-            //                 {checkbox: true},
-            //                 {field: 'id', title: __('Id')},
-            //                 // {field: 'platform_id', title: __('Platform_id')},
-            //                 // {field: 'backoffice_id', title: __('Backoffice_id')},
-            //                 {field: 'platform.name', title: __('所属平台')},
-            //
-            //                 // {field: 'sales_id', title: __('Sales_id')},
-            //                 {field: 'username', title: __('Username')},
-            //                 {field: 'phone', title: __('Phone')},
-            //                 {field: 'age', title: __('Age')},
-            //                 {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-            //                 {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-            //                 {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-            //                 {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-            //                 {field: 'feedback', title: __('Feedback')},
-            //                 // {field: 'feedback', title: __('Feedback')},
-            //                 // {field: 'note', title: __('Note')},
-            //                 // {field: 'operate', title: __('Operate'), table: newFeedback, events: Table.api.events.operate,formatter: Table.api.formatter.operate}
-            //             ]
-            //         ]
-            //     });
-            //     // 为表格3绑定事件
-            //     Table.api.bindevent(newFeedback);
-            // }
+
         },
         add: function () {
             Controller.api.bindevent();

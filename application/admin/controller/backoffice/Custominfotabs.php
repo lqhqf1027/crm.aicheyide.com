@@ -34,14 +34,7 @@ use think\Db;
 //
 //
 //}
-//
-//
-//<?php
 
-//namespace app\admin\controller\promote;
-//
-//use app\common\controller\Backend;
-//use think\Db;
 /**
  * 多表格示例
  *
@@ -65,14 +58,16 @@ class Custominfotabs extends Backend
     public function index()
     {
 
-        $this->loadlang('customer/customerresource');
+        $this->loadlang('backoffice/custominfotabs');
 
         return $this->view->fetch();
     }
+
     //新客户
     public function newCustomer()
     {
         $this->model = model('CustomerResource');
+
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         //当前是否为关联查询
         $this->relationSearch = true;
@@ -89,15 +84,19 @@ class Custominfotabs extends Backend
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where('backoffice_id',NULL)
+                ->where('backoffice_id',"not null")
+                ->where('backoffice_id',8)
                 ->order($sort, $order)
                 ->count();
+
+
 
             $list = $this->model
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('backoffice_id',NULL)
+                ->where('backoffice_id',"not null")
+                ->where('backoffice_id',8)
                 ->limit($offset, $limit)
                 ->select();
 
@@ -113,10 +112,59 @@ class Custominfotabs extends Backend
 
         return $this->view->fetch('index');
     }
+
+    //已分配给销售的用户
+    public function assignedCustomers()
+    {
+        $this->model = model('CustomerResource');
+
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->where('backoffice_id',"not null")
+                ->order($sort, $order)
+                ->count();
+
+
+
+            $list = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->order($sort, $order)
+                ->where('backoffice_id',"not null")
+                ->limit($offset, $limit)
+                ->select();
+
+            foreach ($list as $row) {
+
+                $row->getRelation('platform')->visible(['name']);
+            }
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+
+        return $this->view->fetch('index');
+    }
+
     //分配客户资源给内勤
     //单个分配
     //内勤  message13=>内勤一部，message20=>内勤二部
-    public function dstribution($ids=NULL){
+    public function admeasure($ids=NULL){
         $this->model = model('CustomerResource');
         $id = $this->model->get(['id' => $ids]);
 
@@ -145,6 +193,7 @@ class Custominfotabs extends Backend
 
 
             $params = $this->request->post('row/a');
+
             $result = $this->model->save(['backoffice_id'=>$params['id']],function($query) use ($id){
                 $query->where('id',$id->id);
             });
@@ -160,185 +209,10 @@ class Custominfotabs extends Backend
         return $this->view->fetch();
 
     }
-    //已分配
-//    public function newAllocation()
-//    {
-//        $this->model = model('CustomerResource');
-//        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-//        //当前是否为关联查询
-//        $this->relationSearch = true;
-//        //设置过滤方法
-//        $this->request->filter(['strip_tags']);
-//        if ($this->request->isAjax())
-//        {
-//            //如果发送的来源是Selectpage，则转发到Selectpage
-//            if ($this->request->request('keyField'))
-//            {
-//                return $this->selectpage();
-//            }
-//            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-//            $total = $this->model
-//                ->with(['platform'])
-//                ->where($where)
-//                ->where('backoffice_id','NOT NULL')
-//                ->order($sort, $order)
-//                ->count();
-//
-//            $list = $this->model
-//                ->with(['platform'])
-//                ->where($where)
-//                ->order($sort, $order)
-//                ->where('backoffice_id','NOT NULL')
-//                ->limit($offset, $limit)
-//                ->select();
-//
-//            foreach ($list as $row) {
-//
-//                $row->getRelation('platform')->visible(['name']);
-//            }
-//            $list = collection($list)->toArray();
-//            $result = array("total" => $total, "rows" => $list);
-//
-//            return json($result);
-//        }
-//
-//        return $this->view->fetch('index');
-//    }
-    //已反馈
-//    public function newFeedback()
-//    {
-//        $this->model = model('CustomerResource');
-//        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-//        //当前是否为关联查询
-//        $this->relationSearch = true;
-//        //设置过滤方法
-//        $this->request->filter(['strip_tags']);
-//        if ($this->request->isAjax())
-//        {
-//            //如果发送的来源是Selectpage，则转发到Selectpage
-//            if ($this->request->request('keyField'))
-//            {
-//                return $this->selectpage();
-//            }
-//            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-//            $total = $this->model
-//                ->with(['platform'])
-//                ->where($where)
-//                ->where('backoffice_id','NOT NULL')
-//                ->where('feedback','NOT NULL')
-//                ->order($sort, $order)
-//                ->count();
-//
-//            $list = $this->model
-//                ->with(['platform'])
-//                ->where($where)
-//                ->order($sort, $order)
-//                ->where('backoffice_id','NOT NULL')
-//                ->where('feedback','NOT NULL')
-//                ->limit($offset, $limit)
-//                ->select();
-//
-//            foreach ($list as $row) {
-//
-//                $row->getRelation('platform')->visible(['name']);
-//            }
-//            $list = collection($list)->toArray();
-//            $result = array("total" => $total, "rows" => $list);
-//
-//            return json($result);
-//        }
-//
-//        return $this->view->fetch('index');
-//    }
 
-    // public function table2()
-    // {
 
-    //     $this->model = model('PlanUsedCar');
-    //     // $this->view->assign("statusdataList", $this->model->getStatusdataList());
-    //     $this->view->assign("nperlistList", $this->model->getNperlistList());
-    //     $this->view->assign("contrarytodataList", $this->model->getContrarytodataList());
 
-    //   //当前是否为关联查询
-    //   $this->relationSearch = true;
-    //   //设置过滤方法
-    //   $this->request->filter(['strip_tags']);
-    //   if ($this->request->isAjax())
-    //   {
-    //       //如果发送的来源是Selectpage，则转发到Selectpage
-    //       if ($this->request->request('keyField'))
-    //       {
-    //           return $this->selectpage();
-    //       }
-    //       list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-    //       $total = $this->model
-    //               ->with(['models','financialplatform'])
-    //               ->where($where)
-    //               ->order($sort, $order)
-    //               ->count();
 
-    //       $list = $this->model
-    //               ->with(['models','financialplatform'])
-    //               ->where($where)
-    //               ->order($sort, $order)
-    //               ->limit($offset, $limit)
-    //               ->select();
-
-    //       foreach ($list as $row) {
-    //           $row->visible(['id','statusdata','the_door','new_payment','new_monthly','nperlist','new_total_price','mileage','contrarytodata','createtime','updatetime']);
-    //           $row->visible(['models']);
-    //           $row->getRelation('models')->visible(['name']);
-    //           $row->visible(['financialplatform']);
-    //           $row->getRelation('financialplatform')->visible(['name']);
-    //       }
-    //       $list = collection($list)->toArray();
-    //       $result = array("total" => $total, "rows" => $list);
-
-    //       return json($result);
-    //   }
-    //     return $this->view->fetch('index');
-    // }
-    // public function table3()
-    // {
-    //     $this->model = model('PlanFull');
-    //     $this->view->assign("ismenuList", $this->model->getIsmenuList());
-    //     //当前是否为关联查询
-    //     $this->relationSearch = true;
-    //     //设置过滤方法
-    //     $this->request->filter(['strip_tags']);
-    //     if ($this->request->isAjax())
-    //     {
-    //         //如果发送的来源是Selectpage，则转发到Selectpage
-    //         if ($this->request->request('keyField'))
-    //         {
-    //             return $this->selectpage();
-    //         }
-    //         list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-    //         $total = $this->model
-    //                 ->with(['models'])
-    //                 ->where($where)
-    //                 ->order($sort, $order)
-    //                 ->count();
-
-    //         $list = $this->model
-    //                 ->with(['models'])
-    //                 ->where($where)
-    //                 ->order($sort, $order)
-    //                 ->limit($offset, $limit)
-    //                 ->select();
-
-    //         foreach ($list as $row) {
-    //             $row->visible(['id','models_id','full_total_price','ismenu','createtime','updatetime']);
-    //             $row->visible(['models']);
-    // 			$row->getRelation('models')->visible(['name']);
-    //         }
-    //         $list = collection($list)->toArray();
-    //         $result = array("total" => $total, "rows" => $list);
-
-    //         return json($result);
-    //     }
-    //     return $this->view->fetch('index');
-    // }
 
 }
 
