@@ -19,5 +19,6 @@ return [
     'Confirm' => '确定',
     'Reset' => '重置',
     'Salesman' => '选择销售人员',
-    'Allocation' => '分配销售'
+    'Allocation' => '分配销售',
+    'Distributions' => '分配'
 ];

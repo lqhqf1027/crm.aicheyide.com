@@ -5,11 +5,11 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Salesman')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <!--<div class="radio">-->
-                <!--{foreach $backofficeList as $k=>$v}-->
-                <!--<label><input name="row[id]" type="radio" value="{$v.id}" checked/> {$v.nickname}</label>-->
-                <!--{/foreach}-->
-            <!--</div>-->
+            <div class="radio">
+                {foreach $saleList as $k=>$v}
+                <label><input name="row[id]" type="radio" value="{$v.id}" checked/> {$v.nickname}</label>
+                {/foreach}
+            </div>
 
         </div>
     </div>
@@ -21,3 +21,4 @@
         </div>
     </div>
 </form>
+

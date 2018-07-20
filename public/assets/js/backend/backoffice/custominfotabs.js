@@ -4,9 +4,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         index: function () {
 
             // 初始化表格参数配置
-            Table.api.init({
-
-            });
+            Table.api.init({});
 
             //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -63,6 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         edit_url: 'customer/customerresource/edit',
                         del_url: 'customer/customerresource/del',
                         multi_url: 'customer/customerresource/multi',
+                        admeasure_url: 'backoffice/custominfotabs/admeasure',
                         table: 'customer_resource',
                     },
                     toolbar: '#toolbar1',
@@ -80,24 +79,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'age', title: __('Age')},
-                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            // {
+                            //     field: 'createtime',
+                            //     title: __('Createtime'),
+                            //     operate: 'RANGE',
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'updatetime',
+                            //     title: __('Updatetime'),
+                            //     operate: 'RANGE',
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime
+                            // },
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
-                            {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
+                            {
+                                field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
-                                    {name: 'detail', text: '分配', title: __('Allocation'), icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer', url: 'backoffice/custominfotabs/admeasure',
-                                        success:function(data, ret){
+                                    {
+                                        name: 'detail',
+                                        text: '分配',
+                                        title: __('Allocation'),
+                                        icon: 'fa fa-share',
+                                        classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
+                                        url: 'backoffice/custominfotabs/admeasure',
+                                        success: function (data, ret) {
+                                            console.log(data);
                                         },
-                                        error:function(data,ret){
+                                        error: function (data, ret) {
 
                                         }
                                     }
                                 ],
 
-                                events: Table.api.events.operate,formatter: Table.api.formatter.operate}
+                                events: Table.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
                         ]
                     ]
                 });
@@ -138,24 +164,46 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'age', title: __('Age')},
-                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            // {
+                            //     field: 'createtime',
+                            //     title: __('Createtime'),
+                            //     operate: 'RANGE',
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'updatetime',
+                            //     title: __('Updatetime'),
+                            //     operate: 'RANGE',
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime
+                            // },
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
-                            {field: 'operate', title: __('Operate'), table: assignedCustomers, events: Table.api.events.operate,
-                                // buttons: [
-                                //     {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer', url: 'backoffice/custominfotabs/admeasure',
-                                //         success:function(data, ret){
-                                //         },
-                                //         error:function(data,ret){
-                                //
-                                //         }
-                                //     }
-                                // ],
-
-                                events: Table.api.events.operate,formatter: Table.api.formatter.operate}
+                            // {
+                            //     field: 'operate', title: __('Operate'), table: assignedCustomers,
+                            //     // buttons: [
+                            //     //     {name: 'detail', text: '分配', title: '分配',
+                            //     //      icon: 'fa fa-share',
+                            //     //      classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
+                            //     //      url: 'backoffice/custominfotabs/admeasure',
+                            //     //         success:function(data, ret){
+                            //     //         },
+                            //     //         error:function(data,ret){
+                            //     //
+                            //     //         }
+                            //     //     }
+                            //     // ],
+                            //
+                            //     events: Table.api.events.operate, formatter: Table.api.formatter.operate
+                            // }
                         ]
                     ]
                 });
@@ -179,6 +227,64 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+            },
+            formatter: {
+                operate: function (value, row, index) {
+
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+
+                    // if (options.extend.admeasure_url !== '') {
+                    //
+                    //     buttons.push({
+                    //         name: 'distribution',
+                    //         text: __('Distribution'),
+                    //         icon: 'fa fa-share',
+                    //         title: __('Distribution'),
+                    //         extend: 'data-toggle="tooltip"',
+                    //         classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
+                    //         success: function (data, ret) {
+                    //
+                    //         },
+                    //         error: function (data, ret) {
+                    //
+                    //         }
+                    //     })
+                    // }
+
+                    // if (options.extend.dragsort_url !== '') {
+                    //     buttons.push({
+                    //         name: 'dragsort',
+                    //         icon: 'fa fa-arrows',
+                    //         title: __('Drag to sort'),
+                    //         extend: 'data-toggle="tooltip"',
+                    //         classname: 'btn btn-xs btn-primary btn-dragsort'
+                    //     });
+                    // }
+                    // if (options.extend.edit_url !== '') {
+                    //     buttons.push({
+                    //         name: 'edit',
+                    //         icon: 'fa fa-pencil',
+                    //         title: __('Edit'),
+                    //         extend: 'data-toggle="tooltip"',
+                    //         classname: 'btn btn-xs btn-success btn-editone',
+                    //         url: options.extend.edit_url
+                    //     });
+                    // }
+                    // if (options.extend.del_url !== '') {
+                    //     buttons.push({
+                    //         name: 'del',
+                    //         icon: 'fa fa-trash',
+                    //         title: __('Del'),
+                    //         extend: 'data-toggle="tooltip"',
+                    //         classname: 'btn btn-xs btn-danger btn-delone'
+                    //     });
+                    // }
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
             }
         }
 

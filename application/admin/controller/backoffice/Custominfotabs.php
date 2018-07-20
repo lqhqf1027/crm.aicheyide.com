@@ -85,7 +85,7 @@ class Custominfotabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where('backoffice_id',"not null")
-                ->where('backoffice_id',8)
+                ->where('backoffice_id',13)
                 ->order($sort, $order)
                 ->count();
 
@@ -96,7 +96,7 @@ class Custominfotabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where('backoffice_id',"not null")
-                ->where('backoffice_id',8)
+                ->where('backoffice_id',13)
                 ->limit($offset, $limit)
                 ->select();
 
@@ -168,24 +168,24 @@ class Custominfotabs extends Backend
         $this->model = model('CustomerResource');
         $id = $this->model->get(['id' => $ids]);
 
-        $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
-            $query->where('rule_message','message20')->whereOr('rule_message','message13');
+        $sale =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
+            $query->where('rule_message','message8')->whereOr('rule_message','message9');
         })->select();
-        $backofficeList = array();
-        foreach($backoffice as $k=>$v){
+        $saleList = array();
+        foreach($sale as $k=>$v){
             switch($v['rule_message']){
-                case 'message20':
-                    $backofficeList['message20']['nickname'] = $v['nickname'];
-                    $backofficeList['message20']['id'] = $v['id'];
+                case 'message8':
+                    $saleList['message8']['nickname'] = $v['nickname'];
+                    $saleList['message8']['id'] = $v['id'];
                     break;
-                case 'message13':
-                    $backofficeList['message13']['nickname'] = $v['nickname'];
-                    $backofficeList['message13']['id'] = $v['id'];
+                case 'message9':
+                    $saleList['message9']['nickname'] = $v['nickname'];
+                    $saleList['message9']['id'] = $v['id'];
                     break;
             }
         }
 
-        $this->view->assign('backofficeList',$backofficeList);
+        $this->view->assign('',$saleList);
         $this->assignconfig('id',$id->id);
 
         if ($this->request->isPost())
@@ -194,7 +194,7 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['backoffice_id'=>$params['id']],function($query) use ($id){
+            $result = $this->model->save(['sales_id'=>$params['id']],function($query) use ($id){
                 $query->where('id',$id->id);
             });
             if($result){
