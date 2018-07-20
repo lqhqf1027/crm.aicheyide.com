@@ -1,14 +1,14 @@
 <?php
 
-namespace app\admin\controller\wechat;
+namespace app\wechat\controller;
 
-use app\common\controller\Backend;
+use app\common\controller\Frontend;
 use think\request;
 use think\Controller;
 use think\Loader;
 use think\Config;
 use think\Db;
-class User extends  Backend{
+class Wechat extends  Controller{
   /**
      * Custominfotabs模型对象
      * @var \app\admin\model\Custominfotabs
@@ -26,9 +26,8 @@ class User extends  Backend{
 
     public function _initialize()
     {
-        parent::_initialize();
-        $this->appid = Config::get('wechat')['APPID'];
-        $this->secret = Config::get('wechat')['APPSECRET'];
+        // parent::_initialize();
+        
     }
     /**
      * 微信授权添加用户入库
@@ -105,12 +104,13 @@ class User extends  Backend{
 
     }
     /*获取用户信息插入数据库*/
-    public function addUser()
-    {
+    public function adduser()
+    { 
+        $this->appid = Config::get('wechat')['APPID'];
+        $this->secret = Config::get('wechat')['APPSECRET'];
+        $code = $_GET['code'] ; 
 
-       
-        $code = $_GET['code'] ;
-
+        
         ##获取网页授权的access_token 和openid
         $rslt  = gets("https://api.weixin.qq.com/sns/oauth2/access_token?appid={$this->appid}&secret={$this->secret}&code={$code}&grant_type=authorization_code");
 

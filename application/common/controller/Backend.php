@@ -19,7 +19,7 @@ class Backend extends Controller
      * 无需登录的方法,同时也就不需要鉴权了
      * @var array
      */
-    protected $noNeedLogin = [];
+    protected $noNeedLogin = ['adduser'];
 
     /**
      * 无需鉴权的方法,但需要登录
@@ -99,7 +99,7 @@ class Backend extends Controller
      * 表示注释或字段名
      */
     protected $importHeadType = 'comment';
-   
+ 
     /**
      * 引入后台控制器的traits
      */
@@ -107,6 +107,13 @@ class Backend extends Controller
 
     public function _initialize()
     {
+
+        //判断是否是手机访问公众号授权
+        if(ismobile()){
+           
+
+        }
+
         $modulename = $this->request->module();
          
         $controllername = strtolower($this->request->controller());
@@ -124,6 +131,8 @@ class Backend extends Controller
         !defined('IS_AJAX') && define('IS_AJAX', $this->request->isAjax());
 
         $this->auth = Auth::instance();
+
+        
 
         // 设置当前请求的URI
         $this->auth->setRequestUri($path);
