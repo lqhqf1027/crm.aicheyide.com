@@ -212,7 +212,50 @@ class Customertabs extends Backend
        
         return $this->view->fetch('index');
     }
-    
+    //分配客户资源给内勤
+    //批量分配
+    //内勤  message13=>内勤一部，message20=>内勤二部
+    public function distribution($ids=''){
+        dump(123);
+        die;
+        $this->model = model('CustomerResource');
+        $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
+              $query->where('rule_message','message20')->whereOr('rule_message','message13');
+        })->select(); 
+        $backofficeList = array();
+        foreach($backoffice as $k=>$v){
+            switch($v['rule_message']){
+                case 'message20':
+                $backofficeList['message20']['nickname'] = $v['nickname']; 
+                $backofficeList['message20']['id'] = $v['id'];  
+                break;
+                case 'message13':
+                $backofficeList['message13']['nickname'] = $v['nickname']; 
+                $backofficeList['message13']['id'] = $v['id'];  
+                break;
+            }
+        }
+
+        $this->view->assign('backofficeList',$backofficeList);
+        // $this->assignconfig('id',$id->id); 
+        // foreach($ids as $k=>$v){
+        //     $id = $v;
+        // }
+        // if ($this->request->isPost())
+        // {
+        //     $params = $this->request->post('row/a');
+        //     $result = $this->model->save(['backoffice_id'=>$params['id']],function($query) use ($id){
+        //         $query->where('id',$id->id);
+        //     }); 
+        //     if($result){
+        //         $this->success();
+        //     }
+        //     else{
+        //         $this->error(); 
+        //     }
+        // }
+        return $this->view->fetch();
+    }
     // public function table2()
     // {
         

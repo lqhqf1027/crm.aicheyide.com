@@ -63,6 +63,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     edit_url: 'customer/customerresource/edit',
                     del_url: 'customer/customerresource/del',
                     multi_url: 'customer/customerresource/multi',
+                    // distribution_url: 'promote/customertabs/distribution',
                     table: 'customer_resource',
                 },
                 toolbar: '#toolbar1',
@@ -103,6 +104,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
+                // 批量分配
+                var table = $("#newCustomer");
+                $(document).on("click", ".btn-selected", function () {
+                    var ids = JSON.stringify(Table.api.selectedids(table));
+                    console.log(ids);
+                    Fast.api.ajax({
+                        url: 'promote/customertabs/distribution',
+                        data: {ids: ids}
+                    }, function (data) { //success
+                        
+                        return false;
+                    }, function () { //error
+                        return false;
+                    });
+                   
+                });
             },
             new_allocation: function () {
                 // 表格2

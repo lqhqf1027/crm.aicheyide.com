@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:110:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\index.html";i:1531966380;s:88:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531881565;s:85:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531881565;s:87:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531881565;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:110:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\index.html";i:1532054995;s:88:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531976707;s:85:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531976707;s:87:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531976707;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -71,8 +71,8 @@
                     <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled <?php echo $auth->check('customer/customerresource/edit')?'':'hide'; ?>" title="<?php echo __('Edit'); ?>" ><i class="fa fa-pencil"></i> <?php echo __('Edit'); ?></a>
                     <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled <?php echo $auth->check('customer/customerresource/del')?'':'hide'; ?>" title="<?php echo __('Delete'); ?>" ><i class="fa fa-trash"></i> <?php echo __('Delete'); ?></a>
                     <a href="javascript:;" class="btn btn-danger btn-import <?php echo $auth->check('customer/customerresource/import')?'':'hide'; ?>" title="<?php echo __('Import'); ?>" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> <?php echo __('Import'); ?></a>
-                    <a class="btn btn-info btn-multi btn-disabled disabled" href="javascript:;" ><i class="fa fa-eye"></i> <?php echo __('Distribution'); ?></a>
-                   
+                    <!-- <a href="javascript:;" class="btn btn-info btn-multi btn-disabled disabled btn-selected" title="<?php echo __('Distribution'); ?>" data-params="distribution"><i class="fa fa-eye"></i> <?php echo __('Distribution'); ?></a> -->
+                    <a class="btn btn-info btn-disabled disabled btn-selected" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
                 </div>
                 <!-- <table id="table1" class="table table-striped table-bordered table-hover" width="100%">
                 </table> -->

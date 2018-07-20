@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:108:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\general\attachment\index.html";i:1531881565;s:88:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531881565;s:85:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531881565;s:87:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531881565;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:117:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\distribution.html";i:1532052568;s:88:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531976707;s:85:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531976707;s:87:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531976707;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -50,25 +50,28 @@
                             <!-- END RIBBON -->
                             <?php endif; ?>
                             <div class="content">
-                                <div class="panel panel-default panel-intro">
-    <?php echo build_heading(); ?>
-
-    <div class="panel-body">
-        <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade active in" id="one">
-                <div class="widget-body no-padding">
-                    <div id="toolbar" class="toolbar">
-                        <?php echo build_toolbar(); ?>
-                    </div>
-                    <table id="table" class="table table-striped table-bordered table-hover" width="100%">
-                    </table>
+                                <form id="distribution-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" data-area='["600px","400px"]'>
+    
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2"><?php echo __('选择内勤人员'); ?>:</label>
+        <div class="col-xs-12 col-sm-8">
+           
+            <div class="radio">
+                <?php foreach($backofficeList as $k=>$v): ?>
+                <label ><input name="row[id]" type="radio" value="<?php echo $v['id']; ?>" checked /> <?php echo $v['nickname']; ?></label> 
+                <?php endforeach; ?>
                 </div>
-            </div>
 
         </div>
     </div>
-</div>
-
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed "><?php echo __('OK'); ?></button>
+            <button type="reset" class="btn btn-default btn-embossed"><?php echo __('Reset'); ?></button>
+        </div>
+    </div>
+</form>
                             </div>
                         </div>
                     </div>

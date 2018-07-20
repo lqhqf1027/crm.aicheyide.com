@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:104:"D:\phpStudy\WWW\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\dstribution.html";i:1531891592;s:76:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1529910104;s:73:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1529910104;s:75:"D:\phpStudy\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1529910104;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:113:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\example\bootstraptable\detail.html";i:1531976707;s:88:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531976707;s:85:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531976707;s:87:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531976707;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -50,30 +50,38 @@
                             <!-- END RIBBON -->
                             <?php endif; ?>
                             <div class="content">
-                                <form id="dstribution-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" data-area='["600px","400px"]'>
-    
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2"><?php echo __('选择内勤人员'); ?>:</label>
-        <div class="col-xs-12 col-sm-8">
-           
- 
-            <div class="radio">
-                <?php foreach($backofficeList as $k=>$v): ?>
-                <label ><input name="row[id]" type="radio" value="<?php echo $v['id']; ?>" checked /> <?php echo $v['nickname']; ?></label> 
-                <?php endforeach; ?>
+                                <table class="table table-striped">
+    <thead>
+        <tr>
+            <th><?php echo __('Title'); ?></th>
+            <th><?php echo __('Content'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if(is_array($row) || $row instanceof \think\Collection || $row instanceof \think\Paginator): $i = 0; $__LIST__ = $row;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+        <tr>
+            <td><?php echo $key; ?></td>
+            <td><?php echo $vo; ?></td>
+        </tr>
+        <?php endforeach; endif; else: echo "" ;endif; if(\think\Request::instance()->get('dialog')): ?>
+        <tr>
+            <td>回传数据</td>
+            <td>
+                <div class="input-group">
+                    <input name="callback" class="form-control" value="test" />
+                    <span class="input-group-btn"><a href="javascript:;" class="btn btn-success btn-callback" >回传数据</a></span>
                 </div>
- 
-
-        </div>
+            </td>
+        </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+<div class="hide layer-footer">
+    <label class="control-label col-xs-12 col-sm-2"></label>
+    <div class="col-xs-12 col-sm-8">
+        <button type="reset" class="btn btn-primary btn-embossed btn-close" onclick="Layer.closeAll();"><?php echo __('Close'); ?></button>
     </div>
-    <div class="form-group layer-footer">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed "><?php echo __('OK'); ?></button>
-            <button type="reset" class="btn btn-default btn-embossed"><?php echo __('Reset'); ?></button>
-        </div>
-    </div>
-</form>
+</div>
                             </div>
                         </div>
                     </div>

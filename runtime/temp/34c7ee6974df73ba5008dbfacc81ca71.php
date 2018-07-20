@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:102:"D:\wamp64\www\crm.aicheyide.com\public/../application/admin\view\promote\customertabs\dstribution.html";i:1531822932;s:74:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531717379;s:71:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531717379;s:73:"D:\wamp64\www\crm.aicheyide.com\application\admin\view\common\script.html";i:1531717379;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:4:{s:108:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\example\multitable\index.html";i:1531976707;s:88:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\layout\default.html";i:1531976707;s:85:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\meta.html";i:1531976707;s:87:"D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\view\common\script.html";i:1531976707;}*/ ?>
 <!DOCTYPE html>
 <html lang="<?php echo $config['language']; ?>">
     <head>
@@ -50,28 +50,33 @@
                             <!-- END RIBBON -->
                             <?php endif; ?>
                             <div class="content">
-                                <form id="dstribution-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" data-area='["600px","400px"]'>
-    
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2"><?php echo __('选择内勤人员'); ?>:</label>
-        <div class="col-xs-12 col-sm-8">
-           
-            <div class="radio">
-                <?php foreach($backofficeList as $k=>$v): ?>
-                <label ><input name="row[id]" type="radio" value="<?php echo $v['id']; ?>" checked /> <?php echo $v['nickname']; ?></label> 
-                <?php endforeach; ?>
+                                <div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>多表格（Multitable）</em>用于展示在一个页面展示多个表格数据,并且每次切换时刷新</div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#first" data-toggle="tab">表格1</a></li>
+            <li><a href="#second" data-toggle="tab">表格2</a></li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="first">
+                <div id="toolbar1" class="toolbar">
+                    <?php echo build_toolbar('refresh'); ?>
                 </div>
-
+                <table id="table1" class="table table-striped table-bordered table-hover" width="100%">
+                </table>
+            </div>
+            <div class="tab-pane fade" id="second">
+                <div id="toolbar2" class="toolbar">
+                    <?php echo build_toolbar('refresh'); ?>
+                </div>
+                <table id="table2" class="table table-striped table-bordered table-hover" width="100%">
+                </table>
+            </div>
         </div>
     </div>
-    <div class="form-group layer-footer">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed "><?php echo __('OK'); ?></button>
-            <button type="reset" class="btn btn-default btn-embossed"><?php echo __('Reset'); ?></button>
-        </div>
-    </div>
-</form>
+</div>
                             </div>
                         </div>
                     </div>
