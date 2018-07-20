@@ -128,7 +128,7 @@ class Wechat extends  Controller{
             $insert_user = Db::name('wechat_user')->insert($data);
             if($insert_user){
                 session('MEMBER',$res);
-                die('操作成功');
+                die('<h2 style="font-size:40px;padding-top:50%;text-align:center;color:green">授权操作成功</h2>');
             }else{
                 $this->error('添加失败');
             } 

@@ -280,8 +280,8 @@ return [
         'api_url'             => 'https://api.fastadmin.net',
     ],
     'wechat'                =>[
-        'APPID'=>'wx3b2ff8ef5b4b0cde',
-        'APPSECRET'=>'1dfdcffcdd1f4a802b2be1ead9fe144e'
+        'APPID'=>'wx1652e82587881bf1',
+        'APPSECRET'=>'f32dc3059381d77379d80c5e6ee12a38'
     ]
 
 ];
