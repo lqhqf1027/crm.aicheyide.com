@@ -99,7 +99,7 @@ class Backend extends Controller
      * 表示注释或字段名
      */
     protected $importHeadType = 'comment';
-
+   
     /**
      * 引入后台控制器的traits
      */
@@ -108,6 +108,7 @@ class Backend extends Controller
     public function _initialize()
     {
         $modulename = $this->request->module();
+         
         $controllername = strtolower($this->request->controller());
         $actionname = strtolower($this->request->action());
 

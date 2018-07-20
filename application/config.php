@@ -279,4 +279,9 @@ return [
         //API接口地址
         'api_url'             => 'https://api.fastadmin.net',
     ],
+    'wechat'                =>[
+        'APPID'=>'wx3b2ff8ef5b4b0cde',
+        'APPSECRET'=>'1dfdcffcdd1f4a802b2be1ead9fe144e'
+    ]
+
 ];
