@@ -8,7 +8,7 @@ use think\Controller;
 use think\Hook;
 use think\Lang;
 use think\Session;
-
+use think\Cache;
 /**
  * 后台控制器基类
  */
@@ -92,6 +92,14 @@ class Backend extends Controller
      * Selectpage可显示的字段
      */
     protected $selectpageFields = '*';
+    /**
+     * 微信appid
+     */
+    protected $appid=null;
+    /**
+     * 微信secret
+     */
+    protected $secret = null;
 
     /**
      * 导入文件首行类型
@@ -100,6 +108,7 @@ class Backend extends Controller
      */
     protected $importHeadType = 'comment';
  
+     
     /**
      * 引入后台控制器的traits
      */
@@ -108,12 +117,28 @@ class Backend extends Controller
     public function _initialize()
     {
 
-        //判断是否是手机访问公众号授权
-        if(ismobile()){
-           
-
-        }
-
+        $this->appid = Config::get('wechat')['APPID'];
+        $this->secret = Config::get('wechat')['APPSECRET'];
+        //判断是否有token
+  
+        $token  = Cache::get('Token');
+        
+        if(!$token['access_token'] || $token['expires_in'] <= time()){  
+          
+        
+            $rslt  = gets("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$this->appid}&secret={$this->secret}");
+            if($rslt){
+                $accessArr = array(
+                    'access_token'=>$rslt['access_token'],
+                    'expires_in'=>time()+$rslt['expires_in']-200
+                );
+                Cache::set('Token',$accessArr) ;
+                $token = $rslt;
+            }
+            
+            
+        } 
+       
         $modulename = $this->request->module();
          
         $controllername = strtolower($this->request->controller());

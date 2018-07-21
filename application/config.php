@@ -55,7 +55,7 @@ return [
     // | 模块设置
     // +----------------------------------------------------------------------
     // 默认模块名
-    'default_module'         => 'index',
+    'default_module'         => 'admin',
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名
@@ -140,7 +140,7 @@ return [
         '__CDN__'    => '',
     ],
     //关闭缓存
-    'No_CACHE_RUNTIME'=>true,
+    // 'No_CACHE_RUNTIME'=>true,
 
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'dispatch_jump.tpl',
