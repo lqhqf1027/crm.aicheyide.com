@@ -60,7 +60,7 @@ class Wechat extends  Controller{
         }
     }
     /*微信toke*/
-    public function wxtoke()
+    public function wxtoken()
     {
          
        
@@ -109,7 +109,7 @@ class Wechat extends  Controller{
         $this->appid = Config::get('wechat')['APPID'];
         $this->secret = Config::get('wechat')['APPSECRET'];
         $code = $_GET['code'] ; 
-
+        
         
         ##获取网页授权的access_token 和openid
         $rslt  = gets("https://api.weixin.qq.com/sns/oauth2/access_token?appid={$this->appid}&secret={$this->secret}&code={$code}&grant_type=authorization_code");
@@ -124,21 +124,27 @@ class Wechat extends  Controller{
         $data['province'] = $user['province'];
         $data['headimgurl'] = $user['headimgurl'];
         $res = Db::name('wechat_user')->where(['openid'=>$user['openid']])->find();
+
         if(empty($res)){
             $insert_user = Db::name('wechat_user')->insert($data);
             if($insert_user){
                 session('MEMBER',$res);
-                die('操作成功');
+                die('<h2 style="font-size:40px;padding-top:50%;text-align:center;color:green">授权操作成功</h2>');
             }else{
                 $this->error('添加失败');
             } 
              
         }else{
+            
             session('MEMBER',$res);
             
             // pr($res['id']);die;
             $update_user = Db::name('wechat_user')->where(['id'=>$res['id']])->update($data);
-            $update_user==0?$this->redirect('Index/index/index'):$this->redirect('Index/index/index');;
+            if($update_user){
+                die('<h2 style="font-size:40px;padding-top:50%;text-align:center;">你已授权过了，无需再授权！</h2>');
+            }
+            die;
+            // $update_user==0?$this->redirect('Index/index/index'):$this->redirect('Index/index/index');;
                 
             
          

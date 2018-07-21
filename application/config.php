@@ -55,7 +55,7 @@ return [
     // | 模块设置
     // +----------------------------------------------------------------------
     // 默认模块名
-    'default_module'         => 'index',
+    'default_module'         => 'admin',
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名
@@ -140,7 +140,7 @@ return [
         '__CDN__'    => '',
     ],
     //关闭缓存
-    'No_CACHE_RUNTIME'=>true,
+    // 'No_CACHE_RUNTIME'=>true,
 
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'dispatch_jump.tpl',
@@ -280,8 +280,8 @@ return [
         'api_url'             => 'https://api.fastadmin.net',
     ],
     'wechat'                =>[
-        'APPID'=>'wx3b2ff8ef5b4b0cde',
-        'APPSECRET'=>'1dfdcffcdd1f4a802b2be1ead9fe144e'
+        'APPID'=>'wx1652e82587881bf1',
+        'APPSECRET'=>'f32dc3059381d77379d80c5e6ee12a38'
     ]
 
 ];

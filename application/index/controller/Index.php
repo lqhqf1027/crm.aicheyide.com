@@ -19,6 +19,10 @@ class Index extends Frontend
 
     public function index()
     {
+
+        
+        echo '<h2 style="font-size:40px;text-align:center;">首页暂未开放！</h2>';
+        die;
         return $this->view->fetch();
     }
 
