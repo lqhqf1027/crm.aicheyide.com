@@ -36,30 +36,45 @@ class Wechatuser extends Backend
     } 
     public function index()
     { 
-        // dump( Cache::get('Token'));die;
          
-        $data = Cache::get('wechat_user_info');
-        if(!$data){
-            self::getUserInfo();
-            dump(Cache::get('wechat_user_info'));die;
+        
+        // dump(Cache::get('wechat_user_info'));die;
+        $newUser = array();
+        foreach(Cache::get('wechat_user_info') as $key=>$value){
+            if(!empty($value['tagid_list'])){
+                $newUser[]=$value;
+                // echo $value['remark'];
+            } 
+        }
+        pr($newUser);
+        die;
+        // Cache::rm('wechat_user_info');die;
+        // $data = Cache::rm('wechat_user_info');
+
+        // if(!$data){
             
-        }else{
-            $user = Cache::get('wechat_user_info');
-            foreach($user as $key=>$value){
-                // $user[$key]['nickname'] = htmlspecialchars($value['nickname']);
-                $user[$key]['nickname'] = json_decode($nickname);
-                unset($user[$key]['nickname']);
-                // return $text;
-            }
-            // dump($user );die;
+        //     self::getUserInfo();
+           
+        //     dump(Cache::get('wechat_user_info'));die;
             
-           return  $this->model->allowField(true)->saveAll($user)?1:0;
+        // }else{
+           
+        //     $user = Cache::get('wechat_user_info');
+        //     foreach($user as $key=>$value){
+        //         $user[$key]['nickname'] = base64_encode($value['nickname']);
+        //         // $user[$key]['nickname'] = json_decode($nickname);
+        //         // unset($user[$key]['nickname']);
+        //         // return $text;
+        //     }
+        //     // dump($user );die;
+            
+        //    return  $this->model->allowField(true)->saveAll($user)?1:0;
              
 
-        }
+        // }
         
         //判断是否有新用户关注
-
+        // collection($this->selWechatUser())->toArray()
 
         //设置过滤方法
         $this->request->filter(['strip_tags']);
@@ -79,7 +94,12 @@ class Wechatuser extends Backend
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
+            
+            foreach($list as $k=>$v){
+                //base64解码
 
+                $list[$k]['nickname'] =base64_decode($v['nickname']);
+            }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
 
@@ -100,19 +120,31 @@ class Wechatuser extends Backend
     }
     //根据openid获取用户信息,批量获取
     public static function getUserInfo(){ 
+
         $user = array();
-        $token = self::$token;
+        $newUser = array();
         $openid = self::getOpenid();
+        $token = self::$token;
         foreach($openid as $k=>$v){
             $oid = $v['openid'];
-            $user[] = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$oid}&lang=zh_CN"); 
-        }
-    
-        $userCache = Cache::set('wechat_user_info',$user);
-        return Cache::get('wechat_user_info');
+            $user[] = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$oid}&lang=zh_CN");  
+        } 
+      
+        Cache::set('wechat_user_info',$user);
+
+        return Cache::get('wechat_user_info'); 
         // return posts("https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token={$token}",self::getOpenid());
         // return gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$openid}&lang=zh_CN");
    }
+    //获取wechatuser表的数据  subscribe=>1为已关注的用户
+    public  function selWechatUser(){
+            $user =  $this->model::all(['subscribe'=>1]);
+            foreach($user as $k=>$v){
+                //base64转码
+                $user[$k]['nickname'] =base64_decode($v['nickname']);
+            }
+            return $user;
+    }
     
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法

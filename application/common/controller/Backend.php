@@ -120,23 +120,19 @@ class Backend extends Controller
         $this->appid = Config::get('wechat')['APPID'];
         $this->secret = Config::get('wechat')['APPSECRET'];
         //判断是否有token
-       
+    //    Cache::rm('Token');die;
         $token  = Cache::get('Token');
         
         if(!$token['access_token'] || $token['expires_in'] <= time()){  
-          
-        
             $rslt  = gets("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$this->appid}&secret={$this->secret}");
-            if($rslt){
+            if($rslt){ 
                 $accessArr = array(
                     'access_token'=>$rslt['access_token'],
                     'expires_in'=>time()+$rslt['expires_in']-200
                 );
                 Cache::set('Token',$accessArr) ;
-                $token = $rslt;
-            }
-            
-            
+                // $token = $rslt;
+            } 
         } 
        
         $modulename = $this->request->module();

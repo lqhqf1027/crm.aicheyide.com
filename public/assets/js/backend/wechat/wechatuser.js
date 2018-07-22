@@ -29,6 +29,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'subscribe_text', title: __('Subscribe'), operate:false},
                         {field: 'openid', title: __('Openid')},
                         {field: 'nickname', title: __('Nickname')},
+                        {field: 'remark', title: __('Remark')},
                         {field: 'sex', title: __('Sex'), visible:false, searchList: {"0":__('Sex 0'),"1":__('Sex 1'),"2":__('Sex 2')}},
                         {field: 'sex_text', title: __('Sex'), operate:false},
                         {field: 'city', title: __('City')},
