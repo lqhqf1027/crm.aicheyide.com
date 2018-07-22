@@ -120,7 +120,7 @@ class Backend extends Controller
         $this->appid = Config::get('wechat')['APPID'];
         $this->secret = Config::get('wechat')['APPSECRET'];
         //判断是否有token
-  
+       
         $token  = Cache::get('Token');
         
         if(!$token['access_token'] || $token['expires_in'] <= time()){  

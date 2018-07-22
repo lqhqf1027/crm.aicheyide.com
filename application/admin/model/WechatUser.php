@@ -18,15 +18,30 @@ class WechatUser extends Model
     
     // 追加属性
     protected $append = [
-        'sex_text'
+        'subscribe_text',
+        'sex_text',
+        'subscribe_time_text'
     ];
     
 
     
+    public function getSubscribeList()
+    {
+        return ['0' => __('Subscribe 0'),'1' => __('Subscribe 1')];
+    }     
+
     public function getSexList()
     {
-        return ['1' => __('Sex 1')];
+        return ['0' => __('Sex 0'),'1' => __('Sex 1'),'2' => __('Sex 2')];
     }     
+
+
+    public function getSubscribeTextAttr($value, $data)
+    {        
+        $value = $value ? $value : $data['subscribe'];
+        $list = $this->getSubscribeList();
+        return isset($list[$value]) ? $list[$value] : '';
+    }
 
 
     public function getSexTextAttr($value, $data)
@@ -37,6 +52,16 @@ class WechatUser extends Model
     }
 
 
+    public function getSubscribeTimeTextAttr($value, $data)
+    {
+        $value = $value ? $value : $data['subscribe_time'];
+        return is_numeric($value) ? date("Y-m-d H:i:s", $value) : $value;
+    }
+
+    protected function setSubscribeTimeAttr($value)
+    {
+        return $value && !is_numeric($value) ? strtotime($value) : $value;
+    }
 
 
 }
