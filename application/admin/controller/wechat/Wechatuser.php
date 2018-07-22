@@ -35,47 +35,19 @@ class Wechatuser extends Backend
         self::$token= Cache::get('Token')['access_token'];
     } 
     public function index()
-    { 
-         
-        
-        // dump(Cache::get('wechat_user_info'));die;
-        $newUser = array();
-        foreach(Cache::get('wechat_user_info') as $key=>$value){
-            if(!empty($value['tagid_list'])){
-                $newUser[]=$value;
-                // echo $value['remark'];
-            } 
-        }
-        pr($newUser);
-        die;
-        // Cache::rm('wechat_user_info');die;
-        // $data = Cache::rm('wechat_user_info');
-
-        // if(!$data){
-            
-        //     self::getUserInfo();
-           
-        //     dump(Cache::get('wechat_user_info'));die;
-            
-        // }else{
-           
-        //     $user = Cache::get('wechat_user_info');
-        //     foreach($user as $key=>$value){
-        //         $user[$key]['nickname'] = base64_encode($value['nickname']);
-        //         // $user[$key]['nickname'] = json_decode($nickname);
-        //         // unset($user[$key]['nickname']);
-        //         // return $text;
-        //     }
-        //     // dump($user );die;
-            
-        //    return  $this->model->allowField(true)->saveAll($user)?1:0;
-             
-
-        // }
-        
-        //判断是否有新用户关注
-        // collection($this->selWechatUser())->toArray()
-
+    {  
+        // dump(collection($this->selWechatUser())->toArray());die;
+        // $newUser = array();
+        // // dump(self::getUserInfo());die; 
+        // ##(array)  强制转换数组  以防万一 是个空数组 要报错 
+        // foreach((array)Cache::get('wechat_user_info') as $key=>$value){  
+        //     $value['nickname'] = base64_encode($value['nickname']); 
+        //     if(!empty($value['tagid_list'])){   
+        //         $newUser[]=$value;  
+        //     }  
+        // } 
+        // return  $this->model->allowField(true)->saveAll($newUser)?1:0;
+     
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -93,16 +65,12 @@ class Wechatuser extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
-                ->select();
-            
-            foreach($list as $k=>$v){
-                //base64解码
-
-                $list[$k]['nickname'] =base64_decode($v['nickname']);
-            }
+                ->select(); 
             $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
-
+            foreach($list as $k=>$v){
+                $list[$k]['nickname'] = base64_decode($v['nickname']);
+            }
+            $result = array("total" => $total, "rows" => $list); 
             return json($result);
         }
         return $this->view->fetch();
@@ -141,7 +109,7 @@ class Wechatuser extends Backend
             $user =  $this->model::all(['subscribe'=>1]);
             foreach($user as $k=>$v){
                 //base64转码
-                $user[$k]['nickname'] =base64_decode($v['nickname']);
+                $user[$k]['nickname'] =urldecode($v['nickname']);
             }
             return $user;
     }
