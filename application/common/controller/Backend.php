@@ -122,10 +122,10 @@ class Backend extends Controller
         //判断是否有token
        
         $token  = Cache::get('Token');
-        
-        if(!$token['access_token'] || $token['expires_in'] <= time()){  
-          
-        
+
+        if(!$token['access_token'] || $token['expires_in'] <= time()){
+
+
             $rslt  = gets("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$this->appid}&secret={$this->secret}");
             if($rslt){
                 $accessArr = array(
@@ -135,9 +135,9 @@ class Backend extends Controller
                 Cache::set('Token',$accessArr) ;
                 $token = $rslt;
             }
-            
-            
-        } 
+
+
+        }
        
         $modulename = $this->request->module();
          

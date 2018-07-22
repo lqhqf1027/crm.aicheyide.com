@@ -5,6 +5,7 @@ namespace app\admin\controller\backoffice;
 use app\common\controller\Backend;
 
 use think\Db;
+
 ///**
 // *
 // *
@@ -73,30 +74,29 @@ class Custominfotabs extends Backend
         $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
+        if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
+            if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where('backoffice_id',"not null")
-                ->where('backoffice_id',13)
+                ->where('backoffice_id', "not null")
+                ->where('backoffice_id', 13)
+                ->where('sales_id','null')
                 ->order($sort, $order)
                 ->count();
-
 
 
             $list = $this->model
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('backoffice_id',"not null")
-                ->where('backoffice_id',13)
+                ->where('backoffice_id', "not null")
+                ->where('backoffice_id', 13)
+                ->where('sales_id','null')
                 ->limit($offset, $limit)
                 ->select();
 
@@ -123,28 +123,29 @@ class Custominfotabs extends Backend
         $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
+        if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
+            if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where('backoffice_id',"not null")
+                ->where('backoffice_id', "not null")
+                ->where('backoffice_id',13)
+                ->where('sales_id','not null')
                 ->order($sort, $order)
                 ->count();
-
 
 
             $list = $this->model
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('backoffice_id',"not null")
+                ->where('backoffice_id', "not null")
+                ->where('backoffice_id',13)
+                ->where('sales_id','not null')
                 ->limit($offset, $limit)
                 ->select();
 
@@ -164,44 +165,64 @@ class Custominfotabs extends Backend
     //分配客户资源给内勤
     //单个分配
     //内勤  message13=>内勤一部，message20=>内勤二部
-    public function admeasure($ids=NULL){
+    public function admeasure($ids = NULL)
+    {
         $this->model = model('CustomerResource');
         $id = $this->model->get(['id' => $ids]);
 
-        $sale =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
-            $query->where('rule_message','message8')->whereOr('rule_message','message9');
+        $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
+            $query->where('rule_message', 'message8')->whereOr('rule_message', 'message9');
         })->select();
         $saleList = array();
-        foreach($sale as $k=>$v){
-            switch($v['rule_message']){
-                case 'message8':
-                    $saleList['message8']['nickname'] = $v['nickname'];
-                    $saleList['message8']['id'] = $v['id'];
-                    break;
-                case 'message9':
-                    $saleList['message9']['nickname'] = $v['nickname'];
-                    $saleList['message9']['id'] = $v['id'];
-                    break;
+
+        if (count($sale) > 0) {
+
+            $firstCount = 0;
+            $secondCount = 0;
+
+            foreach ($sale as $k => $v) {
+                switch ($v['rule_message']) {
+                    case 'message8':
+                        $saleList['message8'][$firstCount]['nickname'] = $v['nickname'];
+                        $saleList['message8'][$firstCount]['id'] = $v['id'];
+                        $firstCount++;
+                        break;
+                    case 'message9':
+                        $saleList['message9'][$secondCount]['nickname'] = $v['nickname'];
+                        $saleList['message9'][$secondCount]['id'] = $v['id'];
+                        $secondCount++;
+                        break;
+                }
             }
+
         }
 
-        $this->view->assign('',$saleList);
-        $this->assignconfig('id',$id->id);
+        if(empty($saleList['message8'])){
+            $saleList['message8'] = null;
+        }
 
-        if ($this->request->isPost())
-        {
+        if(empty($saleList['message9'])){
+            $saleList['message9'] = null;
+        }
+
+        $this->view->assign('firstSale', $saleList['message8']);
+        $this->view->assign('secondSale', $saleList['message9']);
+
+
+        $this->assignconfig('id', $id->id);
+
+        if ($this->request->isPost()) {
 
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['sales_id'=>$params['id']],function($query) use ($id){
-                $query->where('id',$id->id);
+            $result = $this->model->save(['sales_id' => $params['id']], function ($query) use ($id) {
+                $query->where('id', $id->id);
             });
-            if($result){
+            if ($result) {
                 $this->success();
 
-            }
-            else{
+            } else {
                 $this->error();
             }
         }
@@ -211,7 +232,49 @@ class Custominfotabs extends Backend
     }
 
 
+    public function dstribution($ids = NULL)
+    {
+        $this->model = model('CustomerResource');
+        $id = $this->model->get(['id' => $ids]);
 
+        $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
+            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13');
+        })->select();
+        $backofficeList = array();
+        foreach ($backoffice as $k => $v) {
+            switch ($v['rule_message']) {
+                case 'message20':
+                    $backofficeList['message20']['nickname'] = $v['nickname'];
+                    $backofficeList['message20']['id'] = $v['id'];
+                    break;
+                case 'message13':
+                    $backofficeList['message13']['nickname'] = $v['nickname'];
+                    $backofficeList['message13']['id'] = $v['id'];
+                    break;
+            }
+        }
+
+        $this->view->assign('backofficeList', $backofficeList);
+        $this->assignconfig('id', $id->id);
+
+        if ($this->request->isPost()) {
+
+
+            $params = $this->request->post('row/a');
+            $result = $this->model->save(['backoffice_id' => $params['id']], function ($query) use ($id) {
+                $query->where('id', $id->id);
+            });
+            if ($result) {
+                $this->success();
+
+            } else {
+                $this->error();
+            }
+        }
+
+        return $this->view->fetch();
+
+    }
 
 
 }
