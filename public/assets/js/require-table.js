@@ -357,6 +357,9 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                                 Layer.close(index);
                             }
                         );
+                    },
+                    'click .btn-newCustomer':function () {
+                        layer.msg("12323123132");
                     }
                 }
             },
