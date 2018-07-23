@@ -284,12 +284,12 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['backoffice_id'=>$params['id']],function($query) use ($ids){
+            $result = $this->model->save(['sales_id'=>$params['id']],function($query) use ($ids){
                 $query->where('id', 'in', $ids);
             });
             if($result){
-                //  $this->redirect('newCustomer');
-                $this->success();
+                  $this->redirect('newCustomer');
+//                $this->success();
             }
             else{
 
