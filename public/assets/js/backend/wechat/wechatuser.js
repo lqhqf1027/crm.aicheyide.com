@@ -8,7 +8,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     index_url: 'wechat/wechatuser/index',
                     add_url: 'wechat/wechatuser/add',
                     edit_url: 'wechat/wechatuser/edit',
-                    del_url: 'wechat/wechatuser/del',
+                    // del_url: 'wechat/wechatuser/del',
                     multi_url: 'wechat/wechatuser/multi',
                     table: 'wechat_user',
                 }
@@ -34,16 +34,60 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'sex_text', title: __('Sex'), operate:false},
                         {field: 'city', title: __('City')},
                         {field: 'province', title: __('Province')},
-                        {field: 'headimgurl', title: __('Headimgurl'), formatter: Table.api.formatter.url},
+                        {field: 'headimgurl', title: __('Headimgurl'), formatter: Table.api.formatter.image},
                         {field: 'subscribe_time', title: __('Subscribe_time'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'subscribe_scene', title: __('Subscribe_scene')},
+                        {field: 'subscribe_scene', title: __('Subscribe_scene'),formatter:function(value,row,index){
+                             
+                            switch(value){
+                                case  'ADD_SCENE_SEARCH':
+                                return  value='公众号搜索';
+                                break;
+                                case  'ADD_SCENE_ACCOUNT_MIGRATION':
+                                return  value='公众号迁移';
+                                break;
+                                case  'ADD_SCENE_PROFILE_CARD':
+                                return  value='名片分享'; 
+                                break;
+                                case  'ADD_SCENE_QR_CODE ':
+                                return  value='扫描二维码';
+                                break;
+                                case  'ADD_SCENEPROFILE':
+                                return  value='图文页内名称点击';
+                                break;
+                                case  'ADD_SCENE_PROFILE_ITEM':
+                                return  value='图文页右上角菜单';
+                                break;
+                                case  'ADD_SCENE_PAID':
+                                return  value='支付后关注';
+                                break;
+                                case 'ADD_SCENE_OTHERS':
+                                return  value='其他';
+                                break;
+                            }
+                        }},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
             });
 
+            
+            $(document).on('click','.btn-pull-user',function(){ 
+                Fast.api.ajax({
+                    url:'wechat/wechatuser/pullNewUser' 
+                },function(data,ret){
+                    console.log(data);
+                    console.log(ret.msg);
+                    // return false;
+                },function(data,ret){
+                    console.log(data);
+                    console.log(ret.msg);
+                    // alert(ret);
+                    // return false;
+                })
+            })
             // 为表格绑定事件
             Table.api.bindevent(table);
+
         },
         add: function () {
             Controller.api.bindevent();
