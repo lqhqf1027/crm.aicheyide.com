@@ -36,16 +36,19 @@ class Wechatuser extends Backend
     } 
     public function index()
     {  
+        // Cache::rm('wechat_user_info');die;
         // dump(collection($this->selWechatUser())->toArray());die;
-        // $newUser = array();
-        // // dump(self::getUserInfo());die; 
-        // ##(array)  强制转换数组  以防万一 是个空数组 要报错 
-        // foreach((array)Cache::get('wechat_user_info') as $key=>$value){  
-        //     $value['nickname'] = base64_encode($value['nickname']); 
-        //     if(!empty($value['tagid_list'])){   
-        //         $newUser[]=$value;  
-        //     }  
-        // } 
+        // dump(self::getUserInfo());die; 
+        ##(array)  强制转换数组  以防万一 是个空数组 要报错 
+        $newUser = array();
+        
+        foreach((array)Cache::get('wechat_user_info') as $key=>$value){  
+            $value['nickname'] = base64_encode($value['nickname']); 
+            if(!empty($value['tagid_list'])){   
+                $newUser[]=$value;  
+            }  
+        } 
+        // dump($newUser);die;
         // return  $this->model->allowField(true)->saveAll($newUser)?1:0;
      
         //设置过滤方法
@@ -112,6 +115,18 @@ class Wechatuser extends Backend
                 $user[$k]['nickname'] =urldecode($v['nickname']);
             }
             return $user;
+    }
+
+    //拉取新用户
+    public  function pullNewUser(){
+        if($this->request->isAjax()){
+            //首先判断是否有新员工关注公众号
+            // 
+            $this->error('',null,222); 
+            // return 111;
+            // return 111;
+        }
+    //    $this->success();
     }
     
     /**
