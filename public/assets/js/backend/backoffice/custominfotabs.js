@@ -50,7 +50,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var newCustomer = $("#newCustomer");
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["30%", "30%"]);
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -129,6 +129,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
+
+                // 批量分配
+                $(document).on("click", ".btn-selected", function () {
+                    var ids = Table.api.selectedids(newCustomer);
+                    var url = 'backoffice/custominfotabs/batch?ids='+ids;
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area:['50%','50%'],
+                        callback:function(value){
+
+                        }
+                    };
+                    Fast.api.open(url,'批量分配',options)
+                });
             },
 
 
@@ -209,6 +224,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 为表格2绑定事件
                 Table.api.bindevent(assignedCustomers);
+
+
             },
 
         },
