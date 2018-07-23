@@ -15,5 +15,7 @@ return [
     'Feedback'  =>  '反馈结果',
     'Note'  =>  '备注',
     'Platform.name'  =>  '平台名称',
-    'Distribution'=>'批量分配'
+    'Distribution'=>'批量分配',
+    'Distributsaletime' => '分配给销售时间',
+    'Distributinternaltime' => '分配给内勤时间'
 ];

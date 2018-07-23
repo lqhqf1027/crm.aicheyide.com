@@ -219,7 +219,7 @@ class Custominfotabs extends Backend
 
         $this->view->assign('firstSale', $saleList['message8']);
         $this->view->assign('secondSale', $saleList['message9']);
-        $this->view->assign('user', $this->auth->id);
+
 
 
         $this->assignconfig('id', $id->id);
@@ -229,7 +229,7 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['sales_id' => $params['id']], function ($query) use ($id) {
+            $result = $this->model->save(['sales_id' => $params['id'],''], function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
             if ($result) {

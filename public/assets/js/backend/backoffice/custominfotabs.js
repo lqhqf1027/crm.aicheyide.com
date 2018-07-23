@@ -34,7 +34,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // console.log(data);
                 // Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
+
 
                 Toastr.success("失败");
 
@@ -46,6 +46,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         batch:function(){
+
 
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
@@ -110,6 +111,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'distributinternaltime', title: __('Distributinternaltime'), operate: false,formatter:Table.api.formatter.datetime},
                             // {
                             //     field: 'createtime',
                             //     title: __('Createtime'),
