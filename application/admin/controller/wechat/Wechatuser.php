@@ -34,20 +34,66 @@ class Wechatuser extends Backend
 
         self::$token= Cache::get('Token')['access_token'];
     } 
+
+
+    function https_request($url, $data = null,$time_out=60,$out_level="s",$headers=array())
+    { 
+
+        
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_NOSIGNAL, 1);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if (!empty($data)){
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        if($out_level=="s")
+        {
+            //超时以秒设置
+            curl_setopt($curl, CURLOPT_TIMEOUT,$time_out);//设置超时时间
+        }elseif ($out_level=="ms") 
+        {
+            curl_setopt($curl, CURLOPT_TIMEOUT_MS,$time_out);  //超时毫秒，curl 7.16.2中被加入。从PHP 5.2.3起可使用 
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        if($headers)
+        {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);//如果有header头 就发送header头信息
+        }
+        $output = curl_exec($curl);
+        curl_close($curl);
+        return json_decode($output);
+    }
+
     public function index()
     {  
         // Cache::rm('wechat_user_info');die;
         // dump(collection($this->selWechatUser())->toArray());die;
-        // dump(self::getUserInfo());die; 
+        // dump(self::getOpenid());die; 
+        $token = self::$token;
+        $openid = self::getOpenid();
+        $url = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=".$token;
+      
+        foreach($openid as $value){ 
+
+            $a =  $this->https_request($url,json_encode($value)); 
+            $user [] = $a;
+          sleep(2);
+        }
+       
+    
+pr( $user);exit;
         ##(array)  强制转换数组  以防万一 是个空数组 要报错 
-        $newUser = array();
+        // $newUser = array();
         
-        foreach((array)Cache::get('wechat_user_info') as $key=>$value){  
-            $value['nickname'] = base64_encode($value['nickname']); 
-            if(!empty($value['tagid_list'])){   
-                $newUser[]=$value;  
-            }  
-        } 
+        // foreach((array)Cache::get('wechat_user_info') as $key=>$value){  
+        //     $value['nickname'] = base64_encode($value['nickname']); 
+        //     if(!empty($value['tagid_list'])){   
+        //         $newUser[]=$value;  
+        //     }  
+        // } 
         // dump($newUser);die;
         // return  $this->model->allowField(true)->saveAll($newUser)?1:0;
      
@@ -83,9 +129,13 @@ class Wechatuser extends Backend
         $userlist = array();
        
         $result = gets("https://api.weixin.qq.com/cgi-bin/user/get?access_token=".self::$token)['data']['openid'];
-        foreach($result as $k=>$v){
-            $userlist[]['openid'] = $v;
-            // $userlist['userlist'][]['lang']="zh_CN";
+        $num = 0;
+        foreach($result as $k=>$v){  
+            if($k%99==0){ 
+                $num = $num+1;
+            }
+            $userlist[$num]['user_list'][$k]['openid'] = $v;
+            $userlist[$num]['user_list'][$k]['lang']="zh_CN";
         }
         return $userlist;
     }
@@ -94,18 +144,28 @@ class Wechatuser extends Backend
 
         $user = array();
         $newUser = array();
-        $openid = self::getOpenid();
+        #这里是所有的opendi?en 
+        return $openid = self::getOpenid();
+
+
+        //pr($openid);exit;
+
+
         $token = self::$token;
         foreach($openid as $k=>$v){
             $oid = $v['openid'];
+
+            //批量接口   批量获取是这个？。。。噢，，不对，是
             $user[] = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$oid}&lang=zh_CN");  
         } 
       
         Cache::set('wechat_user_info',$user);
 
         return Cache::get('wechat_user_info'); 
-        // return posts("https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token={$token}",self::getOpenid());
-        // return gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$openid}&lang=zh_CN");
+
+        ##这个接口？
+        // return posts("https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token={$token}",self::getOpenid()); //批量获取用户接口
+        // return gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$openid}&lang=zh_CN");//单个获取用户接口
    }
     //获取wechatuser表的数据  subscribe=>1为已关注的用户
     public  function selWechatUser(){
