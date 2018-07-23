@@ -6,6 +6,7 @@ return [
     'Subscribe 1'  =>  '已关注',
     'Openid'  =>  'openid',
     'Nickname'  =>  '昵称',
+    'Remark'  =>  '备注姓名',
     'Sex'  =>  '性别',
     'Sex 0'  =>  '未知',
     'Sex 1'  =>  '男',

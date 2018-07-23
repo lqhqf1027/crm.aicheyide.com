@@ -35,32 +35,19 @@ class Wechatuser extends Backend
         self::$token= Cache::get('Token')['access_token'];
     } 
     public function index()
-    { 
-        // dump( Cache::get('Token'));die;
-         
-        $data = Cache::get('wechat_user_info');
-        if(!$data){
-            self::getUserInfo();
-            dump(Cache::get('wechat_user_info'));die;
-            
-        }else{
-            $user = Cache::get('wechat_user_info');
-            foreach($user as $key=>$value){
-                // $user[$key]['nickname'] = htmlspecialchars($value['nickname']);
-                $user[$key]['nickname'] = json_decode($nickname);
-                unset($user[$key]['nickname']);
-                // return $text;
-            }
-            // dump($user );die;
-            
-           return  $this->model->allowField(true)->saveAll($user)?1:0;
-             
-
-        }
-        
-        //判断是否有新用户关注
-
-
+    {  
+        // dump(collection($this->selWechatUser())->toArray());die;
+        // $newUser = array();
+        // // dump(self::getUserInfo());die; 
+        // ##(array)  强制转换数组  以防万一 是个空数组 要报错 
+        // foreach((array)Cache::get('wechat_user_info') as $key=>$value){  
+        //     $value['nickname'] = base64_encode($value['nickname']); 
+        //     if(!empty($value['tagid_list'])){   
+        //         $newUser[]=$value;  
+        //     }  
+        // } 
+        // return  $this->model->allowField(true)->saveAll($newUser)?1:0;
+     
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -78,11 +65,12 @@ class Wechatuser extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
-                ->select();
-
+                ->select(); 
             $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
-
+            foreach($list as $k=>$v){
+                $list[$k]['nickname'] = base64_decode($v['nickname']);
+            }
+            $result = array("total" => $total, "rows" => $list); 
             return json($result);
         }
         return $this->view->fetch();
@@ -100,19 +88,31 @@ class Wechatuser extends Backend
     }
     //根据openid获取用户信息,批量获取
     public static function getUserInfo(){ 
+
         $user = array();
-        $token = self::$token;
+        $newUser = array();
         $openid = self::getOpenid();
+        $token = self::$token;
         foreach($openid as $k=>$v){
             $oid = $v['openid'];
-            $user[] = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$oid}&lang=zh_CN"); 
-        }
-    
-        $userCache = Cache::set('wechat_user_info',$user);
-        return Cache::get('wechat_user_info');
+            $user[] = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$oid}&lang=zh_CN");  
+        } 
+      
+        Cache::set('wechat_user_info',$user);
+
+        return Cache::get('wechat_user_info'); 
         // return posts("https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token={$token}",self::getOpenid());
         // return gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$openid}&lang=zh_CN");
    }
+    //获取wechatuser表的数据  subscribe=>1为已关注的用户
+    public  function selWechatUser(){
+            $user =  $this->model::all(['subscribe'=>1]);
+            foreach($user as $k=>$v){
+                //base64转码
+                $user[$k]['nickname'] =urldecode($v['nickname']);
+            }
+            return $user;
+    }
     
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
