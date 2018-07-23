@@ -118,8 +118,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         error: function (data, ret) {
 
                                         }
-                                    }
+                                    },
+
                                 ],
+
 
                                 events: Table.api.events.operate,
                                 formatter: Controller.api.formatter.operate
@@ -133,16 +135,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 批量分配
                 $(document).on("click", ".btn-selected", function () {
                     var ids = Table.api.selectedids(newCustomer);
-                    var url = 'backoffice/custominfotabs/batch?ids='+ids;
+                    var url = 'backoffice/custominfotabs/batch?ids=' + ids;
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
-                        area:['50%','50%'],
-                        callback:function(value){
+                        area: ['50%', '50%'],
+                        callback: function (value) {
 
                         }
                     };
-                    Fast.api.open(url,'批量分配',options)
+                    Fast.api.open(url, '批量分配', options)
                 });
             },
 
