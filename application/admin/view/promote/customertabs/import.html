@@ -1,18 +1,40 @@
 <form id="import-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="" data-area='["600px","400px"]'>
     
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('选择模板下载并导入')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('导入')}:</label>
         <div class="col-xs-12 col-sm-8">
-           
             
+            <a href="download" class="btn btn-success btn-embossed btn-download" title="{:__('下载导入模板')}"><i class="fa fa-download"></i> {:__('下载导入模板')}</a>
+            <!-- <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('导入客户信息')}</a> -->
+            <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('导入客户信息')}</a>
 
         </div>
-    </div>
-    <div class="form-group layer-footer">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed ">{:__('OK')}</button>
-            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('导入客户信息')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <input id="c-attachfile" data-rule="required" class="form-control" size="50" name="row[attachfile]" type="text" value="">
+                    <div class="input-group-addon no-border no-padding">
+                        <span><button type="button" id="plupload-attachfile" class="btn btn-danger plupload" data-input-id="c-attachfile" data-multiple="false"><i class="fa fa-upload"></i> {:__('导入客户信息')}</button></span>
+                        
+                    </div>
+                    <span class="msg-box n-right" for="c-attachfile"></span>
+                </div>
+            </div>
         </div>
     </div>
+    <!-- <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('导入客户信息')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-attachfile" data-rule="required" class="form-control" size="50" name="row[attachfile]" type="text" value="">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-attachfile" class="btn btn-danger plupload" data-input-id="c-attachfile" data-multiple="false"><i class="fa fa-upload"></i> {:__('导入客户信息')}</button></span>
+                    
+                </div>
+                <span class="msg-box n-right" for="c-attachfile"></span>
+            </div>
+            
+        </div>
+    </div> -->
 </form>

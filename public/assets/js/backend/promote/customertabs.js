@@ -140,12 +140,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         callback:function(value){
                                                         
                         }
-                    };
+                    }
                     Fast.api.open(url,'批量分配',options)
-                });
+                })
                 //导入
-                $(document).on("click", ".btn-import", function () {
-
+                $(document).on("click", ".import", function () {   
+                    var ids = Table.api.selectedids(newCustomer);
+                    var url = 'promote/customertabs/import';
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area:['30%','30%'],
+                        callback:function(value){
+                                                        
+                        }
+                    }
+                    Fast.api.open(url,'导入',options)
                 })
             },
             new_allocation: function () {

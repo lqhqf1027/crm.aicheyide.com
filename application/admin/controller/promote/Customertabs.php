@@ -260,48 +260,65 @@ class Customertabs extends Backend
         return $this->view->fetch();
     }
     //导入
+    //自定义弹出框
     public function import(){
-        
+
         return $this->view->fetch();
     }
-    // public function import () {
 
-    //     if (Input::method() === 'POST') {
-
-    //         $filePath = '.' . Input::get('excelfile');
-
-    //         Excel::load($filePath, function($reader) {
-                
-    //             $data = $reader->getSheet(0)->toArray();
-
-    //             // var_dump($data);
-                  
-    //             foreach ($data as $key => $value) {
-    //                 if ($key == '0') {
-    //                     continue;
-    //                 }
-    //                 else {
-    //                     $cellData[] = [
-    //                         'question'   => $value[0],
-    //                         'paper_id'   => Input::get('paper_id'),
-    //                         'score'      => $value[3],
-    //                         'options'    => $value[1],
-    //                         'answer'     => $value[2],
-    //                         'created_at' => date('Y-m-d H:i:s')
-    //                     ];
-    //                 }
-    //             }
-    //             $result = Question::insert($cellData);
-
-    //             echo $result?'1':'0';
-    //         });
-    //     }
-    //     else {
-    //         $paper = Paper::all();
-    //         return view('admin.question.import', compact('paper'));
-    //     }
-
+    //下载导入模板
+    public function download(){
+        // 新建一个excel对象 大神已经加入了PHPExcel 不用引了 直接用！
+        $objPHPExcel = new \PHPExcel();  //在vendor目录下 \不能少 否则报错
+        /*设置表头*/
+        $objPHPExcel->getActiveSheet()->mergeCells('A1:P1');//合并第一行的单元格
+        $objPHPExcel->getActiveSheet()->mergeCells('A2:P2');//合并第二行的单元格
+        $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', '客户信息导入模板表');//标题
+        $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);      // 第一行的默认高度
         
+        $myrow = 3;/*表头所需要行数的变量，方便以后修改*/
+        /*表头数据填充*/
+        $objPHPExcel->getActiveSheet()->getRowDimension('3')->setRowHeight(30);/*设置行高*/
+        $objPHPExcel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息 
+            ->setCellValue('A' . $myrow, 'id')
+            ->setCellValue('B' . $myrow, '所属平台')
+            ->setCellValue('C' . $myrow, '姓名')
+            ->setCellValue('D' . $myrow, '联系电话')
+            ->setCellValue('E' . $myrow, '年龄')
+            ->setCellValue('F' . $myrow, '性别');
+       
+        //浏览器交互 导出
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="客户信息导入模板表.xlsx"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $result = $objWriter->save('php://output');
+        if ($result) {
+
+            $this->success();
+        }
+        else {
+
+            $this->error();
+        }
+    }
+
+    //导入客户信息
+    // public function import(){
+
+    //    var_dump(123);
+    //    die;
+    // }
+       
     // }
     // public function table2()
     // {
