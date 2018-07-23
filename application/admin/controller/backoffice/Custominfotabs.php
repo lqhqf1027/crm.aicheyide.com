@@ -46,7 +46,7 @@ class Custominfotabs extends Backend
 {
 
     protected $model = null;
-
+//    protected $multiFields = 'batch';
     public function _initialize()
     {
         parent::_initialize();
@@ -83,20 +83,26 @@ class Custominfotabs extends Backend
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where('backoffice_id', "not null")
-                ->where('backoffice_id', 13)
-                ->where('sales_id','null')
+                ->where(function ($query) {
+                    $query->where('backoffice_id', "not null")
+                        ->where('backoffice_id', 13)
+                        //->where('backoffice_id',$this->auth->id)
+                        ->where('sales_id', 'null');
+
+                })
                 ->order($sort, $order)
                 ->count();
-
 
             $list = $this->model
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('backoffice_id', "not null")
-                ->where('backoffice_id', 13)
-                ->where('sales_id','null')
+                ->where(function ($query) {
+                    $query->where('backoffice_id', "not null")
+                        ->where('backoffice_id', 13)
+                        //->where('backoffice_id', $this->auth->id)
+                        ->where('sales_id', 'null');
+                })
                 ->limit($offset, $limit)
                 ->select();
 
@@ -132,9 +138,12 @@ class Custominfotabs extends Backend
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where('backoffice_id', "not null")
-                ->where('backoffice_id',13)
-                ->where('sales_id','not null')
+                ->where(function ($query) {
+                    $query->where('backoffice_id', "not null")
+                        ->where('backoffice_id', 13)
+                        //->where('backoffice_id', $this->auth->id)
+                        ->where('sales_id', 'not null');
+                })
                 ->order($sort, $order)
                 ->count();
 
@@ -143,9 +152,12 @@ class Custominfotabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('backoffice_id', "not null")
-                ->where('backoffice_id',13)
-                ->where('sales_id','not null')
+                ->where(function ($query){
+                    $query->where('backoffice_id', "not null")
+                        ->where('backoffice_id', 13)
+                        //->where('backoffice_id', $this->auth->id)
+                        ->where('sales_id', 'not null');
+                })
                 ->limit($offset, $limit)
                 ->select();
 
@@ -197,16 +209,17 @@ class Custominfotabs extends Backend
 
         }
 
-        if(empty($saleList['message8'])){
+        if (empty($saleList['message8'])) {
             $saleList['message8'] = null;
         }
 
-        if(empty($saleList['message9'])){
+        if (empty($saleList['message9'])) {
             $saleList['message9'] = null;
         }
 
         $this->view->assign('firstSale', $saleList['message8']);
         $this->view->assign('secondSale', $saleList['message9']);
+        $this->view->assign('user', $this->auth->id);
 
 
         $this->assignconfig('id', $id->id);
@@ -235,11 +248,12 @@ class Custominfotabs extends Backend
     //分配客户资源给销售
     //批量分配
     //销售  message8=>销售一部，message9=>销售二部
-    public function batch($ids=null){
+    public function batch($ids = null)
+    {
 
 
         $this->model = model('CustomerResource');
-        // $id = $this->model->get(['id' => $ids]);
+
 
         $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
             $query->where('rule_message', 'message8')->whereOr('rule_message', 'message9');
@@ -268,39 +282,34 @@ class Custominfotabs extends Backend
 
         }
 
-        if(empty($saleList['message8'])){
+        if (empty($saleList['message8'])) {
             $saleList['message8'] = null;
         }
 
-        if(empty($saleList['message9'])){
+        if (empty($saleList['message9'])) {
             $saleList['message9'] = null;
         }
 
         $this->view->assign('firstSale', $saleList['message8']);
         $this->view->assign('secondSale', $saleList['message9']);
 
-        if ($this->request->isPost())
-        {
+        if ($this->request->isPost()) {
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['sales_id'=>$params['id']],function($query) use ($ids){
+            $result = $this->model->save(['sales_id' => $params['id']], function ($query) use ($ids) {
                 $query->where('id', 'in', $ids);
             });
-            if($result){
-                  $this->redirect('newCustomer');
-//                $this->success();
-            }
-            else{
+            if ($result) {
+
+                $this->success();
+            } else {
 
                 $this->error();
             }
         }
-        return $this->view->fetch('backoffice/custominfotabs/admeasure');
+        return $this->view->fetch();
     }
-
-
-
 
 
 }

@@ -358,9 +358,9 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                             }
                         );
                     },
-                    'click .btn-newCustomer':function () {
-                        layer.msg("12323123132");
-                    }
+                    // 'click .btn-newCustomer':function () {
+                    //     layer.msg("12323123132");
+                    // }
                 }
             },
             // 单元格数据格式化
