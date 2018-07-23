@@ -81,7 +81,7 @@ class Customertabs extends Backend
     public function dstribution($ids=NULL){
         $this->model = model('CustomerResource');
         $id = $this->model->get(['id' => $ids]);
-   
+       
         $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
               $query->where('rule_message','message20')->whereOr('rule_message','message13');
         })->select(); 
@@ -212,7 +212,97 @@ class Customertabs extends Backend
        
         return $this->view->fetch('index');
     }
-    
+    //分配客户资源给内勤
+    //批量分配
+    //内勤  message13=>内勤一部，message20=>内勤二部
+    public function distribution($ids=''){
+        
+
+        $this->model = model('CustomerResource');
+        // $id = $this->model->get(['id' => $ids]);
+        
+        $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
+              $query->where('rule_message','message20')->whereOr('rule_message','message13');
+        })->select(); 
+        $backofficeList = array();
+        foreach($backoffice as $k=>$v){
+            switch($v['rule_message']){
+                case 'message20':
+                $backofficeList['message20']['nickname'] = $v['nickname']; 
+                $backofficeList['message20']['id'] = $v['id'];  
+                break;
+                case 'message13':
+                $backofficeList['message13']['nickname'] = $v['nickname']; 
+                $backofficeList['message13']['id'] = $v['id'];  
+                break;
+            }
+        }
+
+        $this->view->assign('backofficeList',$backofficeList);
+      
+        if ($this->request->isPost())
+        {
+          
+            $params = $this->request->post('row/a');
+
+            $result = $this->model->save(['backoffice_id'=>$params['id']],function($query) use ($ids){
+                $query->where('id', 'in', $ids);
+            }); 
+            if($result){
+                //  $this->redirect('newCustomer');
+               $this->success();
+            }
+            else{
+
+                $this->error(); 
+            }
+        }
+        return $this->view->fetch();
+    }
+    //导入
+    public function import(){
+        
+        return $this->view->fetch();
+    }
+    // public function import () {
+
+    //     if (Input::method() === 'POST') {
+
+    //         $filePath = '.' . Input::get('excelfile');
+
+    //         Excel::load($filePath, function($reader) {
+                
+    //             $data = $reader->getSheet(0)->toArray();
+
+    //             // var_dump($data);
+                  
+    //             foreach ($data as $key => $value) {
+    //                 if ($key == '0') {
+    //                     continue;
+    //                 }
+    //                 else {
+    //                     $cellData[] = [
+    //                         'question'   => $value[0],
+    //                         'paper_id'   => Input::get('paper_id'),
+    //                         'score'      => $value[3],
+    //                         'options'    => $value[1],
+    //                         'answer'     => $value[2],
+    //                         'created_at' => date('Y-m-d H:i:s')
+    //                     ];
+    //                 }
+    //             }
+    //             $result = Question::insert($cellData);
+
+    //             echo $result?'1':'0';
+    //         });
+    //     }
+    //     else {
+    //         $paper = Paper::all();
+    //         return view('admin.question.import', compact('paper'));
+    //     }
+
+        
+    // }
     // public function table2()
     // {
         

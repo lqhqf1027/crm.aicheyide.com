@@ -6,9 +6,24 @@
         <div class="col-xs-12 col-sm-8">
 
             <div class="radio">
-                {foreach $saleList as $k=>$v}
+
+                {neq name="$firstSale" value=""}
+                <h4><b style="margin: auto">销售1部:</b></h4>
+                {foreach $firstSale as $k=>$v}
+                <label><input name="row[id]" type="radio" value="{$v.id}" checked/> {$v.nickname}</label>
+
+                {/foreach}
+                <br>
+                {/neq}
+
+                {neq name="$secondSale" value=""}
+                <h4><b style="margin: auto">销售2部:</b></h4>
+                {foreach $secondSale as $k=>$v}
                 <label><input name="row[id]" type="radio" value="{$v.id}" checked/> {$v.nickname}</label>
                 {/foreach}
+                {/neq}
+
+
             </div>
 
         </div>
