@@ -22,28 +22,52 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
-        // dstribution:function(){
-        //
-        //     // $(".btn-add").data("area", ["300px","200px"]);
-        //     Table.api.init({
-        //
-        //     });
-        //     Form.api.bindevent($("form[role=form]"), function(data, ret){
-        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-        //         Fast.api.close(data);//这里是重点
-        //         // console.log(data);
-        //         // Toastr.success("成功");//这个可有可无
-        //     }, function(data, ret){
-        //         // console.log(data);
-        //
-        //         Toastr.success("失败");
-        //
-        //     });
-        //     // Controller.api.bindevent();
-        //     // console.log(Config.id);
-        //
-        //
-        // },
+        admeasure:function(){
+
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+
+
+        },
+
+        batch:function(){
+
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+
+
+        },
+
         table: {
 
             new_customer: function () {
@@ -256,52 +280,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
 
-                    // if (options.extend.admeasure_url !== '') {
-                    //
-                    //     buttons.push({
-                    //         name: 'distribution',
-                    //         text: __('Distribution'),
-                    //         icon: 'fa fa-share',
-                    //         title: __('Distribution'),
-                    //         extend: 'data-toggle="tooltip"',
-                    //         classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
-                    //         success: function (data, ret) {
-                    //
-                    //         },
-                    //         error: function (data, ret) {
-                    //
-                    //         }
-                    //     })
-                    // }
 
-                    // if (options.extend.dragsort_url !== '') {
-                    //     buttons.push({
-                    //         name: 'dragsort',
-                    //         icon: 'fa fa-arrows',
-                    //         title: __('Drag to sort'),
-                    //         extend: 'data-toggle="tooltip"',
-                    //         classname: 'btn btn-xs btn-primary btn-dragsort'
-                    //     });
-                    // }
-                    // if (options.extend.edit_url !== '') {
-                    //     buttons.push({
-                    //         name: 'edit',
-                    //         icon: 'fa fa-pencil',
-                    //         title: __('Edit'),
-                    //         extend: 'data-toggle="tooltip"',
-                    //         classname: 'btn btn-xs btn-success btn-editone',
-                    //         url: options.extend.edit_url
-                    //     });
-                    // }
-                    // if (options.extend.del_url !== '') {
-                    //     buttons.push({
-                    //         name: 'del',
-                    //         icon: 'fa fa-trash',
-                    //         title: __('Del'),
-                    //         extend: 'data-toggle="tooltip"',
-                    //         classname: 'btn btn-xs btn-danger btn-delone'
-                    //     });
-                    // }
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
             }
