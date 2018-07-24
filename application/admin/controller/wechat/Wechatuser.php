@@ -37,9 +37,7 @@ class Wechatuser extends Backend
 
 
     function https_request($url, $data = null,$time_out=60,$out_level="s",$headers=array())
-    { 
-
-        
+    {  
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_NOSIGNAL, 1);
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -65,8 +63,7 @@ class Wechatuser extends Backend
         $output = curl_exec($curl);
         curl_close($curl);
         return json_decode($output);
-    }
-
+    } 
     public function index()
     {  
         // Cache::rm('wechat_user_info');die;
@@ -75,16 +72,16 @@ class Wechatuser extends Backend
         $token = self::$token;
         $openid = self::getOpenid();
         $url = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=".$token;
-      
+        $i = 0;
+        // pr($openid); exit;
         foreach($openid as $value){ 
-
-            $a =  $this->https_request($url,json_encode($value)); 
-            $user [] = $a;
-          sleep(2);
-        }
-       
-    
-pr( $user);exit;
+            pr(json_encode($value));
+            // echo $i++;
+            // $result=  $this->https_request($url,json_encode($value));  
+            // $user [] = $result;
+            // sleep(2);
+        } 
+       die;
         ##(array)  强制转换数组  以防万一 是个空数组 要报错 
         // $newUser = array();
         
@@ -155,7 +152,7 @@ pr( $user);exit;
         foreach($openid as $k=>$v){
             $oid = $v['openid'];
 
-            //批量接口   批量获取是这个？。。。噢，，不对，是
+            //批量接口 
             $user[] = gets("https://api.weixin.qq.com/cgi-bin/user/info?access_token={$token}&openid={$oid}&lang=zh_CN");  
         } 
       
