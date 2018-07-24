@@ -122,6 +122,8 @@ class Customertabs extends Backend
         return $this->view->fetch();
 
     }
+
+
     //已分配
     public function newAllocation()
     {
