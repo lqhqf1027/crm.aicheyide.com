@@ -84,12 +84,13 @@ class Admin extends Backend
             foreach($siteList['message']['list'] as $k => $v){
                 $siteList['message']['list'][$k]['value']=json_decode($v['value'],TRUE);
             }
+
             // $siteList['message']['list']['value'] = json_decode($siteList['message']['list']['value'],TRUE);
         }
        
      
         $this->view->assign('siteList', $siteList['message']['list'][0]['value']);
-        
+
       
         $this->assignconfig("siteList", $siteList['message']['list']);
         
