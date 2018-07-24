@@ -214,6 +214,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'distributinternaltime', title: __('Distributinternaltime'), operate: false,formatter:Table.api.formatter.datetime},
+                            {field: 'distributsaletime', title: __('Distributsaletime'), operate: false,formatter:Table.api.formatter.datetime},
                             // {
                             //     field: 'createtime',
                             //     title: __('Createtime'),

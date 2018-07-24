@@ -21,6 +21,6 @@ return [
     'Salesman' => '选择销售人员',
     'Allocation' => '分配销售',
     'Distributions' => '分配',
-    'Distributsaletime' => '分配给销售时间',
-    'Distributinternaltime' => '分配给内勤时间'
+    'Distributsaletime' => '分配到销售时间',
+    'Distributinternaltime' => '分配到内勤时间'
 ];
