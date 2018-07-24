@@ -24,7 +24,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
+
+        //单个分配
         dstribution:function(){
+ 
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data); 
+                Toastr.success("失败"); 
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+            
+ 
+        },
+        //批量分配
+        
+        distribution:function(){
  
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
@@ -46,16 +70,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             
  
         },
-        distribution:function(){
- 
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-               
-            });
+        //批量导入
+        import:function(){
+            // console.log(123);
+            // return;
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
-                // console.log(data);
+                console.log(data);
                 // Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
@@ -63,9 +85,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-            
+            Controller.api.bindevent();
+            // console.log(Config.id); 
  
         },
         table: {
@@ -143,19 +164,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                     Fast.api.open(url,'批量分配',options)
                 })
-                //导入
-                $(document).on("click", ".import", function () {   
-                    var ids = Table.api.selectedids(newCustomer);
+                //批量导入
+                $(document).on("click", ".import", function () {
+                    
                     var url = 'promote/customertabs/import';
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
                         area:['30%','30%'],
                         callback:function(value){
-                                                        
+
                         }
                     }
                     Fast.api.open(url,'导入',options)
+                        
                 })
             },
             new_allocation: function () {
@@ -188,6 +210,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'age', title: __('Age')},
                             {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
                             {field: 'genderdata_text', title: __('Genderdata'), operate:false},
+                            {field: 'distributinternaltime', title: __('Distributinternaltime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             // {field: 'feedback', title: __('Feedback')},
@@ -196,7 +219,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
 
- 
                 });
 
                 // 为表格2绑定事件
@@ -232,6 +254,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'age', title: __('Age')},
                             {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
                             {field: 'genderdata_text', title: __('Genderdata'), operate:false},
+                            {field: 'feedbacktime', title: __('Feedbacktime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'feedback', title: __('Feedback')},
