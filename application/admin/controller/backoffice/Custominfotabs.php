@@ -229,7 +229,7 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['sales_id' => $params['id'],''], function ($query) use ($id) {
+            $result = $this->model->save(['sales_id' => $params['id'],'distributsaletime'=>time()], function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
             if ($result) {
@@ -297,7 +297,7 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['sales_id' => $params['id']], function ($query) use ($ids) {
+            $result = $this->model->save(['sales_id' => $params['id'],'distributsaletime'=>time()], function ($query) use ($ids) {
                 $query->where('id', 'in', $ids);
             });
             if ($result) {
