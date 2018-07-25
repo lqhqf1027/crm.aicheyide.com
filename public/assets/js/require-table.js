@@ -164,7 +164,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 });
                 // 添加按钮事件
                 $(toolbar).on('click', Table.config.addbtn, function () {
-                    console.log(123);
+
                     var ids = Table.api.selectedids(table);
                     var url = options.extend.add_url;
                     if (url.indexOf("{ids}") !== -1) {
