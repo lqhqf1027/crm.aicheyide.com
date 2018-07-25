@@ -26,14 +26,14 @@ class Wechatuser extends Backend
     public function _initialize()
     {
         parent::_initialize();
-     
 
         $this->model = model('WechatUser');
         $this->view->assign("subscribeList", $this->model->getSubscribeList());
         $this->view->assign("sexList", $this->model->getSexList()); 
 
 
-        self::$token= Cache::get('Token')['access_token'];
+        self::$token= $this->getAccessToken();
+        
     } 
 
 
@@ -71,28 +71,15 @@ class Wechatuser extends Backend
         // dump(collection($this->selWechatUser())->toArray());die;
         // dump(self::getOpenid());die; 
         $token = self::$token;
-        $openid = self::getOpenid();
-
-
+        // pr($token);die;
+        $openid = self::getOpenid(); 
+        pr( $this->getAccessToken());die;
 //把你的openid 拿出来 测试
-//'oklZR1J5BGScztxioesdguVsuDoY';怎么实例化 是不是这样  试看  这样吗  是 更新  这样？  
+//'oklZR1J5BGScztxioesdguVsuDoY'  你开始
 //无心  oklZR1JrHcr1KBZ2RGsToy_BoUZg
         $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
-
-
-
-pr($sendmessage->sendMsgToAll());exit;
-
-
-
-
-
-
-
-
-
-
-
+        
+        dump($sendmessage->sendMsgToAll());exit; 
 // pr( $openid);exit;
 
         // $url = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=".$token;
