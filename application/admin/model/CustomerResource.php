@@ -15,6 +15,8 @@ class CustomerResource extends Model
     // 定义时间戳字段名
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
+
+
     
     // 追加属性
     protected $append = [
@@ -26,7 +28,13 @@ class CustomerResource extends Model
     public function getGenderdataList()
     {
         return ['male' => __('Genderdata male'),'female' => __('Genderdata female')];
-    }     
+    }
+
+
+    public function getCustomerlevelList()
+    {
+        return ['relation' => __('Relation'),'intention' => __('Intention'),'nointention' => __('Nointention'),'giveup' => __('Giveups')];
+    }
 
 
     public function getGenderdataTextAttr($value, $data)

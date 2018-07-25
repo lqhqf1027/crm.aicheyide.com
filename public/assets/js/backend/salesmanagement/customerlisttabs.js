@@ -60,7 +60,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'customer/customerresource/index',
                         add_url: 'salesmanagement/customerlisttabs/add',
-                        edit_url: 'customer/customerresource/edit',
+                        edit_url: 'salesmanagement/customerlisttabs/edit',
                         del_url: 'customer/customerresource/del',
                         multi_url: 'customer/customerresource/multi',
                         table: 'customer_resource',
@@ -72,9 +72,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id')},
-                            // {field: 'platform_id', title: __('Platform_id')},
-                            // {field: 'backoffice_id', title: __('Backoffice_id')},
-                            {field: 'platform.name', title: __('所属平台')},
+                            {field: 'platform.name', title: __('Platform_id')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
@@ -93,19 +91,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
-                                    {
-                                        name: 'detail',
-                                        text: '反馈',
-                                        title: __('Feedback'),
-                                        icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
-                                        url: 'backoffice/custominfotabs/admeasure',
-
-                                    },
 
                                     {
                                         name: 'detail',
-                                        text: '新增销售单',
+                                        text: __('Newsaleslist'),
                                         title: __('Newsaleslist'),
                                         icon: 'fa fa-share',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
@@ -115,7 +104,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     {
                                         name: 'detail',
-                                        text: '放弃',
+                                        text: __('Giveup'),
                                         title: __('Giveup'),
                                         icon: 'fa fa-share',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
@@ -129,7 +118,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
 
                                 ],
-
 
                                 events: Table.api.events.operate,
                                 formatter: Controller.api.formatter.operate
@@ -181,6 +169,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = table ? table.bootstrapTable('getOptions') : {};
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
+
+                    if (options.extend.edit_url !== '') {
+                        buttons.push({
+                            name: 'edit',
+                            text: __('Feedback'),
+                            icon: 'fa fa-pencil',
+                            title: __('Edit'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-success btn-editone',
+                            url: options.extend.edit_url
+                        });
+                    }
 
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');

@@ -1,8 +1,10 @@
 <style>
 
-    .max-h{
-        max-height: 300px;
+
+    .content{
+        min-height:700px;
     }
+
 </style>
 
 <form id="add-form" class="form-horizontal form-ajax" role="form" data-toggle="validator" method="POST" action="">
@@ -13,7 +15,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="group" class="control-label col-xs-12 col-sm-2">{:__('所属角色')}:</label>
+        <label  class="control-label col-xs-12 col-sm-2">{:__('所属角色')}:</label>
         <div class="col-xs-12 col-sm-4">
                 {:build_select('row[rule_message]', $siteList, null, ['class'=>'form-control selectpicker',  'data-rule'=>'required'])} 
                 
