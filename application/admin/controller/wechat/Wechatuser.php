@@ -4,6 +4,7 @@ namespace app\admin\controller\wechat;
 
 use app\common\controller\Backend;
 use think\Cache;
+use think\Config;
 /**
  * 用户信息
  *
@@ -71,17 +72,43 @@ class Wechatuser extends Backend
         // dump(self::getOpenid());die; 
         $token = self::$token;
         $openid = self::getOpenid();
-        $url = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=".$token;
-        $i = 0;
+
+
+//把你的openid 拿出来 测试
+//'oklZR1J5BGScztxioesdguVsuDoY';怎么实例化 是不是这样  试看  这样吗  是 更新  这样？  
+//无心  oklZR1JrHcr1KBZ2RGsToy_BoUZg
+        $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
+
+
+
+pr($sendmessage->sendMsgToAll());exit;
+
+
+
+
+
+
+
+
+
+
+
+// pr( $openid);exit;
+
+        // $url = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=".$token;
+        // $i = 0;
         // pr($openid); exit;
-        foreach($openid as $value){ 
-            pr(json_encode($value));
-            // echo $i++;
-            // $result=  $this->https_request($url,json_encode($value));  
-            // $user [] = $result;
-            // sleep(2);
-        } 
-       die;
+        // foreach($openid as $value){ 
+
+        //     pr(json_encode($value));
+        //     // echo $i++;
+        //     $result=  $this->https_request($url,json_encode($value));  
+        //     $user [] = $result;
+        //     sleep(2);
+        // } 
+    //    die;
+
+
         ##(array)  强制转换数组  以防万一 是个空数组 要报错 
         // $newUser = array();
         
