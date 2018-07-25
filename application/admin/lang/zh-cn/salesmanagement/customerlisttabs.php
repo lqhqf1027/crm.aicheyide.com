@@ -12,7 +12,7 @@ return [
     'Genderdata female' => '女',
     'Createtime' => '创建时间',
     'Updatetime' => '更新时间',
-    'Feedback' => '反馈结果',
+    'Feedbacks' => '反馈结果',
     'Note' => '备注',
     'Platform.name' => '平台名称',
     'Distribution' => '批量分配',
@@ -24,6 +24,12 @@ return [
     'Distributsaletime' => '分配到销售时间',
     'Distributinternaltime' => '分配到内勤时间',
     'Newsaleslist' => '新增销售单',
-    'Giveup' => '放弃'
+    'Giveup' => '放弃',
+    'Giveups' => '已放弃',
+    'Feedback' => '反馈',
+    'Relation' => '待联系',
+    'Intention' => '有意向',
+    'Nointention' => '暂无意向',
+
 
 ];

@@ -42,6 +42,7 @@ class Customerlisttabs extends Backend
         $this->model = model('CustomerResource');
 
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
+
         //当前是否为关联查询
         $this->relationSearch = true;
         //设置过滤方法
@@ -60,7 +61,11 @@ class Customerlisttabs extends Backend
                     $query->where('sales_id', 'not null')
                         ->where('backoffice_id', 'not null')
                         ->where('sales_id', 17)
-                        ->whereOr('platform_id', 'in', '5,6,7');
+                        ->where('customerlevel', null)
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', null);
+                        });
                 })
                 ->order($sort, $order)
                 ->count();
@@ -71,10 +76,15 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                  $query->where('sales_id', 'not null')
+                    $query->where('sales_id', 'not null')
                         ->where('backoffice_id', 'not null')
                         ->where('sales_id', 17)
-                        ->whereOr('platform_id', 'in', '5,6,7');
+                        ->where('customerlevel', null)
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', null);
+                        });
+
                 })
                 ->limit($offset, $limit)
                 ->select();
@@ -200,6 +210,54 @@ class Customerlisttabs extends Backend
         }
 
         $this->assign('platform', $arr);
+        return $this->view->fetch();
+    }
+
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL)
+    {
+        $this->model = model('CustomerResource');
+        $row = $this->model->get($ids);
+        $this->view->assign("costomlevelList", $this->model->getCustomerlevelList());
+
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+
+        $this->view->assign("row", $row);
+
+
         return $this->view->fetch();
     }
 
