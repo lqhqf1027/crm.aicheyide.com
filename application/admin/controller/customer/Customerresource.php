@@ -77,7 +77,61 @@ class Customerresource extends Backend
          
         return $this->view->fetch();
     }
+    
+    //添加
+    public function add()
+    {
+       
+        $this->model = model('CustomerResource');
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $platform = collection( model('Platform')->all(['id'=>array('not in','5,6,7')]))->toArray();
+        // var_dump($platform);
+        // die;
+        if ($this->request->isPost()) {
 
+            $params = $this->request->post("row/a");
+
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+                $result = $this->model->allowField(true)->save($params);
+
+
+                if($result){
+                    $this->success();
+                }else{
+                    $this->error();
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+        $arr = array();
+        foreach ($platform as $value){
+           $arr[$value['id']]=$value['name'];
+        }
+        // var_dump($arr);
+        // die;
+        $this->assign('platform',$arr);
+        return $this->view->fetch();
+    }
 
    
 }

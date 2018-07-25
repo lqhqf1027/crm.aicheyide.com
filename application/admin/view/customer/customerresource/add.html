@@ -1,9 +1,16 @@
 <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Platform_id')}:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-platform_id" data-rule="required" data-source="promote/platform/index" class="form-control selectpage" name="row[platform_id]" type="text" value="">
+        </div>
+    </div> -->
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Platform_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:build_select('row[platform_id]', $platform, null, ['class'=>'form-control selectpicker',  'data-rule'=>'required'])}
+            <!--<input id="c-platform_id" data-rule="required" data-source="salesmanagement/customerlisttabs/getPlatform" class="form-control selectpage" name="row[platform_id]" type="text" value="">-->
         </div>
     </div>
     <!-- <div class="form-group">
