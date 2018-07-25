@@ -15,7 +15,7 @@ return [
     'Feedbacks' => '反馈结果',
     'Note' => '备注',
     'Platform.name' => '平台名称',
-    'Distribution' => '批量分配',
+    'Batchfeedback' => '批量反馈',
     'Confirm' => '确定',
     'Reset' => '重置',
     'Salesman' => '选择销售人员',

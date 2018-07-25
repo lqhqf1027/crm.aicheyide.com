@@ -22,6 +22,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
+
+        //刷新
         admeasure:function(){
 
             // $(".btn-add").data("area", ["300px","200px"]);

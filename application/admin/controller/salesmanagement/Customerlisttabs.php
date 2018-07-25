@@ -2,6 +2,7 @@
 
 namespace app\admin\controller\salesmanagement;
 
+use app\admin\model\CustomerResource;
 use app\common\controller\Backend;
 use think\Model;
 
@@ -18,6 +19,7 @@ class Customerlisttabs extends Backend
      * @var \app\admin\model\Customertabs
      */
     protected $model = null;
+    protected $searchFields  = 'id,username';
 
     public function _initialize()
     {
@@ -262,61 +264,26 @@ class Customerlisttabs extends Backend
     }
 
 
-    public function getPlatform()
+    public function ajaxGiveup()
     {
-
-//        return json(array('name'=>'bb'));
-        $this->model = model('Platform');
-        dump($this->model->all());
-        die;
-
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        //当前是否为关联查询
-        $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = $this->model
-                ->with(['platform'])
-                ->where($where)
-                ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('sales_id', 'not null')
-                        ->where('sales_id', 17)
-                        ->where('customerlevel', '有意向')
-                        ->where('followuptime', '>=', time());
-                })
-                ->order($sort, $order)
-                ->count();
+            $id = input("id");
+            $this->model = model('CustomerResource');
 
 
-            $list = $this->model
-                ->with(['platform'])
-                ->where($where)
-                ->order($sort, $order)
-                ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('sales_id', 'not null')
-                        ->where('sales_id', 17);
-                })
-                ->limit($offset, $limit)
-                ->select();
+           $result = $this->model
+                ->where("id",$id)
+               // ->save(['customerlevel','giveup']);
+                ->setField("customerlevel","giveup");
+           if($result){
+               $this->success();
+           }
 
-            foreach ($list as $row) {
 
-                $row->getRelation('platform')->visible(['name']);
-            }
-            $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
 
-            return json($result);
         }
 
+//        echo json_encode("123");
     }
 
 
