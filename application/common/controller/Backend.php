@@ -119,26 +119,24 @@ class Backend extends Controller
 
         $this->appid = Config::get('wechat')['APPID'];
         $this->secret = Config::get('wechat')['APPSECRET'];
-        //判断是否有token
-    //    Cache::rm('Token');die;
-        $token  = Cache::get('Token');
+        
+        //判断是否有token  Cache::get('access_token')
+    //    Cache::rm('access_token');die;
+        // $token  = Cache::get('Token');
 
 
-        if(!$token['access_token'] || $token['expires_in'] <= time()){
-
-
- 
-            $rslt  = gets("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$this->appid}&secret={$this->secret}");
-            if($rslt){ 
-                $accessArr = array(
-                    'access_token'=>$rslt['access_token'],
-                    'expires_in'=>time()+$rslt['expires_in']-200
-                );
-                Cache::set('Token',$accessArr) ;
- 
-                // $token = $rslt;
-            } 
-        } 
+        // if(!$token['access_token'] || $token['expires_in'] <= time()){  
+           
+        //     $rslt  = gets("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$this->appid}&secret={$this->secret}");
+        //     if($rslt){ 
+        //         $accessArr = array(
+        //             'access_token'=>$rslt['access_token'],
+        //             'expires_in'=>time()+$rslt['expires_in']-200
+        //         );
+        //         Cache::set('Token',$accessArr) ; 
+        //         $token = $rslt;
+        //     } 
+        // } 
  
  
        
@@ -509,4 +507,41 @@ class Backend extends Controller
         return json(['list' => $list, 'total' => $total]);
     }
 
+    //该公共方法获取和全局缓存js-sdk需要使用的access_token
+    protected function getAccessToken(){
+        //我们将access_token全局缓存在文件中,每次获取的时候,先判断是否过期,如果过期重新获取再全局缓存
+        //我们缓存的在文件中的数据，包括access_token和该access_token的过期时间戳.
+        //获取缓存的access_token
+        $access_token_data = json_decode(Cache::get('access_token'),true);
+
+        //判断缓存的access_token是否存在和过期，如果不存在和过期则重新获取.
+        if($access_token_data !== null && $access_token_data['access_token'] && $access_token_data['expires_in'] > time()){
+
+            return $access_token_data['access_token'];
+
+        }else{
+            //重新获取access_token,并全局缓存
+            $curl = curl_init();
+
+            curl_setopt($curl,CURLOPT_URL,'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret);
+
+            curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);
+
+            //获取access_token
+            $data = json_decode(curl_exec($curl),true);
+            if($data != null && $data['access_token']){
+                //设置access_token的过期时间,有效期是7200s
+                $data['expires_in'] = $data['expires_in'] + time();
+
+                //将access_token全局缓存，快速缓存到文件中.
+                Cache::set('access_token',json_encode($data));
+
+                //返回access_token
+                return $data['access_token'];
+
+            }else{
+                exit('微信获取access_token失败');
+            }
+        }
+    }
 }
