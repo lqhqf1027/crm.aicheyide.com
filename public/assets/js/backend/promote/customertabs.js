@@ -103,9 +103,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 extend: {
                     index_url: 'customer/customerresource/index',
                     add_url: 'customer/customerresource/add',
-                    edit_url: 'customer/customerresource/edit',
-                    del_url: 'customer/customerresource/del',
-                    multi_url: 'customer/customerresource/multi',
+                    // edit_url: 'customer/customerresource/edit',
+                    // del_url: 'customer/customerresource/del',
+                    // multi_url: 'customer/customerresource/multi',
                     distribution_url: 'promote/customertabs/distribution',
                     import_url: 'promote/customertabs/import',
                     table: 'customer_resource',
