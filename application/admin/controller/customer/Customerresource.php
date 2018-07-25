@@ -17,7 +17,6 @@ class Customerresource extends Backend
      * @var \app\admin\model\CustomerResource
      */
     protected $model = null;
-//    protected $multiFields = 'batch';
 
     public function _initialize()
     {

@@ -337,6 +337,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
                     'click .btn-delone': function (e, value, row, index) {
+
                         e.stopPropagation();
                         e.preventDefault();
                         var that = this;
