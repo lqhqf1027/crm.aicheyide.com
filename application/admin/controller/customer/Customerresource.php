@@ -133,5 +133,8 @@ class Customerresource extends Backend
         return $this->view->fetch();
     }
 
+    public function import () {
+        return parent::import();
+    }
    
 }

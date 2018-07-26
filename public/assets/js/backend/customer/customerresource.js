@@ -10,6 +10,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     edit_url: 'customer/customerresource/edit',
                     del_url: 'customer/customerresource/del',
                     multi_url: 'customer/customerresource/multi',
+                    import_url: 'customer/customerresource/import',
                     table: 'customer_resource',
                 }
             });
@@ -25,9 +26,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'platform_id', title: __('Platform_id')},
-                        {field: 'backoffice_id', title: __('Backoffice_id')},
-                        {field: 'sales_id', title: __('Sales_id')},
+                        // {field: 'platform_id', title: __('Platform_id')},
+                        // {field: 'backoffice_id', title: __('Backoffice_id')},
+                        {field: 'platform.name', title: __('所属平台')},
+                        
+                        // {field: 'sales_id', title: __('Sales_id')},
                         {field: 'username', title: __('Username')},
                         {field: 'phone', title: __('Phone')},
                         {field: 'age', title: __('Age')},
@@ -35,10 +38,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'genderdata_text', title: __('Genderdata'), operate:false},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'feedback', title: __('Feedback')},
-                        {field: 'note', title: __('Note')},
-                        {field: 'platform.name', title: __('Platform.name')},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        // {field: 'allocationtime', title: __('Allocationtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        // {field: 'feedbacktime', title: __('Feedbacktime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        // {field: 'feedback', title: __('Feedback')},
+                        // {field: 'note', title: __('Note')},
+                        {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
+                        buttons: [
+                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer', url: 'promote/customertabs/dstribution',
+                                        success:function(data, ret){
+                                        }, 
+                                        error:function(data,ret){
+
+                                        }
+                                    }
+                                ],
+                                
+                                 events: Table.api.events.operate,formatter: Table.api.formatter.operate}
                     ]
                 ]
             });
