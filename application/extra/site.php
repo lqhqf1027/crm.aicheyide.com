@@ -30,12 +30,12 @@ return array (
     'message' => 'Message',
   ),
   'mail_type' => '1',
-  'mail_smtp_host' => 'smtp.qq.com',
+  'mail_smtp_host' => 'smtp.163.com',
   'mail_smtp_port' => '465',
-  'mail_smtp_user' => '10000',
-  'mail_smtp_pass' => 'password',
+  'mail_smtp_user' => 'aicheyide@163.com',
+  'mail_smtp_pass' => 'acyd666',
   'mail_verify_type' => '2',
-  'mail_from' => '10000@qq.com',
+  'mail_from' => 'aicheyide@163.com',
   'pushMessage' => 
   array (
     'message1' => '总经理',
