@@ -19,7 +19,7 @@ class Customerlisttabs extends Backend
      * @var \app\admin\model\Customertabs
      */
     protected $model = null;
-    protected $searchFields  = 'id,username';
+    protected $searchFields = 'id,username';
 
     public function _initialize()
     {
@@ -31,9 +31,25 @@ class Customerlisttabs extends Backend
 
     public function index()
     {
-
+        $this->model = model('CustomerResource');
         $this->loadlang('salesmanagement/customerlisttabs');
 
+
+        $total = $this->model
+            ->with(['platform'])
+            ->where(function ($query) {
+                $query->where('sales_id', 'not null')
+                    ->where('backoffice_id', 'not null')
+                    ->where('sales_id', 17)
+                    ->where('customerlevel', null)
+                    ->whereOr(function ($query2) {
+                        $query2->where('platform_id', 'in', '5,6,7')
+                            ->where('customerlevel', null);
+                    });
+
+            })
+            ->count();
+        $this->view->assign('total', $total);
         return $this->view->fetch();
     }
 
@@ -43,13 +59,17 @@ class Customerlisttabs extends Backend
     {
         $this->model = model('CustomerResource');
 
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $this->view->assign(["genderdataList" => $this->model->getGenderdataList(),
+
+        ]);
 
         //当前是否为关联查询
         $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+
+
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
@@ -59,7 +79,6 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-
                     $query->where('sales_id', 'not null')
                         ->where('backoffice_id', 'not null')
                         ->where('sales_id', 17)
@@ -68,6 +87,7 @@ class Customerlisttabs extends Backend
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('customerlevel', null);
                         });
+
                 })
                 ->order($sort, $order)
                 ->count();
@@ -101,8 +121,10 @@ class Customerlisttabs extends Backend
 
             $result = array("total" => $total, "rows" => $list);
 
+
             return json($result);
         }
+
 
         return $this->view->fetch('index');
     }
@@ -235,7 +257,11 @@ class Customerlisttabs extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+
             if ($params) {
+
+                $this->model->where('id', $ids)->setField('feedbacktime', time());
+
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
@@ -270,20 +296,42 @@ class Customerlisttabs extends Backend
             $id = input("id");
             $this->model = model('CustomerResource');
 
-
-           $result = $this->model
-                ->where("id",$id)
-               // ->save(['customerlevel','giveup']);
-                ->setField("customerlevel","giveup");
-           if($result){
-               $this->success();
-           }
-
+            $result = $this->model
+                ->where("id", $id)
+                ->setField("customerlevel", "giveup");
+            if ($result) {
+                $this->success();
+            }
 
 
         }
 
-//        echo json_encode("123");
+
+    }
+
+
+    public function ajaxBatchGiveup()
+    {
+
+        if ($this->request->isAjax()) {
+            $this->model = model('CustomerResource');
+            $id = input("id");
+
+            $id = json_decode($id, true);
+
+
+            $result = $this->model
+                ->where('id', 'in', $id)
+                ->setField('customerlevel', 'giveup');
+
+            if ($result) {
+                $this->success();
+            } else {
+                $this->error();
+            }
+        }
+
+
     }
 
 
