@@ -91,12 +91,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {
-                                field: 'distributinternaltime',
-                                title: __('Distributinternaltime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
+
                             {
                                 field: 'distributsaletime',
                                 title: __('Distributsaletime'),
@@ -223,18 +218,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {
-                                field: 'distributinternaltime',
-                                title: __('Distributinternaltime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {
-                                field: 'distributsaletime',
-                                title: __('Distributsaletime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            // {
+                            //     field: 'distributinternaltime',
+                            //     title: __('Distributinternaltime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'distributsaletime',
+                            //     title: __('Distributsaletime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: relations,
@@ -333,18 +329,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {
-                                field: 'distributinternaltime',
-                                title: __('Distributinternaltime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {
-                                field: 'distributsaletime',
-                                title: __('Distributsaletime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            // {
+                            //     field: 'distributinternaltime',
+                            //     title: __('Distributinternaltime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'distributsaletime',
+                            //     title: __('Distributsaletime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: intentions,
@@ -443,18 +440,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {
-                                field: 'distributinternaltime',
-                                title: __('Distributinternaltime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {
-                                field: 'distributsaletime',
-                                title: __('Distributsaletime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            // {
+                            //     field: 'distributinternaltime',
+                            //     title: __('Distributinternaltime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'distributsaletime',
+                            //     title: __('Distributsaletime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: nointentions,
@@ -556,18 +554,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {
-                                field: 'distributinternaltime',
-                                title: __('Distributinternaltime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {
-                                field: 'distributsaletime',
-                                title: __('Distributsaletime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
+                            // {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            // {
+                            //     field: 'distributinternaltime',
+                            //     title: __('Distributinternaltime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'distributsaletime',
+                            //     title: __('Distributsaletime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
 
                             // {
                             //     field: 'operate', title: __('Operate'), table: giveups,
