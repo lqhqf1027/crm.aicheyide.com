@@ -73,13 +73,13 @@ class Wechatuser extends Backend
         $token = self::$token;
         // pr($token);die;
         $openid = self::getOpenid(); 
-        pr( $this->getAccessToken());die;
+        // pr( $this->getAccessToken());die;
 //把你的openid 拿出来 测试
 //'oklZR1J5BGScztxioesdguVsuDoY'  你开始
 //无心  oklZR1JrHcr1KBZ2RGsToy_BoUZg
-        $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
+        // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
         
-        dump($sendmessage->sendMsgToAll());exit; 
+        // dump($sendmessage->sendMsgToAll());exit; 
 // pr( $openid);exit;
 
         // $url = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=".$token;
