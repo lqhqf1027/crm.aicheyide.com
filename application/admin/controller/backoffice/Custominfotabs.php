@@ -46,6 +46,7 @@ class Custominfotabs extends Backend
 {
 
     protected $model = null;
+
 //    protected $multiFields = 'batch';
     public function _initialize()
     {
@@ -87,7 +88,8 @@ class Custominfotabs extends Backend
                     $query->where('backoffice_id', "not null")
                         ->where('backoffice_id', 13)
                         //->where('backoffice_id',$this->auth->id)
-                        ->where('sales_id', 'null');
+                        ->where('sales_id', 'null')
+                        ->where('platform_id', 'in', [2, 3, 4]);
 
                 })
                 ->order($sort, $order)
@@ -101,7 +103,8 @@ class Custominfotabs extends Backend
                     $query->where('backoffice_id', "not null")
                         ->where('backoffice_id', 13)
                         //->where('backoffice_id', $this->auth->id)
-                        ->where('sales_id', 'null');
+                        ->where('sales_id', 'null')
+                        ->where('platform_id', 'in', [2, 3, 4]);
                 })
                 ->limit($offset, $limit)
                 ->select();
@@ -142,7 +145,8 @@ class Custominfotabs extends Backend
                     $query->where('backoffice_id', "not null")
                         ->where('backoffice_id', 13)
                         //->where('backoffice_id', $this->auth->id)
-                        ->where('sales_id', 'not null');
+                        ->where('sales_id', 'not null')
+                        ->where('platform_id','in',[2,3,4]);
                 })
                 ->order($sort, $order)
                 ->count();
@@ -152,11 +156,12 @@ class Custominfotabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where(function ($query){
+                ->where(function ($query) {
                     $query->where('backoffice_id', "not null")
                         ->where('backoffice_id', 13)
                         //->where('backoffice_id', $this->auth->id)
-                        ->where('sales_id', 'not null');
+                        ->where('sales_id', 'not null')
+                        ->where('platform_id','in',[2,3,4]);
                 })
                 ->limit($offset, $limit)
                 ->select();
@@ -221,7 +226,6 @@ class Custominfotabs extends Backend
         $this->view->assign('secondSale', $saleList['message9']);
 
 
-
         $this->assignconfig('id', $id->id);
 
         if ($this->request->isPost()) {
@@ -229,7 +233,7 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['sales_id' => $params['id'],'distributsaletime'=>time()], function ($query) use ($id) {
+            $result = $this->model->save(['sales_id' => $params['id'], 'distributsaletime' => time()], function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
             if ($result) {
@@ -297,7 +301,7 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
-            $result = $this->model->save(['sales_id' => $params['id'],'distributsaletime'=>time()], function ($query) use ($ids) {
+            $result = $this->model->save(['sales_id' => $params['id'], 'distributsaletime' => time()], function ($query) use ($ids) {
                 $query->where('id', 'in', $ids);
             });
             if ($result) {
