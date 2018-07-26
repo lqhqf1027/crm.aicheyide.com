@@ -129,6 +129,72 @@ class Customerlisttabs extends Backend
         return $this->view->fetch('index');
     }
 
+    //待联系
+    public function relation()
+    {
+        $this->model = model('CustomerResource');
+
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->where(function ($query) {
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'relation')
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'relation');
+                        });
+
+                })
+                ->order($sort, $order)
+                ->count();
+
+
+            $list = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->order($sort, $order)
+                ->where(function ($query) {
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'relation')
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'relation');
+                        });
+
+                })
+                ->limit($offset, $limit)
+                ->select();
+
+            foreach ($list as $row) {
+
+                $row->getRelation('platform')->visible(['name']);
+            }
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+
+        return $this->view->fetch('index');
+    }
+
+
     //有意向
     public function intention()
     {
@@ -149,11 +215,14 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('sales_id', 'not null')
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
                         ->where('sales_id', 17)
-                        ->where('customerlevel', '有意向')
-                        ->where('followuptime', '>=', time());
+                        ->where('customerlevel', 'relation')
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'intention');
+                        });
 
                 })
                 ->order($sort, $order)
@@ -165,9 +234,15 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('sales_id', 'not null')
-                        ->where('sales_id', 17);
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'relation')
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'intention');
+                        });
+
                 })
                 ->limit($offset, $limit)
                 ->select();
@@ -185,6 +260,137 @@ class Customerlisttabs extends Backend
         return $this->view->fetch('index');
     }
 
+
+    //暂无意向
+    public function nointention()
+    {
+        $this->model = model('CustomerResource');
+
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->where(function ($query) {
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'nointention')
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'nointention');
+                        });
+
+                })
+                ->order($sort, $order)
+                ->count();
+
+
+            $list = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->order($sort, $order)
+                ->where(function ($query) {
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'nointention')
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'nointention');
+                        });
+
+                })
+                ->limit($offset, $limit)
+                ->select();
+
+            foreach ($list as $row) {
+
+                $row->getRelation('platform')->visible(['name']);
+            }
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+
+        return $this->view->fetch('index');
+    }
+
+
+    //已放弃
+    public function giveup()
+    {
+        $this->model = model('CustomerResource');
+
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->where(function ($query) {
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'giveup')
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'giveup');
+                        });
+
+                })
+                ->order($sort, $order)
+                ->count();
+
+
+            $list = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->order($sort, $order)
+                ->where(function ($query) {
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'giveup')
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'giveup');
+                        });
+
+                })
+                ->limit($offset, $limit)
+                ->select();
+
+            foreach ($list as $row) {
+
+                $row->getRelation('platform')->visible(['name']);
+            }
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+
+        return $this->view->fetch('index');
+    }
     public function add()
     {
 
@@ -245,7 +451,9 @@ class Customerlisttabs extends Backend
     {
         $this->model = model('CustomerResource');
         $row = $this->model->get($ids);
-        $this->view->assign("costomlevelList", $this->model->getCustomerlevelList());
+
+
+        $this->view->assign("costomlevelList", $this->model->getNewCustomerlevelList());
 
         if (!$row)
             $this->error(__('No Results were found'));
