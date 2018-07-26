@@ -28,6 +28,7 @@ return array (
     'user' => 'User',
     'example' => 'Example',
     'message' => 'Message',
+    'pushtemplate' => 'Pushtemplate',
   ),
   'mail_type' => '1',
   'mail_smtp_host' => 'smtp.163.com',
@@ -59,5 +60,8 @@ return array (
     'message19' => '行政',
     'message20' => '内勤（二部）',
     'message21' => '超级管理员',
+  ),
+  'push' => 
+  array (
   ),
 );
