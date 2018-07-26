@@ -1,0 +1,136 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sales_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sales_id" data-rule="required" data-source="sales/index" class="form-control selectpage" name="row[sales_id]" type="text" value="{$row.sales_id}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Licenseplatenumber')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-licenseplatenumber" data-rule="required" class="form-control" name="row[licenseplatenumber]" type="text" value="{$row.licenseplatenumber}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-models_id" data-rule="required" data-source="models/index" class="form-control selectpage" name="row[models_id]" type="text" value="{$row.models_id}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Kilometres')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-kilometres" data-rule="required" class="form-control" name="row[kilometres]" type="number" value="{$row.kilometres}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Companyaccount')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-companyaccount" data-rule="required" class="form-control" name="row[companyaccount]" type="text" value="{$row.companyaccount}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Cashpledge')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-cashpledge" data-rule="required" class="form-control" name="row[cashpledge]" type="number" value="{$row.cashpledge}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Threemonths')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-threemonths" data-rule="required" class="form-control" name="row[threemonths]" type="number" value="{$row.threemonths}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sixmonths')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sixmonths" data-rule="required" class="form-control" name="row[sixmonths]" type="number" value="{$row.sixmonths}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Manysixmonths')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-manysixmonths" data-rule="required" class="form-control" name="row[manysixmonths]" type="number" value="{$row.manysixmonths}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Drivinglicense')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-drivinglicense" class="form-control" name="row[drivinglicense]" type="text" value="{$row.drivinglicense}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Vin')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-vin" class="form-control" name="row[vin]" type="number" value="{$row.vin}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Expirydate')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-expirydate" class="form-control" name="row[expirydate]" type="number" value="{$row.expirydate}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Annualverificationdate')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-annualverificationdate" class="form-control" name="row[annualverificationdate]" type="number" value="{$row.annualverificationdate}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Carcolor')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-carcolor" class="form-control" name="row[carcolor]" type="text" value="{$row.carcolor}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Aeratedcard')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-aeratedcard" class="form-control" name="row[aeratedcard]" type="text" value="{$row.aeratedcard}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Volumekeys')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-volumekeys" class="form-control" name="row[volumekeys]" type="number" value="{$row.volumekeys}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Parkingposition')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-Parkingposition" class="form-control" name="row[Parkingposition]" type="text" value="{$row.Parkingposition}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Shelf')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-shelf" class="form-control selectpicker" name="row[shelf]">
+                {foreach name="shelfList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.shelf"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Vehiclestate')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-vehiclestate" class="form-control" name="row[vehiclestate]" type="text" value="{$row.vehiclestate}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-note" class="form-control" name="row[note]" type="text" value="{$row.note}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

@@ -1,5 +1,5 @@
 <?php
-//这里不用命名空间？ 不用
+ 
 namespace app\admin\controller\wechat;  
 
 
