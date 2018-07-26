@@ -80,7 +80,6 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->where(function ($query) {
                     $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
                         ->where('sales_id', 17)
                         ->where('customerlevel', null)
                         ->whereOr(function ($query2) {
@@ -99,12 +98,90 @@ class Customerlisttabs extends Backend
                 ->order($sort, $order)
                 ->where(function ($query) {
                     $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
                         ->where('sales_id', 17)
                         ->where('customerlevel', null)
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('customerlevel', null);
+                        });
+
+                })
+                ->limit($offset, $limit)
+                ->select();
+
+
+            foreach ($list as $row) {
+
+                $row->getRelation('platform')->visible(['name']);
+
+            }
+
+
+            $result = array("total" => $total, "rows" => $list);
+
+
+            return json($result);
+        }
+
+
+        return $this->view->fetch('index');
+    }
+
+    //跟进时间过期用户
+    public function overdue()
+    {
+        $this->model = model('CustomerResource');
+
+        $this->view->assign(["genderdataList" => $this->model->getGenderdataList(),
+
+        ]);
+
+        //当前是否为关联查询
+        $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->where(function ($query) {
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'not null')
+                        ->where(strtotime('followuptime'), '<', time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'not null')
+                                ->where(strtotime('followuptime'), '<', time());
+                        });
+
+                })
+                ->order($sort, $order)
+                ->count();
+
+
+            $list = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->order($sort, $order)
+                ->where(function ($query) {
+                    $query->where('sales_id', 'not null')
+                        ->where('backoffice_id', 'not null')
+                        ->where('sales_id', 17)
+                        ->where('customerlevel', 'not null')
+                        ->where(strtotime('followuptime'), '<', time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('customerlevel', 'not null')
+                                ->where(strtotime('followuptime'), '<', time());
                         });
 
                 })
@@ -391,6 +468,7 @@ class Customerlisttabs extends Backend
 
         return $this->view->fetch('index');
     }
+
     public function add()
     {
 
