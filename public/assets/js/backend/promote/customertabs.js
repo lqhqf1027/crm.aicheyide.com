@@ -113,6 +113,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 toolbar: '#toolbar1',
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
@@ -196,6 +197,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
@@ -240,6 +242,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar3',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},

@@ -1,38 +1,6 @@
-<style>
-    .report-file {
-            display: block;
-            position: relative;
-            width: 120px;
-            height: 28px;
-            overflow: hidden;
-            border: 1px solid #428bca;
-            background: none repeat scroll 0 0 #428bca;
-            color: #fff;
-            cursor: pointer;
-            text-align: center;
-            float: left;
-            margin-right:5px;
-    }
-    .report-file span {
-            cursor: pointer;
-            display: block;
-            line-height: 28px;
-    }
-    .file-prew {
-            position: absolute;
-            top: 0;
-            left:0;
-            width: 120px;
-            height: 30px;
-            font-size: 100px; 
-            opacity: 0; 
-            filter: alpha(opacity=0);
-            cursor: pointer;
-    }
-</style>
 
-<form id="import-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="promote/customertabs/import"
-    data-area='["600px","400px"]' enctype="multipart/form-data">
+<form id="import-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" 
+    data-area='["600px","400px"]'>
 
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('导入模板下载')}:</label>
@@ -40,18 +8,41 @@
 
             <a href="download" class="btn btn-success btn-embossed btn-download" title="{:__('下载导入模板')}">
                 <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
-
+            <!-- <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入EXCEL</a> -->
         </div>
     </div>
 
     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('客户信息导入')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-attachfile" data-rule="required" class="form-control" size="50" name="row[attachfile]" type="text" value="">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-attachfile" class="btn btn-danger plupload" data-input-id="c-attachfile" data-multiple="false"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    
+                </div>
+                <span class="msg-box n-right" for="c-attachfile"></span>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+
+    <!-- <div class="form-group">
         <div class="col-xs-12 col-sm-8">
                 <label for="file">客户信息导入:</label>
                 <input type="file" id="file" name="file"/>
                 
         </div>
         <button type="button" onclick="ajaxUploadFile()">确定</button>
-    </div>
+    </div> -->
 
     <!-- <div class="report-file">
         <span>上传文件</span><input tabindex="3" size="3" name="report" class="file-prew" type="file" onchange="document.getElementById('textName').value=this.value">
@@ -61,7 +52,7 @@
 </form>
 
 
-<script>
+<!-- <script>
 
     function ajaxUploadFile() {
         var formData = new FormData();
@@ -90,4 +81,4 @@
         }
     }
 
-</script>
+</script> -->

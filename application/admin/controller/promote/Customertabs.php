@@ -269,59 +269,59 @@ class Customertabs extends Backend
     //自定义弹出框
     public function import(){
 
-        if ($this->request->isPost('submit'))
-        {
+        // if ($this->request->isPost('submit'))
+        // {
            
-            $file = request()->file('file');
-            pr($file);
-            die;
-            $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads'.DS.'excel'); 
+        //     $file = request()->file('file');
+        //     pr($file);
+        //     die;
+        //     $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads'.DS.'excel'); 
             
-			if($info){
+		// 	if($info){
 			 
-                $excelPath = $info->getSaveName();//获取文件名  
-				$filePath = ROOT_PATH . 'public' . DS . 'uploads'. DS . 'excel' . DS . $excelPath;   //上传文件的地址  
+        //         $excelPath = $info->getSaveName();//获取文件名  
+		// 		$filePath = ROOT_PATH . 'public' . DS . 'uploads'. DS . 'excel' . DS . $excelPath;   //上传文件的地址  
 
-                if (!is_file($filePath)) {
-                    $this->error(__('No results were found'));
-                }
-                $PHPReader = new \PHPExcel_Reader_Excel2007();
-                if (!$PHPReader->canRead($filePath)) {
-                    $PHPReader = new \PHPExcel_Reader_Excel5();
-                    if (!$PHPReader->canRead($filePath)) {
-                        $PHPReader = new \PHPExcel_Reader_CSV();
-                        if (!$PHPReader->canRead($filePath)) {
-                            $this->error(__('Unknown data format'));
-                        }
-                    }
-                }
+        //         if (!is_file($filePath)) {
+        //             $this->error(__('No results were found'));
+        //         }
+        //         $PHPReader = new \PHPExcel_Reader_Excel2007();
+        //         if (!$PHPReader->canRead($filePath)) {
+        //             $PHPReader = new \PHPExcel_Reader_Excel5();
+        //             if (!$PHPReader->canRead($filePath)) {
+        //                 $PHPReader = new \PHPExcel_Reader_CSV();
+        //                 if (!$PHPReader->canRead($filePath)) {
+        //                     $this->error(__('Unknown data format'));
+        //                 }
+        //             }
+        //         }
         
-                $PHPExcel = $PHPReader->load($filePath); //加载文件
+        //         $PHPExcel = $PHPReader->load($filePath); //加载文件
                 
-                $currentSheet = $PHPExcel->getSheet(0)->toArray();  //读取文件中的第一个工作表
+        //         $currentSheet = $PHPExcel->getSheet(0)->toArray();  //读取文件中的第一个工作表
                 
-				array_shift($currentSheet);  //删除第一个数组(标题);  
-				$data = [];  
-				foreach($currentSheet as $k=>$v) {  
-					$data[$k]['platform_id'] = $v[0];  
-                    $data[$k]['username'] = $v[1];
-                    $data[$k]['phone'] = $v[2];  
-					$data[$k]['createtime'] = time();     
+		// 		array_shift($currentSheet);  //删除第一个数组(标题);  
+		// 		$data = [];  
+		// 		foreach($currentSheet as $k=>$v) {  
+		// 			$data[$k]['platform_id'] = $v[0];  
+        //             $data[$k]['username'] = $v[1];
+        //             $data[$k]['phone'] = $v[2];  
+		// 			$data[$k]['createtime'] = time();     
 					
-				}  
-				// return json(array('file'=>$data)); 
-                // pr($data);die;
-                $this->model = model('CustomerResource');
-                $result = $this->model->saveAll($data);
-                if ($result) {
-                    $this->success();
-                }
-                else {
-                    $this->error();
-                }
-            }
-        }
-
+		// 		}  
+		// 		// return json(array('file'=>$data)); 
+        //         // pr($data);die;
+        //         $this->model = model('CustomerResource');
+        //         $result = $this->model->saveAll($data);
+        //         if ($result) {
+        //             $this->success();
+        //         }
+        //         else {
+        //             $this->error();
+        //         }
+        //     }
+        // }
+        // return parent::import();
         return $this->view->fetch();
     }
 
