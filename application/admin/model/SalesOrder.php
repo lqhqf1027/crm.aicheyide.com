@@ -76,6 +76,12 @@ class SalesOrder extends Model
     {
         return $value && !is_numeric($value) ? strtotime($value) : $value;
     }
+  
+
+    public function models()
+    {
+        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
 
 
 }
