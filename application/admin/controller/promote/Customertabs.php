@@ -370,7 +370,7 @@ class Customertabs extends Backend
        
         //浏览器交互 导出
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="客户信息导入模板表.xls"');
+        header('Content-Disposition: attachment;filename="客户信息导入模板表.xlsx"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');

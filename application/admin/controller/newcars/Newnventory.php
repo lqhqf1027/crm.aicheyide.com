@@ -1,28 +1,29 @@
 <?php
 
-namespace app\admin\controller\vehiclemanagement;
+namespace app\admin\controller\newcars;
 
 use app\common\controller\Backend;
 
 /**
- * 车辆信息
+ * 新车管理库存
  *
  * @icon fa fa-circle-o
  */
-class Rentcar extends Backend
+class Newnventory extends Backend
 {
     
     /**
-     * CarRentalModelsInfo模型对象
-     * @var \app\admin\model\CarRentalModelsInfo
+     * CarNewInventory模型对象
+     * @var \app\admin\model\CarNewInventory
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = model('CarRentalModelsInfo');
-        $this->view->assign("shelfList", $this->model->getShelfList());
+        $this->model = model('CarNewInventory');
+        $this->view->assign("carprocessList", $this->model->getCarprocessList());
+        $this->view->assign("pledgeList", $this->model->getPledgeList());
     }
     
     /**
@@ -64,7 +65,7 @@ class Rentcar extends Backend
 
             foreach ($list as $row) {
                 
-                $row->getRelation('models')->visible(['name']);
+                
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
