@@ -11,8 +11,8 @@
                         <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('vehiclemanagement/rentcar/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>
                         <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('vehiclemanagement/rentcar/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
                         <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('vehiclemanagement/rentcar/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>
-                        <a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="ismenu=1"><i class="fa fa-eye"></i> 批量上架</a>
-                        <a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="ismenu=0"><i class="fa fa-eye-slash"></i> 批量下架</a>
+                        <a class="btn btn-link btn-multi btn-disabled disabled {:$auth->check('rentcar/Vehicleinformation/multi')?'':'hide'}" href="javascript:;" data-params="shelfismenu=1"><i class="fa fa-eye"></i> 批量上架</a>
+                        <a class="btn btn-link btn-multi btn-disabled disabled {:$auth->check('rentcar/Vehicleinformation/multi')?'':'hide'}" href="javascript:;" data-params="shelfismenu=0"><i class="fa fa-eye-slash"></i> 批量下架</a>
 
 
                         <!-- <div class="dropdown btn-group {:$auth->check('vehiclemanagement/rentcar/multi')?'':'hide'}">
