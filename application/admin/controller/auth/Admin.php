@@ -81,11 +81,12 @@ class Admin extends Backend
             }
             $value['content'] = json_decode($value['content'], TRUE);
             $siteList[$v['group']]['list'][] = $value;
-            foreach($siteList['message']['list'] as $k => $v){
-                $siteList['message']['list'][$k]['value']=json_decode($v['value'],TRUE);
-            }
+          
 
             // $siteList['message']['list']['value'] = json_decode($siteList['message']['list']['value'],TRUE);
+        }
+        foreach($siteList['message']['list'] as $k => $v){
+            $siteList['message']['list'][$k]['value']=json_decode($v['value'],TRUE);
         }
        
      
@@ -104,8 +105,8 @@ class Admin extends Backend
      */
     public function index()
     {
-        if ($this->request->isAjax())
-        {
+        // if ($this->request->isAjax())
+        // {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField'))
             {
@@ -151,9 +152,9 @@ class Admin extends Backend
             }
             unset($v);
             $result = array("total" => $total, "rows" => $list);
-
+            pr(collection($result)->toArray());die;
             return json($result);
-        }
+        // }
         return $this->view->fetch();
     }
 
