@@ -22,7 +22,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
-        // admeasure:function(){
+        // ajaxBatchGiveup:function(){
         //
         //     // $(".btn-add").data("area", ["300px","200px"]);
         //     Table.api.init({
@@ -49,8 +49,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         table: {
 
             new_customer: function () {
+
+
+            // <span class="pagination-info">显示第 1 到第 1 条记录，总共 1 条记录</span>
+
+
                 // 表格1
-                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索客户姓名";};
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
 
                 var newCustomer = $("#newCustomer");
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -89,12 +96,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {
-                                field: 'distributinternaltime',
-                                title: __('Distributinternaltime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
+
                             {
                                 field: 'distributsaletime',
                                 title: __('Distributsaletime'),
@@ -111,17 +113,563 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
+
+
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
 
-                // $(document).on('click','.btn-give_up',function ( e, value, row, index) {
-                //
-                //
-                // })
+
+
+
+                // 批量加入放弃客户
+
+
+                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                    var ids = Table.api.selectedids(newCustomer);
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var that = this;
+                    var top = $(that).offset().top - $(window).scrollTop() + 100;
+                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
+                    if (top + 154 > $(window).height()) {
+                        top = top - 154;
+                    }
+                    if ($(window).width() < 480) {
+                        top = left = undefined;
+                    }
+                    Layer.confirm(
+
+                        __('确定加入放弃客户名单吗?'),
+                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                        function (index) {
+
+                            Fast.api.ajax({
+                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                                data: {id: JSON.stringify(ids)}
+                            }, function (data, rets) {
+
+
+                                Toastr.success("成功");
+                                Layer.close(index);
+                                 newCustomer.bootstrapTable('refresh');
+                                return false;
+                            }, function (data, ret) {
+                                //失败的回调
+                                newCustomer.bootstrapTable('refresh');
+                                return false;
+                            });
+
+
+                        }
+                    );
+
+                });
+
+
+            },
+            relation: function () {
+                // 表格2     待联系
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+
+                var relations = $("#relations");
+                relations.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                relations.bootstrapTable({
+                    url: 'salesmanagement/Customerlisttabs/relation',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'salesmanagement/customerlisttabs/add',
+                        edit_url: 'salesmanagement/customerlisttabs/edit',
+                        del_url: 'customer/customerresource/del',
+                        multi_url: 'customer/customerresource/multi',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar2',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'platform.name', title: __('Platform_id')},
+
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            // {
+                            //     field: 'distributinternaltime',
+                            //     title: __('Distributinternaltime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'distributsaletime',
+                            //     title: __('Distributsaletime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+
+                            {
+                                field: 'operate', title: __('Operate'), table: relations,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(relations);
+
+                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                    var ids = Table.api.selectedids(relations);
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var that = this;
+                    var top = $(that).offset().top - $(window).scrollTop() + 100;
+                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
+                    if (top + 154 > $(window).height()) {
+                        top = top - 154;
+                    }
+                    if ($(window).width() < 480) {
+                        top = left = undefined;
+                    }
+                    Layer.confirm(
+
+                        __('确定加入放弃客户名单吗?'),
+                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                        function (index) {
+
+                            Fast.api.ajax({
+                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                                data: {id: JSON.stringify(ids)}
+                            }, function (data, rets) {
+
+                                Toastr.success("成功");
+                                Layer.close(index);
+                                relations.bootstrapTable('refresh');
+                                return false;
+                            }, function (data, ret) {
+                                //失败的回调
+                                relations.bootstrapTable('refresh');
+                                return false;
+                            });
+
+
+                        }
+                    );
+
+                });
+
+
+            },
+            intention: function () {
+                // 表格3     有意向
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+
+                var intentions = $("#intentions");
+                intentions.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                intentions.bootstrapTable({
+                    url: 'salesmanagement/Customerlisttabs/intention',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'salesmanagement/customerlisttabs/add',
+                        edit_url: 'salesmanagement/customerlisttabs/edit',
+                        del_url: 'customer/customerresource/del',
+                        multi_url: 'customer/customerresource/multi',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar3',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'platform.name', title: __('Platform_id')},
+
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            // {
+                            //     field: 'distributinternaltime',
+                            //     title: __('Distributinternaltime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'distributsaletime',
+                            //     title: __('Distributsaletime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+
+                            {
+                                field: 'operate', title: __('Operate'), table: intentions,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(intentions);
+
+                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                    var ids = Table.api.selectedids(intentions);
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var that = this;
+                    var top = $(that).offset().top - $(window).scrollTop() + 100;
+                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
+                    if (top + 154 > $(window).height()) {
+                        top = top - 154;
+                    }
+                    if ($(window).width() < 480) {
+                        top = left = undefined;
+                    }
+                    Layer.confirm(
+
+                        __('确定加入放弃客户名单吗?'),
+                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                        function (index) {
+
+                            Fast.api.ajax({
+                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                                data: {id: JSON.stringify(ids)}
+                            }, function (data, rets) {
+
+                                Toastr.success("成功");
+                                Layer.close(index);
+                                intentions.bootstrapTable('refresh');
+                                return false;
+                            }, function (data, ret) {
+                                //失败的回调
+                                intentions.bootstrapTable('refresh');
+                                return false;
+                            });
+
+
+                        }
+                    );
+
+                });
+
+
+            },
+            nointention: function () {
+                // 表格4     暂无意向
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+
+                var nointentions = $("#nointentions");
+                nointentions.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                nointentions.bootstrapTable({
+                    url: 'salesmanagement/Customerlisttabs/nointention',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'salesmanagement/customerlisttabs/add',
+                        edit_url: 'salesmanagement/customerlisttabs/edit',
+                        del_url: 'customer/customerresource/del',
+                        multi_url: 'customer/customerresource/multi',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar4',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'platform.name', title: __('Platform_id')},
+
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            // {
+                            //     field: 'distributinternaltime',
+                            //     title: __('Distributinternaltime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'distributsaletime',
+                            //     title: __('Distributsaletime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+
+                            {
+                                field: 'operate', title: __('Operate'), table: nointentions,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(nointentions);
+
+                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                    var ids = Table.api.selectedids(nointentions);
+
+
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var that = this;
+                    var top = $(that).offset().top - $(window).scrollTop() + 100;
+                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
+                    if (top + 154 > $(window).height()) {
+                        top = top - 154;
+                    }
+                    if ($(window).width() < 480) {
+                        top = left = undefined;
+                    }
+                    Layer.confirm(
+
+                        __('确定加入放弃客户名单吗?'),
+                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                        function (index) {
+
+                            Fast.api.ajax({
+                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                                data: {id: JSON.stringify(ids)}
+                            }, function (data, rets) {
+
+                                Toastr.success("成功");
+                                Layer.close(index);
+                                nointentions.bootstrapTable('refresh');
+                                return false;
+                            }, function (data, ret) {
+                                //失败的回调
+                                nointentions.bootstrapTable('refresh');
+                                return false;
+                            });
+
+
+                        }
+                    );
+
+                });
+
+
+            },
+            giveup: function () {
+                // 表格5     已放弃
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+
+                var giveups = $("#giveups");
+                giveups.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                giveups.bootstrapTable({
+                    url: 'salesmanagement/Customerlisttabs/giveup',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'salesmanagement/customerlisttabs/add',
+                        edit_url: 'salesmanagement/customerlisttabs/edit',
+                        del_url: 'customer/customerresource/del',
+                        multi_url: 'customer/customerresource/multi',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar5',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'platform.name', title: __('Platform_id')},
+
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(giveups);
+
 
 
             },
 
+            overdue: function () {
+                // 表格6     跟进时间过期用户
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+
+                var overdues = $("#overdues");
+                overdues.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                overdues.bootstrapTable({
+                    url: 'salesmanagement/Customerlisttabs/overdue',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'salesmanagement/customerlisttabs/add',
+                        edit_url: 'salesmanagement/customerlisttabs/edit',
+                        del_url: 'customer/customerresource/del',
+                        multi_url: 'customer/customerresource/multi',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar6',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'platform.name', title: __('Platform_id')},
+
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            {field: 'customerlevel', title: '客户等级', operate: false,formatter:Controller.api.formatter.status},
+                            // {
+                            //     field: 'distributinternaltime',
+                            //     title: __('Distributinternaltime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+                            // {
+                            //     field: 'distributsaletime',
+                            //     title: __('Distributsaletime'),
+                            //     operate: false,
+                            //     formatter: Table.api.formatter.datetime
+                            // },
+
+                            {
+                                field: 'operate', title: __('Operate'), table: overdues,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(overdues);
+
+                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                    var ids = Table.api.selectedids(overdues);
+
+
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var that = this;
+                    var top = $(that).offset().top - $(window).scrollTop() + 100;
+                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
+                    if (top + 154 > $(window).height()) {
+                        top = top - 154;
+                    }
+                    if ($(window).width() < 480) {
+                        top = left = undefined;
+                    }
+                    Layer.confirm(
+
+                        __('确定加入放弃客户名单吗?'),
+                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                        function (index) {
+
+                            Fast.api.ajax({
+                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                                data: {id: JSON.stringify(ids)}
+                            }, function (data, rets) {
+
+                                Toastr.success("成功");
+                                Layer.close(index);
+                                overdues.bootstrapTable('refresh');
+                                return false;
+                            }, function (data, ret) {
+                                //失败的回调
+                                overdues.bootstrapTable('refresh');
+                                return false;
+                            });
+
+
+                        }
+                    );
+
+                });
+
+
+            },
         },
         add: function () {
             Controller.api.bindevent();
@@ -180,6 +728,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     url: 'salesmanagement/Customerlisttabs/ajaxGiveup',
                                     data: {id: row[options.pk]}
                                 }, function (datas, rets) {
+
+
                                     //成功的回调
                                     // Fast.api.close(data);
                                     Toastr.success("成功");
@@ -196,7 +746,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         );
 
-                    }
+                    },
+
+
                 }
             },
             formatter: {
@@ -213,7 +765,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             name: 'edit',
                             text: __('Feedback'),
                             icon: 'fa fa-pencil',
-                            title: __('Edit'),
+                            title: '反馈',
                             extend: 'data-toggle="tooltip"',
                             classname: 'btn btn-xs btn-success btn-editone',
                             url: options.extend.edit_url
@@ -245,9 +797,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+                status:function (value, row, index) {
+                    //颜色状态数组,可使用red/yellow/aqua/blue/navy/teal/olive/lime/fuchsia/purple/maroon
+                    // if(value==1) value ='可出租';
+                    // if(value==0) value ='正在维修';
+                    // if(value==2) value ='正在出租';
+
+
+                    var colorArr = {relation: 'info', intention: 'success', nointention: 'danger'};
+                    //如果字段列有定义custom
+                    if (typeof this.custom !== 'undefined') {
+                        colorArr = $.extend(colorArr, this.custom);
+                    }
+                    value = value === null ? '' : value.toString();
+
+                    var color = value && typeof colorArr[value] !== 'undefined' ? colorArr[value] : 'primary';
+
+                    var newValue = value.charAt(0).toUpperCase() + value.slice(1);
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"><i class="fa fa-circle"></i> ' + __(newValue) + '</span>';
+                    // if (this.operate != false) {
+                    //     html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
+                    // }
+                    return html;
+                },
             }
         }
 
     };
+
     return Controller;
 });

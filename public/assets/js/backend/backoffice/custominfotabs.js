@@ -164,6 +164,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(document).on("click", ".btn-selected", function () {
                     var ids = Table.api.selectedids(newCustomer);
                     var url = 'backoffice/custominfotabs/batch?ids=' + ids;
+
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
@@ -218,39 +219,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {field: 'distributinternaltime', title: __('Distributinternaltime'), operate: false,formatter:Table.api.formatter.datetime},
                             {field: 'distributsaletime', title: __('Distributsaletime'), operate: false,formatter:Table.api.formatter.datetime},
-                            // {
-                            //     field: 'createtime',
-                            //     title: __('Createtime'),
-                            //     operate: 'RANGE',
-                            //     addclass: 'datetimerange',
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'updatetime',
-                            //     title: __('Updatetime'),
-                            //     operate: 'RANGE',
-                            //     addclass: 'datetimerange',
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {field: 'feedback', title: __('Feedback')},
-                            // {field: 'note', title: __('Note')},
-                            // {
-                            //     field: 'operate', title: __('Operate'), table: assignedCustomers,
-                            //     // buttons: [
-                            //     //     {name: 'detail', text: '分配', title: '分配',
-                            //     //      icon: 'fa fa-share',
-                            //     //      classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
-                            //     //      url: 'backoffice/custominfotabs/admeasure',
-                            //     //         success:function(data, ret){
-                            //     //         },
-                            //     //         error:function(data,ret){
-                            //     //
-                            //     //         }
-                            //     //     }
-                            //     // ],
-                            //
-                            //     events: Table.api.events.operate, formatter: Table.api.formatter.operate
-                            // }
+
                         ]
                     ]
                 });

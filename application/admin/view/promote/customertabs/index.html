@@ -1,14 +1,23 @@
 <div class="panel panel-default panel-intro">
     <div class="panel-heading">
         <div class="panel-lead"><em>客户池，导入客户资源，分配给内勤，同时可以展示销售反馈回来的信息</em></div>
+        <div>
+            <p style="color:coral;font-weight: bold">注意事项：</p>
+            <ol>
+                <li style="color:rgb(250, 10, 10);font-weight: bold">导入客户信息时，请先下载导入模板 </li>
+                <!-- <li style="color:rgb(250, 10, 10);font-weight: bold">批量分配时，请先选择下方数据 </li> -->
+            </ol>
+        </div>
         <ul class="nav nav-tabs" >
-            <li class="active text-center" style="width: 150px;"><a href="#new_customer" data-toggle="tab" style="color:coral;font-weight: bold"><i class="fa fa-flag-o"></i> 新客户</a></li>
-            <li><a href="#new_allocation" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center" ><i class="fa fa-flag-o"></i> 已分配</a></li>
-            <li><a href="#new_feedback" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center"><i class="fa fa-flag-o"></i> 已反馈</a></li>
+            <li class="active text-center"><a href="#new_customer" data-toggle="tab">新客户 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red">{$total}</small></span></a></li>
+            <li><a href="#new_allocation" data-toggle="tab" class="text-center" > 已分配 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red">{$total1}</small></span></a></li>
+            <li><a href="#new_feedback" data-toggle="tab"  class="text-center" > 已反馈 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red">{$total2}</small></span></a></li>
         </ul>
     </div>
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
+
+
             <!--新客户-->
             
             <div class="tab-pane fade active in" id="new_customer">
@@ -16,26 +25,23 @@
                    
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
                     <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
-                    <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('promote/customertabs/edit')?'':'hide'}" title="{:__('Import')}" ><i class="fa fa-upload"></i> {:__('Import')}</a> -->
                     <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
-                    <a href="javascript:;" class="btn btn-danger import" title="{:__('Import')}"><i class="fa fa-upload"></i> {:__('Import')}</a>
-                    <!-- <a href="javascript:;" class="btn btn-info btn-multi btn-disabled disabled btn-selected" title="{:__('Distribution')}" data-params="distribution"><i class="fa fa-eye"></i> {:__('Distribution')}</a> -->
+                    <!-- <a href="javascript:;" class="btn btn-danger import" title="{:__('Import')}"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
+                    <a href="customertabs/download" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
+                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
+                    <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
                     <a class="btn btn-info btn-disabled disabled btn-selected" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
                     
                 </div>
-                <!-- <table id="table1" class="table table-striped table-bordered table-hover" width="100%">
-                </table> -->
-                <!-- <table id="table1" class="table table-striped table-bordered table-hover table-nowrap"
-                           data-operate-edit="{:$auth->check('plan/planacar/edit')}" 
-                           data-operate-del="{:$auth->check('plan/planacar/del')}" 
-                           width="100%">
-                </table> -->
                 <table id="newCustomer" class="table table-striped table-bordered table-hover table-nowrap"
                         data-operate-edit="{:$auth->check('customer/customerresource/edit')}" 
                         data-operate-del="{:$auth->check('customer/customerresource/del')}" 
                         width="100%">
                 </table>
             </div>
+
+
             <!--已分配-->
             
             <div class="tab-pane fade" id="new_allocation">
@@ -64,7 +70,10 @@
                 </table>
 
             </div>
+
+
             <!--已反馈-->
+
             <div class="tab-pane fade" id="new_feedback">
                     <div id="toolbar3" class="toolbar">
                             <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>

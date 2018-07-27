@@ -3,7 +3,11 @@
 namespace app\admin\controller\promote;
 
 use app\common\controller\Backend;
+use app\admin\controller\wechat\WechatMessage;
+use app\admin\model\Admin as adminModel;
+use app\admin\controller\wechat\Wechatuser;
 use think\Db;
+use think\Config;
 /**
  * 多表格示例
  *
@@ -14,11 +18,13 @@ class Customertabs extends Backend
 {
 
     protected $model = null;
+    // static public $token = null;
 
     public function _initialize()   
     {
         parent::_initialize();
-       
+        // self::$token= $this->getAccessToken();
+        
     }
 
     /**
@@ -28,7 +34,32 @@ class Customertabs extends Backend
     {
        
         $this->loadlang('customer/customerresource');
-        
+        $this->model = model('CustomerResource');
+        $total = $this->model
+                     ->with(['platform'])
+                     ->where($where)
+                     ->where('backoffice_id',NULL)
+                     ->where('platform_id', 'not in', '5,6,7')
+                     ->order($sort, $order)
+                     ->count();
+        $total1 = $this->model
+                     ->with(['platform'])
+                     ->where($where)
+                     ->where('backoffice_id','NOT NULL')
+                     ->where('platform_id', 'not in', '5,6,7')
+                     ->order($sort, $order)
+                     ->count(); 
+        $total2 = $this->model
+                     ->with(['platform'])
+                     ->where($where)
+                     ->where('backoffice_id','NOT NULL')
+                     ->where('platform_id', 'not in', '5,6,7')
+                     ->where('feedback','NOT NULL')
+                     ->order($sort, $order)
+                     ->count();         
+        $this->view->assign('total',$total);
+        $this->view->assign('total1',$total1);
+        $this->view->assign('total2',$total2);
         return $this->view->fetch();
     }
 
@@ -53,6 +84,7 @@ class Customertabs extends Backend
                      ->with(['platform'])
                      ->where($where)
                      ->where('backoffice_id',NULL)
+                     ->where('platform_id', 'not in', '5,6,7')
                      ->order($sort, $order)
                      ->count();
  
@@ -61,6 +93,7 @@ class Customertabs extends Backend
                      ->where($where)
                      ->order($sort, $order)
                      ->where('backoffice_id',NULL)
+                     ->where('platform_id', 'not in', '5,6,7')
                      ->limit($offset, $limit)
                      ->select();
  
@@ -80,10 +113,11 @@ class Customertabs extends Backend
     //分配客户资源给内勤
     //单个分配
     //内勤  message13=>内勤一部，message20=>内勤二部
-    public function dstribution($ids=NULL){
+    public function dstribution($ids=NULL)
+    {
         $this->model = model('CustomerResource');
+        
         $id = $this->model->get(['id' => $ids]);
-       
         $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
               $query->where('rule_message','message20')->whereOr('rule_message','message13');
         })->select(); 
@@ -114,8 +148,30 @@ class Customertabs extends Backend
                 $query->where('id',$id->id);
             }); 
             if($result){
-                $this->success();
+                //这里开始调用微信推送
+                //1、use  wechat/WechatMessage  这个类
+                //2、实例化并传参
+                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
+                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
+                //dump($sendmessage->sendMsgToAll());exit; 
+                // $token = self::$token;
+                // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                // $openid = $getAdminOpenid['openid'];
+                // var_dump($openid);
+                // die;
+                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
 
+                // $msg = $sendmessage->sendMsgToAll();
+                // dump($msg);
+                // die;
+                // if($msg['errcode'] == 0){
+                    $this->success();
+                // }
+                // else {
+                //     $this->error('消息推送失败');
+                // }
+               
+                //$this->error('消息推送失败'); 
             }
             else{
                 $this->error(); 
@@ -123,7 +179,6 @@ class Customertabs extends Backend
         }
        
         return $this->view->fetch();
-
     }
 
     //已分配
@@ -147,6 +202,7 @@ class Customertabs extends Backend
                      ->with(['platform'])
                      ->where($where)
                      ->where('backoffice_id','NOT NULL')
+                     ->where('platform_id', 'not in', '5,6,7')
                      ->order($sort, $order)
                      ->count();
  
@@ -155,6 +211,7 @@ class Customertabs extends Backend
                      ->where($where)
                      ->order($sort, $order)
                      ->where('backoffice_id','NOT NULL')
+                     ->where('platform_id', 'not in', '5,6,7')
                      ->limit($offset, $limit)
                      ->select();
  
@@ -191,6 +248,7 @@ class Customertabs extends Backend
                      ->with(['platform'])
                      ->where($where)
                      ->where('backoffice_id','NOT NULL')
+                     ->where('platform_id', 'not in', '5,6,7')
                      ->where('feedback','NOT NULL')
                      ->order($sort, $order)
                      ->count();
@@ -200,6 +258,7 @@ class Customertabs extends Backend
                      ->where($where)
                      ->order($sort, $order)
                      ->where('backoffice_id','NOT NULL')
+                     ->where('platform_id', 'not in', '5,6,7')
                      ->where('feedback','NOT NULL')
                      ->limit($offset, $limit)
                      ->select();
@@ -220,9 +279,9 @@ class Customertabs extends Backend
     //分配客户资源给内勤
     //批量分配
     //内勤  message13=>内勤一部，message20=>内勤二部
-    public function distribution($ids=''){
+    public function distribution($ids='')
+    {
         
-
         $this->model = model('CustomerResource');
         // $id = $this->model->get(['id' => $ids]);
         
@@ -254,8 +313,29 @@ class Customertabs extends Backend
                 $query->where('id', 'in', $ids);
             }); 
             if($result){
-                //  $this->redirect('newCustomer');
-               $this->success();
+                //这里开始调用微信推送
+                //1、use  wechat/WechatMessage  这个类
+                //2、实例化并传参
+                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
+                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
+                //dump($sendmessage->sendMsgToAll());exit; 
+                // $token = self::$token;
+                // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                // $openid = $getAdminOpenid['openid'];
+                // // var_dump($openid);
+                // // die;
+                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+
+                // $msg = $sendmessage->sendMsgToAll();
+                // // dump($msg);
+                // // die;
+                // if($msg['errcode'] == 0){
+                    $this->success();
+                // }
+                // else {
+                //     $this->error('消息推送失败');
+                // }
+                //$this->error('消息推送失败'); 
             }
             else{
 
@@ -265,68 +345,9 @@ class Customertabs extends Backend
         return $this->view->fetch();
     }
 
-    //批量导入
-    //自定义弹出框
-    public function import(){
-
-        if ($this->request->isPost('submit'))
-        {
-           
-            $file = request()->file('file');
-            pr($file);
-            die;
-            $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads'.DS.'excel'); 
-            
-			if($info){
-			 
-                $excelPath = $info->getSaveName();//获取文件名  
-				$filePath = ROOT_PATH . 'public' . DS . 'uploads'. DS . 'excel' . DS . $excelPath;   //上传文件的地址  
-
-                if (!is_file($filePath)) {
-                    $this->error(__('No results were found'));
-                }
-                $PHPReader = new \PHPExcel_Reader_Excel2007();
-                if (!$PHPReader->canRead($filePath)) {
-                    $PHPReader = new \PHPExcel_Reader_Excel5();
-                    if (!$PHPReader->canRead($filePath)) {
-                        $PHPReader = new \PHPExcel_Reader_CSV();
-                        if (!$PHPReader->canRead($filePath)) {
-                            $this->error(__('Unknown data format'));
-                        }
-                    }
-                }
-        
-                $PHPExcel = $PHPReader->load($filePath); //加载文件
-                
-                $currentSheet = $PHPExcel->getSheet(0)->toArray();  //读取文件中的第一个工作表
-                
-				array_shift($currentSheet);  //删除第一个数组(标题);  
-				$data = [];  
-				foreach($currentSheet as $k=>$v) {  
-					$data[$k]['platform_id'] = $v[0];  
-                    $data[$k]['username'] = $v[1];
-                    $data[$k]['phone'] = $v[2];  
-					$data[$k]['createtime'] = time();     
-					
-				}  
-				// return json(array('file'=>$data)); 
-                // pr($data);die;
-                $this->model = model('CustomerResource');
-                $result = $this->model->saveAll($data);
-                if ($result) {
-                    $this->success();
-                }
-                else {
-                    $this->error();
-                }
-            }
-        }
-
-        return $this->view->fetch();
-    }
-
     //下载导入模板
-    public function download(){
+    public function download()
+    {
         // 新建一个excel对象 大神已经加入了PHPExcel 不用引了 直接用！
         $objPHPExcel = new \PHPExcel();  //在vendor目录下 \不能少 否则报错
         /*设置表头*/
@@ -349,7 +370,7 @@ class Customertabs extends Backend
        
         //浏览器交互 导出
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="客户信息导入模板表.xls"');
+        header('Content-Disposition: attachment;filename="客户信息导入模板表.xlsx"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');

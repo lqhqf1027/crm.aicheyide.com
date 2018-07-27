@@ -43,11 +43,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
             // Controller.api.bindevent();
             // console.log(Config.id);
-            
  
         },
-        //批量分配
-        
+        //批量分配 
         distribution:function(){
  
             // $(".btn-add").data("area", ["300px","200px"]);
@@ -92,7 +90,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         table: {
          
             new_customer: function () {
-                // 表格1
+                // 新客户
                 var newCustomer = $("#newCustomer"); 
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-newCustomer").data("area", ["30%", "30%"]);
@@ -104,15 +102,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     index_url: 'customer/customerresource/index',
                     add_url: 'customer/customerresource/add',
                     // edit_url: 'customer/customerresource/edit',
-                    // del_url: 'customer/customerresource/del',
+                    del_url: 'customer/customerresource/del',
                     // multi_url: 'customer/customerresource/multi',
                     distribution_url: 'promote/customertabs/distribution',
-                    import_url: 'promote/customertabs/import',
+                    import_url: 'customer/customerresource/import',
                     table: 'customer_resource',
                 },
                 toolbar: '#toolbar1',
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
@@ -164,24 +163,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                     Fast.api.open(url,'批量分配',options)
                 })
-                //批量导入
-                $(document).on("click", ".import", function () {
-                    
-                    var url = 'promote/customertabs/import';
-                    var options = {
-                        shadeClose: false,
-                        shade: [0.3, '#393D49'],
-                        area:['30%','30%'],
-                        callback:function(value){
-
-                        }
-                    }
-                    Fast.api.open(url,'导入',options)
-                        
-                })
             },
             new_allocation: function () {
-                // 表格2
+                // 已分配的客户
                 var newAllocation = $("#newAllocation");
                 newAllocation.bootstrapTable({
                     url: 'promote/Customertabs/newAllocation',
@@ -196,6 +180,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
@@ -221,11 +206,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
 
-                // 为表格2绑定事件
+                // 为已分配的客户表格绑定事件
                 Table.api.bindevent(newAllocation);
             },
             new_feedback: function () {
-                // 表格3
+                // 已反馈的客户
                 var newFeedback = $("#newFeedback");
                 newFeedback.bootstrapTable({
                     url: 'promote/Customertabs/newFeedback',
@@ -240,6 +225,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar3',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
@@ -264,9 +250,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
-                // 为表格3绑定事件
+                // 为已反馈的客户表格绑定事件
                 Table.api.bindevent(newFeedback);
             }
+        },
+        import: function () { 
+            Controller.api.bindevent();
+               
         },
         add: function () { 
         Controller.api.bindevent();

@@ -8,7 +8,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     index_url: 'promote/platform/index',
                     add_url: 'promote/platform/add',
                     edit_url: 'promote/platform/edit',
-                    del_url: 'promote/platform/del',
+                    // del_url: 'promote/platform/del',
                     multi_url: 'promote/platform/multi',
                     table: 'platform',
                 }
@@ -21,6 +21,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},

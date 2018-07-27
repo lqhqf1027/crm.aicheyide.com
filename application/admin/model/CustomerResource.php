@@ -31,9 +31,24 @@ class CustomerResource extends Model
     }
 
 
-    public function getCustomerlevelList()
+    public function getNewCustomerlevelList()
     {
-        return ['relation' => __('Relation'),'intention' => __('Intention'),'nointention' => __('Nointention'),'giveup' => __('Giveups')];
+        return ['relation' => __('Relation'),'intention' => __('Intention'),'nointention' => __('Nointention')];
+    }
+
+    public function getRelationCustomerlevelList()
+    {
+        return ['intention' => __('Intention'),'nointention' => __('Nointention'),'giveup' => __('Giveups')];
+    }
+
+    public function getIntentionCustomerlevelList()
+    {
+        return ['relation' => __('Relation'),'nointention' => __('Nointention'),'giveup' => __('Giveups')];
+    }
+
+    public function getNointentionCustomerlevelList()
+    {
+        return ['relation' => __('Relation'),'intention' => __('Intention'),'giveup' => __('Giveups')];
     }
 
 
