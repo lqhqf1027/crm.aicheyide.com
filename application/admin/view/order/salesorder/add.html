@@ -1,41 +1,21 @@
 <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+ {php}
+  foreach($newRes as $k =>$v){
+    dump($v) ;
+  } 
+   
+ 
+  {/php}
+    <!-- <div class="form-group">
+        <label  class="control-label col-xs-12 col-sm-2">{:__('销售车型')}:</label>
+        <div class="col-xs-12 col-sm-4">
+                {:build_select('row[plan_acar_name]', $newRes, null, ['class'=>'form-control selectpicker',  'data-rule'=>'required'])} 
+                
+        </div>
 
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Plan_acar_name')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-plan_acar_name" data-rule="required" class="form-control" name="row[plan_acar_name]" type="text">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Sales_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-sales_id" data-rule="required" data-source="sales/index" class="form-control selectpage" name="row[sales_id]" type="text" value="">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Backoffice_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-backoffice_id" data-rule="required" data-source="backoffice/index" class="form-control selectpage" name="row[backoffice_id]" type="text" value="">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Control_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-control_id" data-rule="required" data-source="control/index" class="form-control selectpage" name="row[control_id]" type="text" value="">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('New_car_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-new_car_id" data-rule="required" data-source="new/car/index" class="form-control selectpage" name="row[new_car_id]" type="text" value="">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Order_no')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-order_no" data-rule="required" class="form-control" name="row[order_no]" type="text">
-        </div>
-    </div>
+    </div> -->
+     
+     
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8">
