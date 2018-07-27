@@ -25,9 +25,7 @@ class Customerlisttabs extends Backend
     {
         parent::_initialize();
 
-
     }
-
 
     public function index()
     {
