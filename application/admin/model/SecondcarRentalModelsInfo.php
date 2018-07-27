@@ -4,10 +4,10 @@ namespace app\admin\model;
 
 use think\Model;
 
-class CarRentalModelsInfo extends Model
+class SecondcarRentalModelsInfo extends Model
 {
     // 表名
-    protected $name = 'car_rental_models_info';
+    protected $name = 'secondcar_rental_models_info';
     
     // 自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
