@@ -288,7 +288,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             },
             intention: function () {
-                // 表格2     待联系
+                // 表格3     有意向
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
@@ -399,7 +399,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             },
             nointention: function () {
-                // 表格2     待联系
+                // 表格4     暂无意向
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
@@ -511,9 +511,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
-
             giveup: function () {
-                // 表格2     待联系
+                // 表格5     已放弃
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
@@ -554,7 +553,60 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            // {field: 'followupdate', title: '下次跟进时间', operate: false},
+
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(giveups);
+
+
+
+            },
+
+            overdue: function () {
+                // 表格6     跟进时间过期用户
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+
+                var overdues = $("#overdues");
+                overdues.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                overdues.bootstrapTable({
+                    url: 'salesmanagement/Customerlisttabs/overdue',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'salesmanagement/customerlisttabs/add',
+                        edit_url: 'salesmanagement/customerlisttabs/edit',
+                        del_url: 'customer/customerresource/del',
+                        multi_url: 'customer/customerresource/multi',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar6',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'platform.name', title: __('Platform_id')},
+
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
                             // {
                             //     field: 'distributinternaltime',
                             //     title: __('Distributinternaltime'),
@@ -568,18 +620,60 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             //     formatter: Table.api.formatter.datetime
                             // },
 
-                            // {
-                            //     field: 'operate', title: __('Operate'), table: giveups,
-                            //
-                            //     events: Controller.api.events.operate,
-                            //     formatter: Controller.api.formatter.operate
-                            // }
+                            {
+                                field: 'operate', title: __('Operate'), table: overdues,
+
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
                         ]
                     ]
                 });
                 // 为表格1绑定事件
-                Table.api.bindevent(giveups);
+                Table.api.bindevent(overdues);
 
+                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                    var ids = Table.api.selectedids(overdues);
+
+
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var that = this;
+                    var top = $(that).offset().top - $(window).scrollTop() + 100;
+                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
+                    if (top + 154 > $(window).height()) {
+                        top = top - 154;
+                    }
+                    if ($(window).width() < 480) {
+                        top = left = undefined;
+                    }
+                    Layer.confirm(
+
+                        __('确定加入放弃客户名单吗?'),
+                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                        function (index) {
+
+                            Fast.api.ajax({
+                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                                data: {id: JSON.stringify(ids)}
+                            }, function (data, rets) {
+
+                                Toastr.success("成功");
+                                Layer.close(index);
+                                overdues.bootstrapTable('refresh');
+                                return false;
+                            }, function (data, ret) {
+                                //失败的回调
+                                overdues.bootstrapTable('refresh');
+                                return false;
+                            });
+
+
+                        }
+                    );
+
+                });
 
 
             },
