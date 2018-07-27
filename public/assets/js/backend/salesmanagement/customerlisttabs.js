@@ -797,21 +797,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
-                status: function (value, row, index) {
+                status:function (value, row, index) {
                     //颜色状态数组,可使用red/yellow/aqua/blue/navy/teal/olive/lime/fuchsia/purple/maroon
-                    var colorArr = {intention: 'success', relation: 'info', nointention: 'danger'};
+                    // if(value==1) value ='可出租';
+                    // if(value==0) value ='正在维修';
+                    // if(value==2) value ='正在出租';
+
+
+                    var colorArr = {relation: 'info', intention: 'success', nointention: 'danger'};
                     //如果字段列有定义custom
                     if (typeof this.custom !== 'undefined') {
                         colorArr = $.extend(colorArr, this.custom);
                     }
                     value = value === null ? '' : value.toString();
+
                     var color = value && typeof colorArr[value] !== 'undefined' ? colorArr[value] : 'primary';
+
                     var newValue = value.charAt(0).toUpperCase() + value.slice(1);
                     //渲染状态
-                    var html = '<span class="text-' + color + '">' + __(newValue) + '</span>';
-                    if (this.operate != false) {
-                        html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
-                    }
+                    var html = '<span class="text-' + color + '"><i class="fa fa-circle"></i> ' + __(newValue) + '</span>';
+                    // if (this.operate != false) {
+                    //     html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
+                    // }
                     return html;
                 },
             }

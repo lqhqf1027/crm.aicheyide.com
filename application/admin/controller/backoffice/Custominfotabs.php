@@ -225,6 +225,7 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
+
             $result = $this->model->save(['sales_id' => $params['id'], 'distributsaletime' => time()], function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
@@ -238,8 +239,10 @@ class Custominfotabs extends Backend
                 $token = self::$token;
                 $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
                 $openid = $getAdminOpenid['openid'];
-                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+
+                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');
                 $msg = $sendmessage->sendMsgToAll();
+
                 if($msg['errcode']==0){
                     $this->success();
                 }else{
