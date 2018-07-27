@@ -3,7 +3,9 @@
 namespace app\admin\controller\backoffice;
 
 use app\common\controller\Backend;
-
+use app\admin\controller\wechat\WechatMessage;
+use app\admin\model\Admin as adminModel;
+use think\Config;
 use think\Db;
 
 
@@ -17,12 +19,13 @@ class Custominfotabs extends Backend
 {
 
     protected $model = null;
+    static protected $token = null;
 
 //    protected $multiFields = 'batch';
     public function _initialize()
     {
         parent::_initialize();
-
+        self::$token= $this->getAccessToken();
     }
 
     /**
@@ -30,9 +33,32 @@ class Custominfotabs extends Backend
      */
     public function index()
     {
-
+        $this->model = model('CustomerResource');
         $this->loadlang('backoffice/custominfotabs');
+        $newTotal = $this->model
+            ->with(['platform'])
+            ->where(function ($query) {
+                $query->where('backoffice_id', $this->auth->id)
+                    ->where('sales_id', 'null')
+                    ->where('platform_id', 'in', [2, 3, 4]);
 
+            })
+            ->count();
+
+
+        $assignedTotal = $this->model
+            ->with(['platform'])
+            ->where(function ($query) {
+                $query->where('backoffice_id', $this->auth->id)
+                    ->where('sales_id', 'not null')
+                    ->where('platform_id', 'in', [2, 3, 4]);
+            })
+            ->count();
+
+        $this->view->assign([
+            'newTotal' => $newTotal,
+            'assignedTotal' => $assignedTotal
+        ]);
         return $this->view->fetch();
     }
 
@@ -44,6 +70,7 @@ class Custominfotabs extends Backend
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         //当前是否为关联查询
         $this->relationSearch = true;
+
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -56,7 +83,7 @@ class Custominfotabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('backoffice_id',$this->auth->id)
+                    $query->where('backoffice_id', $this->auth->id)
                         ->where('sales_id', 'null')
                         ->where('platform_id', 'in', [2, 3, 4]);
 
@@ -64,12 +91,13 @@ class Custominfotabs extends Backend
                 ->order($sort, $order)
                 ->count();
 
+
             $list = $this->model
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('backoffice_id',$this->auth->id)
+                    $query->where('backoffice_id', $this->auth->id)
                         ->where('sales_id', 'null')
                         ->where('platform_id', 'in', [2, 3, 4]);
 
@@ -112,7 +140,7 @@ class Custominfotabs extends Backend
                 ->where(function ($query) {
                     $query->where('backoffice_id', $this->auth->id)
                         ->where('sales_id', 'not null')
-                        ->where('platform_id','in',[2,3,4]);
+                        ->where('platform_id', 'in', [2, 3, 4]);
                 })
                 ->order($sort, $order)
                 ->count();
@@ -125,7 +153,7 @@ class Custominfotabs extends Backend
                 ->where(function ($query) {
                     $query->where('backoffice_id', $this->auth->id)
                         ->where('sales_id', 'not null')
-                        ->where('platform_id','in',[2,3,4]);
+                        ->where('platform_id', 'in', [2, 3, 4]);
                 })
                 ->limit($offset, $limit)
                 ->select();
@@ -201,7 +229,23 @@ class Custominfotabs extends Backend
                 $query->where('id', $id->id);
             });
             if ($result) {
-                $this->success();
+                //这里开始调用微信推送
+                //1、use  wechat/WechatMessage  这个类
+                //2、实例化并传参
+                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
+                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化
+                //dump($sendmessage->sendMsgToAll());exit;
+                $token = self::$token;
+                $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                $openid = $getAdminOpenid['openid'];
+                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+                $msg = $sendmessage->sendMsgToAll();
+                if($msg['errcode']==0){
+                    $this->success();
+                }else{
+                    $this->error("消息推送失败");
+                }
+
 
             } else {
                 $this->error();
@@ -269,8 +313,28 @@ class Custominfotabs extends Backend
                 $query->where('id', 'in', $ids);
             });
             if ($result) {
+                //这里开始调用微信推送
+                //1、use  wechat/WechatMessage  这个类
+                //2、实例化并传参
+                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
+                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化
+                //dump($sendmessage->sendMsgToAll());exit;
+                $token = self::$token;
+                $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                $openid = $getAdminOpenid['openid'];
+                // // var_dump($openid);
+                // // die;
+                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
 
-                $this->success();
+                $msg = $sendmessage->sendMsgToAll();
+                // dump($msg);
+                // die;
+                if($msg['errcode'] == 0){
+                    $this->success();
+                }
+                else {
+                    $this->error('消息推送失败');
+                }
             } else {
 
                 $this->error();
