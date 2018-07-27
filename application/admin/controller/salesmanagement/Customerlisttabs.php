@@ -79,11 +79,13 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('sales_id', 17)
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', null)
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
                                 ->where('customerlevel', null);
                         });
 
@@ -97,11 +99,13 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('sales_id', 17)
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', null)
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
                                 ->where('customerlevel', null);
                         });
 
@@ -152,15 +156,14 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
-                        ->where('customerlevel', 'not null')
-                        ->where(strtotime('followuptime'), '<', time())
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', null)
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'not null')
-                                ->where(strtotime('followuptime'), '<', time());
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
+                                ->where('customerlevel', null);
                         });
 
                 })
@@ -173,15 +176,16 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
-                        ->where('customerlevel', 'not null')
-                        ->where(strtotime('followuptime'), '<', time())
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'in',['intention','nointention','relation'])
+                        ->where('followuptimestamp',"<",time())
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'not null')
-                                ->where(strtotime('followuptime'), '<', time());
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
+                                ->where('followuptimestamp',"<",time())
+                                ->where('customerlevel', 'in',['intention','nointention','relation']);
                         });
 
                 })
@@ -226,13 +230,16 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'relation')
+                        ->where('followuptimestamp',">",time())
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'relation');
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
+                                ->where('customerlevel', 'relation')
+                                ->where('followuptimestamp',">",time());
                         });
 
                 })
@@ -245,13 +252,16 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'relation')
+                        ->where('followuptimestamp',">",time())
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'relation');
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
+                                ->where('customerlevel', 'relation')
+                                ->where('followuptimestamp',">",time());
                         });
 
                 })
@@ -292,13 +302,16 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
-                        ->where('customerlevel', 'relation')
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'intention')
+                        ->where('followuptimestamp',">",time())
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'intention');
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
+                                ->where('customerlevel', 'intention')
+                                ->where('followuptimestamp',">",time());
                         });
 
                 })
@@ -311,13 +324,16 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
-                        ->where('customerlevel', 'relation')
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'intention')
+                        ->where('followuptimestamp',">",time())
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'intention');
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
+                                ->where('customerlevel', 'intention')
+                                ->where('followuptimestamp',">",time());
                         });
 
                 })
@@ -358,13 +374,16 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'nointention')
+                        ->where('followuptimestamp',">",time())
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'nointention');
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
+                                ->where('customerlevel', 'nointention')
+                                ->where('followuptimestamp',">",time());
                         });
 
                 })
@@ -377,13 +396,16 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
+                    $query->where('backoffice_id','not null')
+                        ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'nointention')
+                        ->where('followuptimestamp',">",time())
                         ->whereOr(function ($query2) {
                             $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'nointention');
+                                ->where('backoffice_id',null)
+                                ->where('sales_id',$this->auth->id)
+                                ->where('customerlevel', 'nointention')
+                                ->where('followuptimestamp',">",time());
                         });
 
                 })
@@ -424,15 +446,8 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
-                        ->where('customerlevel', 'giveup')
-                        ->whereOr(function ($query2) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'giveup');
-                        });
-
+                    $query->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'giveup');
                 })
                 ->order($sort, $order)
                 ->count();
@@ -443,15 +458,8 @@ class Customerlisttabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('sales_id', 'not null')
-                        ->where('backoffice_id', 'not null')
-                        ->where('sales_id', 17)
-                        ->where('customerlevel', 'giveup')
-                        ->whereOr(function ($query2) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('customerlevel', 'giveup');
-                        });
-
+                    $query->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'giveup');
                 })
                 ->limit($offset, $limit)
                 ->select();
@@ -480,7 +488,10 @@ class Customerlisttabs extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
 
+
+
             if ($params) {
+                $params['sales_id'] = $this->auth->id;
 
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -546,7 +557,7 @@ class Customerlisttabs extends Backend
 
             if ($params) {
 
-                $this->model->where('id', $ids)->setField('feedbacktime', time());
+                $this->model->where('id', $ids)->update(['feedbacktime'=>time(),'followuptimestamp'=>strtotime($params['followupdate'])]);
 
                 try {
                     //是否采用模型验证
@@ -575,7 +586,7 @@ class Customerlisttabs extends Backend
         return $this->view->fetch();
     }
 
-
+//放弃
     public function ajaxGiveup()
     {
         if ($this->request->isAjax()) {
@@ -595,7 +606,7 @@ class Customerlisttabs extends Backend
 
     }
 
-
+//批量放弃
     public function ajaxBatchGiveup()
     {
 

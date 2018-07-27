@@ -33,7 +33,7 @@ class CustomerResource extends Model
 
     public function getNewCustomerlevelList()
     {
-        return ['relation' => __('Relation'),'intention' => __('Intention'),'nointention' => __('Nointention'),'giveup' => __('Giveups')];
+        return ['relation' => __('Relation'),'intention' => __('Intention'),'nointention' => __('Nointention')];
     }
 
     public function getRelationCustomerlevelList()

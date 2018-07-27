@@ -6,35 +6,6 @@ use app\common\controller\Backend;
 
 use think\Db;
 
-///**
-// *
-// *
-// * @icon fa fa-circle-o
-// */
-//class Custominfotabs extends Backend
-//{
-//
-//    /**
-//     * Custominfotabs模型对象
-//     * @var \app\admin\model\Custominfotabs
-//     */
-//    protected $model = null;
-//
-//    public function _initialize()
-//    {
-//        parent::_initialize();
-//        $this->model = model('Custominfotabs');
-//
-//    }
-//
-//    /**
-//     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-//     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-//     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-//     */
-//
-//
-//}
 
 /**
  * 多表格示例
@@ -85,9 +56,7 @@ class Custominfotabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('backoffice_id', 13)
-                        //->where('backoffice_id',$this->auth->id)
+                    $query->where('backoffice_id',$this->auth->id)
                         ->where('sales_id', 'null')
                         ->where('platform_id', 'in', [2, 3, 4]);
 
@@ -100,11 +69,10 @@ class Custominfotabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('backoffice_id', 13)
-                        //->where('backoffice_id', $this->auth->id)
+                    $query->where('backoffice_id',$this->auth->id)
                         ->where('sales_id', 'null')
                         ->where('platform_id', 'in', [2, 3, 4]);
+
                 })
                 ->limit($offset, $limit)
                 ->select();
@@ -142,9 +110,7 @@ class Custominfotabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('backoffice_id', 13)
-                        //->where('backoffice_id', $this->auth->id)
+                    $query->where('backoffice_id', $this->auth->id)
                         ->where('sales_id', 'not null')
                         ->where('platform_id','in',[2,3,4]);
                 })
@@ -157,9 +123,7 @@ class Custominfotabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('backoffice_id', 13)
-                        //->where('backoffice_id', $this->auth->id)
+                    $query->where('backoffice_id', $this->auth->id)
                         ->where('sales_id', 'not null')
                         ->where('platform_id','in',[2,3,4]);
                 })
