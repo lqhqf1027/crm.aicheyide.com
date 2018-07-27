@@ -18,6 +18,7 @@ class Vehicleinformation extends Backend
      * @var \app\admin\model\CarRentalModelsInfo
      */
     protected $model = null;
+    protected $multiFields = 'shelfismenu';
 
     public function _initialize()
     {

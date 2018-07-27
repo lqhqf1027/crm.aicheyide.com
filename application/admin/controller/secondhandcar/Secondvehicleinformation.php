@@ -18,6 +18,7 @@ class Secondvehicleinformation extends Backend
      * @var \app\admin\model\SecondcarRentalModelsInfo
      */
     protected $model = null;
+    protected $multiFields = 'shelfismenu';
 
     public function _initialize()
     {

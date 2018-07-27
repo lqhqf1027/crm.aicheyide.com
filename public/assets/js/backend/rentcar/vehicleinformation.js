@@ -45,7 +45,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'volumekeys', title: __('Volumekeys')},
                         {field: 'Parkingposition', title: __('Parkingposition')},
                         {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Table.api.formatter.toggle},
-                        {field: 'shelfismenu_text', title: __('Shelfismenu'), operate:false},
                         {field: 'vehiclestate', title: __('Vehiclestate')},
                         {field: 'note', title: __('Note')},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
@@ -97,6 +96,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         api: {
             bindevent: function () {
+                $(document).on('click', "input[name='row[shelfismenu]']", function () {
+                    var name = $("input[name='row[name]']");
+                    name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
+                });
+                $("input[name='row[shelfismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
             }
         }
