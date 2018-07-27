@@ -636,5 +636,6 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             }
         },
     };
+
     return Table;
 });

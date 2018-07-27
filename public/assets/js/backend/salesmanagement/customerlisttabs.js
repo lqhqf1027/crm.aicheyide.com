@@ -49,6 +49,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         table: {
 
             new_customer: function () {
+
+
+            // <span class="pagination-info">显示第 1 到第 1 条记录，总共 1 条记录</span>
+
+
                 // 表格1
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
@@ -108,26 +113,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
+
+
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
 
 
-                // 批量分配
-                // $(document).on("click", ".btn-selected", function () {
-                //     var ids = Table.api.selectedids(newCustomer);
-                //
-                //
-                //     var url = 'backoffice/custominfotabs/batch?ids=' + ids;
-                //     var options = {
-                //         shadeClose: false,
-                //         shade: [0.3, '#393D49'],
-                //         area: ['50%', '50%'],
-                //         callback: function (value) {
-                //
-                //         }
-                //     };
-                //     Fast.api.open(url, '批量分配', options)
-                // });
 
 
                 // 批量加入放弃客户
@@ -157,6 +148,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
                                 data: {id: JSON.stringify(ids)}
                             }, function (data, rets) {
+
 
                                 Toastr.success("成功");
                                 Layer.close(index);
@@ -607,6 +599,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            {field: 'customerlevel', title: '客户等级', operate: false,formatter:Controller.api.formatter.status},
                             // {
                             //     field: 'distributinternaltime',
                             //     title: __('Distributinternaltime'),
@@ -735,6 +728,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     url: 'salesmanagement/Customerlisttabs/ajaxGiveup',
                                     data: {id: row[options.pk]}
                                 }, function (datas, rets) {
+
+
                                     //成功的回调
                                     // Fast.api.close(data);
                                     Toastr.success("成功");
@@ -802,9 +797,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+                status: function (value, row, index) {
+                    //颜色状态数组,可使用red/yellow/aqua/blue/navy/teal/olive/lime/fuchsia/purple/maroon
+                    var colorArr = {intention: 'success', relation: 'info', nointention: 'danger'};
+                    //如果字段列有定义custom
+                    if (typeof this.custom !== 'undefined') {
+                        colorArr = $.extend(colorArr, this.custom);
+                    }
+                    value = value === null ? '' : value.toString();
+                    var color = value && typeof colorArr[value] !== 'undefined' ? colorArr[value] : 'primary';
+                    var newValue = value.charAt(0).toUpperCase() + value.slice(1);
+                    //渲染状态
+                    var html = '<span class="text-' + color + '">' + __(newValue) + '</span>';
+                    if (this.operate != false) {
+                        html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
+                    }
+                    return html;
+                },
             }
         }
 
     };
+
     return Controller;
 });
