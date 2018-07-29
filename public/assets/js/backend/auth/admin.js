@@ -55,7 +55,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ]
             });
-alert(Config.admin.id);
+ 
             // 为表格绑定事件
             Table.api.bindevent(table);
         },

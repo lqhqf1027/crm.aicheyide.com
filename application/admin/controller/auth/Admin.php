@@ -104,8 +104,8 @@ class Admin extends Backend
      */
     public function index()
     {
-        // if ($this->request->isAjax())
-        // {
+        if ($this->request->isAjax())
+        {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField'))
             {
@@ -151,9 +151,9 @@ class Admin extends Backend
             }
             unset($v);
             $result = array("total" => $total, "rows" => $list);
-            pr(collection($result)->toArray());die;
+            // pr(collection($result)->toArray());die;
             return json($result);
-        // }
+        }
         return $this->view->fetch();
     }
 
