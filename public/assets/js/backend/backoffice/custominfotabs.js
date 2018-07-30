@@ -24,20 +24,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         //刷新
-        admeasure:function(){
+        admeasure: function () {
 
             // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
 
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
 
-                console.log(data);
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
                 // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
+            }, function (data, ret) {
 
 
                 Toastr.success("失败");
@@ -48,20 +46,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
         },
-
-        batch:function(){
+        batch: function () {
 
 
             // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
                 // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
+            }, function (data, ret) {
                 // console.log(data);
 
                 Toastr.success("失败");
@@ -90,7 +85,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         edit_url: 'customer/customerresource/edit',
                         del_url: 'customer/customerresource/del',
                         multi_url: 'customer/customerresource/multi',
-                        admeasure_url: 'backoffice/custominfotabs/admeasure',
+                        // admeasure_url: 'backoffice/custominfotabs/admeasure',
                         table: 'customer_resource',
                     },
                     toolbar: '#toolbar1',
@@ -156,8 +151,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
 
                                 ],
-
-
                                 events: Table.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
@@ -190,7 +183,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
-            assigned_customers:function () {
+            assigned_customers: function () {
                 // 表格2
                 var assignedCustomers = $("#assignedCustomers");
                 assignedCustomers.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -229,8 +222,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {field: 'distributinternaltime', title: __('Distributinternaltime'), operate: false,formatter:Table.api.formatter.datetime},
-                            {field: 'distributsaletime', title: __('Distributsaletime'), operate: false,formatter:Table.api.formatter.datetime},
+                            {
+                                field: 'distributinternaltime',
+                                title: __('Distributinternaltime'),
+                                operate: false,
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'distributsaletime',
+                                title: __('Distributsaletime'),
+                                operate: false,
+                                formatter: Table.api.formatter.datetime
+                            },
 
                         ]
                     ]
@@ -244,8 +247,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             }
-
-
 
 
         },
