@@ -236,12 +236,13 @@ class Custominfotabs extends Backend
                 //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
                 //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化
                 //dump($sendmessage->sendMsgToAll());exit;
+
                 $token = self::$token;
                 $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
                 $openid = $getAdminOpenid['openid'];
-
                 $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');
                 $msg = $sendmessage->sendMsgToAll();
+
 
                 if($msg['errcode']==0){
                     $this->success();

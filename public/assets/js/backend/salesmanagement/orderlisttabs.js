@@ -25,9 +25,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         table:{
             order_acar: function () {
-                 
-              
-               
+
                 // 表格1
                 var orderAcar = $("#orderAcar"); 
                  

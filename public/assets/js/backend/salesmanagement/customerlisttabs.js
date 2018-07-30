@@ -22,37 +22,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
-        // ajaxBatchGiveup:function(){
-        //
-        //     // $(".btn-add").data("area", ["300px","200px"]);
-        //     Table.api.init({
-        //
-        //     });
-        //     Form.api.bindevent($("form[role=form]"), function(data, ret){
-        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-        //         Fast.api.close(data);//这里是重点
-        //         // console.log(data);
-        //         // Toastr.success("成功");//这个可有可无
-        //     }, function(data, ret){
-        //
-        //
-        //         Toastr.success("失败");
-        //
-        //     });
-        //     // Controller.api.bindevent();
-        //     // console.log(Config.id);
-        //
-        //
-        // },
-
 
         table: {
 
             new_customer: function () {
-
-
-            // <span class="pagination-info">显示第 1 到第 1 条记录，总共 1 条记录</span>
-
 
                 // 表格1
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
@@ -118,11 +91,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
 
-
-
-
                 // 批量加入放弃客户
-
 
                 $(document).on("click", ".btn-selected", function (e, value, row, index) {
                     var ids = Table.api.selectedids(newCustomer);
@@ -138,7 +107,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         top = left = undefined;
                     }
                     Layer.confirm(
-
                         __('确定加入放弃客户名单吗?'),
                         {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
 
@@ -149,10 +117,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 data: {id: JSON.stringify(ids)}
                             }, function (data, rets) {
 
-
                                 Toastr.success("成功");
                                 Layer.close(index);
-                                 newCustomer.bootstrapTable('refresh');
+                                newCustomer.bootstrapTable('refresh');
                                 return false;
                             }, function (data, ret) {
                                 //失败的回调
@@ -164,8 +131,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
                     );
 
-                });
+                })
 
+                newCustomer.on('load-success.bs.table', function (e, data) {
+                    // data.total
+                    var newCustomerNum = $('#badge_new_customer').text(data.total);
+
+                })
 
             },
             relation: function () {
@@ -211,6 +183,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            {
+                                field: 'customerlevel',
+                                title: '客户等级',
+                                operate: false,
+                                formatter: Controller.api.formatter.status
+                            },
                             // {
                             //     field: 'distributinternaltime',
                             //     title: __('Distributinternaltime'),
@@ -250,7 +228,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         top = left = undefined;
                     }
                     Layer.confirm(
-
                         __('确定加入放弃客户名单吗?'),
                         {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
 
@@ -276,6 +253,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     );
 
                 });
+                relations.on('load-success.bs.table', function (e, data) {
+
+                    var newCustomerNum = $('#badge_relation').text(data.total);
+
+                })
 
 
             },
@@ -322,6 +304,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            {
+                                field: 'customerlevel',
+                                title: '客户等级',
+                                operate: false,
+                                formatter: Controller.api.formatter.status
+                            },
+
                             // {
                             //     field: 'distributinternaltime',
                             //     title: __('Distributinternaltime'),
@@ -361,7 +350,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         top = left = undefined;
                     }
                     Layer.confirm(
-
                         __('确定加入放弃客户名单吗?'),
                         {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
 
@@ -388,6 +376,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
 
+                intentions.on('load-success.bs.table', function (e, data) {
+                    // data.total
+                    var newCustomerNum = $('#badge_intention').text(data.total);
+
+                })
 
             },
             nointention: function () {
@@ -398,7 +391,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var nointentions = $("#nointentions");
                 nointentions.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-newSalesList").data("area", ["50%", "50%"]);
                 });
                 // 初始化表格
                 nointentions.bootstrapTable({
@@ -433,6 +426,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            {
+                                field: 'customerlevel',
+                                title: '客户等级',
+                                operate: false,
+                                formatter: Controller.api.formatter.status
+                            },
+
                             // {
                             //     field: 'distributinternaltime',
                             //     title: __('Distributinternaltime'),
@@ -474,7 +474,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         top = left = undefined;
                     }
                     Layer.confirm(
-
                         __('确定加入放弃客户名单吗?'),
                         {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
 
@@ -500,6 +499,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     );
 
                 });
+                nointentions.on('load-success.bs.table', function (e, data) {
+                    // data.total
+                    var newCustomerNum = $('#badge_no_intention').text(data.total);
+
+                })
 
 
             },
@@ -552,124 +556,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(giveups);
 
+                giveups.on('load-success.bs.table', function (e, data) {
+
+                    var newCustomerNum = $('#badge_give_up').text(data.total);
+
+                })
 
 
             },
 
-            overdue: function () {
-                // 表格6     跟进时间过期用户
-                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
-                    return "快速搜索客户姓名";
-                };
-
-                var overdues = $("#overdues");
-                overdues.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
-                });
-                // 初始化表格
-                overdues.bootstrapTable({
-                    url: 'salesmanagement/Customerlisttabs/overdue',
-                    extend: {
-                        index_url: 'customer/customerresource/index',
-                        add_url: 'salesmanagement/customerlisttabs/add',
-                        edit_url: 'salesmanagement/customerlisttabs/edit',
-                        del_url: 'customer/customerresource/del',
-                        multi_url: 'customer/customerresource/multi',
-                        table: 'customer_resource',
-                    },
-                    toolbar: '#toolbar6',
-                    pk: 'id',
-                    sortName: 'id',
-                    searchFormVisible: true,
-                    columns: [
-                        [
-                            {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
-                            {field: 'platform.name', title: __('Platform_id')},
-
-                            // {field: 'sales_id', title: __('Sales_id')},
-                            {field: 'username', title: __('Username')},
-                            {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
-                            {
-                                field: 'genderdata',
-                                title: __('Genderdata'),
-                                visible: false,
-                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
-                            },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {field: 'followupdate', title: '下次跟进时间', operate: false},
-                            {field: 'customerlevel', title: '客户等级', operate: false,formatter:Controller.api.formatter.status},
-                            // {
-                            //     field: 'distributinternaltime',
-                            //     title: __('Distributinternaltime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'distributsaletime',
-                            //     title: __('Distributsaletime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-
-                            {
-                                field: 'operate', title: __('Operate'), table: overdues,
-
-                                events: Controller.api.events.operate,
-                                formatter: Controller.api.formatter.operate
-                            }
-                        ]
-                    ]
-                });
-                // 为表格1绑定事件
-                Table.api.bindevent(overdues);
-
-                $(document).on("click", ".btn-selected", function (e, value, row, index) {
-                    var ids = Table.api.selectedids(overdues);
-
-
-                    e.stopPropagation();
-                    e.preventDefault();
-                    var that = this;
-                    var top = $(that).offset().top - $(window).scrollTop() + 100;
-                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
-                    if (top + 154 > $(window).height()) {
-                        top = top - 154;
-                    }
-                    if ($(window).width() < 480) {
-                        top = left = undefined;
-                    }
-                    Layer.confirm(
-
-                        __('确定加入放弃客户名单吗?'),
-                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
-
-                        function (index) {
-
-                            Fast.api.ajax({
-                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
-                                data: {id: JSON.stringify(ids)}
-                            }, function (data, rets) {
-
-                                Toastr.success("成功");
-                                Layer.close(index);
-                                overdues.bootstrapTable('refresh');
-                                return false;
-                            }, function (data, ret) {
-                                //失败的回调
-                                overdues.bootstrapTable('refresh');
-                                return false;
-                            });
-
-
-                        }
-                    );
-
-                });
-
-
-            },
         },
         add: function () {
             Controller.api.bindevent();
@@ -773,12 +668,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
 
                     buttons.push({
-                        name: 'detail',
+                        name: 'add',
                         text: __('Newsaleslist'),
                         title: __('Newsaleslist'),
                         icon: 'fa fa-share',
-                        classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
-                        url: 'backoffice/custominfotabs/admeasure',
+                        classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList btn-add',
+
                     });
 
                     if (options.extend.give_up_url !== '') {
@@ -797,7 +692,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
-                status:function (value, row, index) {
+                status: function (value, row, index) {
                     //颜色状态数组,可使用red/yellow/aqua/blue/navy/teal/olive/lime/fuchsia/purple/maroon
                     // if(value==1) value ='可出租';
                     // if(value==0) value ='正在维修';
