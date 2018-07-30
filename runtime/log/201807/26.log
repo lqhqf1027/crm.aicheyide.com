@@ -1,0 +1,1673 @@
+---------------------------------------------------------------
+[ 2018-07-26T18:34:16+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/intention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082819
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/intention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082819 [运行时间：0.927541s][吞吐率：1.08req/s] [内存消耗：3,321.20kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001209s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'intention',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601082819',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000310s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000587s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->intention[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000202s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.133650s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.088739s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.088521s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.089439s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.134231s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.089358s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.088850s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'intention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.089144s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'intention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.089888s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:35:04+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082820
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082820 [运行时间：0.825728s][吞吐率：1.21req/s] [内存消耗：3,320.39kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000018s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002552s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'relation',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601082820',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000340s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000482s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->relation[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000238s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.120347s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.078954s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.078557s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.076729s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.118465s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.078913s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.078517s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.078100s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.079528s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:35:19+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/giveup?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082821
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/giveup?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082821 [运行时间：0.827408s][吞吐率：1.21req/s] [内存消耗：3,310.36kb] [文件加载：85]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000032s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001285s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'giveup',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601082821',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000299s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000487s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->giveup[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000208s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.120616s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.078929s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.078579s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.079866s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.118629s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.078943s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.078509s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'giveup' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'giveup' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.078306s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'giveup' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'giveup' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.079399s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:35:25+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082822
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082822 [运行时间：0.839093s][吞吐率：1.19req/s] [内存消耗：3,320.39kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000018s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001226s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'relation',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601082822',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000422s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000514s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->relation[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000201s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.121518s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.079722s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.079833s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.080054s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.120394s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.079606s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.079985s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.079655s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.081212s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:36:43+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082823
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601082823 [运行时间：0.819850s][吞吐率：1.22req/s] [内存消耗：3,320.39kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000019s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001230s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'relation',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601082823',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000841s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000549s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->relation[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000211s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.126033s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.077497s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.077180s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.077484s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.116298s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.077681s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.077007s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.076949s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.078423s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:37:23+08:00 ] 127.0.0.1 GET /admin/salesmanagement/customerlisttabs/edit/ids/12?dialog=1
+[ info ] acyd.com/admin/salesmanagement/customerlisttabs/edit/ids/12?dialog=1 [运行时间：0.632784s][吞吐率：1.58req/s] [内存消耗：3,193.94kb] [文件加载：80]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000031s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001776s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.customerlisttabs',
+    2 => 'edit',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'dialog' => '1',
+  'ids' => '12',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000397s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000479s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->edit[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ VIEW ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\salesmanagement\customerlisttabs\edit.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'costomlevelList',
+  6 => 'row',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000206s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.113950s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.072909s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.074256s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.074355s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.111978s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.074514s ]
+[ sql ] [ SQL ] SELECT * FROM `crm_customer_resource` WHERE  `id` = 12 LIMIT 1 [ RunTime:0.073701s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:37:23+08:00 ] 127.0.0.1 GET /admin/ajax/lang?callback=define&controllername=salesmanagement.customerlisttabs&v=1532601442
+[ info ] acyd.com/admin/ajax/lang?callback=define&controllername=salesmanagement.customerlisttabs&v=1532601442 [运行时间：0.022233s][吞吐率：44.98req/s] [内存消耗：2,339.15kb] [文件加载：73]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001239s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs/edit/ids/12?dialog=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'salesmanagement.customerlisttabs',
+  'v' => '1532601442',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000300s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000864s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000192s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-07-26T18:38:53+08:00 ] 127.0.0.1 GET /admin/backoffice/custominfotabs/admeasure/ids/12
+[ info ] acyd.com/admin/backoffice/custominfotabs/admeasure/ids/12 [运行时间：0.910856s][吞吐率：1.10req/s] [内存消耗：3,267.31kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000101s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.011873s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'backoffice.custominfotabs',
+    2 => 'admeasure',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'ids' => '12',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000350s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000587s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/backoffice/custominfotabs.php
+[ info ] [ RUN ] app\admin\controller\backoffice\Custominfotabs->admeasure[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\backoffice\Custominfotabs.php ]
+[ info ] [ VIEW ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\backoffice\custominfotabs\admeasure.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'firstSale',
+  6 => 'secondSale',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000263s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.127444s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.087882s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.083574s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.084127s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.127035s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.084200s ]
+[ sql ] [ SQL ] SELECT * FROM `crm_customer_resource` WHERE  `id` = 12 LIMIT 1 [ RunTime:0.082542s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_admin` [ RunTime:0.083307s ]
+[ sql ] [ SQL ] SELECT `id`,`nickname`,`rule_message` FROM `crm_admin` WHERE  (  `rule_message` = 'message8' OR `rule_message` = 'message9' ) [ RunTime:0.083995s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:38:53+08:00 ] 127.0.0.1 GET /admin/ajax/lang?callback=define&controllername=backoffice.custominfotabs&v=1532601532
+[ info ] acyd.com/admin/ajax/lang?callback=define&controllername=backoffice.custominfotabs&v=1532601532 [运行时间：0.022908s][吞吐率：43.65req/s] [内存消耗：2,338.73kb] [文件加载：73]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001198s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/backoffice/custominfotabs/admeasure/ids/12',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'backoffice.custominfotabs',
+  'v' => '1532601532',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000301s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000893s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/backoffice/custominfotabs.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000204s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-07-26T18:39:00+08:00 ] 127.0.0.1 GET /assets/css/bootstrap.min.css.map
+[ info ] acyd.com/assets/css/bootstrap.min.css.map [运行时间：0.016031s][吞吐率：62.38req/s] [内存消耗：1,479.57kb] [文件加载：51]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000021s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001195s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'assets',
+    1 => 'css',
+    2 => 'bootstrap.min.css.map',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-07-26T18:39:01+08:00 ] 127.0.0.1 GET /assets/css/fastadmin.min.css.map
+[ info ] acyd.com/assets/css/fastadmin.min.css.map [运行时间：0.014241s][吞吐率：70.22req/s] [内存消耗：1,479.57kb] [文件加载：51]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000019s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001258s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'assets',
+    1 => 'css',
+    2 => 'fastadmin.min.css.map',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-07-26T18:39:01+08:00 ] 127.0.0.1 GET /assets/css/skins/skin-green.css.map
+[ info ] acyd.com/assets/css/skins/skin-green.css.map [运行时间：0.026504s][吞吐率：37.73req/s] [内存消耗：1,479.63kb] [文件加载：51]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000086s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.011433s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'assets',
+    1 => 'css',
+    2 => 'skins',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-07-26T18:39:07+08:00 ] 127.0.0.1 GET /admin/salesmanagement/customerlisttabs?addtabs=1
+[ info ] acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1 [运行时间：0.774019s][吞吐率：1.29req/s] [内存消耗：3,260.73kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001296s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.customerlisttabs',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?ref=addtabs',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000307s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000528s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->index[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ VIEW ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\salesmanagement\customerlisttabs\index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'total',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000229s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.124039s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.082022s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.082173s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.082589s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.123025s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.081990s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.082013s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) LIMIT 1 [ RunTime:0.082141s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:39:07+08:00 ] 127.0.0.1 GET /admin/ajax/lang?callback=define&controllername=salesmanagement.customerlisttabs&v=1532601546
+[ info ] acyd.com/admin/ajax/lang?callback=define&controllername=salesmanagement.customerlisttabs&v=1532601546 [运行时间：0.022780s][吞吐率：43.90req/s] [内存消耗：2,339.15kb] [文件加载：73]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001219s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'salesmanagement.customerlisttabs',
+  'v' => '1532601546',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000302s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000942s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000201s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-07-26T18:39:08+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547495
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547495 [运行时间：0.870822s][吞吐率：1.15req/s] [内存消耗：3,282.27kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000042s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002526s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'newCustomer',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547495',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000323s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000508s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->newCustomer[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000226s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.125437s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.082691s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.082218s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.082631s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.123985s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.082369s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.082157s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.082065s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.088439s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:39:13+08:00 ] 127.0.0.1 GET /admin/salesmanagement/customerlisttabs/edit/ids/18?dialog=1
+[ info ] acyd.com/admin/salesmanagement/customerlisttabs/edit/ids/18?dialog=1 [运行时间：0.629096s][吞吐率：1.59req/s] [内存消耗：3,193.93kb] [文件加载：80]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000023s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001277s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.customerlisttabs',
+    2 => 'edit',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'dialog' => '1',
+  'ids' => '18',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000351s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000515s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->edit[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ VIEW ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\view\salesmanagement\customerlisttabs\edit.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'costomlevelList',
+  6 => 'row',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000258s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.110799s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.080001s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.072876s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.072270s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.110070s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.072407s ]
+[ sql ] [ SQL ] SELECT * FROM `crm_customer_resource` WHERE  `id` = 18 LIMIT 1 [ RunTime:0.073205s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:39:14+08:00 ] 127.0.0.1 GET /admin/ajax/lang?callback=define&controllername=salesmanagement.customerlisttabs&v=1532601553
+[ info ] acyd.com/admin/ajax/lang?callback=define&controllername=salesmanagement.customerlisttabs&v=1532601553 [运行时间：0.023540s][吞吐率：42.48req/s] [内存消耗：2,339.15kb] [文件加载：73]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001211s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs/edit/ids/18?dialog=1',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'salesmanagement.customerlisttabs',
+  'v' => '1532601553',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000305s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000915s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/ajax.php
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\Ajax.php ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000226s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-07-26T18:39:40+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547496
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547496 [运行时间：0.896759s][吞吐率：1.12req/s] [内存消耗：3,282.27kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001255s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'newCustomer',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547496',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000337s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000693s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->newCustomer[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000210s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.130680s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.085498s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.085987s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.086160s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.129550s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.085649s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.085870s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.085524s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.087026s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:39:49+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547497
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547497 [运行时间：0.782737s][吞吐率：1.28req/s] [内存消耗：3,282.27kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001272s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'newCustomer',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547497',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000316s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000507s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->newCustomer[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000234s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.112797s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.073619s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.074113s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.073163s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.113015s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.074038s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.074220s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.073975s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.074944s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:39:58+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547498
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547498 [运行时间：0.830786s][吞吐率：1.20req/s] [内存消耗：3,282.27kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000018s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002271s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'newCustomer',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547498',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000363s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000517s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->newCustomer[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000939s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.120650s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.078578s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.078557s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.078899s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.118490s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.078616s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.078579s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.078360s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.079744s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:40:01+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547499
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547499 [运行时间：0.924558s][吞吐率：1.08req/s] [内存消耗：3,320.39kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000025s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001223s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'relation',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547499',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000317s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000494s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->relation[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000213s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.134932s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.088403s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.088186s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.088472s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.132514s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.088337s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.088248s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.088521s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.089324s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:40:04+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/intention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547500
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/intention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547500 [运行时间：1.425816s][吞吐率：0.70req/s] [内存消耗：3,321.01kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000016s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001230s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'intention',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547500',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000300s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000485s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->intention[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000222s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.135884s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.089812s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.089649s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.335068s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.133958s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.338132s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.090101s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'intention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.088616s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'intention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.089854s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:40:05+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547501
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/relation?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547501 [运行时间：1.958244s][吞吐率：0.51req/s] [内存消耗：3,320.39kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000077s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001449s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'relation',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547501',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000341s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000527s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->relation[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000242s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.129330s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.085014s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.085403s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.085308s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.128321s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.085514s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.085961s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.084028s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'relation' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.085462s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:40:06+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/intention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547502
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/intention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547502 [运行时间：1.108550s][吞吐率：0.90req/s] [内存消耗：3,321.01kb] [文件加载：86]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001230s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'intention',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547502',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000300s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000528s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->intention[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000291s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.115515s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.074872s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.075009s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.075375s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.113950s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.075496s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.075675s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'intention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.075256s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'relation' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'intention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.075840s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:40:33+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547503
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547503 [运行时间：0.869847s][吞吐率：1.15req/s] [内存消耗：3,282.27kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000019s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001235s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'newCustomer',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547503',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000389s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000659s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->newCustomer[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000896s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.125878s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.082782s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.082579s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.082338s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.122905s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.082599s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.082500s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.082007s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.083400s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:41:34+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547504
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547504 [运行时间：0.868789s][吞吐率：1.15req/s] [内存消耗：3,282.27kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000021s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001488s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'newCustomer',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547504',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000327s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000505s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->newCustomer[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000274s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.126465s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.083452s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.083002s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.082786s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.125278s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.083251s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.082792s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.083571s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.083145s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:41:52+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/nointention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547505
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/nointention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547505 [运行时间：0.826765s][吞吐率：1.21req/s] [内存消耗：3,310.45kb] [文件加载：85]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001244s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'nointention',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547505',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000310s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000491s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->nointention[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000304s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.124934s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.078018s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.077891s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.078424s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.117774s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.078252s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.078426s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'nointention' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'nointention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.077568s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'nointention' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'nointention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.078130s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:42:00+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547506
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547506 [运行时间：0.773957s][吞吐率：1.29req/s] [内存消耗：3,282.27kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000027s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001342s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'newCustomer',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547506',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000344s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000498s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->newCustomer[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000229s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.112433s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.073754s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.073620s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.073971s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.110518s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.073684s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.073850s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.073773s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.074521s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:45:16+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/nointention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547507
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/nointention?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547507 [运行时间：0.818686s][吞吐率：1.22req/s] [内存消耗：3,310.45kb] [文件加载：85]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000023s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002045s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'nointention',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547507',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000467s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000491s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->nointention[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000229s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.119336s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.078212s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.078023s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.077765s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.117217s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.077908s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.077806s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'nointention' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'nointention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.078295s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `backoffice_id` IS NOT NULL  AND `customerlevel` = 'nointention' OR (  `platform_id` IN (5,6,7)  AND `customerlevel` = 'nointention' ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.078020s ]
+---------------------------------------------------------------
+[ 2018-07-26T18:46:15+08:00 ] 127.0.0.1 GET /admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547508
+[ info ] acyd.com/admin/salesmanagement/Customerlisttabs/newCustomer?sort=id&order=desc&offset=0&limit=10&filter=%7B%7D&op=%7B%7D&_=1532601547508 [运行时间：0.822091s][吞吐率：1.22req/s] [内存消耗：3,282.27kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000019s ]
+[ info ] [ CACHE ] INIT Memcache
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001293s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\thinkphp\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'salesmanagement.Customerlisttabs',
+    2 => 'newCustomer',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'PHPSESSID=ui5mk8f8m1lbmpiqp6jg75j8c1',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate',
+  'referer' => 'http://acyd.com/admin/salesmanagement/customerlisttabs?addtabs=1',
+  'content-type' => 'application/json',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+  'x-requested-with' => 'XMLHttpRequest',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'connection' => 'close',
+  'host' => 'acyd.com',
+)
+[ info ] [ PARAM ] array (
+  'sort' => 'id',
+  'order' => 'desc',
+  'offset' => '0',
+  'limit' => '10',
+  'filter' => '{}',
+  'op' => '{}',
+  '_' => '1532601547508',
+)
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin\lang\zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000375s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\upyun\Upyun @upload_config_init [ RunTime:0.000504s ]
+[ info ] [ LANG ] D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\public/../application/admin/lang/zh-cn/salesmanagement/customerlisttabs.php
+[ info ] [ RUN ] app\admin\controller\salesmanagement\Customerlisttabs->newCustomer[ D:\phpstudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\controller\salesmanagement\Customerlisttabs.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000246s ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.120764s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_group_access` [ RunTime:0.078243s ]
+[ sql ] [ SQL ] SELECT `aga`.`uid`,`aga`.`group_id`,`ag`.`id`,`ag`.`pid`,`ag`.`name`,`ag`.`rules` FROM `crm_auth_group_access` `aga` LEFT JOIN `crm_auth_group` `ag` ON `aga`.`group_id`=`ag`.`id` WHERE  (  aga.uid='7' and ag.status='normal' ) [ RunTime:0.078753s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.079345s ]
+[ sql ] [ SQL ] SELECT `id`,`pid`,`condition`,`icon`,`name`,`title`,`ismenu` FROM `crm_auth_rule` WHERE  `status` = 'normal' [ RunTime:0.119269s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_customer_resource` [ RunTime:0.078783s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `crm_platform` [ RunTime:0.076835s ]
+[ sql ] [ SQL ] SELECT COUNT(*) AS tp_count FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 1 [ RunTime:0.077594s ]
+[ sql ] [ SQL ] SELECT `customer_resource`.`id`,`customer_resource`.`platform_id`,`customer_resource`.`backoffice_id`,`customer_resource`.`sales_id`,`customer_resource`.`username`,`customer_resource`.`phone`,`customer_resource`.`age`,`customer_resource`.`genderdata`,`customer_resource`.`createtime`,`customer_resource`.`updatetime`,`customer_resource`.`feedback`,`customer_resource`.`note`,`customer_resource`.`distributinternaltime`,`customer_resource`.`distributsaletime`,`customer_resource`.`feedbacktime`,`customer_resource`.`customerlevel`,`customer_resource`.`followupdate`,platform.id AS platform__id,platform.name AS platform__name,platform.status AS platform__status,platform.createtime AS platform__createtime,platform.updatetime AS platform__updatetime FROM `crm_customer_resource` `customer_resource` LEFT JOIN `crm_platform` `platform` ON `customer_resource`.`platform_id`=`platform`.`id` WHERE  (  ( `sales_id` IS NOT NULL AND `sales_id` = 17 )  AND `customerlevel` IS NULL OR (  `platform_id` IN (5,6,7)  AND `customerlevel` IS NULL ) ) ORDER BY `customer_resource`.`id` DESC LIMIT 0,10 [ RunTime:0.079297s ]

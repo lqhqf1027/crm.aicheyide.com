@@ -31,6 +31,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
+
+                console.log(data);
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
@@ -113,7 +115,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {field: 'distributinternaltime', title: __('Distributinternaltime'), operate: false,formatter:Table.api.formatter.datetime},
+                            {
+                                field: 'distributinternaltime',
+                                title: __('Distributinternaltime'),
+                                operate: false,
+                                formatter: Table.api.formatter.datetime
+                            },
                             // {
                             //     field: 'createtime',
                             //     title: __('Createtime'),
@@ -175,10 +182,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     };
                     Fast.api.open(url, '批量分配', options)
                 });
+
+                newCustomer.on('load-success.bs.table', function (e, data) {
+                    $('#new-customer').text(data.total);
+
+                })
+
+
             },
-
-
-            assigned_customers: function () {
+            assigned_customers:function () {
                 // 表格2
                 var assignedCustomers = $("#assignedCustomers");
                 assignedCustomers.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -226,8 +238,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格2绑定事件
                 Table.api.bindevent(assignedCustomers);
 
+                assignedCustomers.on('load-success.bs.table', function (e, data) {
+                    $('#assigned-customer').text(data.total);
 
-            },
+                })
+
+            }
+
+
+
 
         },
         add: function () {
