@@ -132,7 +132,7 @@ class Customerresource extends Backend
         $this->assign('platform',$arr);
         return $this->view->fetch();
     }
-
+    //导入客户信息
     public function import () {
         return parent::import();
     }
