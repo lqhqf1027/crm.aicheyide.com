@@ -97,16 +97,7 @@ class Orderlisttabs extends Backend
                 ->find();
                 
     }
-    /**
-     * 获取通话清单
-     */
-    public function getCallListfiles(){
-        if ($this->request->isAjax()) {
-            $data = input('post.');
-            return $data;
-            $this->success('查询成功',$data);
-        }
-    }
+
 
 
 }

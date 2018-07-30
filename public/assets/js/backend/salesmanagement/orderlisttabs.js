@@ -106,7 +106,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
                 
             });
-           
+            // orderAcar.on('load-success.bs.table',function(e,data){
+            //     console.log(data)
+            // })
                 // 为表格1绑定事件
                 Table.api.bindevent(orderAcar);
                
