@@ -34,7 +34,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var newCustomer = $("#newCustomer");
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-newSalesList").data("area", ["50%", "50%"]);
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -79,7 +79,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
+                                buttons: [
+                                    {
+                                        name:'detail',
+                                        text:'新增销售单',
+                                        title:'新增销售单',
+                                        icon: 'fa fa-share',
+                                        classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList',
+                                        url: 'salesmanagement/customerlisttabs/newSalesList'
+                                    }
 
+                                ],
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
@@ -667,14 +677,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         });
                     }
 
-                    buttons.push({
-                        name: 'add',
-                        text: __('Newsaleslist'),
-                        title: __('Newsaleslist'),
-                        icon: 'fa fa-share',
-                        classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList btn-add',
-
-                    });
 
                     if (options.extend.give_up_url !== '') {
                         //
