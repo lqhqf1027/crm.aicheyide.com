@@ -113,73 +113,73 @@ class Customertabs extends Backend
     //分配客户资源给内勤
     //单个分配
     //内勤  message13=>内勤一部，message20=>内勤二部
-    public function dstribution($ids=NULL)
-    {
-        $this->model = model('CustomerResource');
+    // public function dstribution($ids=NULL)
+    // {
+    //     $this->model = model('CustomerResource');
         
-        $id = $this->model->get(['id' => $ids]);
-        $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
-              $query->where('rule_message','message20')->whereOr('rule_message','message13');
-        })->select(); 
-        $backofficeList = array();
-        foreach($backoffice as $k=>$v){
-            switch($v['rule_message']){
-                case 'message20':
-                $backofficeList['message20']['nickname'] = $v['nickname']; 
-                $backofficeList['message20']['id'] = $v['id'];  
-                break;
-                case 'message13':
-                $backofficeList['message13']['nickname'] = $v['nickname']; 
-                $backofficeList['message13']['id'] = $v['id'];  
-                break;
-            }
-        }
+    //     $id = $this->model->get(['id' => $ids]);
+    //     $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
+    //           $query->where('rule_message','message20')->whereOr('rule_message','message13');
+    //     })->select(); 
+    //     $backofficeList = array();
+    //     foreach($backoffice as $k=>$v){
+    //         switch($v['rule_message']){
+    //             case 'message20':
+    //             $backofficeList['message20']['nickname'] = $v['nickname']; 
+    //             $backofficeList['message20']['id'] = $v['id'];  
+    //             break;
+    //             case 'message13':
+    //             $backofficeList['message13']['nickname'] = $v['nickname']; 
+    //             $backofficeList['message13']['id'] = $v['id'];  
+    //             break;
+    //         }
+    //     }
 
-        $this->view->assign('backofficeList',$backofficeList);
-        $this->assignconfig('id',$id->id); 
+    //     $this->view->assign('backofficeList',$backofficeList);
+    //     $this->assignconfig('id',$id->id); 
         
-        if ($this->request->isPost())
-        {
+    //     if ($this->request->isPost())
+    //     {
             
              
-            $params = $this->request->post('row/a');
-            $time = time();
-            $result = $this->model->save(['backoffice_id'=>$params['id'],'distributinternaltime'=>$time],function($query) use ($id){
-                $query->where('id',$id->id);
-            }); 
-            if($result){
-                //这里开始调用微信推送
-                //1、use  wechat/WechatMessage  这个类
-                //2、实例化并传参
-                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
-                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
-                //dump($sendmessage->sendMsgToAll());exit; 
-                // $token = self::$token;
-                // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
-                // $openid = $getAdminOpenid['openid'];
-                // var_dump($openid);
-                // die;
-                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+    //         $params = $this->request->post('row/a');
+    //         $time = time();
+    //         $result = $this->model->save(['backoffice_id'=>$params['id'],'distributinternaltime'=>$time],function($query) use ($id){
+    //             $query->where('id',$id->id);
+    //         }); 
+    //         if($result){
+    //             //这里开始调用微信推送
+    //             //1、use  wechat/WechatMessage  这个类
+    //             //2、实例化并传参
+    //             //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
+    //             //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
+    //             //dump($sendmessage->sendMsgToAll());exit; 
+    //             // $token = self::$token;
+    //             // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+    //             // $openid = $getAdminOpenid['openid'];
+    //             // var_dump($openid);
+    //             // die;
+    //             // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
 
-                // $msg = $sendmessage->sendMsgToAll();
-                // dump($msg);
-                // die;
-                // if($msg['errcode'] == 0){
-                    $this->success();
-                // }
-                // else {
-                //     $this->error('消息推送失败');
-                // }
+    //             // $msg = $sendmessage->sendMsgToAll();
+    //             // dump($msg);
+    //             // die;
+    //             // if($msg['errcode'] == 0){
+    //                 $this->success();
+    //             // }
+    //             // else {
+    //             //     $this->error('消息推送失败');
+    //             // }
                
-                //$this->error('消息推送失败'); 
-            }
-            else{
-                $this->error(); 
-            }
-        }
+    //             //$this->error('消息推送失败'); 
+    //         }
+    //         else{
+    //             $this->error(); 
+    //         }
+    //     }
        
-        return $this->view->fetch();
-    }
+    //     return $this->view->fetch();
+    // }
 
     //已分配
     public function newAllocation()
@@ -384,6 +384,107 @@ class Customertabs extends Backend
         $objWriter->save('php://output');
         exit;
     }
+
+    //导出客户信息
+    // public function export()
+    // {
+    //     if ($this->request->isPost()) {
+    //         set_time_limit(0);
+    //         $search = $this->request->post('search');
+    //         $ids = $this->request->post('ids');
+    //         $filter = $this->request->post('filter');
+    //         $op = $this->request->post('op');
+    //         $columns = $this->request->post('columns');
+
+    //         $excel = new \PHPExcel();
+
+    //         $excel->getProperties()
+    //             ->setCreator("FastAdmin")
+    //             ->setLastModifiedBy("FastAdmin")
+    //             ->setTitle("标题")
+    //             ->setSubject("Subject");
+    //         $excel->getDefaultStyle()->getFont()->setName('Microsoft Yahei');
+    //         $excel->getDefaultStyle()->getFont()->setSize(12);
+
+    //         $this->sharedStyle = new \PHPExcel_Style();
+    //         $this->sharedStyle->applyFromArray(
+    //             array(
+    //                 'fill'      => array(
+    //                     'type'  => \PHPExcel_Style_Fill::FILL_SOLID,
+    //                     'color' => array('rgb' => '000000')
+    //                 ),
+    //                 'font'      => array(
+    //                     'color' => array('rgb' => "000000"),
+    //                 ),
+    //                 'alignment' => array(
+    //                     'vertical'   => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+    //                     'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+    //                     'indent'     => 1
+    //                 ),
+    //                 'borders'   => array(
+    //                     'allborders' => array('style' => \PHPExcel_Style_Border::BORDER_THIN),
+    //                 )
+    //             ));
+
+    //         $worksheet = $excel->setActiveSheetIndex(0);
+    //         $worksheet->setTitle('标题');
+
+    //         $whereIds = $ids == 'all' ? '1=1' : ['id' => ['in', explode(',', $ids)]];
+    //         $this->request->get(['search' => $search, 'ids' => $ids, 'filter' => $filter, 'op' => $op]);
+    //         list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+
+    //         $line = 1;
+    //         $list = [];
+    //         $this->model
+    //             ->field($columns)
+    //             ->where($where)
+    //             ->where($whereIds)
+    //             ->chunk(100, function ($items) use (&$list, &$line, &$worksheet) {
+    //                 $styleArray = array(
+    //                     'font' => array(
+    //                         'bold'  => true,
+    //                         'color' => array('rgb' => 'FF0000'),
+    //                         'size'  => 15,
+    //                         'name'  => 'Verdana'
+    //                     ));
+    //                 $list = $items = collection($items)->toArray();
+    //                 foreach ($items as $index => $item) {
+    //                     $line++;
+    //                     $col = 0;
+    //                     foreach ($item as $field => $value) {
+
+    //                         $worksheet->setCellValueByColumnAndRow($col, $line, $value);
+    //                         $worksheet->getStyleByColumnAndRow($col, $line)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+    //                         $worksheet->getCellByColumnAndRow($col, $line)->getStyle()->applyFromArray($styleArray);
+    //                         $col++;
+    //                     }
+    //                 }
+    //             });
+    //         $first = array_keys($list[0]);
+    //         foreach ($first as $index => $item) {
+    //             $worksheet->setCellValueByColumnAndRow($index, 1, __($item));
+    //         }
+
+    //         $excel->createSheet();
+    //         // Redirect output to a client’s web browser (Excel2007)
+    //         $title = date("YmdHis");
+    //         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    //         header('Content-Disposition: attachment;filename="' . $title . '.xlsx"');
+    //         header('Cache-Control: max-age=0');
+    //         // If you're serving to IE 9, then the following may be needed
+    //         header('Cache-Control: max-age=1');
+
+    //         // If you're serving to IE over SSL, then the following may be needed
+    //         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+    //         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+    //         header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+    //         header('Pragma: public'); // HTTP/1.0
+
+    //         $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+    //         $objWriter->save('php://output');
+    //         return;
+    //     }
+    // }
     
     // public function table2()
     // {

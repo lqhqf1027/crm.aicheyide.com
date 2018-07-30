@@ -1,8 +1,11 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+
+    var num = 0;
+
     var Controller = {
         index: function () {
-            
+          
             // 初始化表格参数配置
             Table.api.init({
                
@@ -26,28 +29,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         //单个分配
-        dstribution:function(){
+        // dstribution:function(){
  
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
+        //     // $(".btn-add").data("area", ["300px","200px"]);
+        //     Table.api.init({
                
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                Fast.api.close(data);//这里是重点
-                // console.log(data);
-                // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
-                // console.log(data); 
-                Toastr.success("失败"); 
-            });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
+        //     });
+        //     Form.api.bindevent($("form[role=form]"), function(data, ret){
+        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+        //         Fast.api.close(data);//这里是重点
+        //         // console.log(data);
+        //         // Toastr.success("成功");//这个可有可无
+        //     }, function(data, ret){
+        //         // console.log(data); 
+        //         Toastr.success("失败"); 
+        //     });
+        //     // Controller.api.bindevent();
+        //     // console.log(Config.id);
  
-        },
+        // },
         //批量分配 
         distribution:function(){
- 
+            
+          
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
@@ -55,6 +60,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
+             
                 // console.log(data);
                 // Toastr.success("成功");//这个可有可无
             }, function(data, ret){
@@ -92,6 +98,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             new_customer: function () {
                 // 新客户
                 var newCustomer = $("#newCustomer"); 
+               
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-newCustomer").data("area", ["30%", "30%"]);
                 });
@@ -134,12 +141,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'note', title: __('Note')},
                         {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
                         buttons: [
-                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer', url: 'promote/customertabs/dstribution',
-                                        success:function(data, ret){
-                                        }, 
-                                        error:function(data,ret){
-
-                                        }
+                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-newCustomer btn-selected'
                                     }
                                 ],
                                 
@@ -147,11 +149,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ]
             });
+            // var num = 0;
+          
                 // 为表格newCustomer绑定事件
                 Table.api.bindevent(newCustomer);
                 // 批量分配 
                 $(document).on("click", ".btn-selected", function () {   
                     var ids = Table.api.selectedids(newCustomer);
+                    num= parseInt(ids.length);
+                    //    console.log(num);
                     var url = 'promote/customertabs/distribution?ids='+ids;
                     var options = {
                         shadeClose: false,
@@ -163,6 +169,71 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                     Fast.api.open(url,'批量分配',options)
                 })
+                //数据实时统计
+                newCustomer.on('load-success.bs.table',function(e,data){ 
+                
+                    var newCustomerNum =  $('#badge_new_customer').text(data.total); 
+                        newCustomerNum = parseInt($('#badge_new_customer').text());
+                    var newAllocationNum = parseInt($('#badge_new_allocation').text());
+                    num = parseInt(num);
+                    $('#badge_new_allocation').text(num+newAllocationNum); 
+                   
+                })
+
+                //导出按钮的弹出
+
+                // var submitForm = function (ids, layero) {
+                //     var options = newCustomer.bootstrapTable('getOptions');
+                //     console.log(options);
+                //     var columns = [];
+                //     $.each(options.columns[0], function (i, j) {
+                //         if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
+                //             columns.push(j.field);
+                //         }
+                //     });
+                //     var search = options.queryParams({});
+                //     $("input[name=search]", layero).val(options.searchText);
+                //     $("input[name=ids]", layero).val(ids);
+                //     $("input[name=filter]", layero).val(search.filter);
+                //     $("input[name=op]", layero).val(search.op);
+                //     $("input[name=columns]", layero).val(columns.join(','));
+                //     $("form", layero).submit();
+                // };
+
+                // $(document).on("click", ".btn-export", function () {
+                //     var ids = Table.api.selectedids(newCustomer);
+                //     var page = newCustomer.bootstrapTable('getData');
+                //     var all = newCustomer.bootstrapTable('getOptions').totalRows;
+                //     console.log(ids, page, all);
+                //     Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("promote/customertabs/export") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
+                //         title: '导出数据',
+                //         btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "全部(" + all + "条)"],
+                //         success: function (layero, index) {
+                //             $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                //         }
+                //         , yes: function (index, layero) {
+                //             submitForm(ids.join(","), layero);
+                //             return false;
+                //         }
+                //         ,
+                //         btn2: function (index, layero) {
+                //             var ids = [];
+                //             $.each(page, function (i, j) {
+                //                 ids.push(j.id);
+                //             });
+                //             submitForm(ids.join(","), layero);
+                //             return false;
+                //         }
+                //         ,
+                //         btn3: function (index, layero) {
+                //             submitForm("all", layero);
+                //             return false;
+                //         }
+                //     })
+                // });
+
+
+
             },
             new_allocation: function () {
                 // 已分配的客户
@@ -250,6 +321,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
+                
                 // 为已反馈的客户表格绑定事件
                 Table.api.bindevent(newFeedback);
             }

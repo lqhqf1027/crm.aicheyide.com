@@ -1,0 +1,13 @@
+[ 2018-07-25T18:35:04+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000118s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-25T18:35:04+08:00 ][ info ] [ CACHE ] INIT File
+[ 2018-07-25T18:35:04+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.005441s ]
+[ 2018-07-25T18:35:24+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000112s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-25T18:35:24+08:00 ][ info ] [ CACHE ] INIT File
+[ 2018-07-25T18:35:24+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.006112s ]
+[ 2018-07-25T18:35:24+08:00 ][ info ] [ DB ] INIT mysql
+[ 2018-07-25T18:35:25+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.139539s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ 2018-07-25T18:35:25+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'customerss' [ RunTime:0.091106s ]
+[ 2018-07-25T18:35:25+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'crm_customerss' [ RunTime:0.090470s ]
+[ 2018-07-25T18:35:25+08:00 ][ sql ] [ SQL ] SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = 'crm' AND table_name = 'crm_customerss' ORDER BY ORDINAL_POSITION [ RunTime:0.091286s ]

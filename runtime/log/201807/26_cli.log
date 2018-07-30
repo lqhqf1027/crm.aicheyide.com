@@ -1,0 +1,99 @@
+[ 2018-07-26T15:53:07+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000163s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-26T15:53:07+08:00 ][ info ] [ CACHE ] INIT Memcache
+[ 2018-07-26T15:53:07+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.007725s ]
+[ 2018-07-26T15:53:07+08:00 ][ info ] [ DB ] INIT mysql
+[ 2018-07-26T15:53:07+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.129116s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ 2018-07-26T15:53:07+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'car_rental_models_info' [ RunTime:0.085812s ]
+[ 2018-07-26T15:53:07+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'crm_car_rental_models_info' [ RunTime:0.085670s ]
+[ 2018-07-26T15:53:08+08:00 ][ sql ] [ SQL ] SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = 'crm' AND table_name = 'crm_car_rental_models_info' ORDER BY ORDINAL_POSITION [ RunTime:0.085786s ]
+[ 2018-07-26T18:27:17+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000124s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-26T18:27:17+08:00 ][ info ] [ CACHE ] INIT Memcache
+[ 2018-07-26T18:27:17+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.007654s ]
+[ 2018-07-26T18:27:18+08:00 ][ info ] [ DB ] INIT mysql
+[ 2018-07-26T18:27:18+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.132809s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ 2018-07-26T18:27:18+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'car_rental_models_info' [ RunTime:0.085931s ]
+[ 2018-07-26T18:27:18+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'crm_car_rental_models_info' [ RunTime:0.085945s ]
+[ 2018-07-26T18:27:18+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'models' [ RunTime:0.086138s ]
+[ 2018-07-26T18:27:18+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'crm_models' [ RunTime:0.085836s ]
+[ 2018-07-26T18:27:18+08:00 ][ sql ] [ SQL ] SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = 'crm' AND table_name = 'crm_car_rental_models_info' ORDER BY ORDINAL_POSITION [ RunTime:0.087005s ]
+[ 2018-07-26T18:27:18+08:00 ][ sql ] [ SQL ] SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = 'crm' AND table_name = 'crm_models' ORDER BY ORDINAL_POSITION [ RunTime:0.087168s ]
+[ 2018-07-26T18:27:18+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000128s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-26T18:27:18+08:00 ][ info ] [ CACHE ] INIT Memcache
+[ 2018-07-26T18:27:18+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.008234s ]
+[ 2018-07-26T18:27:19+08:00 ][ info ] [ DB ] INIT mysql
+[ 2018-07-26T18:27:19+08:00 ][ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\lang/zh-cn.php
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.113292s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.073383s ]
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] SELECT * FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement' LIMIT 1 [ RunTime:0.072662s ]
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] SELECT * FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rencar' LIMIT 1 [ RunTime:0.072658s ]
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`pid` , `name` , `title` , `icon` , `remark` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (182 , 'vehiclemanagement/rencar' , '车辆信息' , 'fa fa-circle-o\r' , '' , 1 , 'normal' , 1532600839 , 1532600839) [ RunTime:0.079321s ]
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rencar/index' LIMIT 1 [ RunTime:0.071915s ]
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rencar/add' LIMIT 1 [ RunTime:0.072647s ]
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rencar/edit' LIMIT 1 [ RunTime:0.072428s ]
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rencar/del' LIMIT 1 [ RunTime:0.071979s ]
+[ 2018-07-26T18:27:19+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rencar/multi' LIMIT 1 [ RunTime:0.072543s ]
+[ 2018-07-26T18:27:20+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 375 , 'vehiclemanagement/rencar/index' , 'fa fa-circle-o' , '查看' , 0 , 'normal' , 1532600839 , 1532600839) [ RunTime:0.073018s ]
+[ 2018-07-26T18:27:20+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 375 , 'vehiclemanagement/rencar/add' , 'fa fa-circle-o' , '添加' , 0 , 'normal' , 1532600840 , 1532600840) [ RunTime:0.036506s ]
+[ 2018-07-26T18:27:20+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 375 , 'vehiclemanagement/rencar/edit' , 'fa fa-circle-o' , '编辑' , 0 , 'normal' , 1532600840 , 1532600840) [ RunTime:0.035908s ]
+[ 2018-07-26T18:27:20+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 375 , 'vehiclemanagement/rencar/del' , 'fa fa-circle-o' , '删除' , 0 , 'normal' , 1532600840 , 1532600840) [ RunTime:0.036118s ]
+[ 2018-07-26T18:27:20+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 375 , 'vehiclemanagement/rencar/multi' , 'fa fa-circle-o' , '批量更新' , 0 , 'normal' , 1532600840 , 1532600840) [ RunTime:0.036129s ]
+[ 2018-07-26T18:28:27+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000127s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-26T18:28:27+08:00 ][ info ] [ CACHE ] INIT Memcache
+[ 2018-07-26T18:28:27+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.007780s ]
+[ 2018-07-26T18:28:27+08:00 ][ info ] [ DB ] INIT mysql
+[ 2018-07-26T18:28:27+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.117403s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ 2018-07-26T18:28:27+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'car_rental_models_info' [ RunTime:0.075320s ]
+[ 2018-07-26T18:28:27+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'crm_car_rental_models_info' [ RunTime:0.075542s ]
+[ 2018-07-26T18:28:27+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'models' [ RunTime:0.075842s ]
+[ 2018-07-26T18:28:27+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'crm_models' [ RunTime:0.075355s ]
+[ 2018-07-26T18:29:11+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000119s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-26T18:29:11+08:00 ][ info ] [ CACHE ] INIT Memcache
+[ 2018-07-26T18:29:11+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.007829s ]
+[ 2018-07-26T18:29:11+08:00 ][ info ] [ DB ] INIT mysql
+[ 2018-07-26T18:29:11+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.114847s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ 2018-07-26T18:29:11+08:00 ][ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.075299s ]
+[ 2018-07-26T18:29:11+08:00 ][ sql ] [ SQL ] SELECT * FROM `crm_auth_rule` WHERE  (  `name` LIKE 'vehiclemanagement/rencar%' ) [ RunTime:0.074152s ]
+[ 2018-07-26T18:29:15+08:00 ][ sql ] [ SQL ] SELECT * FROM `crm_auth_rule` WHERE  `id` IN (375,377,379,378,376,380) [ RunTime:0.073851s ]
+[ 2018-07-26T18:29:15+08:00 ][ sql ] [ SQL ] DELETE FROM `crm_auth_rule`    WHERE  `id` = 375 [ RunTime:0.075842s ]
+[ 2018-07-26T18:29:15+08:00 ][ sql ] [ SQL ] DELETE FROM `crm_auth_rule`    WHERE  `id` = 376 [ RunTime:0.040514s ]
+[ 2018-07-26T18:29:15+08:00 ][ sql ] [ SQL ] DELETE FROM `crm_auth_rule`    WHERE  `id` = 377 [ RunTime:0.040826s ]
+[ 2018-07-26T18:29:15+08:00 ][ sql ] [ SQL ] DELETE FROM `crm_auth_rule`    WHERE  `id` = 378 [ RunTime:0.040630s ]
+[ 2018-07-26T18:29:15+08:00 ][ sql ] [ SQL ] DELETE FROM `crm_auth_rule`    WHERE  `id` = 379 [ RunTime:0.040306s ]
+[ 2018-07-26T18:29:15+08:00 ][ sql ] [ SQL ] DELETE FROM `crm_auth_rule`    WHERE  `id` = 380 [ RunTime:0.041475s ]
+[ 2018-07-26T18:32:33+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000129s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-26T18:32:33+08:00 ][ info ] [ CACHE ] INIT Memcache
+[ 2018-07-26T18:32:33+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.008079s ]
+[ 2018-07-26T18:32:33+08:00 ][ info ] [ DB ] INIT mysql
+[ 2018-07-26T18:32:34+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.133438s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ 2018-07-26T18:32:34+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'car_rental_models_info' [ RunTime:0.087650s ]
+[ 2018-07-26T18:32:34+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'crm_car_rental_models_info' [ RunTime:0.087121s ]
+[ 2018-07-26T18:32:34+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'models' [ RunTime:0.087328s ]
+[ 2018-07-26T18:32:34+08:00 ][ sql ] [ SQL ] SHOW TABLE STATUS LIKE 'crm_models' [ RunTime:0.087465s ]
+[ 2018-07-26T18:32:34+08:00 ][ sql ] [ SQL ] SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = 'crm' AND table_name = 'crm_car_rental_models_info' ORDER BY ORDINAL_POSITION [ RunTime:0.087936s ]
+[ 2018-07-26T18:32:34+08:00 ][ sql ] [ SQL ] SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = 'crm' AND table_name = 'crm_models' ORDER BY ORDINAL_POSITION [ RunTime:0.087323s ]
+[ 2018-07-26T18:32:34+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000131s ]
+[ info ] [ LOG ] INIT File
+[ 2018-07-26T18:32:34+08:00 ][ info ] [ CACHE ] INIT Memcache
+[ 2018-07-26T18:32:34+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.007695s ]
+[ 2018-07-26T18:32:34+08:00 ][ info ] [ DB ] INIT mysql
+[ 2018-07-26T18:32:34+08:00 ][ info ] [ LANG ] D:\phpStudy\PHPTutorial\WWW\crm.aicheyide.com\application\admin\lang/zh-cn.php
+[ 2018-07-26T18:32:34+08:00 ][ sql ] [ DB ] CONNECT:[ UseTime:0.125716s ] mysql:host=120.78.135.109;dbname=crm;charset=utf8
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] SHOW COLUMNS FROM `crm_auth_rule` [ RunTime:0.079400s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] SELECT * FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement' LIMIT 1 [ RunTime:0.081379s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] SELECT * FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rentcar' LIMIT 1 [ RunTime:0.081120s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rentcar/index' LIMIT 1 [ RunTime:0.080842s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rentcar/add' LIMIT 1 [ RunTime:0.080891s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rentcar/edit' LIMIT 1 [ RunTime:0.079367s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rentcar/del' LIMIT 1 [ RunTime:0.080956s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] SELECT `id` FROM `crm_auth_rule` WHERE  `name` = 'vehiclemanagement/rentcar/multi' LIMIT 1 [ RunTime:0.080578s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 373 , 'vehiclemanagement/rentcar/index' , 'fa fa-circle-o' , '查看' , 0 , 'normal' , 1532601155 , 1532601155) [ RunTime:0.080693s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 373 , 'vehiclemanagement/rentcar/add' , 'fa fa-circle-o' , '添加' , 0 , 'normal' , 1532601155 , 1532601155) [ RunTime:0.040241s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 373 , 'vehiclemanagement/rentcar/edit' , 'fa fa-circle-o' , '编辑' , 0 , 'normal' , 1532601155 , 1532601155) [ RunTime:0.040185s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 373 , 'vehiclemanagement/rentcar/del' , 'fa fa-circle-o' , '删除' , 0 , 'normal' , 1532601155 , 1532601155) [ RunTime:0.040157s ]
+[ 2018-07-26T18:32:35+08:00 ][ sql ] [ SQL ] INSERT INTO `crm_auth_rule` (`id` , `pid` , `name` , `icon` , `title` , `ismenu` , `status` , `createtime` , `updatetime`) VALUES (NULL , 373 , 'vehiclemanagement/rentcar/multi' , 'fa fa-circle-o' , '批量更新' , 0 , 'normal' , 1532601155 , 1532601155) [ RunTime:0.040169s ]
