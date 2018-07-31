@@ -184,12 +184,12 @@ class Customerlisttabs extends Backend
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', null)
                         ->where('phone', 'not in', $noPhone)
-                        ->whereOr(function ($query2) use($noPhone) {
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
@@ -206,16 +206,16 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where(function ($query) use($noPhone){
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('customerlevel', null)
-                        ->whereOr(function ($query2) use($noPhone){
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
-                                ->where('phone','not in',$noPhone)
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('customerlevel', null);
                         });
 
@@ -279,17 +279,17 @@ class Customerlisttabs extends Backend
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where(function ($query) use($noPhone){
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('customerlevel', 'in', ['intention', 'nointention', 'relation'])
                         ->where('followuptimestamp', "<", time())
-                        ->whereOr(function ($query2) use($noPhone){
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
-                                ->where('phone','not in',$noPhone)
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('followuptimestamp', "<", time())
                                 ->where('customerlevel', 'in', ['intention', 'nointention', 'relation']);
                         });
@@ -303,17 +303,17 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'in', ['intention', 'nointention', 'relation'])
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('followuptimestamp', "<", time())
-                        ->whereOr(function ($query2) use($noPhone) {
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
-                                ->where('phone','not in',$noPhone)
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('followuptimestamp', "<", time())
                                 ->where('customerlevel', 'in', ['intention', 'nointention', 'relation']);
                         });
@@ -377,18 +377,18 @@ class Customerlisttabs extends Backend
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'relation')
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use($noPhone) {
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
                                 ->where('customerlevel', 'relation')
-                                ->where('phone','not in',$noPhone)
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('followuptimestamp', ">", time());
                         });
 
@@ -401,17 +401,17 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'relation')
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use($noPhone) {
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
-                                ->where('phone','not in',$noPhone)
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('customerlevel', 'relation')
                                 ->where('followuptimestamp', ">", time());
                         });
@@ -468,20 +468,18 @@ class Customerlisttabs extends Backend
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'intention')
-                        ->where('phone','not in',$noPhone)
-
+                        ->where('phone', 'not in', $noPhone)
                         ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use($noPhone) {
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
                                 ->where('customerlevel', 'intention')
-                                ->where('phone','not in',$noPhone)
-
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('followuptimestamp', ">", time());
                         });
 
@@ -494,20 +492,18 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'intention')
-                        ->where('phone','not in',$noPhone)
-
+                        ->where('phone', 'not in', $noPhone)
                         ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use($noPhone) {
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
                                 ->where('customerlevel', 'intention')
-                                ->where('phone','not in',$noPhone)
-
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('followuptimestamp', ">", time());
                         });
 
@@ -563,17 +559,17 @@ class Customerlisttabs extends Backend
             $total = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
                         ->where('customerlevel', 'nointention')
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use($noPhone) {
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
-                                ->where('phone','not in',$noPhone)
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('customerlevel', 'nointention')
                                 ->where('followuptimestamp', ">", time());
                         });
@@ -587,17 +583,17 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->order($sort, $order)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('backoffice_id', 'not null')
                         ->where('sales_id', $this->auth->id)
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('customerlevel', 'nointention')
                         ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use($noPhone) {
+                        ->whereOr(function ($query2) use ($noPhone) {
                             $query2->where('platform_id', 'in', '5,6,7')
                                 ->where('backoffice_id', null)
                                 ->where('sales_id', $this->auth->id)
-                                ->where('phone','not in',$noPhone)
+                                ->where('phone', 'not in', $noPhone)
                                 ->where('customerlevel', 'nointention')
                                 ->where('followuptimestamp', ">", time());
                         });
@@ -655,9 +651,9 @@ class Customerlisttabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where('phone', 'not in', $noPhone)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('sales_id', $this->auth->id)
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('customerlevel', 'giveup');
                 })
                 ->order($sort, $order)
@@ -667,11 +663,11 @@ class Customerlisttabs extends Backend
             $list = $this->model
                 ->with(['platform'])
                 ->where($where)
-                ->where('phone','not in',$noPhone)
+                ->where('phone', 'not in', $noPhone)
                 ->order($sort, $order)
-                ->where(function ($query) use($noPhone) {
+                ->where(function ($query) use ($noPhone) {
                     $query->where('sales_id', $this->auth->id)
-                        ->where('phone','not in',$noPhone)
+                        ->where('phone', 'not in', $noPhone)
                         ->where('customerlevel', 'giveup');
                 })
                 ->limit($offset, $limit)
@@ -754,7 +750,6 @@ class Customerlisttabs extends Backend
         $this->model = model('CustomerResource');
         $row = $this->model->get($ids);
 
-
         $this->view->assign("costomlevelList", $this->model->getNewCustomerlevelList());
 
         if (!$row)
@@ -772,6 +767,24 @@ class Customerlisttabs extends Backend
 
                 $this->model->where('id', $ids)->update(['feedbacktime' => time(), 'followuptimestamp' => strtotime($params['followupdate'])]);
 
+                $cnlevel = "";
+                switch ($params['customerlevel']){
+                    case "relation":$cnlevel = "待联系";break;
+                    case "intention":$cnlevel = "有意向";break;
+                    case "nointention":$cnlevel = "暂无意向";break;
+                    case "giveup":$cnlevel = "已放弃";break;
+                }
+
+                $data = [
+                    'feedbackcontent' => $params['feedback'],
+                    'feedbacktime' => time(),
+                    'customer_id' => $ids,
+                    'customerlevel'=>$cnlevel,
+                    'followupdate' => $params['followupdate']
+                ];
+                Db::table("crm_feedback_info")->insert($data);
+
+
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
@@ -788,6 +801,8 @@ class Customerlisttabs extends Backend
                 } catch (\think\exception\PDOException $e) {
                     $this->error($e->getMessage());
                 }
+
+
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
@@ -806,6 +821,7 @@ class Customerlisttabs extends Backend
             $id = input("id");
             $this->model = model('CustomerResource');
 
+
             $result = $this->model
                 ->where("id", $id)
                 ->setField("customerlevel", "giveup");
@@ -813,54 +829,29 @@ class Customerlisttabs extends Backend
                 $this->success();
             }
 
-            $newCustomTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('backoffice_id', 'not null')
-                    ->where('sales_id', $this->auth->id)
-                    ->where('customerlevel', null)
-                    ->whereOr(function ($query2) {
-                        $query2->where('platform_id', 'in', '5,6,7')
-                            ->where('backoffice_id', null)
-                            ->where('sales_id', $this->auth->id)
-                            ->where('customerlevel', null);
-                    });
-
-            })
-            ->count();
+//            $newCustomTotal = $this->model
+//                ->with(['platform'])
+//                ->where(function ($query) {
+//                    $query->where('backoffice_id', 'not null')
+//                        ->where('sales_id', $this->auth->id)
+//                        ->where('customerlevel', null)
+//                        ->whereOr(function ($query2) {
+//                            $query2->where('platform_id', 'in', '5,6,7')
+//                                ->where('backoffice_id', null)
+//                                ->where('sales_id', $this->auth->id)
+//                                ->where('customerlevel', null);
+//                        });
+//
+//                })
+//                ->count();
 
 
         }
 
-        return $newCustomTotal;
+        // return $newCustomTotal;
 
     }
 
-
-//    public function newCount()
-//    {
-//        $this->model = model('CustomerResource');
-//
-//
-//        $newCustomTotal = $this->model
-//            ->with(['platform'])
-//            ->where(function ($query) {
-//                $query->where('backoffice_id', 'not null')
-//                    ->where('sales_id', $this->auth->id)
-//                    ->where('customerlevel', null)
-//                    ->whereOr(function ($query2) {
-//                        $query2->where('platform_id', 'in', '5,6,7')
-//                            ->where('backoffice_id', null)
-//                            ->where('sales_id', $this->auth->id)
-//                            ->where('customerlevel', null);
-//                    });
-//
-//            })
-//            ->count();
-//
-//
-//        return json_encode($newCustomTotal);
-//    }
 
 //批量放弃
     public function ajaxBatchGiveup()
@@ -892,51 +883,51 @@ class Customerlisttabs extends Backend
 
     public function newSalesList()
     {
+        $this->model = model("SalesOrder");
         $newRes = array();
         //品牌
         $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key=>$value) {
+        foreach ((array)$res as $key => $value) {
             $sql = Db::name('models')->alias('a')
-                ->join('plan_acar b','b.models_id=a.id')
-                ->join('financial_platform c','b.financial_platform_id=c.id')
+                ->join('plan_acar b', 'b.models_id=a.id')
+                ->join('financial_platform c', 'b.financial_platform_id=c.id')
                 ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
-                ->where(['a.brand_id'=>$value['brandid'],'b.ismenu'=>1])
-
-                ->select() ;
-            $newB =[];
-            foreach((array)$sql as $bValue){
-                $bValue['models_name'] =$bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'】'.'---'.$bValue['financial_platform_name'];
+                ->where(['a.brand_id' => $value['brandid'], 'b.ismenu' => 1])
+                ->select();
+            $newB = [];
+            foreach ((array)$sql as $bValue) {
+                $bValue['models_name'] = $bValue['models_name'] . '【首付' . $bValue['payment'] . '，' . '月供' . $bValue['monthly'] . '，' . 'GPS ' . $bValue['gps'] . '，' . '尾款 ' . $bValue['tail_section'] . '】' . '---' . $bValue['financial_platform_name'];
                 $newB[] = $bValue;
             }
 
 
-            $newRes[]=array(
+            $newRes[] = array(
                 'brand_name' => $value['brand_name'],
                 // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data'=>$newB
+                'data' => $newB
             );
 
 
         }
-        $this->view->assign('newRes',$newRes);
+        $this->view->assign('newRes', $newRes);
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             //生成订单编号
-            $params['order_no'] = 'JY_'.date('Ymdhis').rand(1000,9999);
+            $params['order_no'] = 'JY_' . date('Ymdhis') . rand(1000, 9999);
             //把当前销售员所在的部门的内勤id 入库
 
             //message8=>销售一部顾问，message13=>内勤一部
             //message9=>销售二部顾问，message20=>内勤二部
             // $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
             $adminRule = 'message8'; //测试数据
-            if($adminRule=='message8'){
-                $params['backoffice_id'] = Db::name('admin')->where(['rule_message'=>'message13'])->find()['id'];
+            if ($adminRule == 'message8') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
                 // return true;
             }
-            if($adminRule=='message9'){
-                $params['backoffice_id'] = Db::name('admin')->where(['rule_message'=>'message13'])->find()['id'];
+            if ($adminRule == 'message9') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
                 // return true;
 
             }
@@ -968,6 +959,29 @@ class Customerlisttabs extends Backend
     }
 
 
+    //查看跟进结果
+
+    public function showFeedback($ids = NULL)
+    {
+
+        $data = Db::table("crm_feedback_info")
+            ->where("customer_id", $ids)
+            ->order("feedbacktime desc")
+            ->select();
+
+
+        foreach ($data as $key=> $value){
+
+            $data[$key]['indexs'] = intval($key)+1;
+            $data[$key]['feedbacktime'] = date("Y-m-d H:i:s",intval($value['feedbacktime']));
+
+        }
+
+        $this->view->assign([
+            'feedback_data' => $data
+        ]);
+        return $this->view->fetch();
+    }
 
 
 }

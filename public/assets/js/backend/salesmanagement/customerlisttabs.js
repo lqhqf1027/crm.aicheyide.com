@@ -34,7 +34,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var newCustomer = $("#newCustomer");
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newSalesList").data("area", ["50%", "50%"]);
+                    $(".btn-newSalesList").data("area", ["90%", "90%"]);
+
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -144,8 +145,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
                 newCustomer.on('load-success.bs.table', function (e, data) {
-                    // data.total
-                    var newCustomerNum = $('#badge_new_customer').text(data.total);
+                    $('#badge_new_customer').text(data.total);
 
                 })
 
@@ -158,7 +158,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var relations = $("#relations");
                 relations.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+
+                    $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 relations.bootstrapTable({
@@ -199,18 +200,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false,
                                 formatter: Controller.api.formatter.status
                             },
-                            // {
-                            //     field: 'distributinternaltime',
-                            //     title: __('Distributinternaltime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'distributsaletime',
-                            //     title: __('Distributsaletime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: relations,
@@ -265,7 +254,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 relations.on('load-success.bs.table', function (e, data) {
 
-                    var newCustomerNum = $('#badge_relation').text(data.total);
+                    $('#badge_relation').text(data.total);
 
                 })
 
@@ -279,7 +268,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var intentions = $("#intentions");
                 intentions.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 intentions.bootstrapTable({
@@ -321,18 +310,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.status
                             },
 
-                            // {
-                            //     field: 'distributinternaltime',
-                            //     title: __('Distributinternaltime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'distributsaletime',
-                            //     title: __('Distributsaletime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: intentions,
@@ -387,8 +364,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
                 intentions.on('load-success.bs.table', function (e, data) {
-                    // data.total
-                    var newCustomerNum = $('#badge_intention').text(data.total);
+                    $('#badge_intention').text(data.total);
 
                 })
 
@@ -443,18 +419,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.status
                             },
 
-                            // {
-                            //     field: 'distributinternaltime',
-                            //     title: __('Distributinternaltime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'distributsaletime',
-                            //     title: __('Distributsaletime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: nointentions,
@@ -510,8 +474,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
                 nointentions.on('load-success.bs.table', function (e, data) {
-                    // data.total
-                    var newCustomerNum = $('#badge_no_intention').text(data.total);
+                    $('#badge_no_intention').text(data.total);
 
                 })
 
@@ -525,7 +488,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var giveups = $("#giveups");
                 giveups.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 giveups.bootstrapTable({
@@ -568,7 +531,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 giveups.on('load-success.bs.table', function (e, data) {
 
-                    var newCustomerNum = $('#badge_give_up').text(data.total);
+                    $('#badge_give_up').text(data.total);
 
                 })
 
@@ -583,7 +546,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var overdues = $("#overdues");
                 overdues.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 overdues.bootstrapTable({
@@ -625,18 +588,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.status
                             },
 
-                            // {
-                            //     field: 'distributinternaltime',
-                            //     title: __('Distributinternaltime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'distributsaletime',
-                            //     title: __('Distributsaletime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: overdues,
@@ -729,6 +680,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
 
+
+                    'click .btn-showFeedback': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = "salesmanagement/customerlisttabs/showFeedback";
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看跟进信息'), $(this).data() || {});
+                    },
+
                     'click .btn-give_up': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -799,6 +762,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         });
                     }
 
+                    buttons.push({
+                        name: 'edit',
+                        text: __('查看跟进结果'),
+                        icon: 'fa fa-eye',
+                        title: '查看跟进结果',
+                        extend: 'data-toggle="tooltip"',
+                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                        url: "salesmanagement/customerlisttabs/showFeedback"
+                    });
+
+
 
                     if (options.extend.give_up_url !== '') {
                         //
@@ -809,7 +783,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             extend: 'data-toggle="tooltip"',
                             title: __('Del'),
                             classname: 'btn btn-xs btn-danger btn-give_up'
-                            // url:options.extend.give_up_url
                         });
                     }
 
@@ -817,11 +790,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
                 status: function (value, row, index) {
-                    //颜色状态数组,可使用red/yellow/aqua/blue/navy/teal/olive/lime/fuchsia/purple/maroon
-                    // if(value==1) value ='可出租';
-                    // if(value==0) value ='正在维修';
-                    // if(value==2) value ='正在出租';
-
 
                     var colorArr = {relation: 'info', intention: 'success', nointention: 'danger'};
                     //如果字段列有定义custom
