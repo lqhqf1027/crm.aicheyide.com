@@ -21,7 +21,10 @@ class Salesorder extends Backend
      */
     protected $model = null;
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
-    protected  $dataLimit = 'false'; //表示显示当前自己和所有子级管理员的所有数据
+    protected  $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
+    protected $userid = null;//用户id
+    protected $apikey = null;//apikey
+    protected $sign = null;//sign  md5加密
     public function _initialize()
     {
         parent::_initialize();
@@ -29,6 +32,9 @@ class Salesorder extends Backend
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+        $this->userid = 'cdjy01';
+        $this->apikey = '1de2474bcaaac1e4';
+        $this->sign = md5($this->userid.$this->apikey);
     }
     public function index()
     {
@@ -138,8 +144,90 @@ class Salesorder extends Backend
         }
         return $this->view->fetch();
     }
- 
-    
+        /**
+     * 获取通话清单,第一步登陆，获取验证码
+     */
+    public function getCallListfiles(){
+        // vendor("PHPExcel.PHPExcel");
+        //接口参数userid、apikey、
+       
+        if ($this->request->isAjax()) {
+            //登陆 
+            $params = $this->request->post(''); 
+            $params['userid'] = $this->userid;
+            $params['sign'] = $this->sign; 
+            $params['op'] = 'collect'; 
+            return $params;
+            $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$params);
+            
+            // return json_decode($result['errorcode'],true);
+            if($result['errorcode']=='0000'){
+                $this->success($result['message'],null,$result);
+
+            }else{
+                $this->error($result['message'],null,'');
+            }
+        }
+    }
+    /**
+     * 第二步，得到sid，和手机验证码
+     * 
+     */
+    public function getCallListfiles2(){
+        $userid = 'cdjy01';
+        $apikey = '1de2474bcaaac1e4';
+        $sign = md5($userid.$apikey);
+        if($this->request->isAjax()){
+            $newData = array();
+            $data = input('post.');
+            $newData['userid'] = $userid;
+            $newData['sign'] = $sign;
+            $newData['op'] = 'collect';
+            $newData['checkcode'] = $data['code'];
+            $newData['sid'] = $data['sid'];
+            $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$newData);
+            if($result['errorcode']=='0000'){
+                $newData['userid'] = $userid;
+                $newData['sign'] = $sign;
+                $newData['op'] = 'get';
+                $newData['username'] = $data['phone'];
+                $newData['sid'] = $data['sid'];
+                $this->success($result['message'],null,$result);
+
+            }else{
+                $this->error($result['message'],null,'');
+            }
+        }
+
+    }
+    public function https_request($url, $data = null,$time_out=60,$out_level="s",$headers=array())
+    {  
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_NOSIGNAL, 1);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        if (!empty($data)){
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        if($out_level=="s")
+        {
+            //超时以秒设置
+            curl_setopt($curl, CURLOPT_TIMEOUT,$time_out);//设置超时时间
+        }elseif ($out_level=="ms") 
+        {
+            curl_setopt($curl, CURLOPT_TIMEOUT_MS,$time_out);  //超时毫秒，curl 7.16.2中被加入。从PHP 5.2.3起可使用 
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        if($headers)
+        {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);//如果有header头 就发送header头信息
+        }
+        $output = curl_exec($curl);
+        curl_close($curl);
+        return $output;
+    } 
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑

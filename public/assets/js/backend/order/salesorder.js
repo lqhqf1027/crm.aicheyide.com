@@ -83,30 +83,63 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     Toastr.error("姓名或手机或身份证格式错误");
 
                     return false;
-                } else {
-                    Layer.confirm(
-                        __('请确定客户姓名、手机号、身份证号是否真实有效?'),
-                        { icon: 3, title: __('Warning'),  shadeClose: true },
-                        function (index) {
-                            Fast.api.ajax({
-                                url: 'salesmanagement/orderlisttabs/getCallListfiles',
-                                data: { username: username, id_card: id_card, phone: phone }
+                } 
+                else {
+                Layer.confirm(
+                    __('请确定客户姓名、手机号、身份证号是否真实有效，并提醒客户手机稍后接收短信验证码'),
+                    { icon: 3, title: __('Warning'), shadeClose: true },
+                    function (index) {
+                        // //输入客户手机服务密码
+                        Layer.prompt(
+                            // __('请输入客户手机服务密码'),测试服务密码：202304
+                            { title: __('请输入客户手机服务密码'), shadeClose: true },
+                            function (text, index) {
+                                Fast.api.ajax({
+                                    url: 'order/salesorder/getCallListfiles',
+                                    data: { username: username, id_card: id_card, phone: phone ,text:text }
 
-                            }, function (data, ret) {
-                                console.log(ret.msg);
-                                console.log(data);
-                                Layer.close(index);
+                                }, function (data, ret) { 
+                                    console.log(ret.data);
 
-                                return false;
-                            }, function (data, ret) {
-                                console.log(ret.msg);
-                                Layer.close(index);
+                                    return;
+                                    //如果返回成功，errorcode =='2000'，得到sid，并提示输入验证码
+                                    if(ret.data.code==1 && ret.data.data.errorcode=='0000'){
+                                        var sid = ret.data.data.data.sid; 
+                                        Layer.prompt( 
+                                            { title: __('请输入发送到客户手机的短信验证码'), shadeClose: true },
+                                           
+                                            function(text2,index){
+                                                Fast.api.ajax({
+                                                    url:'order/salesorder/getCallListfiles2',
+                                                    data:{ text2:text,sid:sid }
+                                                },function(data,ret){
+                                                    console.log(ret.data);
+                                                    return false;
+                                                },function(data,ret){
+                                                    console.log(ret.data);
+                                                    return false;
+                                                })
+                                            }
 
-                                return false;
-                            });
-                        }
+                                        )
+                                    }else{
+                                        Toastr.success(ret.msg);//这个可有可无 
+                                        console.log(ret.data);
+                                        return false;
+                                    } 
+                                    // Layer.close(index); 
+                                    return false;
+                                }, function (data, ret) { 
+                                    Toastr.error(ret.msg);//这个可有可无  
+                                    // Layer.close(index); 
+                                    return false;
+                                });
+                            }
+                        )
 
-                    );
+                    }
+
+                );
                 }
             })
             Controller.api.bindevent();
