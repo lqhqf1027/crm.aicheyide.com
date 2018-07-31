@@ -361,12 +361,12 @@ class Customertabs extends Backend
         /*表头数据填充*/
         $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);/*设置行高*/
         $objPHPExcel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息 
-            ->setCellValue('A' . $myrow, 'id')
-            ->setCellValue('B' . $myrow, '所属平台(填写数字[2代表今日头条，3代表百度，4代表58同城])')
-            ->setCellValue('C' . $myrow, '姓名')
-            ->setCellValue('D' . $myrow, '联系电话')
-            ->setCellValue('E' . $myrow, '年龄')
-            ->setCellValue('F' . $myrow, '性别');
+            // ->setCellValue('A' . $myrow, 'id')
+            ->setCellValue('A' . $myrow, '所属平台(填写数字[2代表今日头条，3代表百度，4代表58同城])')
+            ->setCellValue('B' . $myrow, '姓名')
+            ->setCellValue('C' . $myrow, '联系电话');
+            // ->setCellValue('E' . $myrow, '年龄')
+            // ->setCellValue('F' . $myrow, '性别');
        
         //浏览器交互 导出
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -385,106 +385,394 @@ class Customertabs extends Backend
         exit;
     }
 
-    //导出客户信息
-    // public function export()
-    // {
-    //     if ($this->request->isPost()) {
-    //         set_time_limit(0);
-    //         $search = $this->request->post('search');
-    //         $ids = $this->request->post('ids');
-    //         $filter = $this->request->post('filter');
-    //         $op = $this->request->post('op');
-    //         $columns = $this->request->post('columns');
+    //导出新客户信息
+    public function export()
+    {
+        $this->model = model('CustomerResource');
 
-    //         $excel = new \PHPExcel();
+        if ($this->request->isPost()) {
+            set_time_limit(0);
+            $search = $this->request->post('search');
+            $ids = $this->request->post('ids');
+            $filter = $this->request->post('filter');
+            $op = $this->request->post('op');
+            // $columns = $this->request->post('columns');
 
-    //         $excel->getProperties()
-    //             ->setCreator("FastAdmin")
-    //             ->setLastModifiedBy("FastAdmin")
-    //             ->setTitle("标题")
-    //             ->setSubject("Subject");
-    //         $excel->getDefaultStyle()->getFont()->setName('Microsoft Yahei');
-    //         $excel->getDefaultStyle()->getFont()->setSize(12);
+            // var_dump($columns);
+            // die;
 
-    //         $this->sharedStyle = new \PHPExcel_Style();
-    //         $this->sharedStyle->applyFromArray(
-    //             array(
-    //                 'fill'      => array(
-    //                     'type'  => \PHPExcel_Style_Fill::FILL_SOLID,
-    //                     'color' => array('rgb' => '000000')
-    //                 ),
-    //                 'font'      => array(
-    //                     'color' => array('rgb' => "000000"),
-    //                 ),
-    //                 'alignment' => array(
-    //                     'vertical'   => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
-    //                     'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-    //                     'indent'     => 1
-    //                 ),
-    //                 'borders'   => array(
-    //                     'allborders' => array('style' => \PHPExcel_Style_Border::BORDER_THIN),
-    //                 )
-    //             ));
+            $excel = new \PHPExcel();
 
-    //         $worksheet = $excel->setActiveSheetIndex(0);
-    //         $worksheet->setTitle('标题');
+            $excel->getProperties()
+                ->setCreator("FastAdmin")
+                ->setLastModifiedBy("FastAdmin")
+                ->setTitle("标题")
+                ->setSubject("Subject");
+            $excel->getDefaultStyle()->getFont()->setName('Microsoft Yahei');
+            $excel->getDefaultStyle()->getFont()->setSize(12);
 
-    //         $whereIds = $ids == 'all' ? '1=1' : ['id' => ['in', explode(',', $ids)]];
-    //         $this->request->get(['search' => $search, 'ids' => $ids, 'filter' => $filter, 'op' => $op]);
-    //         list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $this->sharedStyle = new \PHPExcel_Style();
+            $this->sharedStyle->applyFromArray(
+                array(
+                    'fill'      => array(
+                        'type'  => \PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => '000000')
+                    ),
+                    'font'      => array(
+                        'color' => array('rgb' => "000000"),
+                    ),
+                    'alignment' => array(
+                        'vertical'   => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'indent'     => 1
+                    ),
+                    'borders'   => array(
+                        'allborders' => array('style' => \PHPExcel_Style_Border::BORDER_THIN),
+                    )
+                ));
 
-    //         $line = 1;
-    //         $list = [];
-    //         $this->model
-    //             ->field($columns)
-    //             ->where($where)
-    //             ->where($whereIds)
-    //             ->chunk(100, function ($items) use (&$list, &$line, &$worksheet) {
-    //                 $styleArray = array(
-    //                     'font' => array(
-    //                         'bold'  => true,
-    //                         'color' => array('rgb' => 'FF0000'),
-    //                         'size'  => 15,
-    //                         'name'  => 'Verdana'
-    //                     ));
-    //                 $list = $items = collection($items)->toArray();
-    //                 foreach ($items as $index => $item) {
-    //                     $line++;
-    //                     $col = 0;
-    //                     foreach ($item as $field => $value) {
+            $worksheet = $excel->setActiveSheetIndex(0);
+            $worksheet->setTitle('标题');
 
-    //                         $worksheet->setCellValueByColumnAndRow($col, $line, $value);
-    //                         $worksheet->getStyleByColumnAndRow($col, $line)->getNumberFormat()->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_TEXT);
-    //                         $worksheet->getCellByColumnAndRow($col, $line)->getStyle()->applyFromArray($styleArray);
-    //                         $col++;
-    //                     }
-    //                 }
-    //             });
-    //         $first = array_keys($list[0]);
-    //         foreach ($first as $index => $item) {
-    //             $worksheet->setCellValueByColumnAndRow($index, 1, __($item));
-    //         }
+            $whereIds = $ids == 'all' ? '1=1' : ['id' => ['in', explode(',', $ids)]];
+            $this->request->get(['search' => $search, 'ids' => $ids, 'filter' => $filter, 'op' => $op]);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-    //         $excel->createSheet();
-    //         // Redirect output to a client’s web browser (Excel2007)
-    //         $title = date("YmdHis");
-    //         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    //         header('Content-Disposition: attachment;filename="' . $title . '.xlsx"');
-    //         header('Cache-Control: max-age=0');
-    //         // If you're serving to IE 9, then the following may be needed
-    //         header('Cache-Control: max-age=1');
+            $myrow = 1;/*表头所需要行数的变量，方便以后修改*/
+            /*表头数据填充*/
+            $excel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);/*设置行高*/
+            $excel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息 
+                        ->setCellValue('A' . $myrow, 'id')
+                        ->setCellValue('B' . $myrow, '所属平台')
+                        ->setCellValue('C' . $myrow, '姓名')
+                        ->setCellValue('D' . $myrow, '联系电话')
+                        ->setCellValue('E' . $myrow, '年龄')
+                        ->setCellValue('F' . $myrow, '性别');
 
-    //         // If you're serving to IE over SSL, then the following may be needed
-    //         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-    //         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
-    //         header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-    //         header('Pragma: public'); // HTTP/1.0
 
-    //         $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
-    //         $objWriter->save('php://output');
-    //         return;
-    //     }
-    // }
+            $line = 1;
+            $list = [];
+            $this->model
+                ->field('id,platform_id,username,phone,age,genderdata')
+                ->where($where)
+                ->where($whereIds)
+                ->where('backoffice_id',NULL)
+                ->where('platform_id', 'not in', '5,6,7')
+                ->chunk(100, function ($items) use (&$list, &$line, &$worksheet) {
+                    $styleArray = array(
+                        'font' => array(
+                            'bold'  => true,
+                            'color' => array('rgb' => 'FF0000'),
+                            'size'  => 15,
+                            'name'  => 'Verdana'
+                        ));
+                    $list = $items = collection($items)->toArray();
+                    // pr($list);
+                    // die;
+
+                });
+
+            // pr($list);
+            // die;
+            $myrow = $myrow + 1; //刚刚设置的行变量
+            $mynum = 1;//序号
+            foreach ($list as $key => $value) {
+
+                $platform_id = $value['platform_id'];
+                // pr($platform_id);
+                $name = DB::name('platform')->where('id', $platform_id)->value('name');
+                $excel->setActiveSheetIndex(0)
+                        ->setCellValue('A' . $myrow, $mynum)
+                        ->setCellValue('B' . $myrow, $name)
+                        ->setCellValue('C' . $myrow, $value['username'])
+                        ->setCellValue('D' . $myrow, $value['phone'])
+                        ->setCellValue('E' . $myrow, $value['age'])
+                        ->setCellValue('F' . $myrow, $value['genderdata_text']);
+                $excel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高 不能批量的设置 这种感觉 if（has（蛋）！=0）{疼();}*/
+                $myrow++;
+                $mynum++;
+                
+            }
+           
+            $title = date("YmdHis");
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $title . '.xlsx"');
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+
+            // If you're serving to IE over SSL, then the following may be needed
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header('Pragma: public'); // HTTP/1.0
+
+            $objWriter = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+            $objWriter->save('php://output');
+            exit;
+
+        }
+    }
+
+    //导出已分配客户信息
+    public function allocationexport()
+    {
+        $this->model = model('CustomerResource');
+
+        if ($this->request->isPost()) {
+            set_time_limit(0);
+            $search = $this->request->post('search');
+            $ids = $this->request->post('ids');
+            $filter = $this->request->post('filter');
+            $op = $this->request->post('op');
+            // $columns = $this->request->post('columns');
+
+            // var_dump($columns);
+            // die;
+
+            $excel = new \PHPExcel();
+
+            $excel->getProperties()
+                ->setCreator("FastAdmin")
+                ->setLastModifiedBy("FastAdmin")
+                ->setTitle("标题")
+                ->setSubject("Subject");
+            $excel->getDefaultStyle()->getFont()->setName('Microsoft Yahei');
+            $excel->getDefaultStyle()->getFont()->setSize(12);
+
+            $this->sharedStyle = new \PHPExcel_Style();
+            $this->sharedStyle->applyFromArray(
+                array(
+                    'fill'      => array(
+                        'type'  => \PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => '000000')
+                    ),
+                    'font'      => array(
+                        'color' => array('rgb' => "000000"),
+                    ),
+                    'alignment' => array(
+                        'vertical'   => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'indent'     => 1
+                    ),
+                    'borders'   => array(
+                        'allborders' => array('style' => \PHPExcel_Style_Border::BORDER_THIN),
+                    )
+                ));
+
+            $worksheet = $excel->setActiveSheetIndex(0);
+            $worksheet->setTitle('标题');
+
+            $whereIds = $ids == 'all' ? '1=1' : ['id' => ['in', explode(',', $ids)]];
+            $this->request->get(['search' => $search, 'ids' => $ids, 'filter' => $filter, 'op' => $op]);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+
+            $myrow = 1;/*表头所需要行数的变量，方便以后修改*/
+            /*表头数据填充*/
+            $excel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);/*设置行高*/
+            $excel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息 
+                        ->setCellValue('A' . $myrow, 'id')
+                        ->setCellValue('B' . $myrow, '所属平台')
+                        ->setCellValue('C' . $myrow, '姓名')
+                        ->setCellValue('D' . $myrow, '联系电话')
+                        ->setCellValue('E' . $myrow, '年龄')
+                        ->setCellValue('F' . $myrow, '性别');
+
+
+            $line = 1;
+            $list = [];
+            $this->model
+                ->field('id,platform_id,username,phone,age,genderdata')
+                ->where($where)
+                ->where($whereIds)
+                ->where('backoffice_id','NOT NULL')
+                ->where('platform_id', 'not in', '5,6,7')
+                ->chunk(100, function ($items) use (&$list, &$line, &$worksheet) {
+                    $styleArray = array(
+                        'font' => array(
+                            'bold'  => true,
+                            'color' => array('rgb' => 'FF0000'),
+                            'size'  => 15,
+                            'name'  => 'Verdana'
+                        ));
+                    $list = $items = collection($items)->toArray();
+                    // pr($list);
+                    // die;
+
+                });
+
+            // pr($list);
+            // die;
+            $myrow = $myrow + 1; //刚刚设置的行变量
+            $mynum = 1;//序号
+            foreach ($list as $key => $value) {
+
+                $platform_id = $value['platform_id'];
+                // pr($platform_id);
+                $name = DB::name('platform')->where('id', $platform_id)->value('name');
+                $excel->setActiveSheetIndex(0)
+                        ->setCellValue('A' . $myrow, $mynum)
+                        ->setCellValue('B' . $myrow, $name)
+                        ->setCellValue('C' . $myrow, $value['username'])
+                        ->setCellValue('D' . $myrow, $value['phone'])
+                        ->setCellValue('E' . $myrow, $value['age'])
+                        ->setCellValue('F' . $myrow, $value['genderdata_text']);
+                $excel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高 不能批量的设置 这种感觉 if（has（蛋）！=0）{疼();}*/
+                $myrow++;
+                $mynum++;
+                
+            }
+           
+            $title = date("YmdHis");
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $title . '.xlsx"');
+            header('Cache-Control: max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            header('Cache-Control: max-age=1');
+
+            // If you're serving to IE over SSL, then the following may be needed
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            header('Pragma: public'); // HTTP/1.0
+
+            $objWriter = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+            $objWriter->save('php://output');
+            exit;
+
+        }
+    }
+
+    //导出已反馈客户信息
+    public function feedbackexport()
+    {
+        $this->model = model('CustomerResource');
+ 
+        if ($this->request->isPost()) {
+            set_time_limit(0);
+            $search = $this->request->post('search');
+            $ids = $this->request->post('ids');
+            $filter = $this->request->post('filter');
+            $op = $this->request->post('op');
+             // $columns = $this->request->post('columns');
+ 
+             // var_dump($columns);
+             // die;
+ 
+            $excel = new \PHPExcel();
+ 
+            $excel->getProperties()
+                ->setCreator("FastAdmin")
+                ->setLastModifiedBy("FastAdmin")
+                ->setTitle("标题")
+                ->setSubject("Subject");
+            $excel->getDefaultStyle()->getFont()->setName('Microsoft Yahei');
+            $excel->getDefaultStyle()->getFont()->setSize(12);
+ 
+            $this->sharedStyle = new \PHPExcel_Style();
+            $this->sharedStyle->applyFromArray(
+                array(
+                    'fill'      => array(
+                        'type'  => \PHPExcel_Style_Fill::FILL_SOLID,
+                        'color' => array('rgb' => '000000')
+                    ),
+                    'font'      => array(
+                        'color' => array('rgb' => "000000"),
+                    ),
+                    'alignment' => array(
+                        'vertical'   => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'indent'     => 1
+                    ),
+                    'borders'   => array(
+                        'allborders' => array('style' => \PHPExcel_Style_Border::BORDER_THIN),
+                    )
+                ));
+ 
+            $worksheet = $excel->setActiveSheetIndex(0);
+            $worksheet->setTitle('标题');
+ 
+            $whereIds = $ids == 'all' ? '1=1' : ['id' => ['in', explode(',', $ids)]];
+            $this->request->get(['search' => $search, 'ids' => $ids, 'filter' => $filter, 'op' => $op]);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+ 
+            $myrow = 1;/*表头所需要行数的变量，方便以后修改*/
+             /*表头数据填充*/
+            $excel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);/*设置行高*/
+            $excel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息 
+                        ->setCellValue('A' . $myrow, 'id')
+                        ->setCellValue('B' . $myrow, '所属平台')
+                        ->setCellValue('C' . $myrow, '姓名')
+                        ->setCellValue('D' . $myrow, '联系电话')
+                        ->setCellValue('E' . $myrow, '年龄')
+                        ->setCellValue('F' . $myrow, '性别');
+ 
+ 
+            $line = 1;
+            $list = [];
+            $this->model
+                ->field('id,platform_id,username,phone,age,genderdata')
+                ->where($where)
+                ->where($whereIds)
+                ->where('backoffice_id','NOT NULL')
+                ->where('platform_id', 'not in', '5,6,7')
+                ->where('feedback','NOT NULL')
+                ->chunk(100, function ($items) use (&$list, &$line, &$worksheet) {
+                    $styleArray = array(
+                        'font' => array(
+                            'bold'  => true,
+                            'color' => array('rgb' => 'FF0000'),
+                            'size'  => 15,
+                            'name'  => 'Verdana'
+                        ));
+                    $list = $items = collection($items)->toArray();
+                     // pr($list);
+                     // die;
+ 
+                });
+ 
+             // pr($list);
+             // die;
+             $myrow = $myrow + 1; //刚刚设置的行变量
+             $mynum = 1;//序号
+             foreach ($list as $key => $value) {
+ 
+                 $platform_id = $value['platform_id'];
+                 // pr($platform_id);
+                 $name = DB::name('platform')->where('id', $platform_id)->value('name');
+                 $excel->setActiveSheetIndex(0)
+                         ->setCellValue('A' . $myrow, $mynum)
+                         ->setCellValue('B' . $myrow, $name)
+                         ->setCellValue('C' . $myrow, $value['username'])
+                         ->setCellValue('D' . $myrow, $value['phone'])
+                         ->setCellValue('E' . $myrow, $value['age'])
+                         ->setCellValue('F' . $myrow, $value['genderdata_text']);
+                 $excel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高 不能批量的设置 这种感觉 if（has（蛋）！=0）{疼();}*/
+                 $myrow++;
+                 $mynum++;
+                 
+             }
+            
+             $title = date("YmdHis");
+             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+             header('Content-Disposition: attachment;filename="' . $title . '.xlsx"');
+             header('Cache-Control: max-age=0');
+             // If you're serving to IE 9, then the following may be needed
+             header('Cache-Control: max-age=1');
+ 
+             // If you're serving to IE over SSL, then the following may be needed
+             header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+             header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+             header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+             header('Pragma: public'); // HTTP/1.0
+ 
+             $objWriter = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+             $objWriter->save('php://output');
+             exit;
+ 
+         }
+     }
+
     
     // public function table2()
     // {
