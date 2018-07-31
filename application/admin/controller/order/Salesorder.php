@@ -147,57 +147,88 @@ class Salesorder extends Backend
         /**
      * 获取通话清单,第一步登陆，获取验证码
      */
-    public function getCallListfiles(){
-        // vendor("PHPExcel.PHPExcel");
-        //接口参数userid、apikey、
-       
+    public function getCallListfiles(){ 
+        //接口参数userid、apikey、 
         if ($this->request->isAjax()) {
             //登陆 
             $params = $this->request->post(''); 
+            
             $params['userid'] = $this->userid;
             $params['sign'] = $this->sign; 
-            $params['op'] = 'collect'; 
-            return $params;
-            $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$params);
-            
-            // return json_decode($result['errorcode'],true);
-            if($result['errorcode']=='0000'){
-                $this->success($result['message'],null,$result);
-
-            }else{
-                $this->error($result['message'],null,'');
+            $params['op'] = 'collect';  
+        //    return $params['sign'];
+            $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$params); 
+            if($result['errorcode']=='0000' && !isset($result['data']['type'])){  // 如果返回值没有type，就直接获取数据  
+                $params['op'] ='get';  
+                $params['sid'] = $result['data']['sid'];  
+                $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$params);  
+                if($result['errorcode']=='0000'){
+                    $result['get_data'] = 'yes';           
+                    $this->success($result['message'],null,$result); 
+                }
+                else{
+                    $this->error($result['message'],null,$result); 
+                } 
+            }  
+            if($result['errorcode']=='0000' && isset($result['data']['type'])){
+                 //需要返回手机号码
+                 $result['username'] =  $params['username'];
+                 $this->success($result['message'],null,$result); 
             }
+            else{
+                $this->error($result['message'],null,$result);
+                
+            } 
         }
     }
     /**
-     * 第二步，得到sid，和手机验证码
+     * 第二步，得到sid，提交手机验证码,此步骤可能重复，
      * 
      */
     public function getCallListfiles2(){
-        $userid = 'cdjy01';
-        $apikey = '1de2474bcaaac1e4';
-        $sign = md5($userid.$apikey);
-        if($this->request->isAjax()){
-            $newData = array();
-            $data = input('post.');
-            $newData['userid'] = $userid;
-            $newData['sign'] = $sign;
-            $newData['op'] = 'collect';
-            $newData['checkcode'] = $data['code'];
-            $newData['sid'] = $data['sid'];
-            $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$newData);
-            if($result['errorcode']=='0000'){
-                $newData['userid'] = $userid;
-                $newData['sign'] = $sign;
-                $newData['op'] = 'get';
-                $newData['username'] = $data['phone'];
-                $newData['sid'] = $data['sid'];
-                $this->success($result['message'],null,$result);
+       
+        if($this->request->isAjax()){ 
+            $params =$this->request->post('');
+            $params['userid'] = $this->userid;
+            $params['sign'] = $this->sign; 
+            $params['op'] = 'code';  
+           
+            $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$params);  
+          
+            if($result['errorcode']=='0000' && !isset($result['data']['type'])){   // 如果返回值没有type，就直接获取数据 
+                //如果验证成功，如果需要再次提交验证码，则继续返回，判断type是否有设定 
+                    $params['op'] ='get';  
+                    $params['sid'] = $result['data']['sid']; 
+                    $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$params);  
+                    if($result['errorcode']=='0000'){
+                        $result['get_data'] = 'yes';           
+                        $this->success($result['message'],null,$result); 
+                    }
+                    else{
+                        $this->error($result['message'],null,$result); 
+                    }    
 
-            }else{
-                $this->error($result['message'],null,'');
+            }
+            if($result['errorcode']=='0000' && isset($result['data']['type'])){ //如果存在这个type，需要继续返回前端获取验证码
+                
+            }
+            else{
+                $this->error($result['message'],null,$result);
             }
         }
+
+    }
+    /**
+     * 获取验证码
+     * @params userid,sign,op,sid,
+     * @return array
+     */
+    public function getCode($sid){
+        $params['userid'] = $this->userid;
+        $params['sign'] = $this->sign;
+        $params['op'] = 'code';
+        $params['sid'] = $sid;
+        return posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$params);
 
     }
     public function https_request($url, $data = null,$time_out=60,$out_level="s",$headers=array())
