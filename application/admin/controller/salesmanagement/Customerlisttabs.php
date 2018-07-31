@@ -745,7 +745,7 @@ class Customerlisttabs extends Backend
     /**
      * 编辑
      */
-    public function edit($ids = NULL)
+    public function edits($ids = NULL)
     {
         $this->model = model('CustomerResource');
         $row = $this->model->get($ids);
@@ -768,18 +768,26 @@ class Customerlisttabs extends Backend
                 $this->model->where('id', $ids)->update(['feedbacktime' => time(), 'followuptimestamp' => strtotime($params['followupdate'])]);
 
                 $cnlevel = "";
-                switch ($params['customerlevel']){
-                    case "relation":$cnlevel = "待联系";break;
-                    case "intention":$cnlevel = "有意向";break;
-                    case "nointention":$cnlevel = "暂无意向";break;
-                    case "giveup":$cnlevel = "已放弃";break;
+                switch ($params['customerlevel']) {
+                    case "relation":
+                        $cnlevel = "待联系";
+                        break;
+                    case "intention":
+                        $cnlevel = "有意向";
+                        break;
+                    case "nointention":
+                        $cnlevel = "暂无意向";
+                        break;
+                    case "giveup":
+                        $cnlevel = "已放弃";
+                        break;
                 }
 
                 $data = [
                     'feedbackcontent' => $params['feedback'],
                     'feedbacktime' => time(),
                     'customer_id' => $ids,
-                    'customerlevel'=>$cnlevel,
+                    'customerlevel' => $cnlevel,
                     'followupdate' => $params['followupdate']
                 ];
                 Db::table("crm_feedback_info")->insert($data);
@@ -794,6 +802,7 @@ class Customerlisttabs extends Backend
                     }
                     $result = $row->allowField(true)->save($params);
                     if ($result !== false) {
+                      //  return json_encode(array('msg'=>'成功','errrcode'=>'1','result'=>$result));
                         $this->success();
                     } else {
                         $this->error($row->getError());
@@ -829,26 +838,7 @@ class Customerlisttabs extends Backend
                 $this->success();
             }
 
-//            $newCustomTotal = $this->model
-//                ->with(['platform'])
-//                ->where(function ($query) {
-//                    $query->where('backoffice_id', 'not null')
-//                        ->where('sales_id', $this->auth->id)
-//                        ->where('customerlevel', null)
-//                        ->whereOr(function ($query2) {
-//                            $query2->where('platform_id', 'in', '5,6,7')
-//                                ->where('backoffice_id', null)
-//                                ->where('sales_id', $this->auth->id)
-//                                ->where('customerlevel', null);
-//                        });
-//
-//                })
-//                ->count();
-
-
         }
-
-        // return $newCustomTotal;
 
     }
 
@@ -869,7 +859,7 @@ class Customerlisttabs extends Backend
                 ->setField('customerlevel', 'giveup');
 
             if ($result) {
-                $this->success();
+                $this->success('','',$result);
             } else {
                 $this->error();
             }
@@ -970,10 +960,10 @@ class Customerlisttabs extends Backend
             ->select();
 
 
-        foreach ($data as $key=> $value){
+        foreach ($data as $key => $value) {
 
-            $data[$key]['indexs'] = intval($key)+1;
-            $data[$key]['feedbacktime'] = date("Y-m-d H:i:s",intval($value['feedbacktime']));
+            $data[$key]['indexs'] = intval($key) + 1;
+            $data[$key]['feedbacktime'] = date("Y-m-d H:i:s", intval($value['feedbacktime']));
 
         }
 

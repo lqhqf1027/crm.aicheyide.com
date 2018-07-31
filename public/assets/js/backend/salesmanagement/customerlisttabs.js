@@ -21,7 +21,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
         },
+        // edit: function () {
+        //
+        //     // $(".btn-add").data("area", ["300px","200px"]);
+        //     Table.api.init({
+        //
+        //     });
+        //     Form.api.bindevent($("form[role=form]"), function(data, ret){
+        //         console.log(data);
+        //         console.log(ret);
+        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+        //         // Fast.api.close(data);//这里是重点
+        //
+        //         // console.log(data);
+        //         // Toastr.success("成功");//这个可有可无
+        //     }, function(data, ret){
+        //         // console.log(data);
+        //
+        //         Toastr.success("失败");
+        //
+        //     });
+        //     // Controller.api.bindevent();
+        //     // console.log(Config.id);
+        // },
+
 
         table: {
 
@@ -81,13 +106,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
+                                    // {
+                                    //     name:'detail',
+                                    //     text:'新增销售单',
+                                    //     title:'新增销售单',
+                                    //     icon: 'fa fa-share',
+                                    //     classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList',
+                                    //     url: 'salesmanagement/customerlisttabs/newSalesList'
+                                    // },
                                     {
-                                        name:'detail',
-                                        text:'新增销售单',
-                                        title:'新增销售单',
-                                        icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList',
-                                        url: 'salesmanagement/customerlisttabs/newSalesList'
+
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edits'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
                                     }
 
                                 ],
@@ -128,6 +174,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 data: {id: JSON.stringify(ids)}
                             }, function (data, rets) {
 
+                                var addData = parseInt(data);
+                                var pre = $('#badge_give_up').text();
+
+                                pre = parseInt(pre);
+
+                                $('#badge_give_up').text(pre + addData);
                                 Toastr.success("成功");
                                 Layer.close(index);
                                 newCustomer.bootstrapTable('refresh');
@@ -203,6 +255,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {
                                 field: 'operate', title: __('Operate'), table: relations,
+                                buttons: [
+                                    {
+
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edit'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
+                                    },
+                                    {
+
+                                        name: 'edit',
+                                        text: __('查看跟进结果'),
+                                        icon: 'fa fa-eye',
+                                        title: '查看跟进结果',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                                        url: "salesmanagement/customerlisttabs/showFeedback"
+
+                                    }
+                                ],
 
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
@@ -313,7 +399,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {
                                 field: 'operate', title: __('Operate'), table: intentions,
+                                buttons: [
+                                    {
 
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edit'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
+                                    },
+                                    {
+
+                                        name: 'edit',
+                                        text: __('查看跟进结果'),
+                                        icon: 'fa fa-eye',
+                                        title: '查看跟进结果',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                                        url: "salesmanagement/customerlisttabs/showFeedback"
+
+                                    }
+                                ],
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
@@ -422,7 +541,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {
                                 field: 'operate', title: __('Operate'), table: nointentions,
+                                buttons: [
+                                    {
 
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edit'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
+                                    },
+                                    {
+
+                                        name: 'edit',
+                                        text: __('查看跟进结果'),
+                                        icon: 'fa fa-eye',
+                                        title: '查看跟进结果',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                                        url: "salesmanagement/customerlisttabs/showFeedback"
+
+                                    }
+                                ],
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
@@ -591,7 +743,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {
                                 field: 'operate', title: __('Operate'), table: overdues,
+                                buttons: [
+                                    {
 
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edit'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
+                                    },
+                                    {
+
+                                        name: 'edit',
+                                        text: __('查看跟进结果'),
+                                        icon: 'fa fa-eye',
+                                        title: '查看跟进结果',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                                        url: "salesmanagement/customerlisttabs/showFeedback"
+
+                                    }
+                                ],
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
@@ -650,10 +835,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         add: function () {
+
             Controller.api.bindevent();
 
         },
-        edit: function () {
+        edits: function () {
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                alert(1111)
+                console.log(data);
+                console.log(ret);
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                // Fast.api.close(data);//这里是重点
+
+                // console.log(data);
+                Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+                alert(22222)
+
+                Toastr.error("失败");
+
+            });
             Controller.api.bindevent();
         },
         api: {
@@ -668,7 +870,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             events: {
                 operate: {
 
-                    'click .btn-editone': function (e, value, row, index) {
+                    'click .btn-editone': function (e, value, row, index) {  //编辑
 
                         e.stopPropagation();
                         e.preventDefault();
@@ -676,7 +878,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = options.extend.edit_url;
+                        var url = 'salesmanagement/customerlisttabs/edits';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
 
@@ -717,8 +919,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Fast.api.ajax({
                                     url: 'salesmanagement/Customerlisttabs/ajaxGiveup',
                                     data: {id: row[options.pk]}
-                                }, function (datas, rets) {
+                                }, function (data, ret) {
+                                    console.log(data);
+                                    console.log(ret);
 
+                                    var pre = $('#badge_give_up').text();
+
+                                    pre = parseInt(pre);
+
+                                    $('#badge_give_up').text(pre + 1);
 
                                     //成功的回调
                                     // Fast.api.close(data);
@@ -749,43 +958,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = table ? table.bootstrapTable('getOptions') : {};
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
-
-                    if (options.extend.edit_url !== '') {
-                        buttons.push({
-                            name: 'edit',
-                            text: __('Feedback'),
-                            icon: 'fa fa-pencil',
-                            title: '反馈',
-                            extend: 'data-toggle="tooltip"',
-                            classname: 'btn btn-xs btn-success btn-editone',
-                            url: options.extend.edit_url
-                        });
-                    }
-
-                    buttons.push({
-                        name: 'edit',
-                        text: __('查看跟进结果'),
-                        icon: 'fa fa-eye',
-                        title: '查看跟进结果',
-                        extend: 'data-toggle="tooltip"',
-                        classname: 'btn btn-xs btn-info btn-showFeedback',
-                        url: "salesmanagement/customerlisttabs/showFeedback"
-                    });
-
-
-
-                    if (options.extend.give_up_url !== '') {
-                        //
-                        buttons.push({
-                            name: 'del',
-                            text: '放弃',
-                            icon: 'fa fa-trash',
-                            extend: 'data-toggle="tooltip"',
-                            title: __('Del'),
-                            classname: 'btn btn-xs btn-danger btn-give_up'
-                        });
-                    }
-
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
