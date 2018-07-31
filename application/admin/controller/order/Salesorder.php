@@ -21,7 +21,10 @@ class Salesorder extends Backend
      */
     protected $model = null;
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
-    protected  $dataLimit = 'false'; //表示显示当前自己和所有子级管理员的所有数据
+    protected  $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
+    protected $userid = null;//用户id
+    protected $apikey = null;//apikey
+    protected $sign = null;//sign  md5加密
     public function _initialize()
     {
         parent::_initialize();
@@ -29,6 +32,9 @@ class Salesorder extends Backend
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+        $this->userid = 'cdjy01';
+        $this->apikey = '1de2474bcaaac1e4';
+        $this->sign = md5($this->userid.$this->apikey);
     }
     public function index()
     {
@@ -144,25 +150,15 @@ class Salesorder extends Backend
     public function getCallListfiles(){
         // vendor("PHPExcel.PHPExcel");
         //接口参数userid、apikey、
-        $userid = 'cdjy01';
-        $apikey = '1de2474bcaaac1e4';
-        $sign = md5($userid.$apikey);
-        
+       
         if ($this->request->isAjax()) {
-            $newData = array();
-            $data = input('post.');
-            //登陆
-            $newData['userid'] = $userid;
-            $newData['sign'] = $sign;
-            $newData['idNumber'] = $data['id_card'];
-            $newData['name'] = $data['username'];
-            $newData['op'] = 'collect';
-            $newData['password'] = $data['text'];
-            $newData['username'] = $data['phone'];
-
-
-           
-            $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',[$newData,$data]);
+            //登陆 
+            $params = $this->request->post(''); 
+            $params['userid'] = $this->userid;
+            $params['sign'] = $this->sign; 
+            $params['op'] = 'collect'; 
+            return $params;
+            $result = posts('https://www.zhicheng-afu.com/ZSS/api/yixin_yys/V1',$params);
             
             // return json_decode($result['errorcode'],true);
             if($result['errorcode']=='0000'){

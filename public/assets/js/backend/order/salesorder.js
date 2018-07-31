@@ -98,7 +98,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     url: 'order/salesorder/getCallListfiles',
                                     data: { username: username, id_card: id_card, phone: phone ,text:text }
 
-                                }, function (data, ret) {
+                                }, function (data, ret) { 
+                                    console.log(ret.data);
+
+                                    return;
                                     //如果返回成功，errorcode =='2000'，得到sid，并提示输入验证码
                                     if(ret.data.code==1 && ret.data.data.errorcode=='0000'){
                                         var sid = ret.data.data.data.sid; 
@@ -119,17 +122,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
 
                                         )
-                                    }
-                                    Toastr.success(ret.msg);//这个可有可无 
-                                    console.log(ret.data);
-                                  
-                                    // Layer.close(index);
-
+                                    }else{
+                                        Toastr.success(ret.msg);//这个可有可无 
+                                        console.log(ret.data);
+                                        return false;
+                                    } 
+                                    // Layer.close(index); 
                                     return false;
-                                }, function (data, ret) {
-                                    console.log(ret.data);
-                                    // Layer.close(index);
-
+                                }, function (data, ret) { 
+                                    Toastr.error(ret.msg);//这个可有可无  
+                                    // Layer.close(index); 
                                     return false;
                                 });
                             }
