@@ -58,6 +58,8 @@ class Customerlisttabs extends Backend
 
     public function index()
     {
+
+
         $canUseId = $this->getUserId();
 
         $this->model = model('CustomerResource');
@@ -161,6 +163,8 @@ class Customerlisttabs extends Backend
                 ->count();
         } else if (in_array($this->auth->id, $canUseId['admin'])) {
 
+
+            echo "123";
             $newCustomTotal = $this->model
                 ->with(['platform'])
                 ->where(function ($query) {
@@ -799,7 +803,7 @@ class Customerlisttabs extends Backend
                             ->whereOr(function ($query2) use ($noPhone) {
                                 $query2->where('platform_id', 'in', '5,6,7')
                                     ->where('backoffice_id', null)
-                                    ->where('sales_id', $this->auth->id)
+                                    ->where('sales_id', "not null")
                                     ->where('customerlevel', 'intention')
                                     ->where('phone', 'not in', $noPhone)
                                     ->where('followuptimestamp', ">", time());
@@ -823,7 +827,7 @@ class Customerlisttabs extends Backend
                             ->whereOr(function ($query2) use ($noPhone) {
                                 $query2->where('platform_id', 'in', '5,6,7')
                                     ->where('backoffice_id', null)
-                                    ->where('sales_id', $this->auth->id)
+                                    ->where('sales_id', "not null")
                                     ->where('customerlevel', 'intention')
                                     ->where('phone', 'not in', $noPhone)
                                     ->where('followuptimestamp', ">", time());
