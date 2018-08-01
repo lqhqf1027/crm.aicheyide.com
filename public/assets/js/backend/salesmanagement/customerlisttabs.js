@@ -841,7 +841,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         edits: function () {
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                alert(1111)
+                alert(1111);
                 console.log(data);
                 console.log(ret);
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
@@ -879,7 +879,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'salesmanagement/customerlisttabs/edits';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('反馈'), $(this).data() || {});
                     },
 
 
