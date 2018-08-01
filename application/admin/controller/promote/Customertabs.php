@@ -23,7 +23,7 @@ class Customertabs extends Backend
     public function _initialize()   
     {
         parent::_initialize();
-        // self::$token= $this->getAccessToken();
+        self::$token= $this->getAccessToken();
         
     }
 
@@ -319,22 +319,22 @@ class Customertabs extends Backend
                 //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
                 //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
                 //dump($sendmessage->sendMsgToAll());exit; 
-                // $token = self::$token;
+                $token = self::$token;
                 // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
                 // $openid = $getAdminOpenid['openid'];
                 // // var_dump($openid);
                 // // die;
-                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
 
                 // $msg = $sendmessage->sendMsgToAll();
                 // // dump($msg);
                 // // die;
-                // if($msg['errcode'] == 0){
+                if($msg['errcode'] == 0){
                     $this->success();
-                // }
-                // else {
-                //     $this->error('消息推送失败');
-                // }
+                }
+                else {
+                    $this->error('消息推送失败');
+                }
                 //$this->error('消息推送失败'); 
             }
             else{
