@@ -57,107 +57,206 @@ class Customerlisttabs extends Backend
 
     public function index()
     {
-
+        $canUseId = $this->getUserId();
 
         $this->model = model('CustomerResource');
         $this->loadlang('salesmanagement/customerlisttabs');
 
+        if (in_array($this->auth->id, $canUseId['sale'])) {
+            $newCustomTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', null)
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', $this->auth->id)
+                                ->where('customerlevel', null);
+                        });
 
-        $newCustomTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('backoffice_id', 'not null')
-                    ->where('sales_id', 1)
-                    ->where('customerlevel', null)
-                    ->whereOr(function ($query2) {
-                        $query2->where('platform_id', 'in', '5,6,7')
-                            ->where('backoffice_id', null)
-                            ->where('sales_id', 1)
-                            ->where('customerlevel', null);
-                    });
+                })
+                ->count();
 
-            })
-            ->count();
+            $relationTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'relation')
+                        ->where('followuptimestamp', ">", time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', $this->auth->id)
+                                ->where('customerlevel', 'relation')
+                                ->where('followuptimestamp', ">", time());
+                        });
 
-        $relationTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('backoffice_id', 'not null')
-                    ->where('sales_id', 1)
-                    ->where('customerlevel', 'relation')
-                    ->where('followuptimestamp', ">", time())
-                    ->whereOr(function ($query2) {
-                        $query2->where('platform_id', 'in', '5,6,7')
-                            ->where('backoffice_id', null)
-                            ->where('sales_id', 1)
-                            ->where('customerlevel', 'relation')
-                            ->where('followuptimestamp', ">", time());
-                    });
+                })
+                ->count();
 
-            })
-            ->count();
+            $intentionTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'intention')
+                        ->where('followuptimestamp', ">", time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', $this->auth->id)
+                                ->where('customerlevel', 'intention')
+                                ->where('followuptimestamp', ">", time());
+                        });
 
-        $intentionTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('backoffice_id', 'not null')
-                    ->where('sales_id', 1)
-                    ->where('customerlevel', 'intention')
-                    ->where('followuptimestamp', ">", time())
-                    ->whereOr(function ($query2) {
-                        $query2->where('platform_id', 'in', '5,6,7')
-                            ->where('backoffice_id', null)
-                            ->where('sales_id', 1)
-                            ->where('customerlevel', 'intention')
-                            ->where('followuptimestamp', ">", time());
-                    });
+                })
+                ->count();
 
-            })
-            ->count();
+            $nointentionTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'nointention')
+                        ->where('followuptimestamp', ">", time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', $this->auth->id)
+                                ->where('customerlevel', 'nointention')
+                                ->where('followuptimestamp', ">", time());
+                        });
 
-        $nointentionTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('backoffice_id', 'not null')
-                    ->where('sales_id', 1)
-                    ->where('customerlevel', 'nointention')
-                    ->where('followuptimestamp', ">", time())
-                    ->whereOr(function ($query2) {
-                        $query2->where('platform_id', 'in', '5,6,7')
-                            ->where('backoffice_id', null)
-                            ->where('sales_id', 1)
-                            ->where('customerlevel', 'nointention')
-                            ->where('followuptimestamp', ">", time());
-                    });
+                })
+                ->count();
 
-            })
-            ->count();
+            $giveupTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'giveup');
+                })
+                ->count();
 
-        $giveupTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('sales_id', 1)
-                    ->where('customerlevel', 'giveup');
-            })
-            ->count();
+            $overdueTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', $this->auth->id)
+                        ->where('customerlevel', 'in', ['intention', 'nointention', 'relation'])
+                        ->where('followuptimestamp', "<", time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', $this->auth->id)
+                                ->where('followuptimestamp', "<", time())
+                                ->where('customerlevel', 'in', ['intention', 'nointention', 'relation']);
+                        });
 
-        $overdueTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('backoffice_id', 'not null')
-                    ->where('sales_id', 1)
-                    ->where('customerlevel', 'in', ['intention', 'nointention', 'relation'])
-                    ->where('followuptimestamp', "<", time())
-                    ->whereOr(function ($query2) {
-                        $query2->where('platform_id', 'in', '5,6,7')
-                            ->where('backoffice_id', null)
-                            ->where('sales_id', 1)
-                            ->where('followuptimestamp', "<", time())
-                            ->where('customerlevel', 'in', ['intention', 'nointention', 'relation']);
-                    });
+                })
+                ->count();
+        } else if (in_array($this->auth->id, $canUseId['admin'])) {
 
-            })
-            ->count();
+            $newCustomTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', "not null")
+                        ->where('customerlevel', null)
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', "not null")
+                                ->where('customerlevel', null);
+                        });
+
+                })
+                ->count();
+
+            $relationTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', "not null")
+                        ->where('customerlevel', 'relation')
+                        ->where('followuptimestamp', ">", time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', "not null")
+                                ->where('customerlevel', 'relation')
+                                ->where('followuptimestamp', ">", time());
+                        });
+
+                })
+                ->count();
+
+            $intentionTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', "not null")
+                        ->where('customerlevel', 'intention')
+                        ->where('followuptimestamp', ">", time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', "not null")
+                                ->where('customerlevel', 'intention')
+                                ->where('followuptimestamp', ">", time());
+                        });
+
+                })
+                ->count();
+
+            $nointentionTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', "not null")
+                        ->where('customerlevel', 'nointention')
+                        ->where('followuptimestamp', ">", time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', "not null")
+                                ->where('customerlevel', 'nointention')
+                                ->where('followuptimestamp', ">", time());
+                        });
+
+                })
+                ->count();
+
+            $giveupTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('sales_id', "not null")
+                        ->where('customerlevel', 'giveup');
+                })
+                ->count();
+
+            $overdueTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', 'not null')
+                        ->where('sales_id', "not null")
+                        ->where('customerlevel', 'in', ['intention', 'nointention', 'relation'])
+                        ->where('followuptimestamp', "<", time())
+                        ->whereOr(function ($query2) {
+                            $query2->where('platform_id', 'in', '5,6,7')
+                                ->where('backoffice_id', null)
+                                ->where('sales_id', "not null")
+                                ->where('followuptimestamp', "<", time())
+                                ->where('customerlevel', 'in', ['intention', 'nointention', 'relation']);
+                        });
+
+                })
+                ->count();
+        }
+
 
         $this->view->assign([
             'newCustomTotal' => $newCustomTotal,
@@ -498,7 +597,7 @@ class Customerlisttabs extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-            if(in_array($this->auth->id,$canUseId['sale'])){
+            if (in_array($this->auth->id, $canUseId['sale'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -544,7 +643,7 @@ class Customerlisttabs extends Backend
                     })
                     ->limit($offset, $limit)
                     ->select();
-            }else if(in_array($this->auth->id,$canUseId['admin'])){
+            } else if (in_array($this->auth->id, $canUseId['admin'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -591,8 +690,6 @@ class Customerlisttabs extends Backend
                     ->limit($offset, $limit)
                     ->select();
             }
-
-
 
 
             foreach ($list as $row) {
@@ -642,7 +739,7 @@ class Customerlisttabs extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            if(in_array($this->auth->id,$canUseId['sale'])){
+            if (in_array($this->auth->id, $canUseId['sale'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -688,7 +785,7 @@ class Customerlisttabs extends Backend
                     })
                     ->limit($offset, $limit)
                     ->select();
-            }else if(in_array($this->auth->id,$canUseId['admin'])){
+            } else if (in_array($this->auth->id, $canUseId['admin'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -784,7 +881,7 @@ class Customerlisttabs extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            if(in_array($this->auth->id,$canUseId['sale'])){
+            if (in_array($this->auth->id, $canUseId['sale'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -830,7 +927,7 @@ class Customerlisttabs extends Backend
                     })
                     ->limit($offset, $limit)
                     ->select();
-            }else if(in_array($this->auth->id,$canUseId['admin'])){
+            } else if (in_array($this->auth->id, $canUseId['admin'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -925,11 +1022,10 @@ class Customerlisttabs extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            if(in_array($this->auth->id,$canUseId['sale'])){
+            if (in_array($this->auth->id, $canUseId['sale'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
-
                     ->where(function ($query) use ($noPhone) {
                         $query->where('sales_id', $this->auth->id)
                             ->where('phone', 'not in', $noPhone)
@@ -950,11 +1046,10 @@ class Customerlisttabs extends Backend
                     })
                     ->limit($offset, $limit)
                     ->select();
-            }else if(in_array($this->auth->id,$canUseId['admin'])){
+            } else if (in_array($this->auth->id, $canUseId['admin'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
-
                     ->where(function ($query) use ($noPhone) {
                         $query->where('sales_id', "not null")
                             ->where('phone', 'not in', $noPhone)
