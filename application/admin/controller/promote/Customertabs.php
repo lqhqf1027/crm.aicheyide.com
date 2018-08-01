@@ -113,73 +113,76 @@ class Customertabs extends Backend
     //分配客户资源给内勤
     //单个分配
     //内勤  message13=>内勤一部，message20=>内勤二部
-    // public function dstribution($ids=NULL)
-    // {
-    //     $this->model = model('CustomerResource');
+    public function dstribution($ids=NULL)
+    {
+        $this->model = model('CustomerResource');
         
-    //     $id = $this->model->get(['id' => $ids]);
-    //     $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
-    //           $query->where('rule_message','message20')->whereOr('rule_message','message13');
-    //     })->select(); 
-    //     $backofficeList = array();
-    //     foreach($backoffice as $k=>$v){
-    //         switch($v['rule_message']){
-    //             case 'message20':
-    //             $backofficeList['message20']['nickname'] = $v['nickname']; 
-    //             $backofficeList['message20']['id'] = $v['id'];  
-    //             break;
-    //             case 'message13':
-    //             $backofficeList['message13']['nickname'] = $v['nickname']; 
-    //             $backofficeList['message13']['id'] = $v['id'];  
-    //             break;
-    //         }
-    //     }
+        $id = $this->model->get(['id' => $ids]);
+        $backoffice =Db::name('admin')->field('id,nickname,rule_message')->where(function($query) {
+              $query->where('rule_message','message20')->whereOr('rule_message','message13');
+        })->select(); 
+        $backofficeList = array();
+        foreach($backoffice as $k=>$v){
+            switch($v['rule_message']){
+                case 'message20':
+                $backofficeList['message20']['nickname'] = $v['nickname']; 
+                $backofficeList['message20']['id'] = $v['id'];  
+                break;
+                case 'message13':
+                $backofficeList['message13']['nickname'] = $v['nickname']; 
+                $backofficeList['message13']['id'] = $v['id'];  
+                break;
+            }
+        }
 
-    //     $this->view->assign('backofficeList',$backofficeList);
-    //     $this->assignconfig('id',$id->id); 
+        $this->view->assign('backofficeList',$backofficeList);
+        $this->assignconfig('id',$id->id); 
         
-    //     if ($this->request->isPost())
-    //     {
+        if ($this->request->isPost())
+        {
             
              
-    //         $params = $this->request->post('row/a');
-    //         $time = time();
-    //         $result = $this->model->save(['backoffice_id'=>$params['id'],'distributinternaltime'=>$time],function($query) use ($id){
-    //             $query->where('id',$id->id);
-    //         }); 
-    //         if($result){
-    //             //这里开始调用微信推送
-    //             //1、use  wechat/WechatMessage  这个类
-    //             //2、实例化并传参
-    //             //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
-    //             //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
-    //             //dump($sendmessage->sendMsgToAll());exit; 
-                // $token = self::$token;
-    //             // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
-    //             // $openid = $getAdminOpenid['openid'];
-    //             // var_dump($openid);
-    //             // die;
-    //             // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+            $params = $this->request->post('row/a');
+            $time = time();
+            $result = $this->model->save(['backoffice_id'=>$params['id'],'distributinternaltime'=>$time],function($query) use ($id){
+                $query->where('id',$id->id);
+            }); 
+            if($result){
+                //这里开始调用微信推送
+                //1、use  wechat/WechatMessage  这个类
+                //2、实例化并传参
+                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
+                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
+                //dump($sendmessage->sendMsgToAll());exit; 
 
-    //             // $msg = $sendmessage->sendMsgToAll();
-    //             // dump($msg);
-    //             // die;
-    //             // if($msg['errcode'] == 0){
-    //                 $this->success();
-    //             // }
-    //             // else {
-    //             //     $this->error('消息推送失败');
-    //             // }
+                $token = self::$token;
+                $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                $openid = $getAdminOpenid['openid'];
+
+                // var_dump($openid);
+                // die;
+
+                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+
+                // $msg = $sendmessage->sendMsgToAll();
+                // dump($msg);
+                // die;
+                if($msg['errcode'] == 0){
+                    $this->success();
+                }
+                else {
+                    $this->error('消息推送失败');
+                }
                
-    //             //$this->error('消息推送失败'); 
-    //         }
-    //         else{
-    //             $this->error(); 
-    //         }
-    //     }
+                //$this->error('消息推送失败'); 
+            }
+            else{
+                $this->error(); 
+            }
+        }
        
-    //     return $this->view->fetch();
-    // }
+        return $this->view->fetch();
+    }
 
     //已分配
     public function newAllocation()

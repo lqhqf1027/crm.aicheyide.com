@@ -1,8 +1,5 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-
-    var num = 0;
-
     var Controller = {
         index: function () {
           
@@ -29,26 +26,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         //单个分配
-        // dstribution:function(){
+        dstribution:function(){
  
-        //     // $(".btn-add").data("area", ["300px","200px"]);
-        //     Table.api.init({
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
                
-        //     });
-        //     Form.api.bindevent($("form[role=form]"), function(data, ret){
-        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-        //         Fast.api.close(data);//这里是重点
-        //         // console.log(data);
-        //         // Toastr.success("成功");//这个可有可无
-        //     }, function(data, ret){
-        //         // console.log(data); 
-        //         Toastr.success("失败"); 
-        //     });
-        //     // Controller.api.bindevent();
-        //     // console.log(Config.id);
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data); 
+                Toastr.success("失败"); 
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
  
-        // },
+        },
         //批量分配 
         distribution:function(){
             
@@ -59,9 +56,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                Fast.api.close(data);//这里是重点
-             
+                
                 // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
                 // Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
@@ -141,7 +142,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'note', title: __('Note')},
                         {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
                         buttons: [
-                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-newCustomer btn-selected'
+                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-newCustomer btn-dialog', url:'promote/customertabs/dstribution', 
+                                       success:function(data, ret){
+
+                                    }, error:function(){}
                                     }
                                 ],
                                 
@@ -149,11 +153,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ]
             });
-            // var num = 0;
           
                 // 为表格newCustomer绑定事件
                 Table.api.bindevent(newCustomer);
                 // 批量分配 
+                var num = 0;
                 $(document).on("click", ".btn-selected", function () {   
                     var ids = Table.api.selectedids(newCustomer);
                     num= parseInt(ids.length);
@@ -175,9 +179,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 
                     var newCustomerNum =  $('#badge_new_customer').text(data.total); 
                         newCustomerNum = parseInt($('#badge_new_customer').text());
-                    var newAllocationNum = parseInt($('#badge_new_allocation').text());
-                    num = parseInt(num);
-                    $('#badge_new_allocation').text(num+newAllocationNum); 
+                    
+                    // var newAllocationNum = parseInt($('#badge_new_allocation').text());
+                    // num = parseInt(num);
+                    // $('#badge_new_allocation').text(num+newAllocationNum); 
                    
                 })
 
@@ -280,6 +285,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为已分配的客户表格绑定事件
                 Table.api.bindevent(newAllocation);
 
+                //数据实时统计
+                newAllocation.on('load-success.bs.table',function(e,data){ 
+                
+                    var newAllocationNum =  $('#badge_new_allocation').text(data.total); 
+                    // var newAllocationNum = parseInt($('#badge_new_allocation').text());
+                    // num = parseInt(num);
+                    // $('#badge_new_allocation').text(num+newAllocationNum); 
+                   
+                })
+
                 //导出分配客户的信息
                 var submitForm = function (ids, layero) {
                     var options = newAllocation.bootstrapTable('getOptions');
@@ -376,6 +391,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 
                 // 为已反馈的客户表格绑定事件
                 Table.api.bindevent(newFeedback);
+
+                //数据实时统计
+                newFeedback.on('load-success.bs.table',function(e,data){ 
+                
+                    var newFeedback =  $('#badge_new_feedback').text(data.total); 
+                    // var newFeedback = parseInt($('#badge_new_feedback').text());
+                    // num = parseInt(num);
+                    // $('#badge_new_allocation').text(num+newFeedback); 
+                   
+                })
 
                 //导出反馈客户的信息
                 var submitForm = function (ids, layero) {
