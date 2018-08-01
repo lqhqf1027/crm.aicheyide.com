@@ -169,6 +169,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                     Fast.api.open(url,'批量分配',options)
                 })
+
                 //数据实时统计
                 newCustomer.on('load-success.bs.table',function(e,data){ 
                 
@@ -180,58 +181,57 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                    
                 })
 
-                //导出按钮的弹出
+                //导出新客户的信息
+                var submitForm = function (ids, layero) {
+                    var options = newCustomer.bootstrapTable('getOptions');
+                    console.log(options);
+                    var columns = [];
+                    $.each(options.columns[0], function (i, j) {
+                        if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
+                            columns.push(j.field);
+                        }
+                    });
+                    var search = options.queryParams({});
+                    $("input[name=search]", layero).val(options.searchText);
+                    $("input[name=ids]", layero).val(ids);
+                    $("input[name=filter]", layero).val(search.filter);
+                    $("input[name=op]", layero).val(search.op);
+                    $("input[name=columns]", layero).val(columns.join(','));
+                    $("form", layero).submit();
+                };
 
-                // var submitForm = function (ids, layero) {
-                //     var options = newCustomer.bootstrapTable('getOptions');
-                //     console.log(options);
-                //     var columns = [];
-                //     $.each(options.columns[0], function (i, j) {
-                //         if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
-                //             columns.push(j.field);
-                //         }
-                //     });
-                //     var search = options.queryParams({});
-                //     $("input[name=search]", layero).val(options.searchText);
-                //     $("input[name=ids]", layero).val(ids);
-                //     $("input[name=filter]", layero).val(search.filter);
-                //     $("input[name=op]", layero).val(search.op);
-                //     $("input[name=columns]", layero).val(columns.join(','));
-                //     $("form", layero).submit();
-                // };
-
-                // $(document).on("click", ".btn-export", function () {
-                //     var ids = Table.api.selectedids(newCustomer);
-                //     var page = newCustomer.bootstrapTable('getData');
-                //     var all = newCustomer.bootstrapTable('getOptions').totalRows;
-                //     console.log(ids, page, all);
-                //     Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("promote/customertabs/export") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
-                //         title: '导出数据',
-                //         btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "全部(" + all + "条)"],
-                //         success: function (layero, index) {
-                //             $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
-                //         }
-                //         , yes: function (index, layero) {
-                //             submitForm(ids.join(","), layero);
-                //             return false;
-                //         }
-                //         ,
-                //         btn2: function (index, layero) {
-                //             var ids = [];
-                //             $.each(page, function (i, j) {
-                //                 ids.push(j.id);
-                //             });
-                //             submitForm(ids.join(","), layero);
-                //             return false;
-                //         }
-                //         ,
-                //         btn3: function (index, layero) {
-                //             submitForm("all", layero);
-                //             return false;
-                //         }
-                //     })
-                // });
-
+                $(document).on("click", ".btn-export", function () {
+                    var ids = Table.api.selectedids(newCustomer);
+                    var page = newCustomer.bootstrapTable('getData');
+                    var all = newCustomer.bootstrapTable('getOptions').totalRows;
+                    console.log(ids, page, all);
+                    Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("promote/customertabs/export") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
+                        title: '导出数据',
+                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "全部(" + all + "条)"],
+                        success: function (layero, index) {
+                            $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                        }
+                        , 
+                        yes: function (index, layero) {
+                            submitForm(ids.join(","), layero);
+                            // return false;
+                        }
+                        ,
+                        btn2: function (index, layero) {
+                            var ids = [];
+                            $.each(page, function (i, j) {
+                                ids.push(j.id);
+                            });
+                            submitForm(ids.join(","), layero);
+                            // return false;
+                        }
+                        ,
+                        btn3: function (index, layero) {
+                            submitForm("all", layero);
+                            // return false;
+                        }
+                    })
+                });
 
 
             },
@@ -279,6 +279,58 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 // 为已分配的客户表格绑定事件
                 Table.api.bindevent(newAllocation);
+
+                //导出分配客户的信息
+                var submitForm = function (ids, layero) {
+                    var options = newAllocation.bootstrapTable('getOptions');
+                    console.log(options);
+                    var columns = [];
+                    $.each(options.columns[0], function (i, j) {
+                        if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
+                            columns.push(j.field);
+                        }
+                    });
+                    var search = options.queryParams({});
+                    $("input[name=search]", layero).val(options.searchText);
+                    $("input[name=ids]", layero).val(ids);
+                    $("input[name=filter]", layero).val(search.filter);
+                    $("input[name=op]", layero).val(search.op);
+                    $("input[name=columns]", layero).val(columns.join(','));
+                    $("form", layero).submit();
+                };
+
+                $(document).on("click", ".btn-allocationexport", function () {
+                    var ids = Table.api.selectedids(newAllocation);
+                    var page = newAllocation.bootstrapTable('getData');
+                    var all = newAllocation.bootstrapTable('getOptions').totalRows;
+                    console.log(ids, page, all);
+                    Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("promote/customertabs/allocationexport") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
+                        title: '导出数据',
+                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "全部(" + all + "条)"],
+                        success: function (layero, index) {
+                            $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                        }
+                        , yes: function (index, layero) {
+                            submitForm(ids.join(","), layero);
+                            // return false;
+                        }
+                        ,
+                        btn2: function (index, layero) {
+                            var ids = [];
+                            $.each(page, function (i, j) {
+                                ids.push(j.id);
+                            });
+                            submitForm(ids.join(","), layero);
+                            // return false;
+                        }
+                        ,
+                        btn3: function (index, layero) {
+                            submitForm("all", layero);
+                            // return false;
+                        }
+                    })
+                });
+
             },
             new_feedback: function () {
                 // 已反馈的客户
@@ -324,6 +376,57 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 
                 // 为已反馈的客户表格绑定事件
                 Table.api.bindevent(newFeedback);
+
+                //导出反馈客户的信息
+                var submitForm = function (ids, layero) {
+                    var options = newFeedback.bootstrapTable('getOptions');
+                    console.log(options);
+                    var columns = [];
+                    $.each(options.columns[0], function (i, j) {
+                        if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
+                            columns.push(j.field);
+                        }
+                    });
+                    var search = options.queryParams({});
+                    $("input[name=search]", layero).val(options.searchText);
+                    $("input[name=ids]", layero).val(ids);
+                    $("input[name=filter]", layero).val(search.filter);
+                    $("input[name=op]", layero).val(search.op);
+                    $("input[name=columns]", layero).val(columns.join(','));
+                    $("form", layero).submit();
+                };
+
+                $(document).on("click", ".btn-feedbackexport", function () {
+                    var ids = Table.api.selectedids(newFeedback);
+                    var page = newFeedback.bootstrapTable('getData');
+                    var all = newFeedback.bootstrapTable('getOptions').totalRows;
+                    console.log(ids, page, all);
+                    Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("promote/customertabs/feedbackexport") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
+                        title: '导出数据',
+                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "全部(" + all + "条)"],
+                        success: function (layero, index) {
+                            $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                        }
+                        , yes: function (index, layero) {
+                            submitForm(ids.join(","), layero);
+                            // return false;
+                        }
+                        ,
+                        btn2: function (index, layero) {
+                            var ids = [];
+                            $.each(page, function (i, j) {
+                                ids.push(j.id);
+                            });
+                            submitForm(ids.join(","), layero);
+                            // return false;
+                        }
+                        ,
+                        btn3: function (index, layero) {
+                            submitForm("all", layero);
+                            // return false;
+                        }
+                    })
+                });
             }
         },
         import: function () { 
