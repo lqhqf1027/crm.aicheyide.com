@@ -73,8 +73,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         add: function () {
+            var n = 0
+            while(true){
+                n++;
+                // let obj =   
+                  console.log(new Object({'girlfriend':'女朋友'}).girlfriend+n); 
+                if(n==20){
+                    break;
+                }
+               }
             //获取通话清单
             $(document).on('click', '.get_call_listfiles', function () {
+                
                 var username = $('#c-username').val();
 
                 var id_card = $('#c-id_card').val();
@@ -83,65 +93,122 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     Toastr.error("姓名或手机或身份证格式错误");
 
                     return false;
-                } 
+                }
                 else {
-                Layer.confirm(
-                    __('请确定客户姓名、手机号、身份证号是否真实有效，并提醒客户手机稍后接收短信验证码'),
-                    { icon: 3, title: __('Warning'), shadeClose: true },
-                    function (index) {
-                        // //输入客户手机服务密码
-                        Layer.prompt(
-                            // __('请输入客户手机服务密码'),测试服务密码：202304
-                            { title: __('请输入客户手机服务密码'), shadeClose: true },
-                            function (text, index) {
-                                Fast.api.ajax({
-                                    url: 'order/salesorder/getCallListfiles',
-                                    data: { username: username, id_card: id_card, phone: phone ,text:text }
+                    Layer.confirm(
+                        __('请确定客户姓名、手机号、身份证号是否真实有效，并提醒客户手机稍后接收短信验证码'),
+                        { icon: 3, title: __('Warning'), shadeClose: true },
+                        function (index) {
+                            // //输入客户手机服务密码
+                            Layer.prompt(
+                                // __('请输入客户手机服务密码'),测试服务密码：202304
+                                { title: __('请输入客户手机服务密码'), shadeClose: true },
+                                //text为输入的服务密码 
+                                function (text, index) {
+                                    Fast.api.ajax({
+                                        url: 'order/salesorder/getCallListfiles',
+                                        data: { name: username, idNumber: id_card, username: phone, password: text }
+                                    }, function (data, ret) {
+                                       
+                                        //判断是否有返回get-data值，如果有就直接得到数据
+                                        if (ret.data.errorcode == '0000' && ret.data.get_data == 'yes') {
+                                            Toastr.success('获取数据成功');
+                                            console.log(ret.data);
+                                            return false;
+                                        }
+                                        else{
+                                            Toastr.error(ret.msg);return false;  
+                                        }
+                                        //如果返回成功，errorcode =='2000'并且type存在，得到sid，并提示输入验证码 
+                                        if (ret.data.errorcode == '0000' && ret.data.data.hasOwnProperty('type')) {  //如果存在type属性，那么就需要输入手机验证码
+                                            
+                                            Layer.msg(ret.data.extra);
+                                            var code = Layer.prompt(
+                                                { title: __('请输入发送到客户手机的短信验证码'), shadeClose: true },
+                                                //text2为输入得验证码
+                                                function (text2, index) {
+                                                    Fast.api.ajax({
+                                                        url: 'order/salesorder/getCallListfiles2',
+                                                        data: { checkcode: text2, sid: ret.data.data.sid, username: ret.data.username }
+                                                    }, function (data, ret) {
+                                                        
+                                                        var sid = ret.data.data.sid;
+                                                        var username = ret.data.username;
 
-                                }, function (data, ret) { 
-                                    console.log(ret.data);
+                                                        if (ret.data.errorcode == '0000' && ret.data.get_data == 'yes') { // 如果需要再次接收验证码 
+                                                            Toastr.success('获取数据成功');
+                                                            console.log(ret.data);
+                                                            return false; 
+                                                        } 
+                                                         //如果第二次返回成功，errorcode =='2000'并且type存在，得到sid，并提示再次输入验证码 
+                                                        if(ret.data.errorcode == '0000' && ret.data.data.hasOwnProperty('type')){ 
 
-                                    return;
-                                    //如果返回成功，errorcode =='2000'，得到sid，并提示输入验证码
-                                    if(ret.data.code==1 && ret.data.data.errorcode=='0000'){
-                                        var sid = ret.data.data.data.sid; 
-                                        Layer.prompt( 
-                                            { title: __('请输入发送到客户手机的短信验证码'), shadeClose: true },
-                                           
-                                            function(text2,index){
-                                                Fast.api.ajax({
-                                                    url:'order/salesorder/getCallListfiles2',
-                                                    data:{ text2:text,sid:sid }
-                                                },function(data,ret){
-                                                    console.log(ret.data);
-                                                    return false;
-                                                },function(data,ret){
-                                                    console.log(ret.data);
-                                                    return false;
-                                                })
-                                            }
+                                                            Layer.msg(ret.data.extra);
+                                                        }
+                                                        else {
+                                                            Toastr.success(ret.msg);
+                                                            console.log(ret.data); 
+                                                            return false;
+                                                        }
+                                                           
+                                                           
+                                                            Layer.prompt(
+                                                                { title: __('请再次输入新的短信验证码'), shadeClose: true },
+                                                                function (text3, index) {
+                                                                    Fast.api.ajax({
+                                                                        url: 'order/salesorder/getCallListfiles2',
+                                                                        data: { checkcode: text3, sid: sid, username: username }
+                                                                    }, function (data, ret) {
+                                                                        console.log(1111);
 
-                                        )
-                                    }else{
-                                        Toastr.success(ret.msg);//这个可有可无 
-                                        console.log(ret.data);
+                                                                        // Toastr.success(ret.msg);  
+                                                                        console.log(data);
+                                                                        console.log(ret.data);
+                                                                        return false;
+                                                                    }, function (data, ret) {
+                                                                        console.log(2222);
+
+                                                                        Toastr.error(ret.msg);
+                                                                        return false;
+                                                                    })
+                                                                }
+
+                                                            ) 
+
+                                                      
+
+                                                    }, function (data, ret) {
+                                                        Toastr.error(ret.msg);
+                                                        return false;
+                                                    })
+                                                }
+
+                                            )
+                                        } else {
+                                            Toastr.error(ret.msg); 
+                                            return false;
+                                        }
+                                        // Layer.close(index); 
+
+                                    }, function (data, ret) {
+                                        Toastr.error(ret.msg); 
+                                        console.log(222)
+                                        console.log(ret)
+                                        // Layer.close(index); 
                                         return false;
-                                    } 
-                                    // Layer.close(index); 
-                                    return false;
-                                }, function (data, ret) { 
-                                    Toastr.error(ret.msg);//这个可有可无  
-                                    // Layer.close(index); 
-                                    return false;
-                                });
-                            }
-                        )
+                                    });
+                                }
+                            )
 
-                    }
+                        }
 
-                );
+                    );
                 }
             })
+
+            function login(){
+                
+            }
             Controller.api.bindevent();
         },
         edit: function () {
