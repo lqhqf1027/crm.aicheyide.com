@@ -18,7 +18,7 @@ class Customertabs extends Backend
 {
 
     protected $model = null;
-    // static public $token = null;
+    static public $token = null;
 
     public function _initialize()   
     {
