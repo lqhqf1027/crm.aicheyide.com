@@ -33,48 +33,50 @@ class Custominfotabs extends Backend
     public function getUserId()
     {
         $this->model = model("Admin");
-        $back =$this->model->where("rule_message", "message13")
+        $back = $this->model->where("rule_message", "message13")
             ->whereOr("rule_message", "message20")
             ->field("id")
             ->select();
 
-        $backArray=array();
+        $backArray = array();
+        $backArray['back'] = array();
+        $backArray['admin'] = array();
 
-        foreach ($back as $value){
-            array_push($backArray['back'],$value['id']);
+        foreach ($back as $value) {
+            array_push($backArray['back'], $value['id']);
         }
 
         $superAdmin = $this->model->where("rule_message", "message21")
             ->field("id")
             ->select();
 
-        foreach ($superAdmin as $value){
-            array_push($backArray['admin'],$value['id']);
+        foreach ($superAdmin as $value) {
+            array_push($backArray['admin'], $value['id']);
         }
 
         return $backArray;
     }
+
     /**
      * 查看
      */
     public function index()
     {
+        $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
         $this->loadlang('backoffice/custominfotabs');
 
 
-        $canUseId = $this->getUserId();
 
 
 
-        if(in_array($this->auth->id,$canUseId['back'])){
+        if (in_array($this->auth->id, $canUseId['back'])) {
             $newTotal = $this->model
                 ->with(['platform'])
                 ->where(function ($query) {
                     $query->where('backoffice_id', $this->auth->id)
                         ->where('sales_id', 'null')
-                        ->where('platform_id', 'in', [2, 3, 4])
-                        ;
+                        ->where('platform_id', 'in', [2, 3, 4]);
                 })
                 ->count();
 
@@ -87,14 +89,13 @@ class Custominfotabs extends Backend
                 })
                 ->count();
 
-        }else if(in_array($this->auth->id,$canUseId['admin'])){
+        } else if (in_array($this->auth->id, $canUseId['admin'])) {
             $newTotal = $this->model
                 ->with(['platform'])
                 ->where(function ($query) {
                     $query->where('backoffice_id', "not null")
                         ->where('sales_id', 'null')
-                        ->where('platform_id', 'in', [2, 3, 4])
-                    ;
+                        ->where('platform_id', 'in', [2, 3, 4]);
                 })
                 ->count();
 
@@ -108,11 +109,6 @@ class Custominfotabs extends Backend
                 ->count();
 
         }
-
-
-
-
-
 
 
         $this->view->assign([
@@ -125,11 +121,12 @@ class Custominfotabs extends Backend
     //新客户
     public function newCustomer()
     {
+        $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
 
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
 
-        $canUseId = $this->getUserId();
+
         //当前是否为关联查询
         $this->relationSearch = true;
 
@@ -142,7 +139,7 @@ class Custominfotabs extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-            if(in_array($this->auth->id,$canUseId['back'])){
+            if (in_array($this->auth->id, $canUseId['back'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -168,7 +165,7 @@ class Custominfotabs extends Backend
                     })
                     ->limit($offset, $limit)
                     ->select();
-            }else if(in_array($this->auth->id,$canUseId['admin'])){
+            } else if (in_array($this->auth->id, $canUseId['admin'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -195,7 +192,6 @@ class Custominfotabs extends Backend
                     ->limit($offset, $limit)
                     ->select();
             }
-
 
 
             foreach ($list as $row) {
@@ -214,9 +210,10 @@ class Custominfotabs extends Backend
     //已分配给销售的用户
     public function assignedCustomers()
     {
+        $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
 
-        $canUseId = $this->getUserId();
+
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         //当前是否为关联查询
         $this->relationSearch = true;
@@ -229,7 +226,7 @@ class Custominfotabs extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-            if(in_array($this->auth->id,$canUseId['back'])){
+            if (in_array($this->auth->id, $canUseId['back'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -253,7 +250,7 @@ class Custominfotabs extends Backend
                     })
                     ->limit($offset, $limit)
                     ->select();
-            }else if(in_array($this->auth->id,$canUseId['admin'])){
+            } else if (in_array($this->auth->id, $canUseId['admin'])) {
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
