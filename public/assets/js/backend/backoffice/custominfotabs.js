@@ -67,7 +67,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
-                // Toastr.success("成功");//这个可有可无
+                 Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
                 // console.log(data);
 
