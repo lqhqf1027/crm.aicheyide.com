@@ -19,6 +19,8 @@ class Custominfotabs extends Backend
 {
 
     protected $model = null;
+    protected $noNeedRight = ['newCustomer', 'batch', 'assignedCustomers', 'admeasure', 'index'];
+    protected $dataLimit = false; //表示不启用，显示所有数据
     static protected $token = null;
 
 //    protected $multiFields = 'batch';
@@ -65,9 +67,6 @@ class Custominfotabs extends Backend
         $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
         $this->loadlang('backoffice/custominfotabs');
-
-
-
 
 
         if (in_array($this->auth->id, $canUseId['back'])) {
@@ -121,6 +120,8 @@ class Custominfotabs extends Backend
     //新客户
     public function newCustomer()
     {
+
+
         $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
 
@@ -199,6 +200,7 @@ class Custominfotabs extends Backend
                 $row->getRelation('platform')->visible(['name']);
             }
             $list = collection($list)->toArray();
+//            pr($list);die();
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -343,7 +345,7 @@ class Custominfotabs extends Backend
 
 
             $params = $this->request->post('row/a');
-
+            
 
             $result = $this->model->save(['sales_id' => $params['id'], 'distributsaletime' => time()], function ($query) use ($id) {
                 $query->where('id', $id->id);
@@ -453,7 +455,7 @@ class Custominfotabs extends Backend
                 // dump($msg);
                 // die;
                 if ($msg['errcode'] == 0) {
-                    $this->success();
+                    $this->success('', '', $result);
                 } else {
                     $this->error('消息推送失败');
                 }

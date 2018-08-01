@@ -920,8 +920,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     url: 'salesmanagement/Customerlisttabs/ajaxGiveup',
                                     data: {id: row[options.pk]}
                                 }, function (data, ret) {
-                                    console.log(data);
-                                    console.log(ret);
+
 
                                     var pre = $('#badge_give_up').text();
 

@@ -29,13 +29,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                var pre = parseInt($('#assigned-customer').text());
 
+                $('#assigned-customer').text(pre+1);
 
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
                 // Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
+
+
+
 
 
                 Toastr.success("失败");
@@ -52,6 +57,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
+
+
+                var datas = parseInt(data);
+
+                var pre = parseInt($('#assigned-customer').text());
+
+                $('#assigned-customer').text(pre+datas);
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
@@ -79,15 +91,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 初始化表格
                 newCustomer.bootstrapTable({
                     url: 'backoffice/Custominfotabs/newCustomer',
-                    extend: {
-                        index_url: 'customer/customerresource/index',
-                        add_url: 'customer/customerresource/add',
-                        edit_url: 'customer/customerresource/edit',
-                        del_url: 'customer/customerresource/del',
-                        multi_url: 'customer/customerresource/multi',
-                        // admeasure_url: 'backoffice/custominfotabs/admeasure',
-                        table: 'customer_resource',
-                    },
+                    // extend: {
+                    //     // index_url: 'customer/customerresource/index',
+                    //     add_url: 'customer/customerresource/add',
+                    //     edit_url: 'customer/customerresource/edit',
+                    //     del_url: 'customer/customerresource/del',
+                    //     multi_url: 'customer/customerresource/multi',
+                    //     table: 'customer_resource',
+                    // },
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
