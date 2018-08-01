@@ -99,14 +99,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'review_the_data_text', title: __('Review_the_data'), operate:false},
                         // {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         // {field: 'planacar.models_id', title: __('Planacar.models_id')},
-                        {field: 'operate', title: __('Operate'), table: orderAcar, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: orderAcar, 
+                            events: Table.api.events.operate, 
+                            buttons: [
+                                {
+                                    name:'detail',
+                                    text:'新增销售单',
+                                    title:'新增销售单',
+                                    icon: 'fa fa-share',
+                                    classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList',
+                                    url: 'salesmanagement/customerlisttabs/newSalesList'
+                                }
+
+                            ],
+                            formatter: Table.api.formatter.operate
+                        }
                     ]
                 ]
                 
             });
-            // orderAcar.on('load-success.bs.table',function(e,data){
-            //     console.log(data)
-            // })
+
+            orderAcar.on('load-success.bs.table',function(e,data){
+                $('#order_acar').text(data.total);
+            })
                 // 为表格1绑定事件
                 Table.api.bindevent(orderAcar);
                
@@ -123,6 +138,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
+            },
+            events:{
+                operate: {
+
+                }
             }
         }
     };
