@@ -38,7 +38,7 @@ class Custominfotabs extends Backend
         $newTotal = $this->model
             ->with(['platform'])
             ->where(function ($query) {
-                $query->where('backoffice_id', $this->auth->id)
+                $query->where('backoffice_id', 1)
                     ->where('sales_id', 'null')
                     ->where('platform_id', 'in', [2, 3, 4]);
 
@@ -49,7 +49,7 @@ class Custominfotabs extends Backend
         $assignedTotal = $this->model
             ->with(['platform'])
             ->where(function ($query) {
-                $query->where('backoffice_id', $this->auth->id)
+                $query->where('backoffice_id', 1)
                     ->where('sales_id', 'not null')
                     ->where('platform_id', 'in', [2, 3, 4]);
             })
@@ -83,7 +83,7 @@ class Custominfotabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', $this->auth->id)
+                    $query->where('backoffice_id', 1)
                         ->where('sales_id', 'null')
                         ->where('platform_id', 'in', [2, 3, 4]);
 
@@ -97,7 +97,7 @@ class Custominfotabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', $this->auth->id)
+                    $query->where('backoffice_id', 1)
                         ->where('sales_id', 'null')
                         ->where('platform_id', 'in', [2, 3, 4]);
 
@@ -138,7 +138,7 @@ class Custominfotabs extends Backend
                 ->with(['platform'])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', $this->auth->id)
+                    $query->where('backoffice_id', 1)
                         ->where('sales_id', 'not null')
                         ->where('platform_id', 'in', [2, 3, 4]);
                 })
@@ -151,7 +151,7 @@ class Custominfotabs extends Backend
                 ->where($where)
                 ->order($sort, $order)
                 ->where(function ($query) {
-                    $query->where('backoffice_id', $this->auth->id)
+                    $query->where('backoffice_id', 1)
                         ->where('sales_id', 'not null')
                         ->where('platform_id', 'in', [2, 3, 4]);
                 })
