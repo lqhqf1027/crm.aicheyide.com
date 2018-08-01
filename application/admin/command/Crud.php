@@ -305,7 +305,7 @@ class Crud extends Command
         $controllerFile = $adminPath . 'controller' . DS . $controllerFile;
         $javascriptFile = ROOT_PATH . 'public' . DS . 'assets' . DS . 'js' . DS . 'backend' . DS . $controllerUrl . '.js';
         $addFile = $viewDir . 'add.html';
-        $editFile = $viewDir . 'edit.html';
+        $editFile = $viewDir . 'edits.html';
         $indexFile = $viewDir . 'index.html';
         $langFile = $adminPath . 'lang' . DS . Lang::detect() . DS . $controllerUrl . '.php';
 

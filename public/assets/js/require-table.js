@@ -307,6 +307,8 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 var params = typeof data.params !== "undefined" ? (typeof data.params == 'object' ? $.param(data.params) : data.params) : '';
                 var options = {url: url, data: {action: action, ids: ids, params: params}};
                 Fast.api.ajax(options, function (data, ret) {
+
+
                     var success = $(element).data("success") || $.noop;
                     if (typeof success === 'function') {
                         if (false === success.call(element, data, ret)) {

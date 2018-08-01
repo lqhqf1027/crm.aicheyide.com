@@ -21,7 +21,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
         },
+        // edit: function () {
+        //
+        //     // $(".btn-add").data("area", ["300px","200px"]);
+        //     Table.api.init({
+        //
+        //     });
+        //     Form.api.bindevent($("form[role=form]"), function(data, ret){
+        //         console.log(data);
+        //         console.log(ret);
+        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+        //         // Fast.api.close(data);//这里是重点
+        //
+        //         // console.log(data);
+        //         // Toastr.success("成功");//这个可有可无
+        //     }, function(data, ret){
+        //         // console.log(data);
+        //
+        //         Toastr.success("失败");
+        //
+        //     });
+        //     // Controller.api.bindevent();
+        //     // console.log(Config.id);
+        // },
+
 
         table: {
 
@@ -34,7 +59,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var newCustomer = $("#newCustomer");
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newSalesList").data("area", ["50%", "50%"]);
+                    $(".btn-newSalesList").data("area", ["90%", "90%"]);
+
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -80,13 +106,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
+                                    // {
+                                    //     name:'detail',
+                                    //     text:'新增销售单',
+                                    //     title:'新增销售单',
+                                    //     icon: 'fa fa-share',
+                                    //     classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList',
+                                    //     url: 'salesmanagement/customerlisttabs/newSalesList'
+                                    // },
                                     {
-                                        name:'detail',
-                                        text:'新增销售单',
-                                        title:'新增销售单',
-                                        icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList',
-                                        url: 'salesmanagement/customerlisttabs/newSalesList'
+
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edits'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
                                     }
 
                                 ],
@@ -127,6 +174,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 data: {id: JSON.stringify(ids)}
                             }, function (data, rets) {
 
+                                var addData = parseInt(data);
+                                var pre = $('#badge_give_up').text();
+
+                                pre = parseInt(pre);
+
+                                $('#badge_give_up').text(pre + addData);
                                 Toastr.success("成功");
                                 Layer.close(index);
                                 newCustomer.bootstrapTable('refresh');
@@ -144,8 +197,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
                 newCustomer.on('load-success.bs.table', function (e, data) {
-                    // data.total
-                    var newCustomerNum = $('#badge_new_customer').text(data.total);
+                    $('#badge_new_customer').text(data.total);
 
                 })
 
@@ -158,7 +210,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var relations = $("#relations");
                 relations.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+
+                    $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 relations.bootstrapTable({
@@ -199,21 +252,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false,
                                 formatter: Controller.api.formatter.status
                             },
-                            // {
-                            //     field: 'distributinternaltime',
-                            //     title: __('Distributinternaltime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'distributsaletime',
-                            //     title: __('Distributsaletime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: relations,
+                                buttons: [
+                                    {
+
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edit'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
+                                    },
+                                    {
+
+                                        name: 'edit',
+                                        text: __('查看跟进结果'),
+                                        icon: 'fa fa-eye',
+                                        title: '查看跟进结果',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                                        url: "salesmanagement/customerlisttabs/showFeedback"
+
+                                    }
+                                ],
 
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
@@ -265,7 +340,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 relations.on('load-success.bs.table', function (e, data) {
 
-                    var newCustomerNum = $('#badge_relation').text(data.total);
+                    $('#badge_relation').text(data.total);
 
                 })
 
@@ -279,7 +354,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var intentions = $("#intentions");
                 intentions.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 intentions.bootstrapTable({
@@ -321,22 +396,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.status
                             },
 
-                            // {
-                            //     field: 'distributinternaltime',
-                            //     title: __('Distributinternaltime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'distributsaletime',
-                            //     title: __('Distributsaletime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: intentions,
+                                buttons: [
+                                    {
 
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edit'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
+                                    },
+                                    {
+
+                                        name: 'edit',
+                                        text: __('查看跟进结果'),
+                                        icon: 'fa fa-eye',
+                                        title: '查看跟进结果',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                                        url: "salesmanagement/customerlisttabs/showFeedback"
+
+                                    }
+                                ],
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
@@ -387,8 +483,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
                 intentions.on('load-success.bs.table', function (e, data) {
-                    // data.total
-                    var newCustomerNum = $('#badge_intention').text(data.total);
+                    $('#badge_intention').text(data.total);
 
                 })
 
@@ -443,22 +538,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.status
                             },
 
-                            // {
-                            //     field: 'distributinternaltime',
-                            //     title: __('Distributinternaltime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'distributsaletime',
-                            //     title: __('Distributsaletime'),
-                            //     operate: false,
-                            //     formatter: Table.api.formatter.datetime
-                            // },
 
                             {
                                 field: 'operate', title: __('Operate'), table: nointentions,
+                                buttons: [
+                                    {
 
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edit'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
+                                    },
+                                    {
+
+                                        name: 'edit',
+                                        text: __('查看跟进结果'),
+                                        icon: 'fa fa-eye',
+                                        title: '查看跟进结果',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                                        url: "salesmanagement/customerlisttabs/showFeedback"
+
+                                    }
+                                ],
                                 events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
@@ -510,8 +626,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
                 nointentions.on('load-success.bs.table', function (e, data) {
-                    // data.total
-                    var newCustomerNum = $('#badge_no_intention').text(data.total);
+                    $('#badge_no_intention').text(data.total);
 
                 })
 
@@ -525,7 +640,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var giveups = $("#giveups");
                 giveups.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 giveups.bootstrapTable({
@@ -568,19 +683,179 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 giveups.on('load-success.bs.table', function (e, data) {
 
-                    var newCustomerNum = $('#badge_give_up').text(data.total);
+                    $('#badge_give_up').text(data.total);
 
                 })
 
 
             },
 
+            overdue: function () {
+                // 表格3     有意向
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+
+                var overdues = $("#overdues");
+                overdues.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-showFeedback").data("area", ["80%", "80%"]);
+                });
+                // 初始化表格
+                overdues.bootstrapTable({
+                    url: 'salesmanagement/Customerlisttabs/overdue',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'salesmanagement/customerlisttabs/add',
+                        edit_url: 'salesmanagement/customerlisttabs/edit',
+                        del_url: 'customer/customerresource/del',
+                        multi_url: 'customer/customerresource/multi',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar6',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'platform.name', title: __('Platform_id')},
+
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+                            {
+                                field: 'customerlevel',
+                                title: '客户等级',
+                                operate: false,
+                                formatter: Controller.api.formatter.status
+                            },
+
+
+                            {
+                                field: 'operate', title: __('Operate'), table: overdues,
+                                buttons: [
+                                    {
+
+                                        name: 'edit',
+                                        text: __('Feedback'),
+                                        icon: 'fa fa-pencil',
+                                        title: '反馈',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'salesmanagement/customerlisttabs/edit'
+
+                                    },
+                                    {
+
+                                        name: 'del',
+                                        text: '放弃',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-give_up'
+
+                                    },
+                                    {
+
+                                        name: 'edit',
+                                        text: __('查看跟进结果'),
+                                        icon: 'fa fa-eye',
+                                        title: '查看跟进结果',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-showFeedback',
+                                        url: "salesmanagement/customerlisttabs/showFeedback"
+
+                                    }
+                                ],
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(overdues);
+
+                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                    var ids = Table.api.selectedids(overdues);
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var that = this;
+                    var top = $(that).offset().top - $(window).scrollTop() + 100;
+                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
+                    if (top + 154 > $(window).height()) {
+                        top = top - 154;
+                    }
+                    if ($(window).width() < 480) {
+                        top = left = undefined;
+                    }
+                    Layer.confirm(
+                        __('确定加入放弃客户名单吗?'),
+                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                        function (index) {
+
+                            Fast.api.ajax({
+                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                                data: {id: JSON.stringify(ids)}
+                            }, function (data, rets) {
+
+                                Toastr.success("成功");
+                                Layer.close(index);
+                                intentions.bootstrapTable('refresh');
+                                return false;
+                            }, function (data, ret) {
+                                //失败的回调
+                                intentions.bootstrapTable('refresh');
+                                return false;
+                            });
+
+
+                        }
+                    );
+
+                });
+
+                overdues.on('load-success.bs.table', function (e, data) {
+                    $('#badge_overdue').text(data.total);
+
+                })
+
+            },
+
         },
         add: function () {
+
             Controller.api.bindevent();
 
         },
-        edit: function () {
+        edits: function () {
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                alert(1111);
+                console.log(data);
+                console.log(ret);
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                // Fast.api.close(data);//这里是重点
+
+                // console.log(data);
+                Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+                alert(22222)
+
+                Toastr.error("失败");
+
+            });
             Controller.api.bindevent();
         },
         api: {
@@ -595,7 +870,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             events: {
                 operate: {
 
-                    'click .btn-editone': function (e, value, row, index) {
+                    'click .btn-editone': function (e, value, row, index) {  //编辑
 
                         e.stopPropagation();
                         e.preventDefault();
@@ -603,8 +878,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = options.extend.edit_url;
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                        var url = 'salesmanagement/customerlisttabs/edits';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('反馈'), $(this).data() || {});
+                    },
+
+
+                    'click .btn-showFeedback': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = "salesmanagement/customerlisttabs/showFeedback";
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看跟进信息'), $(this).data() || {});
                     },
 
                     'click .btn-give_up': function (e, value, row, index) {
@@ -632,8 +919,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Fast.api.ajax({
                                     url: 'salesmanagement/Customerlisttabs/ajaxGiveup',
                                     data: {id: row[options.pk]}
-                                }, function (datas, rets) {
+                                }, function (data, ret) {
+                                    console.log(data);
+                                    console.log(ret);
 
+                                    var pre = $('#badge_give_up').text();
+
+                                    pre = parseInt(pre);
+
+                                    $('#badge_give_up').text(pre + 1);
 
                                     //成功的回调
                                     // Fast.api.close(data);
@@ -665,41 +959,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
 
-                    if (options.extend.edit_url !== '') {
-                        buttons.push({
-                            name: 'edit',
-                            text: __('Feedback'),
-                            icon: 'fa fa-pencil',
-                            title: '反馈',
-                            extend: 'data-toggle="tooltip"',
-                            classname: 'btn btn-xs btn-success btn-editone',
-                            url: options.extend.edit_url
-                        });
-                    }
-
-
-                    if (options.extend.give_up_url !== '') {
-                        //
-                        buttons.push({
-                            name: 'del',
-                            text: '放弃',
-                            icon: 'fa fa-trash',
-                            extend: 'data-toggle="tooltip"',
-                            title: __('Del'),
-                            classname: 'btn btn-xs btn-danger btn-give_up'
-                            // url:options.extend.give_up_url
-                        });
-                    }
-
-
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
                 status: function (value, row, index) {
-                    //颜色状态数组,可使用red/yellow/aqua/blue/navy/teal/olive/lime/fuchsia/purple/maroon
-                    // if(value==1) value ='可出租';
-                    // if(value==0) value ='正在维修';
-                    // if(value==2) value ='正在出租';
-
 
                     var colorArr = {relation: 'info', intention: 'success', nointention: 'danger'};
                     //如果字段列有定义custom
