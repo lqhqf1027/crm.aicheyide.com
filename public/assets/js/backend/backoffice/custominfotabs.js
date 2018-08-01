@@ -36,7 +36,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
-                // Toastr.success("成功");//这个可有可无
+                Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
 
 
@@ -85,6 +85,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             new_customer: function () {
                 // 表格1
                 var newCustomer = $("#newCustomer");
+                newCustomer.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#new-customer').text(data.total);
+
+                })
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-newCustomer").data("area", ["50%", "50%"]);
                 });
@@ -187,10 +192,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     Fast.api.open(url, '批量分配', options)
                 });
 
-                newCustomer.on('load-success.bs.table', function (e, data) {
-                    $('#new-customer').text(data.total);
 
-                })
 
 
             },
