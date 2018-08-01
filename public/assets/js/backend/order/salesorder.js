@@ -73,15 +73,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         add: function () {
-            var n = 0
-            while(true){
-                n++;
-                // let obj =   
-                  console.log(new Object({'girlfriend':'女朋友'}).girlfriend+n); 
-                if(n==20){
-                    break;
-                }
-               }
+            
             //获取通话清单
             $(document).on('click', '.get_call_listfiles', function () {
                 
