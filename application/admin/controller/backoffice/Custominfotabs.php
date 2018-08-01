@@ -32,7 +32,8 @@ class Custominfotabs extends Backend
     //得到可行管理员ID
     public function getUserId()
     {
-        $back = Db::table("admin")->where("rule_message", "message13")
+        $this->model = model("Admin");
+        $back =$this->model->where("rule_message", "message13")
             ->whereOr("rule_message", "message20")
             ->field("id")
             ->select();
@@ -43,7 +44,7 @@ class Custominfotabs extends Backend
             array_push($backArray['back'],$value['id']);
         }
 
-        $superAdmin = Db::table("admin")->where("rule_message", "message21")
+        $superAdmin = $this->model->where("rule_message", "message21")
             ->field("id")
             ->select();
 
