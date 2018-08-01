@@ -25,9 +25,34 @@ class Custominfotabs extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        self::$token= $this->getAccessToken();
+        self::$token = $this->getAccessToken();
     }
 
+
+    //得到可行管理员ID
+    public function getUserId()
+    {
+        $back = Db::table("admin")->where("rule_message", "message13")
+            ->whereOr("rule_message", "message20")
+            ->field("id")
+            ->select();
+
+        $backArray=array();
+
+        foreach ($back as $value){
+            array_push($backArray['back'],$value['id']);
+        }
+
+        $superAdmin = Db::table("admin")->where("rule_message", "message21")
+            ->field("id")
+            ->select();
+
+        foreach ($superAdmin as $value){
+            array_push($backArray['admin'],$value['id']);
+        }
+
+        return $backArray;
+    }
     /**
      * 查看
      */
@@ -35,25 +60,59 @@ class Custominfotabs extends Backend
     {
         $this->model = model('CustomerResource');
         $this->loadlang('backoffice/custominfotabs');
-        $newTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('backoffice_id', 1)
-                    ->where('sales_id', 'null')
-                    ->where('platform_id', 'in', [2, 3, 4]);
-
-            })
-            ->count();
 
 
-        $assignedTotal = $this->model
-            ->with(['platform'])
-            ->where(function ($query) {
-                $query->where('backoffice_id', 1)
-                    ->where('sales_id', 'not null')
-                    ->where('platform_id', 'in', [2, 3, 4]);
-            })
-            ->count();
+        $canUseId = $this->getUserId();
+
+
+
+        if(in_array($this->auth->id,$canUseId['back'])){
+            $newTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', $this->auth->id)
+                        ->where('sales_id', 'null')
+                        ->where('platform_id', 'in', [2, 3, 4])
+                        ;
+                })
+                ->count();
+
+            $assignedTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', $this->auth->id)
+                        ->where('sales_id', 'not null')
+                        ->where('platform_id', 'in', [2, 3, 4]);
+                })
+                ->count();
+
+        }else if(in_array($this->auth->id,$canUseId['admin'])){
+            $newTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', "not null")
+                        ->where('sales_id', 'null')
+                        ->where('platform_id', 'in', [2, 3, 4])
+                    ;
+                })
+                ->count();
+
+            $assignedTotal = $this->model
+                ->with(['platform'])
+                ->where(function ($query) {
+                    $query->where('backoffice_id', "not null")
+                        ->where('sales_id', 'not null')
+                        ->where('platform_id', 'in', [2, 3, 4]);
+                })
+                ->count();
+
+        }
+
+
+
+
+
+
 
         $this->view->assign([
             'newTotal' => $newTotal,
@@ -68,6 +127,8 @@ class Custominfotabs extends Backend
         $this->model = model('CustomerResource');
 
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
+
+        $canUseId = $this->getUserId();
         //当前是否为关联查询
         $this->relationSearch = true;
 
@@ -79,31 +140,62 @@ class Custominfotabs extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = $this->model
-                ->with(['platform'])
-                ->where($where)
-                ->where(function ($query) {
-                    $query->where('backoffice_id', 1)
-                        ->where('sales_id', 'null')
-                        ->where('platform_id', 'in', [2, 3, 4]);
 
-                })
-                ->order($sort, $order)
-                ->count();
+            if(in_array($this->auth->id,$canUseId['back'])){
+                $total = $this->model
+                    ->with(['platform'])
+                    ->where($where)
+                    ->where(function ($query) {
+                        $query->where('backoffice_id', $this->auth->id)
+                            ->where('sales_id', 'null')
+                            ->where('platform_id', 'in', [2, 3, 4]);
+
+                    })
+                    ->order($sort, $order)
+                    ->count();
 
 
-            $list = $this->model
-                ->with(['platform'])
-                ->where($where)
-                ->order($sort, $order)
-                ->where(function ($query) {
-                    $query->where('backoffice_id', 1)
-                        ->where('sales_id', 'null')
-                        ->where('platform_id', 'in', [2, 3, 4]);
+                $list = $this->model
+                    ->with(['platform'])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->where(function ($query) {
+                        $query->where('backoffice_id', $this->auth->id)
+                            ->where('sales_id', 'null')
+                            ->where('platform_id', 'in', [2, 3, 4]);
 
-                })
-                ->limit($offset, $limit)
-                ->select();
+                    })
+                    ->limit($offset, $limit)
+                    ->select();
+            }else if(in_array($this->auth->id,$canUseId['admin'])){
+                $total = $this->model
+                    ->with(['platform'])
+                    ->where($where)
+                    ->where(function ($query) {
+                        $query->where('backoffice_id', "not null")
+                            ->where('sales_id', 'null')
+                            ->where('platform_id', 'in', [2, 3, 4]);
+
+                    })
+                    ->order($sort, $order)
+                    ->count();
+
+
+                $list = $this->model
+                    ->with(['platform'])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->where(function ($query) {
+                        $query->where('backoffice_id', "not null")
+                            ->where('sales_id', 'null')
+                            ->where('platform_id', 'in', [2, 3, 4]);
+
+                    })
+                    ->limit($offset, $limit)
+                    ->select();
+            }
+
+
 
             foreach ($list as $row) {
 
@@ -123,6 +215,7 @@ class Custominfotabs extends Backend
     {
         $this->model = model('CustomerResource');
 
+        $canUseId = $this->getUserId();
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         //当前是否为关联查询
         $this->relationSearch = true;
@@ -134,29 +227,57 @@ class Custominfotabs extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = $this->model
-                ->with(['platform'])
-                ->where($where)
-                ->where(function ($query) {
-                    $query->where('backoffice_id', 1)
-                        ->where('sales_id', 'not null')
-                        ->where('platform_id', 'in', [2, 3, 4]);
-                })
-                ->order($sort, $order)
-                ->count();
+
+            if(in_array($this->auth->id,$canUseId['back'])){
+                $total = $this->model
+                    ->with(['platform'])
+                    ->where($where)
+                    ->where(function ($query) {
+                        $query->where('backoffice_id', $this->auth->id)
+                            ->where('sales_id', 'not null')
+                            ->where('platform_id', 'in', [2, 3, 4]);
+                    })
+                    ->order($sort, $order)
+                    ->count();
 
 
-            $list = $this->model
-                ->with(['platform'])
-                ->where($where)
-                ->order($sort, $order)
-                ->where(function ($query) {
-                    $query->where('backoffice_id', 1)
-                        ->where('sales_id', 'not null')
-                        ->where('platform_id', 'in', [2, 3, 4]);
-                })
-                ->limit($offset, $limit)
-                ->select();
+                $list = $this->model
+                    ->with(['platform'])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->where(function ($query) {
+                        $query->where('backoffice_id', $this->auth->id)
+                            ->where('sales_id', 'not null')
+                            ->where('platform_id', 'in', [2, 3, 4]);
+                    })
+                    ->limit($offset, $limit)
+                    ->select();
+            }else if(in_array($this->auth->id,$canUseId['admin'])){
+                $total = $this->model
+                    ->with(['platform'])
+                    ->where($where)
+                    ->where(function ($query) {
+                        $query->where('backoffice_id', "not null")
+                            ->where('sales_id', 'not null')
+                            ->where('platform_id', 'in', [2, 3, 4]);
+                    })
+                    ->order($sort, $order)
+                    ->count();
+
+
+                $list = $this->model
+                    ->with(['platform'])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->where(function ($query) {
+                        $query->where('backoffice_id', "not null")
+                            ->where('sales_id', 'not null')
+                            ->where('platform_id', 'in', [2, 3, 4]);
+                    })
+                    ->limit($offset, $limit)
+                    ->select();
+            }
+
 
             foreach ($list as $row) {
 
@@ -238,15 +359,15 @@ class Custominfotabs extends Backend
                 //dump($sendmessage->sendMsgToAll());exit;
 
                 $token = self::$token;
-                $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                $getAdminOpenid = adminModel::get(['id' => $params['id']])->toArray();
                 $openid = $getAdminOpenid['openid'];
-                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');
+                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'], Config::get('wechat')['APPSECRET'], $token, $openid, '温馨提示：你有新客户导入，请登陆系统查看。');
                 $msg = $sendmessage->sendMsgToAll();
 
 
-                if($msg['errcode']==0){
+                if ($msg['errcode'] == 0) {
                     $this->success();
-                }else{
+                } else {
                     $this->error("消息推送失败");
                 }
 
@@ -324,19 +445,18 @@ class Custominfotabs extends Backend
                 //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化
                 //dump($sendmessage->sendMsgToAll());exit;
                 $token = self::$token;
-                $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                $getAdminOpenid = adminModel::get(['id' => $params['id']])->toArray();
                 $openid = $getAdminOpenid['openid'];
                 // // var_dump($openid);
                 // // die;
-                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'], Config::get('wechat')['APPSECRET'], $token, $openid, '温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
 
                 $msg = $sendmessage->sendMsgToAll();
                 // dump($msg);
                 // die;
-                if($msg['errcode'] == 0){
+                if ($msg['errcode'] == 0) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('消息推送失败');
                 }
             } else {
