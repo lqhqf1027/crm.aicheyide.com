@@ -163,8 +163,6 @@ class Customerlisttabs extends Backend
                 ->count();
         } else if (in_array($this->auth->id, $canUseId['admin'])) {
 
-
-            echo "123";
             $newCustomTotal = $this->model
                 ->with(['platform'])
                 ->where(function ($query) {
@@ -1298,6 +1296,7 @@ class Customerlisttabs extends Backend
         ]);
         return $this->view->fetch();
     }
+
 
 
 }

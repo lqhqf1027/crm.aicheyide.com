@@ -23,30 +23,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
 
         },
-        // edit: function () {
-        //
-        //     // $(".btn-add").data("area", ["300px","200px"]);
-        //     Table.api.init({
-        //
-        //     });
-        //     Form.api.bindevent($("form[role=form]"), function(data, ret){
-        //         console.log(data);
-        //         console.log(ret);
-        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-        //         // Fast.api.close(data);//这里是重点
-        //
-        //         // console.log(data);
-        //         // Toastr.success("成功");//这个可有可无
-        //     }, function(data, ret){
-        //         // console.log(data);
-        //
-        //         Toastr.success("失败");
-        //
-        //     });
-        //     // Controller.api.bindevent();
-        //     // console.log(Config.id);
-        // },
-
 
         table: {
 
@@ -106,14 +82,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
-                                    // {
-                                    //     name:'detail',
-                                    //     text:'新增销售单',
-                                    //     title:'新增销售单',
-                                    //     icon: 'fa fa-share',
-                                    //     classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList',
-                                    //     url: 'salesmanagement/customerlisttabs/newSalesList'
-                                    // },
+                                    {
+                                        name: 'detail',
+                                        text: '新增销售单',
+                                        title: '新增销售单',
+                                        icon: 'fa fa-share',
+                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
+                                    },
                                     {
 
                                         name: 'edit',
@@ -256,6 +231,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: relations,
                                 buttons: [
+                                    {
+                                        name: 'detail',
+                                        text: '新增销售单',
+                                        title: '新增销售单',
+                                        icon: 'fa fa-share',
+                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
+                                    },
                                     {
 
                                         name: 'edit',
@@ -401,6 +383,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate', title: __('Operate'), table: intentions,
                                 buttons: [
                                     {
+                                        name: 'detail',
+                                        text: '新增销售单',
+                                        title: '新增销售单',
+                                        icon: 'fa fa-share',
+                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
+                                    },
+                                    {
 
                                         name: 'edit',
                                         text: __('Feedback'),
@@ -542,6 +531,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: nointentions,
                                 buttons: [
+                                    {
+                                        name: 'detail',
+                                        text: '新增销售单',
+                                        title: '新增销售单',
+                                        icon: 'fa fa-share',
+                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
+                                    },
                                     {
 
                                         name: 'edit',
@@ -745,6 +741,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate', title: __('Operate'), table: overdues,
                                 buttons: [
                                     {
+                                        name: 'detail',
+                                        text: '新增销售单',
+                                        title: '新增销售单',
+                                        icon: 'fa fa-share',
+                                        classname: 'btn btn-xs btn-warning btn-newSalesList'
+                                    },
+                                    {
 
                                         name: 'edit',
                                         text: __('Feedback'),
@@ -946,7 +949,37 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     },
 
+                    'click .btn-newSalesList':function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        // alert(row[options.pk]);
+                        //第三方扩展皮肤
 
+                        layer.alert('请前往订单列表,选择对应的方案进行新增销售单',{
+                            icon: 1,
+                            skin: 'layer-ext-moon', //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                            area:['500px','300px'],
+                            content:"<h4>请前往订单列表,选择对应的方案进行新增销售单</h4>" +
+                            "<h4 style='line-height: 50px'>请选择新增方案：</h4>" +
+                            "<label><input name='plan' type=\"radio\" value='0' /> 以租代购(新车)</label>" +
+                            "<label class='la'><input name='plan' type=\"radio\" value='1' /> 纯租</label>" +
+                            "<label class='la'><input name='plan' type=\"radio\" value='2' checked/> 以租代购(二手车)</label>" +
+                            "<label class='la'><input name='plan' type=\"radio\" value='3' /> 全款</label>",
+                            btn:['前往'],
+                            btn1:function () {
+                                console.log(row[options.pk]);
+                                var planid = $("input[name=plan]:checked").val();
+
+                                window.location.href="../order/Salesorder/chooseAdd?userid="+row[options.pk]+"&planid="+planid;
+                            }
+
+                        });
+                        $(".layui-layer-btn0").css({"margin-right":"210px"});
+                        $(".la").css({"margin-left":"10px"})
+
+                    }
                 }
             },
             formatter: {
