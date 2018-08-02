@@ -961,13 +961,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         layer.alert('请前往订单列表,选择对应的方案进行新增销售单', {
                             // icon: 1,
                             skin: 'layer-ext-moon', //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-                            area: ['500px', '300px'],
-                            content: "<h4>请前往订单列表,选择对应的方案进行新增销售单</h4>" +
-                            "<h4 style='line-height: 50px'>请选择新增方案：</h4>" +
-                            "<label><input name='plan' type=\"radio\" value='0' /> 以租代购(新车)</label>" +
-                            "<label class='la'><input name='plan' type=\"radio\" value='1' /> 纯租</label>" +
-                            "<label class='la'><input name='plan' type=\"radio\" value='2' checked/> 以租代购(二手车)</label>" +
-                            "<label class='la'><input name='plan' type=\"radio\" value='3' /> 全款</label>",
+                            // content: "<h4>请前往订单列表,选择对应的方案进行新增销售单</h4>",
                             btn: ['前往'],
                             btn1: function () {
 
@@ -982,8 +976,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
 
                         });
-                        $(".layui-layer-btn0").css({"margin-right": "210px"});
+                        $(".layui-layer-btn0").css({"margin-right": "132px"});
                         $(".la").css({"margin-left": "10px"});
+
+
+                        //     "<h4 style='line-height: 50px'>请选择新增方案：</h4>" +
+                        // "<label><input name='plan' type=\"radio\" value='0' /> 以租代购(新车)</label>" +
+                        // "<label class='la'><input name='plan' type=\"radio\" value='1' /> 纯租</label>" +
+                        // "<label class='la'><input name='plan' type=\"radio\" value='2' checked/> 以租代购(二手车)</label>" +
+                        // "<label class='la'><input name='plan' type=\"radio\" value='3' /> 全款</label>",
 
 
                     }
