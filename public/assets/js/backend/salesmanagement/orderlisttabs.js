@@ -100,19 +100,64 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         // {field: 'planacar.models_id', title: __('Planacar.models_id')},
                         {field: 'operate', title: __('Operate'), table: orderAcar, 
-                            events: Table.api.events.operate, 
-                            buttons: [
-                                {
-                                    name:'detail',
-                                    text:'新增销售单',
-                                    title:'新增销售单',
-                                    icon: 'fa fa-share',
-                                    classname: 'btn btn-xs btn-info btn-dialog btn-newSalesList',
-                                    url: 'salesmanagement/customerlisttabs/newSalesList'
+                        buttons: [
+                            {
+                                name:'submit_audit',text:'提交审核', title:'提交到风控审核征信', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-submit_audit',
+                                url: 'salesmanagement/orderlisttabs/sedAudit',  
+                                //等于is_reviewing_true 的时候操作栏应该显示的是正在审核四个字，隐藏编辑和删除
+                                //等于is_reviewing 的时候操作栏应该显示的是提交审核按钮 四个字，显示编辑和删除 
+                                hidden:function(row){ /**提交审核 */
+                                    if(row.review_the_data == 'is_reviewing'){ 
+                                        return false; 
+                                    }  
+                                    else if(row.review_the_data == 'is_reviewing_true'){
+                                        return true;
+                                    }
                                 }
+                            },
+                            { 
+                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',title: __('Del'),classname: 'btn btn-xs btn-danger btn-delone',
+                                url:'order/salesorder/del',/**删除 */
+                                hidden:function(row){
+                                    if(row.review_the_data == 'is_reviewing'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                },
+                                
+                            },
+                            { 
+                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',  title: __('Edit'),classname: 'btn btn-xs btn-success btn-editone', 
+                                url:'order/salesorder/edit',/**编辑 */
+                                hidden:function(row,value,index){ 
+                                    if(row.review_the_data == 'is_reviewing'){ 
+                                        return false; 
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_true'){ 
+                                        return true;
+                                    } 
+                                }, 
+                            },
+                            {
+                                name: 'edit',text: '正在审核中', 
+                                hidden:function(row){  /**正在审核 */
+                                    if(row.review_the_data == 'is_reviewing_true'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                        return true;
+                                    }
+                                }
+                            }
 
-                            ],
-                            formatter: Table.api.formatter.operate
+                        ],
+                            events: Controller.api.events.operate,
+                             
+                            formatter: Controller.api.formatter.operate
+                           
                         }
                     ]
                 ]
@@ -120,6 +165,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             orderAcar.on('load-success.bs.table',function(e,data){
+                // console.log(data);
                 $('#order_acar').text(data.total);
             })
                 // 为表格1绑定事件
@@ -141,8 +187,117 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events:{
                 operate: {
+                    //提交审核
+                    'click .btn-submit_audit': function (e, value, row, index) {
 
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('请确认资料完整，是否开始提交审核?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                                Fast.api.ajax({
+                                    url: 'salesmanagement/orderlisttabs/sedAudit',
+                                    data: {id: row[options.pk]}
+                                }, function (data, ret) {
+
+                                    Toastr.success(ret.msg);
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
+                            }
+                        );
+
+                    },
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    'click .btn-delone': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('Are you sure you want to delete this item?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Table.api.multi("del", row[options.pk], table, that);
+                                Layer.close(index);
+                            }
+                        );
+                    },
                 }
+               
+            },
+            formatter: {
+                operate: function (value, row, index) {
+
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                }
+                // status: function (value, row, index) {
+
+                //     var colorArr = {relation: 'info', intention: 'success', nointention: 'danger'};
+                //     //如果字段列有定义custom
+                //     if (typeof this.custom !== 'undefined') {
+                //         colorArr = $.extend(colorArr, this.custom);
+                //     }
+                //     value = value === null ? '' : value.toString();
+
+                //     var color = value && typeof colorArr[value] !== 'undefined' ? colorArr[value] : 'primary';
+
+                //     var newValue = value.charAt(0).toUpperCase() + value.slice(1);
+                //     //渲染状态
+                //     var html = '<span class="text-' + color + '"><i class="fa fa-circle"></i> ' + __(newValue) + '</span>';
+                //     // if (this.operate != false) {
+                //     //     html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
+                //     // }
+                //     return html;
+                // },
             }
         }
     };

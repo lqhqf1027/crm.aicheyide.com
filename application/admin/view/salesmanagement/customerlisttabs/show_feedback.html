@@ -10,7 +10,7 @@
 <table class="table table-bordered table-striped table-hover">
     <thead>
     <tr>
-        <th>ID</th>
+
         <th>反馈时间</th>
         <th>反馈内容</th>
         <th>下次跟进时间</th>
@@ -22,24 +22,30 @@
     <tbody>
     {volist name="feedback_data" id="vo" key="k"}
 
-    {if condition="$k%2==0"}
+
+    {if condition="$k==$vo.count"}
     <tr class="danger">
-        <td>{$vo.indexs}</td>
         <td>{$vo.feedbacktime}</td>
         <td>{$vo.feedbackcontent}</td>
         <td>{$vo.followupdate}</td>
         <td>{$vo.customerlevel}</td>
 
+
     </tr>
-    {else /}
-    <tr class="warning">
-        <td>{$vo.indexs}</td>
+
+    {else/}
+    <tr class="danger">
         <td>{$vo.feedbacktime}</td>
         <td>{$vo.feedbackcontent}</td>
         <td>{$vo.followupdate}</td>
         <td>{$vo.customerlevel}</td>
     </tr>
+
+    <tr>
+        <td colspan="4"><i class="fa fa-long-arrow-down"></i></td>
+    </tr>
     {/if}
+
 
     {/volist}
 

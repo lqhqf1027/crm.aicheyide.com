@@ -32,6 +32,7 @@
     "fastadmin-cxselect": "~1.4.0",
     "fastadmin-dragsort": "~1.0.0",
     "fastadmin-addtabs": "~1.0.0",
-    "fastadmin-selectpage": "~1.0.0"
+    "fastadmin-selectpage": "~1.0.0",
+    "viewer": "^0.11.1"
   }
 }

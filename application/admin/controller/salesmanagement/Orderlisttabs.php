@@ -24,7 +24,7 @@ class Orderlisttabs extends Backend
     public function _initialize()
     {
         parent::_initialize();
-         
+        $this->model = model('SalesOrder');
 
     }
     public function index(){
@@ -37,7 +37,7 @@ class Orderlisttabs extends Backend
         
         
         // pr(collection($this->getPlanAcarData(5))->toArray());
-        $this->model = model('SalesOrder');
+       
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
@@ -97,7 +97,18 @@ class Orderlisttabs extends Backend
                 ->find();
                 
     }
-
+    public function sedAudit(){
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'is_reviewing_true']);
+            if($result!==false){
+                $this->success('提交成功，请等待审核结果');
+            }else{
+                $this->error('提交失败',null,$result);
+                
+            }
+        }
+    }
 
 
 }
