@@ -38,7 +38,7 @@ class SalesOrder extends Model
 
     public function getReviewTheDataList()
     {
-        return ['not_through' => __('Review_the_data not_through'),'through' => __('Review_the_data through'),'credit_report' => __('Review_the_data credit_report'),'the_guarantor' => __('Review_the_data the_guarantor'),'for_the_car' => __('Review_the_data for_the_car'),'the_car' => __('Review_the_data the_car')];
+        return ['is_reviewing'=>__('Review_the_data is_reviewing'),'is_reviewing_true'=>__('Review_the_data is_reviewing_true'),'not_through' => __('Review_the_data not_through'),'through' => __('Review_the_data through'),'the_guarantor' => __('Review_the_data the_guarantor'),'for_the_car' => __('Review_the_data for_the_car'),'the_car' => __('Review_the_data the_car')];
     }     
 
 

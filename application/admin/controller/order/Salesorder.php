@@ -131,8 +131,15 @@ class Salesorder extends Backend
                     }
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
-                       
-                        $this->success();
+                      
+                       //如果添加成功,将状态改为提交审核
+                        $result_s = $this->model->isUpdate(true)->save(['id'=>$this->model->id,'review_the_data'=>'is_reviewing']);
+                        if($result_s){
+                            $this->success(); 
+                        }
+                        else{
+                            $this->error('更新状态失败');
+                        }
                     } else {
                         $this->error($this->model->getError());
                     }
