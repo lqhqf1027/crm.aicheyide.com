@@ -169,7 +169,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
                     );
 
-                })
+                });
 
                 newCustomer.on('load-success.bs.table', function (e, data) {
                     $('#badge_new_customer').text(data.total);
