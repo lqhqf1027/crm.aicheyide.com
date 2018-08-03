@@ -67,6 +67,87 @@ class Salesorder extends Backend
 
         return $this->view->fetch();
     }
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL) 
+    {
+        $row = $this->model->get($ids);
+
+        //关联订单于方案
+        $result = Db::name('sales_order')->alias('a')
+            ->join('plan_acar b','a.plan_acar_name = b.id')
+            ->field('b.id as plan_id')
+            ->where(['a.id'=>$row['id']])
+            ->find()
+            ;
+         
+
+        $newRes = array();
+        //品牌
+        $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
+        // pr(Session::get('admin'));die;
+        foreach ((array)$res as $key=>$value) {
+            $sql = Db::name('models')->alias('a')
+            ->join('plan_acar b','b.models_id=a.id')
+            ->join('financial_platform c','b.financial_platform_id=c.id')
+            ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
+            ->where(['a.brand_id'=>$value['brandid'],'b.ismenu'=>1])
+
+            ->select() ;
+            $newB =[];
+            foreach((array)$sql as $bValue){
+                $bValue['models_name'] =$bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'】'.'---'.$bValue['financial_platform_name'];
+                $newB[] = $bValue;
+            }
+            $newRes[]=array(
+                'brand_name' => $value['brand_name'],
+                // 'brand_logoimage'=>$value['brand_logoimage'],
+                'data'=>$newB
+            );
+
+
+        }
+        // pr($newRes);die;
+        $this->view->assign("newRes", $newRes);
+        $this->view->assign("result", $result);
+
+
+
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
     public function add()
     {
 
@@ -98,6 +179,7 @@ class Salesorder extends Backend
 
 
         }
+        pr($newRes);die;
         $this->view->assign('newRes',$newRes);
 
         if ($this->request->isPost()) {
