@@ -1280,14 +1280,14 @@ class Customerlisttabs extends Backend
 
         $data = Db::table("crm_feedback_info")
             ->where("customer_id", $ids)
-            ->order("feedbacktime desc")
+            ->order("feedbacktime")
             ->select();
-
 
         foreach ($data as $key => $value) {
 
-            $data[$key]['indexs'] = intval($key) + 1;
+
             $data[$key]['feedbacktime'] = date("Y-m-d H:i:s", intval($value['feedbacktime']));
+            $data[$key]['count'] = count($data);
 
         }
 
