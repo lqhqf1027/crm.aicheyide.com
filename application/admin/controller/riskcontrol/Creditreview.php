@@ -5,7 +5,9 @@ namespace app\admin\controller\riskcontrol;
 use app\common\controller\Backend;
 use app\admin\model\PlanAcar  as planAcarModel;
 use app\admin\model\Models as modelsModel;
+use app\admin\model\Admin;
 use think\Db;
+use think\Config;
 /**
  * 订单列管理
  *
@@ -83,17 +85,24 @@ class Creditreview extends Backend
                ->select();
          
            $list = collection($list)->toArray();
-       
-           foreach( (array) $list as $k => $row){
-            $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
 
-               $list[$k]['payment'] = $planData['payment'];
-               $list[$k]['monthly'] = $planData['monthly'];
-               $list[$k]['nperlist'] = $planData['nperlist'];
-               $list[$k]['margin'] = $planData['margin'];
-               $list[$k]['gps'] = $planData['gps'];
-               $list[$k]['models_name'] = $planData['models_name'];
-               $list[$k]['financial_platform_name'] = $planData['financial_platform_name'];
+        
+           foreach( (array) $list as $k => $row){
+                $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
+
+                $admin_id = $row['admin_id'];
+
+                $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname');
+
+                $list[$k]['admin_nickname'] = $admin_nickname;
+
+                $list[$k]['payment'] = $planData['payment'];
+                $list[$k]['monthly'] = $planData['monthly'];
+                $list[$k]['nperlist'] = $planData['nperlist'];
+                $list[$k]['margin'] = $planData['margin'];
+                $list[$k]['gps'] = $planData['gps'];
+                $list[$k]['models_name'] = $planData['models_name'];
+                $list[$k]['financial_platform_name'] = $planData['financial_platform_name'];
           }
         
            $result = array("total" => $total, "rows" => $list);
@@ -137,6 +146,12 @@ class Creditreview extends Backend
        
            foreach( (array) $list as $k => $row){
             $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
+
+            $admin_id = $row['admin_id'];
+                
+            $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname');
+
+            $list[$k]['admin_nickname'] = $admin_nickname;
 
                $list[$k]['payment'] = $planData['payment'];
                $list[$k]['monthly'] = $planData['monthly'];
@@ -189,6 +204,12 @@ class Creditreview extends Backend
            foreach( (array) $list as $k => $row){
             $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
 
+            $admin_id = $row['admin_id'];
+                
+            $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname');
+
+            $list[$k]['admin_nickname'] = $admin_nickname;
+
                $list[$k]['payment'] = $planData['payment'];
                $list[$k]['monthly'] = $planData['monthly'];
                $list[$k]['nperlist'] = $planData['nperlist'];
@@ -208,7 +229,8 @@ class Creditreview extends Backend
     /**
      * 根据方案id查询 车型名称，首付、月供等
      */
-    public function getPlanAcarData($planId){
+    public function getPlanAcarData($planId)
+    {
          
         return Db::name('plan_acar')->alias('a')
                 ->join('models b','a.models_id=b.id')
@@ -263,14 +285,73 @@ class Creditreview extends Backend
             $list[$k]['models_name'] = $planData['models_name'];
             $list[$k]['financial_platform_name'] = $planData['financial_platform_name'];
         }
+         
         
-        // var_dump($list);
-        // die;
 
-        $this->view->assign('row',$list);
+        //身份证图片
+        $id_cardimages = $list[0]['id_cardimages'];
+        $id_cardimage = explode(',',$id_cardimages);
+        
+        $id_cardimages_arr = [];
+        foreach ($id_cardimage as $k => $v) {
+            $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+    
+        //驾照图片
+        $drivers_licenseimages =$list[0]['drivers_licenseimages'];
+        $drivers_licenseimage = explode(',',$drivers_licenseimages);
+        $drivers_licenseimages_arr = [];
+        foreach ($drivers_licenseimage as $k => $v) {
+            $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //户口簿图片
+        $residence_bookletimages = $list[0]['residence_bookletimages'];
+        $residence_bookletimage = explode(',',$residence_bookletimages);
+        
+        $residence_bookletimages_arr = [];
+        foreach ($residence_bookletimage as $k => $v) {
+            $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //房产证图片
+        $housingimages = $list[0]['housingimages'];
+        $housingimage = explode(',',$housingimages);
+        
+        $housingimages_arr = [];
+        foreach ($housingimage as $k => $v) {
+            $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //银行卡图片
+        $bank_cardimages = $list[0]['bank_cardimages'];
+        $bank_cardimage = explode(',',$bank_cardimages);
+        
+        $bank_cardimages_arr = [];
+        foreach ($bank_cardimage as $k => $v) {
+            $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //申请表图片
+        $application_formimages = $list[0]['application_formimages'];
+        $application_formimage = explode(',',$application_formimages);
+        
+        $application_formimages_arr = [];
+        foreach ($application_formimage as $k => $v) {
+            $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        $this->view->assign('id_cardimages_arr',$id_cardimages_arr);
+        $this->view->assign('drivers_licenseimages_arr',$drivers_licenseimages_arr);
+        $this->view->assign('residence_bookletimages_arr',$residence_bookletimages_arr);
+        $this->view->assign('housingimages_arr',$housingimages_arr);
+        $this->view->assign('bank_cardimages_arr',$bank_cardimages_arr);
+        $this->view->assign('application_formimages_arr',$application_formimages_arr);
+        $this->view->assign('rows',$list);
         
         return $this->view->fetch('auditResult');
 
     }
+
 
 }
