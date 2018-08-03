@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
+define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'viewer'], function ($, undefined, Backend, Table, Form, Viewer) {
 
     var Controller = {
         index: function () {
@@ -60,6 +60,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         {field: 'financial_platform_name', title: __('金融平台')},
                         {field: 'models_name', title: __('销售车型')},
+                        {field: 'admin_nickname', title: __('销售员')},
                         {field: 'username', title: __('Username')},
                         {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
                         {field: 'genderdata_text', title: __('Genderdata'), operate:false},
@@ -167,6 +168,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     
                             {field: 'financial_platform_name', title: __('金融平台')},
                             {field: 'models_name', title: __('销售车型')},
+                            {field: 'admin_nickname', title: __('销售员')},
                             {field: 'username', title: __('Username')},
                             {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
                             {field: 'genderdata_text', title: __('Genderdata'), operate:false},
@@ -259,6 +261,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     
                             {field: 'financial_platform_name', title: __('金融平台')},
                             {field: 'models_name', title: __('销售车型')},
+                            {field: 'admin_nickname', title: __('销售员')},
                             {field: 'username', title: __('Username')},
                             {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
                             {field: 'genderdata_text', title: __('Genderdata'), operate:false},
