@@ -42,10 +42,14 @@ class Wechat extends  Controller{
         $echoStr = $_GET["echostr"];
         if($this->checkSignature()){
             echo $echoStr;
-            exit;
+           die;
         }
-//        $this->responseMsg();
+
     }
+    /**
+     * 检查签名
+     * 
+    */
     private function checkSignature()
     {
         $signature = $_GET["signature"];
