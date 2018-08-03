@@ -29,19 +29,22 @@ class Wechat extends  Controller{
         // parent::_initialize();
         
     }
+    public function test(){
+        return 11;
+    }
     /**
      * 微信授权添加用户入库
      */
     /*微信验证*/
     public function wx()
     {
-        define("TOKEN", "pondbay");
+        define("TOKEN", "aicheyide");
         $echoStr = $_GET["echostr"];
         if($this->checkSignature()){
             echo $echoStr;
             exit;
         }
-        $this->responseMsg();
+//        $this->responseMsg();
     }
     private function checkSignature()
     {
