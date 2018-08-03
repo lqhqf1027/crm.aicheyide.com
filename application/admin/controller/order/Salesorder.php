@@ -179,13 +179,12 @@ class Salesorder extends Backend
 
 
         }
-        pr($newRes);die;
         $this->view->assign('newRes',$newRes);
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             //生成订单编号
-            $params['order_no'] = 'JY_'.date('Ymdhis').rand(1000,9999);
+            $params['order_no'] = date('Ymdhis').rand(1000,9999);
              //把当前销售员所在的部门的内勤id 入库
 
              //message8=>销售一部顾问，message13=>内勤一部

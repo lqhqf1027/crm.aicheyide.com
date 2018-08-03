@@ -29,7 +29,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var orderAcar = $("#orderAcar"); 
                  
-                $(".btn-add").data("area", ["90%","90%"]); 
+                $(".btn-add").data("area", ["95%","95%"]); 
+                $(".btn-edit").data("area", ["95%","95%"]); 
+
                  // 初始化表格
                  orderAcar.bootstrapTable({
                 url: 'salesmanagement/Orderlisttabs/orderAcar',
@@ -104,8 +106,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 name:'submit_audit',text:'提交审核', title:'提交到风控审核征信', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-submit_audit',
                                 url: 'salesmanagement/orderlisttabs/sedAudit',  
-                                //等于is_reviewing_true 的时候操作栏应该显示的是正在审核四个字，隐藏编辑和删除
-                                //等于is_reviewing 的时候操作栏应该显示的是提交审核按钮 四个字，显示编辑和删除 
+                                //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
+                                //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
+                                //....
                                 hidden:function(row){ /**提交审核 */
                                     if(row.review_the_data == 'is_reviewing'){ 
                                         return false; 
@@ -265,7 +268,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             orderAcar.on('load-success.bs.table',function(e,data){
                 // console.log(data);
-                $('#order_acar').text(data.total);
+                $('#badge_order_acar').text(data.total);
             })
                 // 为表格1绑定事件
                 Table.api.bindevent(orderAcar);
@@ -331,6 +334,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     },
                     'click .btn-editone': function (e, value, row, index) {
+                    $(".btn-editone").data("area", ["95%","95%"]); 
+
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -340,7 +345,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    'click .btn-delone': function (e, value, row, index) {
+                    'click .btn-delone': function (e, value, row, index) {  /**编辑按钮 */
 
                         e.stopPropagation();
                         e.preventDefault();
