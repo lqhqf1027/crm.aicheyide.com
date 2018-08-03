@@ -113,6 +113,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_true'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'for_the_car'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'not_through'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
                                 }
                             },
                             { 
@@ -126,6 +135,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.review_the_data == 'for_the_car'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'not_through'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
                                 },
                                 
                             },
@@ -139,6 +157,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_true'){ 
                                         return true;
                                     } 
+                                    else if(row.review_the_data == 'for_the_car'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'not_through'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
                                 }, 
                             },
                             {
@@ -150,8 +177,80 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'for_the_car'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'not_through'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
+                                }
+                            },
+                            {
+                                name: 'for_the_car',icon:'fa fa-check-circle',text: '征信已通过，车管正在备车中', classname: ' text-success ',
+                                hidden:function(row){  /**征信已通过，车管正在备车中 */ 
+                                    if(row.review_the_data == 'for_the_car'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_true'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'not_through'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
+                                }
+                            },
+                            {
+                                name: 'not_through',icon:'fa fa-times',text: '征信未通过，订单已关闭', classname: ' text-danger ',
+                                hidden:function(row){  /**征信不通过 */ 
+                                 
+                                    if(row.review_the_data == 'not_through'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_true'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
+                                }
+                            },
+                            {
+                                name: 'the_guarantor',icon:'fa fa-upload',text: '需提供担保人',extend: 'data-toggle="tooltip"',  title: __('点击上传提供担保人信息'), classname: ' text-danger ',classname: 'btn btn-xs btn-warning btn-the_guarantor',
+                                hidden:function(row){  /**提供担保人 */ 
+                                    
+                                    if(row.review_the_data == 'the_guarantor'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'not_through'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_true'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                        return true;
+                                    }
                                 }
                             }
+
 
                         ],
                             events: Controller.api.events.operate,
