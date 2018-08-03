@@ -19,7 +19,7 @@ class Custominfotabs extends Backend
 {
 
     protected $model = null;
-    protected $noNeedRight = ['newCustomer', 'batch', 'assignedCustomers', 'admeasure', 'index'];
+    protected $noNeedRight = ['newCustomer', 'batch', 'assignedCustomers', 'admeasure', 'index','test1'];
     protected $dataLimit = false; //表示不启用，显示所有数据
     static protected $token = null;
 
@@ -466,6 +466,31 @@ class Custominfotabs extends Backend
             }
         }
         return $this->view->fetch();
+    }
+
+    public function test1()
+    {
+        $arr = array(
+            'touser' => 'oklZR1J5BGScztxioesdguVsuDoY',
+            'template_id' => 'wndsjqki8_p4qyyvBsgMao1WB-5dh1gGBeYFwP5c_1w',
+            "topcolor" => "#FF0000",
+            'url' => '',
+            'data' => array(
+                'first' => '您好！您的订单已确认，即将安排送货人员配送。',
+                'keyword1' => array('value'=>'B0412578452658'),
+                'keyword2' => array('value'=>'五粮液 54度'),
+                'keyword3' => array('value'=>'2瓶'),
+                'keyword4' =>array('value'=>'张伟') ,
+                'keyword5' =>array('value'=>'如皋德顺门大厅') ,
+                'remark' => array('value'=>'为了送货人员能及时联系您，请保持通讯设备畅通')
+            ),
+
+        );
+
+        $result = posts("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".self::$token,json_encode($arr));
+
+        pr($result);
+
     }
 
 

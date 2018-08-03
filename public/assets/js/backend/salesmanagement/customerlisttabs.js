@@ -965,8 +965,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             btn: ['前往'],
                             btn1: function () {
 
+                                window.location.href="../backoffice/Custominfotabs/test1";
                                 // var planid = $("input[name=plan]:checked").val();
-                                window.location.href="Orderlisttabs/index"
+                                // window.location.href="Orderlisttabs/index"
                                 // window.location.href="../order/Salesorder/index";
                                 // window.location.href="../order/Salesorder/chooseAdd?userid="+row[options.pk]+"&planid="+planid;
                                 // row = $.extend({}, row ? row : {}, {ids: ids});
