@@ -248,7 +248,6 @@ class Creditreview extends Backend
     public function auditResult($ids=NULL)
     {
         
-       
         $this->model = model('SalesOrder');
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
@@ -348,10 +347,76 @@ class Creditreview extends Backend
         $this->view->assign('bank_cardimages_arr',$bank_cardimages_arr);
         $this->view->assign('application_formimages_arr',$application_formimages_arr);
         $this->view->assign('rows',$list);
+
+        $id = $result['id'];
+        $this->view->assign("id", $id);
+        
+        if ($this->request->isPost())
+        {
+            // var_dump($_POST['hidden1']);
+            // die;
+            if ($_POST['hidden1'] == '1') {
+
+                // var_dump(123);
+                // die;
+                $result = $this->model->save(['review_the_data'=>'for_the_car'],function($query) use ($id){
+                $query->where('id',$id);
+                }); 
+                
+                if ($result)
+                {
+
+                    $this->success();
+                }
+                else{
+
+                    $this->error();
+                }
+            }
+            if ($_POST['hidden1'] == '2') {
+
+                // var_dump(456);
+                // die;
+                $result = $this->model->save(['review_the_data'=>'the_guarantor'],function($query) use ($id){
+                    $query->where('id',$id);
+                }); 
+                    
+                if ($result)
+                {
+    
+                    $this->success();
+                }
+                else{
+    
+                    $this->error();
+                }
+
+            }
+            if ($_POST['hidden1'] == '3') {
+
+                // var_dump(789);
+                // die;
+                $result = $this->model->save(['review_the_data'=>'not_through'],function($query) use ($id){
+                    $query->where('id',$id);
+                }); 
+                    
+                if ($result)
+                {
+    
+                    $this->success();
+                }
+                else{
+    
+                    $this->error();
+                }
+
+            }
+            
+        }
         
         return $this->view->fetch('auditResult');
 
     }
 
-
+    
 }
