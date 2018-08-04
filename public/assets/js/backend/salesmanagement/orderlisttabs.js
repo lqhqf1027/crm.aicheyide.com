@@ -31,7 +31,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  
                 $(".btn-add").data("area", ["95%","95%"]); 
                 $(".btn-edit").data("area", ["95%","95%"]); 
-
+                
                  // 初始化表格
                  orderAcar.bootstrapTable({
                 url: 'salesmanagement/Orderlisttabs/orderAcar',
@@ -60,7 +60,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'genderdata_text', title: __('Genderdata'), operate:false},
                         {field: 'phone', title: __('Phone')},
                         {field: 'id_card', title: __('Id_card')},
-
+                        {field: 'id', title: __('查看详细资料'), table: orderAcar, buttons: [
+                            {name: 'details', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-details', 
+                                url: 'salesmanagement/Orderlisttabs/details', callback:function(data){
+                                    console.log(data)
+                                }
+                            } 
+                            ],
+                            
+                            operate:false, formatter: Table.api.formatter.buttons
+                        },
                         {field: 'payment', title: __('首付（元）')},
                         {field: 'monthly', title: __('月供（元）')},
                         {field: 'nperlist', title: __('期数')},
@@ -265,10 +274,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
                 
             });
+         
 
             orderAcar.on('load-success.bs.table',function(e,data){
                 // console.log(data);
                 $('#badge_order_acar').text(data.total);
+                $(".btn-details").data("area", ["95%","95%"]); 
             })
                 // 为表格1绑定事件
                 Table.api.bindevent(orderAcar);

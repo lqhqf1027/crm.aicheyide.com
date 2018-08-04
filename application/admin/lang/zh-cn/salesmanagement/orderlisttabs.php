@@ -3,6 +3,7 @@
 return [
     'Id'  =>  'ID',
     'Plan_acar_name'  =>  '车型',
+    'Decoration'=>'装饰',
     'Sales_id'  =>  '销售员',
     'Backoffice_id'  =>  '部门内勤',
     'Control_id'  =>  '风控审核',
