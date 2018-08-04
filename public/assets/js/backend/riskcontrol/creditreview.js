@@ -24,6 +24,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'viewer'], function (
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
+        auditResult:function(){
+            // console.log(123);
+            // return;
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
+            // console.log(Config.id); 
+ 
+        },
 
         table: {
          
@@ -108,19 +126,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'viewer'], function (
                         // {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         // {field: 'planacar.models_id', title: __('Planacar.models_id')},
                         {field: 'operate', title: __('Operate'), table: toAudit, 
-                            events: Table.api.events.operate, 
                             buttons: [
                                 {
-                                    name:'detail',
+                                    name:'auditResult',
                                     text:'审核',
                                     title:'审核',
                                     icon: 'fa fa-share',
-                                    classname: 'btn btn-xs btn-info btn-dialog btn-auditResult',
-                                    url: 'riskcontrol/creditreview/auditResult'
+                                    classname: 'btn btn-xs btn-info btn-auditResult',
+                                    // url: 'riskcontrol/creditreview/auditResult',
+                                
+                                    
                                 }
 
                             ],
-                            formatter: Table.api.formatter.operate
+                            events: Controller.api.events.operate,
+                             
+                            formatter: Controller.api.formatter.operate
                         }
                     ]
                 ]
@@ -343,6 +364,78 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'viewer'], function (
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+            },
+            events:{
+                operate: {
+                    //提交审核
+                    'click .btn-auditResult': function (e, value, row, index) {
+ 
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'riskcontrol/creditreview/auditResult'; 
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+                            callback:function(value){
+                                Form.api.bindevent("form[role=form]", function(data, ret){
+                                    Toastr.success(ret.msg);
+                                    
+                                    //这里只要返回false，就会阻止我们的弹窗自动关闭和自动提示
+                                    return false;
+                                });
+
+                               // 在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            }
+                        })
+                        // Layer.confirm(
+                        //     __('请确认资料完整，是否开始提交审核?'),
+                        //     {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                        //     function (index) {
+                        //         var table = $(that).closest('table');
+                        //         var options = table.bootstrapTable('getOptions');
+
+
+                        //         Fast.api.ajax({
+                        //             url: 'salesmanagement/orderlisttabs/sedAudit',
+                        //             data: {id: row[options.pk]}
+                        //         }, function (data, ret) {
+
+                        //             Toastr.success(ret.msg);
+                        //             Layer.close(index);
+                        //             table.bootstrapTable('refresh');
+                        //             return false;
+                        //         }, function (data, ret) {
+                        //             //失败的回调
+                        //             Toastr.success(ret.msg);
+
+                        //             return false;
+                        //         });
+
+
+                        //     }
+                        // );
+
+                    },
+     
+                }
+               
+            },
+            formatter: {
+                operate: function (value, row, index) {
+
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                }
+               
             }
         }
          

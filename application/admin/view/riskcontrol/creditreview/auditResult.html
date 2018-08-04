@@ -1,4 +1,5 @@
-<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+<form id="auditResult-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
     <h2>
         <center>当前购车方式：以租代购（新车）</center>
     </h2>
@@ -14,6 +15,8 @@
     </h3>
     <br>
     {foreach $rows as $k=>$row}
+
+    
     <!-- <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -294,9 +297,7 @@
 
 
     {/foreach}
-    <b style="color: #ddd">
-        <center><i>--我是有底线的--</i></center>
-    </b>
+    
     <!-- <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Review_the_data')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -320,20 +321,28 @@
     </div> -->
  
     
-    <a href="javascript:;" class="btn btn-success btn-pass" data-params="pass" title="{:__('审核通过')}"><i class="fa fa-download"></i> {:__('审核通过')}</a>
+    <!-- <a href="" class="btn btn-success btn-pass" data-params="pass" title="{:__('审核通过')}"><i class="fa fa-download"></i> {:__('审核通过')}</a>
     
     <a href="javascript:;" class="btn btn-success btn-completiondata" title="{:__('补全资料')}"><i class="fa fa-download"></i> {:__('补全资料')}</a>
 
-    <a href="javascript:;" class="btn btn-danger btn-nopass" title="{:__('审核不通过')}"><i class="fa fa-download"></i> {:__('审核不通过')}</a>
+    <a href="javascript:;" class="btn btn-danger btn-nopass" title="{:__('审核不通过')}"><i class="fa fa-download"></i> {:__('审核不通过')}</a> -->
 
-
-    <!-- <div class="form-group layer-footer">
+    <!-- <input type="hidden" name="id" value="{$id}"> -->
+    <input type="hidden" name="hidden1" id="hidden1"/>
+    <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed">{:__('OK')}</button>
-            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+            <button type="submit" class="btn btn-success btn-embossed" id="pass" name="pass" onclick="examine('1')">{:__('审核通过')}</button>
+            <button type="submit" class="btn btn-success btn-embossed" id="data" name="data" onclick="examine('2')">{:__('补全资料')}</button>
+            <button type="submit" class="btn btn-danger btn-embossed" id="nopass" name="nopass" onclick="examine('3')">{:__('审核不通过')}</button>
         </div>
-    </div> -->
+    </div>
 
 </form>
+
+<script>
+    function examine(type){
+        document.getElementById("hidden1").value=type;
+    }
+</script>
 

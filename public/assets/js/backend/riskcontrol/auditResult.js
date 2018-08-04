@@ -1,7 +1,7 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'viewer'], function ($, undefined, Backend, Table, Form, viewer) {
 
     var Controller = {
-        auditResult: function () {
+        index: function () {
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
@@ -22,6 +22,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'viewer'], function (
                     url: data-original
                 })
             });
+            
 
             // 初始化表格
             table.bootstrapTable({
@@ -46,6 +47,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'viewer'], function (
             // 为表格绑定事件
             Table.api.bindevent(table);
 
+        },
+        auditResult:function(){
+            // console.log(123);
+            // return;
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
+            // console.log(Config.id); 
+ 
         },
         add: function () {
             Controller.api.bindevent();
