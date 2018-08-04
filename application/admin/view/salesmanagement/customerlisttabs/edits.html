@@ -24,7 +24,13 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">下次跟进时间</label>
         <div class="col-xs-12 col-sm-8">
+            {empty name="$default_date"}
             <input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[followupdate]" type="text" value="{$row.followupdate}">
+
+            {else /}
+            <input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[followupdate]" type="text" value="{$default_date}">
+
+            {/empty}
         </div>
     </div>
 

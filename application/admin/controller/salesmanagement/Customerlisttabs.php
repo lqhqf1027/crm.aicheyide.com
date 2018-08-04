@@ -1153,6 +1153,10 @@ class Customerlisttabs extends Backend
         $this->model = model('CustomerResource');
         $row = $this->model->get($ids);
 
+        if(empty($row['followupdate'])){
+           $this->view->assign("default_date",date("Y-m-d",time()));
+        }
+
         $this->view->assign("costomlevelList", $this->model->getNewCustomerlevelList());
 
         if (!$row)
