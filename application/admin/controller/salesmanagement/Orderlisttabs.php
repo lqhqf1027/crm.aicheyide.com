@@ -32,7 +32,7 @@ class Orderlisttabs extends Backend
        
         return $this->view->fetch();
     }
-    
+    /**以租代购（新车）*/
     public function orderAcar(){ 
         
         
@@ -97,6 +97,7 @@ class Orderlisttabs extends Backend
                 ->find();
                 
     }
+    /**提交审核 */
     public function sedAudit(){
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
@@ -109,6 +110,25 @@ class Orderlisttabs extends Backend
             }
         }
     }
+    /**查看详细资料 */
+    public function details($ids = null){
+        $row = $this->model->get($ids); 
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }  
+        $row['plan'] = Db::name('sales_order')->alias('a')
+                    ->join('plan_acar b','a.plan_acar_name = b.id')
+                    ->join('models c','b.models_id=c.id')
+                    
 
+                        ;
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
 
 }

@@ -1,22 +1,29 @@
-<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
-    <h2>
-        <center>当前购车方式：以租代购（新车）</center>
-    </h2>
-    <br>
-
-
+<h3>
     <center>
-        <strong class="text-info"> {:__('如需编辑资料，可选择对应的选项进行编辑操作')}</strong>
-
+        <h2>基本资料</h2>
     </center>
+</h3>
+<br>
+<div class="container">
 
-
-    <h3>
-        <center>基本资料</center>
-    </h3>
-    <br>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('Username')}：</strong> {$row.username}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('Phone')}：</strong> {$row.phone}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('Id_card')}：</strong> {$row.id_card}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('销售车型/方案')}：</strong> {$row.id_card}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('')}:</label>
         <div class="col-xs-12 col-sm-8">
 
             <select id="c-plan_acar_name" data-rule="required" class="form-control selectpicker" name="row[plan_acar_name]">
@@ -45,27 +52,8 @@
     </div>
 
 
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
-        <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="{$row.username}">
-        </div>
 
 
-    </div>
-    <div class="form-group">
-
-        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
-        <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-phone" data-rule="required" class="form-control" name="row[phone]" type="text" value="{$row.phone}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
-        <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-id_card" data-rule="required" class="form-control" name="row[id_card]" type="text" value="{$row.id_card}">
-        </div>
-    </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
         <div class="col-xs-12 col-sm-8 ">
@@ -446,11 +434,4 @@
         </div>
     </div>
 
-    <div class="form-group layer-footer">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
-            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
-        </div>
-    </div>
-</form>
+</div>
