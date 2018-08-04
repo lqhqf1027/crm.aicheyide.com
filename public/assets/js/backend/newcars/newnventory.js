@@ -21,26 +21,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
-                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        // {field: 'models_id', title: __('Models_id')},
                         {field: 'models.name', title: __('Models.name')},
-                        {field: 'carnumber', title: __('Carnumber')},
-                        {field: 'reservecar', title: __('Reservecar')},
-                        {field: 'carprocess', title: __('Carprocess'), visible:false, searchList: {"1":__('Carprocess 1'),"0":__('Carprocess 0')}},
-                        {field: 'carprocess_text', title: __('Carprocess'), operate:false},
-                        {field: 'pledge', title: __('Pledge'), visible:false, searchList: {"1":__('Pledge 1'),"0":__('Pledge 0')}},
-                        {field: 'pledge_text', title: __('Pledge'), operate:false},
+                        // {field: 'carnumber', title: __('Carnumber')},
+                        // {field: 'reservecar', title: __('Reservecar')},
                         {field: 'licensenumber', title: __('Licensenumber')},
+                        {field: 'frame_number', title: __('Frame_number')},
+                        {field: 'engine_number', title: __('Engine_number')},
+                        {field: 'household', title: __('Household')},
+                        {field: '4s_shop', title: __('4s_shop')},
                         {field: 'note', title: __('Note')},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'models.id', title: __('Models.id')},
-                        {field: 'models.brand_id', title: __('Models.brand_id')},
-                        // {field: 'models.name', title: __('Models.name')},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
