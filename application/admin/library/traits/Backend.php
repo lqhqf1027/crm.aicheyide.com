@@ -80,7 +80,7 @@ trait Backend
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
-                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
                         $this->model->validate($validate);
                     }
@@ -91,6 +91,8 @@ trait Backend
                         $this->error($this->model->getError());
                     }
                 } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
                     $this->error($e->getMessage());
                 }
             }
@@ -130,6 +132,8 @@ trait Backend
                         $this->error($row->getError());
                     }
                 } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
                     $this->error($e->getMessage());
                 }
             }
@@ -322,6 +326,8 @@ trait Backend
             $this->model->saveAll($insert);
         } catch (\think\exception\PDOException $exception) {
             $this->error($exception->getMessage());
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
         }
 
         $this->success();

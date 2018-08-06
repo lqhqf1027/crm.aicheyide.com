@@ -19,7 +19,7 @@ class Backend extends Controller
      * 无需登录的方法,同时也就不需要鉴权了
      * @var array
      */
-    protected $noNeedLogin = ['adduser'];
+    protected $noNeedLogin = [];
 
     /**
      * 无需鉴权的方法,但需要登录
@@ -92,14 +92,6 @@ class Backend extends Controller
      * Selectpage可显示的字段
      */
     protected $selectpageFields = '*';
-    /**
-     * 微信appid
-     */
-    protected $appid=null;
-    /**
-     * 微信secret
-     */
-    protected $secret = null;
 
     /**
      * 导入文件首行类型
@@ -107,41 +99,27 @@ class Backend extends Controller
      * 表示注释或字段名
      */
     protected $importHeadType = 'comment';
- 
-     
+
     /**
      * 引入后台控制器的traits
      */
+
+      /**
+     * 微信appid
+     */
+    protected $appid=null;
+    /**
+     * 微信secret
+     */
+    protected $secret = null;
     use \app\admin\library\traits\Backend;
 
     public function _initialize()
     {
-
         $this->appid = Config::get('wechat')['APPID'];
         $this->secret = Config::get('wechat')['APPSECRET'];
-        
-        //判断是否有token  Cache::get('access_token')
-    //    Cache::rm('access_token');die;
-        // $token  = Cache::get('Token');
 
- 
-        // if(!$token['access_token'] || $token['expires_in'] <= time()){  
-           
-        //     $rslt  = gets("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$this->appid}&secret={$this->secret}");
-        //     if($rslt){ 
-        //         $accessArr = array(
-        //             'access_token'=>$rslt['access_token'],
-        //             'expires_in'=>time()+$rslt['expires_in']-200
-        //         );
-        //         Cache::set('Token',$accessArr) ; 
-        //         $token = $rslt;
-        //     } 
-        // } 
- 
- 
-       
         $modulename = $this->request->module();
-         
         $controllername = strtolower($this->request->controller());
         $actionname = strtolower($this->request->action());
 
@@ -158,8 +136,6 @@ class Backend extends Controller
 
         $this->auth = Auth::instance();
 
-        
-
         // 设置当前请求的URI
         $this->auth->setRequestUri($path);
         // 检测是否需要验证登录
@@ -169,14 +145,14 @@ class Backend extends Controller
                 Hook::listen('admin_nologin', $this);
                 $url = Session::get('referer');
                 $url = $url ? $url : $this->request->url();
-                $this->redirect(('index/login'));
+                $this->error(__('Please login first'), url('index/login', ['url' => $url]));
             }
             // 判断是否需要验证权限
             if (!$this->auth->match($this->noNeedRight)) {
                 // 判断控制器和方法判断是否有对应权限
                 if (!$this->auth->check($path)) {
                     Hook::listen('admin_nopermission', $this);
-                    $this->error(__('You have no permission'), ''); 
+                    $this->error(__('You have no permission'), '');
                 }
             }
         }
@@ -245,7 +221,6 @@ class Backend extends Controller
         $this->assign('auth', $this->auth);
         //渲染管理员对象
         $this->assign('admin', Session::get('admin'));
-        // dump( Session::get('admin'));die;
     }
 
     /**
@@ -340,7 +315,7 @@ class Backend extends Controller
                 case 'FINDIN':
                 case 'FINDINSET':
                 case 'FIND_IN_SET':
-                    $where[] = "FIND_IN_SET('{$v}', " . ($this->relationSearch ? $k : '`' . str_replace('.', '`.`', $k) . '`') . ")";
+                    $where[] = "FIND_IN_SET('{$v}', " . ($relationSearch ? $k : '`' . str_replace('.', '`.`', $k) . '`') . ")";
                     break;
                 case 'IN':
                 case 'IN(...)':
@@ -506,7 +481,7 @@ class Backend extends Controller
         //这里一定要返回有list这个字段,total是可选的,如果total<=list的数量,则会隐藏分页按钮
         return json(['list' => $list, 'total' => $total]);
     }
-
+    
     //该公共方法获取和全局缓存js-sdk需要使用的access_token
     protected function getAccessToken(){
         //我们将access_token全局缓存在文件中,每次获取的时候,先判断是否过期,如果过期重新获取再全局缓存
@@ -544,4 +519,5 @@ class Backend extends Controller
             }
         }
     }
+
 }

@@ -31,7 +31,7 @@ class Frontend extends Controller
      * @var array
      */
     protected $noNeedRight = [];
-  
+
     /**
      * 权限Auth
      * @var Auth
@@ -40,13 +40,9 @@ class Frontend extends Controller
 
     public function _initialize()
     {
-        // session('MEMBER',null);
-        // cache('token',null);die;
         //移除HTML标签
         $this->request->filter('strip_tags');
-        $modulename = strtolower($this->request->module());
-
- 
+        $modulename = $this->request->module();
         $controllername = strtolower($this->request->controller());
         $actionname = strtolower($this->request->action());
 

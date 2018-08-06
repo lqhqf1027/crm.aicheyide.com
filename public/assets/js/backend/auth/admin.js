@@ -14,7 +14,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             var table = $("#table");
-      
+
             //在表格内容渲染完成后回调的事件
             table.on('post-body.bs.table', function (e, json) {
                 $("tbody tr[data-index]", this).each(function () {
@@ -44,7 +44,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                }
                             }
                         }}, 
-                        
                         {field: 'logintime', title: __('Login time'), formatter: Table.api.formatter.datetime, operate: 'RANGE', addclass: 'datetimerange', sortable: true},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: function (value, row, index) {
                                 if(row.id == Config.admin.id){
@@ -55,7 +54,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ]
             });
- 
+
             // 为表格绑定事件
             Table.api.bindevent(table);
         },
