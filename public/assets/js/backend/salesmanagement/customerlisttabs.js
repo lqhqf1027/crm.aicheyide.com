@@ -123,6 +123,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
 
+                optionns = {
+
+                    minDate: Date(), //支持string，Date，Moment
+                    maxDate: Date(),
+                };
+
                 // 批量加入放弃客户
 
                 $(document).on("click", ".btn-selected", function (e, value, row, index) {
@@ -170,6 +176,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     );
 
                 });
+
+
+                $(".datetimepicker").click(function () {
+                    alert(1);
+                })
+
 
                 newCustomer.on('load-success.bs.table', function (e, data) {
                     $('#badge_new_customer').text(data.total);
@@ -883,6 +895,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'salesmanagement/customerlisttabs/edits';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('反馈'), $(this).data() || {});
+
+
                     },
 
 
@@ -965,7 +979,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             btn: ['前往'],
                             btn1: function () {
 
-                                window.location.href="../backoffice/Custominfotabs/test1";
+                                window.location.href = "../backoffice/Custominfotabs/test1";
                                 // var planid = $("input[name=plan]:checked").val();
                                 // window.location.href="Orderlisttabs/index"
                                 // window.location.href="../order/Salesorder/index";
