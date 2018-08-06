@@ -1,7 +1,15 @@
-/runtime
-
-/runtime/log
-# /application/extra/addons.php
-# /public/assets/js/addons.js
-# /public/assets/js/addons.js
-
+/nbproject/
+/thinkphp/
+/vendor/
+/runtime/*
+/addons/*
+/application/admin/command/Install/*.lock
+/public/assets/libs/
+/public/assets/addons/*
+/public/uploads/*
+.idea
+composer.lock
+*.log
+*.css.map
+!.gitkeep
+.env
