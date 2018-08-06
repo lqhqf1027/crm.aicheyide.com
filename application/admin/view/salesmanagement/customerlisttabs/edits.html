@@ -25,10 +25,10 @@
         <label class="control-label col-xs-12 col-sm-2">下次跟进时间</label>
         <div class="col-xs-12 col-sm-8">
             {empty name="$default_date"}
-            <input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" value="{$row.followupdate}">
+            <input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" value="{$row.followupdate}" onblur="great()">
 
             {else /}
-            <input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" value="{$default_date}">
+            <input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" value="{$default_date}" onblur="great()">
 
             {/empty}
         </div>
@@ -50,5 +50,41 @@
         </div>
     </div>
 </form>
+<script>
 
+
+    function great() {
+
+        var now = new Date(getNowFormatDate()).getTime();
+
+        var choose = $("#c-followupdate").val();
+
+        choose = choose.getTime();
+alert(now);
+alert(choose);
+        if(choose<now){
+            layer.alert('您选择的时间无效，请重新选择', {
+                icon: 1,
+                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+            })
+
+            $("#c-followupdate").val("");
+        }
+    }
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+</script>
 
