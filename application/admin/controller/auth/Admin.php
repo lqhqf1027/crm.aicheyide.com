@@ -10,6 +10,7 @@ use fast\Tree;
 use app\common\model\Config as ConfigModel;
 use think\Exception;
 
+
 /**
  * 管理员管理
  *
@@ -19,6 +20,9 @@ use think\Exception;
 class Admin extends Backend
 {
 
+    /**
+     * @var \app\admin\model\Admin
+     */
     protected $model = null;
     protected $childrenGroupIds = [];
     protected $childrenAdminIds = [];
@@ -27,7 +31,7 @@ class Admin extends Backend
     {
         parent::_initialize();
         $this->model = model('Admin');
-        
+
         $this->childrenAdminIds = $this->auth->getChildrenAdminIds(true);
         $this->childrenGroupIds = $this->auth->getChildrenGroupIds(true);
 
@@ -97,6 +101,8 @@ class Admin extends Backend
     //    dump($groupdata);
         $this->view->assign('groupdata', $groupdata);
         $this->assignconfig("admin", ['id' => $this->auth->id]);
+        $this->view->assign('groupdata', $groupdata);
+        $this->assignconfig("admin", ['id' => $this->auth->id]);
     }
 
     /**
@@ -151,7 +157,7 @@ class Admin extends Backend
             }
             unset($v);
             $result = array("total" => $total, "rows" => $list);
-            // pr(collection($result)->toArray());die;
+
             return json($result);
         }
         return $this->view->fetch();

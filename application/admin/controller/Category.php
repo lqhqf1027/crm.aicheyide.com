@@ -15,6 +15,9 @@ use fast\Tree;
 class Category extends Backend
 {
 
+    /**
+     * @var \app\common\model\Category
+     */
     protected $model = null;
     protected $categorylist = [];
     protected $noNeedRight = ['selectpage'];
@@ -35,7 +38,6 @@ class Category extends Backend
         }
         $this->view->assign("flagList", $this->model->getFlagList());
         $this->view->assign("typeList", CategoryModel::getTypeList());
-         
         $this->view->assign("parentList", $categorydata);
     }
 

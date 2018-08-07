@@ -56,5 +56,4 @@ return [
     'This is a test mail content' => '这是一封来自FastAdmin校验邮件,用于校验邮件配置是否正常!',
     'This is a test mail'         => '这是一封来自FastAdmin的邮件',
     'Please input your email'     => '请输入测试接收者邮箱',
-    'Message'=>'消息推送配置'
 ];

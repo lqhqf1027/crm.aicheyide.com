@@ -29,37 +29,33 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     boundaryGap: false,
                     data: Orderdata.column
                 },
-                yAxis: {
-
-                },
+                yAxis: {},
                 grid: [{
-                        left: 'left',
-                        top: 'top',
-                        right: '10',
-                        bottom: 30
-                    }],
+                    left: 'left',
+                    top: 'top',
+                    right: '10',
+                    bottom: 30
+                }],
                 series: [{
-                        name: __('Sales'),
-                        type: 'line',
-                        smooth: true,
-                        areaStyle: {
-                            normal: {
-                            }
-                        },
-                        lineStyle: {
-                            normal: {
-                                width: 1.5
-                            }
-                        },
-                        data: Orderdata.paydata
+                    name: __('Sales'),
+                    type: 'line',
+                    smooth: true,
+                    areaStyle: {
+                        normal: {}
                     },
+                    lineStyle: {
+                        normal: {
+                            width: 1.5
+                        }
+                    },
+                    data: Orderdata.paydata
+                },
                     {
                         name: __('Orders'),
                         type: 'line',
                         smooth: true,
                         areaStyle: {
-                            normal: {
-                            }
+                            normal: {}
                         },
                         lineStyle: {
                             normal: {
@@ -74,58 +70,61 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             myChart.setOption(option);
 
             //动态添加数据，可以通过Ajax获取数据然后填充
-            // setInterval(function () {
-            //     Orderdata.column.push((new Date()).toLocaleTimeString().replace(/^\D*/, ''));
-            //     var amount = Math.floor(Math.random() * 200) + 20;
-            //     Orderdata.createdata.push(amount);
-            //     Orderdata.paydata.push(Math.floor(Math.random() * amount) + 1);
+            setInterval(function () {
+                Orderdata.column.push((new Date()).toLocaleTimeString().replace(/^\D*/, ''));
+                var amount = Math.floor(Math.random() * 200) + 20;
+                Orderdata.createdata.push(amount);
+                Orderdata.paydata.push(Math.floor(Math.random() * amount) + 1);
 
-            //     //按自己需求可以取消这个限制
-            //     if (Orderdata.column.length >= 20) {
-            //         //移除最开始的一条数据
-            //         Orderdata.column.shift();
-            //         Orderdata.paydata.shift();
-            //         Orderdata.createdata.shift();
-            //     }
-            //     myChart.setOption({
-            //         xAxis: {
-            //             data: Orderdata.column
-            //         },
-            //         series: [{
-            //                 name: __('Sales'),
-            //                 data: Orderdata.paydata
-            //             },
-            //             {
-            //                 name: __('Orders'),
-            //                 data: Orderdata.createdata
-            //             }]
-            //     });
-            // }, 2000);
+                //按自己需求可以取消这个限制
+                if (Orderdata.column.length >= 20) {
+                    //移除最开始的一条数据
+                    Orderdata.column.shift();
+                    Orderdata.paydata.shift();
+                    Orderdata.createdata.shift();
+                }
+                myChart.setOption({
+                    xAxis: {
+                        data: Orderdata.column
+                    },
+                    series: [{
+                        name: __('Sales'),
+                        data: Orderdata.paydata
+                    },
+                        {
+                            name: __('Orders'),
+                            data: Orderdata.createdata
+                        }]
+                });
+                if ($("#echart").width() != $("#echart canvas").width() && $("#echart canvas").width() < $("#echart").width()) {
+                    myChart.resize();
+                }
+            }, 2000);
             $(window).resize(function () {
                 myChart.resize();
             });
 
-            $(document).on("click", ".btn-checkversion", function(){
+            $(document).on("click", ".btn-checkversion", function () {
                 top.window.$("[data-toggle=checkupdate]").trigger("click");
             });
 
             //读取FastAdmin的更新信息和社区动态
-            // $.ajax({
-            //     url: Config.fastadmin.api_url + '/news/index',
-            //     type: 'post',
-            //     dataType: 'jsonp',
-            //     success: function (ret) {
-            //         $("#news-list").html(Template("newstpl", {news: ret.newslist}));
-            //     }
-            // });
-            // $.ajax({
-            //     url: Config.fastadmin.api_url + '/forum/discussion',
-            //     type: 'post',
-            //     dataType: 'jsonp',
-            //     success: function (ret) {
-            //         $("#discussion-list").html(Template("discussiontpl", {news: ret.discussionlist}));
-            //     }
-            // });
+            $.ajax({
+                url: Config.fastadmin.api_url + '/news/index',
+                type: 'post',
+                dataType: 'jsonp',
+                success: function (ret) {
+                    $("#news-list").html(Template("newstpl", {news: ret.newslist}));
+                }
+            });
+            $.ajax({
+                url: Config.fastadmin.api_url + '/forum/discussion',
+                type: 'post',
+                dataType: 'jsonp',
+                success: function (ret) {
+                    $("#discussion-list").html(Template("discussiontpl", {news: ret.discussionlist}));
+                }
+            });
         }
     };
 

@@ -16,9 +16,12 @@ use think\Exception;
 class Config extends Backend
 {
 
+    /**
+     * @var \app\common\model\Config
+     */
     protected $model = null;
     protected $noNeedRight = ['check'];
-    public $message;
+
     public function _initialize()
     {
         parent::_initialize();
@@ -32,7 +35,6 @@ class Config extends Backend
     {
         $siteList = [];
         $groupList = ConfigModel::getGroupList();
-      
         foreach ($groupList as $k => $v) {
             $siteList[$k]['name'] = $k;
             $siteList[$k]['title'] = $v;
@@ -59,11 +61,8 @@ class Config extends Backend
         $this->view->assign('siteList', $siteList);
         $this->view->assign('typeList', ConfigModel::getTypeList());
         $this->view->assign('groupList', ConfigModel::getGroupList());
-       
-        
         return $this->view->fetch();
     }
-   
 
     /**
      * 添加

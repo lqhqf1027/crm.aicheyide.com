@@ -18,7 +18,7 @@ return [
     // 应用命名空间
     'app_namespace'          => 'app',
     // 应用调试模式
-    'app_debug'              => true,
+    'app_debug'              => Env::get('app.debug', true),
     // 应用Trace
     'app_trace'              => Env::get('app.trace', false),
     // 应用模式状态
@@ -55,7 +55,7 @@ return [
     // | 模块设置
     // +----------------------------------------------------------------------
     // 默认模块名
-    'default_module'         => 'admin',
+    'default_module'         => 'index',
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名
@@ -139,9 +139,6 @@ return [
         '__ROOT__'   => '',
         '__CDN__'    => '',
     ],
-    //关闭缓存
-    // 'No_CACHE_RUNTIME'=>true,
-
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'dispatch_jump.tpl',
     'dispatch_error_tmpl'    => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'dispatch_jump.tpl',
@@ -275,7 +272,7 @@ return [
         //自动检测更新
         'checkupdate'         => false,
         //版本号
-        'version'             => '1.0.0.20180618_beta',
+        'version'             => '1.0.0.20180806_beta',
         //API接口地址
         'api_url'             => 'https://api.fastadmin.net',
     ],
@@ -283,5 +280,4 @@ return [
         'APPID'=>'wx1652e82587881bf1',
         'APPSECRET'=>'f32dc3059381d77379d80c5e6ee12a38'
     ]
-
 ];
