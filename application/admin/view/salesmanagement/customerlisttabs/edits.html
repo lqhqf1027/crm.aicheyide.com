@@ -55,20 +55,22 @@
 
     function great() {
 
+
+
         var now = new Date(getNowFormatDate()).getTime();
 
         var choose = $("#c-followupdate").val();
 
-        choose = choose.getTime();
-alert(now);
-alert(choose);
+        choose = new Date(choose).getTime();
+
+
         if(choose<now){
+            // 您选择的时间无效，请重新选择
             layer.alert('您选择的时间无效，请重新选择', {
                 icon: 1,
                 skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
             })
 
-            $("#c-followupdate").val("");
         }
     }
     function getNowFormatDate() {
