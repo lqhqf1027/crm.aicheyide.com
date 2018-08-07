@@ -322,17 +322,17 @@
     },
     {
         "name": "karsonzhang/fastadmin-addons",
-        "version": "1.1.4",
-        "version_normalized": "1.1.4.0",
+        "version": "1.1.6",
+        "version_normalized": "1.1.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/karsonzhang/fastadmin-addons.git",
-            "reference": "dc228912747efbba7a0cebd3ef15f41b22940d60"
+            "reference": "7841fa8ed6f9f73c631896c37ea42e491eb9b2cc"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/karsonzhang/fastadmin-addons/zipball/dc228912747efbba7a0cebd3ef15f41b22940d60",
-            "reference": "dc228912747efbba7a0cebd3ef15f41b22940d60",
+            "url": "https://api.github.com/repos/karsonzhang/fastadmin-addons/zipball/7841fa8ed6f9f73c631896c37ea42e491eb9b2cc",
+            "reference": "7841fa8ed6f9f73c631896c37ea42e491eb9b2cc",
             "shasum": ""
         },
         "require": {
@@ -340,7 +340,7 @@
             "topthink/think-helper": ">=1.0.4",
             "topthink/think-installer": ">=1.0.10"
         },
-        "time": "2018-04-23T08:43:04+00:00",
+        "time": "2018-07-19T01:38:51+00:00",
         "type": "library",
         "extra": {
             "think-config": {
@@ -600,17 +600,17 @@
     },
     {
         "name": "overtrue/wechat",
-        "version": "3.3.27",
-        "version_normalized": "3.3.27.0",
+        "version": "3.3.29",
+        "version_normalized": "3.3.29.0",
         "source": {
             "type": "git",
             "url": "https://github.com/overtrue/wechat.git",
-            "reference": "7e4f570b7717e47cc8a77aaf84941fe5e2af1e9b"
+            "reference": "86e505a3aa144986fe22b96ec9558c65e48f4fff"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/overtrue/wechat/zipball/7e4f570b7717e47cc8a77aaf84941fe5e2af1e9b",
-            "reference": "7e4f570b7717e47cc8a77aaf84941fe5e2af1e9b",
+            "url": "https://api.github.com/repos/overtrue/wechat/zipball/86e505a3aa144986fe22b96ec9558c65e48f4fff",
+            "reference": "86e505a3aa144986fe22b96ec9558c65e48f4fff",
             "shasum": ""
         },
         "require": {
@@ -629,7 +629,7 @@
             "overtrue/phplint": "dev-master",
             "phpunit/phpunit": "~4.0"
         },
-        "time": "2018-07-04T07:16:11+00:00",
+        "time": "2018-07-31T09:17:27+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -660,36 +660,32 @@
     },
     {
         "name": "paragonie/random_compat",
-        "version": "v2.0.17",
-        "version_normalized": "2.0.17.0",
+        "version": "v9.99.99",
+        "version_normalized": "9.99.99.0",
         "source": {
             "type": "git",
             "url": "https://github.com/paragonie/random_compat.git",
-            "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d"
+            "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/29af24f25bab834fcbb38ad2a69fa93b867e070d",
-            "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d",
+            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+            "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.2.0"
+            "php": "^7"
         },
         "require-dev": {
-            "phpunit/phpunit": "4.*|5.*"
+            "phpunit/phpunit": "4.*|5.*",
+            "vimeo/psalm": "^1"
         },
         "suggest": {
             "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
         },
-        "time": "2018-07-04T16:31:37+00:00",
+        "time": "2018-07-02T15:55:56+00:00",
         "type": "library",
         "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "lib/random.php"
-            ]
-        },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
@@ -1054,17 +1050,17 @@
     },
     {
         "name": "symfony/http-foundation",
-        "version": "v3.4.12",
-        "version_normalized": "3.4.12.0",
+        "version": "v3.4.14",
+        "version_normalized": "3.4.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/http-foundation.git",
-            "reference": "1c28679fcbb0d9b35e4fd49fbb74d2ca4ea17bce"
+            "reference": "19a3267828046a2a4a05e3dc2954bbd2e0ad9fa6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/1c28679fcbb0d9b35e4fd49fbb74d2ca4ea17bce",
-            "reference": "1c28679fcbb0d9b35e4fd49fbb74d2ca4ea17bce",
+            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/19a3267828046a2a4a05e3dc2954bbd2e0ad9fa6",
+            "reference": "19a3267828046a2a4a05e3dc2954bbd2e0ad9fa6",
             "shasum": ""
         },
         "require": {
@@ -1075,7 +1071,7 @@
         "require-dev": {
             "symfony/expression-language": "~2.8|~3.0|~4.0"
         },
-        "time": "2018-06-21T11:10:19+00:00",
+        "time": "2018-08-01T14:04:26+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1110,23 +1106,23 @@
     },
     {
         "name": "symfony/options-resolver",
-        "version": "v3.4.12",
-        "version_normalized": "3.4.12.0",
+        "version": "v3.4.14",
+        "version_normalized": "3.4.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/options-resolver.git",
-            "reference": "cc5e98ed91688a22a7162a8800096356f9076b1d"
+            "reference": "6debc476953a45969ab39afe8dee0b825f356dc7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/options-resolver/zipball/cc5e98ed91688a22a7162a8800096356f9076b1d",
-            "reference": "cc5e98ed91688a22a7162a8800096356f9076b1d",
+            "url": "https://api.github.com/repos/symfony/options-resolver/zipball/6debc476953a45969ab39afe8dee0b825f356dc7",
+            "reference": "6debc476953a45969ab39afe8dee0b825f356dc7",
             "shasum": ""
         },
         "require": {
             "php": "^5.5.9|>=7.0.8"
         },
-        "time": "2018-05-30T04:26:49+00:00",
+        "time": "2018-07-26T08:45:46+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1166,17 +1162,17 @@
     },
     {
         "name": "symfony/polyfill-mbstring",
-        "version": "v1.8.0",
-        "version_normalized": "1.8.0.0",
+        "version": "v1.9.0",
+        "version_normalized": "1.9.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/polyfill-mbstring.git",
-            "reference": "3296adf6a6454a050679cde90f95350ad604b171"
+            "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/3296adf6a6454a050679cde90f95350ad604b171",
-            "reference": "3296adf6a6454a050679cde90f95350ad604b171",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d0cd638f4634c16d8df4508e847f14e9e43168b8",
+            "reference": "d0cd638f4634c16d8df4508e847f14e9e43168b8",
             "shasum": ""
         },
         "require": {
@@ -1185,11 +1181,11 @@
         "suggest": {
             "ext-mbstring": "For best performance"
         },
-        "time": "2018-04-26T10:06:28+00:00",
+        "time": "2018-08-06T14:22:27+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.8-dev"
+                "dev-master": "1.9-dev"
             }
         },
         "installation-source": "dist",
@@ -1227,28 +1223,28 @@
     },
     {
         "name": "symfony/polyfill-php70",
-        "version": "v1.8.0",
-        "version_normalized": "1.8.0.0",
+        "version": "v1.9.0",
+        "version_normalized": "1.9.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/polyfill-php70.git",
-            "reference": "77454693d8f10dd23bb24955cffd2d82db1007a6"
+            "reference": "1e24b0c4a56d55aaf368763a06c6d1c7d3194934"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/77454693d8f10dd23bb24955cffd2d82db1007a6",
-            "reference": "77454693d8f10dd23bb24955cffd2d82db1007a6",
+            "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/1e24b0c4a56d55aaf368763a06c6d1c7d3194934",
+            "reference": "1e24b0c4a56d55aaf368763a06c6d1c7d3194934",
             "shasum": ""
         },
         "require": {
-            "paragonie/random_compat": "~1.0|~2.0",
+            "paragonie/random_compat": "~1.0|~2.0|~9.99",
             "php": ">=5.3.3"
         },
-        "time": "2018-04-26T10:06:28+00:00",
+        "time": "2018-08-06T14:22:27+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.8-dev"
+                "dev-master": "1.9-dev"
             }
         },
         "installation-source": "dist",
