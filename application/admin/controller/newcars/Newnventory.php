@@ -39,6 +39,15 @@ class Newnventory extends Backend
      */
     public function index()
     {
+
+//        $list = $this->model
+//            ->with(['models'])
+//
+//            ->where("status",1)
+//
+//            ->select();
+//        die();
+
         //当前是否为关联查询
         $this->relationSearch = true;
         //设置过滤方法
@@ -52,12 +61,14 @@ class Newnventory extends Backend
             $total = $this->model
                 ->with(['models'])
                 ->where($where)
+                ->where("statuss",1)
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
                 ->with(['models'])
                 ->where($where)
+                ->where("statuss",1)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -95,10 +106,6 @@ class Newnventory extends Backend
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
-                if (empty($params['sales_order_id'])) {
-                    $params['sales_order_id'] = 1;
-                }
-
 
                 try {
                     //是否采用模型验证
@@ -139,7 +146,7 @@ class Newnventory extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-pr($params);die();
+
             if ($params) {
                 try {
                     //是否采用模型验证
