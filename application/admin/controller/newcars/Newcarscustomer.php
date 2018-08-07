@@ -19,7 +19,7 @@ class Newcarscustomer extends Backend
      */
     protected $model = null;
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
-    protected  $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
+    protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
@@ -42,8 +42,11 @@ class Newcarscustomer extends Backend
      */
     public function index()
     {
-        $total = Db::view("order_view")->count();
-        pr($total);die();
+//        $total = Db::view("order_view")->count();
+//
+//        $list = Db::view("order_view")->select();
+//        pr($list);
+//        pr($total);die();
 //        $list = Db::view("order")
 //
 //            ->select();
@@ -58,78 +61,36 @@ class Newcarscustomer extends Backend
     public function prepare_lift_car()
     {
 
-        if($this->request->isAjax()){
-            $total = Db::view("order_view")->count();
+        if ($this->request->isAjax()) {
+            $total = Db::view("order_view")
+                ->where("review_the_data","for_the_car")
+                ->count();
+            $list = Db::view("order_view")
+                ->where("review_the_data","for_the_car")
+                ->select();
+
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
         }
-//        //当前是否为关联查询
-////        $this->relationSearch = true;
-//
-//
-//        //设置过滤方法
-//        $this->request->filter(['strip_tags']);
-//        if ($this->request->isAjax()) {
-//            //如果发送的来源是Selectpage，则转发到Selectpage
-//            if ($this->request->request('keyField')) {
-//                return $this->selectpage();
-//            }
-//            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-//
-//            $total = $this->model
-//                ->where($where)
-//                ->order($sort, $order)
-//                ->count();
-//
-////            $list = $this->model
-////                ->where($where)
-////                ->order($sort, $order)
-////                ->limit($offset, $limit)
-////                ->select();
-//
-//            $list = Db::view("order")
-//                ->where($where)
-//                ->order($sort, $order)
-//                ->limit($offset, $limit)
-//                ->select();
-//
-////            $list = collection($list)->toArray();
-//            $result = array("total" => $total, "rows" => $list);
-//
-//            return json($result);
-//        }
-//        return $this->view->fetch();
+        return 1;
     }
 
     //已提车
-//    public function already_lift_car()
-//    {
-//        //设置过滤方法
-//        $this->request->filter(['strip_tags']);
-//        if ($this->request->isAjax()) {
-//            //如果发送的来源是Selectpage，则转发到Selectpage
-//            if ($this->request->request('keyField')) {
-//                return $this->selectpage();
-//            }
-//            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-//            $total = $this->model
-//                ->where($where)
-//                ->where("review_the_data","for_the_car")
-//                ->order($sort, $order)
-//                ->count();
-//
-//            $list = $this->model
-//                ->where($where)
-//                ->where("review_the_data","for_the_car")
-//                ->order($sort, $order)
-//                ->limit($offset, $limit)
-//                ->select();
-//
-//            $list = collection($list)->toArray();
-//            $result = array("total" => $total, "rows" => $list);
-//
-//            return json($result);
-//        }
-////        $this->assignconfig('num',1);
-//
-//        return $this->view->fetch();
-//    }
+    public function already_lift_car()
+    {
+        if ($this->request->isAjax()) {
+            $total = Db::view("order_view")
+                ->where("review_the_data","the_car")
+                ->count();
+            $list = Db::view("order_view")
+                ->where("review_the_data","the_car")
+                ->select();
+
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+        return 1;
+    }
 }
