@@ -42,6 +42,8 @@ class Newcarscustomer extends Backend
      */
     public function index()
     {
+        $total = Db::view("order_view")->count();
+        pr($total);die();
 //        $list = Db::view("order")
 //
 //            ->select();
@@ -55,42 +57,46 @@ class Newcarscustomer extends Backend
     //待提车
     public function prepare_lift_car()
     {
-        //当前是否为关联查询
-//        $this->relationSearch = true;
 
-
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-
-            $total = $this->model
-                ->where($where)
-                ->order($sort, $order)
-                ->count();
-
-//            $list = $this->model
+        if($this->request->isAjax()){
+            $total = Db::view("order_view")->count();
+        }
+//        //当前是否为关联查询
+////        $this->relationSearch = true;
+//
+//
+//        //设置过滤方法
+//        $this->request->filter(['strip_tags']);
+//        if ($this->request->isAjax()) {
+//            //如果发送的来源是Selectpage，则转发到Selectpage
+//            if ($this->request->request('keyField')) {
+//                return $this->selectpage();
+//            }
+//            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+//
+//            $total = $this->model
+//                ->where($where)
+//                ->order($sort, $order)
+//                ->count();
+//
+////            $list = $this->model
+////                ->where($where)
+////                ->order($sort, $order)
+////                ->limit($offset, $limit)
+////                ->select();
+//
+//            $list = Db::view("order")
 //                ->where($where)
 //                ->order($sort, $order)
 //                ->limit($offset, $limit)
 //                ->select();
-
-            $list = Db::view("order")
-                ->where($where)
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-
-//            $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
-
-            return json($result);
-        }
-        return $this->view->fetch();
+//
+////            $list = collection($list)->toArray();
+//            $result = array("total" => $total, "rows" => $list);
+//
+//            return json($result);
+//        }
+//        return $this->view->fetch();
     }
 
     //已提车
