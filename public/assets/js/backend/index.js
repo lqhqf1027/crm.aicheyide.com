@@ -60,55 +60,55 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
             });
 
             //读取FastAdmin的更新信息
-            $.ajax({
-                url: Config.fastadmin.api_url + '/news/index',
-                type: 'post',
-                dataType: 'jsonp',
-                success: function (ret) {
-                    $(".notifications-menu > a span").text(ret.new > 0 ? ret.new : '');
-                    $(".notifications-menu .footer a").attr("href", ret.url);
-                    $.each(ret.newslist, function (i, j) {
-                        var item = '<li><a href="' + j.url + '" target="_blank"><i class="' + j.icon + '"></i> ' + j.title + '</a></li>';
-                        $(item).appendTo($(".notifications-menu ul.menu"));
-                    });
-                }
-            });
+            // $.ajax({
+            //     url: Config.fastadmin.api_url + '/news/index',
+            //     type: 'post',
+            //     dataType: 'jsonp',
+            //     success: function (ret) {
+            //         $(".notifications-menu > a span").text(ret.new > 0 ? ret.new : '');
+            //         $(".notifications-menu .footer a").attr("href", ret.url);
+            //         $.each(ret.newslist, function (i, j) {
+            //             var item = '<li><a href="' + j.url + '" target="_blank"><i class="' + j.icon + '"></i> ' + j.title + '</a></li>';
+            //             $(item).appendTo($(".notifications-menu ul.menu"));
+            //         });
+            //     }
+            // });
 
             //读取首次登录推荐插件列表
-            if (localStorage.getItem("fastep") == "installed") {
-                $.ajax({
-                    url: Config.fastadmin.api_url + '/addon/recommend',
-                    type: 'post',
-                    dataType: 'jsonp',
-                    success: function (ret) {
-                        require(['template'], function (Template) {
-                            var install = function (name, title) {
-                                Fast.api.ajax({
-                                    url: 'addon/install',
-                                    data: {name: name, faversion: Config.fastadmin.version}
-                                }, function (data, ret) {
-                                    Fast.api.refreshmenu();
-                                });
-                            };
-                            $(document).on('click', '.btn-install', function () {
-                                $(this).prop("disabled", true).addClass("disabled");
-                                $("input[name=addon]:checked").each(function () {
-                                    install($(this).data("name"));
-                                });
-                                return false;
-                            });
-                            $(document).on('click', '.btn-notnow', function () {
-                                Layer.closeAll();
-                            });
-                            Layer.open({
-                                type: 1, skin: 'layui-layer-page', area: ["860px", "620px"], title: '',
-                                content: Template.render(ret.tpl, {addonlist: ret.rows})
-                            });
-                            localStorage.setItem("fastep", "dashboard");
-                        });
-                    }
-                });
-            }
+            // if (localStorage.getItem("fastep") == "installed") {
+            //     $.ajax({
+            //         url: Config.fastadmin.api_url + '/addon/recommend',
+            //         type: 'post',
+            //         dataType: 'jsonp',
+            //         success: function (ret) {
+            //             require(['template'], function (Template) {
+            //                 var install = function (name, title) {
+            //                     Fast.api.ajax({
+            //                         url: 'addon/install',
+            //                         data: {name: name, faversion: Config.fastadmin.version}
+            //                     }, function (data, ret) {
+            //                         Fast.api.refreshmenu();
+            //                     });
+            //                 };
+            //                 $(document).on('click', '.btn-install', function () {
+            //                     $(this).prop("disabled", true).addClass("disabled");
+            //                     $("input[name=addon]:checked").each(function () {
+            //                         install($(this).data("name"));
+            //                     });
+            //                     return false;
+            //                 });
+            //                 $(document).on('click', '.btn-notnow', function () {
+            //                     Layer.closeAll();
+            //                 });
+            //                 Layer.open({
+            //                     type: 1, skin: 'layui-layer-page', area: ["860px", "620px"], title: '',
+            //                     content: Template.render(ret.tpl, {addonlist: ret.rows})
+            //                 });
+            //                 localStorage.setItem("fastep", "dashboard");
+            //             });
+            //         }
+            //     });
+            // }
 
             //版本检测
             var checkupdate = function (ignoreversion, tips) {
