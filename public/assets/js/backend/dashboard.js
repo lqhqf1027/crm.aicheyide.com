@@ -109,22 +109,22 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             });
 
             //读取FastAdmin的更新信息和社区动态
-            $.ajax({
-                url: Config.fastadmin.api_url + '/news/index',
-                type: 'post',
-                dataType: 'jsonp',
-                success: function (ret) {
-                    $("#news-list").html(Template("newstpl", {news: ret.newslist}));
-                }
-            });
-            $.ajax({
-                url: Config.fastadmin.api_url + '/forum/discussion',
-                type: 'post',
-                dataType: 'jsonp',
-                success: function (ret) {
-                    $("#discussion-list").html(Template("discussiontpl", {news: ret.discussionlist}));
-                }
-            });
+            // $.ajax({
+            //     url: Config.fastadmin.api_url + '/news/index',
+            //     type: 'post',
+            //     dataType: 'jsonp',
+            //     success: function (ret) {
+            //         $("#news-list").html(Template("newstpl", {news: ret.newslist}));
+            //     }
+            // });
+            // $.ajax({
+            //     url: Config.fastadmin.api_url + '/forum/discussion',
+            //     type: 'post',
+            //     dataType: 'jsonp',
+            //     success: function (ret) {
+            //         $("#discussion-list").html(Template("discussiontpl", {news: ret.discussionlist}));
+            //     }
+            // });
         }
     };
 
