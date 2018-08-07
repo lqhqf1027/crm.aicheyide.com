@@ -16,7 +16,7 @@
                 <option disabled>{$vo.name}</option>
                 {volist name="vo.models" id="model_vo"}
 
-                {if condition="$model_vo.brand_id eq $validate_brand_id"}
+                {if condition="$model_vo.models_id eq $validate_models_id"}
                 <option value="{$model_vo.models_id}" selected>{$model_vo.models_name}</option>
                 {else/}
                 <option value="{$model_vo.models_id}">{$model_vo.models_name}</option>
@@ -56,14 +56,18 @@
             </select> -->
             <div class="radio">
                 {foreach name="carprocessList" item="vo"}
-                <label for="row[carprocess]-{$key}"><input id="row[carprocess]-{$key}" name="row[carprocess]"
-                                                           type="radio" value="{$key}" {in name="key" value="1"
-                                                           }checked{/in} /> {$vo}</label>
+                <label for="row[carprocess]-{$key}">
+                    {if condition="$key==$row['carprocess']"}
+                    <input id="row[carprocess]-{$key}" name="row[carprocess]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[carprocess]-{$key}" name="row[carprocess]" type="radio" value="{$key}"/>
+                    {/if}
+                     {$vo}</label>
                 {/foreach}
             </div>
-
         </div>
     </div>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Pledge')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -75,8 +79,12 @@
             </select> -->
             <div class="radio">
                 {foreach name="pledgeList" item="vo"}
-                <label for="row[pledge]-{$key}"><input id="row[pledge]-{$key}" name="row[pledge]" type="radio"
-                                                       value="{$key}" {in name="key" value="1" }checked{/in} />
+                <label for="row[pledge]-{$key}">
+                    {if condition="$key==$row['carprocess']"}
+                    <input id="row[pledge]-{$key}" name="row[pledge]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[pledge]-{$key}" name="row[pledge]" type="radio" value="{$key}"/>
+                    {/if}
                     {$vo}</label>
                 {/foreach}
             </div>
