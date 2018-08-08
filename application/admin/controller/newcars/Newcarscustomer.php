@@ -4,6 +4,7 @@ namespace app\admin\controller\newcars;
 
 use app\common\controller\Backend;
 use think\Db;
+use think\Config;
 
 /**
  * 新车客户信息
@@ -44,7 +45,7 @@ class Newcarscustomer extends Backend
     {
 
         $this->loadlang('newcars/newcarscustomer');
-
+        $this->loadlang('order/salesorder');
         return $this->view->fetch();
     }
 
@@ -55,11 +56,11 @@ class Newcarscustomer extends Backend
         if ($this->request->isAjax()) {
             $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
                 ->where("review_the_data", "for_the_car")
-                ->where("car_new_inventory_id",null)
+                ->where("car_new_inventory_id", null)
                 ->count();
             $list = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
                 ->where("review_the_data", "for_the_car")
-                ->where("car_new_inventory_id",null)
+                ->where("car_new_inventory_id", null)
                 ->select();
 
             $result = array("total" => $total, "rows" => $list);
@@ -75,11 +76,11 @@ class Newcarscustomer extends Backend
         if ($this->request->isAjax()) {
             $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop,car_new_inventory_id")
                 ->where("review_the_data", "the_car")
-                ->where("car_new_inventory_id","not null")
+                ->where("car_new_inventory_id", "not null")
                 ->count();
             $list = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop,car_new_inventory_id")
                 ->where("review_the_data", "the_car")
-                ->where("car_new_inventory_id","not null")
+                ->where("car_new_inventory_id", "not null")
                 ->select();
 
             $result = array("total" => $total, "rows" => $list);
@@ -94,22 +95,22 @@ class Newcarscustomer extends Backend
     {
         if ($this->request->isPost()) {
 
-            $id= input("post.id");
+            $id = input("post.id");
 
             Db::name("sales_order")
-            ->where("id",$ids)
-            ->update([
-                'car_new_inventory_id'=>$id,
-                'review_the_data'=>"the_car",
-                'delivery_datetime'=>time()
-            ]);
+                ->where("id", $ids)
+                ->update([
+                    'car_new_inventory_id' => $id,
+                    'review_the_data' => "the_car",
+                    'delivery_datetime' => time()
+                ]);
 
             Db::name("car_new_inventory")
-            ->where("id",$id)
-            ->setField("statuss",0);
+                ->where("id", $id)
+                ->setField("statuss", 0);
 
 
-            $this->success('','',$ids);
+            $this->success('', '', $ids);
         }
         $stock = Db::name("car_new_inventory")
             ->alias("i")
@@ -119,26 +120,341 @@ class Newcarscustomer extends Backend
             ->select();
 
         $this->view->assign([
-            'stock'=>$stock
+            'stock' => $stock
         ]);
 
         return $this->view->fetch();
     }
 
-    //查看订单表所有信息
-    public function showOrder()
+    /**查看详细资料 */
+    public function show_order($ids = null)
     {
-        echo 1;
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        $row['plan'] = Db::name('sales_order')->alias('a')
+            ->join('plan_acar b', 'a.plan_acar_name = b.id')
+            ->join('models c', 'b.models_id=c.id');
 
+
+        $sql = Db::name('sales_order')->alias('a')
+            ->join('plan_acar b', 'b.id=a.plan_acar_name')
+            ->join('financial_platform c', 'b.financial_platform_id=c.id')
+            ->join('models d', 'b.models_id=d.id')
+            ->join('brand e', 'e.id=d.brand_id')
+            ->field('d.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
+            ->where('a.id', $row['id'])
+            ->select();
+
+
+        $newRes = $sql[0]['models_name'] . '【首付' . $sql[0]['payment'] . '，' . '月供' . $sql[0]['monthly'] . '，' . 'GPS ' . $sql[0]['gps'] . '，' . '尾款 ' . $sql[0]['tail_section'] . '】' . '---' . $sql[0]['financial_platform_name'];
+
+
+        $this->view->assign('newRes', $newRes);
+
+        //定金合同（多图）
+        $deposit_contractimages = $row['deposit_contractimages'];
+        $deposit_contractimage = explode(',', $deposit_contractimages);
+
+        $deposit_contractimages_arr = [];
+        foreach ($deposit_contractimage as $k => $v) {
+            $deposit_contractimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //定金收据上传
+        $deposit_receiptimages = $row['deposit_receiptimages'];
+        $deposit_receiptimage = explode(',', $deposit_receiptimages);
+
+        $deposit_receiptimages_arr = [];
+        foreach ($deposit_receiptimage as $k => $v) {
+            $deposit_receiptimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //身份证正反面（多图）
+        $id_cardimages = $row['id_cardimages'];
+        $id_cardimage = explode(',', $id_cardimages);
+
+        $id_cardimages_arr = [];
+        foreach ($id_cardimage as $k => $v) {
+            $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //驾照正副页（多图）
+        $drivers_licenseimages = $row['drivers_licenseimages'];
+        $drivers_licenseimage = explode(',', $drivers_licenseimages);
+
+        $drivers_licenseimages_arr = [];
+        foreach ($drivers_licenseimage as $k => $v) {
+            $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //户口簿【首页、主人页、本人页】
+        $residence_bookletimages = $row['residence_bookletimages'];
+        $residence_bookletimage = explode(',', $residence_bookletimages);
+
+        $residence_bookletimages_arr = [];
+        foreach ($residence_bookletimage as $k => $v) {
+            $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //住房合同/房产证（多图）
+        $housingimages = $row['housingimages'];
+        $housingimage = explode(',', $housingimages);
+
+        $housingimages_arr = [];
+        foreach ($housingimage as $k => $v) {
+            $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //银行卡照（可多图）
+        $bank_cardimages = $row['bank_cardimages'];
+        $bank_cardimage = explode(',', $bank_cardimages);
+
+        $bank_cardimages_arr = [];
+        foreach ($bank_cardimage as $k => $v) {
+            $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //申请表（多图）
+        $application_formimages = $row['application_formimages'];
+        $application_formimage = explode(',', $application_formimages);
+
+        $application_formimages_arr = [];
+        foreach ($application_formimage as $k => $v) {
+            $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //通话清单（文件上传）
+        $call_listfiles = $row['call_listfiles'];
+        $call_listfile = explode(',', $call_listfiles);
+
+        $call_listfiles_arr = [];
+        foreach ($call_listfile as $k => $v) {
+            $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //征信报告（多图）
+        $credit_reportimages = $row['credit_reportimages'];
+        $credit_reportimage = explode(',', $credit_reportimages);
+
+        $credit_reportimages_arr = [];
+        foreach ($credit_reportimage as $k => $v) {
+            $credit_reportimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //担保人身份证正反面（多图）
+        $guarantee_id_cardimages = $row['guarantee_id_cardimages'];
+        $guarantee_id_cardimage = explode(',', $guarantee_id_cardimages);
+
+        $guarantee_id_cardimages_arr = [];
+        foreach ($guarantee_id_cardimage as $k => $v) {
+            $guarantee_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //担保协议（多图）
+        $guarantee_agreementimages = $row['guarantee_agreementimages'];
+        $guarantee_agreementimage = explode(',', $guarantee_agreementimages);
+
+        $guarantee_agreementimages_arr = [];
+        foreach ($guarantee_agreementimage as $k => $v) {
+            $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+
+
+
+        $this->view->assign(
+            array(
+                'deposit_contractimages_arr' => $deposit_contractimages_arr,
+                'deposit_receiptimages_arr' => $deposit_receiptimages_arr,
+                'id_cardimages_arr' => $id_cardimages_arr,
+                'drivers_licenseimages_arr' => $drivers_licenseimages_arr,
+                'residence_bookletimages_arr' => $residence_bookletimages_arr,
+                'housingimages_arr' => $housingimages_arr,
+                'bank_cardimages_arr' => $bank_cardimages_arr,
+                'application_formimages_arr' => $application_formimages_arr,
+                'call_listfiles_arr' => $call_listfiles_arr,
+                'credit_reportimages_arr' => $credit_reportimages_arr,
+                'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
+                'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
+
+            )
+        );
+        $this->view->assign("row", $row);
         return $this->view->fetch();
-
     }
 
     //查看订单表和库存表所有信息
-    public function showOrderAndStock()
+    public function show_order_and_stock($ids = null)
     {
-        echo 1;
-        return $this->view->fetch();
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        $row['plan'] = Db::name('sales_order')->alias('a')
+            ->join('plan_acar b', 'a.plan_acar_name = b.id')
+            ->join('models c', 'b.models_id=c.id');
 
+
+        $sql = Db::name('sales_order')->alias('a')
+            ->join('plan_acar b', 'b.id=a.plan_acar_name')
+            ->join('financial_platform c', 'b.financial_platform_id=c.id')
+            ->join('models d', 'b.models_id=d.id')
+            ->join('brand e', 'e.id=d.brand_id')
+            ->field('d.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
+            ->where('a.id', $row['id'])
+            ->select();
+
+
+        $newRes = $sql[0]['models_name'] . '【首付' . $sql[0]['payment'] . '，' . '月供' . $sql[0]['monthly'] . '，' . 'GPS ' . $sql[0]['gps'] . '，' . '尾款 ' . $sql[0]['tail_section'] . '】' . '---' . $sql[0]['financial_platform_name'];
+
+
+        $this->view->assign('newRes', $newRes);
+
+        //定金合同（多图）
+        $deposit_contractimages = $row['deposit_contractimages'];
+        $deposit_contractimage = explode(',', $deposit_contractimages);
+
+        $deposit_contractimages_arr = [];
+        foreach ($deposit_contractimage as $k => $v) {
+            $deposit_contractimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //定金收据上传
+        $deposit_receiptimages = $row['deposit_receiptimages'];
+        $deposit_receiptimage = explode(',', $deposit_receiptimages);
+
+        $deposit_receiptimages_arr = [];
+        foreach ($deposit_receiptimage as $k => $v) {
+            $deposit_receiptimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //身份证正反面（多图）
+        $id_cardimages = $row['id_cardimages'];
+        $id_cardimage = explode(',', $id_cardimages);
+
+        $id_cardimages_arr = [];
+        foreach ($id_cardimage as $k => $v) {
+            $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //驾照正副页（多图）
+        $drivers_licenseimages = $row['drivers_licenseimages'];
+        $drivers_licenseimage = explode(',', $drivers_licenseimages);
+
+        $drivers_licenseimages_arr = [];
+        foreach ($drivers_licenseimage as $k => $v) {
+            $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //户口簿【首页、主人页、本人页】
+        $residence_bookletimages = $row['residence_bookletimages'];
+        $residence_bookletimage = explode(',', $residence_bookletimages);
+
+        $residence_bookletimages_arr = [];
+        foreach ($residence_bookletimage as $k => $v) {
+            $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //住房合同/房产证（多图）
+        $housingimages = $row['housingimages'];
+        $housingimage = explode(',', $housingimages);
+
+        $housingimages_arr = [];
+        foreach ($housingimage as $k => $v) {
+            $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //银行卡照（可多图）
+        $bank_cardimages = $row['bank_cardimages'];
+        $bank_cardimage = explode(',', $bank_cardimages);
+
+        $bank_cardimages_arr = [];
+        foreach ($bank_cardimage as $k => $v) {
+            $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //申请表（多图）
+        $application_formimages = $row['application_formimages'];
+        $application_formimage = explode(',', $application_formimages);
+
+        $application_formimages_arr = [];
+        foreach ($application_formimage as $k => $v) {
+            $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //通话清单（文件上传）
+        $call_listfiles = $row['call_listfiles'];
+        $call_listfile = explode(',', $call_listfiles);
+
+        $call_listfiles_arr = [];
+        foreach ($call_listfile as $k => $v) {
+            $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //征信报告（多图）
+        $credit_reportimages = $row['credit_reportimages'];
+        $credit_reportimage = explode(',', $credit_reportimages);
+
+        $credit_reportimages_arr = [];
+        foreach ($credit_reportimage as $k => $v) {
+            $credit_reportimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //担保人身份证正反面（多图）
+        $guarantee_id_cardimages = $row['guarantee_id_cardimages'];
+        $guarantee_id_cardimage = explode(',', $guarantee_id_cardimages);
+
+        $guarantee_id_cardimages_arr = [];
+        foreach ($guarantee_id_cardimage as $k => $v) {
+            $guarantee_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //担保协议（多图）
+        $guarantee_agreementimages = $row['guarantee_agreementimages'];
+        $guarantee_agreementimage = explode(',', $guarantee_agreementimages);
+
+        $guarantee_agreementimages_arr = [];
+        foreach ($guarantee_agreementimage as $k => $v) {
+            $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        $stock = Db::name("sales_order")
+            ->alias("so")
+            ->join("car_new_inventory i", "so.car_new_inventory_id=i.id")
+            ->where("so.id", $ids)
+            ->field("i.licensenumber,i.presentationcondition,i.note,i.frame_number,i.engine_number,i.household,i.4s_shop")
+            ->select();
+        $stock = $stock[0];
+        $this->view->assign(
+            array(
+                'deposit_contractimages_arr' => $deposit_contractimages_arr,
+                'deposit_receiptimages_arr' => $deposit_receiptimages_arr,
+                'id_cardimages_arr' => $id_cardimages_arr,
+                'drivers_licenseimages_arr' => $drivers_licenseimages_arr,
+                'residence_bookletimages_arr' => $residence_bookletimages_arr,
+                'housingimages_arr' => $housingimages_arr,
+                'bank_cardimages_arr' => $bank_cardimages_arr,
+                'application_formimages_arr' => $application_formimages_arr,
+                'call_listfiles_arr' => $call_listfiles_arr,
+                'credit_reportimages_arr' => $credit_reportimages_arr,
+                'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
+                'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
+                'stock'=>$stock
+            )
+        );
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
     }
 }
