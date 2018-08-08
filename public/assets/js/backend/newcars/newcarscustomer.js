@@ -34,7 +34,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 })
                 prepareLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    // $(".btn-newCustomer").data("area", ["50%", "50%"]);
                 });
                 // 初始化表格
                 prepareLiftCar.bootstrapTable({
@@ -66,6 +66,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'margin', title: __('保证金') },
                             { field: 'tail_section', title: __('尾款') },
                             { field: 'gps', title: __('GPS(元)') },
+                            { field: 'createtime', title: __('订车时间'),formatter: Table.api.formatter.datetime,operate:false },
                             { field: 'operate', title: __('Operate'), table: prepareLiftCar, events: Table.api.events.operate, formatter: Table.api.formatter.operate }
                         ]
                     ]
@@ -110,6 +111,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'margin', title: __('保证金') },
                             { field: 'tail_section', title: __('尾款') },
                             { field: 'gps', title: __('GPS(元)') },
+                            { field: 'licensenumber', title: __('车牌号') },
+                            { field: 'frame_number', title: __('车架号') },
+                            { field: 'engine_number', title: __('发动机号') },
+                            { field: 'household', title: __('所属户') },
+                            { field: '4s_shop', title: __('4S店') },
+                            { field: 'createtime', title: __('订车时间'),formatter: Table.api.formatter.datetime,operate:false },
+                            { field: 'delivery_datetime', title: __('提车时间'),formatter: Table.api.formatter.datetime,operate:false },
                             { field: 'operate', title: __('Operate'), table: alreadyLiftCar, events: Table.api.events.operate, formatter: Table.api.formatter.operate }
                         ]
                     ]

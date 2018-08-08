@@ -42,16 +42,7 @@ class Newcarscustomer extends Backend
      */
     public function index()
     {
-//        $total = Db::view("order_view")->count();
-//
-//        $list = Db::view("order_view")->select();
-//        pr($list);
-//        pr($total);die();
-//        $list = Db::view("order")
-//
-//            ->select();
-//
-//        die();
+
         $this->loadlang('newcars/newcarscustomer');
 
         return $this->view->fetch();
@@ -62,10 +53,10 @@ class Newcarscustomer extends Backend
     {
 
         if ($this->request->isAjax()) {
-            $total = Db::view("order_view")
-                ->where("review_the_data","for_the_car")
+            $total = Db::view("order_view","id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps")
+//                ->where("review_the_data","for_the_car")
                 ->count();
-            $list = Db::view("order_view")
+            $list = Db::view("order_view","id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps")
                 ->where("review_the_data","for_the_car")
                 ->select();
 
@@ -80,10 +71,10 @@ class Newcarscustomer extends Backend
     public function already_lift_car()
     {
         if ($this->request->isAjax()) {
-            $total = Db::view("order_view")
+            $total = Db::view("order_view","id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop")
                 ->where("review_the_data","the_car")
                 ->count();
-            $list = Db::view("order_view")
+            $list = Db::view("order_view","id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop")
                 ->where("review_the_data","the_car")
                 ->select();
 
