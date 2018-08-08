@@ -134,6 +134,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'the_guarantor'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
                                 }
                             },
                             { 
@@ -154,6 +157,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_car'){
                                         return true;
                                     }
                                 },
@@ -178,6 +184,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'the_guarantor'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
                                 }, 
                             },
                             {
@@ -198,10 +207,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'the_guarantor'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
                                 }
                             },
                             {
-                                name: 'for_the_car',icon:'fa fa-check-circle',text: '征信已通过，车管正在备车中', classname: ' text-success ',
+                                name: 'for_the_car',icon:'fa fa-check-circle',text: '征信已通过，车管正在备车中', classname: ' text-info ',
                                 hidden:function(row){  /**征信已通过，车管正在备车中 */ 
                                     if(row.review_the_data == 'for_the_car'){ 
                                         return false; 
@@ -216,6 +228,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_car'){
                                         return true;
                                     }
                                 }
@@ -239,10 +254,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'the_guarantor'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
                                 }
                             },
                             {
-                                name: 'the_guarantor',icon:'fa fa-upload',text: '需提供担保人',extend: 'data-toggle="tooltip"',  title: __('点击上传提供担保人信息'), classname: ' text-danger ',classname: 'btn btn-xs btn-warning btn-the_guarantor',
+                                name: 'the_guarantor',icon:'fa fa-upload',text: '需提供担保人',extend: 'data-toggle="tooltip"',  title: __('点击上传提供担保人信息'),classname: 'btn btn-xs btn-warning btn-the_guarantor',
                                 hidden:function(row){  /**提供担保人 */ 
                                     
                                     if(row.review_the_data == 'the_guarantor'){ 
@@ -260,8 +278,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
+                                }
+                            },
+                            {
+                                name: 'the_car',icon:'fa fa-automobile',text: '已提车',extend: 'data-toggle="tooltip"',  title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                hidden:function(row){  /**提供担保人 */ 
+                                    if(row.review_the_data == 'the_car'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'the_guarantor'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'not_through'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_true'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                        return true;
+                                    }
                                 }
                             }
+
 
 
                         ],

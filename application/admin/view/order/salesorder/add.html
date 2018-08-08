@@ -23,7 +23,7 @@
 
                 <option value="{$vo['brand_logoimage']}" disabled>{$vo['brand_name']}</option>
                 {volist name="vo.data" id="vo_s"}
-                <option value="{$vo_s['id']}">{$vo_s['models_name']}</option>
+                <option value="{$vo_s['id']},{$vo_s['models_name']}">{$vo_s['models_name']}</option>
                 {/volist} {/volist}
             </select>
 
@@ -428,28 +428,7 @@
             <ul class="row list-inline plupload-preview" id="p-guarantee_id_cardimages"></ul>
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('户口簿【首页、户主页、本人页】')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-guarantee_agreementimages" class="form-control" size="50" name="row[guarantee_agreementimages]" type="text">
-                <div class="input-group-addon no-border no-padding">
-                    <span>
-                        <button type="button" id="plupload-guarantee_agreementimages" class="btn btn-danger plupload" data-input-id="c-guarantee_agreementimages"
-                            data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-guarantee_agreementimages">
-                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
-                    </span>
-                    <span>
-                        <button type="button" id="fachoose-guarantee_agreementimages" class="btn btn-primary fachoose" data-input-id="c-guarantee_agreementimages"
-                            data-mimetype="image/*" data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
-                    </span>
-                </div>
-                <span class="msg-box n-right" for="c-guarantee_agreementimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-guarantee_agreementimages"></ul>
-        </div>
-    </div>
+     
     <b style="color: #ddd">
         <center>
             <i>--我是有底线的--</i>

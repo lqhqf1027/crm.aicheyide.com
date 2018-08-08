@@ -26,6 +26,9 @@ class Salesorder extends Backend
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
+
+
+    static protected $token = null;
     public function _initialize()
     {
         parent::_initialize();
@@ -33,6 +36,9 @@ class Salesorder extends Backend
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+        //获取token
+        // self::$token = $this->getAccessToken();
+
         $this->userid = 'cdjy01';
         $this->apikey = '1de2474bcaaac1e4';
         $this->sign = md5($this->userid.$this->apikey);
@@ -91,8 +97,7 @@ class Salesorder extends Backend
             ->join('plan_acar b','b.models_id=a.id')
             ->join('financial_platform c','b.financial_platform_id=c.id')
             ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
-            ->where(['a.brand_id'=>$value['brandid'],'b.ismenu'=>1])
-
+            ->where(['a.brand_id'=>$value['brandid'],'b.ismenu'=>1]) 
             ->select() ;
             $newB =[];
             foreach((array)$sql as $bValue){
@@ -157,16 +162,15 @@ class Salesorder extends Backend
             $sql = Db::name('models')->alias('a')
             ->join('plan_acar b','b.models_id=a.id')
             ->join('financial_platform c','b.financial_platform_id=c.id')
-            ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
+            ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,c.name as financial_platform_name')
             ->where(['a.brand_id'=>$value['brandid'],'b.ismenu'=>1])
 
             ->select() ;
             $newB =[];
             foreach((array)$sql as $bValue){
-                $bValue['models_name'] =$bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'】'.'---'.$bValue['financial_platform_name'];
+                $bValue['models_name'] =$bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'，'.'保证金'.$bValue['margin'].'】'.'---'.$bValue['financial_platform_name'];
                 $newB[] = $bValue;
             }
-
 
             $newRes[]=array(
                 'brand_name' => $value['brand_name'],
@@ -180,6 +184,10 @@ class Salesorder extends Backend
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $ex = explode(',',$params['plan_acar_name']);
+             
+            $params['plan_acar_name'] = reset($ex);//截取id
+            $params['plan_name'] = addslashes(end($ex));//  
             //生成订单编号
             $params['order_no'] = date('Ymdhis');
              //把当前销售员所在的部门的内勤id 入库
@@ -214,6 +222,7 @@ class Salesorder extends Backend
                        //如果添加成功,将状态改为提交审核
                         $result_s = $this->model->isUpdate(true)->save(['id'=>$this->model->id,'review_the_data'=>'is_reviewing']);
                         if($result_s){
+                           
                             $this->success(); 
                         }
                         else{
