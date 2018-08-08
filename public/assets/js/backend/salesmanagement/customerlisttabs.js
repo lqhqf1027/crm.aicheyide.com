@@ -131,7 +131,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 // 批量加入放弃客户
 
-                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                $(document).on("click", ".btn-selected1", function (e, value, row, index) {
                     var ids = Table.api.selectedids(newCustomer);
                     e.stopPropagation();
                     e.preventDefault();
@@ -293,7 +293,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(relations);
 
-                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                $(document).on("click", ".btn-selected2", function (e, value, row, index) {
                     var ids = Table.api.selectedids(relations);
                     e.stopPropagation();
                     e.preventDefault();
@@ -443,7 +443,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(intentions);
 
-                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                $(document).on("click", ".btn-selected3", function (e, value, row, index) {
                     var ids = Table.api.selectedids(intentions);
                     e.stopPropagation();
                     e.preventDefault();
@@ -592,7 +592,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(nointentions);
 
-                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                $(document).on("click", ".btn-selected4", function (e, value, row, index) {
                     var ids = Table.api.selectedids(nointentions);
 
 
@@ -801,7 +801,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(overdues);
 
-                $(document).on("click", ".btn-selected", function (e, value, row, index) {
+                $(document).on("click", ".btn-selected5", function (e, value, row, index) {
                     var ids = Table.api.selectedids(overdues);
                     e.stopPropagation();
                     e.preventDefault();
