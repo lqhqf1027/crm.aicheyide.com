@@ -25,8 +25,7 @@ class Creditreview extends Backend
 
     public function _initialize()
     {
-        parent::_initialize();
-         
+        parent::_initialize(); 
 
     }
 
@@ -84,15 +83,14 @@ class Creditreview extends Backend
                ->limit($offset, $limit)
                ->select();
          
-           $list = collection($list)->toArray();
-
+           $list = collection($list)->toArray();  
         
            foreach( (array) $list as $k => $row){
                 $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
 
                 $admin_id = $row['admin_id'];
 
-                $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname');
+                $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname'); 
 
                 $list[$k]['admin_nickname'] = $admin_nickname;
 
@@ -248,109 +246,55 @@ class Creditreview extends Backend
     public function auditResult($ids=NULL)
     {
         
-        $this->model = model('SalesOrder');
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
-        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
-        
-        $result = $this->model->get(['id' => $ids])->toArray();
-
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        list($where, $sort, $order, $offset, $limit) = $this->buildparams(); 
-        $total = $this->model
-            ->where($where)
-            ->where('id', $result['id'])
-            ->order($sort, $order)
-            ->count();
-
-        $list = $this->model
-            ->where($where)
-            ->where('id', $result['id'])
-            ->order($sort, $order)
-            ->limit($offset, $limit)
-            ->select();
-         
-        $list = collection($list)->toArray();
-
-        foreach( (array) $list as $k => $row){
-            $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
-
-            $list[$k]['payment'] = $planData['payment'];
-            $list[$k]['monthly'] = $planData['monthly'];
-            $list[$k]['nperlist'] = $planData['nperlist'];
-            $list[$k]['margin'] = $planData['margin'];
-            $list[$k]['gps'] = $planData['gps'];
-            $list[$k]['models_name'] = $planData['models_name'];
-            $list[$k]['financial_platform_name'] = $planData['financial_platform_name'];
-        }
-         
-        
-
+        $this->model = model('SalesOrder'); 
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+            $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }   
+        // $list = collection($row)->toArray();
+        // pr($row);die;
+      
         //身份证图片
-        $id_cardimages = $list[0]['id_cardimages'];
-        $id_cardimage = explode(',',$id_cardimages);
-        
-        $id_cardimages_arr = [];
-        foreach ($id_cardimage as $k => $v) {
-            $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-    
-        //驾照图片
-        $drivers_licenseimages =$list[0]['drivers_licenseimages'];
-        $drivers_licenseimage = explode(',',$drivers_licenseimages);
-        $drivers_licenseimages_arr = [];
-        foreach ($drivers_licenseimage as $k => $v) {
-            $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
-        //户口簿图片
-        $residence_bookletimages = $list[0]['residence_bookletimages'];
-        $residence_bookletimage = explode(',',$residence_bookletimages);
-        
-        $residence_bookletimages_arr = [];
-        foreach ($residence_bookletimage as $k => $v) {
-            $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
-        //房产证图片
-        $housingimages = $list[0]['housingimages'];
-        $housingimage = explode(',',$housingimages);
-        
-        $housingimages_arr = [];
-        foreach ($housingimage as $k => $v) {
-            $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
-        //银行卡图片
-        $bank_cardimages = $list[0]['bank_cardimages'];
-        $bank_cardimage = explode(',',$bank_cardimages);
-        
-        $bank_cardimages_arr = [];
-        foreach ($bank_cardimage as $k => $v) {
-            $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
-        //申请表图片
-        $application_formimages = $list[0]['application_formimages'];
-        $application_formimage = explode(',',$application_formimages);
-        
-        $application_formimages_arr = [];
-        foreach ($application_formimage as $k => $v) {
-            $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
-        $this->view->assign('id_cardimages_arr',$id_cardimages_arr);
-        $this->view->assign('drivers_licenseimages_arr',$drivers_licenseimages_arr);
-        $this->view->assign('residence_bookletimages_arr',$residence_bookletimages_arr);
-        $this->view->assign('housingimages_arr',$housingimages_arr);
-        $this->view->assign('bank_cardimages_arr',$bank_cardimages_arr);
-        $this->view->assign('application_formimages_arr',$application_formimages_arr);
-        $this->view->assign('rows',$list);
-
-        $id = $result['id'];
-        $this->view->assign("id", $id);
-        
+       
+        $id_cardimages = explode(',',$row['id_cardimages']); 
+         
+        //驾照图片 
+        $drivers_licenseimages = explode(',',$row['drivers_licenseimages']); 
+        //户口簿图片 
+        $residence_bookletimages = explode(',',$row['residence_bookletimages']); 
+        //住房合同/房产证图片 
+        $housingimages = explode(',',$row['housingimages']); 
+        //银行卡图片 
+        $bank_cardimages = explode(',', $row['bank_cardimages']); 
+        //申请表图片 
+        $application_formimages = explode(',',$row['application_formimages']);   
+       //定金合同
+       $deposit_contractimages = explode(',',$row['deposit_contractimages']);  
+       //定金收据
+       $deposit_receiptimages = explode(',',$row['deposit_receiptimages']);  
+        //通话清单
+       $call_listfiles = explode(',',$row['call_listfiles']);  
+        $this->view->assign(
+           [    
+               'row'=>$row, 
+               'cdn'=>Config::get('upload')['cdnurl'],
+                'id_cardimages'=>$id_cardimages,
+                'drivers_licenseimages'=>$drivers_licenseimages,
+                'residence_bookletimages'=>$residence_bookletimages,
+                'housingimages'=>$housingimages,
+                'bank_cardimages'=>$bank_cardimages,
+                'application_formimages'=>$application_formimages,
+                'deposit_contractimages'=>$deposit_contractimages,
+                'deposit_receiptimages'=>$deposit_receiptimages,
+                'call_listfiles'=>$call_listfiles,
+            ]
+        ); 
+  
         if ($this->request->isPost())
         {
             

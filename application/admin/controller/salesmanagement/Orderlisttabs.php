@@ -23,16 +23,19 @@ class Orderlisttabs extends Backend
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected  $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
     // protected  $dataLimit = 'false'; //表示显示当前自己和所有子级管理员的所有数据
-
+    static protected $token = null;
+    
     public function _initialize()
     {
-        parent::_initialize();
+        parent::_initialize(); 
+        $this->model = model('SalesOrder');
         
-
+        //获取token
+        // self::$token = $this->getAccessToken();
     }
     public function index(){
         $this->loadlang('order/salesorder');
-        $this->model = model('SalesOrder');
+      
         $total = $this->model
                      ->where($where)
                      ->order($sort, $order)
@@ -54,7 +57,7 @@ class Orderlisttabs extends Backend
         
         
         // pr(collection($this->getPlanAcarData(5))->toArray());
-        $this->model = model('SalesOrder');
+
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
@@ -118,9 +121,33 @@ class Orderlisttabs extends Backend
     public function sedAudit(){
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
+           
             $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'is_reviewing_true']);
             if($result!==false){
-                $this->success('提交成功，请等待审核结果');
+                // //推送模板消息给风控
+                // $sedArr = array(
+                //     'touser' => 'oklZR1J5BGScztxioesdguVsuDoY',
+                //     'template_id' => 'LGTN0xKp69odF_RkLjSmCltwWvCDK_5_PuAVLKvX0WQ', /**以租代购新车模板id */
+                //     "topcolor" => "#FF0000",
+                //     'url' => '',
+                //     'data' => array(
+                //         'first' =>array('value'=>'你有新客户资料待审核','color'=>'#FF5722') ,
+                //         'keyword1' => array('value'=>$params['username'],'color'=>'#01AAED'),
+                //         'keyword2' => array('value'=>'以租代购（新车）','color'=>'#01AAED'),
+                //         'keyword3' => array('value'=>Session::get('admin')['nickname'],'color'=>'#01AAED'),
+                //         'keyword4' =>array('value'=>date('Y年m月d日 H:i:s'),'color'=>'#01AAED') , 
+                //         'remark' => array('value'=>'请前往系统进行查看操作')
+                //     )
+                // );
+                // $sedResult= posts("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".self::$token,json_encode($sedArr));
+                // if( $sedResult['errcode']==0 && $sedResult['errmsg'] =='ok'){
+                //     $this->success('提交成功，请等待审核结果'); 
+                // }else{
+                //     $this->error('微信推送失败',null,$sedResult);
+                // }
+                    $this->success('提交成功，请等待审核结果'); 
+               
+                
             }else{
                 $this->error('提交失败',null,$result);
                 
@@ -139,28 +166,6 @@ class Orderlisttabs extends Backend
                 $this->error(__('You have no permission'));
             }
         }  
-        $row['plan'] = Db::name('sales_order')->alias('a')
-                    ->join('plan_acar b','a.plan_acar_name = b.id')
-                    ->join('models c','b.models_id=c.id')
-                    
-                        ;
-
-       
-        $sql = Db::name('sales_order')->alias('a')
-            ->join('plan_acar b','b.id=a.plan_acar_name')
-            ->join('financial_platform c','b.financial_platform_id=c.id')
-            ->join('models d', 'b.models_id=d.id')
-            ->join('brand e', 'e.id=d.brand_id')
-            ->field('d.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
-            ->where('a.id', $row['id'])
-            ->select();
-           
-           
-        $newRes=$sql[0]['models_name'].'【首付'.$sql[0]['payment'].'，'.'月供'.$sql[0]['monthly'].'，'.'GPS '.$sql[0]['gps'].'，'.'尾款 '.$sql[0]['tail_section'].'】'.'---'.$sql[0]['financial_platform_name'];
-                
-
-        $this->view->assign('newRes',$newRes);
-
         //定金合同（多图）
         $deposit_contractimages = $row['deposit_contractimages'];
         $deposit_contractimage = explode(',',$deposit_contractimages);
