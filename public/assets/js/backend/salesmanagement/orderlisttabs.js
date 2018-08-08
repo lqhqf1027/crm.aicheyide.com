@@ -134,6 +134,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'the_guarantor'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
                                 }
                             },
                             { 
@@ -154,6 +157,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_car'){
                                         return true;
                                     }
                                 },
@@ -178,6 +184,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'the_guarantor'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
                                 }, 
                             },
                             {
@@ -198,6 +207,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'the_guarantor'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
                                 }
                             },
                             {
@@ -216,6 +228,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_car'){
                                         return true;
                                     }
                                 }
@@ -239,6 +254,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'the_guarantor'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
                                 }
                             },
                             {
@@ -258,6 +276,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true; 
                                     }
                                     else if(row.review_the_data == 'is_reviewing'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_car'){
+                                        return true;
+                                    }
+                                }
+                            },
+                            {
+                                name: 'the_car',icon:'fa fa-check-circle',text: '已提车', classname: ' text-success ',
+                                hidden:function(row){  /**已提车 */ 
+                                    if(row.review_the_data == 'the_car'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_true'){ 
+                                        return true; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'not_through'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'the_guarantor'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){
                                         return true;
                                     }
                                 }
