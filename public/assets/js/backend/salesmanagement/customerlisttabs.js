@@ -767,7 +767,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '反馈',
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-success btn-editone',
-                                        url: 'salesmanagement/customerlisttabs/edit'
+                                        // url: 'salesmanagement/customerlisttabs/edit'
 
                                     },
                                     {
