@@ -53,35 +53,92 @@ class Newcarscustomer extends Backend
     {
 
         if ($this->request->isAjax()) {
-            $total = Db::view("order_view","id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps")
-//                ->where("review_the_data","for_the_car")
+            $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
+                ->where("review_the_data", "for_the_car")
+                ->where("car_new_inventory_id",null)
                 ->count();
-            $list = Db::view("order_view","id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps")
-                ->where("review_the_data","for_the_car")
+            $list = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
+                ->where("review_the_data", "for_the_car")
+                ->where("car_new_inventory_id",null)
                 ->select();
 
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
-        return 1;
+        return true;
     }
 
     //已提车
     public function already_lift_car()
     {
         if ($this->request->isAjax()) {
-            $total = Db::view("order_view","id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop")
-                ->where("review_the_data","the_car")
+            $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop,car_new_inventory_id")
+                ->where("review_the_data", "the_car")
+                ->where("car_new_inventory_id","not null")
                 ->count();
-            $list = Db::view("order_view","id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop")
-                ->where("review_the_data","the_car")
+            $list = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop,car_new_inventory_id")
+                ->where("review_the_data", "the_car")
+                ->where("car_new_inventory_id","not null")
                 ->select();
 
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
-        return 1;
+        return true;
+    }
+
+    //选择库存车
+    public function choose_stock($ids = null)
+    {
+        if ($this->request->isPost()) {
+
+            $id= input("post.id");
+
+            Db::name("sales_order")
+            ->where("id",$ids)
+            ->update([
+                'car_new_inventory_id'=>$id,
+                'review_the_data'=>"the_car",
+                'delivery_datetime'=>time()
+            ]);
+
+            Db::name("car_new_inventory")
+            ->where("id",$id)
+            ->setField("statuss",0);
+
+
+            $this->success('','',$ids);
+        }
+        $stock = Db::name("car_new_inventory")
+            ->alias("i")
+            ->join("crm_models m", "i.models_id=m.id")
+            ->where("statuss", 1)
+            ->field("i.id,m.name,i.licensenumber,i.frame_number,i.engine_number,i.household,i.4s_shop,i.note")
+            ->select();
+
+        $this->view->assign([
+            'stock'=>$stock
+        ]);
+
+        return $this->view->fetch();
+    }
+
+    //查看订单表所有信息
+    public function showOrder()
+    {
+        echo 1;
+
+        return $this->view->fetch();
+
+    }
+
+    //查看订单表和库存表所有信息
+    public function showOrderAndStock()
+    {
+        echo 1;
+        return $this->view->fetch();
+
     }
 }
