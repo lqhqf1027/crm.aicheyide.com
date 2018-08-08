@@ -1,0 +1,174 @@
+<h3>
+    <center>
+        <h2>基本资料</h2>
+    </center>
+</h3>
+<br>
+<div class="container" style="border: 1px solid #ddd">
+    <br>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-2">
+            <strong>{:__('Username')}：</strong> {$row.username}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-2">
+            <strong>{:__('Phone')}：</strong> {$row.phone}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('Id_card')}：</strong> {$row.id_card}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-5">
+            <strong>{:__('销售车型/方案')}：</strong> {$newRes}
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-2">
+            <strong>{:__('Genderdata')}：</strong> {:__($row.genderdata_text)}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-5">
+            <strong>{:__('详细地址')}：</strong> {$row.city}{$row.detailed_address}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-5">
+            <strong>{:__('Emergency_contact_1')}：</strong> {$row.emergency_contact_1}
+        </div>
+
+
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-2">
+            <strong>{:__('Createtime')}：</strong> {$row.createtime}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-5">
+            <strong>{:__('Emergency_contact_2')}：</strong> {$row.emergency_contact_2}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-5">
+            <strong>{:__('Family_members')}：</strong> {$row.family_members}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <strong>{:__('Deposit_contractimages')}：</strong>
+            {foreach $deposit_contractimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <strong>{:__('Deposit_receiptimages')}：</strong>
+            {foreach $deposit_receiptimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <strong>{:__('Id_cardimages')}：</strong>
+            {foreach $id_cardimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <strong>{:__('Drivers_licenseimages')}：</strong>
+            {foreach $drivers_licenseimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <strong>{:__('Residence_bookletimages')}：</strong>
+            {foreach $residence_bookletimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <strong>{:__('Housingimages')}：</strong>
+            {foreach $housingimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <strong>{:__('Bank_cardimages')}：</strong>
+            {foreach $bank_cardimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <strong>{:__('Application_formimages')}：</strong>
+            {foreach $application_formimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('Call_listfiles')}：</strong>
+            {foreach $call_listfiles_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('Credit_reportimages')}：</strong>
+            {foreach $credit_reportimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('Guarantee_id_cardimages')}：</strong>
+            {foreach $guarantee_id_cardimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('Guarantee_agreementimages')}：</strong>
+            {foreach $guarantee_agreementimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+
+</div>

@@ -23,6 +23,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
 
+        choose_stock: function () {
+
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                // console.log(data);
+
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);
+                // console.log(data);
+                Toastr.success("成功");
+            }, function (data, ret) {
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+
+
+        },
+
         table: {
 
             prepare_lift_car: function () {
@@ -34,7 +55,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 })
                 prepareLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-chooseStock").data("area", ["60%", "60%"]);
+                    $(".btn-showOrder").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 prepareLiftCar.bootstrapTable({
@@ -42,8 +64,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
-                        edit_url: 'order/salesorder/edit',
-                        del_url: 'order/salesorder/del',
+                        // edit_url: 'order/salesorder/edit',
+                        // del_url: 'order/salesorder/del',
                         multi_url: 'order/salesorder/multi',
                         table: 'sales_order',
                     },
@@ -52,21 +74,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     sortName: 'id',
                     columns: [
                         [
-                            { checkbox: true },
-                            { field: 'id', title: __('Id') },
-                            { field: 'order_no', title: __('订单编号') },
-                            { field: 'financial_name', title: __('金融平台') },
-                            { field: 'models_name', title: __('销售车型') },
-                            { field: 'username', title: __('Username') },
-                            { field: 'phone', title: __('电话号码') },
-                            { field: 'id_card', title: __('身份证号') },
-                            { field: 'payment', title: __('首付') },
-                            { field: 'monthly', title: __('月供') },
-                            { field: 'nperlist', title: __('期数') },
-                            { field: 'margin', title: __('保证金') },
-                            { field: 'tail_section', title: __('尾款') },
-                            { field: 'gps', title: __('GPS(元)') },
-                            { field: 'operate', title: __('Operate'), table: prepareLiftCar, events: Table.api.events.operate, formatter: Table.api.formatter.operate }
+                            {checkbox: true},
+                            {field: 'id', title: __('Id')},
+                            {field: 'order_no', title: __('订单编号')},
+                            {field: 'financial_name', title: __('金融平台')},
+                            {field: 'models_name', title: __('销售车型')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('电话号码')},
+                            {field: 'id_card', title: __('身份证号')},
+                            {field: 'payment', title: __('首付')},
+                            {field: 'monthly', title: __('月供')},
+                            {field: 'nperlist', title: __('期数')},
+                            {field: 'margin', title: __('保证金')},
+                            {field: 'tail_section', title: __('尾款')},
+                            {field: 'gps', title: __('GPS(元)')},
+                            {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: prepareLiftCar,
+                                events: Table.api.events.operate,
+                                formatter: Table.api.formatter.operate,
+                                buttons: [
+                                    {
+                                        name: 'detail',
+                                        text: '选择库存车',
+                                        title: '选择库存车',
+                                        icon: 'fa fa-arrows',
+                                        classname: 'btn btn-xs btn-danger btn-dialog btn-chooseStock',
+                                        url: 'newcars/newcarscustomer/choose_stock',
+                                    },
+                                    {
+                                        name: 'look',
+                                        text: '查看客户详细资料',
+                                        title: '查看客户详细资料',
+                                        icon: 'fa fa-eye',
+                                        classname: 'btn btn-xs btn-info btn-dialog btn-showOrder',
+                                        url: 'newcars/newcarscustomer/show_order',
+                                    }
+                                ]
+                            }
                         ]
                     ]
                 });
@@ -78,7 +130,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格2
                 var alreadyLiftCar = $("#alreadyLiftCar");
                 alreadyLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    // $(".btn-newCustomer").data("area", ["30%", "30%"]);
+                    $(".btn-showOrderAndStock").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 alreadyLiftCar.bootstrapTable({
@@ -86,8 +138,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
-                        edit_url: 'order/salesorder/edit',
-                        del_url: 'order/salesorder/del',
+                        // edit_url: 'order/salesorder/edit',
+                        // del_url: 'order/salesorder/del',
                         multi_url: 'order/salesorder/multi',
                         table: 'sales_order',
                     },
@@ -96,21 +148,54 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     sortName: 'id',
                     columns: [
                         [
-                            { checkbox: true },
-                            { field: 'id', title: __('Id') },
-                            { field: 'order_no', title: __('订单编号') },
-                            { field: 'financial_name', title: __('金融平台') },
-                            { field: 'models_name', title: __('销售车型') },
-                            { field: 'username', title: __('Username') },
-                            { field: 'phone', title: __('电话号码') },
-                            { field: 'id_card', title: __('身份证号') },
-                            { field: 'payment', title: __('首付') },
-                            { field: 'monthly', title: __('月供') },
-                            { field: 'nperlist', title: __('期数') },
-                            { field: 'margin', title: __('保证金') },
-                            { field: 'tail_section', title: __('尾款') },
-                            { field: 'gps', title: __('GPS(元)') },
-                            { field: 'operate', title: __('Operate'), table: alreadyLiftCar, events: Table.api.events.operate, formatter: Table.api.formatter.operate }
+                            {checkbox: true},
+                            {field: 'id', title: __('Id')},
+                            {field: 'order_no', title: __('订单编号')},
+                            {field: 'financial_name', title: __('金融平台')},
+                            {field: 'models_name', title: __('销售车型')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('电话号码')},
+                            {field: 'id_card', title: __('身份证号')},
+                            {field: 'payment', title: __('首付')},
+                            {field: 'monthly', title: __('月供')},
+                            {field: 'nperlist', title: __('期数')},
+                            {field: 'margin', title: __('保证金')},
+                            {field: 'tail_section', title: __('尾款')},
+                            {field: 'gps', title: __('GPS(元)')},
+                            {field: 'licensenumber', title: __('车牌号')},
+                            {field: 'frame_number', title: __('车架号')},
+                            {field: 'engine_number', title: __('发动机号')},
+                            {field: 'household', title: __('所属户')},
+                            {field: '4s_shop', title: __('4S店')},
+                            {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: alreadyLiftCar,
+                                events: Table.api.events.operate,
+                                formatter: Table.api.formatter.operate,
+                                buttons: [
+                                    {
+                                        name: 'look',
+                                        text: '查看客户详细资料',
+                                        title: '查看客户详细资料',
+                                        icon: 'fa fa-eye',
+                                        classname: 'btn btn-xs btn-info btn-dialog btn-showOrderAndStock',
+                                        url: 'newcars/newcarscustomer/show_order_and_stock',
+                                    }
+                                ]
+                            }
                         ]
                     ]
                 });

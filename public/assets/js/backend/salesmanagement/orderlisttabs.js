@@ -284,6 +284,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             },
                             {
+
                                 name: 'the_car',icon:'fa fa-automobile',text: '已提车',extend: 'data-toggle="tooltip"',  title: __('订单已完成，客户已提车'), classname: ' text-success ',
                                 hidden:function(row){  /**提供担保人 */ 
                                     if(row.review_the_data == 'the_car'){ 
@@ -302,6 +303,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true; 
                                     }
                                     else if(row.review_the_data == 'is_reviewing'){
+
+    
                                         return true;
                                     }
                                 }

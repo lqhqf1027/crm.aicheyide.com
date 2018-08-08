@@ -57,7 +57,7 @@ class Orderlisttabs extends Backend
         
         
         // pr(collection($this->getPlanAcarData(5))->toArray());
-  
+
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
@@ -318,6 +318,13 @@ class Orderlisttabs extends Backend
                ->select();
          
            $list = collection($list)->toArray();
+
+           foreach( (array) $list as $k => $row){
+                $planData = collection($this->getPlanCarRentalData($row['plan_car_rental_name']))->toArray();
+
+                $list[$k]['licenseplatenumber'] = $planData['licenseplatenumber'];
+                $list[$k]['models_name'] = $planData['models_name'];
+          }
           
            $result = array("total" => $total, "rows" => $list);
            return json($result);
@@ -326,7 +333,20 @@ class Orderlisttabs extends Backend
        return $this->view->fetch('index');
         
     }
-
+    /**
+     * 根据方案id查询 车型名称，首付、月供等
+     */
+    public function getPlanCarRentalData($planId){
+         
+        return Db::name('car_rental_models_info')->alias('a')
+                ->join('models b','a.models_id=b.id')
+                ->field('a.id,a.licenseplatenumber,
+                        b.name as models_name'
+                        )
+                ->where('a.id',$planId)
+                ->find();
+                
+    }
     /**查看纯租详细资料 */
     public function rentaldetails($ids = null){
         $this->model = new \app\admin\model\rental\Order;
@@ -381,6 +401,18 @@ class Orderlisttabs extends Backend
         foreach ($call_listfilesimage as $k => $v) {
             $call_listfilesimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+
+        $sql = Db::name('rental_order')->alias('a')
+            ->join('car_rental_models_info b','b.id=a.plan_car_rental_name')
+            ->join('models c', 'b.models_id=c.id')
+            ->field('c.name as models_name')
+            ->where('a.id', $row['id'])
+            ->select();
+           
+           
+        $newRes=$sql[0]['models_name'].'【押金'.$row['cash_pledge'].'，'.'租期'.$row['tenancy_term'].'，'.'月供'.$row['rental_price'].'】';
+                
+        $this->view->assign('newRes',$newRes);
 
         $this->view->assign(
             array(
