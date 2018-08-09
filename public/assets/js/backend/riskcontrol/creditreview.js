@@ -1,15 +1,15 @@
- 
+
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
 
     var Controller = {
         index: function () {
-          
+
             // 初始化表格参数配置
             Table.api.init({
-               
+
             });
-          
+
             //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var panel = $($(this).attr("href"));
@@ -22,136 +22,93 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //移除绑定的事件
                 $(this).unbind('shown.bs.tab');
             });
-            
+
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
         table: {
-         
+
             to_audit: function () {
-                // 新客户
+                // 待审核
                 var toAudit = $("#toAudit"); 
-               
-                toAudit.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-auditResult").data("area", ["90%", "90%"]);
-                });
-                 // 初始化表格
-                 toAudit.bootstrapTable({
-                url: 'riskcontrol/creditreview/toAudit',
-                extend: {
-                    // index_url: 'customer/customerresource/index',
-                    // add_url: 'customer/customerresource/add',
-                    // edit_url: 'customer/customerresource/edit',
-                    // del_url: 'customer/customerresource/del',
-                    // multi_url: 'customer/customerresource/multi',
-                    // distribution_url: 'promote/customertabs/distribution',
-                    // import_url: 'customer/customerresource/import',
-                    table: 'sales_order',
-                },
-                toolbar: '#toolbar1',
-                pk: 'id',
-                sortName: 'id',
-                searchFormVisible: true,
-                columns: [
-                    [
-                        {checkbox: true},
-                        {field: 'id', title: __('Id')},
-                        {field: 'order_no', title: __('Order_no')},
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                // 初始化表格
+                toAudit.bootstrapTable({
+                    url: 'riskcontrol/creditreview/toAudit',
+                    extend: {
+                        // index_url: 'customer/customerresource/index',
+                        // add_url: 'customer/customerresource/add',
+                        // edit_url: 'customer/customerresource/edit',
+                        // del_url: 'customer/customerresource/del',
+                        // multi_url: 'customer/customerresource/multi',
+                        // distribution_url: 'promote/customertabs/distribution',
+                        // import_url: 'customer/customerresource/import',
+                        table: 'sales_order',
+                    },
+                    toolbar: '#toolbar1',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            { checkbox: true },
+                            { field: 'id', title: __('Id') },
+                            { field: 'order_no', title: __('Order_no') },
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
 
-                        {field: 'financial_platform_name', title: __('金融平台')},
-                        {field: 'models_name', title: __('销售车型')},
-                        {field: 'admin_nickname', title: __('销售员')},
-                        {field: 'username', title: __('Username')},
-                        {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                        {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                        {field: 'phone', title: __('Phone')},
-                        {field: 'id_card', title: __('Id_card')},
+                            { field: 'financial_platform_name', title: __('金融平台') },
+                            { field: 'models_name', title: __('销售车型') },
+                            { field: 'admin_nickname', title: __('销售员') },
+                            { field: 'username', title: __('Username') },
+                            { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
+                            { field: 'genderdata_text', title: __('Genderdata'), operate: false },
+                            { field: 'phone', title: __('Phone') },
+                            { field: 'id_card', title: __('Id_card') },
 
-                        {field: 'payment', title: __('首付（元）')},
-                        {field: 'monthly', title: __('月供（元）')},
-                        {field: 'nperlist', title: __('期数')},
-                        {field: 'margin', title: __('保证金（元）')},
-                        {field: 'tail_section', title: __('尾款（元）')},
-                        {field: 'gps', title: __('GPS（元）')},
-                        // {field: 'sales_id', title: __('Sales_id')},
-                        // {field: 'backoffice_id', title: __('Backoffice_id')},
-                        // {field: 'control_id', title: __('Control_id')},
-                        // {field: 'new_car_id', title: __('New_car_id')},
-                    
-                      
-                        // {field: 'city', title: __('City'),formatter:function(value,row,index){
-                        //     return value+''+row.detailed_address;
-                        // }},
-                        // {field: 'detailed_address', title: __('Detailed_address')},
-                        // {field: 'emergency_contact_1', title: __('Emergency_contact_1')},
-                        // {field: 'emergency_contact_2', title: __('Emergency_contact_2')},
-                        // {field: 'family_members', title: __('Family_members')},
-                        // {field: 'customer_source', title: __('Customer_source'), visible:false, searchList: {"direct_the_guest":__('customer_source direct_the_guest'),"turn_to_introduce":__('customer_source turn_to_introduce')}},
-                        // {field: 'customer_source_text', title: __('Customer_source'), operate:false},
-                        // {field: 'turn_to_introduce_name', title: __('Turn_to_introduce_name')},
-                        // {field: 'turn_to_introduce_phone', title: __('Turn_to_introduce_phone')},
-                        // {field: 'turn_to_introduce_card', title: __('Turn_to_introduce_card')},
-                        // {field: 'id_cardimages', title: __('Id_cardimages'), formatter: Table.api.formatter.images},
-                        // {field: 'drivers_licenseimages', title: __('Drivers_licenseimages'), formatter: Table.api.formatter.images},
-                        // {field: 'residence_bookletimages', title: __('Residence_bookletimages'), formatter: Table.api.formatter.images},
-                        // {field: 'housingimages', title: __('Housingimages'), formatter: Table.api.formatter.images},
-                        // {field: 'bank_cardimages', title: __('Bank_cardimages'), formatter: Table.api.formatter.images},
-                        // {field: 'application_formimages', title: __('Application_formimages'), formatter: Table.api.formatter.images},
-                        // {field: 'call_listfiles', title: __('Call_listfiles')},
-                        // {field: 'credit_reportimages', title: __('Credit_reportimages'), formatter: Table.api.formatter.images},
-                        // {field: 'deposit_contractimages', title: __('Deposit_contractimages'), formatter: Table.api.formatter.images},
-                        // {field: 'deposit_receiptimages', title: __('Deposit_receiptimages'), formatter: Table.api.formatter.images},
-                        // {field: 'guarantee_id_cardimages', title: __('Guarantee_id_cardimages'), formatter: Table.api.formatter.images},
-                        // {field: 'guarantee_agreementimages', title: __('Guarantee_agreementimages'), formatter: Table.api.formatter.images},
-                        // {field: 'review_the_data', title: __('Review_the_data'), visible:false, searchList: {"not_through":__('review_the_data not_through'),"through":__('review_the_data through'),"credit_report":__('review_the_data credit_report'),"the_guarantor":__('review_the_data the_guarantor'),"for_the_car":__('review_the_data for_the_car'),"the_car":__('review_the_data the_car')}},
-                        // {field: 'review_the_data_text', title: __('Review_the_data'), operate:false},
-                        // {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        // {field: 'planacar.models_id', title: __('Planacar.models_id')},
-                        {field: 'operate', title: __('Operate'), table: toAudit, 
-                            buttons: [
-                                {
-                                    name:'auditResult',
-                                    text:'审核',
-                                    title:'审核',
-                                    icon: 'fa fa-share',
-                                    classname: 'btn btn-xs btn-info btn-auditResult btn-dialog',
-                                    
-                                    // url: 'riskcontrol/creditreview/auditResult',
-                                
-                                    
-                                }
+                            { field: 'payment', title: __('首付（元）') },
+                            { field: 'monthly', title: __('月供（元）') },
+                            { field: 'nperlist', title: __('期数') },
+                            { field: 'margin', title: __('保证金（元）') },
+                            { field: 'tail_section', title: __('尾款（元）') },
+                            { field: 'gps', title: __('GPS（元）') },
+                            {
+                                field: 'operate', title: __('Operate'), table: toAudit,
+                                buttons: [
+                                    {
+                                        name: 'auditResult',
+                                        text: '审核',
+                                        title: '审核',
+                                        icon: 'fa fa-check-square-o',
+                                        classname: 'btn btn-xs btn-info btn-auditResult btn-dialog',
+                                    },
+                                    {
+                                        name: 'bigData',
+                                        text: '查看大数据',
+                                        title: '查看大数据征信',
+                                        icon: 'fa fa-eye',
+                                        classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
 
-                            ],
-                            events: Controller.api.events.operate,
-                             
-                            formatter: Controller.api.formatter.operate
-                            // events: Table.api.events.operate,
-                             
-                            // formatter: Table.api.formatter.operate
-                        }
+                                    }
+
+                                ],
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+                            }
+                        ]
                     ]
-                ]
-            });
-          
-                // 为表格newCustomer绑定事件
+                });
                 Table.api.bindevent(toAudit);
-
                 //数据实时统计
-                toAudit.on('load-success.bs.table',function(e,data){ 
-                
-                    var toAudit =  $('#badge_new_toAudit').text(data.total); 
+                toAudit.on('load-success.bs.table', function (e, data) {
+                    $(".btn-auditResult").data("area", ["95%", "95%"]);
+                    $(".btn-bigData").data("area", ["95%", "95%"]);
+                    var toAudit = $('#badge_new_toAudit').text(data.total);
                     toAudit = parseInt($('#badge_new_toAudit').text());
-                    
-                    // var newAllocationNum = parseInt($('#badge_new_allocation').text());
-                    // num = parseInt(num);
-                    // $('#badge_new_allocation').text(num+newAllocationNum); 
-                   
                 })
 
             },
             pass_audit: function () {
-                // 已分配的客户
+                // 审核通过
                 var passAudit = $("#passAudit");
                 passAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/passAudit',
@@ -169,82 +126,42 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     searchFormVisible: true,
                     columns: [
                         [
-                            {checkbox: true},
-                            {field: 'id', title: __('Id')},
-                            {field: 'order_no', title: __('Order_no')},
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-    
-                            {field: 'financial_platform_name', title: __('金融平台')},
-                            {field: 'models_name', title: __('销售车型')},
-                            {field: 'admin_nickname', title: __('销售员')},
-                            {field: 'username', title: __('Username')},
-                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                            {field: 'phone', title: __('Phone')},
-                            {field: 'id_card', title: __('Id_card')},
-    
-                            {field: 'payment', title: __('首付（元）')},
-                            {field: 'monthly', title: __('月供（元）')},
-                            {field: 'nperlist', title: __('期数')},
-                            {field: 'margin', title: __('保证金（元）')},
-                            {field: 'tail_section', title: __('尾款（元）')},
-                            {field: 'gps', title: __('GPS（元）')},
-                            // {field: 'sales_id', title: __('Sales_id')},
-                            // {field: 'backoffice_id', title: __('Backoffice_id')},
-                            // {field: 'control_id', title: __('Control_id')},
-                            // {field: 'new_car_id', title: __('New_car_id')},
-                        
-                          
-                            // {field: 'city', title: __('City'),formatter:function(value,row,index){
-                            //     return value+''+row.detailed_address;
-                            // }},
-                            // {field: 'detailed_address', title: __('Detailed_address')},
-                            // {field: 'emergency_contact_1', title: __('Emergency_contact_1')},
-                            // {field: 'emergency_contact_2', title: __('Emergency_contact_2')},
-                            // {field: 'family_members', title: __('Family_members')},
-                            // {field: 'customer_source', title: __('Customer_source'), visible:false, searchList: {"direct_the_guest":__('customer_source direct_the_guest'),"turn_to_introduce":__('customer_source turn_to_introduce')}},
-                            // {field: 'customer_source_text', title: __('Customer_source'), operate:false},
-                            // {field: 'turn_to_introduce_name', title: __('Turn_to_introduce_name')},
-                            // {field: 'turn_to_introduce_phone', title: __('Turn_to_introduce_phone')},
-                            // {field: 'turn_to_introduce_card', title: __('Turn_to_introduce_card')},
-                            // {field: 'id_cardimages', title: __('Id_cardimages'), formatter: Table.api.formatter.images},
-                            // {field: 'drivers_licenseimages', title: __('Drivers_licenseimages'), formatter: Table.api.formatter.images},
-                            // {field: 'residence_bookletimages', title: __('Residence_bookletimages'), formatter: Table.api.formatter.images},
-                            // {field: 'housingimages', title: __('Housingimages'), formatter: Table.api.formatter.images},
-                            // {field: 'bank_cardimages', title: __('Bank_cardimages'), formatter: Table.api.formatter.images},
-                            // {field: 'application_formimages', title: __('Application_formimages'), formatter: Table.api.formatter.images},
-                            // {field: 'call_listfiles', title: __('Call_listfiles')},
-                            // {field: 'credit_reportimages', title: __('Credit_reportimages'), formatter: Table.api.formatter.images},
-                            // {field: 'deposit_contractimages', title: __('Deposit_contractimages'), formatter: Table.api.formatter.images},
-                            // {field: 'deposit_receiptimages', title: __('Deposit_receiptimages'), formatter: Table.api.formatter.images},
-                            // {field: 'guarantee_id_cardimages', title: __('Guarantee_id_cardimages'), formatter: Table.api.formatter.images},
-                            // {field: 'guarantee_agreementimages', title: __('Guarantee_agreementimages'), formatter: Table.api.formatter.images},
-                            // {field: 'review_the_data', title: __('Review_the_data'), visible:false, searchList: {"not_through":__('review_the_data not_through'),"through":__('review_the_data through'),"credit_report":__('review_the_data credit_report'),"the_guarantor":__('review_the_data the_guarantor'),"for_the_car":__('review_the_data for_the_car'),"the_car":__('review_the_data the_car')}},
-                            // {field: 'review_the_data_text', title: __('Review_the_data'), operate:false},
-                            // {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            // {field: 'planacar.models_id', title: __('Planacar.models_id')},
-                            
+                            { checkbox: true },
+                            { field: 'id', title: __('Id') },
+                            { field: 'order_no', title: __('Order_no') },
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+
+                            { field: 'financial_platform_name', title: __('金融平台') },
+                            { field: 'models_name', title: __('销售车型') },
+                            { field: 'admin_nickname', title: __('销售员') },
+                            { field: 'username', title: __('Username') },
+                            { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
+                            { field: 'genderdata_text', title: __('Genderdata'), operate: false },
+                            { field: 'phone', title: __('Phone') },
+                            { field: 'id_card', title: __('Id_card') },
+
+                            { field: 'payment', title: __('首付（元）') },
+                            { field: 'monthly', title: __('月供（元）') },
+                            { field: 'nperlist', title: __('期数') },
+                            { field: 'margin', title: __('保证金（元）') },
+                            { field: 'tail_section', title: __('尾款（元）') },
+                            { field: 'gps', title: __('GPS（元）') },
                         ]
                     ]
 
                 });
 
-                // 为已分配的客户表格绑定事件
                 Table.api.bindevent(passAudit);
 
                 //数据实时统计
-                passAudit.on('load-success.bs.table',function(e,data){ 
-                
-                    var passAudit =  $('#badge_new_passAudit').text(data.total); 
-                    // var newAllocationNum = parseInt($('#badge_new_allocation').text());
-                    // num = parseInt(num);
-                    // $('#badge_new_allocation').text(num+newAllocationNum); 
-                   
+                passAudit.on('load-success.bs.table', function (e, data) {
+
+                    var passAudit = $('#badge_new_passAudit').text(data.total);
                 })
 
             },
             no_approval: function () {
-                // 已反馈的客户
+                // 审核未通过
                 var noApproval = $("#noApproval");
                 noApproval.bootstrapTable({
                     url: 'riskcontrol/creditreview/noApproval',
@@ -262,105 +179,63 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     searchFormVisible: true,
                     columns: [
                         [
-                            {checkbox: true},
-                            {field: 'id', title: __('Id')},
-                            {field: 'order_no', title: __('Order_no')},
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-    
-                            {field: 'financial_platform_name', title: __('金融平台')},
-                            {field: 'models_name', title: __('销售车型')},
-                            {field: 'admin_nickname', title: __('销售员')},
-                            {field: 'username', title: __('Username')},
-                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                            {field: 'phone', title: __('Phone')},
-                            {field: 'id_card', title: __('Id_card')},
-    
-                            {field: 'payment', title: __('首付（元）')},
-                            {field: 'monthly', title: __('月供（元）')},
-                            {field: 'nperlist', title: __('期数')},
-                            {field: 'margin', title: __('保证金（元）')},
-                            {field: 'tail_section', title: __('尾款（元）')},
-                            {field: 'gps', title: __('GPS（元）')},
-                            // {field: 'sales_id', title: __('Sales_id')},
-                            // {field: 'backoffice_id', title: __('Backoffice_id')},
-                            // {field: 'control_id', title: __('Control_id')},
-                            // {field: 'new_car_id', title: __('New_car_id')},
-                        
-                          
-                            // {field: 'city', title: __('City'),formatter:function(value,row,index){
-                            //     return value+''+row.detailed_address;
-                            // }},
-                            // {field: 'detailed_address', title: __('Detailed_address')},
-                            // {field: 'emergency_contact_1', title: __('Emergency_contact_1')},
-                            // {field: 'emergency_contact_2', title: __('Emergency_contact_2')},
-                            // {field: 'family_members', title: __('Family_members')},
-                            // {field: 'customer_source', title: __('Customer_source'), visible:false, searchList: {"direct_the_guest":__('customer_source direct_the_guest'),"turn_to_introduce":__('customer_source turn_to_introduce')}},
-                            // {field: 'customer_source_text', title: __('Customer_source'), operate:false},
-                            // {field: 'turn_to_introduce_name', title: __('Turn_to_introduce_name')},
-                            // {field: 'turn_to_introduce_phone', title: __('Turn_to_introduce_phone')},
-                            // {field: 'turn_to_introduce_card', title: __('Turn_to_introduce_card')},
-                            // {field: 'id_cardimages', title: __('Id_cardimages'), formatter: Table.api.formatter.images},
-                            // {field: 'drivers_licenseimages', title: __('Drivers_licenseimages'), formatter: Table.api.formatter.images},
-                            // {field: 'residence_bookletimages', title: __('Residence_bookletimages'), formatter: Table.api.formatter.images},
-                            // {field: 'housingimages', title: __('Housingimages'), formatter: Table.api.formatter.images},
-                            // {field: 'bank_cardimages', title: __('Bank_cardimages'), formatter: Table.api.formatter.images},
-                            // {field: 'application_formimages', title: __('Application_formimages'), formatter: Table.api.formatter.images},
-                            // {field: 'call_listfiles', title: __('Call_listfiles')},
-                            // {field: 'credit_reportimages', title: __('Credit_reportimages'), formatter: Table.api.formatter.images},
-                            // {field: 'deposit_contractimages', title: __('Deposit_contractimages'), formatter: Table.api.formatter.images},
-                            // {field: 'deposit_receiptimages', title: __('Deposit_receiptimages'), formatter: Table.api.formatter.images},
-                            // {field: 'guarantee_id_cardimages', title: __('Guarantee_id_cardimages'), formatter: Table.api.formatter.images},
-                            // {field: 'guarantee_agreementimages', title: __('Guarantee_agreementimages'), formatter: Table.api.formatter.images},
-                            // {field: 'review_the_data', title: __('Review_the_data'), visible:false, searchList: {"not_through":__('review_the_data not_through'),"through":__('review_the_data through'),"credit_report":__('review_the_data credit_report'),"the_guarantor":__('review_the_data the_guarantor'),"for_the_car":__('review_the_data for_the_car'),"the_car":__('review_the_data the_car')}},
-                            // {field: 'review_the_data_text', title: __('Review_the_data'), operate:false},
-                            // {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            // {field: 'planacar.models_id', title: __('Planacar.models_id')},
-                            
+                            { checkbox: true },
+                            { field: 'id', title: __('Id') },
+                            { field: 'order_no', title: __('Order_no') },
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+
+                            { field: 'financial_platform_name', title: __('金融平台') },
+                            { field: 'models_name', title: __('销售车型') },
+                            { field: 'admin_nickname', title: __('销售员') },
+                            { field: 'username', title: __('Username') },
+                            { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
+                            { field: 'genderdata_text', title: __('Genderdata'), operate: false },
+                            { field: 'phone', title: __('Phone') },
+                            { field: 'id_card', title: __('Id_card') },
+
+                            { field: 'payment', title: __('首付（元）') },
+                            { field: 'monthly', title: __('月供（元）') },
+                            { field: 'nperlist', title: __('期数') },
+                            { field: 'margin', title: __('保证金（元）') },
+                            { field: 'tail_section', title: __('尾款（元）') },
+                            { field: 'gps', title: __('GPS（元）') },
                         ]
                     ]
                 });
-                
-                // 为已反馈的客户表格绑定事件
+
                 Table.api.bindevent(noApproval);
 
                 //数据实时统计
-                noApproval.on('load-success.bs.table',function(e,data){ 
-                
-                    var noApproval =  $('#badge_new_noApproval').text(data.total); 
-                    // var newFeedback = parseInt($('#badge_new_feedback').text());
-                    // num = parseInt(num);
-                    // $('#badge_new_allocation').text(num+newFeedback); 
-                   
+                noApproval.on('load-success.bs.table', function (e, data) {
+
+                    var noApproval = $('#badge_new_noApproval').text(data.total);
                 })
 
             }
         },
-        
+
         //审核
-        auditResult:function(){
- 
-            // $(".btn-add").data("area", ["300px","200px"]);
+        auditResult: function () {
             Table.api.init({
-               
+
             });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
+
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
                 // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
+            }, function (data, ret) {
                 // console.log(data); 
-                Toastr.success("失败"); 
+                Toastr.success("失败");
             });
             // Controller.api.bindevent();
             // console.log(Config.id);
- 
+
         },
-        add: function () { 
+        add: function () {
             Controller.api.bindevent();
-           
+
         },
         edit: function () {
             Controller.api.bindevent();
@@ -374,32 +249,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
             },
-            events:{
+            events: {
                 operate: {
-                    //提交审核
+                    //审核
                     'click .btn-auditResult': function (e, value, row, index) {
-                        
+
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'riskcontrol/creditreview/auditResult'; 
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = 'riskcontrol/creditreview/auditResult';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
-                            // shadeClose: false,
-                            // shade: [0.3, '#393D49'],
-
-                            callback:function(value){
-                                
-
-                            //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            callback: function (value) {
+                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
                             }
                         })
                     },
-     
+                    //查看大数据
+                    'click .btn-bigData': function (e, value, row, index) { 
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = 'riskcontrol/creditreview/toViewBigData';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+                            callback: function (value) {
+                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            }
+                        })
+                    },
                 }
-               
+
             },
             formatter: {
                 operate: function (value, row, index) {
@@ -412,51 +296,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 }
-               
+
             }
         }
-         
+
     };
 
-    $('#pass').click(function(){
+    $('#pass').click(function () {
         // alert(123);
         // return false;   
-            
-        Form.api.bindevent($("form[role=form]"), function(data, ret){
+
+        Form.api.bindevent($("form[role=form]"), function (data, ret) {
             //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
+
             Fast.api.close(data);//这里是重点
             // console.log(data);
             // Toastr.success("成功");//这个可有可无
-        }, function(data, ret){
-                // console.log(data); 
-            Toastr.success("失败"); 
+        }, function (data, ret) {
+            // console.log(data); 
+            Toastr.success("失败");
         });
-           
-        
+
+
     });
-    $('#data').click(function(){
-        Form.api.bindevent($("form[role=form]"), function(data, ret){
+    $('#data').click(function () {
+        Form.api.bindevent($("form[role=form]"), function (data, ret) {
             //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
+
             Fast.api.close(data);//这里是重点
             // console.log(data);
             // Toastr.success("成功");//这个可有可无
-        }, function(data, ret){
-                // console.log(data); 
-            Toastr.success("失败"); 
+        }, function (data, ret) {
+            // console.log(data); 
+            Toastr.success("失败");
         });
     });
-    $('#nopass').click(function(){
-        Form.api.bindevent($("form[role=form]"), function(data, ret){
+    $('#nopass').click(function () {
+        Form.api.bindevent($("form[role=form]"), function (data, ret) {
             //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
+
             Fast.api.close(data);//这里是重点
             // console.log(data);
             // Toastr.success("成功");//这个可有可无
-        }, function(data, ret){
-                // console.log(data); 
-            Toastr.success("失败"); 
+        }, function (data, ret) {
+            // console.log(data); 
+            Toastr.success("失败");
         });
     });
     return Controller;
