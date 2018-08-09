@@ -65,6 +65,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
+
+        },
+        vehicleManagement:function(){
+ 
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data); 
+                Toastr.success("失败"); 
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+ 
         },
         add: function () {
             Controller.api.bindevent();
@@ -78,5 +99,78 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             }
         }
     };
+    //第一步的点击
+    $('#onebtn').click(function(){
+        var onebtns=document.getElementById("onebtn");
+     	var twobtns=document.getElementById("twobtn");
+     	var soutside1ab=document.getElementById("outside1abs");
+     	var soutside2as=document.getElementById("outside2as");
+        var oneforms=document.getElementById("oneform");
+        var twoforms=document.getElementById("twoform");
+        var threeforms=document.getElementById("add-form");
+        
+        var $ids = $('#hiddenPlanName').val();
+        console.log($ids);
+        // return;
+        Layer.confirm(
+            __('需要车管文员确认车辆状态及证件是否齐全，是否发起确认请求?'),
+            {icon: 3, title: __('Warning'), shadeClose: true},
+
+            function (index) {
+
+                Fast.api.ajax({
+                    url: 'order/rentalorder/vehicleManagement',
+                    data: {id: JSON.stringify($ids)}
+                }, function (data, rets) {
+                    // console.log(data);
+                    // return;
+                    Toastr.success("成功");
+                    Layer.close(index);
+                    Layer.open({
+                        type: 1,
+                        skin: 'layui-layer-demo', //样式类名
+                        closeBtn: 0, //不显示关闭按钮
+                        anim: 2,
+                        shadeClose: false, //开启遮罩关闭
+                        content: '请耐心等待车管人员的确认'
+                      });
+
+                    
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+                    
+                    return false;
+                });
+
+
+            }
+        );
+     	
+		soutside1ab.classList.remove("outside1ab");
+		oneforms.style.display="none";
+        twoforms.style.display="block";
+        
+       
+        
+    });
+
+    //第二步的点击
+    $('#twobtn').click(function(){
+        var onebtns=document.getElementById("onebtn");
+     	var twobtns=document.getElementById("twobtn");
+     	var soutside1ab=document.getElementById("outside1abs");
+     	var soutside2as=document.getElementById("outside2as");
+        var oneforms=document.getElementById("oneform");
+        var twoforms=document.getElementById("twoform");
+        var threeforms=document.getElementById("add-form");
+     	
+		threeforms.style.display="block";
+        twoforms.style.display="none";
+        soutside2as.classList.remove("outside2a");
+       
+        
+    });
+
     return Controller;
 });

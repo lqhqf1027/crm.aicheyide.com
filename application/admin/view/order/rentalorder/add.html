@@ -1,6 +1,4 @@
 <style>
-     /** @version:1.1.5
- * @author:byl@*/
 *{margin: 0;padding: 0;box-sizing: border-box;}
 body, html {
     font-family:"微软雅黑";
@@ -82,7 +80,11 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
 /*第一步*/
 .twobox-form{display: none;}
 .threebox-form{display: none;}
-
+/* 第三步 */
+ .threebox-form .successr .symbol{width: 66px;height: 66px;border: solid 4px #39f;border-radius:50%;position: relative;margin: 0 auto;}
+ .threebox-form .successr .symbol:before{position: absolute; content: " ";width:36px; height:19px;border-left:4px solid #39f; border-bottom: 4px solid #39f;top: 12px;left: 10px;transform:rotate(-46deg);}
+ .threebox-form .successr p{font-size: 20px;text-align: center;margin-top: 15px;}
+ /* .threebox-form .successr button{width: 130px;height: 40px;background-color: #39f;color: #fff;margin: 7% 32%;border-radius: 6px;font-size: 14px;} */
 </style>
 
 <!-- 流程图 -->
@@ -129,72 +131,78 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
 
 <form id="oneform" class="form-horizontal onebox-form"  role="form" data-toggle="validator" method="POST" action="">
     <div id="oneform">
-    
+
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('请选择租车方案')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('请选择租车方案')}:</label>
             <div class="col-xs-12 col-sm-8">
-                    <select id="c-plan_car_rental_name" data-rule="required">
 
-                            <option value=" " style='display: none'>未选中任何项</option>
-                            {volist name="newRes" id="vo"}
-
-                            <option value="{$vo['brand_logoimage']}" disabled>{$vo['brand_name']}</option>
-                            {volist name="vo.data" id="vo_s"}
-                            <option value="{$vo_s['id']}">{$vo_s['models_name']}</option>
-                            {/volist} {/volist}
-                                                
+                    <select id="c-plan_acar_name" data-rule="required" class="form-control selectpicker" name="row[plan_acar_name]" onchange="planName(this.value)">
+                        <option value=" " style='display: none'>未选中任何项</option>
+                        {volist name="newRes" id="vo"}
+        
+                        <option value="{$vo['brand_logoimage']}" disabled>{$vo['brand_name']}</option>
+                        {volist name="vo.data" id="vo_s"}
+                        <option id="rentalCar" value="{$vo_s['id']}">{$vo_s['models_name']}</option>
+                        {/volist} {/volist}
                     </select>
+            </div>
+            <input type="hidden" value="" id="hiddenPlanName">
+            <div class="control-label col-xs-12 col-sm-11">
+                    <button type="button" class="onebtn btn btn-success btn-embossed" id="onebtn">下一步</button>
             </div>
         </div>
 
-        <button type="button" class="onebtn" id="onebtn" onclick="fun()">下一步</button>
-        
     </div>      
 </form>
+<script>
+    function planName(planName){
+        document.getElementById('hiddenPlanName').value=planName;
+    }
 
+</script>
 <!-- 完善客户信息 -->
 
 <form id="twoform" class="form-horizontal twobox-form"  role="form" data-toggle="validator" method="POST" action="">
     <div id="twoform">
     
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Cash_pledge')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Cash_pledge')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-cash_pledge" data-rule="required" class="form-control form-control" name="row[cash_pledge]" type="number">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Rental_price')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Rental_price')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-rental_price" data-rule="required" class="form-control form-control" name="row[rental_price]" type="number">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Tenancy_term')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Tenancy_term')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-tenancy_term" data-rule="required" class="form-control form-control" name="row[tenancy_term]" type="number">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Username')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-username" data-rule="required" class="form-control form-control" name="row[username]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Phone')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-phone" data-rule="required" class="form-control form-control" name="row[phone]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Id_card')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-id_card" data-rule="required" class="form-control form-control" name="row[id_card]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Genderdata')}:</label>
             <div class="col-xs-12 col-sm-8">
                 
                 <div class="radio">
@@ -206,67 +214,67 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Gps_installation_name')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Gps_installation_name')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-gps_installation_name" data-rule="required" class="form-control form-control" name="row[gps_installation_name]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Gps_installation_datetime')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Gps_installation_datetime')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-gps_installation_datetime" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[gps_installation_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Information_audition_name')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Information_audition_name')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-information_audition_name" data-rule="required" class="form-control form-control" name="row[information_audition_name]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Information_audition_datetime')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Information_audition_datetime')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-information_audition_datetime" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[information_audition_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Insurance_status_name')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Insurance_status_name')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-Insurance_status_name" data-rule="required" class="form-control form-control" name="row[Insurance_status_name]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Insurance_status_datetime')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Insurance_status_datetime')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-Insurance_status_datetime" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[Insurance_status_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('General_manager_name')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('General_manager_name')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-general_manager_name" data-rule="required" class="form-control form-control" name="row[general_manager_name]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('General_manager_datetime')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('General_manager_datetime')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-general_manager_datetime" data-rule="required" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[general_manager_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_1')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Emergency_contact_1')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-emergency_contact_1" data-rule="required" class="form-control form-control" name="row[emergency_contact_1]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_2')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Emergency_contact_2')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-emergency_contact_2" data-rule="required" class="form-control form-control" name="row[emergency_contact_2]" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Id_cardimages')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <div class="input-group">
                     <input id="c-id_cardimages" data-rule="required" class="form-control form-control" size="50" name="row[id_cardimages]" type="text">
@@ -280,7 +288,7 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Drivers_licenseimages')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <div class="input-group">
                     <input id="c-drivers_licenseimages" data-rule="required" class="form-control form-control" size="50" name="row[drivers_licenseimages]" type="text">
@@ -294,7 +302,7 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Residence_bookletimages')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Residence_bookletimages')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <div class="input-group">
                     <input id="c-residence_bookletimages" data-rule="required" class="form-control form-control" size="50" name="row[residence_bookletimages]" type="text">
@@ -308,7 +316,7 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfilesimages')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Call_listfilesimages')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <div class="input-group">
                     <input id="c-call_listfilesimages" data-rule="required" class="form-control form-control" size="50" name="row[call_listfilesimages]" type="text">
@@ -322,68 +330,42 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Delivery_datetime')}:</label>
+            <label class="control-label col-xs-12 col-sm-3">{:__('Delivery_datetime')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <input id="c-delivery_datetime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[delivery_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
             </div>
         </div>
 
-        <button type="button" class="twobtn" id="twobtn" onclick="fun1()">下一步</button>
+        <div class="control-label col-xs-12 col-sm-11">
+                <button type="button" class="twobtn btn btn-success btn-embossed" id="twobtn">下一步</button>
+        </div>
+
 
     </div>
 </form>
 
 <!-- 提交信息入库 -->
 
-<form id="threeform" class="form-horizontal threebox-form" role="form" data-toggle="validator" method="POST" action="">
-    <div id="threeform">
+<form id="add-form" class="form-horizontal threebox-form" role="form" data-toggle="validator" method="POST" action="">
+    <div id="add-form">
 
-    
-        <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('请选择租车方案')}:</label>
-            <div class="col-xs-12 col-sm-8">
-                    <select id="c-plan_car_rental_name" data-rule="required">
-
-                            <option value=" " style='display: none'>未选中任何项</option>
-                            {volist name="newRes" id="vo"}
-
-                            <option value="{$vo['brand_logoimage']}" disabled>{$vo['brand_name']}</option>
-                            {volist name="vo.data" id="vo_s"}
-                            <option value="{$vo_s['id']}">{$vo_s['models_name']}</option>
-                            {/volist} {/volist}
-                                                
-                    </select>
-
+            <div class="successr control-label col-xs-12 col-sm-12">
+                    <div class="symbol">
+                        
+                    </div>
+            <p>恭喜，完成了租车订单！</p>
+            <!-- <div class="control-label col-xs-12 col-sm-8">
+                    <button type="button" class=" confirm twobtn btn btn-success btn-embossed">确认</button>
+            </div> -->
+            <!-- <button class="confirm btn btn-success btn-embossed col-xs-12 col-sm-11">确认</button> -->
             </div>
-        </div>
 
-        <button class="confirm">确认</button>
+            <div class="control-label col-xs-12 col-sm-8">
+                    <button type="button" class=" confirm twobtn btn btn-success btn-embossed">确认</button>
+            </div>
 
     </div>
 
 </form>
 
-<script type="text/javascript">
-     	var onebtns=document.getElementById("onebtn");
-     	var twobtns=document.getElementById("twobtn");
-     	var soutside1ab=document.getElementById("outside1abs");
-     	var soutside2as=document.getElementById("outside2as");
-        var oneforms=document.getElementById("oneform");
-        var twoforms=document.getElementById("twoform");
-        var threeforms=document.getElementById("threeform");
-     	function fun(){
 
-		    soutside1ab.classList.remove("outside1ab");
-		    oneforms.style.display="none";
-		    twoforms.style.display="block";
-                		
-     	}
-        function fun1(){
-	    		
-          threeforms.style.display="block";
-          twoforms.style.display="none";
-          soutside2as.classList.remove("outside2a");
-          
-        } 
-            
-</script>

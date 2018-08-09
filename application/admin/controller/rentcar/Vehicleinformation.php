@@ -5,6 +5,8 @@ namespace app\admin\controller\rentcar;
 use app\common\controller\Backend;
 
 use think\Db;
+use app\common\model\Config as ConfigModel;
+
 /**
  * 租车管理车辆信息
  *
@@ -65,9 +67,13 @@ class Vehicleinformation extends Backend
                     ->limit($offset, $limit)
                     ->select();
 
-            foreach ($list as $row) {
-                
-                
+            foreach ($list as $key => $value) {
+                $sql = DB::name('admin')->where('id',$value['sales_id'])->field('nickname,rule_message')->select();
+                // $rule_message = $sql[0]['rule_message'];
+                $rule_message = DB::name('auth_group_access')->alias('a')->join('auth_group b','a.group_id=b.id')->field('b.name as sales_name')->where('a.uid',$value['sales_id'])->select();
+                $sales_name = $rule_message['0']['sales_name'] . '---' . $sql[0]['nickname'];
+                $list[$key]['sales'] = $sales_name;
+               
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
@@ -125,6 +131,73 @@ class Vehicleinformation extends Backend
 
 
             $params = $this->request->post('row/a');
+           
+            $result = $this->model->save(['sales_id' => $params['id']], function ($query) use ($id) {
+                $query->where('id', $id->id);
+            });
+            if ($result) {
+                $this->success();
+
+            } else {
+                $this->error();
+            }
+        }
+
+
+        return $this->view->fetch();
+    }
+    //修改销售预定
+    public function salesbookedit($ids = NULL)
+    {
+        $this->model = model('CarRentalModelsInfo');
+        $id = $this->model->get(['id' => $ids]);
+        
+        $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
+            $query->where('rule_message', 'message8')->whereOr('rule_message', 'message9');
+        })->select();
+        $saleList = array();
+
+        if (count($sale) > 0) {
+
+            $firstCount = 0;
+            $secondCount = 0;
+
+            foreach ($sale as $k => $v) {
+                switch ($v['rule_message']) {
+                    case 'message8':
+                        $saleList['message8'][$firstCount]['nickname'] = $v['nickname'];
+                        $saleList['message8'][$firstCount]['id'] = $v['id'];
+                        $firstCount++;
+                        break;
+                    case 'message9':
+                        $saleList['message9'][$secondCount]['nickname'] = $v['nickname'];
+                        $saleList['message9'][$secondCount]['id'] = $v['id'];
+                        $secondCount++;
+                        break;
+                }
+            }
+
+        }
+
+        if (empty($saleList['message8'])) {
+            $saleList['message8'] = null;
+        }
+
+        if (empty($saleList['message9'])) {
+            $saleList['message9'] = null;
+        }
+
+        $this->view->assign('firstSale', $saleList['message8']);
+        $this->view->assign('secondSale', $saleList['message9']);
+
+        if ($this->request->isPost()) {
+
+
+            $params = $this->request->post('row/a');
+
+            if($params['id'] == 0){
+                $params['id'] = NULL;
+            }
            
             $result = $this->model->save(['sales_id' => $params['id']], function ($query) use ($id) {
                 $query->where('id', $id->id);

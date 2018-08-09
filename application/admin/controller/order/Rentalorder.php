@@ -123,5 +123,26 @@ class Rentalorder extends Backend
          return $this->view->fetch();
      }
     
+     //车辆管理人员审核
+    public function vehicleManagement()
+    {
 
+        if ($this->request->isAjax()) {
+            $this->model = model('car_rental_models_info');
+            $id = input("id");
+
+            $id = json_decode($id, true);
+
+
+            $result = $this->model
+                ->where('id', $id)
+                ->setField('review_the_data', 'is_reviewing');
+
+            if ($result) {
+                $this->success('', '', $result);
+            } else {
+                $this->error();
+            }
+        }
+    }
 }

@@ -55,7 +55,6 @@ class Orderlisttabs extends Backend
     /**以租代购（新车）*/
     public function orderAcar(){ 
         
-        
         // pr(collection($this->getPlanAcarData(5))->toArray());
 
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
@@ -165,131 +164,62 @@ class Orderlisttabs extends Backend
             if (!in_array($row[$this->dataLimitField], $adminIds)) {
                 $this->error(__('You have no permission'));
             }
-        }  
+        }
+        
         //定金合同（多图）
-        $deposit_contractimages = $row['deposit_contractimages'];
-        $deposit_contractimage = explode(',',$deposit_contractimages);
+        $deposit_contractimages = explode(',',$row['deposit_contractimages']);
         
-        $deposit_contractimages_arr = [];
-        foreach ($deposit_contractimage as $k => $v) {
-            $deposit_contractimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //定金收据上传
-        $deposit_receiptimages = $row['deposit_receiptimages'];
-        $deposit_receiptimage = explode(',',$deposit_receiptimages);
-        
-        $deposit_receiptimages_arr = [];
-        foreach ($deposit_receiptimage as $k => $v) {
-            $deposit_receiptimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
+        $deposit_receiptimages = explode(',',$row['deposit_receiptimages']);
 
         //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'];
-        $id_cardimage = explode(',',$id_cardimages);
+        $id_cardimages = explode(',',$row['id_cardimages']);
         
-        $id_cardimages_arr = [];
-        foreach ($id_cardimage as $k => $v) {
-            $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'];
-        $drivers_licenseimage = explode(',',$drivers_licenseimages);
+        $drivers_licenseimages = explode(',',$row['drivers_licenseimages']);
         
-        $drivers_licenseimages_arr = [];
-        foreach ($drivers_licenseimage as $k => $v) {
-            $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages'];
-        $residence_bookletimage = explode(',',$residence_bookletimages);
+        $residence_bookletimages = explode(',',$row['residence_bookletimages']);
         
-        $residence_bookletimages_arr = [];
-        foreach ($residence_bookletimage as $k => $v) {
-            $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //住房合同/房产证（多图）
-        $housingimages = $row['housingimages'];
-        $housingimage = explode(',',$housingimages);
+        $housingimages = explode(',',$row['housingimages']);
         
-        $housingimages_arr = [];
-        foreach ($housingimage as $k => $v) {
-            $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //银行卡照（可多图）
-        $bank_cardimages = $row['bank_cardimages'];
-        $bank_cardimage = explode(',',$bank_cardimages);
-        
-        $bank_cardimages_arr = [];
-        foreach ($bank_cardimage as $k => $v) {
-            $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
+        $bank_cardimages = explode(',',$row['bank_cardimages']);
 
         //申请表（多图）
-        $application_formimages = $row['application_formimages'];
-        $application_formimage = explode(',',$application_formimages);
+        $application_formimages = explode(',',$row['application_formimages']);
         
-        $application_formimages_arr = [];
-        foreach ($application_formimage as $k => $v) {
-            $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //通话清单（文件上传）
-        $call_listfiles = $row['call_listfiles'];
-        $call_listfile = explode(',',$call_listfiles);
+        $call_listfiles = explode(',',$row['call_listfiles']);
         
-        $call_listfiles_arr = [];
-        foreach ($call_listfile as $k => $v) {
-            $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //征信报告（多图）
-        $credit_reportimages = $row['credit_reportimages'];
-        $credit_reportimage = explode(',',$credit_reportimages);
+        $new_car_marginimages = explode(',',$row['new_car_marginimages']);
         
-        $credit_reportimages_arr = [];
-        foreach ($credit_reportimage as $k => $v) {
-            $credit_reportimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //担保人身份证正反面（多图）
-        $guarantee_id_cardimages = $row['guarantee_id_cardimages'];
-        $guarantee_id_cardimage = explode(',',$guarantee_id_cardimages);
+        $guarantee_id_cardimages = explode(',',$row['guarantee_id_cardimages']);
         
-        $guarantee_id_cardimages_arr = [];
-        foreach ($guarantee_id_cardimage as $k => $v) {
-            $guarantee_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //担保协议（多图）
-        $guarantee_agreementimages = $row['guarantee_agreementimages'];
-        $guarantee_agreementimage = explode(',',$guarantee_agreementimages);
+        $guarantee_agreementimages = explode(',',$row['guarantee_agreementimages']);
         
-        $guarantee_agreementimages_arr = [];
-        foreach ($guarantee_agreementimage as $k => $v) {
-            $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
         $this->view->assign(
-            array(
-                'deposit_contractimages_arr'=> $deposit_contractimages_arr,
-                'deposit_receiptimages_arr'=> $deposit_receiptimages_arr,
-                'id_cardimages_arr'=> $id_cardimages_arr,
-                'drivers_licenseimages_arr'=> $drivers_licenseimages_arr,
-                'residence_bookletimages_arr'=> $residence_bookletimages_arr,
-                'housingimages_arr'=> $housingimages_arr,
-                'bank_cardimages_arr'=> $bank_cardimages_arr,
-                'application_formimages_arr'=> $application_formimages_arr,
-                'call_listfiles_arr'=> $call_listfiles_arr,
-                'credit_reportimages_arr'=> $credit_reportimages_arr,
-                'guarantee_id_cardimages_arr'=> $guarantee_id_cardimages_arr,
-                'guarantee_agreementimages_arr'=> $guarantee_agreementimages_arr,
-            )
-        );
-        $this->view->assign("row", $row);
+            [    
+                'row'=>$row, 
+                'cdn'=>Config::get('upload')['cdnurl'],
+                'deposit_contractimages'=> $deposit_contractimages,
+                'deposit_receiptimages'=> $deposit_receiptimages,
+                'id_cardimages'=> $id_cardimages,
+                'drivers_licenseimages'=> $drivers_licenseimages,
+                'residence_bookletimages'=> $residence_bookletimages,
+                'housingimages'=> $housingimages,
+                'bank_cardimages'=> $bank_cardimages,
+                'application_formimages'=> $application_formimages,
+                'call_listfiles'=> $call_listfiles,
+                'new_car_marginimages'=> $new_car_marginimages,
+                'guarantee_id_cardimages'=> $guarantee_id_cardimages,
+                'guarantee_agreementimages'=> $guarantee_agreementimages,
+             ]
+         ); 
         return $this->view->fetch();
     }
 
@@ -365,42 +295,17 @@ class Orderlisttabs extends Backend
                     
                         ;
 
-
         //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'];
-        $id_cardimage = explode(',',$id_cardimages);
+        $id_cardimages = explode(',',$row['id_cardimages']);
         
-        $id_cardimages_arr = [];
-        foreach ($id_cardimage as $k => $v) {
-            $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
-
         //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'];
-        $drivers_licenseimage = explode(',',$drivers_licenseimages);
-        
-        $drivers_licenseimages_arr = [];
-        foreach ($drivers_licenseimage as $k => $v) {
-            $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
+        $drivers_licenseimages = explode(',',$row['drivers_licenseimages']);
 
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages'];
-        $residence_bookletimage = explode(',',$residence_bookletimages);
-        
-        $residence_bookletimages_arr = [];
-        foreach ($residence_bookletimage as $k => $v) {
-            $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
+        $residence_bookletimages = explode(',',$row['residence_bookletimages']);
 
         //通话清单（文件上传）
-        $call_listfilesimages = $row['call_listfilesimages'];
-        $call_listfilesimage = explode(',',$call_listfilesimages);
-        
-        $call_listfilesimages_arr = [];
-        foreach ($call_listfilesimage as $k => $v) {
-            $call_listfilesimages_arr[] = Config::get('upload')['cdnurl'] . $v;
-        }
+        $call_listfilesimages = explode(',',$row['call_listfilesimages']);
 
         $sql = Db::name('rental_order')->alias('a')
             ->join('car_rental_models_info b','b.id=a.plan_car_rental_name')
@@ -412,17 +317,17 @@ class Orderlisttabs extends Backend
            
         $newRes=$sql[0]['models_name'].'【押金'.$row['cash_pledge'].'，'.'租期'.$row['tenancy_term'].'，'.'月供'.$row['rental_price'].'】';
                 
-        $this->view->assign('newRes',$newRes);
-
         $this->view->assign(
-            array(
-                'id_cardimages_arr'=> $id_cardimages_arr,
-                'drivers_licenseimages_arr'=> $drivers_licenseimages_arr,
-                'residence_bookletimages_arr'=> $residence_bookletimages_arr,
-                'call_listfilesimages_arr'=> $call_listfilesimages_arr,
-            )
+            [
+                'newRes'=> $newRes,
+                "row"=> $row,
+                'cdn'=>Config::get('upload')['cdnurl'],
+                'id_cardimages'=> $id_cardimages,
+                'drivers_licenseimages'=> $drivers_licenseimages,
+                'residence_bookletimages'=> $residence_bookletimages,
+                'call_listfilesimages'=> $call_listfilesimages,
+            ]
         );
-        $this->view->assign("row", $row);
         return $this->view->fetch();
     }
 
