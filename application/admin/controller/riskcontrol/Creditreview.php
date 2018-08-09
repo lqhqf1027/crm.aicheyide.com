@@ -20,48 +20,46 @@ class Creditreview extends Backend
      * Ordertabs模型对象
      * @var \app\admin\model\Ordertabs
      */
-    protected $model = null;
-    protected  $dataLimit = 'false'; //表示显示当前自己和所有子级管理员的所有数据
+    protected $model = null; 
+    protected $userid = 'junyi_testusr';//用户id
+    protected $Rc4 = '1de2474bcaaac1e4';//apikey
+    protected $sign = null;//sign  md5加密
 
     public function _initialize()
     {
         parent::_initialize(); 
-
+        $this->model = model('SalesOrder');  
+        $this->sign =md5($this->userid.$this->Rc4); 
     }
 
     public function index()
     {
         $this->loadlang('order/salesorder');
-        $this->model = model('SalesOrder');
-        $total = $this->model
-                     ->where($where)
-                     ->where('review_the_data', 'is_reviewing_true')
-                     ->order($sort, $order)
-                     ->count();
-        $total1 = $this->model
-                     ->where($where)
-                     ->where('review_the_data', 'for_the_car')
-                     ->order($sort, $order)
-                     ->count(); 
-        $total2 = $this->model
-                     ->where($where)
-                     ->where('review_the_data', 'not_through')
-                     ->order($sort, $order)
-                     ->count();         
-        $this->view->assign('total',$total);
-        $this->view->assign('total1',$total1);
-        $this->view->assign('total2',$total2);
+      
+        $this->view->assign([
+            'total'=>$this->model
+                    ->where($where)
+                    ->where('review_the_data', 'is_reviewing_true')
+                    ->order($sort, $order)
+                    ->count(),
+            'total1'=>$this->model
+                    ->where($where)
+                    ->where('review_the_data', 'for_the_car')
+                    ->order($sort, $order)
+                    ->count(),
+            'total2'=>$this->model
+                    ->where($where)
+                    ->where('review_the_data', 'not_through')
+                    ->order($sort, $order)
+                    ->count(),
+
+        ]); 
         return $this->view->fetch();
     }
 
     //展示需要审核的销售单
     public function toAudit()
-    { 
-        
-        $this->model = model('SalesOrder');
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
-        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+    {  
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -242,7 +240,7 @@ class Creditreview extends Backend
                 
     }
 
-    //审核销售提交过来的销售单
+    /** 审核销售提交过来的销售单*/
     public function auditResult($ids=NULL)
     {
         
@@ -262,7 +260,6 @@ class Creditreview extends Backend
         //身份证图片
        
         $id_cardimages = explode(',',$row['id_cardimages']); 
-         
         //驾照图片 
         $drivers_licenseimages = explode(',',$row['drivers_licenseimages']); 
         //户口簿图片 
@@ -279,6 +276,9 @@ class Creditreview extends Backend
        $deposit_receiptimages = explode(',',$row['deposit_receiptimages']);  
         //通话清单
        $call_listfiles = explode(',',$row['call_listfiles']);  
+       /**不必填 */
+       //保证金收据
+       $new_car_marginimages = $row['new_car_marginimages']==''?[]:explode(',',$row['new_car_marginimages']);  
         $this->view->assign(
            [    
                'row'=>$row, 
@@ -292,9 +292,10 @@ class Creditreview extends Backend
                 'deposit_contractimages'=>$deposit_contractimages,
                 'deposit_receiptimages'=>$deposit_receiptimages,
                 'call_listfiles'=>$call_listfiles,
+                'new_car_marginimages'=>$new_car_marginimages 
             ]
         ); 
-  
+        $id = $row['id'];
         if ($this->request->isPost())
         {
             
@@ -363,5 +364,24 @@ class Creditreview extends Backend
 
     }
 
-    
+    /**查看大数据 */
+    public function toViewBigData($ids=NULL){ 
+        $row = $this->model->get($ids);
+        $params = array();
+        $params['sign'] = $this->sign;
+        $params['userid'] = $this->userid;
+        $params['params'] =  
+                [
+                    'tx'=>'101',
+                    'data'=>[
+                        'name'=>'包成永',
+                        'idNo'=>'511623199504257475',
+                        'queryReason'=>'10'
+                    ]
+                ];
+       
+        pr(json_encode($params));
+        pr(posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3',$params));
+        // pr($this->sign);die;
+    }
 }

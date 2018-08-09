@@ -33,7 +33,7 @@ return [
     'Bank_cardimages'  =>  '银行卡照（可多图）',
     'Application_formimages'  =>  '申请表（多图）',
     'Call_listfiles'  =>  '通话清单（文件上传）',
-    'Credit_reportimages'  =>  '征信报告（多图）,不必填',
+    'New_car_marginimages'  =>  '保证金收据上传',
     'Deposit_contractimages'  =>  '定金合同（多图）',
     'Deposit_receiptimages'  =>  '定金收据上传',
     'Guarantee_id_cardimages'  =>  '担保人身份证正反面（多图）',

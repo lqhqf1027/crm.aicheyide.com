@@ -360,18 +360,18 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfiles')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-6">
             <div class="input-group">
-                <input id="c-call_listfiles" data-rule="required" class="form-control" size="50" name="row[call_listfiles]" type="text" placeholder="请上传PDF或EXCEL格式！！！">
+                <input id="c-call_listfiles" data-rule="required" class="form-control" size="50" name="row[call_listfiles]" type="text" placeholder="请上传PDF格式！！！">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-call_listfiles" class="btn btn-danger plupload" data-input-id="c-call_listfiles" data-multiple="true">
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     &nbsp;&nbsp;&nbsp;
-                    <span>
+                    <!-- <span>
 
                         <button type="button" id="fachoose-call_listfiles" class="btn btn-info get_call_listfiles" data-multiple="true">
                             <i class="fa fa-download"></i> {:__('点击这里一键获取通话清单')}</button>
-                    </span>
+                    </span> -->
                 </div>
                 <span class="msg-box n-right" for="c-call_listfiles"></span>
             </div>
@@ -384,51 +384,29 @@
     </h3>
     <br>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Credit_reportimages')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('New_car_marginimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-credit_reportimages" class="form-control" size="50" name="row[credit_reportimages]" type="text">
+                <input id="c-new_car_marginimages" class="form-control" size="50" name="row[new_car_marginimages]" type="text" placeholder="待风控审核资料后确认是否需要交付保证金">
                 <div class="input-group-addon no-border no-padding">
                     <span>
-                        <button type="button" id="plupload-credit_reportimages" class="btn btn-danger plupload" data-input-id="c-credit_reportimages"
-                            data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-credit_reportimages">
+                        <button type="button" id="plupload-new_car_marginimages" class="btn btn-danger plupload" data-input-id="c-new_car_marginimages"
+                            data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-new_car_marginimages">
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-credit_reportimages" class="btn btn-primary fachoose" data-input-id="c-credit_reportimages"
+                        <button type="button" id="fachoose-new_car_marginimages" class="btn btn-primary fachoose" data-input-id="c-new_car_marginimages"
                             data-mimetype="image/*" data-multiple="true">
                             <i class="fa fa-list"></i> {:__('Choose')}</button>
                     </span>
                 </div>
-                <span class="msg-box n-right" for="c-credit_reportimages"></span>
+                <span class="msg-box n-right" for="c-new_car_marginimages"></span>
             </div>
-            <ul class="row list-inline plupload-preview" id="p-credit_reportimages"></ul>
+            <ul class="row list-inline plupload-preview" id="p-new_car_marginimages"></ul>
         </div>
     </div>
 
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Guarantee_id_cardimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-guarantee_id_cardimages" class="form-control" size="50" name="row[guarantee_id_cardimages]" type="text">
-                <div class="input-group-addon no-border no-padding">
-                    <span>
-                        <button type="button" id="plupload-guarantee_id_cardimages" class="btn btn-danger plupload" data-input-id="c-guarantee_id_cardimages"
-                            data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-guarantee_id_cardimages">
-                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
-                    </span>
-                    <span>
-                        <button type="button" id="fachoose-guarantee_id_cardimages" class="btn btn-primary fachoose" data-input-id="c-guarantee_id_cardimages"
-                            data-mimetype="image/*" data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
-                    </span>
-                </div>
-                <span class="msg-box n-right" for="c-guarantee_id_cardimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-guarantee_id_cardimages"></ul>
-        </div>
-    </div>
-     
+    
     <b style="color: #ddd">
         <center>
             <i>--我是有底线的--</i>

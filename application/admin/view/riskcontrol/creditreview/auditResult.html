@@ -145,32 +145,24 @@
         <hr>
         <div class="form-group">
 
-                <div class="col-xs-12 col-sm-8 col-md-4">
-                    <strong>{:__('定金合同')}：</strong>
-                    {foreach $deposit_contractimages as $k => $v}
-                    <a href="{$cdn}{$v}" target="_blank">
-                        <img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">
-                    </a> {/foreach}
-                </div>
-    
-                <div class="col-xs-12 col-sm-8 col-md-4">
-                    <strong>{:__('定金收据')}：</strong>
-                    {foreach $deposit_receiptimages as $k => $v}
-                    <a href="{$cdn}{$v}" target="_blank">
-                        <img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">
-                    </a> {/foreach}
-                </div>
-    
-              
-    
-            </div>
+            <div class="col-xs-12 col-sm-8 col-md-4">
+                <strong>{:__('保证金收据')}：</strong>
+                {empty name="$new_car_marginimages"}
+                <span class="text-info">暂无{:__('保证金收据')}</span>
+                {else /} {foreach $new_car_marginimages as $k => $v}
+                <a href="{$cdn}{$v}" target="_blank">
+                    <img src="{$cdn}{$v}" alt="{:__('保证金收据')}" style="width:80px;height:80px;">
+                </a> {/foreach} {/empty}
+
+            </div> 
+        </div>
     </div>
     <input type="hidden" name="hidden1" id="hidden1" />
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
             <button type="submit" class="btn btn-success btn-embossed" id="pass" onclick="examine('1')">{:__('审核通过')}</button>
-            <button type="submit" class="btn btn-default btn-embossed" id="data" onclick="examine('2')">{:__('补全资料')}</button>
+            <button type="submit" class="btn btn-default btn-embossed" id="data" onclick="examine('2')">{:__('需提担保人')}</button>
             <button type="submit" class="btn btn-danger btn-embossed" id="nopass" onclick="examine('3')">{:__('审核不通过')}</button>
         </div>
     </div>
