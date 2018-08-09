@@ -192,15 +192,10 @@ class Orderlisttabs extends Backend
         
         //通话清单（文件上传）
         $call_listfiles = explode(',',$row['call_listfiles']);
-        
-        //征信报告（多图）
-        $new_car_marginimages = explode(',',$row['new_car_marginimages']);
-        
-        //担保人身份证正反面（多图）
-        $guarantee_id_cardimages = explode(',',$row['guarantee_id_cardimages']);
-        
-        //担保协议（多图）
-        $guarantee_agreementimages = explode(',',$row['guarantee_agreementimages']);
+
+        /**不必填 */
+        //保证金收据
+        $new_car_marginimages = $row['new_car_marginimages']==''?[]:explode(',',$row['new_car_marginimages']);
         
         $this->view->assign(
             [    
@@ -216,8 +211,6 @@ class Orderlisttabs extends Backend
                 'application_formimages'=> $application_formimages,
                 'call_listfiles'=> $call_listfiles,
                 'new_car_marginimages'=> $new_car_marginimages,
-                'guarantee_id_cardimages'=> $guarantee_id_cardimages,
-                'guarantee_agreementimages'=> $guarantee_agreementimages,
              ]
          ); 
         return $this->view->fetch();
