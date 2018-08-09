@@ -239,8 +239,8 @@ class Newcarscustomer extends Backend
             $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
-        //征信报告（多图）
-        $credit_reportimages = $row['credit_reportimages'];
+        //保证金收据（多图）
+        $credit_reportimages = $row['new_car_marginimages'];
         $credit_reportimage = explode(',', $credit_reportimages);
 
         $credit_reportimages_arr = [];
@@ -294,6 +294,8 @@ class Newcarscustomer extends Backend
     public function show_order_and_stock($ids = null)
     {
         $row = $this->model->get($ids);
+
+//        pr($row);die();
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -404,7 +406,7 @@ class Newcarscustomer extends Backend
         }
 
         //征信报告（多图）
-        $credit_reportimages = $row['credit_reportimages'];
+        $credit_reportimages = $row['new_car_marginimages'];
         $credit_reportimage = explode(',', $credit_reportimages);
 
         $credit_reportimages_arr = [];
