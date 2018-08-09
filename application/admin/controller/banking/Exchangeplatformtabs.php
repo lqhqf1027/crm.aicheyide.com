@@ -18,10 +18,11 @@ class Exchangeplatformtabs extends Backend
     protected $model = null;
     protected $dataLimit = false; //表示不启用，显示所有数据
 
+
 //    protected $multiFields = 'batch';
     public function _initialize()
     {
-//        $this->model = model('CustomerResource');
+
         parent::_initialize();
     }
 
@@ -31,18 +32,7 @@ class Exchangeplatformtabs extends Backend
      */
     public function index()
     {
-        $list = Db::view("crm_plan_acar_view", "plan_acar_id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type")
-            ->where("mortgage_type", "new_car")
-            ->select();
 
-        $count = 1;
-
-        foreach ($list as $k=>$v){
-            $list[$k]['id'] = $count;
-            $count++;
-        }
-        pr($list);
-        die();
         $this->loadlang('backoffice/custominfotabs');
         return $this->view->fetch();
     }
@@ -51,28 +41,57 @@ class Exchangeplatformtabs extends Backend
     public function new_car()
     {
         if ($this->request->isAjax()) {
-            $total = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type")
-                ->where("mortgage_type", "new_car")
-                ->count();
+            $res = $this->getCar("new_car");
 
-            $list = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type")
-                ->where("mortgage_type", "new_car")
-                ->select();
-            $count = 1;
-
-            foreach ($list as $k=>$v){
-                $list[$k]['id'] = $count;
-                $count++;
-            }
-
-
-                        $result = array("total" => $total, "rows" => $list);
+            $result = array("total" => $res[0], "rows" => $res[1]);
 
             return json($result);
         }
         return true;
     }
 
+    //悦达车
+    public function yue_da_car()
+    {
+        if ($this->request->isAjax()) {
+            $res = $this->getCar("yueda_car");
+
+            $result = array("total" => $res[0], "rows" => $res[1]);
+
+            return json($result);
+        }
+        return true;
+    }
+
+    //其他车
+    public function other_car()
+    {
+        if ($this->request->isAjax()) {
+
+            $res = $this->getCar("other_car");
+
+            $result = array("total" => $res[0], "rows" => $res[1]);
+
+            return json($result);
+        }
+        return true;
+    }
+
+    public function getCar($condition)
+    {
+
+        $result = array();
+
+        $result[0] = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,monthly,nperlist")
+            ->where("mortgage_type", $condition)
+            ->count();
+
+        $result[1] = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,monthly,nperlist")
+            ->where("mortgage_type", $condition)
+            ->select();
+
+        return $result;
+    }
 
     /**
      * 编辑
@@ -82,9 +101,11 @@ class Exchangeplatformtabs extends Backend
 //        $row = $this->model->get($ids);
 
         $row = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type")
-            ->where("mortgage_type", "new_car")
-            ->where("id",$ids)
+            ->where("id", $ids)
             ->select();
+
+        $row = $row[0];
+
 
         if (!$row)
             $this->error(__('No Results were found'));
@@ -96,6 +117,7 @@ class Exchangeplatformtabs extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+//            pr($params);die();
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -104,7 +126,27 @@ class Exchangeplatformtabs extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
                         $row->validate($validate);
                     }
-                    $result = $row->allowField(true)->save($params);
+//                    $result = $row->allowField(true)->save($params);
+
+                    $getId = Db::name("car_new_inventory")
+                        ->where("id", $ids)
+                        ->field("car_mortgage_id")
+                        ->select();
+
+                    $getId = $getId[0]['car_mortgage_id'];
+
+                    $result = Db::name("mortgage")
+                        ->where("id", $getId)
+                        ->update([
+                            'lending_date' => $params['lending_date'],
+                            'bank_card' => $params['bank_card'],
+                            'invoice_monney' => $params['invoice_monney'],
+                            'registration_code' => $params['registration_code'],
+                            'tax' => $params['tax'],
+                            'business_risks' => $params['business_risks'],
+                            'insurance' => $params['insurance'],
+                        ]);
+
                     if ($result !== false) {
                         $this->success();
                     } else {
@@ -118,31 +160,50 @@ class Exchangeplatformtabs extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign("row", $row);
+        $this->view->assign([
+            "row" => $row,
+        ]);
         return $this->view->fetch();
     }
 
-    //待提车
-//    public function prepare_lift_car()
-//    {
-//
-//        if ($this->request->isAjax()) {
-//            $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
-//                ->where("review_the_data", "for_the_car")
-//                ->where("car_new_inventory_id", null)
-//                ->count();
-//            $list = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
-//                ->where("review_the_data", "for_the_car")
-//                ->where("car_new_inventory_id", null)
-//                ->select();
-//
-//            $result = array("total" => $total, "rows" => $list);
-//
-//            return json($result);
-//        }
-//        return true;
-//    }
+    //更改平台
+    public function change_platform($ids = null)
+    {
+        $row = Db::view("crm_plan_acar_view", "mortgage_type")
+            ->where("id", $ids)
+            ->select();
 
+        $row = $row[0];
+
+        $this->view->assign([
+            'mortgage_type_list' => ['new_car' => '新车', 'yueda_car' => '悦达', 'other_car' => '其他'],
+
+            'my_type' => $row['mortgage_type']
+        ]);
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post("mortgage_type");
+
+            $getId = Db::name("car_new_inventory")
+                ->where("id", $ids)
+                ->field("car_mortgage_id")
+                ->select();
+
+            $getId = $getId[0]['car_mortgage_id'];
+
+            $result = Db::name("mortgage")
+                ->where("id", $getId)
+                ->setField("mortgage_type", $params);
+
+            if ($result !== false) {
+                $this->success();
+            } else {
+                $this->error($row->getError());
+            }
+
+        }
+        return $this->view->fetch();
+    }
 
 }
 
