@@ -1,10 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<form id="auditResult-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
-</body>
-</html>
+<h2>
+        <center>审核资料
+
+        </center>
+    </h2>
+
+    <br>
+
+
+
+    <div class="container-fulid">
+
+        <br>
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('订车日期')}：</strong> {$row.createtime|date='Y-m-d H:i:s',###}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-9">
+                <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name}
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('Username')}：</strong> {$row.username} {if condition="$row.genderdata eq 'male'"} &nbsp;
+                <span class="fa fa-male text-info"></span>
+                {else /}
+                <span class="fa fa-female" style="color:palevioletred"></span>
+
+                {/if}
+
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('Phone')}：</strong> {$row.phone}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('Id_card')}：</strong> {$row.id_card}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-5">
+                <strong>{:__('现居住地址（同联系地址）')}：</strong> {$row.city}{$row.detailed_address}
+            </div>
+
+
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+
+            <div class="col-xs-12 col-sm-8 col-md-4">
+                <strong>{:__('Emergency_contact_1')}：</strong> {$row.emergency_contact_1}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-4">
+                <strong>{:__('Emergency_contact_2')}：</strong> {$row.emergency_contact_2}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-4">
+                <strong>{:__('Family_members')}：</strong> {$row.family_members}
+            </div>
+
+        </div>
+        <hr>
+
+    </div>
+
+</form>
+
+
+<script>
+    function examine(type) {
+        document.getElementById("hidden1").value = type;
+    }
+</script>

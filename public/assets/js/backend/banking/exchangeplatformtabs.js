@@ -85,12 +85,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'monthly', title: __('月供')},
                             {field: 'nperlist', title: __('期数')},
                             {field: 'registration_code', title: __('登记编码')},
-                            {field: 'tax', title: __('购置税')},
-                            {field: 'business_risks', title: __('商业险')},
-                            {field: 'insurance', title: __('交强险')},
+                            {field: 'invoice_monney', title: __('开票金额(元)')},
+                            {field: 'tax', title: __('购置税(元)')},
+                            {field: 'business_risks', title: __('商业险(元)')},
+                            {field: 'insurance', title: __('交强险(元)')},
                             {field: 'lending_date', title: __('放款日期')},
                             {field: 'createtime', title: __('订车时间'), formatter: Table.api.formatter.datetime, operate: false},
-                            {field: 'delivery_datetime', title: __('提车时间')},
+                            {field: 'delivery_datetime', title: __('提车时间'), formatter: Table.api.formatter.datetime, operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -114,14 +115,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
-                                    {
-                                        name: 'details',
-                                        text: __('查看详情'),
-                                        icon: 'fa fa-eye',
-                                        title: __('查看详情'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-info btn-details',
-                                    },
+                                    // {
+                                    //     name: 'details',
+                                    //     text: __('查看详情'),
+                                    //     icon: 'fa fa-eye',
+                                    //     title: __('查看详情'),
+                                    //     extend: 'data-toggle="tooltip"',
+                                    //     classname: 'btn btn-xs btn-info btn-details',
+                                    // },
                                 ]
                             }
                         ]
@@ -169,12 +170,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'monthly', title: __('月供')},
                             {field: 'nperlist', title: __('期数')},
                             {field: 'registration_code', title: __('登记编码')},
-                            {field: 'tax', title: __('购置税')},
-                            {field: 'business_risks', title: __('商业险')},
-                            {field: 'insurance', title: __('交强险')},
+                            {field: 'invoice_monney', title: __('开票金额(元)')},
+                            {field: 'tax', title: __('购置税(元)')},
+                            {field: 'business_risks', title: __('商业险(元)')},
+                            {field: 'insurance', title: __('交强险(元)')},
                             {field: 'lending_date', title: __('放款日期')},
                             {field: 'createtime', title: __('订车时间'), formatter: Table.api.formatter.datetime, operate: false},
-                            {field: 'delivery_datetime', title: __('提车时间')},
+                            {field: 'delivery_datetime', title: __('提车时间'), formatter: Table.api.formatter.datetime, operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -198,14 +200,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
-                                    {
-                                        name: 'details',
-                                        text: __('查看详情'),
-                                        icon: 'fa fa-eye',
-                                        title: __('查看详情'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-info btn-details',
-                                    },
+                                    // {
+                                    //     name: 'details',
+                                    //     text: __('查看详情'),
+                                    //     icon: 'fa fa-eye',
+                                    //     title: __('查看详情'),
+                                    //     extend: 'data-toggle="tooltip"',
+                                    //     classname: 'btn btn-xs btn-info btn-details',
+                                    // },
                                 ]
                             }
                         ]
@@ -253,12 +255,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'monthly', title: __('月供')},
                             {field: 'nperlist', title: __('期数')},
                             {field: 'registration_code', title: __('登记编码')},
-                            {field: 'tax', title: __('购置税')},
-                            {field: 'business_risks', title: __('商业险')},
-                            {field: 'insurance', title: __('交强险')},
+                            {field: 'invoice_monney', title: __('开票金额(元)')},
+                            {field: 'tax', title: __('购置税(元)')},
+                            {field: 'business_risks', title: __('商业险(元)')},
+                            {field: 'insurance', title: __('交强险(元)')},
                             {field: 'lending_date', title: __('放款日期')},
                             {field: 'createtime', title: __('订车时间'), formatter: Table.api.formatter.datetime, operate: false},
-                            {field: 'delivery_datetime', title: __('提车时间')},
+                            {field: 'delivery_datetime', title: __('提车时间'), formatter: Table.api.formatter.datetime, operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -282,14 +285,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
-                                    {
-                                        name: 'details',
-                                        text: __('查看详情'),
-                                        icon: 'fa fa-eye',
-                                        title: __('查看详情'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-info btn-details',
-                                    },
+                                    // {
+                                    //     name: 'details',
+                                    //     text: __('查看详情'),
+                                    //     icon: 'fa fa-eye',
+                                    //     title: __('查看详情'),
+                                    //     extend: 'data-toggle="tooltip"',
+                                    //     classname: 'btn btn-xs btn-info btn-details',
+                                    // },
 
                                 ]
                             }
@@ -349,14 +352,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'operate', title: __('Operate'), table: nanchongDriver, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
                             buttons:[
-                                {
-                                    name: 'details',
-                                    text: __('查看详情'),
-                                    icon: 'fa fa-eye',
-                                    title: __('查看详情'),
-                                    extend: 'data-toggle="tooltip"',
-                                    classname: 'btn btn-xs btn-info btn-nan-details',
-                                },
+                                // {
+                                //     name: 'details',
+                                //     text: __('查看详情'),
+                                //     icon: 'fa fa-eye',
+                                //     title: __('查看详情'),
+                                //     extend: 'data-toggle="tooltip"',
+                                //     classname: 'btn btn-xs btn-info btn-nan-details',
+                                // },
                             ]
                             }
                         ]
