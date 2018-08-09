@@ -141,27 +141,15 @@
         <div class="form-group">
 
                 <div class="col-xs-12 col-sm-8 col-md-4">
-                    <strong>{:__('Guarantee_id_cardimages')}：</strong> 
-                    {foreach $guarantee_id_cardimages as $k => $v}
-                    <a href="{$cdn}{$v}" target="_blank">
-                        <img src="{$cdn}{$v}" alt="" style="width:80px;height:80px;">
-                    </a> {/foreach}
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-4">
-                    <strong>{:__('Guarantee_agreementimages')}：</strong> 
-                    {foreach $guarantee_agreementimages as $k => $v}
-                    <a href="{$cdn}{$v}" target="_blank">
-                        <img src="{$cdn}{$v}" alt="" style="width:80px;height:80px;">
-                    </a> {/foreach}
-                </div>
-
-                <div class="col-xs-12 col-sm-8 col-md-4">
-                    <strong>{:__('保证金收据')}：</strong> 
-                    {foreach $new_car_marginimages as $k => $v}
-                    <a href="{$cdn}{$v}" target="_blank">
-                        <img src="{$cdn}{$v}" alt="" style="width:80px;height:80px;">
-                    </a> {/foreach}
-                </div>
+                        <strong>{:__('保证金收据')}：</strong>
+                        {empty name="$new_car_marginimages"}
+                        <span class="text-info">暂无{:__('保证金收据')}</span>
+                        {else /} {foreach $new_car_marginimages as $k => $v}
+                        <a href="{$cdn}{$v}" target="_blank">
+                            <img src="{$cdn}{$v}" alt="{:__('保证金收据')}" style="width:80px;height:80px;">
+                        </a> {/foreach} {/empty}
+        
+                    </div> 
 
         </div>
     </div>

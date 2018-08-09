@@ -270,15 +270,15 @@ class Creditreview extends Backend
         $bank_cardimages = explode(',', $row['bank_cardimages']); 
         //申请表图片 
         $application_formimages = explode(',',$row['application_formimages']);   
-       //定金合同
-       $deposit_contractimages = explode(',',$row['deposit_contractimages']);  
-       //定金收据
-       $deposit_receiptimages = explode(',',$row['deposit_receiptimages']);  
+        //定金合同
+        $deposit_contractimages = explode(',',$row['deposit_contractimages']);  
+        //定金收据
+        $deposit_receiptimages = explode(',',$row['deposit_receiptimages']);  
         //通话清单
-       $call_listfiles = explode(',',$row['call_listfiles']);  
-       /**不必填 */
-       //保证金收据
-       $new_car_marginimages = $row['new_car_marginimages']==''?[]:explode(',',$row['new_car_marginimages']);  
+        $call_listfiles = explode(',',$row['call_listfiles']);  
+        /**不必填 */
+        //保证金收据
+        $new_car_marginimages = $row['new_car_marginimages']==''?[]:explode(',',$row['new_car_marginimages']);  
         $this->view->assign(
            [    
                'row'=>$row, 
