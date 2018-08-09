@@ -52,6 +52,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
+                    $(".btn-details").data("area", ["80%", "80%"]);
 
                 });
                 // 初始化表格
@@ -108,12 +109,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'change',
                                         text: __('更改平台'),
-                                        icon: 'fa fa-pencil',
+                                        icon: 'fa fa-arrows',
                                         title: __('更改平台'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
-
+                                    {
+                                        name: 'details',
+                                        text: __('查看详情'),
+                                        icon: 'fa fa-eye',
+                                        title: __('查看详情'),
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-details',
+                                    },
                                 ]
                             }
                         ]
@@ -129,8 +137,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 yueDaCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
-
-                    // $(".btn-showOrder").data("area", ["80%", "80%"]);
+                    $(".btn-details").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 yueDaCar.bootstrapTable({
@@ -186,12 +193,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'change',
                                         text: __('更改平台'),
-                                        icon: 'fa fa-pencil',
+                                        icon: 'fa fa-arrows',
                                         title: __('更改平台'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
-
+                                    {
+                                        name: 'details',
+                                        text: __('查看详情'),
+                                        icon: 'fa fa-eye',
+                                        title: __('查看详情'),
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-details',
+                                    },
                                 ]
                             }
                         ]
@@ -207,7 +221,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 otherCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
-                    // $(".btn-showOrder").data("area", ["80%", "80%"]);
+                    $(".btn-details").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 otherCar.bootstrapTable({
@@ -263,10 +277,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'change',
                                         text: __('更改平台'),
-                                        icon: 'fa fa-pencil',
+                                        icon: 'fa fa-arrows',
                                         title: __('更改平台'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
+                                    },
+                                    {
+                                        name: 'details',
+                                        text: __('查看详情'),
+                                        icon: 'fa fa-eye',
+                                        title: __('查看详情'),
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-details',
                                     },
 
                                 ]
@@ -276,6 +298,72 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 为表格1绑定事件
                 Table.api.bindevent(otherCar);
+
+            },
+
+            nanchong_driver: function () {
+                // 表格1
+                var nanchongDriver = $("#nanchongDriver");
+
+                nanchongDriver.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-changePlatform").data("area", ["30%", "30%"]);
+                    // $(".btn-showOrder").data("area", ["80%", "80%"]);
+                });
+                // 初始化表格
+                nanchongDriver.bootstrapTable({
+                    url: "banking/Exchangeplatformtabs/nanchong_driver",
+                    extend: {
+                        // index_url: 'banking/nanchong/nanchongdriver/index',
+                        add_url: 'banking/nanchong/nanchongdriver/add',
+                        edit_url: 'banking/nanchong/nanchongdriver/edit',
+                        del_url: 'banking/nanchong/nanchongdriver/del',
+                        multi_url: 'banking/nanchong/nanchongdriver/multi',
+                        table: 'nanchong_driver',
+                    },
+                    toolbar: '#toolbar4',
+                    pk: 'id',
+                    sortName: 'id',
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id')},
+                            {field: 'car_model', title: __('Car_model')},
+                            {field: 'licensenumber', title: __('Licensenumber')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'id_card', title: __('Id_card')},
+                            {field: 'detailed_address', title: __('Detailed_address')},
+                            {field: 'household', title: __('Household')},
+                            {field: 'payment', title: __('Payment')},
+                            {field: 'monthly', title: __('Monthly')},
+                            {field: 'nperlist', title: __('Nperlist'), searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}, formatter: Table.api.formatter.normal},
+                            {field: 'car_images', title: __('Car_images'), formatter: Table.api.formatter.images},
+                            {field: 'lending_date', title: __('Lending_date'), operate:'RANGE', addclass:'datetimerange'},
+                            {field: 'bank_card', title: __('Bank_card')},
+                            {field: 'invoice_monney', title: __('Invoice_monney'), operate:'BETWEEN'},
+                            {field: 'registration_code', title: __('Registration_code')},
+                            {field: 'tax', title: __('Tax'), operate:'BETWEEN'},
+                            {field: 'business_risks', title: __('Business_risks'), operate:'BETWEEN'},
+                            {field: 'insurance', title: __('Insurance'), operate:'BETWEEN'},
+                            {field: 'booking_time', title: __('Booking_time'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {field: 'operate', title: __('Operate'), table: nanchongDriver, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
+                            buttons:[
+                                {
+                                    name: 'details',
+                                    text: __('查看详情'),
+                                    icon: 'fa fa-eye',
+                                    title: __('查看详情'),
+                                    extend: 'data-toggle="tooltip"',
+                                    classname: 'btn btn-xs btn-info btn-nan-details',
+                                },
+                            ]
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(nanchongDriver);
 
             },
 
@@ -333,7 +421,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'banking/exchangeplatformtabs/change_platform';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('更换平台'), $(this).data() || {});
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('更改平台'), $(this).data() || {});
+                    },
+                    'click .btn-details': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'banking/exchangeplatformtabs/details';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看详情'), $(this).data() || {});
                     }
                 }
             },

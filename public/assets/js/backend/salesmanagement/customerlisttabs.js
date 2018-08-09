@@ -855,15 +855,37 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         edits: function () {
+            Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                alert(1111);
-                console.log(data);
-                console.log(ret);
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                // Fast.api.close(data);//这里是重点
 
-                // console.log(data);
-                Toastr.success("成功");//这个可有可无
+
+                // switch (data){
+                //     case 'relation':
+                //         $res = $("#badge_relation");
+                //         break;
+                //     case 'intention':
+                //         $res = $("#badge_intention");
+                //         break;
+                //     case 'nointention':
+                //         $res = $("#badge_no_intention");
+                //         break;
+                //
+                // }
+
+                //
+                //
+                //
+                // num = parseInt(num);
+                //
+                // res.text(num+1);
+
+
+
+                Controller.api.bindevent();
+                // Fast.api.close(data);
+                // // console.log(data);
+                // Toastr.success("成功");
+
             }, function (data, ret) {
                 // console.log(data);
                 alert(22222)
@@ -871,7 +893,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.error("失败");
 
             });
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
         },
         api: {
             bindevent: function () {

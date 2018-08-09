@@ -33,7 +33,7 @@ class Exchangeplatformtabs extends Backend
     public function index()
     {
 
-        $this->loadlang('backoffice/custominfotabs');
+        $this->loadlang('banking/exchangeplatformtabs');
         return $this->view->fetch();
     }
 
@@ -75,6 +75,22 @@ class Exchangeplatformtabs extends Backend
             return json($result);
         }
         return true;
+    }
+
+    //南充司机
+    public function nanchong_driver()
+    {
+
+        if ($this->request->isAjax()) {
+
+            $total = Db::name("nanchong_driver")->count();
+            $list = Db::name("nanchong_driver")->select();
+
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+
     }
 
     public function getCar($condition)
@@ -202,6 +218,20 @@ class Exchangeplatformtabs extends Backend
             }
 
         }
+        return $this->view->fetch();
+    }
+
+    //查看详情信息
+    public function details($ids = null)
+    {
+        $res = Db::view("crm_plan_acar_view","id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,margin,tail_section,gps,note,4s_shop,engine_number,frame_number,presentationcondition,car_imgeas")
+        ->where("id",$ids)
+        ->select();
+
+        $this->view->assign([
+          'info'=>$res
+        ]);
+
         return $this->view->fetch();
     }
 
