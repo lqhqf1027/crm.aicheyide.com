@@ -161,6 +161,7 @@ class Exchangeplatformtabs extends Backend
                             'tax' => $params['tax'],
                             'business_risks' => $params['business_risks'],
                             'insurance' => $params['insurance'],
+                            'car_imgeas'=>$params['car_images']
                         ]);
 
                     if ($result !== false) {
