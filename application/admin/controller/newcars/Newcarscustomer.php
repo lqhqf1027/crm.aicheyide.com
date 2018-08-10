@@ -46,6 +46,21 @@ class Newcarscustomer extends Backend
 
         $this->loadlang('newcars/newcarscustomer');
         $this->loadlang('order/salesorder');
+
+        $prepare_total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
+            ->where("review_the_data", "for_the_car")
+            ->where("car_new_inventory_id", null)
+            ->count();
+
+        $already_total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
+            ->where("review_the_data", "for_the_car")
+            ->where("car_new_inventory_id", null)
+            ->count();
+
+        $this->view->assign([
+            'prepare_total'=>$prepare_total,
+            'already_total'=>$already_total
+        ]);
         return $this->view->fetch();
     }
 
@@ -141,6 +156,8 @@ class Newcarscustomer extends Backend
         $row['plan'] = Db::name('sales_order')->alias('a')
             ->join('plan_acar b', 'a.plan_acar_name = b.id')
             ->join('models c', 'b.models_id=c.id');
+
+        $row['createtime'] = date("Y-m-d",$row['createtime']);
 
 
         //定金合同（多图）

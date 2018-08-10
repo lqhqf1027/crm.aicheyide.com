@@ -51,9 +51,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var prepareLiftCar = $("#prepareLiftCar");
                 prepareLiftCar.on('load-success.bs.table', function (e, data) {
                     console.log(data.total);
-                    $('#new-customer').text(data.total);
+                    $('#badge_prepare').text(data.total);
 
-                })
+                });
                 prepareLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-chooseStock").data("area", ["60%", "60%"]);
                     $(".btn-showOrder").data("area", ["95%", "95%"]);
@@ -129,6 +129,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             already_lift_car: function () {
                 // 表格2
                 var alreadyLiftCar = $("#alreadyLiftCar");
+                alreadyLiftCar.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#badge_already').text(data.total);
+
+                });
                 alreadyLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
                 });
