@@ -13,7 +13,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     table: 'car_rental_models_info',
                 }
             });
-
+            //实时消息
+            var goeasy = new GoEasy({
+                appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+            });
+            goeasy.subscribe({
+                channel: 'demo',
+                onMessage: function(message){
+                    alert('新消息：'+message.content);
+                }
+            });
+            
             var table = $("#table");
 
             // 初始化表格
@@ -113,6 +123,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return false; 
                                     }
                                     else if(row.sales_id == null){
+                                      
+                                        return true;
+                                    } 
+                                },
+                                
+                            },
+                            { 
+                                name: 'rentalrequest',text:'销售员租车请求', title:'销售员租车请求',icon: 'fa fa-automobile', extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-success btn-dialog btn-rentalrequest',
+                                // url:'rentcar/vehicleinformation/rentalrequest',/**销售员租车请求 */
+                                hidden:function(row){
+                                    if(row.review_the_data == 'is_reviewing'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == ''){
                                       
                                         return true;
                                     } 
@@ -224,6 +252,48 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Layer.close(index);
                             }
                         );
+                    },
+                    'click .btn-rentalrequest': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('确定可以进行租车?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                                Fast.api.ajax({
+                                    url: 'rentcar/vehicleinformation/rentalrequest',
+                                    data: {id: row[options.pk]}
+                                }, function (data, ret) {
+
+                                    Toastr.success("成功");
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+
+                                    return false;
+                                });
+
+
+                            }
+                        );
+
                     },
                 }
                

@@ -110,21 +110,17 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
                     </div>
                 </li>
                 <li class="ml45">
-                    完成
+                    提交资料审核
                     <div class="box-outside2 outside2a" id="outside2as">
                         <div class="box-num3 num3a" >
                          3
                        </div>
                     </div>
                 </li>
-                <div class="clear">
-                    
+                <div class="clear">  
                 </div>
             </ul>
-            
-            
         </div>
-
 </div>
 
 <!-- 选择租车方案 -->
@@ -137,12 +133,12 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
             <div class="col-xs-12 col-sm-8">
 
                     <select id="c-plan_acar_name" data-rule="required" class="form-control selectpicker" name="row[plan_acar_name]" onchange="planName(this.value)">
-                        <option value=" " style='display: none'>未选中任何项</option>
+                        <option class="rentalCar" value=" " style='display: none'>未选中任何项</option>
                         {volist name="newRes" id="vo"}
         
                         <option value="{$vo['brand_logoimage']}" disabled>{$vo['brand_name']}</option>
                         {volist name="vo.data" id="vo_s"}
-                        <option id="rentalCar" value="{$vo_s['id']}">{$vo_s['models_name']}</option>
+                        <option class="rentalCar" id="rentalCar" value="{$vo_s['id']},{$vo_s['models_name']}">{$vo_s['models_name']}</option>
                         {/volist} {/volist}
                     </select>
             </div>
@@ -162,8 +158,17 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
 </script>
 <!-- 完善客户信息 -->
 
-<form id="twoform" class="form-horizontal twobox-form"  role="form" data-toggle="validator" method="POST" action="">
+<form id="twoform" class="form-horizontal twobox-form" name="form1"  role="form" data-toggle="validator" method="POST" action="">
     <div id="twoform">
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-3">{:__('请选择租车方案')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                    <input id="c-plan_acar_name" data-rule="required" class="form-control form-control" name="row[plan_acar_name]" value="{$Request.session.planName}" readonly>        
+            </div>
+
+        </div>
+        
     
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-3">{:__('Cash_pledge')}:</label>
@@ -337,7 +342,7 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
         </div>
 
         <div class="control-label col-xs-12 col-sm-11">
-                <button type="button" class="twobtn btn btn-success btn-embossed" id="twobtn">下一步</button>
+                <button type="button" class="twobtn btn btn-success btn-embossed" id="twobtn">提交资料</button>
         </div>
 
 
@@ -353,15 +358,13 @@ button, dd, div, dl, dt, form, img, li, ol, p, td, th, ul{
                     <div class="symbol">
                         
                     </div>
-            <p>恭喜，完成了租车订单！</p>
-            <!-- <div class="control-label col-xs-12 col-sm-8">
-                    <button type="button" class=" confirm twobtn btn btn-success btn-embossed">确认</button>
-            </div> -->
-            <!-- <button class="confirm btn btn-success btn-embossed col-xs-12 col-sm-11">确认</button> -->
+            <p>恭喜，完成了租车资料的填写！</p>
+
             </div>
 
             <div class="control-label col-xs-12 col-sm-8">
-                    <button type="button" class=" confirm twobtn btn btn-success btn-embossed">确认</button>
+                    <button type="button" class=" confirm twobtn btn btn-success btn-embossed" id="threebtn">提交审核</button>
+                    <button type="button" class=" confirm twobtn btn btn-success btn-embossed" id="fourbtn">暂不提交审核</button>
             </div>
 
     </div>
