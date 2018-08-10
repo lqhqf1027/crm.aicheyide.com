@@ -56,7 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
                 prepareLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-chooseStock").data("area", ["60%", "60%"]);
-                    $(".btn-showOrder").data("area", ["80%", "80%"]);
+                    $(".btn-showOrder").data("area", ["95%", "95%"]);
                 });
                 // 初始化表格
                 prepareLiftCar.bootstrapTable({
@@ -130,7 +130,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格2
                 var alreadyLiftCar = $("#alreadyLiftCar");
                 alreadyLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-showOrderAndStock").data("area", ["80%", "80%"]);
+                    $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
                 });
                 // 初始化表格
                 alreadyLiftCar.bootstrapTable({
