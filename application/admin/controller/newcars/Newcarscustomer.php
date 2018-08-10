@@ -143,21 +143,6 @@ class Newcarscustomer extends Backend
             ->join('models c', 'b.models_id=c.id');
 
 
-        $sql = Db::name('sales_order')->alias('a')
-            ->join('plan_acar b', 'b.id=a.plan_acar_name')
-            ->join('financial_platform c', 'b.financial_platform_id=c.id')
-            ->join('models d', 'b.models_id=d.id')
-            ->join('brand e', 'e.id=d.brand_id')
-            ->field('d.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
-            ->where('a.id', $row['id'])
-            ->select();
-
-
-        $newRes = $sql[0]['models_name'] . '【首付' . $sql[0]['payment'] . '，' . '月供' . $sql[0]['monthly'] . '，' . 'GPS ' . $sql[0]['gps'] . '，' . '尾款 ' . $sql[0]['tail_section'] . '】' . '---' . $sql[0]['financial_platform_name'];
-
-
-        $this->view->assign('newRes', $newRes);
-
         //定金合同（多图）
         $deposit_contractimages = $row['deposit_contractimages'];
         $deposit_contractimage = explode(',', $deposit_contractimages);
@@ -267,8 +252,6 @@ class Newcarscustomer extends Backend
         }
 
 
-
-
         $this->view->assign(
             array(
                 'deposit_contractimages_arr' => $deposit_contractimages_arr,
@@ -293,8 +276,17 @@ class Newcarscustomer extends Backend
     //查看订单表和库存表所有信息
     public function show_order_and_stock($ids = null)
     {
-        $row = $this->model->get($ids);
+        $row = Db::table("crm_order_view")
+            ->where("id", $ids)
+            ->select();
+        $row = $row[0];
+//        pr($reson);die();
 
+//        pr(Config::get('upload')['cdnurl']);die();
+
+if($row['new_car_marginimages']==""){
+    $row['new_car_marginimages'] = null;
+}
 //        pr($row);die();
         if (!$row)
             $this->error(__('No Results were found'));
@@ -308,21 +300,6 @@ class Newcarscustomer extends Backend
             ->join('plan_acar b', 'a.plan_acar_name = b.id')
             ->join('models c', 'b.models_id=c.id');
 
-
-        $sql = Db::name('sales_order')->alias('a')
-            ->join('plan_acar b', 'b.id=a.plan_acar_name')
-            ->join('financial_platform c', 'b.financial_platform_id=c.id')
-            ->join('models d', 'b.models_id=d.id')
-            ->join('brand e', 'e.id=d.brand_id')
-            ->field('d.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
-            ->where('a.id', $row['id'])
-            ->select();
-
-
-        $newRes = $sql[0]['models_name'] . '【首付' . $sql[0]['payment'] . '，' . '月供' . $sql[0]['monthly'] . '，' . 'GPS ' . $sql[0]['gps'] . '，' . '尾款 ' . $sql[0]['tail_section'] . '】' . '---' . $sql[0]['financial_platform_name'];
-
-
-        $this->view->assign('newRes', $newRes);
 
         //定金合同（多图）
         $deposit_contractimages = $row['deposit_contractimages'];
@@ -405,13 +382,13 @@ class Newcarscustomer extends Backend
             $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
-        //征信报告（多图）
-        $credit_reportimages = $row['new_car_marginimages'];
-        $credit_reportimage = explode(',', $credit_reportimages);
+        //保证金收据（多图）
+        $new_car_marginimages = $row['new_car_marginimages'];
+        $new_car_marginimages = explode(',', $new_car_marginimages);
 
-        $credit_reportimages_arr = [];
-        foreach ($credit_reportimage as $k => $v) {
-            $credit_reportimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        $new_car_marginimages_arr = [];
+        foreach ($new_car_marginimages as $k => $v) {
+            $new_car_marginimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
         //担保人身份证正反面（多图）
@@ -432,31 +409,43 @@ class Newcarscustomer extends Backend
             $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
-        $stock = Db::name("sales_order")
-            ->alias("so")
-            ->join("car_new_inventory i", "so.car_new_inventory_id=i.id")
-            ->where("so.id", $ids)
-            ->field("i.licensenumber,i.presentationcondition,i.note,i.frame_number,i.engine_number,i.household,i.4s_shop")
-            ->select();
-        $stock = $stock[0];
-        $this->view->assign(
-            array(
-                'deposit_contractimages_arr' => $deposit_contractimages_arr,
-                'deposit_receiptimages_arr' => $deposit_receiptimages_arr,
-                'id_cardimages_arr' => $id_cardimages_arr,
-                'drivers_licenseimages_arr' => $drivers_licenseimages_arr,
-                'residence_bookletimages_arr' => $residence_bookletimages_arr,
-                'housingimages_arr' => $housingimages_arr,
-                'bank_cardimages_arr' => $bank_cardimages_arr,
-                'application_formimages_arr' => $application_formimages_arr,
-                'call_listfiles_arr' => $call_listfiles_arr,
-                'credit_reportimages_arr' => $credit_reportimages_arr,
-                'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
-                'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
-                'stock'=>$stock
-            )
+        //车辆所有的扫描件 (多图)
+
+        $car_imgeas = $row['car_imgeas'];
+
+        $car_imgeas = explode(",",$car_imgeas);
+
+        $car_imgeas_arr = array();
+
+        foreach ($car_imgeas as $k=>$v){
+            $car_imgeas_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+
+        $data = array(
+            'deposit_contractimages_arr' => $deposit_contractimages_arr,
+            'deposit_receiptimages_arr' => $deposit_receiptimages_arr,
+            'id_cardimages_arr' => $id_cardimages_arr,
+            'drivers_licenseimages_arr' => $drivers_licenseimages_arr,
+            'residence_bookletimages_arr' => $residence_bookletimages_arr,
+            'housingimages_arr' => $housingimages_arr,
+            'bank_cardimages_arr' => $bank_cardimages_arr,
+            'application_formimages_arr' => $application_formimages_arr,
+            'call_listfiles_arr' => $call_listfiles_arr,
+            'new_car_marginimages_arr' => $new_car_marginimages_arr,
+            'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
+            'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
+            'car_imgeas_arr' =>$car_imgeas_arr
         );
+
+//        pr($data);die();
+
+        $row['createtime'] = date("Y-m-d",$row['createtime']);
+        $row['delivery_datetime'] = date("Y-m-d",$row['delivery_datetime']);
+
+        $this->view->assign($data);
         $this->view->assign("row", $row);
         return $this->view->fetch();
     }
+
 }
