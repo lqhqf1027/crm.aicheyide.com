@@ -49,6 +49,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             new_car: function () {
                 // 表格1
                 var newCar = $("#newCar");
+                newCar.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#badge_new_car').text(data.total);
+
+                });
 
                 newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
@@ -73,7 +78,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'name', title: __('车型')},
+                            {field: 'models_name', title: __('车型')},
                             {field: 'licensenumber', title: __('车牌号')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
@@ -135,6 +140,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             yue_da_car: function () {
                 // 表格1
                 var yueDaCar = $("#yueDaCar");
+                yueDaCar.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#badge_yue_da').text(data.total);
+
+                });
 
                 yueDaCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
@@ -158,7 +168,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'name', title: __('车型')},
+                            {field: 'models_name', title: __('车型')},
                             {field: 'licensenumber', title: __('车牌号')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
@@ -220,6 +230,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             other_car: function () {
                 // 表格1
                 var otherCar = $("#otherCar");
+                otherCar.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#badge_other').text(data.total);
+
+                });
 
                 otherCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
@@ -243,7 +258,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'name', title: __('车型')},
+                            {field: 'models_name', title: __('车型')},
                             {field: 'licensenumber', title: __('车牌号')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
@@ -307,6 +322,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             nanchong_driver: function () {
                 // 表格1
                 var nanchongDriver = $("#nanchongDriver");
+                nanchongDriver.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#badge_nan_chong').text(data.total);
+
+                });
 
                 nanchongDriver.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
