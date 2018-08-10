@@ -214,4 +214,44 @@ class Vehicleinformation extends Backend
         return $this->view->fetch();
     }
 
+    //车管人员对租车请求的同意
+    public function rentalrequest()
+    {
+        if ($this->request->isAjax()) {
+            $id = input("id");
+            $this->model = model('car_rental_models_info');
+
+
+            $result = $this->model
+                ->where("id", $id)
+                ->setField("review_the_data", "is_reviewing_true");
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo1",
+                'content' => "车管人员已同意你的租车请求"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            
+            if ($result) {
+                $this->success();
+            }
+            else{
+                $this->error();
+            }
+
+        }
+
+    }
+
 }
