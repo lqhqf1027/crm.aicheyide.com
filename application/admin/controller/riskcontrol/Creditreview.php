@@ -20,7 +20,7 @@ class Creditreview extends Backend
      */
     protected $model = null;
     protected $userid = 'junyi_testusr'; //用户id
-    protected $Rc4 = '1de2474bcaaac1e4'; //apikey
+    protected $Rc4 = '12b39127a265ce21'; //apikey
     protected $sign = null; //sign  md5加密
 
     public function _initialize()
@@ -345,7 +345,7 @@ class Creditreview extends Backend
         $params = array();
         $params['sign'] = $this->sign;
         $params['userid'] = $this->userid;
-        $params['params'] =
+        $params['params'] = json_encode(
                 [
                     'tx' => '101',
                     'data' => [
@@ -353,9 +353,11 @@ class Creditreview extends Backend
                         'idNo' => '511623199504257475',
                         'queryReason' => '10',
                     ],
-                ];
+                ]
+            );
 
-        pr(json_encode($params));
+        // return $this->sign;
+        // pr($this->sign);
         pr(posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params));
         // pr($this->sign);die;
     }

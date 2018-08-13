@@ -491,7 +491,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, { ids: ids });
-                        var url = options.extend.edit_url;
+                        var url = options.extend.edit_url+'/posttype/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
                     'click .btn-delone': function (e, value, row, index) {  /**编辑按钮 */
@@ -531,8 +531,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url+'/posttype/the_guarantor';
 
 
-                        console.log(url);
-                        Fast.api.open(Table.api.replaceurl(url,row, table), __('请上传保证金'), $(this).data() || {});
+                        // console.log(url);
+                        Fast.api.open(Table.api.replaceurl(url,row, table), __('请上传保证金收据'), $(this).data() || {});
                     },
                 }
 
