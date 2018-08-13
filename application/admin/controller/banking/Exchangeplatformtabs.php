@@ -34,6 +34,19 @@ class Exchangeplatformtabs extends Backend
     {
 
         $this->loadlang('banking/exchangeplatformtabs');
+        $new_car = $this->getCar("new_car");
+        $yue_da_car = $this->getCar("yue_da_car");
+        $other_car = $this->getCar("other_car");
+        $nan_chong = Db::name("nanchong_driver")->count();
+
+        $this->view->assign([
+            'new_total'=>$new_car[0],
+            'yue_total'=>$yue_da_car[0],
+            'other_total'=>$other_car[0],
+            'nan_chong'=>$nan_chong
+        ]);
+
+
         return $this->view->fetch();
     }
 
@@ -98,11 +111,11 @@ class Exchangeplatformtabs extends Backend
 
         $result = array();
 
-        $result[0] = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,monthly,nperlist")
+        $result[0] = Db::table("crm_order_view")
             ->where("mortgage_type", $condition)
             ->count();
 
-        $result[1] = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,monthly,nperlist")
+        $result[1] = Db::table("crm_order_view")
             ->where("mortgage_type", $condition)
             ->select();
 
@@ -116,7 +129,7 @@ class Exchangeplatformtabs extends Backend
     {
 //        $row = $this->model->get($ids);
 
-        $row = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,car_imgeas")
+        $row = Db::table("crm_order_view")
             ->where("id", $ids)
             ->select();
 
@@ -161,7 +174,7 @@ class Exchangeplatformtabs extends Backend
                             'tax' => $params['tax'],
                             'business_risks' => $params['business_risks'],
                             'insurance' => $params['insurance'],
-                            'car_imgeas'=>$params['car_images']
+                            'car_imgeas' => $params['car_images']
                         ]);
 
                     if ($result !== false) {
@@ -186,8 +199,9 @@ class Exchangeplatformtabs extends Backend
     //更改平台
     public function change_platform($ids = null)
     {
-        $row = Db::view("crm_plan_acar_view", "mortgage_type")
+        $row = Db::table("crm_order_view")
             ->where("id", $ids)
+            ->field("mortgage_type")
             ->select();
 
         $row = $row[0];
@@ -201,9 +215,11 @@ class Exchangeplatformtabs extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("mortgage_type");
 
-            $getId = Db::name("car_new_inventory")
-                ->where("id", $ids)
-                ->field("car_mortgage_id")
+            $getId = Db::name("sales_order")
+                ->alias("so")
+                ->join("car_new_inventory ni","so.car_new_inventory_id=ni.id")
+                ->where("so.id", $ids)
+                ->field("ni.car_mortgage_id")
                 ->select();
 
             $getId = $getId[0]['car_mortgage_id'];
@@ -225,15 +241,15 @@ class Exchangeplatformtabs extends Backend
     //查看详情信息
     public function details($ids = null)
     {
-        $res = Db::view("crm_plan_acar_view","id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,margin,tail_section,gps,note,4s_shop,engine_number,frame_number,presentationcondition,car_imgeas,plan_name,emergency_contact_1,emergency_contact_2,family_members,id_cardimages,drivers_licenseimages,residence_bookletimages,housingimages,bank_cardimages,application_formimages,call_listfiles,deposit_contractimages,deposit_receiptimages,genderdata,city")
-        ->where("id",$ids)
-        ->select();
+        $res = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,margin,tail_section,gps,note,4s_shop,engine_number,frame_number,presentationcondition,car_imgeas,plan_name,emergency_contact_1,emergency_contact_2,family_members,id_cardimages,drivers_licenseimages,residence_bookletimages,housingimages,bank_cardimages,application_formimages,call_listfiles,deposit_contractimages,deposit_receiptimages,genderdata,city")
+            ->where("id", $ids)
+            ->select();
         $res = $res[0];
 
 //        pr($res);die();
 
         $this->view->assign([
-          'row'=>$res
+            'row' => $res
         ]);
 
         return $this->view->fetch();

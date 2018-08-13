@@ -26,12 +26,12 @@ class CarNewInventory extends Model
     
     public function getCarprocessList()
     {
-        return ['1' => __('Carprocess 1'), '0' => __('Carprocess 0')];
+        return ['1' => __('是'), '0' => __('否')];
     }     
 
     public function getPledgeList()
     {
-        return ['1' => __('Pledge 1'), '0' => __('Pledge 0')];
+        return ['1' => __('是'), '0' => __('否')];
     }     
 
 
