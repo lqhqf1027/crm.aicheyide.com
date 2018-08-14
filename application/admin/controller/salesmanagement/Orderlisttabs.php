@@ -45,10 +45,17 @@ class Orderlisttabs extends Backend
         $total1 = $this->model
                      ->where($where)
                      ->order($sort, $order)
-                     ->count(); 
+                     ->count();
+        
+        $this->model = new \app\admin\model\second\sales\Order;        
+        $total2 = $this->model
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->count(); 
         
         $this->view->assign('total',$total);
         $this->view->assign('total1',$total1);
+        $this->view->assign('total2',$total2);
        
         return $this->view->fetch();
     }
@@ -117,7 +124,8 @@ class Orderlisttabs extends Backend
                 
     }
     /**提交审核 */
-    public function sedAudit(){
+    public function sedAudit()
+    {
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
            
@@ -154,7 +162,8 @@ class Orderlisttabs extends Backend
         }
     }
     /**查看详细资料 */
-    public function details($ids = null){
+    public function details($ids = null)
+    {
         $this->model = model('SalesOrder');
         $row = $this->model->get($ids); 
         if (!$row)
@@ -217,7 +226,8 @@ class Orderlisttabs extends Backend
     }
 
     /**纯租 */
-    public function orderRental(){ 
+    public function orderRental()
+    { 
         
         $this->model = new \app\admin\model\rental\Order;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
@@ -259,7 +269,8 @@ class Orderlisttabs extends Backend
     /**
      * 根据方案id查询 车型名称，首付、月供等
      */
-    public function getPlanCarRentalData($planId){
+    public function getPlanCarRentalData($planId)
+    {
          
         return Db::name('car_rental_models_info')->alias('a')
                 ->join('models b','a.models_id=b.id')
@@ -271,7 +282,8 @@ class Orderlisttabs extends Backend
                 
     }
     /**查看纯租详细资料 */
-    public function rentaldetails($ids = null){
+    public function rentaldetails($ids = null)
+    {
         $this->model = new \app\admin\model\rental\Order;
         $row = $this->model->get($ids); 
         if (!$row)
@@ -321,6 +333,134 @@ class Orderlisttabs extends Backend
                 'call_listfilesimages'=> $call_listfilesimages,
             ]
         );
+        return $this->view->fetch();
+    }
+
+    /**以租代购（二手车）*/
+    public function orderSecond()
+    { 
+        
+        $this->model = new \app\admin\model\second\sales\Order;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
+        $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
+        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+       //设置过滤方法
+       $this->request->filter(['strip_tags']);
+       if ($this->request->isAjax()) {
+           //如果发送的来源是Selectpage，则转发到Selectpage
+           if ($this->request->request('keyField')) {
+               return $this->selectpage();
+           }
+           list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+           $total = $this->model
+               ->where($where)
+               ->order($sort, $order)
+               ->count();
+
+           $list = $this->model
+               ->where($where)
+               ->order($sort, $order)
+               ->limit($offset, $limit)
+               ->select();
+         
+           $list = collection($list)->toArray();
+        
+           foreach( (array) $list as $k => $row){
+            $planData = collection($this->getPlanCarSecondData($row['plan_car_second_name']))->toArray();
+
+               $list[$k]['newpayment'] = $planData['newpayment'];
+               $list[$k]['monthlypaymen'] = $planData['monthlypaymen'];
+               $list[$k]['periods'] = $planData['periods'];
+               $list[$k]['totalprices'] = $planData['totalprices'];
+               $list[$k]['models_name'] = $planData['models_name'];
+          }
+        
+           $result = array("total" => $total, "rows" => $list);
+           return json($result);
+       }
+
+       return $this->view->fetch('index');
+        
+    }
+
+    /**
+     * 根据方案id查询 车型名称，首付、月供等
+     */
+    public function getPlanCarSecondData($planId)
+    {
+         
+        return Db::name('secondcar_rental_models_info')->alias('a')
+                ->join('models b','a.models_id=b.id')
+                ->field('a.id,a.licenseplatenumber,a.newpayment,a.monthlypaymen,a.periods,a.totalprices,
+                        b.name as models_name'
+                        )
+                ->where('a.id',$planId)
+                ->find();
+                
+    }
+
+    /**查看二手车单详细资料 */
+    public function seconddetails($ids = null)
+    {
+        $this->model = new \app\admin\model\second\sales\Order;
+        $row = $this->model->get($ids); 
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        
+        //定金合同（多图）
+        $deposit_contractimages = explode(',',$row['deposit_contractimages']);
+        
+        //定金收据上传
+        $deposit_receiptimages = explode(',',$row['deposit_receiptimages']);
+
+        //身份证正反面（多图）
+        $id_cardimages = explode(',',$row['id_cardimages']);
+        
+        //驾照正副页（多图）
+        $drivers_licenseimages = explode(',',$row['drivers_licenseimages']);
+        
+        //户口簿【首页、主人页、本人页】
+        $residence_bookletimages = explode(',',$row['residence_bookletimages']);
+        
+        //住房合同/房产证（多图）
+        $housingimages = explode(',',$row['housingimages']);
+        
+        //银行卡照（可多图）
+        $bank_cardimages = explode(',',$row['bank_cardimages']);
+
+        //申请表（多图）
+        $application_formimages = explode(',',$row['application_formimages']);
+        
+        //通话清单（文件上传）
+        $call_listfiles = explode(',',$row['call_listfiles']);
+
+        /**不必填 */
+        //保证金收据
+        $new_car_marginimages = $row['new_car_marginimages']==''?[]:explode(',',$row['new_car_marginimages']);
+        
+        $this->view->assign(
+            [    
+                'row'=>$row, 
+                'cdn'=>Config::get('upload')['cdnurl'],
+                'deposit_contractimages'=> $deposit_contractimages,
+                'deposit_receiptimages'=> $deposit_receiptimages,
+                'id_cardimages'=> $id_cardimages,
+                'drivers_licenseimages'=> $drivers_licenseimages,
+                'residence_bookletimages'=> $residence_bookletimages,
+                'housingimages'=> $housingimages,
+                'bank_cardimages'=> $bank_cardimages,
+                'application_formimages'=> $application_formimages,
+                'call_listfiles'=> $call_listfiles,
+                'new_car_marginimages'=> $new_car_marginimages,
+             ]
+         ); 
         return $this->view->fetch();
     }
 

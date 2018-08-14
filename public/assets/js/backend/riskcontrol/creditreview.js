@@ -58,6 +58,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'financial_platform_name', title: __('金融平台') },
                             { field: 'models_name', title: __('销售车型') },
                             { field: 'admin_nickname', title: __('销售员') },
+                            {
+                                field: 'id', title: __('查看详细资料'), table: newcarAudit, buttons: [
+                                    {
+                                        name: 'newcardetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-newcardetails',
+                                        url: 'riskcontrol/creditreview/newcardetails', callback: function (data) {
+                                            console.log(data)
+                                        }
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
                             { field: 'username', title: __('Username') },
                             { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
                             { field: 'genderdata_text', title: __('Genderdata'), operate: false },
@@ -70,29 +82,134 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'margin', title: __('保证金（元）') },
                             { field: 'tail_section', title: __('尾款（元）') },
                             { field: 'gps', title: __('GPS（元）') },
+                            // {
+                            //     field: 'operate', title: __('Operate'), table: newcarAudit,
+                            //     buttons: [
+                            //         {
+                            //             name: 'newauditResult',
+                            //             text: '审核',
+                            //             title: '审核',
+                            //             icon: 'fa fa-check-square-o',
+                            //             classname: 'btn btn-xs btn-info btn-newauditResult btn-dialog',
+                            //         },
+                            //         {
+                            //             name: 'bigData',
+                            //             text: '查看大数据',
+                            //             title: '查看大数据征信',
+                            //             icon: 'fa fa-eye',
+                            //             classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
+
+                            //         }
+
+                            //     ],
+                            //     events: Controller.api.events.operate,
+
+                            //     formatter: Controller.api.formatter.operate
+                            // }
+
                             {
                                 field: 'operate', title: __('Operate'), table: newcarAudit,
                                 buttons: [
                                     {
-                                        name: 'newauditResult',
-                                        text: '审核',
-                                        title: '审核',
-                                        icon: 'fa fa-check-square-o',
-                                        classname: 'btn btn-xs btn-info btn-newauditResult btn-dialog',
+                                        name: 'newauditResult', text: '审核', title: '审核征信', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-newauditResult btn-dialog',
+                                        url: 'riskcontrol/creditreview/newauditResult',
+                                        //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
+                                        //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
+                                        //....
+                                        hidden: function (row) { /**审核 */
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                        }
                                     },
                                     {
-                                        name: 'bigData',
-                                        text: '查看大数据',
-                                        title: '查看大数据征信',
-                                        icon: 'fa fa-eye',
-                                        classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
+                                        name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
+                                        url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                        },
+                                    },
+                                    {
+                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
+                                        hidden: function (row) {  /**征信已通过 */
+                                            if (row.review_the_data == 'for_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'not_through', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
+                                        hidden: function (row) {  /**征信不通过 */
 
+                                            if (row.review_the_data == 'not_through') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+
+                                        name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                        hidden: function (row) {  /**已提车 */
+                                            if (row.review_the_data == 'the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                        }
                                     }
 
+
+                            
                                 ],
                                 events: Controller.api.events.operate,
 
                                 formatter: Controller.api.formatter.operate
+
                             }
                         ]
                     ]
@@ -102,6 +219,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newcarAudit.on('load-success.bs.table', function (e, data) {
                     $(".btn-newauditResult").data("area", ["95%", "95%"]);
                     $(".btn-bigData").data("area", ["95%", "95%"]);
+                    $(".btn-newcardetails").data("area", ["95%", "95%"]);
                     var newcarAudit = $('#badge_newcar_audit').text(data.total);
                     newcarAudit = parseInt($('#badge_newcar_audit').text());
                 })
@@ -139,6 +257,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'models_name', title: __('租车车型') },
                             {field: 'admin_nickname', title: __('销售员') },
+                            {
+                                field: 'id', title: __('查看详细资料'), table: rentalcarAudit, buttons: [
+                                    {
+                                        name: 'rentalcardetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-rentalcardetails',
+                                        url: 'riskcontrol/creditreview/rentalcardetails', callback: function (data) {
+                                            console.log(data)
+                                        }
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
@@ -146,29 +276,103 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'cash_pledge', title: __('押金（元）')},
                             {field: 'rental_price', title: __('租金（元）')},
                             {field: 'tenancy_term', title: __('租期（月）')},
+                            // {
+                            //     field: 'operate', title: __('Operate'), table: rentalcarAudit,
+                            //     buttons: [
+                            //         {
+                            //             name: 'rentalauditResult',
+                            //             text: '审核',
+                            //             title: '审核',
+                            //             icon: 'fa fa-check-square-o',
+                            //             classname: 'btn btn-xs btn-info btn-rentalauditResult btn-dialog',
+                            //         },
+                            //         {
+                            //             name: 'bigData',
+                            //             text: '查看大数据',
+                            //             title: '查看大数据征信',
+                            //             icon: 'fa fa-eye',
+                            //             classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
+
+                            //         }
+
+                            //     ],
+                            //     events: Controller.api.events.operate,
+
+                            //     formatter: Controller.api.formatter.operate
+                            // }
+
                             {
                                 field: 'operate', title: __('Operate'), table: rentalcarAudit,
                                 buttons: [
                                     {
-                                        name: 'rentalauditResult',
-                                        text: '审核',
-                                        title: '审核',
-                                        icon: 'fa fa-check-square-o',
-                                        classname: 'btn btn-xs btn-info btn-rentalauditResult btn-dialog',
+                                        name: 'rentalauditResult', text: '审核', title: '审核征信', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-rentalauditResult btn-dialog',
+                                        url: 'riskcontrol/creditreview/rentalauditResult',
+                                        //等于is_reviewing_true 的时候操作栏显示的是审核两个字，
+                                        //等于is_reviewing_pass 的时候操作栏显示的是通过审核四个字，
+                                        //....
+                                        hidden: function (row) { /**审核 */
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_nopass') {
+                                                return true;
+                                            }
+                                        }
                                     },
                                     {
-                                        name: 'bigData',
-                                        text: '查看大数据',
-                                        title: '查看大数据征信',
-                                        icon: 'fa fa-eye',
-                                        classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
+                                        name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
+                                        url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_nopass') {
+                                                return true;
+                                            }
+                                        },
+                                    },
+                                    {
+                                        name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
+                                        hidden: function (row) {  /**征信已通过 */
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_nopass') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'is_reviewing_nopass', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
+                                        hidden: function (row) {  /**征信不通过 */
 
-                                    }
+                                            if (row.review_the_data == 'is_reviewing_nopass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+
 
                                 ],
                                 events: Controller.api.events.operate,
 
                                 formatter: Controller.api.formatter.operate
+
                             }
                         ]
                     ]
@@ -180,6 +384,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //数据实时统计
                 rentalcarAudit.on('load-success.bs.table', function (e, data) {
                     $(".btn-rentalauditResult").data("area", ["95%", "95%"]);
+                    $(".btn-rentalcardetails").data("area", ["95%", "95%"]);
+                    $(".btn-bigData").data("area", ["95%", "95%"]);
                     var rentalcarAudit = $('#badge_rental_audit').text(data.total);
                 })
 
