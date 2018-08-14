@@ -169,12 +169,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 registryRegistration.bootstrapTable({
                     url: 'material/Driver/data_warehousing',
                     extend: {
-                        index_url: 'customer/customerresource/index',
-                        add_url: 'customer/customerresource/add',
-                        edit_url: 'material/Driver/registry_registration_edit',
-                        del_url: 'customer/customerresource/del',
-                        multi_url: 'customer/customerresource/multi',
-                        table: 'customer_resource',
+                        index_url: 'registry/registration/index',
+                        add_url: 'registry/registration/add',
+                        edit_url: 'material/driver/registry_registration_edit',
+                        del_url: 'registry/registration/del',
+                        multi_url: 'registry/registration/multi',
+                        table: 'registry_registration',
                     },
                     toolbar: '#toolbar2',
                     pk: 'id',

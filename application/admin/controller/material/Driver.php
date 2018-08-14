@@ -156,8 +156,10 @@ class Driver extends Backend
 
         $row = Db::table("crm_order_view")
         ->where("id",$ids)
-        ->field("marry_and_divorce,halfyear_bank_flow,residence_permit,company_contract,rent_house_contact,keys,lift_list")
+        ->field("marry_and_divorceimages,halfyear_bank_flowimages,residence_permitimages,company_contractimages,rent_house_contactimages,keys,lift_listimages,explain_situation,truth_management_protocolimages,confidentiality_agreementimages,supplementary_contract_agreementimages,tianfu_bank_cardimages,other_documentsimages,tax_proofimages,invoice_or_deduction_coupletimages,registration_certificateimages,mortgage_registration_fee,maximum_guarantee_contractimages,credit_reportimages,information_remark,driving_licenseimages")
         ->select();
+
+        $row = $row[0];
         
         if (!$row)
             $this->error(__('No Results were found'));
