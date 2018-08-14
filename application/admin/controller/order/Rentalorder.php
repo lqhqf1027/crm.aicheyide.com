@@ -130,7 +130,12 @@ class Rentalorder extends Backend
             
 
             $params = $this->request->post("row/a");
-            $plan_car_rental_name = Session::get('plan_id');;
+            $plan_car_rental_name = Session::get('plan_id');
+
+            $ex = explode(',',$params['plan_car_rental_name']);
+             
+            $params['plan_car_rental_name'] = reset($ex);//截取id
+            $params['plan_name'] = addslashes(end($ex));//
             
             //生成订单编号
             $params['plan_car_rental_name'] = $plan_car_rental_name;
@@ -279,7 +284,7 @@ class Rentalorder extends Backend
                 ->join('car_rental_models_info b','b.models_id=a.id')
                 ->field('a.name as models_name,b.id,b.licenseplatenumber,b.sales_id,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.shelfismenu')
                 ->where(['a.brand_id'=>$value['brandid'],'b.shelfismenu'=>1])
-                ->whereOr('sales_id', $this->auth->id)
+                ->where('sales_id', $this->auth->id)
                 ->where('review_the_data', '')
                 ->select();
             $newB =[];

@@ -166,8 +166,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 channel: 'demo1',
                 onMessage: function(message){
                    
-                    alert('新消息：'+message.content);
-                    Layer.close(open);
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        Layer.close(open);
+                        // $(".btn-refresh").trigger("click");
+                    });
+                    
                     soutside1ab.classList.remove("outside1ab");
                     oneforms.style.display="none";
                     twoforms.style.display="block";

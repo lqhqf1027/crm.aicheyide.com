@@ -20,8 +20,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             goeasy.subscribe({
                 channel: 'demo',
                 onMessage: function(message){
-                    alert('新消息：'+message.content);
-                    $(".btn-refresh").trigger("click");
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                    
                 }
             });
             
