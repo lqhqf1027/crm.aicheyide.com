@@ -336,6 +336,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     $('#badge_relation').text(data.total);
 
+                    // Fast.api.ajax({
+                    //     url: 'salesmanagement/Customerlisttabs/getTotal',
+                    // }, function (data, rets) {
+                    // console.log(data['intention']);
+                    //
+                    //     // Toastr.success("成功");
+                    //     // Layer.close(index);
+                    //     // relations.bootstrapTable('refresh');
+                    //     return false;
+                    // }, function (data, ret) {
+                    //     //失败的回调
+                    //     relations.bootstrapTable('refresh');
+                    //     return false;
+                    // });
+
+
+                    // console.log($("#badge_relation").text());
+                    // console.log($("#badge_intention").text());
+                    // console.log($("#badge_no_intention").text());
+                    // console.log($("#badge_overdue").text());
+
                 })
 
 

@@ -1,3 +1,139 @@
+<style>
+    .mask-layer {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 2020;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .mask-layer > div {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .mask-layer-black {
+        width: 100%;
+        height: 100%;
+        background: #000;
+        opacity: .85;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .mask-layer-container {
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        position: absolute;
+        margin: 0 auto;
+        z-index: 2030;
+        padding: 0 10px;
+        border-radius: 10px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    .mask-layer-container-operate {
+        width: 100%;
+        height: 30px;
+        padding: 10px 0;
+        text-align: center;
+        border-bottom: solid 1px #ddd;
+    }
+
+    .mask-layer-imgbox {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        margin-top: 10px;
+    }
+
+    .mask-layer-imgbox > p {
+        position: absolute;
+        cursor: move;
+        transform-origin: center;
+        -webkit-transform-origin: center;
+        -moz-transform-origin: center;
+        -ms-transform-origin: center;
+        -o-transform-origin: center;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        -webkit-margin-before: 0;
+        -webkit-margin-after: 0;
+        cursor: move;
+        left: 0;
+        top: 0;
+    }
+
+    .mask-layer-imgboxp > p > img {
+        display: inline-block;
+        vertical-align: middle;
+        cursor: move;
+    }
+
+    /*按钮样式*/
+    .btn-default-styles {
+        display: inline-block;
+        padding: 5px 10px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        background: #8C85E6;
+        color: #fff;
+        border: solid 1px #8C85E6;
+        border-radius: 4px;
+    }
+
+    .btn-default-styles:focus {
+        outline: none;
+    }
+
+    .btn-default-styles:hover {
+        background: #8078e3;
+        animation: anniu 1s infinite;
+    }
+
+    .btn-default-styles:active {
+        box-shadow: 0 2px 3px rgba(0, 0, 0, .2) inset;
+    }
+
+    .auto-img-center {
+        height: 80%;
+    }
+
+</style>
+
 <h3>
     <center>
         <h2>基本资料</h2>
@@ -42,10 +178,10 @@
             <strong>{:__('是否购买保险')}：</strong> {eq name="$row.buy_insurancedata" value="yes"}已购买{else/}未购买{/eq}
         </div>
         <!--<div class="col-xs-12 col-sm-8 col-md-3">-->
-            <!--<strong>{:__('身份证号')}：</strong> {$row.id_card}-->
+        <!--<strong>{:__('身份证号')}：</strong> {$row.id_card}-->
         <!--</div>-->
         <!--<div class="col-xs-12 col-sm-8 col-md-5">-->
-            <!--<strong>{:__('详细地址')}：</strong> {$row.city}{$row.detailed_address}-->
+        <!--<strong>{:__('详细地址')}：</strong> {$row.city}{$row.detailed_address}-->
         <!--</div>-->
     </div>
     <br>
@@ -53,7 +189,9 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('姓名')}：</strong> {:__($row.username)} {eq name="$row.genderdata" value="male"} <span class="fa fa-male text-info"></span>{else /} <span class="fa fa-female" style="color:palevioletred"></span>{/eq}
+            <strong>{:__('姓名')}：</strong> {:__($row.username)} {eq name="$row.genderdata" value="male"} <span
+                class="fa fa-male text-info"></span>{else /} <span class="fa fa-female"
+                                                                   style="color:palevioletred"></span>{/eq}
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-2">
@@ -97,12 +235,12 @@
             <strong>{:__('登记编码')}：</strong>{$row.registration_code}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('抵押类型')}：</strong>  {switch name="$row.mortgage_type"}
+            <strong>{:__('抵押类型')}：</strong> {switch name="$row.mortgage_type"}
             {case value="new_car"}新车{/case}
             {case value="used_car"}二手车{/case}
             {case value="yueda_car"}悦达{/case}
             {case value="other_car"}其他{/case}
-        {/switch}
+            {/switch}
         </div>
     </div>
     <br>
@@ -165,21 +303,21 @@
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('身份证正反面（多图）')}：</strong>
             {foreach $id_cardimages_arr as $k => $v}
-            <a href="{$v}" target="_blank">
-                <img src="{$v}" alt="" style="width:80px;height:80px;">
-            </a>
+
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Drivers_licenseimages')}：</strong>
             {foreach $drivers_licenseimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Residence_bookletimages')}：</strong>
             {foreach $residence_bookletimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
 
             {/foreach}
         </div>
@@ -193,19 +331,19 @@
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Bank_cardimages')}：</strong>
             {foreach $bank_cardimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Housingimages')}：</strong>
             {foreach $housingimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Application_formimages')}：</strong>
             {foreach $application_formimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
         </div>
 
@@ -225,7 +363,7 @@
             {else/}
             <strong>{:__('保证金收据')}：</strong>
             {foreach $new_car_marginimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
             {/empty}
 
@@ -233,14 +371,14 @@
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Deposit_contractimages')}：</strong>
             {foreach $deposit_contractimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Deposit_receiptimages')}：</strong>
             {foreach $deposit_receiptimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
         </div>
 
@@ -253,7 +391,7 @@
         <div class="col-xs-12 col-sm-8 col-md-6">
             <strong>{:__('车辆所有的扫描件（多图）')}：</strong>
             {foreach $car_imgeas_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3" style="line-height: 80px">
@@ -265,18 +403,201 @@
         </div>
 
 
-
     </div>
     <br>
     <br>
     <hr>
     <br>
 
-
-
 </div>
-{php}
+<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+<script>
+    $(function () {
 
-//dump($row);
+        image_preview($(".to-change"));
 
-{/php}
+            function image_preview(obj) {
+                var len = obj.length;
+
+
+                var arrPic = new Array(); //定义一个数组
+                for (var i = 0; i < len; i++) {
+                    arrPic[i] = obj.eq(i).prop("src"); //将所有img路径存储到数组中
+                }
+
+                obj.each(function () {
+                    $(this).on("click", function () {
+                        // alert($(this).prop("src"));
+                        // alert(obj.index(this));
+                        //给body添加弹出层的html
+                        $("body").append("<div class=\"mask-layer\" style=\"magin-bottom: 10px\">" +
+                            "   <div class=\"mask-layer-black\"></div>" +
+                            "   <div class=\"mask-layer-container\">" +
+                            "       <div class=\"mask-layer-container-operate\">" +
+                            "           <button class=\"mask-prev btn-default-styles\">上一张</button>" +
+                            "           <button class=\"mask-clockwise btn-default-styles\">旋转</button>" +
+                            "           <button class=\"mask-close btn-default-styles\">关闭</button>" +
+                            "           <button class=\"mask-next btn-default-styles\">下一张</button>" +
+                            "       </div>" +
+                            "       <div class=\"mask-layer-imgbox auto-img-center\"></div>" +
+                            "   </div>" +
+                            "</div>"
+                        );
+
+                        var img_index = obj.index(this);//获取点击的索引值
+                        var num = img_index;
+
+                        showImg();
+
+                        function showImg() {
+                            $(".mask-layer-imgbox").append("<p><img src=\"\" alt=\"\"></p>");
+                            $(".mask-layer-imgbox img").prop("src", arrPic[num]); //给弹出框的Img赋值
+
+                            //图片居中显示
+                            var box_width = $(".auto-img-center").width(); //图片盒子宽度
+                            var box_height = $(".auto-img-center").height();//图片高度高度
+
+                            var initial_width = $(".auto-img-center img").width();//初始图片宽度
+                            var initial_height = $(".auto-img-center img").height();//初始图片高度
+
+
+                            // $(".auto-img-center img").css("width", "100%");
+                            // $(".auto-img-center img").css({"height": "100%", "margin-left": "20%", "margin-top": 10});
+                            $(".auto-img-center img").addClass('img-responsive');
+
+
+                            // if (initial_width > initial_height) {
+                            //     // $(".auto-img-center img").css("width", "100%");
+                            //     $(".auto-img-center img").css("height", "100%");
+                            //     var last_imgHeight = $(".auto-img-center img").height();
+                            //
+                            // } else {
+                            //     $(".auto-img-center img").css("height", "100%");
+                            //     var last_imgWidth = $(".auto-img-center img").width();
+                            //
+                            // }
+                            // var zoom_n = 1;
+
+                            var zs = 1;
+
+                            function zoomImg(o) {
+                                var zoom = parseInt(o.style.zoom, 10) || 100;
+                                zoom += event.wheelDelta / 10; //可适合修改
+
+                                if (zoom == 112) {
+                                    zs += 0.1;
+                                    if (zs > 1.8) {
+                                        zs = 1.8;
+                                    }
+                                } else if (zoom == 88) {
+                                    zs -= 0.1;
+
+                                    if (zs < 0.4) {
+                                        zs = 0.4;
+                                    }
+                                }
+
+                                $(".mask-layer-imgbox img").css({
+                                    "transform": "scale(" + zs + ")",
+                                    "-moz-transform": "scale(" + zs + ")",
+                                    "-ms-transform": "scale(" + zs + ")",
+                                    "-o-transform": "scale(" + zs + ")",
+                                    "-webkit-transform": "scale(" + zs + ")"
+                                });
+
+                            }
+
+                            $(document).ready(function () {
+                                $(".mask-layer-imgbox img").bind("mousewheel", function () {
+                                    zoomImg(this);
+                                    return false;
+                                });
+                            });
+
+                            //图片拖拽
+                            var $div_img = $(".mask-layer-imgbox p");
+                            //绑定鼠标左键按住事件
+                            $div_img.bind("mousedown", function (event) {
+
+                                event.preventDefault && event.preventDefault(); //去掉图片拖动响应
+                                //获取需要拖动节点的坐标
+                                var offset_x = $(this)[0].offsetLeft;//x坐标
+                                var offset_y = $(this)[0].offsetTop;//y坐标
+                                //获取当前鼠标的坐标
+                                var mouse_x = event.pageX;
+                                var mouse_y = event.pageY;
+                                //绑定拖动事件
+                                //由于拖动时，可能鼠标会移出元素，所以应该使用全局（document）元素
+                                $(".mask-layer-imgbox").bind("mousemove", function (ev) {
+
+                                    // 计算鼠标移动了的位置
+                                    var _x = ev.pageX - mouse_x;
+                                    var _y = ev.pageY - mouse_y;
+                                    //设置移动后的元素坐标
+                                    var now_x = (offset_x + _x) + "px";
+                                    var now_y = (offset_y + _y) + "px";
+                                    //改变目标元素的位置
+                                    $div_img.css({
+                                        top: now_y,
+                                        left: now_x
+                                    });
+                                });
+                            });
+                            //当鼠标左键松开，接触事件绑定
+                            $(".mask-layer-imgbox").bind("mouseup", function () {
+                                $(this).unbind("mousemove");
+                            });
+
+                            //旋转
+                            var spin_n = 0;
+                            $(".mask-clockwise").click(function () {
+                                spin_n += 90;
+                                $(".mask-layer-imgbox img").parent("p").css({
+                                    "transform": "rotate(" + spin_n + "deg)",
+                                    "-moz-transform": "rotate(" + spin_n + "deg)",
+                                    "-ms-transform": "rotate(" + spin_n + "deg)",
+                                    "-o-transform": "rotate(" + spin_n + "deg)",
+                                    "-webkit-transform": "rotate(" + spin_n + "deg)"
+                                });
+                            });
+
+                            //关闭
+                            $(".mask-close").click(function () {
+                                $(".mask-layer").remove();
+                            });
+                            $(".mask-layer-black").click(function () {
+                                $(".mask-layer").remove();
+                            });
+                        }
+
+                        //下一张
+                        $(".mask-next").on("click", function () {
+
+                            console.log(arrPic[num]);
+                            $(".mask-layer-imgbox p img").remove();
+                            num++;
+                            if (num == len) {
+                                num = 0;
+                            }
+                            showImg();
+                        });
+
+                        //上一张
+                        $(".mask-prev").on("click", function () {
+                            $(".mask-layer-imgbox p img").remove();
+                            num--;
+                            if (num == -1) {
+                                num = len - 1;
+                            }
+                            showImg();
+                        });
+
+                    })
+
+                })
+            }
+        }
+    )
+
+
+</script>

@@ -1,15 +1,7 @@
 <?php
 
 return [
-    'Id'  =>  'id',
-    'Name'  =>  '姓名',
-    'Age'  =>  '年龄',
-    'Genderdata'  =>  '性别',
-    'Genderdata male'  =>  '男',
-    'Genderdata female'  =>  '女',
-    'Phone'  =>  '手机号',
-    'Createtime'  =>  '创建时间',
-    'Updatetime'  =>  '更新时间',
+    'Id'  =>  'ID',
     'Archival_coding'  =>  '档案编码',
     'Signtime'  =>  '签订时间',
     'Total_contract'  =>  '合同总价',
