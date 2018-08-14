@@ -341,16 +341,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  
                 $(".btn-add").data("area", ["95%","95%"]); 
                 $(".btn-edit").data("area", ["95%","95%"]); 
-
-                var goeasy = new GoEasy({
-                    appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-                });
-                goeasy.subscribe({
-                    channel: 'demo3',
-                    onMessage: function(message){
-                        $(".btn-refresh").trigger("click");
-                    }
-                });
                 
                  // 初始化表格
                  orderRental.bootstrapTable({
@@ -479,6 +469,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ]
                 
+            });
+
+            var goeasy = new GoEasy({
+                appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+            });
+            goeasy.subscribe({
+                channel: 'demo3',
+                onMessage: function(message){
+                   
+                    $(".btn-refresh").trigger("click");
+                }
             });
          
 

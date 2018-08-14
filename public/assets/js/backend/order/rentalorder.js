@@ -271,7 +271,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     parent.layer.close(index);
                     Toastr.success("成功");
 
-                    goEasy.publish ({
+                    goeasy.publish ({
                             channel: 'demo3', 
                             message: '123'
                     });
@@ -300,6 +300,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
                     Toastr.success("成功");
+
+                    goeasy.publish ({
+                        channel: 'demo3', 
+                        message: '123'
+                    });
 
                    
                 }, function (data, ret) {
