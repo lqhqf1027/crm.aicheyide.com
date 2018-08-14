@@ -130,7 +130,12 @@ class Rentalorder extends Backend
             
 
             $params = $this->request->post("row/a");
-            $plan_car_rental_name = Session::get('plan_id');;
+            $plan_car_rental_name = Session::get('plan_id');
+
+            $ex = explode(',',$params['plan_car_rental_name']);
+             
+            $params['plan_car_rental_name'] = reset($ex);//截取id
+            $params['plan_name'] = addslashes(end($ex));//
             
             //生成订单编号
             $params['plan_car_rental_name'] = $plan_car_rental_name;

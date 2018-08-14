@@ -40,9 +40,11 @@ class Creditreview extends Backend
                     ->where('review_the_data', 'is_reviewing_true')
                     ->order($sort, $order)
                     ->count(),
-            'total1' => $this->model
+
+            'total1'=>DB::name('rental_order')
+
                     ->where($where)
-                    ->where('review_the_data', 'for_the_car')
+                    ->where('review_the_data', 'is_reviewing_true')
                     ->order($sort, $order)
                     ->count(),
             'total2' => $this->model
@@ -55,9 +57,11 @@ class Creditreview extends Backend
         return $this->view->fetch();
     }
 
-    //展示需要审核的销售单
-    public function toAudit()
-    {
+
+    //展示需要审核的新车销售单
+    public function newcarAudit()
+    {  
+
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -107,65 +111,60 @@ class Creditreview extends Backend
         return $this->view->fetch('index');
     }
 
-    //展示通过审核的销售单
-    public function passAudit()
-    {
-        $this->model = model('SalesOrder');
-        $this->view->assign('genderdataList', $this->model->getGenderdataList());
-        $this->view->assign('customerSourceList', $this->model->getCustomerSourceList());
-        $this->view->assign('reviewTheDataList', $this->model->getReviewTheDataList());
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = $this->model
+
+    //展示需要审核的租车单
+    public function rentalcarAudit()
+    { 
+        
+       //设置过滤方法
+       $this->request->filter(['strip_tags']);
+       if ($this->request->isAjax()) {
+           //如果发送的来源是Selectpage，则转发到Selectpage
+           if ($this->request->request('keyField')) {
+               return $this->selectpage();
+           }
+           list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+           $total = DB::name('rental_order')
+
                ->where($where)
                ->order($sort, $order)
-               ->where('review_the_data', 'for_the_car')
+               ->where('review_the_data', 'is_reviewing_true')
                ->count();
 
-            $list = $this->model
+           $list = DB::name('rental_order')
+
                ->where($where)
                ->order($sort, $order)
-               ->where('review_the_data', 'for_the_car')
+               ->where('review_the_data', 'is_reviewing_true')
                ->limit($offset, $limit)
                ->select();
+         
+           $list = collection($list)->toArray();
 
-            $list = collection($list)->toArray();
+           foreach( (array) $list as $k => $row){
 
-            foreach ((array) $list as $k => $row) {
-                $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
+            $admin_id = $row['admin_id'];
+            $plan_car_rental_name = $row['plan_car_rental_name'];
+            $models_name = DB::name('car_rental_models_info')->alias('a')->join('models b','b.id=a.models_id')->where('a.id', $plan_car_rental_name)->value('b.name');
+            $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname'); 
 
-                $admin_id = $row['admin_id'];
+            $list[$k]['admin_nickname'] = $admin_nickname;
+            $list[$k]['models_name'] = $models_name;
 
-                $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname');
+      }
+        
+           $result = array("total" => $total, "rows" => $list);
+           return json($result);
+       }
 
-                $list[$k]['admin_nickname'] = $admin_nickname;
-
-                $list[$k]['payment'] = $planData['payment'];
-                $list[$k]['monthly'] = $planData['monthly'];
-                $list[$k]['nperlist'] = $planData['nperlist'];
-                $list[$k]['margin'] = $planData['margin'];
-                $list[$k]['gps'] = $planData['gps'];
-                $list[$k]['models_name'] = $planData['models_name'];
-                $list[$k]['financial_platform_name'] = $planData['financial_platform_name'];
-            }
-
-            $result = array('total' => $total, 'rows' => $list);
-
-            return json($result);
-        }
-
-        return $this->view->fetch('index');
+       return $this->view->fetch('index');
+        
     }
 
-    //展示未通过审核的销售单
-    public function noApproval()
-    {
+    //展示需要审核的二手车单
+    public function secondhandcarAudit()
+    { 
+        
         $this->model = model('SalesOrder');
         $this->view->assign('genderdataList', $this->model->getGenderdataList());
         $this->view->assign('customerSourceList', $this->model->getCustomerSourceList());
@@ -235,8 +234,10 @@ class Creditreview extends Backend
                 ->find();
     }
 
-    /** 审核销售提交过来的销售单*/
-    public function auditResult($ids = null)
+
+    /** 审核销售提交过来的销售新车单*/
+    public function newauditResult($ids=NULL)
+
     {
         $this->model = model('SalesOrder');
         $row = $this->model->get($ids);
@@ -275,19 +276,20 @@ class Creditreview extends Backend
         //保证金收据
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
         $this->view->assign(
-           [
-               'row' => $row,
-               'cdn' => Config::get('upload')['cdnurl'],
-                'id_cardimages' => $id_cardimages,
-                'drivers_licenseimages' => $drivers_licenseimages,
-                'residence_bookletimages' => $residence_bookletimages,
-                'housingimages' => $housingimages,
-                'bank_cardimages' => $bank_cardimages,
-                'application_formimages' => $application_formimages,
-                'deposit_contractimages' => $deposit_contractimages,
-                'deposit_receiptimages' => $deposit_receiptimages,
-                'call_listfiles' => $call_listfiles,
-                'new_car_marginimages' => $new_car_marginimages,
+
+           [    
+                'row'=>$row, 
+                'cdn'=>Config::get('upload')['cdnurl'],
+                'id_cardimages'=>$id_cardimages,
+                'drivers_licenseimages'=>$drivers_licenseimages,
+                'residence_bookletimages'=>$residence_bookletimages,
+                'housingimages'=>$housingimages,
+                'bank_cardimages'=>$bank_cardimages,
+                'application_formimages'=>$application_formimages,
+                'deposit_contractimages'=>$deposit_contractimages,
+                'deposit_receiptimages'=>$deposit_receiptimages,
+                'call_listfiles'=>$call_listfiles,
+                'new_car_marginimages'=>$new_car_marginimages 
             ]
         );
         $id = $row['id'];
@@ -335,7 +337,113 @@ class Creditreview extends Backend
             }
         }
 
-        return $this->view->fetch('auditResult');
+        
+        return $this->view->fetch('newauditResult');
+
+    }
+
+    /** 审核提交过来的租车单*/
+    public function rentalauditResult($ids=NULL)
+    {
+        
+        $this->model = new \app\admin\model\rental\Order; 
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+            $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }   
+        // $list = collection($row)->toArray();
+        // pr($row);die;
+      
+        //身份证图片
+        $id_cardimages = explode(',',$row['id_cardimages']); 
+        //驾照图片 
+        $drivers_licenseimages = explode(',',$row['drivers_licenseimages']); 
+        //户口簿图片 
+        $residence_bookletimages = explode(',',$row['residence_bookletimages']);   
+        //通话清单
+        $call_listfilesimages = explode(',',$row['call_listfilesimages']);   
+        $this->view->assign(
+           [    
+                'row'=>$row, 
+                'cdn'=>Config::get('upload')['cdnurl'],
+                'id_cardimages'=>$id_cardimages,
+                'drivers_licenseimages'=>$drivers_licenseimages,
+                'residence_bookletimages'=>$residence_bookletimages,
+                'call_listfilesimages'=>$call_listfilesimages
+            ]
+        ); 
+        $id = $row['id'];
+        if ($this->request->isPost())
+        {
+            
+            // var_dump($_POST['hidden1']);
+            // die;
+            if ($_POST['hidden1'] == '1') {
+
+                // var_dump(123);
+                // die;
+                $result = $this->model->save(['review_the_data'=>'for_the_car'],function($query) use ($id){
+                $query->where('id',$id);
+                }); 
+                
+                if ($result)
+                {
+
+                    $this->success();
+                }
+                else{
+
+                    $this->error();
+                }
+            }
+            if ($_POST['hidden1'] == '2') {
+
+                // var_dump(456);
+                // die;
+                $result = $this->model->save(['review_the_data'=>'the_guarantor'],function($query) use ($id){
+                    $query->where('id',$id);
+                }); 
+                    
+                if ($result)
+                {
+    
+                    $this->success();
+                }
+                else{
+    
+                    $this->error();
+                }
+
+            }
+            if ($_POST['hidden1'] == '3') {
+
+                // var_dump(789);
+                // die;
+                $result = $this->model->save(['review_the_data'=>'not_through'],function($query) use ($id){
+                    $query->where('id',$id);
+                }); 
+                    
+                if ($result)
+                {
+    
+                    $this->success();
+                }
+                else{
+    
+                    $this->error();
+                }
+
+            }
+            
+        }
+        
+        return $this->view->fetch('rentalauditResult');
+
     }
 
     /**查看大数据 */
