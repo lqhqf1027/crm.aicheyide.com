@@ -35,7 +35,7 @@ class Exchangeplatformtabs extends Backend
 
         $this->loadlang('banking/exchangeplatformtabs');
         $new_car = $this->getCar("new_car");
-        $yue_da_car = $this->getCar("yue_da_car");
+        $yue_da_car = $this->getCar("yueda_car");
         $other_car = $this->getCar("other_car");
         $nan_chong = Db::name("nanchong_driver")->count();
 

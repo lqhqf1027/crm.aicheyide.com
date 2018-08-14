@@ -53,8 +53,8 @@ class Newcarscustomer extends Backend
             ->count();
 
         $already_total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
-            ->where("review_the_data", "for_the_car")
-            ->where("car_new_inventory_id", null)
+            ->where("review_the_data", "the_car")
+            ->where("car_new_inventory_id", "not null")
             ->count();
 
         $this->view->assign([

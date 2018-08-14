@@ -9,49 +9,54 @@ use think\Hook;
 use think\Lang;
 use think\Session;
 use think\Cache;
+
 /**
- * 后台控制器基类
+ * 后台控制器基类.
  */
 class Backend extends Controller
 {
-
     /**
-     * 无需登录的方法,同时也就不需要鉴权了
+     * 无需登录的方法,同时也就不需要鉴权了.
+     *
      * @var array
      */
     protected $noNeedLogin = [];
 
     /**
-     * 无需鉴权的方法,但需要登录
+     * 无需鉴权的方法,但需要登录.
+     *
      * @var array
      */
     protected $noNeedRight = [];
 
     /**
      * 布局模板
+     *
      * @var string
      */
     protected $layout = 'default';
 
     /**
-     * 权限控制类
+     * 权限控制类.
+     *
      * @var Auth
      */
     protected $auth = null;
 
     /**
      * 模型对象
+     *
      * @var \think\Model
      */
     protected $model = null;
 
     /**
-     * 快速搜索时执行查找的字段
+     * 快速搜索时执行查找的字段.
      */
     protected $searchFields = 'id';
 
     /**
-     * 是否是关联查询
+     * 是否是关联查询.
      */
     protected $relationSearch = false;
 
@@ -59,12 +64,12 @@ class Backend extends Controller
      * 是否开启数据限制
      * 支持auth/personal
      * 表示按权限判断/仅限个人
-     * 默认为禁用,若启用请务必保证表中存在admin_id字段
+     * 默认为禁用,若启用请务必保证表中存在admin_id字段.
      */
     protected $dataLimit = false;
 
     /**
-     * 数据限制字段
+     * 数据限制字段.
      */
     protected $dataLimitField = 'admin_id';
 
@@ -84,32 +89,32 @@ class Backend extends Controller
     protected $modelSceneValidate = false;
 
     /**
-     * Multi方法可批量修改的字段
+     * Multi方法可批量修改的字段.
      */
     protected $multiFields = 'status';
 
     /**
-     * Selectpage可显示的字段
+     * Selectpage可显示的字段.
      */
     protected $selectpageFields = '*';
 
     /**
      * 导入文件首行类型
      * 支持comment/name
-     * 表示注释或字段名
+     * 表示注释或字段名.
      */
     protected $importHeadType = 'comment';
 
     /**
-     * 引入后台控制器的traits
+     * 引入后台控制器的traits.
      */
 
-      /**
-     * 微信appid
-     */
-    protected $appid=null;
     /**
-     * 微信secret
+     * 微信appid.
+     */
+    protected $appid = null;
+    /**
+     * 微信secret.
      */
     protected $secret = null;
     use \app\admin\library\traits\Backend;
@@ -123,13 +128,13 @@ class Backend extends Controller
         $controllername = strtolower($this->request->controller());
         $actionname = strtolower($this->request->action());
 
-        $path = str_replace('.', '/', $controllername) . '/' . $actionname;
+        $path = str_replace('.', '/', $controllername).'/'.$actionname;
 
         // 定义是否Addtabs请求
-        !defined('IS_ADDTABS') && define('IS_ADDTABS', input("addtabs") ? TRUE : FALSE);
+        !defined('IS_ADDTABS') && define('IS_ADDTABS', input('addtabs') ? true : false);
 
         // 定义是否Dialog请求
-        !defined('IS_DIALOG') && define('IS_DIALOG', input("dialog") ? TRUE : FALSE);
+        !defined('IS_DIALOG') && define('IS_DIALOG', input('dialog') ? true : false);
 
         // 定义是否AJAX请求
         !defined('IS_AJAX') && define('IS_AJAX', $this->request->isAjax());
@@ -145,7 +150,7 @@ class Backend extends Controller
                 Hook::listen('admin_nologin', $this);
                 $url = Session::get('referer');
                 $url = $url ? $url : $this->request->url();
-                $this->error(__('Please login first'), url('index/login', ['url' => $url]));
+                $this->redirect('index/login');
             }
             // 判断是否需要验证权限
             if (!$this->auth->match($this->noNeedRight)) {
@@ -158,7 +163,7 @@ class Backend extends Controller
         }
 
         // 非选项卡时重定向
-        if (!$this->request->isPost() && !IS_AJAX && !IS_ADDTABS && !IS_DIALOG && input("ref") == 'addtabs') {
+        if (!$this->request->isPost() && !IS_AJAX && !IS_ADDTABS && !IS_DIALOG && input('ref') == 'addtabs') {
             $url = preg_replace_callback("/([\?|&]+)ref=addtabs(&?)/i", function ($matches) {
                 return $matches[2] == '&' ? $matches[1] : '';
             }, $this->request->url());
@@ -179,38 +184,38 @@ class Backend extends Controller
 
         // 如果有使用模板布局
         if ($this->layout) {
-            $this->view->engine->layout('layout/' . $this->layout);
+            $this->view->engine->layout('layout/'.$this->layout);
         }
 
         // 语言检测
         $lang = strip_tags($this->request->langset());
 
-        $site = Config::get("site");
+        $site = Config::get('site');
 
         $upload = \app\common\model\Config::upload();
 
         // 上传信息配置后
-        Hook::listen("upload_config_init", $upload);
+        Hook::listen('upload_config_init', $upload);
 
         // 配置信息
         $config = [
-            'site'           => array_intersect_key($site, array_flip(['name', 'indexurl', 'cdnurl', 'version', 'timezone', 'languages'])),
-            'upload'         => $upload,
-            'modulename'     => $modulename,
+            'site' => array_intersect_key($site, array_flip(['name', 'indexurl', 'cdnurl', 'version', 'timezone', 'languages'])),
+            'upload' => $upload,
+            'modulename' => $modulename,
             'controllername' => $controllername,
-            'actionname'     => $actionname,
-            'jsname'         => 'backend/' . str_replace('.', '/', $controllername),
-            'moduleurl'      => rtrim(url("/{$modulename}", '', false), '/'),
-            'language'       => $lang,
-            'fastadmin'      => Config::get('fastadmin'),
-            'referer'        => Session::get("referer")
+            'actionname' => $actionname,
+            'jsname' => 'backend/'.str_replace('.', '/', $controllername),
+            'moduleurl' => rtrim(url("/{$modulename}", '', false), '/'),
+            'language' => $lang,
+            'fastadmin' => Config::get('fastadmin'),
+            'referer' => Session::get('referer'),
         ];
-        $config = array_merge($config, Config::get("view_replace_str"));
+        $config = array_merge($config, Config::get('view_replace_str'));
 
         Config::set('upload', array_merge(Config::get('upload'), $upload));
 
         // 配置信息后
-        Hook::listen("config_init", $config);
+        Hook::listen('config_init', $config);
         //加载当前控制器语言包
         $this->loadlang($controllername);
         //渲染站点配置
@@ -224,17 +229,19 @@ class Backend extends Controller
     }
 
     /**
-     * 加载语言文件
+     * 加载语言文件.
+     *
      * @param string $name
      */
     protected function loadlang($name)
     {
-        Lang::load(APP_PATH . $this->request->module() . '/lang/' . $this->request->langset() . '/' . str_replace('.', '/', $name) . '.php');
+        Lang::load(APP_PATH.$this->request->module().'/lang/'.$this->request->langset().'/'.str_replace('.', '/', $name).'.php');
     }
 
     /**
-     * 渲染配置信息
-     * @param mixed $name 键名或数组
+     * 渲染配置信息.
+     *
+     * @param mixed $name  键名或数组
      * @param mixed $value 值
      */
     protected function assignconfig($name, $value = '')
@@ -243,62 +250,64 @@ class Backend extends Controller
     }
 
     /**
-     * 生成查询所需要的条件,排序方式
-     * @param mixed $searchfields 快速查询的字段
-     * @param boolean $relationSearch 是否关联查询
+     * 生成查询所需要的条件,排序方式.
+     *
+     * @param mixed $searchfields   快速查询的字段
+     * @param bool  $relationSearch 是否关联查询
+     *
      * @return array
      */
     protected function buildparams($searchfields = null, $relationSearch = null)
     {
         $searchfields = is_null($searchfields) ? $this->searchFields : $searchfields;
         $relationSearch = is_null($relationSearch) ? $this->relationSearch : $relationSearch;
-        $search = $this->request->get("search", '');
-        $filter = $this->request->get("filter", '');
-        $op = $this->request->get("op", '', 'trim');
-        $sort = $this->request->get("sort", "id");
-        $order = $this->request->get("order", "DESC");
-        $offset = $this->request->get("offset", 0);
-        $limit = $this->request->get("limit", 0);
-        $filter = (array)json_decode($filter, TRUE);
-        $op = (array)json_decode($op, TRUE);
+        $search = $this->request->get('search', '');
+        $filter = $this->request->get('filter', '');
+        $op = $this->request->get('op', '', 'trim');
+        $sort = $this->request->get('sort', 'id');
+        $order = $this->request->get('order', 'DESC');
+        $offset = $this->request->get('offset', 0);
+        $limit = $this->request->get('limit', 0);
+        $filter = (array) json_decode($filter, true);
+        $op = (array) json_decode($op, true);
         $filter = $filter ? $filter : [];
         $where = [];
         $tableName = '';
         if ($relationSearch) {
             if (!empty($this->model)) {
                 $name = \think\Loader::parseName(basename(str_replace('\\', '/', get_class($this->model))));
-                $tableName = $name . '.';
+                $tableName = $name.'.';
             }
             $sortArr = explode(',', $sort);
-            foreach ($sortArr as $index => & $item) {
-                $item = stripos($item, ".") === false ? $tableName . trim($item) : $item;
+            foreach ($sortArr as $index => &$item) {
+                $item = stripos($item, '.') === false ? $tableName.trim($item) : $item;
             }
             unset($item);
             $sort = implode(',', $sortArr);
         }
         $adminIds = $this->getDataLimitAdminIds();
         if (is_array($adminIds)) {
-            $where[] = [$tableName . $this->dataLimitField, 'in', $adminIds];
+            $where[] = [$tableName.$this->dataLimitField, 'in', $adminIds];
         }
         if ($search) {
             $searcharr = is_array($searchfields) ? $searchfields : explode(',', $searchfields);
             foreach ($searcharr as $k => &$v) {
-                $v = stripos($v, ".") === false ? $tableName . $v : $v;
+                $v = stripos($v, '.') === false ? $tableName.$v : $v;
             }
             unset($v);
-            $where[] = [implode("|", $searcharr), "LIKE", "%{$search}%"];
+            $where[] = [implode('|', $searcharr), 'LIKE', "%{$search}%"];
         }
         foreach ($filter as $k => $v) {
             $sym = isset($op[$k]) ? $op[$k] : '=';
-            if (stripos($k, ".") === false) {
-                $k = $tableName . $k;
+            if (stripos($k, '.') === false) {
+                $k = $tableName.$k;
             }
             $v = !is_array($v) ? trim($v) : $v;
             $sym = strtoupper(isset($op[$k]) ? $op[$k] : $sym);
             switch ($sym) {
                 case '=':
                 case '!=':
-                    $where[] = [$k, $sym, (string)$v];
+                    $where[] = [$k, $sym, (string) $v];
                     break;
                 case 'LIKE':
                 case 'NOT LIKE':
@@ -315,7 +324,7 @@ class Backend extends Controller
                 case 'FINDIN':
                 case 'FINDINSET':
                 case 'FIND_IN_SET':
-                    $where[] = "FIND_IN_SET('{$v}', " . ($relationSearch ? $k : '`' . str_replace('.', '`.`', $k) . '`') . ")";
+                    $where[] = "FIND_IN_SET('{$v}', ".($relationSearch ? $k : '`'.str_replace('.', '`.`', $k).'`').')';
                     break;
                 case 'IN':
                 case 'IN(...)':
@@ -326,13 +335,14 @@ class Backend extends Controller
                 case 'BETWEEN':
                 case 'NOT BETWEEN':
                     $arr = array_slice(explode(',', $v), 0, 2);
-                    if (stripos($v, ',') === false || !array_filter($arr))
+                    if (stripos($v, ',') === false || !array_filter($arr)) {
                         continue;
+                    }
                     //当出现一边为空时改变操作符
                     if ($arr[0] === '') {
                         $sym = $sym == 'BETWEEN' ? '<=' : '>';
                         $arr = $arr[1];
-                    } else if ($arr[1] === '') {
+                    } elseif ($arr[1] === '') {
                         $sym = $sym == 'BETWEEN' ? '>=' : '<';
                         $arr = $arr[0];
                     }
@@ -342,17 +352,18 @@ class Backend extends Controller
                 case 'NOT RANGE':
                     $v = str_replace(' - ', ',', $v);
                     $arr = array_slice(explode(',', $v), 0, 2);
-                    if (stripos($v, ',') === false || !array_filter($arr))
+                    if (stripos($v, ',') === false || !array_filter($arr)) {
                         continue;
+                    }
                     //当出现一边为空时改变操作符
                     if ($arr[0] === '') {
                         $sym = $sym == 'RANGE' ? '<=' : '>';
                         $arr = $arr[1];
-                    } else if ($arr[1] === '') {
+                    } elseif ($arr[1] === '') {
                         $sym = $sym == 'RANGE' ? '>=' : '<';
                         $arr = $arr[0];
                     }
-                    $where[] = [$k, str_replace('RANGE', 'BETWEEN', $sym) . ' time', $arr];
+                    $where[] = [$k, str_replace('RANGE', 'BETWEEN', $sym).' time', $arr];
                     break;
                 case 'LIKE':
                 case 'LIKE %...%':
@@ -377,12 +388,14 @@ class Backend extends Controller
                 }
             }
         };
+
         return [$where, $sort, $order, $offset, $limit];
     }
 
     /**
      * 获取数据限制的管理员ID
-     * 禁用数据限制时返回的是null
+     * 禁用数据限制时返回的是null.
+     *
      * @return mixed
      */
     protected function getDataLimitAdminIds()
@@ -397,15 +410,15 @@ class Backend extends Controller
         if (in_array($this->dataLimit, ['auth', 'personal'])) {
             $adminIds = $this->dataLimit == 'auth' ? $this->auth->getChildrenAdminIds(true) : [$this->auth->id];
         }
+
         return $adminIds;
     }
 
     /**
-     * Selectpage的实现方法
+     * Selectpage的实现方法.
      *
      * 当前方法只是一个比较通用的搜索匹配,请按需重载此方法来编写自己的搜索逻辑,$where按自己的需求写即可
      * 这里示例了所有的参数，所以比较复杂，实现上自己实现只需简单的几行即可
-     *
      */
     protected function selectpage()
     {
@@ -413,25 +426,25 @@ class Backend extends Controller
         $this->request->filter(['strip_tags', 'htmlspecialchars']);
 
         //搜索关键词,客户端输入以空格分开,这里接收为数组
-        $word = (array)$this->request->request("q_word/a");
+        $word = (array) $this->request->request('q_word/a');
         //当前页
-        $page = $this->request->request("pageNumber");
+        $page = $this->request->request('pageNumber');
         //分页大小
-        $pagesize = $this->request->request("pageSize");
+        $pagesize = $this->request->request('pageSize');
         //搜索条件
-        $andor = $this->request->request("andOr", "and", "strtoupper");
+        $andor = $this->request->request('andOr', 'and', 'strtoupper');
         //排序方式
-        $orderby = (array)$this->request->request("orderBy/a");
+        $orderby = (array) $this->request->request('orderBy/a');
         //显示的字段
-        $field = $this->request->request("showField");
+        $field = $this->request->request('showField');
         //主键
-        $primarykey = $this->request->request("keyField");
+        $primarykey = $this->request->request('keyField');
         //主键值
-        $primaryvalue = $this->request->request("keyValue");
+        $primaryvalue = $this->request->request('keyValue');
         //搜索字段
-        $searchfield = (array)$this->request->request("searchField/a");
+        $searchfield = (array) $this->request->request('searchField/a');
         //自定义搜索条件
-        $custom = (array)$this->request->request("custom/a");
+        $custom = (array) $this->request->request('custom/a');
         $order = [];
         foreach ($orderby as $k => $v) {
             $order[$v[0]] = $v[1];
@@ -446,7 +459,7 @@ class Backend extends Controller
                 $logic = $andor == 'AND' ? '&' : '|';
                 $searchfield = is_array($searchfield) ? implode($logic, $searchfield) : $searchfield;
                 foreach ($word as $k => $v) {
-                    $query->where(str_replace(',', $logic, $searchfield), "like", "%{$v}%");
+                    $query->where(str_replace(',', $logic, $searchfield), 'like', "%{$v}%");
                 }
                 if ($custom && is_array($custom)) {
                     foreach ($custom as $k => $v) {
@@ -474,50 +487,47 @@ class Backend extends Controller
                 unset($item['password'], $item['salt']);
                 $list[] = [
                     $primarykey => isset($item[$primarykey]) ? $item[$primarykey] : '',
-                    $field      => isset($item[$field]) ? $item[$field] : ''
+                    $field => isset($item[$field]) ? $item[$field] : '',
                 ];
             }
         }
         //这里一定要返回有list这个字段,total是可选的,如果total<=list的数量,则会隐藏分页按钮
         return json(['list' => $list, 'total' => $total]);
     }
-    
+
     //该公共方法获取和全局缓存js-sdk需要使用的access_token
-    protected function getAccessToken(){
+    protected function getAccessToken()
+    {
         //我们将access_token全局缓存在文件中,每次获取的时候,先判断是否过期,如果过期重新获取再全局缓存
         //我们缓存的在文件中的数据，包括access_token和该access_token的过期时间戳.
         //获取缓存的access_token
-        $access_token_data = json_decode(Cache::get('access_token'),true);
+        $access_token_data = json_decode(Cache::get('access_token'), true);
 
         //判断缓存的access_token是否存在和过期，如果不存在和过期则重新获取.
-        if($access_token_data !== null && $access_token_data['access_token'] && $access_token_data['expires_in'] > time()){
-
+        if ($access_token_data !== null && $access_token_data['access_token'] && $access_token_data['expires_in'] > time()) {
             return $access_token_data['access_token'];
-
-        }else{
+        } else {
             //重新获取access_token,并全局缓存
             $curl = curl_init();
 
-            curl_setopt($curl,CURLOPT_URL,'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret);
+            curl_setopt($curl, CURLOPT_URL, 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret);
 
-            curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
             //获取access_token
-            $data = json_decode(curl_exec($curl),true);
-            if($data != null && $data['access_token']){
+            $data = json_decode(curl_exec($curl), true);
+            if ($data != null && $data['access_token']) {
                 //设置access_token的过期时间,有效期是7200s
                 $data['expires_in'] = $data['expires_in'] + time();
 
                 //将access_token全局缓存，快速缓存到文件中.
-                Cache::set('access_token',json_encode($data));
+                Cache::set('access_token', json_encode($data));
 
                 //返回access_token
                 return $data['access_token'];
-
-            }else{
+            } else {
                 exit('微信获取access_token失败');
             }
         }
     }
-
 }

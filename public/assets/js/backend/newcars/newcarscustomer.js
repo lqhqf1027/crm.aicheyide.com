@@ -127,6 +127,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             },
             already_lift_car: function () {
+
                 // 表格2
                 var alreadyLiftCar = $("#alreadyLiftCar");
                 alreadyLiftCar.on('load-success.bs.table', function (e, data) {
@@ -248,5 +249,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
+
     return Controller;
 });
