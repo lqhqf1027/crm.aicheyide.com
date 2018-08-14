@@ -159,19 +159,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
-            assigned_customers: function () {
+            registry_registration: function () {
                 // 表格2
-                var assignedCustomers = $("#assignedCustomers");
-                assignedCustomers.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["30%", "30%"]);
+                var registryRegistration = $("#registryRegistration");
+                registryRegistration.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    // $(".btn-newCustomer").data("area", ["30%", "30%"]);
                 });
                 // 初始化表格
-                assignedCustomers.bootstrapTable({
-                    url: 'backoffice/Custominfotabs/assignedCustomers',
+                registryRegistration.bootstrapTable({
+                    url: 'material/Driver/data_warehousing',
                     extend: {
                         index_url: 'customer/customerresource/index',
                         add_url: 'customer/customerresource/add',
-                        edit_url: 'customer/customerresource/edit',
+                        edit_url: 'material/Driver/registry_registration_edit',
                         del_url: 'customer/customerresource/del',
                         multi_url: 'customer/customerresource/multi',
                         table: 'customer_resource',
@@ -182,42 +182,68 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
-                            // {field: 'platform_id', title: __('Platform_id')},
-                            // {field: 'backoffice_id', title: __('Backoffice_id')},
-                            {field: 'platform.name', title: __('所属平台')},
-
-                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'rrid', title: __('ID')},
+                            {field: 'archival_coding', title: __('档案编码')},
                             {field: 'username', title: __('Username')},
-                            {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
-                            {
-                                field: 'genderdata',
-                                title: __('Genderdata'),
-                                visible: false,
-                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
-                            },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {
-                                field: 'distributinternaltime',
-                                title: __('Distributinternaltime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {
-                                field: 'distributsaletime',
-                                title: __('Distributsaletime'),
-                                operate: false,
-                                formatter: Table.api.formatter.datetime
-                            },
+                            {field: 'full_mortgage', title: __('全款/按揭')},
+                            {field: 'financial_name', title: __('金融公司')},
+                            {field: 'phone', title: __('电话')},
+                            {field: 'licensenumber', title: __('车票号')},
+                            {field: 'frame_number', title: __('车架号')},
+                            {field: 'household', title: __('所属分公司')},
+                            {field: 'sales_name', title: __('销售员')},
+                            {field: 'id_cardimages', title: __('身份证复印件'),formatter:Controller.api.formatter.judge},
+                            {field: 'residence_bookletimages', title: __('户口复印件'),formatter:Controller.api.formatter.judge},
+                            {field: 'marry_and_divorce', title: __('结婚证或者离婚证'),formatter:Controller.api.formatter.judge},
+                            {field: 'credit_report', title: __('征信报告'),formatter:Controller.api.formatter.judge},
+                            {field: 'halfyear_bank_flow', title: __('半年银行流水'),formatter:Controller.api.formatter.judge},
+                            {field: 'call_listfiles', title: __('通话清单'),formatter:Controller.api.formatter.judge},
+                            {field: 'guarantee_id_cardimages', title: __('担保人'),formatter:Controller.api.formatter.judge},
+                            {field: 'housingimages', title: __('房产复印件'),formatter:Controller.api.formatter.judge},
+                            {field: 'drivers_licenseimages', title: __('驾照'),formatter:Controller.api.formatter.judge},
+                            {field: 'residence_permit', title: __('居住证'),formatter:Controller.api.formatter.judge},
+                            {field: 'rent_house_contact', title: __('租房合同'),formatter:Controller.api.formatter.judge},
+                            {field: 'company_contract', title: __('公司合同'),formatter:Controller.api.formatter.judge},
+                            {field: 'keys', title: __('钥匙'),formatter:Controller.api.formatter.judge},
+                            {field: 'lift_list', title: __('提车单'),formatter:Controller.api.formatter.judge},
+                            {field: 'deposit_contractimages', title: __('定金协议'),formatter:Controller.api.formatter.judge},
+                            {field: 'truth_management_protocol', title: __('道路管理条例告知书'),formatter:Controller.api.formatter.judge},
+                            {field: 'confidentiality_agreement', title: __('保密协议'),formatter:Controller.api.formatter.judge},
+                            {field: 'supplementary_contract_agreement', title: __('合同补充协议/客户告知书'),formatter:Controller.api.formatter.judge},
+                            {field: 'explain_situation', title: __('情况说明'),formatter:Controller.api.formatter.judge},
+                            {field: 'tianfu_bank_card', title: __('天府银行卡附件'),formatter:Controller.api.formatter.judge},
+                            {field: 'other_documents', title: __('其他'),formatter:Controller.api.formatter.judge},
+                            {field: 'driving_license', title: __('行驶证'),formatter:Controller.api.formatter.judge},
+                            {field: 'insurance', title: __('交强险'),formatter:Controller.api.formatter.judge},
+                            {field: 'tax_proof', title: __('完税证明'),formatter:Controller.api.formatter.judge},
+                            {field: 'invoice_or_deduction_couplet', title: __('发票或抵扣联'),formatter:Controller.api.formatter.judge},
+                            {field: 'registration_certificate', title: __('登记证书'),formatter:Controller.api.formatter.judge},
+                            {field: 'business_risks', title: __('商业险'),formatter:Controller.api.formatter.judge},
+                            {field: 'mortgage_registration_fee', title: __('抵押登记费'),formatter:Controller.api.formatter.judge},
+                            {field: 'tax', title: __('购置税'),formatter:Controller.api.formatter.judge},
+                            {field: 'maximum_guarantee_contract', title: __('最高保障合同'),formatter:Controller.api.formatter.judge},
+                            {field: 'information_remark', title: __('备注')},
+                            {field: 'operate', title: __('Operate'), table: registryRegistration,
+                                buttons: [
+                                    {
+                                        name: 'edit',
+                                        icon: 'fa fa-pencil',
+                                        title: __('Edit'),
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                    },
 
+                                ],
+                                events: Table.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            },
                         ]
                     ]
                 });
                 // 为表格2绑定事件
-                Table.api.bindevent(assignedCustomers);
+                Table.api.bindevent(registryRegistration);
 
-                assignedCustomers.on('load-success.bs.table', function (e, data) {
+                registryRegistration.on('load-success.bs.table', function (e, data) {
                     $('#assigned-customer').text(data.total);
 
                 })
@@ -242,6 +268,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
             },
+
             formatter: {
                 operate: function (value, row, index) {
 
@@ -254,6 +281,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+
+                judge:function (value) {
+                    var res = "";
+                    var color = "";
+                    if(value==null ||value==""){
+                        res = "x";
+                        color = "danger";
+                    }else{
+                        res = "√"
+                        color = "success";
+                    }
+
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"> ' + __(res) + '</span>';
+
+                    return html;
+                }
             }
         }
 
