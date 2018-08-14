@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/image_preview.css">
 <h3>
     <center>
         <h2>基本资料</h2>
@@ -38,7 +39,9 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('姓名')}：</strong> {:__($row.username)} {eq name="$row.genderdata" value="male"} <span class="fa fa-male text-info"></span>{else /} <span class="fa fa-female" style="color:palevioletred"></span>{/eq}
+            <strong>{:__('姓名')}：</strong> {:__($row.username)} {eq name="$row.genderdata" value="male"} <span
+                class="fa fa-male text-info"></span>{else /} <span class="fa fa-female"
+                                                                   style="color:palevioletred"></span>{/eq}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-2">
             <strong>{:__('Phone')}：</strong> {$row.phone}
@@ -93,21 +96,21 @@
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('身份证正反面（多图）')}：</strong>
             {foreach $id_cardimages_arr as $k => $v}
-            <a href="{$v}" target="_blank">
-                <img src="{$v}" alt="" style="width:80px;height:80px;">
-            </a>
+
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Drivers_licenseimages')}：</strong>
             {foreach $drivers_licenseimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Residence_bookletimages')}：</strong>
             {foreach $residence_bookletimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
 
             {/foreach}
         </div>
@@ -121,19 +124,19 @@
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Bank_cardimages')}：</strong>
             {foreach $bank_cardimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Housingimages')}：</strong>
             {foreach $housingimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Application_formimages')}：</strong>
             {foreach $application_formimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
         </div>
 
@@ -153,7 +156,7 @@
             {else/}
             <strong>{:__('保证金收据')}：</strong>
             {foreach $new_car_marginimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
             {/empty}
 
@@ -161,14 +164,14 @@
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Deposit_contractimages')}：</strong>
             {foreach $deposit_contractimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('Deposit_receiptimages')}：</strong>
             {foreach $deposit_receiptimages_arr as $k => $v}
-            <a href="{$v}" target="_blank"><img src="{$v}" alt="" style="width:80px;height:80px;"></a>
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
         </div>
 
@@ -190,7 +193,6 @@
         </div>
 
 
-
     </div>
     <br>
     <br>
@@ -198,6 +200,9 @@
     <br>
 
 </div>
-{php}
-//dump($row);
-{/php}
+<script src="/assets/js/jquery-3.1.1.min.js"></script>
+<script>
+    $(function () {
+        image_preview($("img"));
+    })
+</script>
