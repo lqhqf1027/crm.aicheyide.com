@@ -178,10 +178,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
 
-                $(".datetimepicker").click(function () {
-                    alert(1);
-                })
-
 
                 newCustomer.on('load-success.bs.table', function (e, data) {
                     $('#badge_new_customer').text(data.total);
@@ -336,26 +332,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     $('#badge_relation').text(data.total);
 
-                    // Fast.api.ajax({
-                    //     url: 'salesmanagement/Customerlisttabs/getTotal',
-                    // }, function (data, rets) {
-                    // console.log(data['intention']);
-                    //
-                    //     // Toastr.success("成功");
-                    //     // Layer.close(index);
-                    //     // relations.bootstrapTable('refresh');
-                    //     return false;
-                    // }, function (data, ret) {
-                    //     //失败的回调
-                    //     relations.bootstrapTable('refresh');
-                    //     return false;
-                    // });
+                    // f();
 
 
-                    // console.log($("#badge_relation").text());
-                    // console.log($("#badge_intention").text());
-                    // console.log($("#badge_no_intention").text());
-                    // console.log($("#badge_overdue").text());
+
 
                 })
 
@@ -1048,6 +1028,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 }
             },
+
             formatter: {
                 operate: function (value, row, index) {
 
@@ -1082,6 +1063,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
+    function f()
+    {
+        Fast.api.ajax({
+            url: 'salesmanagement/Customerlisttabs/returnTotal',
+        }, function (data, rets) {
+
+            console.log(data);
+            $("#badge_relation").text(data['relationTotal']);
+            $("#badge_intention").text(data['intentionTotal']);
+            $("#badge_no_intention").text(data['nointentionTotal']);
+            $("#badge_overdue").text(data['overdueTotal']);
+            $('#badge_new_customer').text(data['newCustomTotal']);
+            // $("#badge_relation").text();
+            // Toastr.success("成功");
+            // Layer.close(index);
+            // relations.bootstrapTable('refresh');
+
+            return false;
+        }, function (data, ret) {
+            //失败的回调
+            relations.bootstrapTable('refresh');
+            return false;
+        });
+    }
 
     return Controller;
 });
