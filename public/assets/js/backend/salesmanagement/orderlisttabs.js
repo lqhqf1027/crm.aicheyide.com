@@ -511,7 +511,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-refresh").trigger("click");
                 }
             });
-         
 
                 orderRental.on('load-success.bs.table', function (e, data) {
                     // console.log(data);

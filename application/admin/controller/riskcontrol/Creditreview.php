@@ -532,6 +532,7 @@ class Creditreview extends Backend
      }
 
     /**查看大数据 */
+
     public function toViewBigData($ids = null)
     {
         $row = $this->model->get($ids);
@@ -543,15 +544,170 @@ class Creditreview extends Backend
                     'tx' => '101',
                     'data' => [
                         'name' => '包成永',
-                        'idNo' => '511623199504257475',
+                        'idNo' => '511623199504257475 ',
                         'queryReason' => '10',
                     ],
                 ]
             );
-
-        // return $this->sign;
-        // pr($this->sign);
-        pr(posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params));
-        // pr($this->sign);die;
+        //判断数据库里是否有当前用户的大数据
+        $data = $this->getBigData($row['id']);
+        // pr($data);die;
+    
+        if(empty($data)){
+            //如果数据为空，调取大数据接口
+            $result = posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params);
+            //转义base64入库
+            $result = base64_encode($this->JSON($result));
+            $writeDatabases = Db::name('big_data')->insert(['sales_order_id'=>$row['id'],'data'=>$result]);
+            if($writeDatabases){
+                echo 111;
+                $this->view->assign('bigdata',$data);
+                pr($this->getBigData($row['id']));die;
+                
+            }
+            else{
+                $this->error('数据写入失败');
+                return false;
+            }
+        }
+        else{
+            //如果errorCode == 0001 ,用户没有借款信息大数据可查询
+            if($data['errorCode']=='0001'){
+                $this->success('该用户没有大数据可查询',null,$this->getBigData($row['id']));
+                echo 22;die;
+            }
+            else{
+                echo 333;
+                $this->view->assign('bigdata',$this->getBigData($row['id']));
+                pr($data);die;
+                
+            }
+        }
+      
+      
     }
+    /**
+     * 查询大数据表
+     * @param int $sales_order_id
+     * @return data
+     */
+    public function getBigData($sales_order_id){
+        $bigData = Db::name('big_data')->alias('a')
+        ->join('sales_order b','a.sales_order_id = b.id')
+        ->where(['a.sales_order_id'=>$sales_order_id])
+        ->field('a.data')
+        ->find()
+        ;
+        if(!empty($bigData)){
+            return get_object_vars(json_decode(base64_decode($bigData['data'])));
+
+        }
+        else{
+            return [];
+        }
+    }
+    /**
+     * 对象转数组
+     * 
+     */
+    public function object_array($array) {  
+        if(is_object($array)) {  
+            $array = (array)$array;  
+         } if(is_array($array)) {  
+             foreach($array as $key=>$value) {  
+                 $array[$key] = object_array($value);  
+                 }  
+         }  
+         return $array;  
+    }  
+    /**************************************************************
+
+ *
+
+ *  使用特定function对数组中所有元素做处理
+
+ *  @param  string  &$array     要处理的字符串
+
+ *  @param  string  $function   要执行的函数
+
+ *  @return boolean $apply_to_keys_also     是否也应用到key上
+
+ *  @access public
+
+ *
+
+ *************************************************************/
+public  function arrayRecursive(&$array, $function, $apply_to_keys_also = false)
+
+{
+
+    static $recursive_counter = 0;
+
+    if (++$recursive_counter > 1000) {
+
+        die('possible deep recursion attack');
+
+    }
+
+    foreach ($array as $key => $value) {
+
+        if (is_array($value)) {
+
+           $this-> arrayRecursive($array[$key], $function, $apply_to_keys_also);
+
+        } else {
+
+            $array[$key] = $function($value);
+
+        }
+
+  
+
+        if ($apply_to_keys_also && is_string($key)) {
+
+            $new_key = $function($key);
+
+            if ($new_key != $key) {
+
+                $array[$new_key] = $array[$key];
+
+                unset($array[$key]);
+
+            }
+
+        }
+
+    }
+
+    $recursive_counter--;
+
+}
+
+  
+
+/**************************************************************
+
+ *
+
+ *  将数组转换为JSON字符串（兼容中文）
+
+ *  @param  array   $array      要转换的数组
+
+ *  @return string      转换得到的json字符串
+
+ *  @access public
+
+ *
+
+ *************************************************************/
+
+public function JSON($array) {
+    $this->arrayRecursive($array, 'urlencode', true);
+
+    $json = json_encode($array);
+
+    return urldecode($json);
+
+}
+
 }
