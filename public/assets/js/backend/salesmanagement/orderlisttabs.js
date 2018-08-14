@@ -488,7 +488,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
          
  
 
-                });
+             
 
 
                 orderRental.on('load-success.bs.table', function (e, data) {
