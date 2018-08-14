@@ -21,6 +21,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 channel: 'demo',
                 onMessage: function(message){
                     alert('新消息：'+message.content);
+                    $(".btn-refresh").trigger("click");
                 }
             });
             
