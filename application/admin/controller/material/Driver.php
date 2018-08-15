@@ -29,10 +29,6 @@ class Driver extends Backend
 
     public function index()
     {
-//        $list = Db::table("crm_order_view")
-//            ->where("registry_registration_id", "not null")
-//            ->select();
-//        pr($list);die();
 
         return $this->view->fetch();
     }
@@ -85,14 +81,13 @@ class Driver extends Backend
     {
         $row = Db::table("crm_order_view")
             ->where("id", $ids)
-            ->field("archival_coding,signtime,total_contract,end_money,hostdate,mortgage,mortgage_people,ticketdate,supplier,tax_amount,no_tax_amount,pay_taxesdate,house_fee,luqiao_fee,insurance_buydate,car_boat_tax,insurance_policy,commercial_insurance_policy,transferdate")
+            ->field("archival_coding,signdate,total_contract,end_money,hostdate,mortgage,mortgage_people,ticketdate,supplier,tax_amount,no_tax_amount,pay_taxesdate,house_fee,luqiao_fee,insurance_buydate,car_boat_tax,insurance_policy,commercial_insurance_policy,transferdate")
             ->select();
         $row = $row[0];
 
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-            $params['signtime'] = strtotime($params['signtime']);
 
             if ($params) {
                 try {
@@ -104,7 +99,7 @@ class Driver extends Backend
                     }
                     $doUpdate = [
                         'archival_coding' => $params['archival_coding'],
-                        'signtime' => $params['signtime'],
+                        'signdate' => $params['signdate'],
                         'total_contract' => $params['total_contract'],
                         'end_money' => $params['end_money'],
                         'hostdate' => $params['hostdate'],

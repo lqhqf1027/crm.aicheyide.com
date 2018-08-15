@@ -23,31 +23,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
 
-        //刷新
-        admeasure: function () {
-
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({});
-            Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                var pre = parseInt($('#assigned-customer').text());
-
-                $('#assigned-customer').text(pre + 1);
-
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                Fast.api.close(data);//这里是重点
-                // console.log(data);
-                Toastr.success("成功");//这个可有可无
-            }, function (data, ret) {
-
-
-                Toastr.success("失败");
-
-            });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-
-
-        },
 
 
         table: {
@@ -83,9 +58,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'mrid', title: __('ID')},
                             {field: 'archival_coding', title: __('档案编码')},
                             {
-                                field: 'signtime',
-                                title: __('签订时间'),
-                                formatter: Table.api.formatter.datetime,
+                                field: 'signdate',
+                                title: __('签订日期'),
                                 operate: false
                             },
                             {field: 'username', title: __('Username')},
