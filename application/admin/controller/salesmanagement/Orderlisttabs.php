@@ -311,21 +311,10 @@ class Orderlisttabs extends Backend
 
         //通话清单（文件上传）
         $call_listfilesimages = explode(',',$row['call_listfilesimages']);
-
-        $sql = Db::name('rental_order')->alias('a')
-            ->join('car_rental_models_info b','b.id=a.plan_car_rental_name')
-            ->join('models c', 'b.models_id=c.id')
-            ->field('c.name as models_name')
-            ->where('a.id', $row['id'])
-            ->select();
-           
-           
-        $newRes=$sql[0]['models_name'].'【押金'.$row['cash_pledge'].'，'.'租期'.$row['tenancy_term'].'，'.'月供'.$row['rental_price'].'】';
                 
         $this->view->assign(
             [
-                'newRes'=> $newRes,
-                "row"=> $row,
+                'row'=> $row,
                 'cdn'=>Config::get('upload')['cdnurl'],
                 'id_cardimages'=> $id_cardimages,
                 'drivers_licenseimages'=> $drivers_licenseimages,
