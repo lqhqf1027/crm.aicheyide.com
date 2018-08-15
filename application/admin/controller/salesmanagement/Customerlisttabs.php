@@ -1279,24 +1279,6 @@ class Customerlisttabs extends Backend
                 $sql2 = Db::table("crm_feedback_info")->insert($data);
 
 
-//                try {
-//                    //是否采用模型验证
-//                    if ($this->modelValidate) {
-//                        $name = basename(str_replace('\\', '/', get_class($this->model)));
-//                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-//                        $row->validate($validate);
-//                    }
-//                    $result = $row->allowField(true)->save($params);
-//                    if ($result !== false) {
-//                        //  return json_encode(array('msg'=>'成功','errrcode'=>'1','result'=>$result));
-//                        $this->success('', '', $params['customerlevel']);
-//                    } else {
-//                        $this->error($row->getError());
-//                    }
-//                } catch (\think\exception\PDOException $e) {
-//                    $this->error($e->getMessage());
-//                }
-
                 if ($sql1 && $sql2) {
                     $this->success();
                 } else {

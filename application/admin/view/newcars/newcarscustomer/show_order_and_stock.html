@@ -166,25 +166,43 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$id_cardimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('身份证正反面（多图）')}：</strong>暂无<span class="text-info">身份证信息</span></p>
+            {else /}
             <strong>{:__('身份证正反面（多图）')}：</strong>
             {foreach $id_cardimages_arr as $k => $v}
 
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
 
             {/foreach}
+            {/empty}
+
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$drivers_licenseimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('驾照正副页（多图）')}：</strong>暂无<span class="text-info">驾驶证信息</span></p>
+
+            {else /}
             <strong>{:__('Drivers_licenseimages')}：</strong>
             {foreach $drivers_licenseimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
+            {/empty}
+
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$residence_bookletimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('户口簿【首页、主人页、本人页】')}：</strong>暂无<span class="text-info">户口簿相关信息</span>
+            </p>
+
+            {else /}
             <strong>{:__('Residence_bookletimages')}：</strong>
             {foreach $residence_bookletimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
 
             {/foreach}
+            {/empty}
+
         </div>
 
     </div>
@@ -194,22 +212,39 @@
     <br>
     <div class="form-group">
         <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$bank_cardimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('银行卡照（可多图）')}：</strong>暂无<span class="text-info">银行卡相关信息</span></p>
+            {else /}
             <strong>{:__('Bank_cardimages')}：</strong>
             {foreach $bank_cardimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
+            {/empty}
+
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$housingimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('住房合同/房产证（多图）')}：</strong>暂无<span
+                    class="text-info">住房合同/房产证相关信息</span></p>
+            {else /}
             <strong>{:__('Housingimages')}：</strong>
             {foreach $housingimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
+            {/empty}
+
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$application_formimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('申请表（多图）')}：</strong>暂无<span class="text-info">申请表相关信息</span></p>
+
+            {else /}
             <strong>{:__('Application_formimages')}：</strong>
             {foreach $application_formimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
+            {/empty}
+
         </div>
 
 
@@ -221,30 +256,41 @@
     <div class="form-group">
         <div class="col-xs-12 col-sm-8 col-md-4">
 
-            {empty name="$row.new_car_marginimages"}
+            {empty name="$new_car_marginimages_arr"}
             <p style="margin-top: 8%"><strong>{:__('保证金收据')}：</strong>暂无<span class="text-info">保证金收据</span></p>
 
 
             {else/}
             <strong>{:__('保证金收据')}：</strong>
             {foreach $new_car_marginimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
             {/empty}
 
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$deposit_contractimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('定金合同（多图）')}：</strong>暂无<span class="text-info">定金合同相关信息</span></p>
+
+            {else /}
             <strong>{:__('Deposit_contractimages')}：</strong>
             {foreach $deposit_contractimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
+            {/empty}
+
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$deposit_receiptimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('定金收据上传')}：</strong>暂无<span class="text-info">定金收据相关信息</span></p>
+            {else /}
             <strong>{:__('Deposit_receiptimages')}：</strong>
             {foreach $deposit_receiptimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
+            {/empty}
+
         </div>
 
     </div>
@@ -254,10 +300,16 @@
     <br>
     <div class="form-group">
         <div class="col-xs-12 col-sm-8 col-md-6">
+            {empty name="$car_imgeas_arr"}
+            <p style="margin-top: 8%"><strong>{:__('车辆所有的扫描件')}：</strong>暂无<span class="text-info">车辆所有的扫描件相关信息</span></p>
+
+            {else /}
             <strong>{:__('车辆所有的扫描件（多图）')}：</strong>
             {foreach $car_imgeas_arr as $k => $v}
             <img src="{$v}" alt="" style="width:80px;height:80px;" class="to-change">
             {/foreach}
+            {/empty}
+
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3" style="line-height: 80px">
             <strong>{:__('通话清单')}：</strong>
@@ -278,6 +330,7 @@
 
 
 <script>
+
 
     image_preview($(".to-change"));
 

@@ -58,8 +58,8 @@ class Newcarscustomer extends Backend
             ->count();
 
         $this->view->assign([
-            'prepare_total'=>$prepare_total,
-            'already_total'=>$already_total
+            'prepare_total' => $prepare_total,
+            'already_total' => $already_total
         ]);
         return $this->view->fetch();
     }
@@ -67,7 +67,6 @@ class Newcarscustomer extends Backend
     //待提车
     public function prepare_lift_car()
     {
-
         if ($this->request->isAjax()) {
             $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
                 ->where("review_the_data", "for_the_car")
@@ -157,7 +156,7 @@ class Newcarscustomer extends Backend
             ->join('plan_acar b', 'a.plan_acar_name = b.id')
             ->join('models c', 'b.models_id=c.id');
 
-        $row['createtime'] = date("Y-m-d",$row['createtime']);
+        $row['createtime'] = date("Y-m-d", $row['createtime']);
 
 
         //定金合同（多图）
@@ -242,12 +241,12 @@ class Newcarscustomer extends Backend
         }
 
         //保证金收据（多图）
-        $credit_reportimages = $row['new_car_marginimages'];
-        $credit_reportimage = explode(',', $credit_reportimages);
+        $new_car_marginimages = $row['new_car_marginimages'];
+        $new_car_marginimages = explode(',', $new_car_marginimages);
 
-        $credit_reportimages_arr = [];
-        foreach ($credit_reportimage as $k => $v) {
-            $credit_reportimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        $new_car_marginimages_arr = [];
+        foreach ($new_car_marginimages as $k => $v) {
+            $new_car_marginimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
         //担保人身份证正反面（多图）
@@ -267,24 +266,31 @@ class Newcarscustomer extends Backend
         foreach ($guarantee_agreementimage as $k => $v) {
             $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+        $data = array(
+            'deposit_contractimages_arr' => $deposit_contractimages_arr,
+            'deposit_receiptimages_arr' => $deposit_receiptimages_arr,
+            'id_cardimages_arr' => $id_cardimages_arr,
+            'drivers_licenseimages_arr' => $drivers_licenseimages_arr,
+            'residence_bookletimages_arr' => $residence_bookletimages_arr,
+            'housingimages_arr' => $housingimages_arr,
+            'bank_cardimages_arr' => $bank_cardimages_arr,
+            'application_formimages_arr' => $application_formimages_arr,
+            'call_listfiles_arr' => $call_listfiles_arr,
+            'new_car_marginimages_arr' => $new_car_marginimages_arr,
+            'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
+            'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
 
+        );
+
+
+        foreach ($data as $k => $v) {
+            if ($v[0] == "https://static.aicheyide.com") {
+                $data[$k] = null;
+            }
+        }
 
         $this->view->assign(
-            array(
-                'deposit_contractimages_arr' => $deposit_contractimages_arr,
-                'deposit_receiptimages_arr' => $deposit_receiptimages_arr,
-                'id_cardimages_arr' => $id_cardimages_arr,
-                'drivers_licenseimages_arr' => $drivers_licenseimages_arr,
-                'residence_bookletimages_arr' => $residence_bookletimages_arr,
-                'housingimages_arr' => $housingimages_arr,
-                'bank_cardimages_arr' => $bank_cardimages_arr,
-                'application_formimages_arr' => $application_formimages_arr,
-                'call_listfiles_arr' => $call_listfiles_arr,
-                'credit_reportimages_arr' => $credit_reportimages_arr,
-                'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
-                'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
-
-            )
+            $data
         );
         $this->view->assign("row", $row);
         return $this->view->fetch();
@@ -297,14 +303,10 @@ class Newcarscustomer extends Backend
             ->where("id", $ids)
             ->select();
         $row = $row[0];
-//        pr($reson);die();
 
-//        pr(Config::get('upload')['cdnurl']);die();
-
-if($row['new_car_marginimages']==""){
-    $row['new_car_marginimages'] = null;
-}
-//        pr($row);die();
+        if ($row['new_car_marginimages'] == "") {
+            $row['new_car_marginimages'] = null;
+        }
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -430,11 +432,11 @@ if($row['new_car_marginimages']==""){
 
         $car_imgeas = $row['car_imgeas'];
 
-        $car_imgeas = explode(",",$car_imgeas);
+        $car_imgeas = explode(",", $car_imgeas);
 
         $car_imgeas_arr = array();
 
-        foreach ($car_imgeas as $k=>$v){
+        foreach ($car_imgeas as $k => $v) {
             $car_imgeas_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
@@ -452,13 +454,17 @@ if($row['new_car_marginimages']==""){
             'new_car_marginimages_arr' => $new_car_marginimages_arr,
             'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
             'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
-            'car_imgeas_arr' =>$car_imgeas_arr
+            'car_imgeas_arr' => $car_imgeas_arr
         );
 
-//        pr($data);die();
+        foreach ($data as $k => $v) {
+            if ($v[0] == "https://static.aicheyide.com") {
+                 $data[$k] = null;
+            }
+        }
 
-        $row['createtime'] = date("Y-m-d",$row['createtime']);
-        $row['delivery_datetime'] = date("Y-m-d",$row['delivery_datetime']);
+        $row['createtime'] = date("Y-m-d", $row['createtime']);
+        $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
 
         $this->view->assign($data);
         $this->view->assign("row", $row);

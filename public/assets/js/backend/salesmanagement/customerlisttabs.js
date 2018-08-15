@@ -332,7 +332,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     $('#badge_relation').text(data.total);
 
-                    // f();
+                    f();
 
 
 

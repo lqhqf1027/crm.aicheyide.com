@@ -30,7 +30,6 @@ class Driver extends Backend
     public function index()
     {
 
-
         return $this->view->fetch();
     }
 
@@ -82,14 +81,13 @@ class Driver extends Backend
     {
         $row = Db::table("crm_order_view")
             ->where("id", $ids)
-            ->field("archival_coding,signtime,total_contract,end_money,hostdate,mortgage,mortgage_people,ticketdate,supplier,tax_amount,no_tax_amount,pay_taxesdate,house_fee,luqiao_fee,insurance_buydate,car_boat_tax,insurance_policy,commercial_insurance_policy,transferdate")
+            ->field("archival_coding,signdate,total_contract,end_money,hostdate,mortgage,mortgage_people,ticketdate,supplier,tax_amount,no_tax_amount,pay_taxesdate,house_fee,luqiao_fee,insurance_buydate,car_boat_tax,insurance_policy,commercial_insurance_policy,transferdate")
             ->select();
         $row = $row[0];
 
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-            $params['signtime'] = strtotime($params['signtime']);
 
             if ($params) {
                 try {
@@ -101,7 +99,7 @@ class Driver extends Backend
                     }
                     $doUpdate = [
                         'archival_coding' => $params['archival_coding'],
-                        'signtime' => $params['signtime'],
+                        'signdate' => $params['signdate'],
                         'total_contract' => $params['total_contract'],
                         'end_money' => $params['end_money'],
                         'hostdate' => $params['hostdate'],
@@ -151,24 +149,28 @@ class Driver extends Backend
     }
 
 
-    public function registry_registration_edit($ids = null)
+
+
+
+    /**
+     * 编辑
+     */
+    public function edit2($ids = NULL)
     {
 
-        $row = Db::table("crm_order_view")
+        $id = Db::name("sales_order")
         ->where("id",$ids)
-        ->field("marry_and_divorceimages,halfyear_bank_flowimages,residence_permitimages,company_contractimages,rent_house_contactimages,keys,lift_listimages,explain_situation,truth_management_protocolimages,confidentiality_agreementimages,supplementary_contract_agreementimages,tianfu_bank_cardimages,other_documentsimages,tax_proofimages,invoice_or_deduction_coupletimages,registration_certificateimages,mortgage_registration_fee,maximum_guarantee_contractimages,credit_reportimages,information_remark,driving_licenseimages")
+        ->field("registry_registration_id")
+        ->select();
+
+        $id = $id[0]['registry_registration_id'];
+
+        $row = Db::name("registry_registration")
+        ->where("id",$id)
         ->select();
 
         $row = $row[0];
-        
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
+
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
@@ -179,7 +181,32 @@ class Driver extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
                         $row->validate($validate);
                     }
-                    $result = $row->allowField(true)->save($params);
+                    $data = array(
+                        'marry_and_divorceimages'=>$params['marry_and_divorceimages'],
+                        'halfyear_bank_flowimages'=>$params['halfyear_bank_flowimages'],
+                        'residence_permitimages'=>$params['residence_permitimages'],
+                        'company_contractimages'=>$params['company_contractimages'],
+                        'rent_house_contactimages'=>$params['rent_house_contactimages'],
+                        'car_keys'=>$params['car_keys'],
+                        'lift_listimages'=>$params['lift_listimages'],
+                        'explain_situation'=>$params['explain_situation'],
+                        'truth_management_protocolimages'=>$params['truth_management_protocolimages'],
+                        'confidentiality_agreementimages'=>$params['confidentiality_agreementimages'],
+                        'supplementary_contract_agreementimages'=>$params['supplementary_contract_agreementimages'],
+                        'tianfu_bank_cardimages'=>$params['tianfu_bank_cardimages'],
+                        'other_documentsimages'=>$params['other_documentsimages'],
+                        'tax_proofimages'=>$params['tax_proofimages'],
+                        'invoice_or_deduction_coupletimages'=>$params['invoice_or_deduction_coupletimages'],
+                        'registration_certificateimages'=>$params['registration_certificateimages'],
+                        'mortgage_registration_fee'=>$params['mortgage_registration_fee'],
+                        'maximum_guarantee_contractimages'=>$params['maximum_guarantee_contractimages'],
+                        'credit_reportimages'=>$params['credit_reportimages'],
+                        'information_remark'=>$params['information_remark'],
+                        'driving_licenseimages'=>$params['driving_licenseimages']
+                    );
+                    $result = Db::name("registry_registration")
+                        ->where("id",$id)
+                        ->update($data);
                     if ($result !== false) {
                         $this->success();
                     } else {
@@ -194,8 +221,16 @@ class Driver extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
         $this->view->assign("row", $row);
+        $this->view->assign("keylist", $this->keylist());
         return $this->view->fetch();
     }
+
+
+    public function keylist()
+    {
+        return [1=>'有',0=>'无'];
+    }
+
 
 
 }

@@ -156,6 +156,7 @@ class Rentalorder extends Backend
                         $this->model->validate($validate);
                     }
                     $result = $this->model->allowField(true)->save($params);
+                    //将新增的id存入session中
                     $userId = Db::name('rental_order')->getLastInsID();
                     Session::set('userId',$userId);
                     if ($result) {
@@ -284,7 +285,7 @@ class Rentalorder extends Backend
                 ->join('car_rental_models_info b','b.models_id=a.id')
                 ->field('a.name as models_name,b.id,b.licenseplatenumber,b.sales_id,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.shelfismenu')
                 ->where(['a.brand_id'=>$value['brandid'],'b.shelfismenu'=>1])
-                ->where('sales_id', $this->auth->id)
+                ->whereOr('sales_id', $this->auth->id)
                 ->where('review_the_data', '')
                 ->select();
             $newB =[];
