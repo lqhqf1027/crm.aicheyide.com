@@ -221,6 +221,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events:{
                 operate: {
+                    /**编辑按钮 */
                     'click .btn-editone': function (e, value, row, index) {
                     $(".btn-editone").data("area", ["95%","95%"]); 
 
@@ -233,7 +234,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    'click .btn-delone': function (e, value, row, index) {  /**编辑按钮 */
+                    /**删除按钮 */
+                    'click .btn-delone': function (e, value, row, index) {  
 
                         e.stopPropagation();
                         e.preventDefault();
