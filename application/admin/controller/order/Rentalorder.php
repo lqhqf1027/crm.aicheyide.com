@@ -156,6 +156,7 @@ class Rentalorder extends Backend
                         $this->model->validate($validate);
                     }
                     $result = $this->model->allowField(true)->save($params);
+                    //将新增的id存入session中
                     $userId = Db::name('rental_order')->getLastInsID();
                     Session::set('userId',$userId);
                     if ($result) {

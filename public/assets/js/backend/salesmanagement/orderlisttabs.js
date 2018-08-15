@@ -568,7 +568,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             order_second: function () {
 
-                // 表格1
+                // 表格3
                 var orderSecond = $("#orderSecond");
 
                 $(".btn-add").data("area", ["95%", "95%"]);
@@ -623,8 +623,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate', title: __('Operate'), table: orderSecond,
                                 buttons: [
                                     {
-                                        name: 'second_audit', text: '提交审核', title: '提交到风控审核征信', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-second_audit',
-                                        url: 'order/secondsalesorder/sedAudit',
+                                        name: 'second_audit', text: '提交审核', title: '审核征信', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-second_audit',
+                                        url: 'order/secondsalesorder/setAudit',
                                         //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
                                         //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
                                         //....
@@ -700,7 +700,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         },
                                     },
                                     {
-                                        name: 'edit', text: '正在审核中',
+                                        name: 'is_reviewing_true', text: '正在审核中',
                                         hidden: function (row) {  /**正在审核 */
                                             if (row.review_the_data == 'is_reviewing_true') {
                                                 return false;
