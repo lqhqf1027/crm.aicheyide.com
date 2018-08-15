@@ -868,12 +868,12 @@ class Creditreview extends Backend
         }
     }
     public function bigDataHtml(){
-        echo <<<data
+        
                  "<div>
                     <h3><center>客户大数据信息</center></h3>
                 </div>";
-                data;
-
+              
+ 
     }
 
     /**
