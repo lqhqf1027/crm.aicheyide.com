@@ -663,6 +663,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         })
                     },
+
                     //审核二手车单
                     'click .btn-secondhandcarResult': function (e, value, row, index) {
 
@@ -680,6 +681,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         })
                     },
                     //查看大数据
+
                     'click .btn-bigData': function (e, value, row, index) { 
                         e.stopPropagation();
                         e.preventDefault();
@@ -690,6 +692,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'riskcontrol/creditreview/toViewBigData';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
                             callback: function (value) {
+                                alert(value);
                                 //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
                             }
                         })

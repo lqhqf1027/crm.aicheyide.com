@@ -10,7 +10,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 use think\Env;
-
+use think\Config;
 return [
     // +----------------------------------------------------------------------
     // | 应用设置
@@ -279,5 +279,18 @@ return [
     'wechat'                =>[
         'APPID'=>'wx1652e82587881bf1',
         'APPSECRET'=>'f32dc3059381d77379d80c5e6ee12a38'
+    ],
+    //共享api
+    'big_data_api'             => [
+        'share' => [
+            'post_url'=>'https://www.zhichengcredit.com/echo-center/api/echoApi/v3',
+            'userid'=>'junyi_testusr',
+            'rc4'=>'12b39127a265ce21' 
+        ],
+        'fuwang' => [
+            'post_url'=>'https://www.zhichengcredit.com/echo-center/api/mixedRiskQuery/queryMixedRiskList/v3',
+            'userid'=>'junyi_testusr',
+            'rc4'=>'12b39127a265ce21', 
+        ]
     ]
 ];
