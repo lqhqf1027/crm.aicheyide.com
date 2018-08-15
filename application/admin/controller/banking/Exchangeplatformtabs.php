@@ -127,7 +127,6 @@ class Exchangeplatformtabs extends Backend
      */
     public function edit($ids = NULL)
     {
-//        $row = $this->model->get($ids);
 
         $row = Db::table("crm_order_view")
             ->where("id", $ids)

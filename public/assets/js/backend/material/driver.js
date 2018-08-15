@@ -31,16 +31,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 var pre = parseInt($('#assigned-customer').text());
 
-                $('#assigned-customer').text(pre+1);
+                $('#assigned-customer').text(pre + 1);
 
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
                 Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
-
-
-
 
 
                 Toastr.success("失败");
@@ -85,7 +82,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'mrid', title: __('ID')},
                             {field: 'archival_coding', title: __('档案编码')},
-                            {field: 'signtime', title: __('签订时间'), formatter: Table.api.formatter.datetime, operate: false},
+                            {
+                                field: 'signtime',
+                                title: __('签订时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
@@ -102,7 +104,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'frame_number', title: __('车架号')},
                             {field: 'mortgage', title: __('抵押')},
                             {field: 'mortgage_people', title: __('抵押人')},
-                            {field: 'ticketdate', title: __('开票日期'),operate: false},
+                            {field: 'ticketdate', title: __('开票日期'), operate: false},
                             {field: 'supplier', title: __('供货商')},
                             {field: 'tax_amount', title: __('含税金额(元)')},
                             {field: 'no_tax_amount', title: __('不含税金额(元)')},
@@ -130,7 +132,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
 
                                 ],
-                                events: Table.api.events.operate,
+                                events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             }
                         ]
@@ -156,8 +158,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
 
-
-
             },
             registry_registration: function () {
                 // 表格2
@@ -171,7 +171,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'registry/registration/index',
                         add_url: 'registry/registration/add',
-                        edit_url: 'material/driver/registry_registration_edit',
+                        edit_url: 'material/driver/edit2',
                         del_url: 'registry/registration/del',
                         multi_url: 'registry/registration/multi',
                         table: 'registry_registration',
@@ -192,49 +192,107 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'frame_number', title: __('车架号')},
                             {field: 'household', title: __('所属分公司')},
                             {field: 'sales_name', title: __('销售员')},
-                            {field: 'id_cardimages', title: __('身份证复印件'),formatter:Controller.api.formatter.judge},
-                            {field: 'residence_bookletimages', title: __('户口复印件'),formatter:Controller.api.formatter.judge},
-                            {field: 'marry_and_divorce', title: __('结婚证或者离婚证'),formatter:Controller.api.formatter.judge},
-                            {field: 'credit_report', title: __('征信报告'),formatter:Controller.api.formatter.judge},
-                            {field: 'halfyear_bank_flow', title: __('半年银行流水'),formatter:Controller.api.formatter.judge},
-                            {field: 'call_listfiles', title: __('通话清单'),formatter:Controller.api.formatter.judge},
-                            {field: 'guarantee_id_cardimages', title: __('担保人'),formatter:Controller.api.formatter.judge},
-                            {field: 'housingimages', title: __('房产复印件'),formatter:Controller.api.formatter.judge},
-                            {field: 'drivers_licenseimages', title: __('驾照'),formatter:Controller.api.formatter.judge},
-                            {field: 'residence_permit', title: __('居住证'),formatter:Controller.api.formatter.judge},
-                            {field: 'rent_house_contact', title: __('租房合同'),formatter:Controller.api.formatter.judge},
-                            {field: 'company_contract', title: __('公司合同'),formatter:Controller.api.formatter.judge},
-                            {field: 'keys', title: __('钥匙'),formatter:Controller.api.formatter.judge},
-                            {field: 'lift_list', title: __('提车单'),formatter:Controller.api.formatter.judge},
-                            {field: 'deposit_contractimages', title: __('定金协议'),formatter:Controller.api.formatter.judge},
-                            {field: 'truth_management_protocol', title: __('道路管理条例告知书'),formatter:Controller.api.formatter.judge},
-                            {field: 'confidentiality_agreement', title: __('保密协议'),formatter:Controller.api.formatter.judge},
-                            {field: 'supplementary_contract_agreement', title: __('合同补充协议/客户告知书'),formatter:Controller.api.formatter.judge},
-                            {field: 'explain_situation', title: __('情况说明'),formatter:Controller.api.formatter.judge},
-                            {field: 'tianfu_bank_card', title: __('天府银行卡附件'),formatter:Controller.api.formatter.judge},
-                            {field: 'other_documents', title: __('其他'),formatter:Controller.api.formatter.judge},
-                            {field: 'driving_license', title: __('行驶证'),formatter:Controller.api.formatter.judge},
-                            {field: 'insurance', title: __('交强险'),formatter:Controller.api.formatter.judge},
-                            {field: 'tax_proof', title: __('完税证明'),formatter:Controller.api.formatter.judge},
-                            {field: 'invoice_or_deduction_couplet', title: __('发票或抵扣联'),formatter:Controller.api.formatter.judge},
-                            {field: 'registration_certificate', title: __('登记证书'),formatter:Controller.api.formatter.judge},
-                            {field: 'business_risks', title: __('商业险'),formatter:Controller.api.formatter.judge},
-                            {field: 'mortgage_registration_fee', title: __('抵押登记费'),formatter:Controller.api.formatter.judge},
-                            {field: 'tax', title: __('购置税'),formatter:Controller.api.formatter.judge},
-                            {field: 'maximum_guarantee_contract', title: __('最高保障合同'),formatter:Controller.api.formatter.judge},
+                            {field: 'id_cardimages', title: __('身份证复印件'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'residence_bookletimages',
+                                title: __('户口复印件'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {
+                                field: 'marry_and_divorceimages',
+                                title: __('结婚证或者离婚证'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {field: 'credit_reportimages', title: __('征信报告'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'halfyear_bank_flowimages',
+                                title: __('半年银行流水'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {field: 'call_listfiles', title: __('通话清单'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'guarantee_id_cardimages',
+                                title: __('担保人'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {field: 'housingimages', title: __('房产复印件'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'drivers_licenseimages',
+                                title: __('驾照'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {field: 'residence_permitimages', title: __('居住证'), formatter: Controller.api.formatter.judge},
+                            {field: 'rent_house_contactimages', title: __('租房合同'), formatter: Controller.api.formatter.judge},
+                            {field: 'company_contractimages', title: __('公司合同'), formatter: Controller.api.formatter.judge},
+                            {field: 'car_keys', title: __('钥匙'), formatter: Controller.api.formatter.judge},
+                            {field: 'lift_listimages', title: __('提车单'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'deposit_contractimages',
+                                title: __('定金协议'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {
+                                field: 'truth_management_protocolimages',
+                                title: __('道路管理条例告知书'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {
+                                field: 'confidentiality_agreementimages',
+                                title: __('保密协议'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {
+                                field: 'supplementary_contract_agreementimages',
+                                title: __('合同补充协议/客户告知书'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {field: 'explain_situation', title: __('情况说明'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'tianfu_bank_cardimages',
+                                title: __('天府银行卡附件'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {field: 'other_documentsimages', title: __('其他'), formatter: Controller.api.formatter.judge},
+                            {field: 'driving_licenseimages', title: __('行驶证'), formatter: Controller.api.formatter.judge},
+                            {field: 'insurance', title: __('交强险'), formatter: Controller.api.formatter.judge},
+                            {field: 'tax_proofimages', title: __('完税证明'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'invoice_or_deduction_coupletimages',
+                                title: __('发票或抵扣联'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {
+                                field: 'registration_certificateimages',
+                                title: __('登记证书'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {field: 'business_risks', title: __('商业险'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'mortgage_registration_fee',
+                                title: __('抵押登记费'),
+                                formatter: Controller.api.formatter.judge
+                            },
+                            {field: 'tax', title: __('购置税'), formatter: Controller.api.formatter.judge},
+                            {
+                                field: 'maximum_guarantee_contractimages',
+                                title: __('最高保障合同'),
+                                formatter: Controller.api.formatter.judge
+                            },
                             {field: 'information_remark', title: __('备注')},
-                            {field: 'operate', title: __('Operate'), table: registryRegistration,
+                            {
+                                field: 'operate', title: __('Operate'), table: registryRegistration,
                                 buttons: [
                                     {
-                                        name: 'edit',
+                                        name: 'edit2',
                                         icon: 'fa fa-pencil',
                                         title: __('Edit'),
+
                                         extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        classname: 'btn btn-xs btn-success btn-edittwo',
                                     },
 
                                 ],
-                                events: Table.api.events.operate,
+                                events: Controller.api.events.operate,
                                 formatter: Controller.api.formatter.operate
                             },
                         ]
@@ -259,6 +317,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+        edit2: function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
@@ -268,7 +329,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
             },
+            events: {
+                operate:{
 
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+
+                    'click .btn-edittwo': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                }
+            },
             formatter: {
                 operate: function (value, row, index) {
 
@@ -282,13 +368,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
 
-                judge:function (value) {
+                judge: function (value) {
                     var res = "";
                     var color = "";
-                    if(value==null ||value==""){
+                    if (value == null || value == "") {
                         res = "x";
                         color = "danger";
-                    }else{
+                    } else {
                         res = "√"
                         color = "success";
                     }
