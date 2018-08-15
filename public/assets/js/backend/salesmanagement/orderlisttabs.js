@@ -905,7 +905,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     },
                     //租车提交审核
-                    'click .btn-submit_audit': function (e, value, row, index) {
+                    'click .btn-rental_audit': function (e, value, row, index) {
 
                         e.stopPropagation();
                         e.preventDefault();
