@@ -182,6 +182,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newCustomer.on('load-success.bs.table', function (e, data) {
                     $('#badge_new_customer').text(data.total);
 
+                    // f(['relation','intention','nointention','overdue']);
                 })
 
             },
@@ -332,7 +333,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     $('#badge_relation').text(data.total);
 
-                    f();
+                    // f(['new_customer','intention','nointention','overdue']);
 
 
 
@@ -487,6 +488,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 intentions.on('load-success.bs.table', function (e, data) {
                     $('#badge_intention').text(data.total);
 
+                    // f(['new_customer','relation','nointention','overdue']);
                 })
 
             },
@@ -845,6 +847,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 overdues.on('load-success.bs.table', function (e, data) {
                     $('#badge_overdue').text(data.total);
 
+                    // f(['relation','intention','nointention','new_customer']);
                 })
 
             },
@@ -1037,27 +1040,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
-    function f()
+    function f(arr)
     {
         Fast.api.ajax({
             url: 'salesmanagement/Customerlisttabs/returnTotal',
+            data: {
+                arr:arr
+            }
         }, function (data, rets) {
 
-            console.log(data);
-            $("#badge_relation").text(data['relationTotal']);
-            $("#badge_intention").text(data['intentionTotal']);
-            $("#badge_no_intention").text(data['nointentionTotal']);
-            $("#badge_overdue").text(data['overdueTotal']);
-            $('#badge_new_customer').text(data['newCustomTotal']);
+            // console.log(data);
+
+
+            for (var key in data){
+                switch (key){
+                    case 'new_customer':
+                        $('#badge_new_customer').text(data['new_customer']);
+                        break;
+                    case 'intention':
+                        $("#badge_intention").text(data['intention']);
+                        break;
+                    case 'nointention':
+                        $("#badge_no_intention").text(data['nointention']);
+                        break;
+                    case 'overdue':
+                        $("#badge_overdue").text(data['overdue']);
+                        break;
+                    case 'relation':
+                        $("#badge_relation").text(data['relation']);
+                        break;
+
+                }
+            }
+
+            // $("#badge_relation").text(data['relationTotal']);
+            // $("#badge_intention").text(data['intentionTotal']);
+            // $("#badge_no_intention").text(data['nointentionTotal']);
+            // $("#badge_overdue").text(data['overdueTotal']);
+            // $('#badge_new_customer').text(data['newCustomTotal']);
             // $("#badge_relation").text();
-            // Toastr.success("成功");
-            // Layer.close(index);
-            // relations.bootstrapTable('refresh');
+
 
             return false;
         }, function (data, ret) {
             //失败的回调
-            relations.bootstrapTable('refresh');
+
             return false;
         });
     }
