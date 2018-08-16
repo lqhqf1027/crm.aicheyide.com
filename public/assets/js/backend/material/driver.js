@@ -36,7 +36,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //
                 // })
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-editone").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -137,7 +137,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格2
                 var registryRegistration = $("#registryRegistration");
                 registryRegistration.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    // $(".btn-newCustomer").data("area", ["30%", "30%"]);
+                    $(".btn-edittwo").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 registryRegistration.bootstrapTable({

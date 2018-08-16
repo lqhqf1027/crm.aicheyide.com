@@ -97,7 +97,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '反馈',
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-success btn-editone',
-                                        url: 'salesmanagement/customerlisttabs/edits'
+                                        url: 'salesmanagement/customerlisttabs/edit'
 
                                     },
                                     {
@@ -855,37 +855,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
 
         },
-        edits: function () {
+        edit: function () {
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
 
-
-                // switch (data){
-                //     case 'relation':
-                //         $res = $("#badge_relation");
-                //         break;
-                //     case 'intention':
-                //         $res = $("#badge_intention");
-                //         break;
-                //     case 'nointention':
-                //         $res = $("#badge_no_intention");
-                //         break;
-                //
-                // }
-
-                //
-                //
-                //
-                // num = parseInt(num);
-                //
-                // res.text(num+1);
-
-
-
                 Controller.api.bindevent();
-                // Fast.api.close(data);
-                // // console.log(data);
-                // Toastr.success("成功");
 
             }, function (data, ret) {
                 // console.log(data);
@@ -894,7 +868,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.error("失败");
 
             });
-            // Controller.api.bindevent();
         },
         api: {
             bindevent: function () {
@@ -904,6 +877,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+
             },
             events: {
                 operate: {
@@ -916,7 +890,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'salesmanagement/customerlisttabs/edits';
+                        var url = 'salesmanagement/customerlisttabs/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('反馈'), $(this).data() || {});
 
 
@@ -1087,6 +1061,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             return false;
         });
     }
+
+
 
     return Controller;
 });
