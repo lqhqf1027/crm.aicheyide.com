@@ -53,9 +53,16 @@ class Orderlisttabs extends Backend
                     ->order($sort, $order)
                     ->count(); 
         
+        $this->model = new \app\admin\model\full\parment\Order;
+        $total3 = $this->model
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->count(); 
+        
         $this->view->assign('total',$total);
         $this->view->assign('total1',$total1);
         $this->view->assign('total2',$total2);
+        $this->view->assign('total3',$total3);
        
         return $this->view->fetch();
     }
@@ -452,5 +459,114 @@ class Orderlisttabs extends Backend
          ); 
         return $this->view->fetch();
     }
+   
+    /**全款 */
+    public function orderFull()
+    { 
+        $this->model = new \app\admin\model\full\parment\Order;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+       //设置过滤方法
+       $this->request->filter(['strip_tags']);
+       if ($this->request->isAjax()) {
+           //如果发送的来源是Selectpage，则转发到Selectpage
+           if ($this->request->request('keyField')) {
+               return $this->selectpage();
+           }
+           list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+           $total = $this->model
+               ->where($where)
+               ->order($sort, $order)
+               ->count();
+
+           $list = $this->model
+               ->where($where)
+               ->order($sort, $order)
+               ->limit($offset, $limit)
+               ->select();
+         
+           $list = collection($list)->toArray();
+        
+           foreach( (array) $list as $k => $row){
+            $planData = collection($this->getPlanCarFullData($row['plan_plan_full_name']))->toArray();
+
+               $list[$k]['full_total_price'] = $planData['full_total_price'];
+               $list[$k]['models_name'] = $planData['models_name'];
+               $city = $list[$k]['city'];
+               $detailed_address = $list[$k]['detailed_address'];
+               $list[$k]['city'] = $city . $detailed_address;
+
+
+          }
+        
+           $result = array("total" => $total, "rows" => $list);
+           return json($result);
+       }
+
+       return $this->view->fetch('index');
+        
+    }
+
+    /**
+     * 根据方案id查询 车型名称，首付、月供等
+     */
+    public function getPlanCarFullData($planId)
+    {
+         
+        return Db::name('plan_full')->alias('a')
+                ->join('models b','a.models_id=b.id')
+                ->field('a.id,a.full_total_price,
+                        b.name as models_name'
+                        )
+                ->where('a.id',$planId)
+                ->find();
+                
+    }
+
+    /**查看全款单详细资料 */
+    public function fulldetails($ids = null)
+    {
+        $this->model = new \app\admin\model\full\parment\Order;
+        $row = $this->model->get($ids); 
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        
+
+        //身份证正反面（多图）
+        $id_cardimages = explode(',',$row['id_cardimages']);
+        
+        //驾照正副页（多图）
+        $drivers_licenseimages = explode(',',$row['drivers_licenseimages']);
+        
+        //申请表（多图）
+        $application_formimages = explode(',',$row['application_formimages']);
+
+        /**不必填 */
+        //银行卡照（可多图）
+        $bank_cardimages = $row['bank_cardimages']==''?[]:explode(',',$row['bank_cardimages']);
+
+        //通话清单（文件上传）
+        $call_listfiles = $row['call_listfiles']==''?[]:explode(',',$row['call_listfiles']);
+        
+        $this->view->assign(
+            [    
+                'row'=>$row, 
+                'cdn'=>Config::get('upload')['cdnurl'],
+                'id_cardimages'=> $id_cardimages,
+                'drivers_licenseimages'=> $drivers_licenseimages,
+                'application_formimages'=> $application_formimages,
+                'bank_cardimages'=> $bank_cardimages,
+                'call_listfiles'=> $call_listfiles,
+             ]
+         ); 
+        return $this->view->fetch();
+    }
+
+
 
 }

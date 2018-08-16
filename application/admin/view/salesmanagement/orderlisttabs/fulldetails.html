@@ -1,0 +1,100 @@
+
+<form id="details-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <h3>
+        <center>
+            <h2>基本资料</h2>
+        </center>
+    </h3>
+    <br>
+
+    <div class="container-fulid">
+
+        <br>
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('Createtime')}：</strong> {$row.createtime|date='Y-m-d H:i:s',###}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-9">
+                <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name}
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('Username')}：</strong> {$row.username} {if condition="$row.genderdata_text eq '男'"} &nbsp;
+                <span class="fa fa-male text-info"></span>
+                {else /}
+                <span class="fa fa-female" style="color:palevioletred"></span>
+
+                {/if}
+
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('Phone')}：</strong> {$row.phone}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('Id_card')}：</strong> {$row.id_card}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-5">
+                <strong>{:__('现居住地址（同联系地址）')}：</strong> {$row.city}{$row.detailed_address}
+            </div>
+
+
+        </div>
+        <hr>
+        <div class="form-group">
+
+            <div class="col-xs-12 col-sm-8 col-md-4">
+                <strong>{:__('身份证正反面')}：</strong>
+                {foreach $id_cardimages as $k => $v}
+
+                    <img src="{$cdn}{$v}" alt="{:__('身份证正反面')}" style="width:80px;height:80px;">
+                 {/foreach}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-4">
+                <strong>{:__('驾照正副页')}：</strong>
+                {foreach $drivers_licenseimages as $k => $v}
+
+                    <img src="{$cdn}{$v}" alt="{:__('驾照正副页')}" style="width:80px;height:80px;">
+                 {/foreach}
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-8 col-md-4">
+                    <strong>{:__('申请表')}：</strong>
+                    {foreach $application_formimages as $k => $v}
+
+                        <img src="{$cdn}{$v}" alt="{:__('申请表')}" style="width:80px;height:80px;">
+                     {/foreach}
+                </div>
+            </div>
+            
+        </div>
+        <hr>
+        <div class="form-group">
+
+                <div class="col-xs-12 col-sm-8 col-md-3">
+                    <strong>{:__('银行卡')}：</strong>
+                    {empty name="$bank_cardimages"}
+                    <span class="text-info">暂无{:__('银行卡图片')}</span>
+                    {else /}  {foreach $bank_cardimages as $k => $v}
+    
+                        <img src="{$cdn}{$v}" alt=">{:__('银行卡')}" style="width:80px;height:80px;">
+    
+                    {/foreach}  {/empty}
+                </div>
+
+                <div class="col-xs-12 col-sm-8 col-md-4">
+                    <strong>{:__('通话清单')}：</strong>
+                    {empty name="$call_listfiles"}
+                    <span class="text-info">暂无{:__('通话清单')}</span>
+                    {else /}  {foreach $call_listfiles as $k => $v}
+                    <a href="{$cdn}{$v}" target="_blank">
+                        <button type="button" class="btn btn-info">查看通话清单</button>
+                    </a> {/foreach}   {/empty}
+            </div>
+        </div>
+    </div>
+</form>
+
+
