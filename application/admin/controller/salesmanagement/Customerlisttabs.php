@@ -80,6 +80,7 @@ class Customerlisttabs extends Backend
     public function index()
     {
 
+
         $this->loadlang('salesmanagement/customerlisttabs');
 
         $getTotal = $this->getTotal();
@@ -95,7 +96,7 @@ class Customerlisttabs extends Backend
         return $this->view->fetch();
     }
 
-    public function getTotal()
+    public function getTotal($get_one=null)
     {
         $canUseId = $this->getUserId();
 
@@ -328,6 +329,23 @@ class Customerlisttabs extends Backend
 
                 })
                 ->count();
+        }
+
+        if(!empty($get_one)){
+            switch ($get_one){
+                case 'new_customer':
+                    return $newCustomTotal;
+                case 'relation':
+                    return $relationTotal;
+                case 'intention':
+                    return $intentionTotal;
+                case 'nointention':
+                    return $nointentionTotal;
+                case 'giveup':
+                    return $giveupTotal;
+                case 'overdue':
+                    return $overdueTotal;
+            }
         }
 
         return [
@@ -1369,9 +1387,17 @@ class Customerlisttabs extends Backend
     public function returnTotal()
     {
         if($this->request->isAjax()){
-            $data = $this->getTotal();
+            $asd = $this->request->post("");
 
-            $this->success('','',$data);
+            $arr = array();
+            for($i=0;$i<count($asd['arr']);$i++){
+                $arr[$asd['arr'][$i]]=$this->getTotal($asd['arr'][$i]);
+            }
+
+
+
+
+            $this->success('','',$arr);
         }
     }
 
