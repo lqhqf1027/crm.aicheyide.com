@@ -844,6 +844,96 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 // alert(Table.api.getrowdata(table, index));
             },
+            order_full: function () {
+
+                // 表格1
+                var orderFull = $("#orderFull");
+
+                $(".btn-add").data("area", ["95%", "95%"]);
+                $(".btn-edit").data("area", ["95%", "95%"]);
+
+                // 初始化表格
+                orderFull.bootstrapTable({
+                    url: 'salesmanagement/Orderlisttabs/orderFull',
+                    extend: {
+                        // index_url: 'order/fullparmentorder/index',
+                        add_url: 'order/fullparmentorder/add',
+                        edit_url: 'order/fullparmentorder/edit',
+                        del_url: 'order/fullparmentorder/del',
+                        multi_url: 'order/fullparmentorder/multi',
+                        table: 'full_parment_order',
+                    },
+                    toolbar: '#toolbar4',
+                    pk: 'id',
+                    sortName: 'id',
+                    columns: [
+                        [
+                            { checkbox: true },
+                            { field: 'id', title: __('Id') },
+                            { field: 'order_no', title: __('Order_no') },
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+                            { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            { field: 'models_name', title: __('销售车型') },
+                            { field: 'full_total_price', title: __('全款总价（元）') },
+
+                            {
+                                field: 'id', title: __('查看详细资料'), table: orderFull, buttons: [
+                                    {
+                                        name: 'fulldetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-fulldetails',
+                                        url: 'salesmanagement/Orderlisttabs/fulldetails', callback: function (data) {
+                                            console.log(data)
+                                        }
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
+
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'id_card', title: __('Id_card')},
+                            {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
+                            {field: 'city', title: __('City')},
+                            // {field: 'detailed_address', title: __('Detailed_address')},
+
+                            {
+                                field: 'operate', title: __('Operate'), table: orderFull,
+                                buttons: [
+                                    {
+                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'order/fullparmentorder/edit',/**编辑 */
+                                        
+                                    },
+                                    {
+                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        url: 'order/fullparmentorder/del',/**删除 */
+    
+                                    }
+                                    
+
+                                ],
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+                           
+                        ]
+                    ]
+
+                });
+
+
+                orderFull.on('load-success.bs.table', function (e, data) {
+                    // console.log(data);
+                    $('#badge_order_full').text(data.total);
+                    $(".btn-fulldetails").data("area", ["95%", "95%"]);
+                })
+                // 为表格1绑定事件
+                Table.api.bindevent(orderFull);
+
+                // alert(Table.api.getrowdata(table, index));
+            },
         },
         add: function () {
 
