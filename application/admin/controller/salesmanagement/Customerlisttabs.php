@@ -1221,7 +1221,7 @@ class Customerlisttabs extends Backend
     /**
      * 编辑
      */
-    public function edits($ids = NULL)
+    public function edit($ids = NULL)
     {
         $this->model = model('CustomerResource');
         $row = $this->model->get($ids);
@@ -1242,7 +1242,6 @@ class Customerlisttabs extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-//pr($params);die();
             if ($params) {
 
                 $sql1 = $this->model->where('id', $ids)->update([
