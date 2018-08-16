@@ -19,7 +19,7 @@ class Creditreview extends Backend
      *
      * @var \app\admin\model\Ordertabs
      */
-    protected $model = null; 
+    protected $model = null;
     protected $userid = 'junyi_testusr'; //用户id
     protected $Rc4 = '12b39127a265ce21'; //apikey
     protected $sign = null; //sign  md5加密
@@ -28,7 +28,7 @@ class Creditreview extends Backend
         parent::_initialize();
         $this->model = model('SalesOrder'); 
         //共享userid 、sign
-        $this->sign = md5($this->userid.$this->Rc4);
+        $this->sign = md5($this->userid . $this->Rc4);
     }
 
     public function index()
@@ -38,24 +38,24 @@ class Creditreview extends Backend
         $this->view->assign([
             'total' => $this->model
 
-                    ->where($where)
-                    ->where('review_the_data', 'NEQ', 'is_reviewing')
-                    ->where('review_the_data', 'NEQ', 'the_guarantor')
-                    ->order($sort, $order)
-                    ->count(),
+                ->where($where)
+                ->where('review_the_data', 'NEQ', 'is_reviewing')
+                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->order($sort, $order)
+                ->count(),
 
-            'total1'=>DB::name('rental_order')
+            'total1' => DB::name('rental_order')
 
-                    ->where($where)
-                    ->where('review_the_data', 'NEQ', 'is_reviewing_false')
-                    ->order($sort, $order)
-                    ->count(),
-            'total2'=>DB::name('second_sales_order')
-                    ->where($where)
-                    ->where('review_the_data', 'NEQ', 'is_reviewing')
-                    ->where('review_the_data', 'NEQ', 'the_guarantor')
-                    ->order($sort, $order)
-                    ->count(),
+                ->where($where)
+                ->where('review_the_data', 'NEQ', 'is_reviewing_false')
+                ->order($sort, $order)
+                ->count(),
+            'total2' => DB::name('second_sales_order')
+                ->where($where)
+                ->where('review_the_data', 'NEQ', 'is_reviewing')
+                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->order($sort, $order)
+                ->count(),
 
         ]);
 
@@ -184,23 +184,23 @@ class Creditreview extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
             $total = DB::name('second_sales_order')
-               ->where($where)
-               ->order($sort, $order)
-               ->where('review_the_data', 'NEQ', 'is_reviewing')
+                ->where($where)
+                ->order($sort, $order)
+                ->where('review_the_data', 'NEQ', 'is_reviewing')
                 ->where('review_the_data', 'NEQ', 'the_guarantor')
-               ->count();
+                ->count();
 
             $list = DB::name('second_sales_order')
-               ->where($where)
-               ->order($sort, $order)
-               ->where('review_the_data', 'NEQ', 'is_reviewing')
+                ->where($where)
+                ->order($sort, $order)
+                ->where('review_the_data', 'NEQ', 'is_reviewing')
                 ->where('review_the_data', 'NEQ', 'the_guarantor')
-               ->limit($offset, $limit)
-               ->select();
+                ->limit($offset, $limit)
+                ->select();
 
             $list = collection($list)->toArray();
 
-            foreach ((array) $list as $k => $row) {
+            foreach ((array)$list as $k => $row) {
                 $planData = collection($this->getPlanSecondCarData($row['plan_car_second_name']))->toArray();
 
 
@@ -246,17 +246,16 @@ class Creditreview extends Backend
     public function getPlanSecondCarData($planId)
     {
         return Db::name('secondcar_rental_models_info')->alias('a')
-                ->join('models b', 'a.models_id=b.id')
-                ->field('a.id,a.newpayment,a.monthlypaymen,a.periods,a.totalprices,
-                        b.name as models_name'
-                        )
-                ->where('a.id', $planId)
-                ->find();
+            ->join('models b', 'a.models_id=b.id')
+            ->field('a.id,a.newpayment,a.monthlypaymen,a.periods,a.totalprices,
+                        b.name as models_name')
+            ->where('a.id', $planId)
+            ->find();
     }
 
     /** 审核销售提交过来的销售新车单*/
 
-    public function newauditResult($ids=NULL)
+    public function newauditResult($ids = null)
 
     {
         $this->model = model('SalesOrder');
@@ -312,7 +311,7 @@ class Creditreview extends Backend
                 'new_car_marginimages' => $new_car_marginimages
             ]
         );
-        
+
         return $this->view->fetch('newauditResult');
 
     }
@@ -323,10 +322,10 @@ class Creditreview extends Backend
         if ($this->request->isAjax()) {
 
             $this->model = model('SalesOrder');
-        
+
             $id = input("id");
 
-            $id = json_decode($id, true);         
+            $id = json_decode($id, true);
 
 
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
@@ -349,10 +348,10 @@ class Creditreview extends Backend
         if ($this->request->isAjax()) {
 
             $this->model = model('SalesOrder');
-        
+
             $id = input("id");
 
-            $id = json_decode($id, true);         
+            $id = json_decode($id, true);
 
 
             $result = $this->model->save(['review_the_data' => 'the_guarantor'], function ($query) use ($id) {
@@ -376,11 +375,11 @@ class Creditreview extends Backend
         if ($this->request->isAjax()) {
 
             $this->model = model('SalesOrder');
-        
+
             $id = input("id");
 
 
-            $id = json_decode($id, true);         
+            $id = json_decode($id, true);
 
 
             $result = $this->model->save(['review_the_data' => 'not_through'], function ($query) use ($id) {
@@ -432,8 +431,8 @@ class Creditreview extends Backend
                 'call_listfilesimages' => $call_listfilesimages
             ]
 
-        ); 
-        
+        );
+
         return $this->view->fetch('rentalauditResult');
 
     }
@@ -443,12 +442,12 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\rental\Order; 
-        
+            $this->model = new \app\admin\model\rental\Order;
+
             $id = input("id");
 
 
-            $id = json_decode($id, true);         
+            $id = json_decode($id, true);
 
 
             $result = $this->model->save(['review_the_data' => 'is_reviewing_pass'], function ($query) use ($id) {
@@ -472,11 +471,11 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\rental\Order; 
-        
+            $this->model = new \app\admin\model\rental\Order;
+
             $id = input("id");
 
-            $id = json_decode($id, true);         
+            $id = json_decode($id, true);
 
 
             $result = $this->model->save(['review_the_data' => 'is_reviewing_nopass'], function ($query) use ($id) {
@@ -495,7 +494,7 @@ class Creditreview extends Backend
     }
 
     /** 审核销售提交过来的销售二手车单*/
-    public function secondhandcarResult($ids=NULL)
+    public function secondhandcarResult($ids = null)
     {
         $this->model = new \app\admin\model\second\sales\Order;
         $row = $this->model->get($ids);
@@ -535,22 +534,22 @@ class Creditreview extends Backend
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
         $this->view->assign(
 
-           [    
-                'row'=>$row, 
-                'cdn'=>Config::get('upload')['cdnurl'],
-                'id_cardimages'=>$id_cardimages,
-                'drivers_licenseimages'=>$drivers_licenseimages,
-                'residence_bookletimages'=>$residence_bookletimages,
-                'housingimages'=>$housingimages,
-                'bank_cardimages'=>$bank_cardimages,
-                'application_formimages'=>$application_formimages,
-                'deposit_contractimages'=>$deposit_contractimages,
-                'deposit_receiptimages'=>$deposit_receiptimages,
-                'call_listfiles'=>$call_listfiles,
-                'new_car_marginimages'=>$new_car_marginimages 
+            [
+                'row' => $row,
+                'cdn' => Config::get('upload')['cdnurl'],
+                'id_cardimages' => $id_cardimages,
+                'drivers_licenseimages' => $drivers_licenseimages,
+                'residence_bookletimages' => $residence_bookletimages,
+                'housingimages' => $housingimages,
+                'bank_cardimages' => $bank_cardimages,
+                'application_formimages' => $application_formimages,
+                'deposit_contractimages' => $deposit_contractimages,
+                'deposit_receiptimages' => $deposit_receiptimages,
+                'call_listfiles' => $call_listfiles,
+                'new_car_marginimages' => $new_car_marginimages
             ]
         );
-        
+
         return $this->view->fetch('secondhandcarResult');
 
     }
@@ -561,10 +560,10 @@ class Creditreview extends Backend
         if ($this->request->isAjax()) {
 
             $this->model = new \app\admin\model\second\sales\Order;
-        
+
             $id = input("id");
 
-            $id = json_decode($id, true);         
+            $id = json_decode($id, true);
 
 
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
@@ -587,10 +586,10 @@ class Creditreview extends Backend
         if ($this->request->isAjax()) {
 
             $this->model = new \app\admin\model\second\sales\Order;
-        
+
             $id = input("id");
 
-            $id = json_decode($id, true);         
+            $id = json_decode($id, true);
 
 
             $result = $this->model->save(['review_the_data' => 'the_guarantor'], function ($query) use ($id) {
@@ -613,10 +612,10 @@ class Creditreview extends Backend
         if ($this->request->isAjax()) {
 
             $this->model = new \app\admin\model\second\sales\Order;
-        
+
             $id = input("id");
 
-            $id = json_decode($id, true);         
+            $id = json_decode($id, true);
 
 
             $result = $this->model->save(['review_the_data' => 'not_through'], function ($query) use ($id) {
@@ -721,27 +720,27 @@ class Creditreview extends Backend
         $residence_bookletimages = explode(',', $row['residence_bookletimages']);   
          //通话清单
 
-         $call_listfilesimages = explode(',',$row['call_listfilesimages']);   
-         $this->view->assign(
-            [    
-                 'row'=>$row, 
-                 'cdn'=>Config::get('upload')['cdnurl'],
-                 'id_cardimages'=>$id_cardimages,
-                 'drivers_licenseimages'=>$drivers_licenseimages,
-                 'residence_bookletimages'=>$residence_bookletimages,
-                 'call_listfilesimages'=>$call_listfilesimages
-             ]
-         ); 
-         
-         return $this->view->fetch();
- 
-     }
-     
+        $call_listfilesimages = explode(',', $row['call_listfilesimages']);
+        $this->view->assign(
+            [
+                'row' => $row,
+                'cdn' => Config::get('upload')['cdnurl'],
+                'id_cardimages' => $id_cardimages,
+                'drivers_licenseimages' => $drivers_licenseimages,
+                'residence_bookletimages' => $residence_bookletimages,
+                'call_listfilesimages' => $call_listfilesimages
+            ]
+        );
+
+        return $this->view->fetch();
+
+    }
+
     /**查看二手车单详细资料 */
     public function secondhandcardetails($ids = null)
     {
         $this->model = new \app\admin\model\second\sales\Order;
-        $row = $this->model->get($ids); 
+        $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -752,52 +751,52 @@ class Creditreview extends Backend
         }
         
         //定金合同（多图）
-        $deposit_contractimages = explode(',',$row['deposit_contractimages']);
+        $deposit_contractimages = explode(',', $row['deposit_contractimages']);
         
         //定金收据上传
-        $deposit_receiptimages = explode(',',$row['deposit_receiptimages']);
+        $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
 
         //身份证正反面（多图）
-        $id_cardimages = explode(',',$row['id_cardimages']);
+        $id_cardimages = explode(',', $row['id_cardimages']);
         
         //驾照正副页（多图）
-        $drivers_licenseimages = explode(',',$row['drivers_licenseimages']);
+        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
         
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = explode(',',$row['residence_bookletimages']);
+        $residence_bookletimages = explode(',', $row['residence_bookletimages']);
         
         //住房合同/房产证（多图）
-        $housingimages = explode(',',$row['housingimages']);
+        $housingimages = explode(',', $row['housingimages']);
         
         //银行卡照（可多图）
-        $bank_cardimages = explode(',',$row['bank_cardimages']);
+        $bank_cardimages = explode(',', $row['bank_cardimages']);
 
         //申请表（多图）
-        $application_formimages = explode(',',$row['application_formimages']);
+        $application_formimages = explode(',', $row['application_formimages']);
         
         //通话清单（文件上传）
-        $call_listfiles = explode(',',$row['call_listfiles']);
+        $call_listfiles = explode(',', $row['call_listfiles']);
 
         /**不必填 */
         //保证金收据
-        $new_car_marginimages = $row['new_car_marginimages']==''?[]:explode(',',$row['new_car_marginimages']);
-        
+        $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
+
         $this->view->assign(
-            [    
-                'row'=>$row, 
-                'cdn'=>Config::get('upload')['cdnurl'],
-                'deposit_contractimages'=> $deposit_contractimages,
-                'deposit_receiptimages'=> $deposit_receiptimages,
-                'id_cardimages'=> $id_cardimages,
-                'drivers_licenseimages'=> $drivers_licenseimages,
-                'residence_bookletimages'=> $residence_bookletimages,
-                'housingimages'=> $housingimages,
-                'bank_cardimages'=> $bank_cardimages,
-                'application_formimages'=> $application_formimages,
-                'call_listfiles'=> $call_listfiles,
-                'new_car_marginimages'=> $new_car_marginimages,
-             ]
-         ); 
+            [
+                'row' => $row,
+                'cdn' => Config::get('upload')['cdnurl'],
+                'deposit_contractimages' => $deposit_contractimages,
+                'deposit_receiptimages' => $deposit_receiptimages,
+                'id_cardimages' => $id_cardimages,
+                'drivers_licenseimages' => $drivers_licenseimages,
+                'residence_bookletimages' => $residence_bookletimages,
+                'housingimages' => $housingimages,
+                'bank_cardimages' => $bank_cardimages,
+                'application_formimages' => $application_formimages,
+                'call_listfiles' => $call_listfiles,
+                'new_car_marginimages' => $new_car_marginimages,
+            ]
+        );
         return $this->view->fetch();
     }
 
@@ -805,75 +804,120 @@ class Creditreview extends Backend
 
 
     public function toViewBigData($ids = null)
-    { 
-        
+    {
+
         $row = $this->model->get($ids);
         $params = array();
-        $params['sign'] =   $this->sign;
+        $params['sign'] = $this->sign;
         $params['userid'] = $this->userid;
         $params['params'] = json_encode(
             [
                 'tx' => '101',
                 'data' => [
-                    'name' =>$row['username'],
-                    'idNo' => $row['id_card'],
+                    // 'name' => $row['username'],
+                    'name' => '薛剑飞',
+                    // 'idNo' => $row['id_card'],
+                    'idNo' => '230206197807200710',
                     'queryReason' => '10',
                 ],
             ]
         );
-        // return $this->bigDataHtml();
-        // echo '<h2 >aaa</h2>';
-        // $result = posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params); /**共享数据接口 */
-        // pr($result['params']['data']['loanRecords']['orgName']);        die;
+        // return $this->bigDataHtml(); 
         //判断数据库里是否有当前用户的大数据
-        $data = $this->getBigData($row['id']); 
+        $data = $this->getBigData($row['id']);
         if (empty($data)) {
             //如果数据为空，调取大数据接口
-            $result['sales_order_id']= $row['id']; 
-            $result['name']=$row['username'];
-            $result['phone']=$row['phone'];
-            $result['id_card']=$row['id_card'];
-            $result['createtime']=time(); 
+            $result['sales_order_id'] = $row['id'];
+            $result['name'] = $row['username'];
+            $result['phone'] = $row['phone'];
+            $result['id_card'] = $row['id_card'];
+            $result['createtime'] = time(); 
             // pr($result);die;
-            $result['share_data'] = posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params); /**共享数据接口 */
-           
-            //转义base64入库
-            $result['share_data'] = base64_encode($this->JSON($result['share_data']));
-            $writeDatabases = Db::name('big_data')->insert($result);
-            if ($writeDatabases) {
-                echo 111;
-                $this->view->assign('bigdata', $data);
-                pr($this->getBigData($row['id']));
-                die;
+            $result['share_data'] = posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params);
+            /**共享数据接口 */
+            //只有errorCode返回 '0000'  '0001'  '0005' 时为正确查询
+            if ($result['share_data']['errorCode'] == '0000' || $result['share_data']['errorCode'] == '0001' || $result['share_data']['errorCode'] == '0005') {
+                //风险数据接口
+
+                 /**
+                  * @params pricedAuthentification
+                 * 收费验证环节
+                 * 1-身份信息认证
+                 * 2-手机号实名验证
+                 * 3-银行卡三要素验证 
+                 * 4-银行卡四要素 
+                 * 当提交 3、4时 银行卡为必填项
+                 */
+                $params_risk['sign'] = $this->sign;
+                $params_risk['userid'] = $this->userid;
+                $params_risk['params'] = json_encode(
+                    [
+                        'data'=>[
+                            // 'name' => $row['username'],
+                            'name' =>'薛剑飞',
+                            // 'idNo' => $row['id_card'],
+                            'idNo' => '230206197807200710',
+                            // 'mobile' => $row['phone'],
+                            'mobile' =>'15881088300'
+                          
+                        ],
+                        'queryReason' => '10',//贷前审批s 
+                        'pricedAuthentification' => '1,2'
+                        
+                    ]
+                );   
+                
+                $result['risk_data'] = posts('https://www.zhichengcredit.com/echo-center/api/mixedRiskQuery/queryMixedRiskList/v3 ', $params_risk);
+              
+                /**风险数据接口 */
+                if ($result['risk_data']['errorcode'] == '0000' || $result['risk_data']['errorcode'] == '0001' || $result['risk_data']['errorcode'] == '0005') {
+                    //转义base64入库
+                    $result['share_data'] = base64_encode($this->JSON($result['share_data']));
+                    $result['risk_data'] = base64_encode($this->JSON($result['risk_data']));
+                    $writeDatabases = Db::name('big_data')->insert($result);
+                    if ($writeDatabases) {
+                        echo 111;
+                        $this->view->assign('bigdata', $data);
+                        pr($this->getBigData($row['id']));
+                        die;
+
+                    } else {
+                        $this->error('数据写入失败');
+                        return false;
+                    }
+                } else {
+                    $this->error('风险接口-》' . $result['risk_data']['message']);
+
+                }
 
             } else {
-                $this->error('数据写入失败');
-                return false;
+                $this->error('共享接口-》' . $result['message']);
             }
         } else {
             //如果errorCode == 0001 ,用户没有借款信息大数据可查询
             if ($data['errorCode'] == '0001') {
                 // $this->success('该用户没有大数据可查询', null, $this->getBigData($row['id']));
                 pr($data);
-                
+
                 echo 22;
                 die;
             } else {
                 echo 333;
                 $this->view->assign('bigdata', $this->getBigData($row['id']));
                 pr($data);
-                die;
+                $this->success();
 
             }
         }
     }
-    public function bigDataHtml(){
-        
-                 "<div>
+    public function bigDataHtml()
+    {
+
+        "<div>
                     <h3><center>客户大数据信息</center></h3>
                 </div>";
-              
- 
+
+
     }
 
     /**
@@ -889,7 +933,8 @@ class Creditreview extends Backend
             ->field('a.*')
             ->find();
         if (!empty($bigData)) {
-            $bigData['share_data'] =  $this->object_to_array(json_decode(base64_decode($bigData['share_data'])));
+            $bigData['share_data'] = $this->object_to_array(json_decode(base64_decode($bigData['share_data'])));
+            $bigData['risk_data'] = $this->object_to_array(json_decode(base64_decode($bigData['risk_data'])));
             return $bigData;
 
         } else {
@@ -901,7 +946,8 @@ class Creditreview extends Backend
      * 
      */
 
-    public function object_to_array($obj) {
+    public function object_to_array($obj)
+    {
         $obj = (array)$obj;
         foreach ($obj as $k => $v) {
             if (gettype($v) == 'resource') {
@@ -911,7 +957,7 @@ class Creditreview extends Backend
                 $obj[$k] = (array)$this->object_to_array($v);
             }
         }
-     
+
         return $obj;
     }
     /**************************************************************

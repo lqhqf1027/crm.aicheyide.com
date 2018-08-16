@@ -694,6 +694,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             callback: function (value) {
                                 alert(value);
                                 //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            },success:function(ret){
+                                console.log(ret);
                             }
                         })
                     },
