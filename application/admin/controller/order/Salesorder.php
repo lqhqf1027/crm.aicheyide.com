@@ -5,6 +5,7 @@ namespace app\admin\controller\order;
 use app\common\controller\Backend;
 use think\Db;
 use think\Session;
+use think\Request;
 
 /**
  * 订单列管理.
@@ -228,6 +229,13 @@ class Salesorder extends Backend
 
     public function add()
     {
+
+        //销售方案类别
+        $category = DB::name('scheme_category')->field('id,name')->select();
+
+        // pr($category);
+        // die;
+
         $newRes = array();
         //品牌
         $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
@@ -235,14 +243,14 @@ class Salesorder extends Backend
         foreach ((array) $res as $key => $value) {
             $sql = Db::name('models')->alias('a')
                 ->join('plan_acar b', 'b.models_id=a.id')
-                ->join('financial_platform c', 'b.financial_platform_id=c.id')
-                ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,c.name as financial_platform_name')
+                ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id')
                 ->where(['a.brand_id' => $value['brandid'], 'b.ismenu' => 1])
 
                 ->select();
             $newB = [];
             foreach ((array) $sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'，'.'保证金'.$bValue['margin'].'】'.'---'.$bValue['financial_platform_name'];
+                $bValue['models_name'] = $bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'，'.'保证金'.$bValue['margin'].'】';
+                $bValue['category_id'] = $bValue['category_id'];
                 $newB[] = $bValue;
             }
 
@@ -253,6 +261,7 @@ class Salesorder extends Backend
             );
         }
         $this->view->assign('newRes', $newRes);
+        $this->view->assign('category', $category);
 
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
@@ -308,6 +317,15 @@ class Salesorder extends Backend
 
         return $this->view->fetch();
     }
+
+    // public function category()
+    // {
+    //     $category_id = input("category_id");
+    //     $category_id = json_decode($category_id, true);
+    //     Session::set('category_id', $category_id);
+    //     // var_dump(Session::get('category_id'));
+    //     // die;
+    // }
 
     /**
      * 获取通话清单,第一步登陆，获取验证码
