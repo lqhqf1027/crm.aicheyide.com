@@ -1,5 +1,20 @@
 <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择销售方案类型')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]"
+                    >
+                <option value="" style="display: none">未选择任何项</option>
+                {foreach name="$category" item="vo"}
+                <option value="{$vo.id}">{$vo.name}</option>
+                {/foreach}
+
+            </select>
+
+        </div>
+    </div>
 
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
@@ -129,3 +144,6 @@
         </div>
     </div>
 </form>
+{php}
+//dump($category);
+{/php}
