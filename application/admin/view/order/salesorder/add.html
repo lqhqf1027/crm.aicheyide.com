@@ -14,73 +14,137 @@
     </h3>
     <br>
     <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('销售方案类别')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售方案类别')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]" onchange="changePlan(this)">
+                <option value=" " style='display: none'>未选中任何项</option>
+
+                {foreach $category as $k => $v}
+
+                <option value="{$v['id']}">{$v['name']}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
             <div class="col-xs-12 col-sm-8">
-    
-                <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]" onchange="changePlan(this)">
-                    <option value=" " style='display: none'>未选中任何项</option>
-                    
-                    {foreach $category as $k => $v}
-                    
-                    <option value="{$v['id']}">{$v['name']}</option>
-                    {/foreach}
-                </select>
-    
+
+                <table class="plan_acar table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
+                    <tr>
+                        <th>请先选择销售方案类别</th>
+                    </tr>
+                    <!-- <tr>
+                        <th class="col-xs-12 col-sm-1 ">车型</th>
+                        <th class="col-xs-12 col-sm-1 ">首付（元）</th>
+                        <th class="col-xs-12 col-sm-1 ">首付（元）</th>
+                        <th class="col-xs-12 col-sm-1 ">期数（月）</th>
+                        <th class="col-xs-12 col-sm-1 ">尾款（元）</th>
+                        <th class="col-xs-12 col-sm-1 ">GPS(元)</th>
+                        <th class="col-xs-12 col-sm-1 ">首付总额（元）</th>
+                        <th class="col-xs-12 col-sm-1 ">操作</th>
+                    </tr> -->
+                </table>
             </div>
-    </div>  
+            
+        
+    </div>
+
+    <!-- <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-plan_acar_name" data-rule="required" class="form-control selectpicker " name="row[plan_acar_name]" onchange="changePlan(this)">
+                <option value=" " style='display: none'>未选中任何项</option>
+
+            
+            </select>
+
+        </div>
+    </div> -->
+
     <script type="text/javascript">
 
         function changePlan(that) {
-            var planName = document.getElementById('planName');
-            // var category_id = that.value;
-            console.log(that.value);
-            // $.ajax({
-            //     url: 'order/salesorder/category',
+
+            // console.log(that.value);
+
+            $.ajax({
+                url: 'order/salesorder/planacar',
+
+                data: { category_id: JSON.stringify(that.value) },
+
+                success: function (data) {
+
+                    var data = JSON.parse(data);
+
+                    var html = '<tr>';
+
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '车型' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '首付（元）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '月供（元）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '期数（月）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '尾款（元）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + 'GPS(元)' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '首付总额（元）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '操作' + '</th>';
+
+                    html += '</tr>';
+                    html += '<tr>';
+
+                    console.log(data);
+                    
+                    for (var i in data) {
+                        var result = data[i];
+                        console.log(result);
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>'; 
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + '<button id="plan_name" type="button" class="btn btn-default plan_name" onclick="changePlanacar(' + result.id + ')">选择该方案</button>' + '</td>' ;
+
+                        html += '</tr>';
+
+                    }
+                    
+                    $('.plan_acar').html(html);
+
+                }
+
+            });
+
+        }
+
+        function changePlanacar (that) {
+
+            console.log(that);
+            $(".plan_name").each(function() {
+               
+                 $(this).removeClass('btn-default').addClass('btn-success');
                 
-            //     data: {category_id: JSON.stringify(that.value)}
-            // });
-            if (that.value) {
+            });
 
-                planName.style.setProperty('display', 'block', 'important');
+           
 
 
-            } else {
-
-                planName.style.setProperty('display', 'none', 'important');
-            }
 
         }
 
     </script>
-    <div id="planName" style="display: none">
-        <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
-            <div class="col-xs-12 col-sm-8">
 
-                <select id="c-plan_acar_name" data-rule="required" class="form-control selectpicker" name="row[plan_acar_name]">
-                    <option value=" " style='display: none'>未选中任何项</option>
-                    {volist name="newRes" id="vo"}
-
-                    <option value="{$vo['brand_logoimage']}" disabled>{$vo['brand_name']}</option>
-                    {volist name="vo.data" id="vo_s"} 
-                    {if $vo_s['category_id'] == 1 }
-                    <option value="{$vo_s['id']},{$vo_s['models_name']}">{$vo_s['models_name']}</option>
-                    {else /}
-                    {/if}
-                    {/volist} 
-                    {/volist}
-                </select>
-
-            </div>
-        </div>  
-    </div>  
+    
     <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Decoration')}:</label>
-            <div class="col-xs-12 col-sm-8 col-md-3">
-                <input id="c-decoration" placeholder="如：脚垫，全车膜，行车记录仪等" class="form-control" name="row[decoration]" type="text">
-            </div>
-    
-    
+        <label class="control-label col-xs-12 col-sm-2">{:__('Decoration')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <input id="c-decoration" placeholder="如：脚垫，全车膜，行车记录仪等" class="form-control" name="row[decoration]" type="text">
+        </div>
+
+
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
@@ -451,7 +515,7 @@
         </div>
     </div>
 
-    
+
     <b style="color: #ddd">
         <center>
             <i>--我是有底线的--</i>
