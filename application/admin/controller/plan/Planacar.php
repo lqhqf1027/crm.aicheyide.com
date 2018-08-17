@@ -87,12 +87,17 @@ class Planacar extends Backend
      */
     public function add()
     {
-        $this->view->assign("sales", $this->getSales());
+        $this->view->assign([
+            "sales"=> $this->getSales(),
+            'category'=>$this->getCategory()
+        ]);
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if(empty($params['working_insurance'])){
                 $params['working_insurance'] = "no";
             }
+
+//            pr($params);die();
 
             if($params['sales_id']==" "){
                 $params['sales_id'] = null;
@@ -144,6 +149,9 @@ class Planacar extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            if($params['sales_id']==" "){
+                $params['sales_id'] = null;
+            }
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -168,7 +176,9 @@ class Planacar extends Backend
         }
         $this->view->assign([
             "row"=>$row,
-            'working_insurance'=>$this->working_insurance()
+            'working_insurance_list'=>$this->working_insurance(),
+            'sales'=>$this->getSales(),
+            'category'=>$this->getCategory()
         ]);
         return $this->view->fetch();
     }
@@ -188,6 +198,14 @@ class Planacar extends Backend
 
         return $sales;
 
+    }
+
+    //得到销售方案类别信息
+    public function getCategory()
+    {
+       $res = Db::name("scheme_category")->select();
+
+       return $res;
     }
 
 }
