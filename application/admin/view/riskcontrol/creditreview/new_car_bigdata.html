@@ -1,0 +1,181 @@
+<form id="auditResult-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <h2>
+        <center>大数据综合查询结果</center>
+    </h2>
+    <br>
+    <br>
+    <div class="container-fulid">
+        <div class="col-xs-12 col-sm-8   col-md-12  text-center">
+            <span style="padding: 2px 0 ;border-left: 3px solid green">&nbsp;客户姓名：{$bigdata.name} </span> &nbsp;&nbsp;
+            <span style="padding: 2px 0 ;border-left: 3px solid green"> &nbsp;身份证号：{$bigdata.id_card}</span>&nbsp;&nbsp;
+            <span style="padding: 2px 0 ;border-left: 3px solid green">
+                &nbsp;手机号：{$bigdata.phone}</span>
+        </div>
+        <br>
+        <br>
+        <table class="table table-hover">
+            <th class="info">流水号。标识每一次查询，平台内唯一</th>
+            <th class="info">致诚信用分，取值300~850</th>
+            <th class="info">违约概率，取值0.73%~73.6%</th>
+
+            <tr>
+                <td>{$bigdata.share_data.params.data.flowId}</td>
+                <td>{$bigdata.share_data.params.data.zcCreditScore|default="暂无借款信息"}</td>
+                <td>{$bigdata.share_data.params.data.contractBreakRate|default="暂无借款信息"}</td>
+            </tr>
+
+        </table>
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <b class="text-success">
+                    <center> <h2> 被查询统计</strong></h2>
+            </b>
+            <table class="table table-hover table-bordered">
+                <th class="info">其他机构查询次数</th>
+                <th class="info">其他查询机构数</th>
+                <th class="info">本机构查询次数</th>
+                {empty name="$bigdata.share_data.params.data.queryStatistics"} 
+                    <b class="text-danger">暂无信息</b>
+                    {else /}
+                
+                
+                        <tr>
+                            <td>{$bigdata.share_data.params.data.queryStatistics.otherOrgCount}</td>
+                            <td>{$bigdata.share_data.params.data.queryStatistics.timesByCurrentOrg}</td> 
+                            <td>{$bigdata.share_data.params.data.queryStatistics.timesByOtherOrg}</td>
+                        </tr>
+                    
+                {/empty}
+            </table>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-6"> 
+            <b class="text-success">
+                <center> <h2> 被查询历史</strong></h2>
+            </b>
+            <table class="table table-hover table-bordered">
+                <th class="info">历史上在阿福平台查询此借款人的机构
+                        名称（随机编码）</th>
+                <th class="info">查询时间</th>
+                <th class="info">机构类型</th>
+                <th class="info">查询原因</th>
+                {empty name="$bigdata.share_data.params.data.queryHistory"} 
+                    <b class="text-danger">暂无信息</b>
+                    {else /}
+            
+                    {foreach $bigdata.share_data.params.data.queryHistory  as $k=>$v}
+                        <tr>
+                            <td>{$v.orgName}</td>
+                            <td>{$v.time}</td>
+                            <td>
+                                {switch name="$v.queryReason"} 
+                                    {case value="10"}贷款审批{/case} 
+                                    {case value="11"}贷后管理{/case} 
+                                    {case value="12"}信用卡审批{/case} 
+                                    {case value="13"}担保资格审查{/case}
+                                    {case value="14"}保前审查{/case} 
+                                {/switch}
+                            
+                            </td>
+                            <td>{$v.orgType}</td>
+                        </tr>
+                    {/foreach}
+                {/empty}
+            </table>
+        </div>
+        <b class="text-success">
+                <center> <h2> 借款记录历史</strong></h2>
+         </b>
+         <table class="table table-hover">
+             <th class="info">提供数据的机构代号（随机编码）</th>
+             <th class="info">姓名</th>
+             <th class="info">身份证号</th>
+             <th class="info">借款时间</th>
+             <th class="info">借款期数</th>
+             <th class="info">借款金额</th>
+
+             <th class="info">审批结果</th>
+             <th class="info">还款状态</th>
+             <th class="info">借款类型</th>
+             <th class="info">逾期金额</th>
+             <th class="info">逾期情况</th>
+             <th class="info">历史逾期总次数</th>
+             <th class="info">历史逾期M3+次数</th>
+             <th class="info">历史逾期M6+次数</th> 
+             {empty name="$bigdata.share_data.params.data.loanRecords"} 
+             <tr >
+                 <td colspan="14" style="text-align: center">
+                        <span class="text-danger pull-center">暂无借款记录</span>
+
+                 </td> 
+             
+             </tr>
+             <tr></tr>
+             <tr></tr>
+             <tr></tr>
+             <tr></tr>
+                
+                 {else /}
+            
+                 {foreach $bigdata.share_data.params.data.queryHistory  as $k=>$v}
+                     <tr>
+                         <td>{$v.orgName}</td>
+                         <td>{$v.name}</td>
+                         <td>{$v.certNo}</td>
+                         <td>{$v.loanDate}</td>
+                         <td>{$v.periods}</td>
+                         <td>{$v.loanAmount}</td>
+                         <td>{$v.approvalStatusCode}</td>
+                         <td>{$v.loanStatusCode}</td>
+                         <td>{$v.loanTypeCode}</td>
+                         <td>{$v.overdueAmount}</td>
+                         <td>{$v.overdueStatus}</td>
+                         <td>{$v.overdueTotal}</td>
+                         <td>{$v.overdueM3}</td>
+                         <td>{$v.overdueM6}</td> 
+                     </tr>
+                 {/foreach}
+             {/empty}
+         </table>
+
+         <b class="text-danger">
+                <center> <h2> 风险项记录</strong></h2>
+         </b>
+         <table class="table table-hover">
+             <th class="danger">提供数据的机构代号（随机编码）</th>
+             <th class="danger">命中项</th>
+             <th class="danger">命中内容</th>
+             <th class="danger">风险类别</th>
+             <th class="danger">风险明细</th>
+             <th class="danger">风险最近时间</th> 
+             {empty name="$bigdata.share_data.params.data.nperlist"} 
+             <tr >
+                 <td colspan="14" style="text-align: center">
+                        <span class="text-danger pull-center">暂无 风险项记录</span>
+
+                 </td> 
+             
+             </tr>
+             <tr></tr>
+             <tr></tr>
+             <tr></tr>
+             <tr></tr>
+                
+                 {else /}
+            
+                 {foreach $bigdata.share_data.params.data.riskResults  as $k=>$v}
+                     <tr>
+                         <td>{$v.orgName}</td>
+                         <td>{$v.riskItemTypeCode}</td>
+                         <td>{$v.riskItemValue}</td>
+                         <td>{$v.riskTypeCode}</td>
+                         <td>{$v.riskDetail}</td>
+                         <td>{$v.riskTime}</td> 
+                     </tr>
+                 {/foreach}
+             {/empty}
+         </table>
+        <!-- <div class="col-xs-12 col-sm-8 col-md-4">
+            
+        </div> -->
+
+    </div>
+</form>
