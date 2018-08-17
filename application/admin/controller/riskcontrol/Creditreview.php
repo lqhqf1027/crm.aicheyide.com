@@ -800,7 +800,7 @@ class Creditreview extends Backend
         return $this->view->fetch();
     }
 
-    /**查看大数据 */
+    /**查看新车大数据 */
 
 
     public function toViewBigData($ids = null)
@@ -876,10 +876,10 @@ class Creditreview extends Backend
                     $result['risk_data'] = base64_encode($this->JSON($result['risk_data']));
                     $writeDatabases = Db::name('big_data')->insert($result);
                     if ($writeDatabases) {
-                        echo 111;
+                        
                         $this->view->assign('bigdata', $data);
                         pr($this->getBigData($row['id']));
-                        die;
+                        
 
                     } else {
                         $this->error('数据写入失败');
@@ -902,13 +902,14 @@ class Creditreview extends Backend
                 echo 22;
                 die;
             } else {
-                echo 333;
+                // echo 333;
                 $this->view->assign('bigdata', $this->getBigData($row['id']));
-                pr($data);
-                $this->success();
+                pr($data);die;
+             
 
             }
         }
+        return $this->view->fetch('new_car_bigdata');
     }
     public function bigDataHtml()
     {
