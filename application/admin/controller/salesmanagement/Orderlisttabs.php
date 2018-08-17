@@ -136,7 +136,7 @@ class Orderlisttabs extends Backend
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
            
-            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'is_reviewing_true']);
+            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'send_to_internal']);
             if($result!==false){
                 // //推送模板消息给风控
                 // $sedArr = array(
@@ -159,7 +159,7 @@ class Orderlisttabs extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
-                    $this->success('提交成功，请等待审核结果'); 
+                    $this->success('提交成功，请等待金融匹配结果'); 
                
                 
             }else{
