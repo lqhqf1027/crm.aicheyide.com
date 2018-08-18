@@ -86,34 +86,16 @@ class Salesorder extends Backend
                 //关联订单于方案
                 $result = Db::name('sales_order')->alias('a')
                     ->join('plan_acar b', 'a.plan_acar_name = b.id')
-                    ->field('b.id as plan_id')
+                    ->join('models c', 'c.id=b.models_id')
+                    ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.name as models_name')
                     ->where(['a.id' => $row['id']])
                     ->find();
-            }
-            $newRes = array();
-            //品牌
-            $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-            // pr(Session::get('admin'));die;
-            foreach ((array) $res as $key => $value) {
-                $sql = Db::name('models')->alias('a')
-                    ->join('plan_acar b', 'b.models_id=a.id')
-                    ->join('financial_platform c', 'b.financial_platform_id=c.id')
-                    ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
-                    ->where(['a.brand_id' => $value['brandid'], 'b.ismenu' => 1])
-                    ->select();
-                $newB = [];
-                foreach ((array) $sql as $bValue) {
-                    $bValue['models_name'] = $bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'】'.'---'.$bValue['financial_platform_name'];
-                    $newB[] = $bValue;
-                }
-                $newRes[] = array(
-                    'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                    'data' => $newB,
-                );
-            }
-            // pr($newRes);die;
-            $this->view->assign('newRes', $newRes);
+            }   
+
+            $category = DB::name('scheme_category')->field('id,name')->select();
+
+            $this->view->assign('category', $category);
+            
             $this->view->assign('result', $result);
 
             if (!$row) {
@@ -160,34 +142,16 @@ class Salesorder extends Backend
                 //关联订单于方案
                 $result = Db::name('sales_order')->alias('a')
                     ->join('plan_acar b', 'a.plan_acar_name = b.id')
-                    ->field('b.id as plan_id')
+                    ->join('models c', 'c.id=b.models_id')
+                    ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.name as models_name')
                     ->where(['a.id' => $row['id']])
                     ->find();
-            }
-            $newRes = array();
-            //品牌
-            $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-            // pr(Session::get('admin'));die;
-            foreach ((array) $res as $key => $value) {
-                $sql = Db::name('models')->alias('a')
-                    ->join('plan_acar b', 'b.models_id=a.id')
-                    ->join('financial_platform c', 'b.financial_platform_id=c.id')
-                    ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
-                    ->where(['a.brand_id' => $value['brandid'], 'b.ismenu' => 1])
-                    ->select();
-                $newB = [];
-                foreach ((array) $sql as $bValue) {
-                    $bValue['models_name'] = $bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'】'.'---'.$bValue['financial_platform_name'];
-                    $newB[] = $bValue;
-                }
-                $newRes[] = array(
-                    'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                    'data' => $newB,
-                );
-            }
-            // pr($newRes);die;
-            $this->view->assign('newRes', $newRes);
+            }   
+
+            $category = DB::name('scheme_category')->field('id,name')->select();
+
+            $this->view->assign('category', $category);
+            
             $this->view->assign('result', $result);
 
             if (!$row) {
@@ -201,6 +165,17 @@ class Salesorder extends Backend
             }
             if ($this->request->isPost()) {
                 $params = $this->request->post('row/a');
+
+                $params['plan_acar_name'] = Session::get('plan_id'); 
+
+                $data = DB::name('plan_acar')->where('id', $params['plan_acar_name'])->field('payment,monthly,nperlist,gps,margin,tail_section')->find();
+           
+           
+                $params['car_total_price'] = $data['payment'] + $data['monthly'] * $data['nperlist'];
+                $params['downpayment'] = $data['payment'] + $data['monthly'] + $data['margin'] + $data['gps'];
+            
+                $params['plan_name'] = Session::get('plan_name');
+
                 if ($params) {
                     try {
                         //是否采用模型验证
@@ -227,6 +202,9 @@ class Salesorder extends Backend
         }
     }
 
+    /**
+     * 添加.
+     */
     public function add()
     {
 
@@ -236,14 +214,13 @@ class Salesorder extends Backend
         // pr($category);
         // die;
         
-
         $this->view->assign('category', $category);
 
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
-            $ex = explode(',', $params['plan_acar_name']);
+            // $ex = explode(',', $params['plan_acar_name']);
 
-            $params['plan_acar_name'] = reset($ex); //截取id
+            $params['plan_acar_name'] = Session::get('plan_id'); 
             $data = DB::name('plan_acar')->where('id', $params['plan_acar_name'])->field('payment,monthly,nperlist,gps,margin,tail_section')->find();
            
            
@@ -251,7 +228,7 @@ class Salesorder extends Backend
             $params['downpayment'] = $data['payment'] + $data['monthly'] + $data['margin'] + $data['gps'];
             $params['difference'] = $params['downpayment'];  
             
-            $params['plan_name'] = addslashes(end($ex)); //
+            $params['plan_name'] = Session::get('plan_name'); //
             //生成订单编号
             $params['order_no'] = date('Ymdhis');
             //把当前销售员所在的部门的内勤id 入库
@@ -282,7 +259,7 @@ class Salesorder extends Backend
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
                         //如果添加成功,将状态改为提交审核
-                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing']);
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'send_to_internal']);
                         if ($result_s) {
                             $this->success();
                         } else {
@@ -301,45 +278,32 @@ class Salesorder extends Backend
         return $this->view->fetch();
     }
 
+    //方案组装
     public function planname()
     {
         if ($this->request->isAjax()) {
 
         
-            $category_id = input("category_id");
-            $category_id = json_decode($category_id, true);
-
-            $newRes = array();
-            //品牌
-            $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-            // pr(Session::get('admin'));die;
-            foreach ((array) $res as $key => $value) {
-                $sql = Db::name('models')->alias('a')
-                    ->join('plan_acar b', 'b.models_id=a.id')
-                    ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id')
-                    ->where(['a.brand_id' => $value['brandid'], 'b.ismenu' => 1, 'b.category_id' => $category_id])
+            $plan_id = input("id");
+            $plan_id = json_decode($plan_id, true);
+            
+            $sql = Db::name('models')->alias('a')
+                ->join('plan_acar b', 'b.models_id=a.id')
+                ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id')
+                ->where(['b.ismenu' => 1, 'b.id' => $plan_id])
                     
-                    ->select();
-                $newB = [];
-                foreach ((array) $sql as $bValue) {
-                    $bValue['models_name'] = $bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'，'.'保证金'.$bValue['margin'].'】';
-                    $newB[] = $bValue;
-                }
+                ->find();
+                
+            $plan_name = $sql['models_name'].'【首付'.$sql['payment'].'，'.'月供'.$sql['monthly'].'，'.'GPS '.$sql['gps'].'，'.'尾款 '.$sql['tail_section'].'，'.'保证金'.$sql['margin'].'】';
 
-                $newRes[] = array(
-                    'brand_name' => $value['brand_name'],
-                    // 'brand_logoimage'=>$value['brand_logoimage'],
-                    'data' => $newB,
-                );
-            }
+            Session::set('plan_id',$plan_id);
 
-            $newRes = json_encode($newRes);
-
-            return $newRes;
+            Session::set('plan_name',$plan_name);
 
         }
     }
-
+    
+    //显示方案列表
     public function planacar()
     {
         if ($this->request->isAjax()) {
@@ -363,27 +327,6 @@ class Salesorder extends Backend
         }
     }
     
-    //备注
-    public function note()
-    {
-        $ids = input("ids");
-        
-        $ids = json_decode($ids, true);
-        // pr($ids);
-        // die;
-        $ex = explode(',', $ids);
-        $id = reset($ex); //截取id
-
-        // var_dump($id);
-        // die;
-        $result = DB::name('plan_acar')->where('id', $id)->value('note');
-        
-        $result = json_encode($result);
-
-        return $result;
-        
-    }
-
     /**
      * 获取通话清单,第一步登陆，获取验证码
      */
