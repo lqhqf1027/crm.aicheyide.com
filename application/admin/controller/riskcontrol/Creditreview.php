@@ -814,10 +814,10 @@ class Creditreview extends Backend
             [
                 'tx' => '101',
                 'data' => [
-                    // 'name' => $row['username'],
-                    'name' => '薛剑飞',
-                    // 'idNo' => $row['id_card'],
-                    'idNo' => '230206197807200710',
+                    'name' => $row['username'],
+                    // 'name' => '包成永',
+                    'idNo' => $row['id_card'],
+                    // 'idNo' => '511623199504257475',
                     'queryReason' => '10',
                 ],
             ]
@@ -853,12 +853,12 @@ class Creditreview extends Backend
                 $params_risk['params'] = json_encode(
                     [
                         'data'=>[
-                            // 'name' => $row['username'],
-                            'name' =>'薛剑飞',
-                            // 'idNo' => $row['id_card'],
-                            'idNo' => '230206197807200710',
-                            // 'mobile' => $row['phone'],
-                            'mobile' =>'15881088300'
+                            'name' => $row['username'],
+                            // 'name' =>'包成永',
+                            'idNo' => $row['id_card'],
+                            // 'idNo' => '511623199504257475',
+                            'mobile' => $row['phone'],
+                            // 'mobile' =>'15208369501'
                           
                         ],
                         'queryReason' => '10',//贷前审批s 
@@ -879,6 +879,7 @@ class Creditreview extends Backend
                         
                         $this->view->assign('bigdata', $data);
                         pr($this->getBigData($row['id']));
+                        // die;
                         
 
                     } else {
@@ -904,7 +905,7 @@ class Creditreview extends Backend
             } else {
                 // echo 333;
                 $this->view->assign('bigdata', $this->getBigData($row['id']));
-                pr($data);die;
+                // pr($data);die;
              
 
             }
