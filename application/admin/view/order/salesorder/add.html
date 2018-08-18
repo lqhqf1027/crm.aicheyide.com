@@ -51,19 +51,7 @@
             
         
     </div>
-
-    <!-- <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
-        <div class="col-xs-12 col-sm-8">
-
-            <select id="c-plan_acar_name" data-rule="required" class="form-control selectpicker " name="row[plan_acar_name]" onchange="changePlan(this)">
-                <option value=" " style='display: none'>未选中任何项</option>
-
-            
-            </select>
-
-        </div>
-    </div> -->
+   
 
     <script type="text/javascript">
 
@@ -94,11 +82,11 @@
                     html += '</tr>';
                     html += '<tr>';
 
-                    console.log(data);
+                    // console.log(data);
                     
                     for (var i in data) {
                         var result = data[i];
-                        console.log(result);
+                        // console.log(result);
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>'; 
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
@@ -106,7 +94,7 @@
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + '<button id="plan_name" type="button" class="btn btn-default plan_name" onclick="changePlanacar(' + result.id + ')">选择该方案</button>' + '</td>' ;
+                        html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
 
                         html += '</tr>';
 
@@ -114,29 +102,42 @@
                     
                     $('.plan_acar').html(html);
 
+                    $("input[type='button']").each(function() {
+                        // console.log(123);
+                        
+                        $(this).click(function(){
+                            // console.log($(".btn-success").length);
+                            if($(".btn-success").length == 2){ 
+                                $("input[type='button']").removeClass("btn-success").addClass("btn-default");
+                                $("input[type='button']").val("选择该方案");
+                            }
+                            $(this).removeClass("btn-default").addClass("btn-success");
+                            // var value = $(this).val();
+                            // console.log(value);
+                            if ($(this).prop("className") == 'btn btn-success') {
+                                $(this).val("已选择此方案");
+
+                                // console.log($(this).attr("name"));
+
+                                $.ajax({
+                                    url: 'order/salesorder/planname',
+
+                                    data: { id: JSON.stringify($(this).attr("name")) },
+                                })
+                                
+                            }
+                             
+                        })
+                           
+                    }); 
+
                 }
 
             });
-
         }
-
-        function changePlanacar (that) {
-
-            console.log(that);
-            $(".plan_name").each(function() {
-               
-                 $(this).removeClass('btn-default').addClass('btn-success');
-                
-            });
-
-           
-
-
-
-        }
-
+          
+ 
     </script>
-
     
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Decoration')}:</label>

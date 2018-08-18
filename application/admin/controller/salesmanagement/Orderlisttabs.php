@@ -89,8 +89,8 @@ class Orderlisttabs extends Backend
 
            $list = $this->model
                ->where($where)
-               ->order($sort, $order)
-               ->limit($offset, $limit)
+            //    ->order($sort, $order)
+            //    ->limit($offset, $limit)
                ->select();
          
            $list = collection($list)->toArray();
@@ -104,7 +104,6 @@ class Orderlisttabs extends Backend
                $list[$k]['margin'] = $planData['margin'];
                $list[$k]['gps'] = $planData['gps'];
                $list[$k]['models_name'] = $planData['models_name'];
-               $list[$k]['financial_platform_name'] = $planData['financial_platform_name'];
           }
         
            $result = array("total" => $total, "rows" => $list);
@@ -123,20 +122,39 @@ class Orderlisttabs extends Backend
                 ->join('models b','a.models_id=b.id')
                 ->join('financial_platform c','a.financial_platform_id= c.id')
                 ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,
-                        b.name as models_name,
-                        c.name as financial_platform_name'
+                        b.name as models_name'
                         )
                 ->where('a.id',$planId)
                 ->find();
                 
     }
-    /**提交审核 */
+    /**提交内勤 */
     public function sedAudit()
     {
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
            
             $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'send_to_internal']);
+
+            $sales_name = DB::name('admin')->where('id', $this->auth->id)->value('nickname');
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-sales",
+                'content' => "销售员" . $sales_name . "发出新车销售请求，请处理"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+
             if($result!==false){
                 // //推送模板消息给风控
                 // $sedArr = array(

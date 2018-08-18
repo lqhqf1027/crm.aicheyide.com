@@ -25,23 +25,56 @@
         <center>基本资料</center>
     </h3>
     <br>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售方案类别')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]" disabled>
+                <option value=" " style='display: none'>未选中任何项</option>
+
+                {foreach $category as $k => $v}
+                {if $result['category_id'] eq  $v['id']}
+                <option value="{$v['id']}" selected>{$v['name']}</option>
+                {else /}
+                <option value="{$v['id']}">{$v['name']}</option>
+                {/if}
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-plan_acar_name" data-rule="required" class="form-control selectpicker" name="row[plan_acar_name]" disabled>
-                <option value=" " style='display: none'>未选中任何项</option>
-                {volist name="newRes" id="vo"}
+            <table class="plan_acar table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
+                <tr>
+                    <th class="col-xs-12 col-sm-1 ">车型</th>
+                    <th class="col-xs-12 col-sm-1 ">月供（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">首付（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">期数（月）</th>
+                    <th class="col-xs-12 col-sm-1 ">尾款（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">GPS(元)</th>
+                    <th class="col-xs-12 col-sm-1 ">首付总额（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">操作</th>
+                </tr>
+                <tr>
+                    <td class="col-xs-12 col-sm-1 ">{$result.models_name}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.payment}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.monthly}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.nperlist}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.margin}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.gps}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.gps}</td>
+                    <td class="col-xs-12 col-sm-1 ">
 
-                <option disabled>{$vo['brand_name']}</option>
-                {volist name="vo.data" id="vo_s"} {if condition="$result['plan_id'] eq $vo_s['id']"}
-                <option value="{$vo_s['id']}" selected>{$vo_s['models_name']}</option>
-                {else /}
-                <option value="{$vo_s['id']}">{$vo_s['models_name']}</option>
+                        <input name="" type="button" class="btn btn-success" value="已选择此方案"></input>
 
-                {/if} {/volist} {/volist}
-            </select>
-
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 
