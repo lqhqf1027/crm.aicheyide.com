@@ -92,6 +92,8 @@ class Salesorder extends Backend
                     ->find();
             }   
 
+            $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
+
             $category = DB::name('scheme_category')->field('id,name')->select();
 
             $this->view->assign('category', $category);
@@ -147,6 +149,8 @@ class Salesorder extends Backend
                     ->where(['a.id' => $row['id']])
                     ->find();
             }   
+
+            $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
 
             $category = DB::name('scheme_category')->field('id,name')->select();
 
@@ -317,9 +321,14 @@ class Salesorder extends Backend
 
                     ->where('a.category_id', $category_id)
 
-                    ->field('a.id,a.payment,a.monthly,a.nperlist,a.tail_section,a.gps,a.note,b.name as models_name')
+                    ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,b.name as models_name')
 
                     ->select();
+            foreach ($result as $k =>$v) {
+
+                $result[$k]['downpayment'] = $v['payment'] + $v['monthly'] + $v['margin'] + $v['gps'];
+
+            }
 
             $result = json_encode($result);
            
