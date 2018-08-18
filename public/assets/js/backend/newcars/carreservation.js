@@ -6,6 +6,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({});
 
+
+
             //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var panel = $($(this).attr("href"));
@@ -21,6 +23,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
+
         },
 
         table: {
@@ -37,6 +41,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-chooseStock").data("area", ["60%", "60%"]);
                     $(".btn-showOrder").data("area", ["95%", "95%"]);
                 });
+
+                var easy = new GoEasy({
+                    appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+                });
+
+                easy.subscribe({
+                    channel: 'pushCarTube',
+                    onMessage: function(message){
+                        Layer.alert('有<span class="text-info">1</span>条姓名为:<span class="text-info">'+message.content+"</span>的消息进入,请注意查看",{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+
+                    }
+                });
+
                 // 初始化表格
                 prepareSubmit.bootstrapTable({
                     url: "newcars/carreservation/prepare_submit",
@@ -86,7 +106,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 buttons: [
                                     {
                                         name: 'detail',
-                                        text: '匹配金融',
+                                        text: '提交给金融',
                                         icon: 'fa fa-pencil',
                                         title: __('Edit'),
                                         extend: 'data-toggle="tooltip"',
@@ -104,31 +124,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(prepareSubmit);
 
-                // 批量删除按钮事件
+                // 批量提交金融事件
                 $(".btn-mass-finance").on('click',  function () {
-                    var that = this;
-                    var ids = Table.api.selectedids(table);
+
+                    var ids = Table.api.selectedids(prepareSubmit);
+
                     Layer.confirm(
-                        __('Are you sure you want to delete the %s selected item?', ids.length),
-                        {icon: 3, title: __('Warning'), offset: 0, shadeClose: true},
+                        __('确定提交匹配金融?', ids.length),
+                        {icon: 3, title: __('Warning'), offset: 'auto', shadeClose: true},
                         function (index) {
-                            // Table.api.multi("del", ids, table, that);
-                            // Layer.close(index);
+
 
                             Fast.api.ajax({
-                                    url: "newcars/carreservation/matching_finance",
-                                    data: {id:ids},
+                                    url: "newcars/carreservation/mass_finance",
+                                    data: {id:JSON.stringify(ids)},
 
                                 }, function (data, ret) {
 
-                                    Toastr.success("成功");
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
 
+                                // var easys = new GoEasy({
+                                //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+                                // });
+                                //
+                                // easys.publish({
+                                //     channel:"pushFinance",
+                                //     message:data
+                                // });
+
+                                Toastr.success("成功");
+                                    Layer.close(index);
+                                prepareSubmit.bootstrapTable('refresh');
+                                return false;
                                 }, function (data, ret) {
 
                                     console.log("error");
-
+                                return false;
                                 },
                             )
                         }
@@ -146,7 +176,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
                 alreadySubmit.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
                 });
                 // 初始化表格
                 alreadySubmit.bootstrapTable({
@@ -263,13 +292,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     }, function (data, ret) {
 
-                                        Toastr.success("成功");
+
+                                    // var easys = new GoEasy({
+                                    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+                                    // });
+                                    //
+                                    // easys.publish({
+                                    //     channel:"pushFinance",
+                                    //     message:data
+                                    // });
+
+                                        // Toastr.success("成功");
                                         Layer.close(index);
                                         table.bootstrapTable('refresh');
 
                                     }, function (data, ret) {
 
-                                        console.log("error");
+                                        console.log(ret);
 
                                     },
                                 )
@@ -285,5 +324,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     };
 
+
+
     return Controller;
 });
+
+function easy() {
+    return new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
+}

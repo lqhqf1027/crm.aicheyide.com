@@ -1,14 +1,26 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
-
     var Controller = {
         index: function () {
 
             // 初始化表格参数配置
             Table.api.init({});
+
+
+            var goeasy = new GoEasy({
+                appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+            });
+            goeasy.subscribe({
+                channel: 'pushFinance',
+                onMessage: function(message){
+                    Layer.alert('有<span class="text-info">'+message.content+"</span>条消息进入,请注意查看",{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+
+                }
+            });
+
 
             //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -27,27 +39,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
 
-
         table: {
 
-            not_entry: function () {
+            prepare_match: function () {
                 // 表格1
-                var notEntry = $("#notEntry");
-                notEntry.on('load-success.bs.table', function (e, data) {
+                var prepareMatch = $("#prepareMatch");
+                prepareMatch.on('load-success.bs.table', function (e, data) {
                     console.log(data.total);
-                    $('#new-customer').text(data.total);
+                    $('#badge_prepare').text(data.total);
 
-                })
-                notEntry.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-editone").data("area", ["50%", "40%"]);
-                    $(".btn-edit").data("area", ["50%", "40%"]);
+                });
+                prepareMatch.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-editone").data("area", ["40%", "40%"]);
+                    $(".btn-test").data("area", ["40%", "40%"]);
+                    // $(".btn-showOrder").data("area", ["95%", "95%"]);
                 });
                 // 初始化表格
-                notEntry.bootstrapTable({
-                    url: 'backoffice/carreservation/not_entry',
+                prepareMatch.bootstrapTable({
+                    url: "planmanagement/matchfinance/prepare_match",
                     extend: {
-                        edit_url: 'backoffice/carreservation/actual_amount',
-
+                        index_url: 'order/salesorder/index',
+                        add_url: 'order/salesorder/add',
+                        edit_url: 'order/salesorder/edit',
+                        // del_url: 'order/salesorder/del',
+                        multi_url: 'order/salesorder/multi',
+                        table: 'sales_order',
                     },
                     toolbar: '#toolbar1',
                     pk: 'id',
@@ -79,18 +95,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'engine_number', title: __('发动机号')},
                             {field: 'household', title: __('行驶证所有户')},
                             {field: '4s_shop', title: __('4S店')},
+                            {field: 'amount_collected', title: __('实收金额')},
+                            {field: 'decorate', title: __('装饰')},
 
                             {
-                                field: 'operate', title: __('Operate'), table: notEntry,
-                                buttons:[
+                                field: 'operate', title: __('Operate'), table: prepareMatch,
+                                buttons: [
                                     {
                                         name: 'detail',
-                                        text: '实际金额',
+                                        text: '匹配金融',
                                         icon: 'fa fa-pencil',
                                         title: __('Edit'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-editone',
-                                        url: 'backoffice/carreservation/actual_amount'
+
                                     }
                                 ],
 
@@ -101,54 +119,53 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 });
                 // 为表格1绑定事件
-                Table.api.bindevent(notEntry);
+                Table.api.bindevent(prepareMatch);
 
-                goeasy.subscribe({
-                    channel: 'demo-sales',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
-
-
-                // 批量分配
-                $(document).on("click", ".btn-selected", function () {
-                    var ids = Table.api.selectedids(notEntry);
-                    var url = 'backoffice/custominfotabs/batch?ids=' + ids;
-
-                    var options = {
-                        shadeClose: false,
-                        shade: [0.3, '#393D49'],
-                        area: ['50%', '50%'],
-                        callback: function (value) {
-
-                        }
-                    };
-                    Fast.api.open(url, '批量分配', options)
-                });
+                Controller.api.bindevent(prepareMatch);
 
 
 
 
-            },
-            entry: function () {
-                // 表格1
-                var entrys = $("#entrys");
-                // entrys.on('load-success.bs.table', function (e, data) {
-                //     console.log(data.total);
-                //     $('#new-customer').text(data.total);
+                // 批量编辑按钮事件
+                // $(".btn-test").on('click', function () {
                 //
-                // })
-                // entrys.on('post-body.bs.table', function (e, settings, json, xhr) {
+                //     var that = this;
+                //     //循环弹出多个编辑框
+                //     $.each(prepareMatch.bootstrapTable('getSelections'), function (index, row) {
+                //         console.log(index);
+                //         console.log(row);
+                //         var url = 'planmanagement/matchfinance/edit';
                 //
+                //         var options = prepareMatch.bootstrapTable('getOptions');
+                //         row = $.extend({}, row ? row : {}, {ids: row[options.pk]});
+                //         var url = Table.api.replaceurl(url, row, prepareMatch);
+                //         Fast.api.open(url, __('Edit'), $(that).data() || {});
+                //     });
                 // });
+            },
+            already_match: function () {
+
+                // 表格2
+                var alreadyMatch = $("#alreadyMatch");
+                alreadyMatch.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#badge_already').text(data.total);
+
+                });
+                alreadyMatch.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
+                });
                 // 初始化表格
-                entrys.bootstrapTable({
-                    url: 'backoffice/carreservation/entry',
+                alreadyMatch.bootstrapTable({
+                    url: "planmanagement/matchfinance/already_match",
+                    extend: {
+                        index_url: 'order/salesorder/index',
+                        add_url: 'order/salesorder/add',
+                        // edit_url: 'order/salesorder/edit',
+                        // del_url: 'order/salesorder/del',
+                        multi_url: 'order/salesorder/multi',
+                        table: 'sales_order',
+                    },
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
@@ -185,10 +202,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
-                // 为表格1绑定事件
-                Table.api.bindevent(entrys);
+                // 为表格2绑定事件
+                Table.api.bindevent(alreadyMatch);
 
-            },
+
+            }
 
 
         },
@@ -199,51 +217,36 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
-        actual_amount:function(){
-            Controller.api.bindevent();
-
-            var easy = new GoEasy({
-                appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-            });
-
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({});
-            Form.api.bindevent($("form[role=form]"), function (data, ret) {
-
-                easy.publish({
-                    channel:"pushCarTube",
-                    message:data
-                });
-
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                Fast.api.close(data);//这里是重点
-                // console.log(data);
-                Toastr.success("成功");//这个可有可无
-            }, function (data, ret) {
-
-
-
-
-
-                Toastr.success("失败");
-
-            });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-
-
-
-
-
-        },
         api: {
-            bindevent: function () {
+            bindevent: function (table) {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
                     var name = $("input[name='row[name]']");
                     name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+
+
+                //Bootstrap-table的父元素,包含table,toolbar,pagnation
+                var parenttable = table.closest('.bootstrap-table');
+                //Bootstrap-table配置
+                var options = table.bootstrapTable('getOptions');
+                //Bootstrap操作区
+                var toolbar = $(options.toolbar, parenttable);
+
+
+                // 批量编辑按钮事件
+                $(toolbar).on('click', '.btn-test', function () {
+                    var that = this;
+                    //循环弹出多个编辑框
+                    $.each(table.bootstrapTable('getSelections'), function (index, row) {
+                        var url = 'planmanagement/matchfinance/edit';
+                        row = $.extend({}, row ? row : {}, {ids: row[options.pk]});
+                        var url = Table.api.replaceurl(url, row, table);
+                        Fast.api.open(url, __('Edit'), $(that).data() || {});
+                    });
+                });
+
             },
             formatter: {
                 operate: function (value, row, index) {
@@ -258,23 +261,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
             },
-            events:{
-                operate:{
+            events: {
+                operate: {
                     'click .btn-editone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
-
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'backoffice/carreservation/actual_amount';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
+                        var url = 'planmanagement/matchfinance/edit';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
                 }
             }
         }
 
     };
+    function get_easy() {
+        return new GoEasy({
+            appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+        });
+    }
     return Controller;
 });

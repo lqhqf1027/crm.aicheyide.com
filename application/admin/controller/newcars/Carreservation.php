@@ -34,10 +34,12 @@ class Carreservation extends Backend
 
             $list = Db::table("crm_order_view")
                 ->where("review_the_data", "send_car_tube")
+                ->where("amount_collected", "not null")
                 ->select();
 
             $total = Db::table("crm_order_view")
                 ->where("review_the_data", "send_car_tube")
+                ->where("amount_collected", "not null")
                 ->count();
 
 
@@ -55,10 +57,12 @@ class Carreservation extends Backend
 
             $list = Db::table("crm_order_view")
                 ->where("review_the_data", "is_reviewing")
+                ->where("amount_collected", "not null")
                 ->select();
 
             $total = Db::table("crm_order_view")
                 ->where("review_the_data", "is_reviewing")
+                ->where("amount_collected", "not null")
                 ->count();
 
 
@@ -81,8 +85,12 @@ class Carreservation extends Backend
                 ->where("id", $id)
                 ->setField("review_the_data", "is_reviewing");
 
+
             if ($res) {
-                $this->success('', '', $id);
+
+                $this->sendOrderNotice($res);
+
+                $this->success('', '', $res);
             } else {
                 $this->error();
             }
@@ -96,8 +104,48 @@ class Carreservation extends Backend
     {
         if ($this->request->isAjax()) {
             $ids = input("id");
-            $this->success('','',$ids);
+
+            $ids = json_decode($ids, true);
+
+            $res = Db::name("sales_order")
+                ->where("id", "in", $ids)
+                ->setField("review_the_data", "is_reviewing");
+
+            if ($res) {
+
+                $this->sendOrderNotice($res);
+
+
+                $this->success('', '', $res);
+
+            } else {
+                $this->error('','','失败');
+            }
+
         }
+    }
+
+
+    //后台发送推送请求
+    public function sendOrderNotice($number)
+    {
+        //请求地址
+        $uri = "http://goeasy.io/goeasy/publish";
+        // 参数数组
+        $data = [
+            'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+            'channel' => "pushFinance",
+            'content' => "您有<span class='text-danger'>" . $number . "</span>条新的消息,请注意查看"
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $uri);//地址
+        curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+        curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+        $return = curl_exec($ch);
+        curl_close($ch);
+        print_r($return);
     }
 
 

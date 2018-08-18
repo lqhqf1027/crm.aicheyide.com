@@ -37,25 +37,26 @@ class Carreservation extends Backend
             if (in_array($this->auth->id, $can_use_id['admin'])) {
                 $list = Db::table("crm_order_view")
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "send_to_internal")
-                    ->where("amount_collected",null)
+                    ->where("review_the_data", "inhouse_handling")
+                    ->where("amount_collected", null)
                     ->select();
                 $total = Db::table("crm_order_view")
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "send_to_internal")
-                    ->where("amount_collected",null)
+                    ->where("review_the_data", "inhouse_handling")
+                    ->where("amount_collected", null)
                     ->count();
+
             } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
                 $list = Db::table("crm_order_view")
                     ->where("backoffice_id", $this->auth->id)
-                    ->where("review_the_data", "send_to_internal")
-                    ->where("amount_collected",null)
+                    ->where("review_the_data", "inhouse_handling")
+                    ->where("amount_collected", null)
                     ->select();
 
                 $total = Db::table("crm_order_view")
                     ->where("backoffice_id", $this->auth->id)
-                    ->where("review_the_data", "send_to_internal")
-                    ->where("amount_collected",null)
+                    ->where("review_the_data", "inhouse_handling")
+                    ->where("amount_collected", null)
                     ->count();
             }
 
@@ -67,7 +68,7 @@ class Carreservation extends Backend
                 $res = $res[0];
 
                 $list[$k]['sales_name'] = $res['nickname'];
-                $list[$k]['detailed_address'] = $v['city']."/".$v['detailed_address'];
+                $list[$k]['detailed_address'] = $v['city'] . "/" . $v['detailed_address'];
             }
 
 
@@ -88,24 +89,24 @@ class Carreservation extends Backend
                 $list = Db::table("crm_order_view")
                     ->where("backoffice_id", "not null")
                     ->where("review_the_data", "send_car_tube")
-                    ->where("amount_collected","not null")
+                    ->where("amount_collected", "not null")
                     ->select();
                 $total = Db::table("crm_order_view")
                     ->where("backoffice_id", "not null")
                     ->where("review_the_data", "send_car_tube")
-                    ->where("amount_collected","not null")
+                    ->where("amount_collected", "not null")
                     ->count();
             } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
                 $list = Db::table("crm_order_view")
                     ->where("backoffice_id", $this->auth->id)
                     ->where("review_the_data", "send_car_tube")
-                    ->where("amount_collected","not null")
+                    ->where("amount_collected", "not null")
                     ->select();
 
                 $total = Db::table("crm_order_view")
                     ->where("backoffice_id", $this->auth->id)
                     ->where("review_the_data", "send_car_tube")
-                    ->where("amount_collected","not null")
+                    ->where("amount_collected", "not null")
                     ->count();
             }
 
@@ -117,7 +118,7 @@ class Carreservation extends Backend
                 $res = $res[0];
 
                 $list[$k]['sales_name'] = $res['nickname'];
-                $list[$k]['detailed_address'] = $v['city']."/".$v['detailed_address'];
+                $list[$k]['detailed_address'] = $v['city'] . "/" . $v['detailed_address'];
             }
 
 
@@ -165,22 +166,48 @@ class Carreservation extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
 
+            //得到首期款
+            $downpayment = Db::name("sales_order")
+                ->where("id", $ids)
+                ->field("downpayment")
+                ->find()['downpayment'];
+
+            //得到差额
+            $difference = floatval($downpayment) - floatval($params['amount_collected']);
+
+            if ($difference < 0) {
+                $difference = 0;
+            }
+
+
             $result = Db::name("sales_order")
-            ->where("id",$ids)
-            ->update([
-                'amount_collected'=>$params['amount_collected'],
-                'decorate'=>$params['decorate'],
-                'review_the_data'=>'send_car_tube'
-            ]);
+                ->where("id", $ids)
+                ->update([
+                    'amount_collected' => $params['amount_collected'],
+                    'decorate' => $params['decorate'],
+                    'review_the_data' => 'send_car_tube',
+                    'difference' => $difference
+                ]);
+
 
             if ($result !== false) {
-                $this->success();
-            }else{
+                $this->success('','',$this->get_username($ids));
+            } else {
                 $this->error();
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
 
         return $this->view->fetch();
+    }
+
+    public function get_username($id)
+    {
+        $username = Db::name("sales_order")
+            ->where("id", $id)
+            ->field("username")
+            ->find()['username'];
+
+        return $username;
     }
 }
