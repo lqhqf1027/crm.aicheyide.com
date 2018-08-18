@@ -65,7 +65,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'newcardetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-newcardetails',
                                         url: 'riskcontrol/creditreview/newcardetails', callback: function (data) {
-                                            console.log(data)
+                                            // console.log(data)
                                         }
                                     }
                                 ],
@@ -73,8 +73,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
                             { field: 'username', title: __('Username') },
-                            { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
-                            { field: 'genderdata_text', title: __('Genderdata'), operate: false },
+                            // { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
+                            // { field: 'genderdata_text', title: __('Genderdata'), operate: false },
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
 
