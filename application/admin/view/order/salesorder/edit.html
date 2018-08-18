@@ -44,10 +44,11 @@
             <table class="plan_acar table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
                 <tr>
                     <th class="col-xs-12 col-sm-1 ">车型</th>
-                    <th class="col-xs-12 col-sm-1 ">月供（元）</th>
                     <th class="col-xs-12 col-sm-1 ">首付（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">月供（元）</th>
                     <th class="col-xs-12 col-sm-1 ">期数（月）</th>
                     <th class="col-xs-12 col-sm-1 ">尾款（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">保证金（元）</th>
                     <th class="col-xs-12 col-sm-1 ">GPS(元)</th>
                     <th class="col-xs-12 col-sm-1 ">首付总额（元）</th>
                     <th class="col-xs-12 col-sm-1 ">操作</th>
@@ -57,9 +58,10 @@
                     <td class="col-xs-12 col-sm-1 ">{$result.payment}</td>
                     <td class="col-xs-12 col-sm-1 ">{$result.monthly}</td>
                     <td class="col-xs-12 col-sm-1 ">{$result.nperlist}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.tail_section}</td>
                     <td class="col-xs-12 col-sm-1 ">{$result.margin}</td>
                     <td class="col-xs-12 col-sm-1 ">{$result.gps}</td>
-                    <td class="col-xs-12 col-sm-1 ">{$result.gps}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.downpayment}</td>
                     <td class="col-xs-12 col-sm-1 ">
 
                         <input name="" type="button" class="btn btn-success" value="已选择此方案"></input>
@@ -92,6 +94,7 @@
                     html += '<th class="col-xs-12 col-sm-1 ">' + '月供（元）' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '期数（月）' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '尾款（元）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '保证金（元）' + '</th>'
                     html += '<th class="col-xs-12 col-sm-1 ">' + 'GPS(元)' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '首付总额（元）' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '操作' + '</th>';
@@ -109,8 +112,9 @@
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
 
                         html += '</tr>';

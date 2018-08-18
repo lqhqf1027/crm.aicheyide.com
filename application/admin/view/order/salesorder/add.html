@@ -75,9 +75,11 @@
                     html += '<th class="col-xs-12 col-sm-1 ">' + '月供（元）' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '期数（月）' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '尾款（元）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '保证金（元）' + '</th>'
                     html += '<th class="col-xs-12 col-sm-1 ">' + 'GPS(元)' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '首付总额（元）' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '操作' + '</th>';
+                    ;
 
                     html += '</tr>';
                     html += '<tr>';
@@ -92,8 +94,9 @@
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
 
                         html += '</tr>';
@@ -114,10 +117,11 @@
                             $(this).removeClass("btn-default").addClass("btn-success");
                             // var value = $(this).val();
                             // console.log(value);
+                            
                             if ($(this).prop("className") == 'btn btn-success') {
-                                $(this).val("已选择此方案");
+                                $(this).val('已选择此方案');
 
-                                // console.log($(this).attr("name"));
+                                // $("input[type='button']").append('<i calss="fa fa-check aria-hidden="true""></i>');
 
                                 $.ajax({
                                     url: 'order/salesorder/planname',
