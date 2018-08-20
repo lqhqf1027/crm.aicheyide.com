@@ -13,7 +13,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             goeasy.subscribe({
                 channel: 'pushFinance',
                 onMessage: function(message){
-                    Layer.alert('有<span class="text-info">'+message.content+"</span>条消息进入,请注意查看",{ icon:0},function(index){
+                    Layer.alert('您有<span class="text-danger">'+message.content+"</span>条新消息进入,请注意查看",{ icon:0},function(index){
                         Layer.close(index);
                         $(".btn-refresh").trigger("click");
                     });
