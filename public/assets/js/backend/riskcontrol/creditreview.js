@@ -1,5 +1,5 @@
 
-define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
+define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-theme','addtabs'], function ($, undefined, Backend, Table, Form,Echarts, undefined, Template) {
 
     var goeasy = new GoEasy({
         appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
@@ -27,6 +27,55 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+        },
+        new_car_bigdata:function(){
+            //欺诈评分图表
+            
+                var myChart = Echarts.init(document.getElementById('echart'));
+            // 指定图表的配置项和数据
+            var option = {
+                tooltip : {
+                    formatter: "{a} <br/><br/>{b} : {c}"
+                },
+                toolbox: {
+                    feature: {
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+               
+                series: [
+                    {
+                        name: '欺诈评分',
+                        type: 'gauge',
+                        detail: {formatter:' {value}'},
+                        data: [{value: Config.zcFraudScore, name: '欺诈评分'}],
+                        axisLine:{
+                            lineStyle:{
+                                 color: [[0.2, 'lime'],[0.70, '#1e90ff'],[4, '#ff4500']],
+                            width: 3,
+                            shadowColor : '#fff', //默认透明
+                            shadowBlur: 10
+
+                            }
+                        },
+                        splitLine:{
+                            show:false,
+                        },
+                        axisTick:{
+                            show:false,
+                            length:0
+                        },
+                        axisLabel:{
+                            show:false,
+                            length:0
+                        }
+                    }
+                ],
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
         },
         table: {
 
@@ -735,7 +784,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, { ids: ids });
-                        var url = 'riskcontrol/creditreview/toViewBigData';
+                        var url = 'riskcontrol/creditreview/new_car_bigdata';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
                             callback: function (value) {
                                 alert(value);
