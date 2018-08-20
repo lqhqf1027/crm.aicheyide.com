@@ -600,17 +600,17 @@
     },
     {
         "name": "overtrue/wechat",
-        "version": "3.3.29",
-        "version_normalized": "3.3.29.0",
+        "version": "3.3.30",
+        "version_normalized": "3.3.30.0",
         "source": {
             "type": "git",
             "url": "https://github.com/overtrue/wechat.git",
-            "reference": "86e505a3aa144986fe22b96ec9558c65e48f4fff"
+            "reference": "eac24ed4058d8ad5f8693bd97907c4d754e8fbfe"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/overtrue/wechat/zipball/86e505a3aa144986fe22b96ec9558c65e48f4fff",
-            "reference": "86e505a3aa144986fe22b96ec9558c65e48f4fff",
+            "url": "https://api.github.com/repos/overtrue/wechat/zipball/eac24ed4058d8ad5f8693bd97907c4d754e8fbfe",
+            "reference": "eac24ed4058d8ad5f8693bd97907c4d754e8fbfe",
             "shasum": ""
         },
         "require": {
@@ -629,7 +629,7 @@
             "overtrue/phplint": "dev-master",
             "phpunit/phpunit": "~4.0"
         },
-        "time": "2018-07-31T09:17:27+00:00",
+        "time": "2018-08-07T13:38:45+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
