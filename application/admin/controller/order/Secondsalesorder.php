@@ -119,9 +119,37 @@ class Secondsalesorder extends Backend
                         }
                         $result = $row->allowField(true)->save($params);
                         if ($result !== false) {
-                            $this->success();
+                            //如果添加成功,将状态改为提交审核
+                            $result_s = $this->model->isUpdate(true)->save(['id' => $row['id'], 'review_the_data' => 'is_reviewing_true']);
+
+                            $admin_nickname = DB::name('admin')->alias('a')->join('second_sales_order b', 'b.admin_id=a.id')->where('b.id', $row['id'])->value('a.nickname');
+
+
+                            //请求地址
+                            $uri = "http://goeasy.io/goeasy/publish";
+                            // 参数数组
+                            $data = [
+                                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                                'channel' => "demo-second-the_guarantor",
+                                'content' => "销售员" . $admin_nickname . "提交的二手单已经提供保证金，请及时处理"
+                            ];
+                            $ch = curl_init ();
+                            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+                            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+                            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+                            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+                            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+                            $return = curl_exec ( $ch );
+                            curl_close ( $ch );
+                            // print_r($return);
+
+                            if ($result_s) {
+                                $this->success();
+                            } else {
+                                $this->error('更新状态失败');
+                            }
                         } else {
-                            $this->error($row->getError());
+                            $this->error($this->model->getError());
                         }
                     } catch (\think\exception\PDOException $e) {
                         $this->error($e->getMessage());
@@ -132,7 +160,6 @@ class Secondsalesorder extends Backend
             //复制$row的值区分编辑和保证金收据
 
             $this->view->assign('row', $row);
-            $row['posttype'] = 'the_guarantor';
 
             return $this->view->fetch('the_guarantor');
         }

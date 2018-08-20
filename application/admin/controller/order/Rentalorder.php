@@ -183,9 +183,30 @@ class Rentalorder extends Backend
         if ($this->request->isPost()) {
 
             $id = Session::get('userId');
+
+            $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+
             $result = $this->model->save(['review_the_data'=>'is_reviewing_true'],function($query) use ($id){
                 $query->where('id',$id);
                 });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-pop_rental",
+                'content' => "销售员" . $admin_nickname . "提交的租车单，请及时处理"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if($result){
 
@@ -205,8 +226,30 @@ class Rentalorder extends Backend
     {
          if ($this->request->isAjax()) {
             $id = $this->request->post('id');
+
+            $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
            
             $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'is_reviewing_true']);
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-table_rental",
+                'content' => "销售员" . $admin_nickname . "提交的租车单，请及时处理"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
+
+
             if($result!==false){
                 // //推送模板消息给风控
                 // $sedArr = array(
