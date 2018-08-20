@@ -1,8 +1,5 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
 
     var Controller = {
         index: function () {
@@ -25,6 +22,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
+
         },
 
 
@@ -82,7 +81,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {
                                 field: 'operate', title: __('Operate'), table: notEntry,
-                                buttons:[
+                                buttons: [
                                     {
                                         name: 'detail',
                                         text: '实际金额',
@@ -103,35 +102,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(notEntry);
 
+
+                var goeasy = new GoEasy({
+                    appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+                });
+
                 goeasy.subscribe({
                     channel: 'demo-sales',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                    onMessage: function (message) {
+                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
                             Layer.close(index);
                             $(".btn-refresh").trigger("click");
                         });
-                        
+
                     }
                 });
-
-
-                // 批量分配
-                $(document).on("click", ".btn-selected", function () {
-                    var ids = Table.api.selectedids(notEntry);
-                    var url = 'backoffice/custominfotabs/batch?ids=' + ids;
-
-                    var options = {
-                        shadeClose: false,
-                        shade: [0.3, '#393D49'],
-                        area: ['50%', '50%'],
-                        callback: function (value) {
-
-                        }
-                    };
-                    Fast.api.open(url, '批量分配', options)
-                });
-
-
 
 
             },
@@ -199,10 +184,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
-        actual_amount:function(){
+        actual_amount: function () {
             Controller.api.bindevent();
-
-            var easy = new GoEasy({
+            var goeasy = new GoEasy({
                 appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
             });
 
@@ -210,10 +194,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
 
-                easy.publish({
-                    channel:"pushCarTube",
-                    message:data
+
+                goeasy.publish({
+                    channel: 'pushyou',
+                    message: data.toString()
                 });
+
+
 
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
@@ -222,14 +209,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             }, function (data, ret) {
 
 
-
-
-
                 Toastr.success("失败");
 
             });
             // Controller.api.bindevent();
             // console.log(Config.id);
+
 
 
 
@@ -258,8 +243,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
             },
-            events:{
-                operate:{
+            events: {
+                operate: {
                     'click .btn-editone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();

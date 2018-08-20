@@ -8,6 +8,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
 
+
             //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var panel = $($(this).attr("href"));
@@ -42,20 +43,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-showOrder").data("area", ["95%", "95%"]);
                 });
 
-                var easy = new GoEasy({
-                    appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-                });
 
-                easy.subscribe({
-                    channel: 'pushCarTube',
-                    onMessage: function(message){
-                        Layer.alert('有<span class="text-info">1</span>条姓名为:<span class="text-info">'+message.content+"</span>的消息进入,请注意查看",{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-
-                    }
-                });
 
                 // 初始化表格
                 prepareSubmit.bootstrapTable({
@@ -124,6 +112,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(prepareSubmit);
 
+                var goeasy = new GoEasy({
+                    appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+                });
+
+                goeasy.subscribe({
+                    channel: 'pushyou',
+                    onMessage: function(message){
+                        Layer.alert("您有<span class='text-danger'>"+message.content+"</span>条新消息进入，请注意查看",function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+
+                    }
+                });
+
                 // 批量提交金融事件
                 $(".btn-mass-finance").on('click',  function () {
 
@@ -142,14 +145,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }, function (data, ret) {
 
 
-                                // var easys = new GoEasy({
-                                //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-                                // });
-                                //
-                                // easys.publish({
-                                //     channel:"pushFinance",
-                                //     message:data
-                                // });
+                                var goeasy = new GoEasy({
+                                    appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+                                });
+
+                                goeasy.publish({
+                                    channel: 'pushFinance',
+                                    message: data.toString()
+                                });
 
                                 Toastr.success("成功");
                                     Layer.close(index);
@@ -164,6 +167,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
                     );
                 });
+
 
             },
             already_submit: function () {
@@ -291,16 +295,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         data: {id: row[options.pk]},
 
                                     }, function (data, ret) {
+                                        // console.log(data);
 
+                                    var res = data;
 
-                                    // var easys = new GoEasy({
-                                    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-                                    // });
-                                    //
-                                    // easys.publish({
-                                    //     channel:"pushFinance",
-                                    //     message:data
-                                    // });
+                                    res = data.toString();
+
+                                    var goeasy = new GoEasy({
+                                        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+                                    });
+
+                                    goeasy.publish({
+                                        channel: 'pushFinance',
+                                        message: res
+                                    });
 
                                         // Toastr.success("成功");
                                         Layer.close(index);
@@ -329,8 +337,3 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     return Controller;
 });
 
-function easy() {
-    return new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
-}

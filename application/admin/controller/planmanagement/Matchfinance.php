@@ -35,6 +35,9 @@ class Matchfinance extends Backend
                 ->where("review_the_data", "is_reviewing")
                 ->count();
 
+            $list = $this->add_sales($list);
+
+
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -54,6 +57,7 @@ class Matchfinance extends Backend
             $total = Db::table("crm_order_view")
                 ->where("review_the_data", "is_reviewing_true")
                 ->count();
+            $list = $this->add_sales($list);
 
             $result = array("total" => $total, "rows" => $list);
 
@@ -77,10 +81,9 @@ class Matchfinance extends Backend
             $params = $this->request->post("row/a");
 
             $plan_id = Db::name("sales_order")
-            ->where("id",$ids)
-            ->field("plan_acar_name")
-            ->find()['plan_acar_name'];
-
+                ->where("id", $ids)
+                ->field("plan_acar_name")
+                ->find()['plan_acar_name'];
 
 
             if ($params) {
@@ -93,7 +96,7 @@ class Matchfinance extends Backend
                     ->where("id", $ids)
                     ->setField("review_the_data", "is_reviewing_true");
 
-                if($res && $res2){
+                if ($res && $res2) {
                     $result = true;
                 }
 
@@ -109,5 +112,21 @@ class Matchfinance extends Backend
         }
         $this->view->assign("row", $row);
         return $this->view->fetch();
+    }
+
+    //添加销售员名称
+    public function add_sales($data = array())
+    {
+        foreach ($data as $k => $v) {
+            $nickname = Db::name("admin")
+                ->where("id", $v['sales_id'])
+                ->field("nickname")
+                ->find()['nickname'];
+
+            $data[$k]['sales_name'] = $nickname;
+
+        }
+
+        return $data;
     }
 }

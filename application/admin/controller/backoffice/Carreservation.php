@@ -191,7 +191,8 @@ class Carreservation extends Backend
 
 
             if ($result !== false) {
-                $this->success('','',$this->get_username($ids));
+
+                $this->success('', '', $result);
             } else {
                 $this->error();
             }
@@ -201,13 +202,4 @@ class Carreservation extends Backend
         return $this->view->fetch();
     }
 
-    public function get_username($id)
-    {
-        $username = Db::name("sales_order")
-            ->where("id", $id)
-            ->field("username")
-            ->find()['username'];
-
-        return $username;
-    }
 }

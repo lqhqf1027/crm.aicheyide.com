@@ -42,6 +42,7 @@ class Carreservation extends Backend
                 ->where("amount_collected", "not null")
                 ->count();
 
+            $list = $this->add_sales($list);
 
             $result = array("total" => $total, "rows" => $list);
 
@@ -64,7 +65,7 @@ class Carreservation extends Backend
                 ->where("review_the_data", "is_reviewing")
                 ->where("amount_collected", "not null")
                 ->count();
-
+            $list = $this->add_sales($list);
 
             $result = array("total" => $total, "rows" => $list);
 
@@ -85,10 +86,7 @@ class Carreservation extends Backend
                 ->where("id", $id)
                 ->setField("review_the_data", "is_reviewing");
 
-
             if ($res) {
-
-                $this->sendOrderNotice($res);
 
                 $this->success('', '', $res);
             } else {
@@ -109,25 +107,24 @@ class Carreservation extends Backend
 
             $res = Db::name("sales_order")
                 ->where("id", "in", $ids)
-                ->setField("review_the_data", "is_reviewing");
+                ->update(["review_the_data" => "is_reviewing"]);
 
             if ($res) {
-
-                $this->sendOrderNotice($res);
-
 
                 $this->success('', '', $res);
 
             } else {
-                $this->error('','','失败');
+                $this->error('', '', '失败');
             }
 
         }
     }
 
 
-    //后台发送推送请求
-    public function sendOrderNotice($number)
+    /**
+     * 订单提醒
+     */
+    public function sendOrderNotice()
     {
         //请求地址
         $uri = "http://goeasy.io/goeasy/publish";
@@ -135,7 +132,7 @@ class Carreservation extends Backend
         $data = [
             'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
             'channel' => "pushFinance",
-            'content' => "您有<span class='text-danger'>" . $number . "</span>条新的消息,请注意查看"
+            'content' => "您有新的订单"
         ];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $uri);//地址
@@ -148,5 +145,18 @@ class Carreservation extends Backend
         print_r($return);
     }
 
+    public function add_sales($data = array())
+    {
+        foreach ($data as $k => $v) {
+            $nickname = Db::name("admin")
+                ->where("id", $v['sales_id'])
+                ->field("nickname")
+                ->find()['nickname'];
 
+            $data[$k]['sales_name'] = $nickname;
+
+        }
+
+        return $data;
+    }
 }
