@@ -8,14 +8,24 @@
     <br>
 
     <div class="container-fulid">
-        <div class="col-xs-12 col-sm-8   col-md-12  text-center">
-            <span style="padding: 2px 0 ;border-left: 3px solid green">&nbsp;客户姓名：{$bigdata.name} </span> &nbsp;&nbsp;
-            <span style="padding: 2px 0 ;border-left: 3px solid green"> &nbsp;身份证号：{$bigdata.id_card}</span>&nbsp;&nbsp;
-            <span style="padding: 2px 0 ;border-left: 3px solid green">
-                &nbsp;手机号：{$bigdata.phone}</span>
+        <div class="col-xs-12 col-sm-8 col-md-12">
+            <table class="table table-hover" style="text-align: center;    font-size: 12px;padding-top: 10px">
+                <tr>
+                    <td style="background-color:#DAE2E6;width: 11% " ><i class="fa fa-user-circle"></i> 姓名</td>
+                    <td style="width: 9%">{$bigdata.name}</td>
+                    <td style="background-color:#DAE2E6;width: 11% "><i class="fa fa-address-card-o"></i> 身份证号</td>
+                    <td style="width: 9%">{$bigdata.id_card}</td>
+                    <td style="background-color:#DAE2E6;width: 11% "><i class="fa fa-mobile"></i> 手机号</td>
+                    <td style="width: 9%">{$bigdata.phone}</td>
+                    <td style="background-color:#DAE2E6;width: 11% "><i class="fa fa-calendar"></i> 最后一次查询/更新时间</td>
+                    <td style="width: 9%">{$bigdata.createtime}</td>
+                    <td style="background-color:#DAE2E6;width: 11% "><i class="fa fa-file-archive-o"></i> 查询方式</td>
+                    <td>贷前审批</td>
+                </tr>
+                
+            </table>
         </div>
-        <br>
-        <br>
+       
         <ul id="myTab" class="nav nav-tabs">
             <li class=" text-center " style="width: 50%">
                 <a href="#home" data-toggle="tab">
