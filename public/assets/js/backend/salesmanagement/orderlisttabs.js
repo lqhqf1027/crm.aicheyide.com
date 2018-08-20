@@ -1194,21 +1194,128 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
                             {field: 'city', title: __('City')},
                             // {field: 'detailed_address', title: __('Detailed_address')},
-
                             {
                                 field: 'operate', title: __('Operate'), table: orderFull,
                                 buttons: [
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
-                                        url: 'order/fullparmentorder/edit',/**编辑 */
-                                        
+                                        name: 'submitCar', text: '提交车管备车', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交车管备车'), classname: 'btn btn-xs btn-success btn-submitCar',
+                                        url: 'order/fullparmentorder/submitCar',/**提交给车管 */
+                                        //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
+                                        //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
+                                        //....
+                                        hidden: function (row) { /**提交审核 */
+                                            if (row.review_the_data == 'is_reviewing') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            
+                                        }
                                     },
                                     {
                                         icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
                                         url: 'order/fullparmentorder/del',/**删除 */
-    
+                                        hidden: function (row) {
+                                            if (row.review_the_data == 'is_reviewing') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            
+                                        },
+
+                                    },
+                                    {
+                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'order/fullparmentorder/edit',/**编辑 */
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'is_reviewing') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                        },
+                                    },
+                                    {
+                                        name: 'is_reviewing_true', icon: 'fa fa-check-circle', text: '车管正在备车中', classname: ' text-info ',
+                                        hidden: function (row) {  /**车管正在备车中 */
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                           
+                                        }
+                                    },
+                                    {
+                                        name: 'getCar', text: '是否提取车辆', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('车管备车成功，等待提车'), classname: 'btn btn-xs btn-success btn-getCar',
+                                        url: 'order/fullparmentorder/getCar',
+                                        hidden: function (row) {  /**车管备车成功，等待提车 */
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                           
+                                        }
+                                    },
+                                    {
+
+                                        name: 'for_the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                        hidden: function (row) {  /**已提车 */
+                                            if (row.review_the_data == 'for_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+
+
+                                                return true;
+                                            }
+                                        }
                                     }
-                                    
+
+
 
                                 ],
                                 events: Controller.api.events.operate,
@@ -1216,7 +1323,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.operate
 
                             }
-                           
                         ]
                     ]
 
@@ -1365,6 +1471,98 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Fast.api.ajax({
 
                                     url: 'order/secondsalesorder/setAudit',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success(ret.msg);
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
+                            }
+                        );
+
+                    },
+                    //全款车提交车管
+                    'click .btn-submitCar': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('请确认资料完整，是否开始提交车管备车?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                                Fast.api.ajax({
+
+                                    url: 'order/fullparmentorder/submitCar',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success(ret.msg);
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
+                            }
+                        );
+
+                    },
+                    //全款车提取
+                    'click .btn-getCar': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('车管备车成功，是否进行提取?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                                Fast.api.ajax({
+
+                                    url: 'order/fullparmentorder/getCar',
                                     data: {id: row[options.pk]}
  
                                 }, function (data, ret) {

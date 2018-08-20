@@ -98,9 +98,13 @@ class Fullparmentorder extends Backend
                     }
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
-                        
-                        $this->success();
-                        
+                        //如果添加成功,将状态改为提交审核
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing']);
+                        if ($result_s) {
+                            $this->success();
+                        } else {
+                            $this->error('更新状态失败');
+                        }
                     } else {
                         $this->error($this->model->getError());
                     }
@@ -192,6 +196,126 @@ class Fullparmentorder extends Backend
         }
         $this->view->assign("row", $row);
         return $this->view->fetch();
+    }
+
+    //提交车管
+    public function submitCar()
+    {
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+
+            $admin_nickname = DB::name('admin')->alias('a')->join('full_parment_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+           
+            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'is_reviewing_true']);
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-submitCar",
+                'content' => "销售员" . $admin_nickname . "提交的全款定单，请及时处理"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
+
+            if($result!==false){
+                // //推送模板消息给风控
+                // $sedArr = array(
+                //     'touser' => 'oklZR1J5BGScztxioesdguVsuDoY',
+                //     'template_id' => 'LGTN0xKp69odF_RkLjSmCltwWvCDK_5_PuAVLKvX0WQ', /**以租代购新车模板id */
+                //     "topcolor" => "#FF0000",
+                //     'url' => '',
+                //     'data' => array(
+                //         'first' =>array('value'=>'你有新客户资料待审核','color'=>'#FF5722') ,
+                //         'keyword1' => array('value'=>$params['username'],'color'=>'#01AAED'),
+                //         'keyword2' => array('value'=>'以租代购（新车）','color'=>'#01AAED'),
+                //         'keyword3' => array('value'=>Session::get('admin')['nickname'],'color'=>'#01AAED'),
+                //         'keyword4' =>array('value'=>date('Y年m月d日 H:i:s'),'color'=>'#01AAED') , 
+                //         'remark' => array('value'=>'请前往系统进行查看操作')
+                //     )
+                // );
+                // $sedResult= posts("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".self::$token,json_encode($sedArr));
+                // if( $sedResult['errcode']==0 && $sedResult['errmsg'] =='ok'){
+                //     $this->success('提交成功，请等待审核结果'); 
+                // }else{
+                //     $this->error('微信推送失败',null,$sedResult);
+                // }
+                    $this->success('提交成功，请等待备车结果'); 
+               
+                
+            }else{
+                $this->error('提交失败',null,$result);
+                
+            }
+        }
+    }
+
+    //提取车辆
+    public function getCar()
+    {
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+
+            $admin_nickname = DB::name('admin')->alias('a')->join('full_parment_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+           
+            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'for_the_car']);
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-submitCar",
+                'content' => "销售员" . $admin_nickname . "要进行提车"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
+
+            if($result!==false){
+                // //推送模板消息给风控
+                // $sedArr = array(
+                //     'touser' => 'oklZR1J5BGScztxioesdguVsuDoY',
+                //     'template_id' => 'LGTN0xKp69odF_RkLjSmCltwWvCDK_5_PuAVLKvX0WQ', /**以租代购新车模板id */
+                //     "topcolor" => "#FF0000",
+                //     'url' => '',
+                //     'data' => array(
+                //         'first' =>array('value'=>'你有新客户资料待审核','color'=>'#FF5722') ,
+                //         'keyword1' => array('value'=>$params['username'],'color'=>'#01AAED'),
+                //         'keyword2' => array('value'=>'以租代购（新车）','color'=>'#01AAED'),
+                //         'keyword3' => array('value'=>Session::get('admin')['nickname'],'color'=>'#01AAED'),
+                //         'keyword4' =>array('value'=>date('Y年m月d日 H:i:s'),'color'=>'#01AAED') , 
+                //         'remark' => array('value'=>'请前往系统进行查看操作')
+                //     )
+                // );
+                // $sedResult= posts("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".self::$token,json_encode($sedArr));
+                // if( $sedResult['errcode']==0 && $sedResult['errmsg'] =='ok'){
+                //     $this->success('提交成功，请等待审核结果'); 
+                // }else{
+                //     $this->error('微信推送失败',null,$sedResult);
+                // }
+                    $this->success('提交成功'); 
+               
+                
+            }else{
+                $this->error('提交失败',null,$result);
+                
+            }
+        }
     }
         
        
