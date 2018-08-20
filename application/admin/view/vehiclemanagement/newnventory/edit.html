@@ -1,0 +1,121 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <!--<div class="form-group">-->
+    <!--<label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>-->
+    <!--<div class="col-xs-12 col-sm-8">-->
+    <!--<input id="c-models_id" data-rule="required" data-source="planmanagement/models/index" class="form-control selectpage" name="row[models_id]" type="text" value="{$row.models_id}">-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select id="c-models_id" data-rule="required" class="form-control selectpicker" name="row[models_id]">
+                <option value=" " style='display: none'>未选中任何项</option>
+                {volist name="car_models" id="vo"}
+                <option disabled>{$vo.name}</option>
+                {volist name="vo.models" id="model_vo"}
+
+                {if condition="$model_vo.models_id eq $validate_models_id"}
+                <option value="{$model_vo.models_id}" selected>{$model_vo.models_name}</option>
+                {else/}
+                <option value="{$model_vo.models_id}">{$model_vo.models_name}</option>
+                {/if}
+
+                {/volist}
+                <!--<option value="" selected></option>-->
+                {/volist}
+
+            </select>
+
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Carnumber')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-carnumber" class="form-control" name="row[carnumber]" type="number" value="{$row.carnumber}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Reservecar')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-reservecar" class="form-control" name="row[reservecar]" type="number"
+                   value="{$row.reservecar}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Carprocess')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <!-- <select  id="c-carprocess" class="form-control selectpicker" name="row[carprocess]">
+                {foreach name="carprocessList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.carprocess"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select> -->
+            <div class="radio">
+                {foreach name="carprocessList" item="vo"}
+                <label for="row[carprocess]-{$key}">
+                    {if condition="$key==$row['carprocess']"}
+                    <input id="row[carprocess]-{$key}" name="row[carprocess]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[carprocess]-{$key}" name="row[carprocess]" type="radio" value="{$key}"/>
+                    {/if}
+                     {$vo}</label>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pledge')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <!-- <select  id="c-pledge" class="form-control selectpicker" name="row[pledge]">
+                {foreach name="pledgeList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.pledge"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select> -->
+            <div class="radio">
+                {foreach name="pledgeList" item="vo"}
+                <label for="row[pledge]-{$key}">
+                    {if condition="$key==$row['carprocess']"}
+                    <input id="row[pledge]-{$key}" name="row[pledge]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[pledge]-{$key}" name="row[pledge]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Licensenumber')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-licensenumber" data-rule="required" class="form-control" name="row[licensenumber]" type="text"
+                   value="{$row.licensenumber}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Presentationcondition')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-presentationcondition" class="form-control " rows="5" name="row[presentationcondition]"
+                      cols="50">{$row.presentationcondition}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-note" class="form-control" name="row[note]" type="text" value="{$row.note}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

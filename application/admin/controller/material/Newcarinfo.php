@@ -10,7 +10,7 @@ use think\Db;
  *
  * @icon fa fa-circle-o
  */
-class Driver extends Backend
+class Newcarinfo extends Backend
 {
 
     /**
@@ -24,7 +24,7 @@ class Driver extends Backend
         parent::_initialize();
 //        $this->model = model('MortgageRegistration');
 //        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        $this->loadlang('material/driver');
+        $this->loadlang('material/mortgageregistration');
     }
 
     public function index()
@@ -84,6 +84,8 @@ class Driver extends Backend
             ->field("archival_coding,signdate,total_contract,end_money,hostdate,mortgage,mortgage_people,ticketdate,supplier,tax_amount,no_tax_amount,pay_taxesdate,house_fee,luqiao_fee,insurance_buydate,car_boat_tax,insurance_policy,commercial_insurance_policy,transferdate")
             ->select();
         $row = $row[0];
+
+
 
 
         if ($this->request->isPost()) {
