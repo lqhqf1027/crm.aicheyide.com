@@ -134,7 +134,7 @@ class Orderlisttabs extends Backend
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
            
-            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'send_to_internal']);
+            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'inhouse_handling']);
 
             $sales_name = DB::name('admin')->where('id', $this->auth->id)->value('nickname');
 

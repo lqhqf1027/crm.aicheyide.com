@@ -39,8 +39,9 @@ class Creditreview extends Backend
             'total' => $this->model
 
                 ->where($where)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_true')
+                ->whereOr('review_the_data', 'for_the_car')
+                ->whereOr('review_the_data', 'not_guarantor')
                 ->order($sort, $order)
                 ->count(),
 
@@ -78,15 +79,17 @@ class Creditreview extends Backend
             $total = $this->model
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_true')
+                ->whereOr('review_the_data', 'for_the_car')
+                ->whereOr('review_the_data', 'not_guarantor')
                 ->count();
 
             $list = $this->model
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_true')
+                ->whereOr('review_the_data', 'for_the_car')
+                ->whereOr('review_the_data', 'not_guarantor')
                 ->limit($offset, $limit)
                 ->select();
 
