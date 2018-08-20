@@ -803,7 +803,7 @@ class Creditreview extends Backend
     /**查看新车大数据 */
 
 
-    public function toViewBigData($ids = null)
+    public function new_car_bigdata($ids = null)
     {
 
         $row = $this->model->get($ids);
@@ -879,7 +879,7 @@ class Creditreview extends Backend
                         
                         $this->view->assign('bigdata', $data);
                         pr($this->getBigData($row['id']));
-                        // die;
+                        die;
                         
 
                     } else {
@@ -905,23 +905,18 @@ class Creditreview extends Backend
             } else {
                 // echo 333;
                 $this->view->assign('bigdata', $this->getBigData($row['id']));
+                
+                $this->assignconfig([
+            
+                    'zcFraudScore' =>$this->getBigData($row['id'])['risk_data']['data']['zcFraudScore']
+                ]);
                 // pr($data);die;
              
 
             }
         }
-        return $this->view->fetch('new_car_bigdata');
-    }
-    public function bigDataHtml()
-    {
-
-        "<div>
-                    <h3><center>客户大数据信息</center></h3>
-                </div>";
-
-
-    }
-
+        return $this->view->fetch();
+    } 
     /**
      * 查询大数据表
      * @param int $sales_order_id
