@@ -3,7 +3,7 @@
 namespace app\admin\controller\riskcontrol;
 
 use app\common\controller\Backend;
-use think\Db;
+use think\DB;
 use think\Config;
 use think\db\exception\DataNotFoundException;
 
@@ -41,7 +41,7 @@ class Creditreview extends Backend
                 ->where($where)
                 ->where('review_the_data', 'is_reviewing_true')
                 ->whereOr('review_the_data', 'for_the_car')
-                ->whereOr('review_the_data', 'not_guarantor')
+                ->whereOr('review_the_data', 'not_through')
                 ->order($sort, $order)
                 ->count(),
 
@@ -81,7 +81,7 @@ class Creditreview extends Backend
                 ->order($sort, $order)
                 ->where('review_the_data', 'is_reviewing_true')
                 ->whereOr('review_the_data', 'for_the_car')
-                ->whereOr('review_the_data', 'not_guarantor')
+                ->whereOr('review_the_data', 'not_through')
                 ->count();
 
             $list = $this->model
@@ -89,7 +89,7 @@ class Creditreview extends Backend
                 ->order($sort, $order)
                 ->where('review_the_data', 'is_reviewing_true')
                 ->whereOr('review_the_data', 'for_the_car')
-                ->whereOr('review_the_data', 'not_guarantor')
+                ->whereOr('review_the_data', 'not_through')
                 ->limit($offset, $limit)
                 ->select();
 
@@ -330,10 +330,29 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
+            $admin_nickname = DB::name('admin')->alias('a')->join('sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-newpass",
+                'content' => "销售员" . $admin_nickname . "提交的新车销售单已通过风控审核"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if ($result) {
                 $this->success();
@@ -345,7 +364,7 @@ class Creditreview extends Backend
         }
     }
 
-    //新车单----需提供担保人
+    //新车单----需提供保证金
     public function newdata()
     {
         if ($this->request->isAjax()) {
@@ -356,10 +375,29 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
+            $admin_nickname = DB::name('admin')->alias('a')->join('sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'the_guarantor'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-newdata",
+                'content' => "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if ($result) {
                 $this->success();
@@ -384,10 +422,29 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
+            $admin_nickname = DB::name('admin')->alias('a')->join('sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'not_through'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-newnopass",
+                'content' => "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if ($result) {
                 $this->success();
@@ -452,19 +509,35 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
+            $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'is_reviewing_pass'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-rentalpass",
+                'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if ($result) {
                 $this->success();
             } else {
                 $this->error();
             }
-
-
-
 
         }
     }
@@ -480,10 +553,29 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
+            $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'is_reviewing_nopass'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-rentalnopass",
+                'content' => "销售员" . $admin_nickname . "提交的租车单没有通过风控审核"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if ($result) {
                 $this->success();
@@ -568,10 +660,29 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
+            $admin_nickname = DB::name('admin')->alias('a')->join('second_rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-secondpass",
+                'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if ($result) {
                 $this->success();
@@ -594,10 +705,29 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
+            $admin_nickname = DB::name('admin')->alias('a')->join('second_rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'the_guarantor'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-seconddata",
+                'content' => "销售员" . $admin_nickname . "提交的租车单需要提交保证金"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if ($result) {
                 $this->success();
@@ -620,10 +750,29 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
+            $admin_nickname = DB::name('admin')->alias('a')->join('second_rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'not_through'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            //请求地址
+            $uri = "http://goeasy.io/goeasy/publish";
+            // 参数数组
+            $data = [
+                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'channel' => "demo-secondnopass",
+                'content' => "销售员" . $admin_nickname . "提交的租车单没有通过风控审核"
+            ];
+            $ch = curl_init ();
+            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+            $return = curl_exec ( $ch );
+            curl_close ( $ch );
+            // print_r($return);
 
             if ($result) {
                 $this->success();

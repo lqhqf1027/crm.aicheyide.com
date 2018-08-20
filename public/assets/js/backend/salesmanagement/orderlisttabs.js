@@ -1,5 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    var goeasy = new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
+
     var Controller = {
         index: function () {
             Table.api.init({
@@ -506,6 +510,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(orderAcar);
 
+                //实时消息
+                //通过
+                goeasy.subscribe({
+                    channel: 'demo-newpass',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+                //提供保证金
+                goeasy.subscribe({
+                    channel: 'demo-newdata',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
+                //不通过
+                goeasy.subscribe({
+                    channel: 'demo-newnopass',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
+
                 // alert(Table.api.getrowdata(table, index));
             },
             order_rental: function () {
@@ -705,14 +746,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 
             });
 
-            var goeasy = new GoEasy({
-                appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-            });
             goeasy.subscribe({
                 channel: 'demo3',
                 onMessage: function(message){
                    
                     $(".btn-refresh").trigger("click");
+                }
+            });
+
+            //通过
+            goeasy.subscribe({
+                channel: 'demo-rentalpass',
+                onMessage: function(message){
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                    
+                }
+            });
+            //不通过
+            goeasy.subscribe({
+                channel: 'demo-rentalnopass',
+                onMessage: function(message){
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                    
                 }
             });
 
@@ -1045,6 +1106,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
                 // 为表格1绑定事件
                 Table.api.bindevent(orderSecond);
+
+                 //通过
+                goeasy.subscribe({
+                    channel: 'demo-secondpass',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+                 //提供保证金
+                goeasy.subscribe({
+                    channel: 'demo-seconddata',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+                //不通过
+                goeasy.subscribe({
+                    channel: 'demo-secondnopass',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
 
                 // alert(Table.api.getrowdata(table, index));
             },

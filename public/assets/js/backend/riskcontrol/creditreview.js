@@ -225,6 +225,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         $(".btn-refresh").trigger("click");
                     }
                 });
+                //提供保证金
+                goeasy.subscribe({
+                    channel: 'demo-the_guarantor',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
 
                 //数据实时统计
                 newcarAudit.on('load-success.bs.table', function (e, data) {
@@ -397,6 +408,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     onMessage: function(message){
                        
                         $(".btn-refresh").trigger("click");
+                    }
+                });
+                //弹框   提交审核
+                goeasy.subscribe({
+                    channel: 'demo-pop_rental',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+                //表格   提交审核
+                goeasy.subscribe({
+                    channel: 'demo-table_rental',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
                     }
                 });
 
@@ -601,6 +634,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         $(".btn-refresh").trigger("click");
                     }
                 });
+                
+                //提供保证金
+                goeasy.subscribe({
+                    channel: 'demo-second-the_guarantor',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
                 //数据实时统计
                 secondhandcarAudit.on('load-success.bs.table', function (e, data) {
                     $(".btn-secondhandcarResult").data("area", ["95%", "95%"]);
