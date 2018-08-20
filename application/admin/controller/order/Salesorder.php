@@ -320,6 +320,10 @@ class Salesorder extends Backend
                     ->join('models b', 'b.id=a.models_id')
 
                     ->where('a.category_id', $category_id)
+                   
+                    ->where('sales_id', NULL)
+
+                    ->whereOr('sales_id', $this->auth->id)
 
                     ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,b.name as models_name')
 
