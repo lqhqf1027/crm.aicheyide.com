@@ -32,6 +32,14 @@ class Exchangeplatformtabs extends Backend
      */
     public function index()
     {
+//        $ids = Db::name("sales_order")
+//            ->alias("so")
+//            ->join("car_new_inventory ni","so.car_new_inventory_id = ni.id")
+//            ->field("ni.id,ni.car_mortgage_id")
+//            ->select();
+//
+//        pr($ids);die();
+
 
         $this->loadlang('banking/exchangeplatformtabs');
         $new_car = $this->getCar("new_car");
@@ -40,10 +48,10 @@ class Exchangeplatformtabs extends Backend
         $nan_chong = Db::name("nanchong_driver")->count();
 
         $this->view->assign([
-            'new_total'=>$new_car[0],
-            'yue_total'=>$yue_da_car[0],
-            'other_total'=>$other_car[0],
-            'nan_chong'=>$nan_chong
+            'new_total' => $new_car[0],
+            'yue_total' => $yue_da_car[0],
+            'other_total' => $other_car[0],
+            'nan_chong' => $nan_chong
         ]);
 
 
@@ -54,6 +62,25 @@ class Exchangeplatformtabs extends Backend
     public function new_car()
     {
         if ($this->request->isAjax()) {
+
+            $ids = Db::name("sales_order")
+                ->alias("so")
+                ->join("car_new_inventory ni", "so.car_new_inventory_id = ni.id")
+                ->field("ni.id,ni.car_mortgage_id")
+                ->select();
+
+            foreach ($ids as $k => $v) {
+                if (empty($v['car_mortgage_id'])) {
+                    Db::name("mortgage")->insert(["mortgage_type" => "new_car"]);
+
+                    $last_id = Db::name("mortgage")->getLastInsID();
+
+                    Db::name("car_new_inventory")
+                        ->where("id", $v['id'])
+                        ->setField("car_mortgage_id", $last_id);
+                }
+            }
+
             $res = $this->getCar("new_car");
 
             $result = array("total" => $res[0], "rows" => $res[1]);
@@ -127,13 +154,16 @@ class Exchangeplatformtabs extends Backend
      */
     public function edit($ids = NULL)
     {
+        $gage_id = Db::name("sales_order")
+            ->alias("so")
+            ->join("car_new_inventory ni", "so.car_new_inventory_id = ni.id")
+            ->where("so.id", $ids)
+            ->field("ni.car_mortgage_id")
+            ->find()['car_mortgage_id'];
 
-        $row = Db::table("crm_order_view")
-            ->where("id", $ids)
-            ->select();
-
-        $row = $row[0];
-
+        $row = Db::name("mortgage")
+            ->where("id", $gage_id)
+            ->find();
 
         if (!$row)
             $this->error(__('No Results were found'));
@@ -154,27 +184,23 @@ class Exchangeplatformtabs extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
                         $row->validate($validate);
                     }
-//                    $result = $row->allowField(true)->save($params);
 
-                    $getId = Db::name("car_new_inventory")
-                        ->where("id", $ids)
-                        ->field("car_mortgage_id")
-                        ->select();
+                    $data = array(
+                        'lending_date' => $params['lending_date'],
+                        'bank_card' => $params['bank_card'],
+                        'invoice_monney' => $params['invoice_monney'],
+                        'registration_code' => $params['registration_code'],
+                        'tax' => $params['tax'],
+                        'business_risks' => $params['business_risks'],
+                        'insurance' => $params['insurance'],
+                        'car_imgeas' => $params['car_images']
 
-                    $getId = $getId[0]['car_mortgage_id'];
+                    );
+
 
                     $result = Db::name("mortgage")
-                        ->where("id", $getId)
-                        ->update([
-                            'lending_date' => $params['lending_date'],
-                            'bank_card' => $params['bank_card'],
-                            'invoice_monney' => $params['invoice_monney'],
-                            'registration_code' => $params['registration_code'],
-                            'tax' => $params['tax'],
-                            'business_risks' => $params['business_risks'],
-                            'insurance' => $params['insurance'],
-                            'car_imgeas' => $params['car_images']
-                        ]);
+                        ->where("id", $gage_id)
+                        ->update($data);
 
                     if ($result !== false) {
                         $this->success();
@@ -216,7 +242,7 @@ class Exchangeplatformtabs extends Backend
 
             $getId = Db::name("sales_order")
                 ->alias("so")
-                ->join("car_new_inventory ni","so.car_new_inventory_id=ni.id")
+                ->join("car_new_inventory ni", "so.car_new_inventory_id=ni.id")
                 ->where("so.id", $ids)
                 ->field("ni.car_mortgage_id")
                 ->select();
@@ -244,8 +270,6 @@ class Exchangeplatformtabs extends Backend
             ->where("id", $ids)
             ->select();
         $res = $res[0];
-
-//        pr($res);die();
 
         $this->view->assign([
             'row' => $res

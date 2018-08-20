@@ -16,6 +16,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
+            table.on('post-body.bs.table', function (e, settings, json, xhr) {
+                $(".btn-add").data("area", ["80%", "80%"]);
+
+            });
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,

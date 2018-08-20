@@ -57,7 +57,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
-                    $(".btn-details").data("area", ["80%", "80%"]);
+                    $(".btn-btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-edit").data("area", ["80%", "80%"]);
 
                 });
                 // 初始化表格
@@ -148,7 +149,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 yueDaCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
-                    $(".btn-details").data("area", ["80%", "80%"]);
+                    $(".btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-edit").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 yueDaCar.bootstrapTable({
@@ -238,7 +240,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 otherCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
-                    $(".btn-details").data("area", ["80%", "80%"]);
+                    $(".btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-edit").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 otherCar.bootstrapTable({
@@ -330,7 +333,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 nanchongDriver.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
-                    // $(".btn-showOrder").data("area", ["80%", "80%"]);
+                    $(".btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-add").data("area", ["80%", "80%"]);
+                    $(".btn-edit").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 nanchongDriver.bootstrapTable({

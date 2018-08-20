@@ -40,11 +40,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
-                    url: 'material/Driver/new_customer',
+                    url: 'material/Newcarinfo/new_customer',
                     extend: {
-                        index_url: 'material/mortgageregistration/index',
-                        add_url: 'material/mortgageregistration/add',
-                        edit_url: 'material/driver/edit',
+                        edit_url: 'material/newcarinfo/edit',
                         del_url: 'material/mortgageregistration/del',
                         multi_url: 'material/mortgageregistration/multi',
                         table: 'mortgage_registration',
@@ -55,7 +53,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'mrid', title: __('ID')},
+                            {field: 'id', title: __('ID')},
                             {field: 'archival_coding', title: __('档案编码')},
                             {
                                 field: 'signdate',
@@ -138,14 +136,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var registryRegistration = $("#registryRegistration");
                 registryRegistration.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-edittwo").data("area", ["80%", "80%"]);
+                    $(".btn-edit").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 registryRegistration.bootstrapTable({
-                    url: 'material/Driver/data_warehousing',
+                    url: 'material/Newcarinfo/data_warehousing',
                     extend: {
-                        index_url: 'registry/registration/index',
+                        index_url: 'registry/Newcarinfo/index',
                         add_url: 'registry/registration/add',
-                        edit_url: 'material/driver/edit2',
+                        edit_url: 'material/newcarinfo/edit2',
                         del_url: 'registry/registration/del',
                         multi_url: 'registry/registration/multi',
                         table: 'registry_registration',
@@ -156,7 +155,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'rrid', title: __('ID')},
+                            {field: 'id', title: __('ID')},
                             {field: 'archival_coding', title: __('档案编码')},
                             {field: 'username', title: __('Username')},
                             {field: 'full_mortgage', title: __('全款/按揭')},

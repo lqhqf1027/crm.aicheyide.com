@@ -38,10 +38,8 @@ class Newcarinfo extends Backend
     {
         if ($this->request->isAjax()) {
             $list = Db::table("crm_order_view")
-                ->where("mortgage_registration_id", "not null")
                 ->select();
             $total = Db::table("crm_order_view")
-                ->where("mortgage_registration_id", "not null")
                 ->count();
             $result = array("total" => $total, "rows" => $list);
 
@@ -56,14 +54,22 @@ class Newcarinfo extends Backend
     {
         if ($this->request->isAjax()) {
             $list = Db::table("crm_order_view")
-                ->where("registry_registration_id", "not null")
                 ->select();
             $total = Db::table("crm_order_view")
-                ->where("registry_registration_id", "not null")
                 ->count();
 
             foreach ($list as $k => $v) {
                 $list[$k]['full_mortgage'] = '按揭';
+
+                if ($v['sales_id']) {
+                    $sale = Db::name("admin")
+                        ->where("id", $v['sales_id'])
+                        ->field("nickname")
+                        ->find()['nickname'];
+
+                    $list[$k]['sales_name'] = $sale;
+                }
+
             }
 
             $result = array("total" => $total, "rows" => $list);
@@ -79,19 +85,32 @@ class Newcarinfo extends Backend
      */
     public function edit($ids = NULL)
     {
-        $row = Db::table("crm_order_view")
+//        $row = Db::table("crm_order_view")
+//            ->where("id", $ids)
+//            ->field("archival_coding,signdate,total_contract,end_money,hostdate,mortgage,mortgage_people,ticketdate,supplier,tax_amount,no_tax_amount,pay_taxesdate,house_fee,luqiao_fee,insurance_buydate,car_boat_tax,insurance_policy,commercial_insurance_policy,transferdate")
+//            ->select();
+//        $row = $row[0];
+
+        $gage = Db::name("sales_order")
             ->where("id", $ids)
-            ->field("archival_coding,signdate,total_contract,end_money,hostdate,mortgage,mortgage_people,ticketdate,supplier,tax_amount,no_tax_amount,pay_taxesdate,house_fee,luqiao_fee,insurance_buydate,car_boat_tax,insurance_policy,commercial_insurance_policy,transferdate")
-            ->select();
-        $row = $row[0];
+            ->field("mortgage_registration_id")
+            ->find()['mortgage_registration_id'];
 
+        if ($gage) {
+            $row = Db::name("mortgage_registration")
+                ->where("id", "$gage")
+                ->find();
 
+            $this->view->assign("row", $row);
+        }
 
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
 
             if ($params) {
+
+//                pr($params);die();
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
@@ -99,6 +118,7 @@ class Newcarinfo extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
                         $row->validate($validate);
                     }
+
                     $doUpdate = [
                         'archival_coding' => $params['archival_coding'],
                         'signdate' => $params['signdate'],
@@ -120,18 +140,22 @@ class Newcarinfo extends Backend
                         'commercial_insurance_policy' => $params['commercial_insurance_policy'],
                         'transferdate' => $params['transferdate']
                     ];
-                    $res = Db::name("sales_order")
-                        ->alias("so")
-                        ->join("mortgage_registration mr", "so.mortgage_registration_id=mr.id")
-                        ->where("so.id", $ids)
-                        ->field("mr.id as mrid")
-                        ->select();
 
-                    $res = $res[0]['mrid'];
 
-                    $result = Db::name("mortgage_registration")
-                        ->where("id", $res)
-                        ->update($doUpdate);
+                    if ($gage) {
+                        $result = Db::name("mortgage_registration")
+                            ->where("id", $gage)
+                            ->update($doUpdate);
+                    } else {
+                        Db::name("mortgage_registration")->insert($doUpdate);
+
+                        $lastId = Db::name("mortgage_registration")->getLastInsID();
+
+                        $result = Db::name("sales_order")
+                            ->where("id", $ids)
+                            ->setField("mortgage_registration_id", $lastId);
+                    }
+
 
                     if ($result !== false) {
                         $this->success();
@@ -146,12 +170,9 @@ class Newcarinfo extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign("row", $row);
+
         return $this->view->fetch();
     }
-
-
-
 
 
     /**
@@ -160,22 +181,36 @@ class Newcarinfo extends Backend
     public function edit2($ids = NULL)
     {
 
-        $id = Db::name("sales_order")
-            ->where("id",$ids)
-            ->field("registry_registration_id")
-            ->select();
+//        $id = Db::name("sales_order")
+//            ->where("id", $ids)
+//            ->field("registry_registration_id")
+//            ->select();
+//
+//        $id = $id[0]['registry_registration_id'];
+//
+//        $row = Db::name("registry_registration")
+//            ->where("id", $id)
+//            ->select();
+//
+//        $row = $row[0];
 
-        $id = $id[0]['registry_registration_id'];
+        $registr = Db::name("sales_order")
+        ->where("id",$ids)
+        ->find()['registry_registration_id'];
 
-        $row = Db::name("registry_registration")
-            ->where("id",$id)
-            ->select();
+        if($registr){
+           $row = Db::name("registry_registration")
+            ->where("id",$registr)
+            ->find();
+            $this->view->assign("row", $row);
+        }
 
-        $row = $row[0];
+
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
+
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
@@ -184,31 +219,44 @@ class Newcarinfo extends Backend
                         $row->validate($validate);
                     }
                     $data = array(
-                        'marry_and_divorceimages'=>$params['marry_and_divorceimages'],
-                        'halfyear_bank_flowimages'=>$params['halfyear_bank_flowimages'],
-                        'residence_permitimages'=>$params['residence_permitimages'],
-                        'company_contractimages'=>$params['company_contractimages'],
-                        'rent_house_contactimages'=>$params['rent_house_contactimages'],
-                        'car_keys'=>$params['car_keys'],
-                        'lift_listimages'=>$params['lift_listimages'],
-                        'explain_situation'=>$params['explain_situation'],
-                        'truth_management_protocolimages'=>$params['truth_management_protocolimages'],
-                        'confidentiality_agreementimages'=>$params['confidentiality_agreementimages'],
-                        'supplementary_contract_agreementimages'=>$params['supplementary_contract_agreementimages'],
-                        'tianfu_bank_cardimages'=>$params['tianfu_bank_cardimages'],
-                        'other_documentsimages'=>$params['other_documentsimages'],
-                        'tax_proofimages'=>$params['tax_proofimages'],
-                        'invoice_or_deduction_coupletimages'=>$params['invoice_or_deduction_coupletimages'],
-                        'registration_certificateimages'=>$params['registration_certificateimages'],
-                        'mortgage_registration_fee'=>$params['mortgage_registration_fee'],
-                        'maximum_guarantee_contractimages'=>$params['maximum_guarantee_contractimages'],
-                        'credit_reportimages'=>$params['credit_reportimages'],
-                        'information_remark'=>$params['information_remark'],
-                        'driving_licenseimages'=>$params['driving_licenseimages']
+                        'marry_and_divorceimages' => $params['marry_and_divorceimages'],
+                        'halfyear_bank_flowimages' => $params['halfyear_bank_flowimages'],
+                        'residence_permitimages' => $params['residence_permitimages'],
+                        'company_contractimages' => $params['company_contractimages'],
+                        'rent_house_contactimages' => $params['rent_house_contactimages'],
+                        'car_keys' => $params['car_keys'],
+                        'lift_listimages' => $params['lift_listimages'],
+                        'explain_situation' => $params['explain_situation'],
+                        'truth_management_protocolimages' => $params['truth_management_protocolimages'],
+                        'confidentiality_agreementimages' => $params['confidentiality_agreementimages'],
+                        'supplementary_contract_agreementimages' => $params['supplementary_contract_agreementimages'],
+                        'tianfu_bank_cardimages' => $params['tianfu_bank_cardimages'],
+                        'other_documentsimages' => $params['other_documentsimages'],
+                        'tax_proofimages' => $params['tax_proofimages'],
+                        'invoice_or_deduction_coupletimages' => $params['invoice_or_deduction_coupletimages'],
+                        'registration_certificateimages' => $params['registration_certificateimages'],
+                        'mortgage_registration_fee' => $params['mortgage_registration_fee'],
+                        'maximum_guarantee_contractimages' => $params['maximum_guarantee_contractimages'],
+                        'credit_reportimages' => $params['credit_reportimages'],
+                        'information_remark' => $params['information_remark'],
+                        'driving_licenseimages' => $params['driving_licenseimages']
                     );
-                    $result = Db::name("registry_registration")
-                        ->where("id",$id)
-                        ->update($data);
+
+                    if($registr){
+                        $result = Db::name("registry_registration")
+                            ->where("id", $registr)
+                            ->update($data);
+                    }else{
+                        Db::name("registry_registration")->insert($data);
+
+                        $last_id = Db::name("registry_registration")->getLastInsID();
+
+                        $result = Db::name("sales_order")
+                        ->where("id",$ids)
+                        ->setField("registry_registration_id",$last_id);
+                    }
+
+
                     if ($result !== false) {
                         $this->success();
                     } else {
@@ -222,7 +270,7 @@ class Newcarinfo extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign("row", $row);
+
         $this->view->assign("keylist", $this->keylist());
         return $this->view->fetch();
     }
@@ -230,9 +278,8 @@ class Newcarinfo extends Backend
 
     public function keylist()
     {
-        return [1=>'有',0=>'无'];
+        return [1 => '有', 0 => '无'];
     }
-
 
 
 }
