@@ -1,3 +1,12 @@
+
+<style>
+    .fx-th{
+        background: #DAE2E6;    color: #19191A;font-size: 12px;text-align: center
+    }
+    .fa{
+        margin-right: 5px;
+    }
+</style>
 <form id="auditResult-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
     <h1>
         <center>
@@ -18,7 +27,7 @@
                     <td style="background-color:#DAE2E6;width: 11% "><i class="fa fa-mobile"></i> 手机号</td>
                     <td style="width: 9%">{$bigdata.phone}</td>
                     <td style="background-color:#DAE2E6;width: 11% "><i class="fa fa-calendar"></i> 最后一次查询/更新时间</td>
-                    <td style="width: 9%">{$bigdata.createtime}</td>
+                    <td style="width: 9%">{$bigdata.createtime|date="Y-m-d H:i:s",###}</td>
                     <td style="background-color:#DAE2E6;width: 11% "><i class="fa fa-file-archive-o"></i> 查询方式</td>
                     <td>贷前审批</td>
                 </tr>
@@ -299,48 +308,228 @@
                         </tr>
                        <tr>
                            <td style="background-color:#DAE2E6 ">验证结果</td>
-                           <td>s</td>
-                           <td>s</td>
-                           <td>s</td>
-                           <td>s</td>
+                           <td>
+                               {switch name="$bigdata.risk_data.data.identityVerifyCode"}
+                                {case value="-3"}
+                                无查询权限
+                                {/case}
+                                {case value="-2"}
+                                查询失败
+                                {/case}
+                                {case value="-1"}
+                                未查询
+                                {/case}
+                                {case value="0"}
+                                查无此记录
+                                {/case}
+                                {case value="2"}
+                                不一致
+                                {/case}   
+                                {case value="3"}                               
+                                一致
+                                {/case}
+                               {/switch}
+                           </td>
+                           <td>
+                               {foreach $bigdata.risk_data.data.mobileVerifyList as $v}
+                                    {$v.desc}
+                                {/foreach}
+                               
+                           </td>
+                           <td>
+                               {$bigdata.risk_data.data.bankCheckAuth3}
+                           </td>
+                           <td>
+                                {$bigdata.risk_data.data.bankCheckAuth4}
+                               
+                           </td>
                        </tr>
                     </table>
                 </div>
                 <!-- <img src="https://static.aicheyide.com/echarts/755406383486789573.jpg" alt="" id="echart-bg"> -->
+                <div class="col-xs-12 col-sm-8 col-md-12 ">
+                        <b class="text-default">
+                            <h2> 风险结果</h2>
+                        </b>
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-12">
+                    <table class="table table-hover" style="border: 1px solid #C8CBCC; border-collapse: collapse;text-align: center;    font-size: 12px;padding-top: 10px">
+                        <th class="fx-th">名单类型</th>
+                        <th class="fx-th">命中项</th>
+                        <th class="fx-th">命中内容</th>
+                        <th class="fx-th">风险明细</th>
+                        <th  class="fx-th">风险最近时间</th>
+                        <th class="fx-th">备注</th>
+                        <th class="fx-th">操作</th>
+                        {foreach  $bigdata.risk_data.data.resultList as $k=>$v}
+                       
+                        <tr>
+                            <td>
+                               {$v.dataType}
 
-                <div class="col-md-12 ">
-                    <b class="text-default">
-                        <h2> 社交关系网分析数据</h2>
+                            </td>
+                            <td>{$v.riskItemType}</td>
+                            <td>{}</td>
+                            <td>{$v.riskDetail}</td>
+                            <td>{$v.riskTime}</td>
+                            <td>{$v.remarks|default='---'}</td>
+                            <td>
+                                {if $v.remarksDetailsList}
+                                    <a class="btn btn-info btn-xs view-remarks " data-toggle="modal" data-target="#previewModal">查看</a>
+                                {else}
+                                ---
+                                {/if}
+                            </td>
+                        </tr>
+                        {/foreach}
+                    </table>
+                </div>
+                <div id="previewModal" class="modal fade "  tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h4 class="modal-title">风险详情</h4>
+                                </div>
+                                <div class="modal-body  ">
+                                    <div class="col-xs-12 col-sm-8 col-md-12">
+                                    <table class="table table-hover" style="border: 1px solid #C8CBCC; border-collapse: collapse;text-align: center;    font-size: 12px;padding-top: 10px">
+                                        <th class="fx-th">主体名称</th>
+                                        <th class="fx-th">主体代码	</th>
+                                        <th class="fx-th">立案法院	</th>
+                                        <th class="fx-th">案件编号</th>
+                                        <th  class="fx-th">标的金额</th>
+                                        <th class="fx-th">案件状态</th>
+                                        <th class="fx-th">立案时间</th>
+                                        {foreach  $bigdata.risk_data.data.resultList as $k=>$v}
+                                            {if $v.remarksDetailsList }
+                                                {foreach $v.remarksDetailsList as $value}
+                                                    <tr>
+                                                        <td>
+                                                            {$value.entityName} 
+                                                        </td>
+                                                        <td>{$value.entityId}</td>
+                                                        <td>{$value.courtName}</td>
+                                                        <td>{$value.caseCode}</td>
+                                                        <td>{$value.execMoney}</td>
+                                                        <td>{$value.caseState}</td>
+                                                        <td>
+                                                        {$value.regDate}
+                                                        </td>
+                                                    </tr>
+                                                {/foreach}
+                                                {else /}
+                                                
+                                            {/if}
+                                        {/foreach}
+                                    </table>
+                                </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-12 ">
+                    <b class="">
+                        <h2 > <i class="fa fa-th"></i> 社会关系网分析</h2>
                     </b>
                 </div>
-
-                <hr>
-                <div class=" col-xs-12 col-sm-8 col-md-12 text-left">
-                    <strong>
-                        <b>
-                            <i class="fa fa-circle text-default"></i> 基本信息</b>
-                    </strong>
-
+                <div class="col-xs-12 col-sm-8 col-md-12 ">
+                <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_1" data-toggle="tab">基本信息</a></li>
+                            <li><a href="#tab_2" data-toggle="tab">一阶联系人</a></li>
+                            <li><a href="#tab_3" data-toggle="tab">二阶联系人</a></li>
+                            <li><a href="#tab_3" data-toggle="tab">主叫联系人</a></li>
+                            <li><a href="#tab_3" data-toggle="tab">夜间通话</a></li>
+                            <li><a href="#tab_3" data-toggle="tab">与虚拟号码通话</a></li>
+                            <li><a href="#tab_3" data-toggle="tab">异地通话</a></li>
+                            <li><a href="#tab_3" data-toggle="tab">与澳门通话</a></li>
+                            <li><a href="#tab_3" data-toggle="tab">与同行通话</a></li>
+                            <li><a href="#tab_3" data-toggle="tab">与法院／律师通话</a></li> 
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_1">
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted">姓名</p>
+                                            
+                                            <strong> {$bigdata.name}</strong>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                        <p class="text-muted">性别</p>
+                                        
+                                        <strong> {$bigdata.risk_data.data.behaviorFeatures.gender}</strong>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted">年龄</p>
+                                        
+                                            <strong> {$bigdata.risk_data.data.behaviorFeatures.age}</strong>
+                                        
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted">手机运营商</p>
+                                        
+                                            <strong> {$bigdata.risk_data.data.behaviorFeatures.mobileOperator}</strong>
+                                        
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted">手机号码归属地：</p>
+                                        
+                                            <strong> {$bigdata.risk_data.data.behaviorFeatures.mobileLocation}</strong>
+                                        
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted">身份证号归属地：</p>
+                                        
+                                            <strong> {$bigdata.risk_data.data.behaviorFeatures.mobileOperator}</strong>
+                                        
+                                    </div> 
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="tab-pane" id="tab_2">
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted"> 一阶联系人黑名单个数</p>
+                                            
+                                            <strong>{$bigdata.risk_data.data.behaviorFeatures.firstOrderBlackCnt}</strong>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                        <p class="text-muted">一阶联系人逾期个数</p>
+                                        
+                                        <strong> {$bigdata.risk_data.data.behaviorFeatures.firstOrderOverdueCnt}</strong>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted">一阶联系人黑名单数占比</p>
+                                        
+                                            <strong>  {$bigdata.risk_data.data.behaviorFeatures.firstOrderBlackCnt }</strong>
+                                        
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted">一阶联系人逾期占比</p>
+                                        
+                                            <strong> {$bigdata.risk_data.data.behaviorFeatures.mobileOperator}</strong>
+                                        
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 col-md-2 text-center">
+                                            <p class="text-muted">一阶联系人逾期m3+个数</p>
+                                        
+                                            <strong> {$bigdata.risk_data.data.behaviorFeatures.firstOrderOverdueCnt+100}</strong>
+                                        
+                                    </div> 
+                            </div>
+                            <!-- /.tab-pane -->
+                            <div class="tab-pane" id="tab_3">
+                             
+                            </div>
+                            <!-- /.tab-pane -->
+                        </div>
+                        <!-- /.tab-content -->
+                    </div>
                 </div>
-                <br>
-                <br>
-                <div class="col-xs-12 col-sm-8 col-md-2 text-left">
-                    性别：{$bigdata.risk_data.data.behaviorFeatures.gender}
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-2 text-left">
-                    年龄：{$bigdata.risk_data.data.behaviorFeatures.age}
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-2 text-left">
-                    手机运营商：{$bigdata.risk_data.data.behaviorFeatures.mobileOperator}
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-3 text-left">
-                    手机号码归属地：{$bigdata.risk_data.data.behaviorFeatures.mobileLocation}
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-3 text-left">
-                    身份证号归属地：{$bigdata.risk_data.data.behaviorFeatures.mobileOperator}
-                </div>
-
-                <hr>
+                {if $bigdata.risk_data.data.behaviorFeatures}
+               
                 <div class=" col-xs-12 col-sm-8 col-md-2 text-left">
                     <strong>
                         <b>
@@ -451,7 +640,7 @@
                 <div class=" col-xs-12 col-sm-8 col-md-12 text-left">
                     <strong>
                         <b>
-                            <i class="fa fa-circle text-success"></i> 联系人信息1</b>
+                            <i class="fa fa-circle text-success"></i> 一阶联系人</b>
                     </strong>
                     <br>
                     <br>
@@ -459,32 +648,12 @@
 
 
 
-                <div class="col-xs-12 col-sm-8 col-md-2 text-left">
-                    一阶联系人黑名单个数：{$bigdata.risk_data.data.behaviorFeatures.firstOrderBlackCnt}
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-2 text-left">
-                    一阶联系人逾期个数（当前逾期天数大于等于4）：{$bigdata.risk_data.data.behaviorFeatures.firstOrderOverdueCnt}
-                </div>
-
-
-                <div class="col-xs-12 col-sm-8 col-md-2 text-left">
-                    一阶联系人黑名单数占比： {$bigdata.risk_data.data.behaviorFeatures.firstOrderBlackCnt }
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-3 text-left">
-                    一阶联系人逾期占比：{$bigdata.risk_data.data.behaviorFeatures.firstOrderOverdueCnt+100}
-                </div>
-
-
-                <div class="col-xs-12 col-sm-8 col-md-3 text-left">
-                    一阶联系人逾期m3+个数（历史逾期天数大于等于90天，包含逾期还清）：{$bigdata.risk_data.data.behaviorFeatures.firstOrderM3Cnt}
-                </div>
-                <br>
-                <br>
+              
 
                 <div class=" col-xs-12 col-sm-8 col-md-12 text-left">
                     <strong>
                         <b>
-                            <i class="fa fa-circle text-success"></i> 联系人信息2</b>
+                            <i class="fa fa-circle text-success"></i> 二阶联系人</b>
                     </strong>
                     <br>
                     <br>
@@ -500,7 +669,12 @@
                 <div class="col-xs-12 col-sm-8 col-md-3 text-left">
                     二阶联系人逾期m3+个数（历史逾期天数大于等于90天，包含逾期还清）：{$bigdata.risk_data.data.behaviorFeatures.secondOrderM3Cnt}
                 </div>
-
+                {else /}
+                <div class="col-xs-12 col-sm-8 col-md-3 text-left">
+                        （未命中社交关系网分析）
+                </div>
+                
+                {/if}
                 <!-- <div class="col-xs-12 col-sm-8 col-md-3 text-left">
                                 二阶联系人逾期m3+个数（历史逾期天数大于等于90天，包含逾期还清）：{$bigdata.risk_data.data.behaviorFeatures.mobileOperator}
                         </div>
