@@ -5,6 +5,7 @@ namespace app\admin\controller\rentcar;
 use app\common\controller\Backend;
 
 use think\Db;
+use think\Session;
 use app\common\model\Config as ConfigModel;
 
 /**
@@ -214,6 +215,8 @@ class Vehicleinformation extends Backend
         return $this->view->fetch();
     }
 
+
+
     //车管人员对租车请求的同意
     public function rentalrequest()
     {
@@ -226,13 +229,17 @@ class Vehicleinformation extends Backend
                 ->where("id", $id)
                 ->setField("review_the_data", "is_reviewing_true");
 
+            $rental_id = Session::get('rental_id');
+
+            DB::name('rental_order')->where("id", $rental_id)->setField("review_the_data", "is_reviewing_argee");
+
             //请求地址
             $uri = "http://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
                 'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo1",
-                'content' => "车管人员已同意你的租车请求"
+                'channel' => "demo-argee",
+                'content' => "车管人员已同意你的租车预定请求"
             ];
             $ch = curl_init ();
             curl_setopt ( $ch, CURLOPT_URL, $uri );//地址

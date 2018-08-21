@@ -27,6 +27,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     
                 }
             });
+
+            //预定
+            goeasy.subscribe({
+                channel: 'demo-reserve',
+                onMessage: function(message){
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                    
+                }
+            });
             
             var table = $("#table");
 
@@ -259,6 +271,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         );
                     },
+                    //车管同意租车预定
                     'click .btn-rentalrequest': function (e, value, row, index) {
 
                         e.stopPropagation();

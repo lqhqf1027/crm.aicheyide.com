@@ -27,6 +27,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
 
         },
+        reserve:function(){
+            
+          
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+            
+ 
+        },
         table: {
             order_acar: function () {
 
@@ -567,6 +595,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     edit_url: 'order/rentalorder/edit',
                     del_url: 'order/rentalorder/del',
                     multi_url: 'order/rentalorder/multi',
+                    reserve_url: 'order/rentalorder/reserve',
                     table: 'rental_order',
                 },
                 toolbar: '#toolbar2',
@@ -623,19 +652,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'operate', title: __('Operate'), table: orderRental, 
                         buttons: [
                             {
-                                name:'rental_audit',text:'提交审核', title:'提交到风控审核', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-rental_audit',
-                                url: 'order/rentalorder/setAudit',  
+                                name:'customerInformation',text:'补全客户信息', title:'补全客户信息', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-customerInformation',
+                                url: 'order/rentalorder/add',  
                                 //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
                                 //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
                                 //....
-                                hidden:function(row){ /**提交审核 */
-                                    if(row.review_the_data == 'is_reviewing_false'){ 
+                                hidden:function(row){ /**补全客户信息 */
+                                    if(row.review_the_data == 'is_reviewing_argee'){ 
                                         return false; 
                                     }  
                                     else if(row.review_the_data == 'is_reviewing_true'){
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_pass'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_false'){
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
@@ -647,10 +679,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',title: __('Del'),classname: 'btn btn-xs btn-danger btn-delone',
                                 url:'order/rentalorder/del',/**删除 */
                                 hidden:function(row){
-                                    if(row.review_the_data == 'is_reviewing_false'){ 
+                                    if(row.review_the_data == 'is_reviewing_argee'){ 
                                         return false; 
                                     }
                                     else if(row.review_the_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_false'){
                                       
                                         return true;
                                     } 
@@ -668,8 +704,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',  title: __('Edit'),classname: 'btn btn-xs btn-success btn-editone', 
                                 url:'order/rentalorder/edit',/**编辑 */
                                 hidden:function(row,value,index){ 
-                                    if(row.review_the_data == 'is_reviewing_false'){ 
+                                    if(row.review_the_data == 'is_reviewing_argee'){ 
                                         return false; 
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_false'){
+                                      
+                                        return true;
                                     } 
                                     else if(row.review_the_data == 'is_reviewing_true'){ 
                                         return true;
@@ -683,8 +723,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }, 
                             },
                             {
-                                name: 'is_reviewing_true',text: '正在审核中',title:'正在审核中',
-                                hidden:function(row){  /**正在审核 */
+                                name: 'is_reviewing_true',text: '车管正在处理中',title:'车管正在处理中',
+                                hidden:function(row){  /**车管正在处理中 */
                                     if(row.review_the_data == 'is_reviewing_true'){ 
                                         return false; 
                                     }
@@ -694,6 +734,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_pass'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'is_reviewing_argee'){
+                                      
+                                        return true;
+                                    } 
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
                                         return true;
                                     }
@@ -708,6 +752,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if (row.review_the_data == 'is_reviewing_true') {
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'is_reviewing_argee'){
+                                      
+                                        return true;
+                                    } 
                                     else if(row.review_the_data == 'is_reviewing_false'){
                                         return true;
                                     }
@@ -726,6 +774,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if (row.review_the_data == 'is_reviewing_pass') {
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'is_reviewing_argee'){
+                                      
+                                        return true;
+                                    } 
                                     else if (row.review_the_data == 'is_reviewing_true') {
                                         return true;
                                     }
@@ -754,6 +806,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             });
 
+            //车管同意预定---销售接受消息
+            goeasy.subscribe({
+                channel: 'demo-argee',
+                onMessage: function(message){
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                }
+            });
+
             //通过
             goeasy.subscribe({
                 channel: 'demo-rentalpass',
@@ -777,58 +840,76 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             });
 
-                orderRental.on('load-success.bs.table', function (e, data) {
-                    // console.log(data);
-                    $('#badge_order_rental').text(data.total);
-                    $(".btn-rentalDetails").data("area", ["95%", "95%"]);
-                })
-                // 为表格1绑定事件
-                Table.api.bindevent(orderRental);
+            orderRental.on('load-success.bs.table', function (e, data) {
+                // console.log(data);
+                $('#badge_order_rental').text(data.total);
+                $(".btn-rentalDetails").data("area", ["95%", "95%"]);
+            })
+            // 为表格1绑定事件
+            Table.api.bindevent(orderRental);
 
 
                
-                $(document).on("click", ".rental-list", function (index) {   
+            $(document).on("click", ".rental-list", function (index) {   
                     
                     
-                    var url = 'order/rentalorder/add';
-                    var options = {
-                        shadeClose: false,
-                        shade: [0.3, '#393D49'],
-                        area:['95%','95%'],
-                        // closeBtn: 0, //不显示关闭按钮
-                        cancel: function(index){ 
-                            //右上角关闭回调
+                var url = 'order/rentalorder/add';
+                var options = {
+                    shadeClose: false,
+                    shade: [0.3, '#393D49'],
+                    area:['95%','95%'],
+                    // closeBtn: 0, //不显示关闭按钮
+                    cancel: function(index){ 
+                        //右上角关闭回调
                             
-                            if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭
+                        if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭
                                 
-                                Fast.api.ajax({
-                                    url: 'order/rentalorder/giveup',
-                                    // data: {ids: JSON.stringify($ids)}
-                                }, function (data, rets) {
-                                    // console.log(data);
-                                    // return;
-                                    // Toastr.success("成功");
-                                    Layer.close(index);
+                            Fast.api.ajax({
+                                url: 'order/rentalorder/giveup',
+                                // data: {ids: JSON.stringify($ids)}
+                            }, function (data, rets) {
+                                // console.log(data);
+                                // return;
+                                // Toastr.success("成功");
+                                Layer.close(index);
                                     
-                                    // return false;
-                                }, function (data, ret) {
-                                    //失败的回调
+                                // return false;
+                            }, function (data, ret) {
+                                //失败的回调
                                     
-                                    return false;
-                                });
+                                return false;
+                            });
 
                                 layer.close(index)
                             }
 
-                            return false; 
+                        return false; 
                             
-                        },
-                        callback:function(value){
+                    },
+                    callback:function(value){
                                                         
-                        }
                     }
-                    Fast.api.open(url,'新增租车单',options)
-                })
+                }
+                Fast.api.open(url,'新增租车单',options)
+            })
+
+
+            //销售预定租车
+            $(document).on("click", ".btn-reserve", function () {   
+                    
+                var url = 'order/rentalorder/reserve';
+                var options = {
+                    shadeClose: false,
+                    shade: [0.3, '#393D49'],
+                    area:['70%','70%'],
+                    // closeBtn: 0, //不显示关闭按钮
+                    callback:function(value){
+                        console.log(123);                      
+                    }
+                }
+                Fast.api.open(url,'租车预定',options)
+            })
+
 
             },
             order_second: function () {
@@ -1397,6 +1478,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             }
                         );
+
+                    },
+                    //租车客户信息的补全
+                    'click .btn-customerInformation': function (e, value, row, index) {
+
+                        $(".btn-customerInformation").data("area", ["95%", "95%"]);
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = [options.pk];
+                        row = $.extend({}, row ? row : {}, { ids:ids}); 
+                        var url = 'order/rentalorder/add';
+
+
+                        // console.log(url);
+                        Fast.api.open(Table.api.replaceurl(url,row, table), __('补全客户信息'), $(this).data() || {});
+
 
                     },
                     //租车提交审核
