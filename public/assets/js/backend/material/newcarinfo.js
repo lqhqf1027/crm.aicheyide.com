@@ -63,7 +63,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
-                            {field: 'total_contract', title: __('合同总价')},
                             {field: 'payment', title: __('首付')},
                             {field: 'monthly', title: __('月供')},
                             {field: 'nperlist', title: __('期数')},

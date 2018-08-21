@@ -17,7 +17,7 @@ return [
     'House_fee'  =>  '上户费(元)',
     'Luqiao_fee'  =>  '路桥费(元)',
     'Insurance_buydate'  =>  '保险购买日期',
-    'Insurance_policy'  =>  '交强险保单',
-    'Commercial_insurance_policy'  =>  '商业险保单',
+    'Insurance_policy'  =>  '交强险保单号',
+    'Commercial_insurance_policy'  =>  '商业险保单号',
     'Transferdate'  =>  '过户日期'
 ];
