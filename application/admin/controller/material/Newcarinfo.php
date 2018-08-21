@@ -85,20 +85,15 @@ class Newcarinfo extends Backend
      */
     public function edit($ids = NULL)
     {
-//        $row = Db::table("crm_order_view")
-//            ->where("id", $ids)
-//            ->field("archival_coding,signdate,total_contract,end_money,hostdate,mortgage,mortgage_people,ticketdate,supplier,tax_amount,no_tax_amount,pay_taxesdate,house_fee,luqiao_fee,insurance_buydate,car_boat_tax,insurance_policy,commercial_insurance_policy,transferdate")
-//            ->select();
-//        $row = $row[0];
-
         $gage = Db::name("sales_order")
             ->where("id", $ids)
-            ->field("mortgage_registration_id")
-            ->find()['mortgage_registration_id'];
+            ->field("mortgage_registration_id,delivery_datetime")
+            ->find();
 
-        if ($gage) {
+
+        if ($gage['mortgage_registration_id']) {
             $row = Db::name("mortgage_registration")
-                ->where("id", "$gage")
+                ->where("id", $gage['mortgage_registration_id'])
                 ->find();
 
             $this->view->assign("row", $row);
@@ -110,7 +105,6 @@ class Newcarinfo extends Backend
 
             if ($params) {
 
-//                pr($params);die();
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
@@ -121,8 +115,7 @@ class Newcarinfo extends Backend
 
                     $doUpdate = [
                         'archival_coding' => $params['archival_coding'],
-                        'signdate' => $params['signdate'],
-                        'total_contract' => $params['total_contract'],
+                        'signdate' => $gage['delivery_datetime'],
                         'end_money' => $params['end_money'],
                         'hostdate' => $params['hostdate'],
                         'mortgage' => $params['mortgage'],
@@ -138,13 +131,14 @@ class Newcarinfo extends Backend
                         'car_boat_tax' => $params['car_boat_tax'],
                         'insurance_policy' => $params['insurance_policy'],
                         'commercial_insurance_policy' => $params['commercial_insurance_policy'],
-                        'transferdate' => $params['transferdate']
+                        'transferdate' => $params['transferdate'],
+                        'classification' => 'new'
                     ];
 
 
-                    if ($gage) {
+                    if ($gage['mortgage_registration_id']) {
                         $result = Db::name("mortgage_registration")
-                            ->where("id", $gage)
+                            ->where("id", $gage['mortgage_registration_id'])
                             ->update($doUpdate);
                     } else {
                         Db::name("mortgage_registration")->insert($doUpdate);
@@ -181,30 +175,17 @@ class Newcarinfo extends Backend
     public function edit2($ids = NULL)
     {
 
-//        $id = Db::name("sales_order")
-//            ->where("id", $ids)
-//            ->field("registry_registration_id")
-//            ->select();
-//
-//        $id = $id[0]['registry_registration_id'];
-//
-//        $row = Db::name("registry_registration")
-//            ->where("id", $id)
-//            ->select();
-//
-//        $row = $row[0];
 
         $registr = Db::name("sales_order")
-        ->where("id",$ids)
-        ->find()['registry_registration_id'];
+            ->where("id", $ids)
+            ->find()['registry_registration_id'];
 
-        if($registr){
-           $row = Db::name("registry_registration")
-            ->where("id",$registr)
-            ->find();
+        if ($registr) {
+            $row = Db::name("registry_registration")
+                ->where("id", $registr)
+                ->find();
             $this->view->assign("row", $row);
         }
-
 
 
         if ($this->request->isPost()) {
@@ -239,21 +220,22 @@ class Newcarinfo extends Backend
                         'maximum_guarantee_contractimages' => $params['maximum_guarantee_contractimages'],
                         'credit_reportimages' => $params['credit_reportimages'],
                         'information_remark' => $params['information_remark'],
-                        'driving_licenseimages' => $params['driving_licenseimages']
+                        'driving_licenseimages' => $params['driving_licenseimages'],
+                        'classification' => 'new'
                     );
 
-                    if($registr){
+                    if ($registr) {
                         $result = Db::name("registry_registration")
                             ->where("id", $registr)
                             ->update($data);
-                    }else{
+                    } else {
                         Db::name("registry_registration")->insert($data);
 
                         $last_id = Db::name("registry_registration")->getLastInsID();
 
                         $result = Db::name("sales_order")
-                        ->where("id",$ids)
-                        ->setField("registry_registration_id",$last_id);
+                            ->where("id", $ids)
+                            ->setField("registry_registration_id", $last_id);
                     }
 
 

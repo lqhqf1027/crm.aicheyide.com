@@ -335,7 +335,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
                     $(".btn-editone").data("area", ["80%", "80%"]);
                     $(".btn-add").data("area", ["80%", "80%"]);
-                    $(".btn-edit").data("area", ["80%", "80%"]);
+                    $(".btn-edit").data("area", ["80%", "80%"]);d
                 });
                 // 初始化表格
                 nanchongDriver.bootstrapTable({
