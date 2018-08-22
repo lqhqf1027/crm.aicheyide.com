@@ -37,6 +37,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // })
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-detail").data("area", ["95%", "95%"]);
+                    $(".btn-edit").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -97,9 +99,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'edit',
                                         icon: 'fa fa-pencil',
+                                        text: __('Edit'),
                                         title: __('Edit'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-success btn-editone',
+                                    },
+                                    {
+                                        name: 'detail',
+                                        text: '查看详细信息',
+                                        icon: 'fa fa-eye',
+                                        title: __('detail'),
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-info btn-detail',
                                     },
 
                                 ],
@@ -143,7 +154,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'registry/Newcarinfo/index',
                         add_url: 'registry/registration/add',
-                        edit_url: 'material/newcarinfo/edit2',
+                        edit_url: 'material/newcarinfo/edit3',
                         del_url: 'registry/registration/del',
                         multi_url: 'registry/registration/multi',
                         table: 'registry_registration',
@@ -292,6 +303,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit2: function () {
             Controller.api.bindevent();
         },
+        edit3: function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
@@ -325,6 +339,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
+                    'click .btn-detail':function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = "material/newcarinfo/detail";
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看详细信息'), $(this).data() || {});
+                    }
                 }
             },
             formatter: {
@@ -344,10 +368,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var res = "";
                     var color = "";
                     if (value == null || value == "") {
-                        res = "x";
+                        res = "<i class='fa fa-times'></i>";
                         color = "danger";
                     } else {
-                        res = "√"
+                        res = "<i class='fa fa-check'></i>"
                         color = "success";
                     }
 
