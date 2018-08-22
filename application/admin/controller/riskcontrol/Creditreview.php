@@ -974,10 +974,8 @@ class Creditreview extends Backend
             [
                 'tx' => '101',
                 'data' => [
-                    'name' => $row['username'],
-                    // 'name' => '包成永',
+                    'name' => $row['username'], 
                     'idNo' => $row['id_card'],
-                    // 'idNo' => '511623199504257475',
                     'queryReason' => '10',
                 ],
             ]
@@ -1014,12 +1012,9 @@ class Creditreview extends Backend
                     [
                         'data'=>[
                             'name' => $row['username'],
-                            // 'name' =>'包成永',
-                            'idNo' => $row['id_card'],
-                            // 'idNo' => '511623199504257475',
-                            'mobile' => $row['phone'],
-                            // 'mobile' =>'15208369501'
                           
+                            'idNo' => $row['id_card'],
+                            'mobile' => $row['phone'],
                         ],
                         'queryReason' => '10',//贷前审批s 
                         'pricedAuthentification' => '1,2'
@@ -1027,53 +1022,35 @@ class Creditreview extends Backend
                     ]
                 );   
                 
-                $result['risk_data'] = posts('https://www.zhichengcredit.com/echo-center/api/mixedRiskQuery/queryMixedRiskList/v3 ', $params_risk);
-              
+                $result['risk_data'] = posts('https://www.zhichengcredit.com/echo-center/api/mixedRiskQuery/queryMixedRiskList/v3 ', $params_risk); 
                 /**风险数据接口 */
                 if ($result['risk_data']['errorcode'] == '0000' || $result['risk_data']['errorcode'] == '0001' || $result['risk_data']['errorcode'] == '0005') {
                     //转义base64入库
-                    $result['share_data'] = base64_encode($this->JSON($result['share_data']));
-                    $result['risk_data'] = base64_encode($this->JSON($result['risk_data']));
+                    $result['share_data'] = base64_encode(ARRAY_TO_JSON($result['share_data']));
+                    $result['risk_data'] = base64_encode(ARRAY_TO_JSON($result['risk_data'])); 
                     $writeDatabases = Db::name('big_data')->insert($result);
-                    if ($writeDatabases) {
-                        
-                        $this->view->assign('bigdata', $data);
-                        pr($this->getBigData($row['id']));
-                        die;
-                        
+                    if ($writeDatabases) { 
+                        $this->view->assign('bigdata',  $this->getBigData($row['id'])); 
 
                     } else {
-                        $this->error('数据写入失败');
-                        return false;
+                        return '<h1><center>数据写入失败</center></h1>';
                     }
                 } else {
-                    $this->error('风险接口-》' . $result['risk_data']['message']);
+                    return "<h1><center>风险接口-》{$result['risk_data']['message']}</center></h1>";
 
                 }
 
             } else {
-                $this->error('共享接口-》' . $result['message']);
+                return "<h1><center>共享接口-》{$result['message']}</center></h1>";
+                
             }
-        } else {
-            //如果errorCode == 0001 ,用户没有借款信息大数据可查询
-            if ($data['errorCode'] == '0001') {
-                // $this->success('该用户没有大数据可查询', null, $this->getBigData($row['id']));
-                pr($data);
-
-                echo 22;
-                die;
-            } else {
-                // echo 333;
-                $this->view->assign('bigdata', $this->getBigData($row['id']));
+        } else { 
+                $this->view->assign('bigdata', $data);
                 
                 $this->assignconfig([
             
                     'zcFraudScore' =>$this->getBigData($row['id'])['risk_data']['data']['zcFraudScore']
-                ]);
-                // pr($data);die;
-             
-
-            }
+                ]); 
         }
         return $this->view->fetch();
     } 
@@ -1090,122 +1067,14 @@ class Creditreview extends Backend
             ->field('a.*')
             ->find();
         if (!empty($bigData)) {
-            $bigData['share_data'] = $this->object_to_array(json_decode(base64_decode($bigData['share_data'])));
-            $bigData['risk_data'] = $this->object_to_array(json_decode(base64_decode($bigData['risk_data'])));
+            $bigData['share_data'] = object_to_array(json_decode(base64_decode($bigData['share_data'])));
+            $bigData['risk_data'] = object_to_array(json_decode(base64_decode($bigData['risk_data'])));
             return $bigData;
 
         } else {
             return [];
         }
     }
-    /**
-     * 对象转数组
-     * 
-     */
-
-    public function object_to_array($obj)
-    {
-        $obj = (array)$obj;
-        foreach ($obj as $k => $v) {
-            if (gettype($v) == 'resource') {
-                return;
-            }
-            if (gettype($v) == 'object' || gettype($v) == 'array') {
-                $obj[$k] = (array)$this->object_to_array($v);
-            }
-        }
-
-        return $obj;
-    }
-    /**************************************************************
-
-     *
-
-     *  使用特定function对数组中所有元素做处理
-
-     *  @param  string  &$array     要处理的字符串
-
-     *  @param  string  $function   要执行的函数
-
-     *  @return boolean $apply_to_keys_also     是否也应用到key上
-
-     *  @access public
-
-     *
-
-     *************************************************************/
-    public function arrayRecursive(&$array, $function, $apply_to_keys_also = false)
-
-    {
-
-        static $recursive_counter = 0;
-
-        if (++$recursive_counter > 1000) {
-
-            die('possible deep recursion attack');
-
-        }
-
-        foreach ($array as $key => $value) {
-
-            if (is_array($value)) {
-
-                $this->arrayRecursive($array[$key], $function, $apply_to_keys_also);
-
-            } else {
-
-                $array[$key] = $function($value);
-
-            }
-
-
-
-            if ($apply_to_keys_also && is_string($key)) {
-
-                $new_key = $function($key);
-
-                if ($new_key != $key) {
-
-                    $array[$new_key] = $array[$key];
-
-                    unset($array[$key]);
-
-                }
-
-            }
-
-        }
-
-        $recursive_counter--;
-
-    }
-
-
-
-    /**************************************************************
-
-     *
-
-     *  将数组转换为JSON字符串（兼容中文）
-
-     *  @param  array   $array      要转换的数组
-
-     *  @return string      转换得到的json字符串
-
-     *  @access public
-
-     *
-
-     *************************************************************/
-
-    public function JSON($array)
-    {
-        $this->arrayRecursive($array, 'urlencode', true);
-
-        $json = json_encode($array);
-
-        return urldecode($json);
-
-    }
+ 
 
 }
