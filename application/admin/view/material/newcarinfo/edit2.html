@@ -1,10 +1,303 @@
-<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('车钥匙')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有身份证复印件')}:</label>
         <div class="col-xs-12 col-sm-8">
 
             <div class="radio">
+                {empty name="$row.id_card"}
+                <label for="row[id_card]-{$key}"><input id="row[id_card]-{$key}" name="row[id_card]" type="radio"
+                                                                        value="yes"/>有</label>
+                <label for="row[id_card]-{$key}"><input id="row[id_card]-{$key}" name="row[id_card]" type="radio"
+                                                                        value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[id_card]-{$key}">
+                    {if condition="$key==$row['marry_and_divorceimages']"}
+                    <input id="row[id_card]-{$key}" name="row[id_card]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[id_card]-{$key}" name="row[id_card]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="badge">14</span>
+                        Cras justo odio
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">2</span>
+                        Dapibus ac facilisis in
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">1</span>
+                        Morbi leo risus
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有户口复印件')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.registered_residence"}
+                <label for="row[registered_residence]-{$key}"><input id="row[registered_residence]-{$key}" name="row[registered_residence]" type="radio"
+                                                        value="yes"/>有</label>
+                <label for="row[registered_residence]-{$key}"><input id="row[registered_residence]-{$key}" name="row[registered_residence]" type="radio"
+                                                        value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[registered_residence]-{$key}">
+                    {if condition="$key==$row['registered_residence']"}
+                    <input id="row[registered_residence]-{$key}" name="row[registered_residence]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[registered_residence]-{$key}" name="row[registered_residence]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有结婚证或者离婚证')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.marry_and_divorceimages"}
+                <label for="row[marry_and_divorceimages]-{$key}"><input id="row[marry_and_divorceimages]-{$key}" name="row[marry_and_divorceimages]" type="radio"
+                                                                        value="yes"/>有</label>
+                <label for="row[marry_and_divorceimages]-{$key}"><input id="row[marry_and_divorceimages]-{$key}" name="row[marry_and_divorceimages]" type="radio"
+                                                                        value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[marry_and_divorceimages]-{$key}">
+                    {if condition="$key==$row['marry_and_divorceimages']"}
+                    <input id="row[marry_and_divorceimages]-{$key}" name="row[marry_and_divorceimages]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[marry_and_divorceimages]-{$key}" name="row[marry_and_divorceimages]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有征信报告')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.credit_reportimages"}
+                <label for="row[credit_reportimages]-{$key}"><input id="row[credit_reportimages]-{$key}" name="row[credit_reportimages]" type="radio"
+                                                                     value="yes"/>有</label>
+                <label for="row[credit_reportimages]-{$key}"><input id="row[credit_reportimages]-{$key}" name="row[credit_reportimages]" type="radio"
+                                                                     value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[credit_reportimages]-{$key}">
+                    {if condition="$key==$row['credit_reportimages']"}
+                    <input id="row[credit_reportimages]-{$key}" name="row[credit_reportimages]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[credit_reportimages]-{$key}" name="row[credit_reportimages]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有半年银行流水')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.halfyear_bank_flowimages"}
+                <label for="row[halfyear_bank_flowimages]-{$key}"><input id="row[halfyear_bank_flowimages]-{$key}" name="row[halfyear_bank_flowimages]" type="radio"
+                                                                    value="yes"/>有</label>
+                <label for="row[halfyear_bank_flowimages]-{$key}"><input id="row[halfyear_bank_flowimages]-{$key}" name="row[halfyear_bank_flowimages]" type="radio"
+                                                                    value="no" checked>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[halfyear_bank_flowimages]-{$key}">
+                    {if condition="$key==$row['halfyear_bank_flowimages']"}
+                    <input id="row[halfyear_bank_flowimages]-{$key}" name="row[halfyear_bank_flowimages]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[halfyear_bank_flowimages]-{$key}" name="row[halfyear_bank_flowimages]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有通话清单')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.detailed_list"}
+                <label for="row[detailed_list]-{$key}"><input id="row[detailed_list]-{$key}" name="row[detailed_list]" type="radio"
+                                                                    value="yes"/>有</label>
+                <label for="row[detailed_list]-{$key}"><input id="row[detailed_list]-{$key}" name="row[detailed_list]" type="radio"
+                                                                    value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[detailed_list]-{$key}">
+                    {if condition="$key==$row['detailed_list']"}
+                    <input id="row[detailed_list]-{$key}" name="row[detailed_list]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[detailed_list]-{$key}" name="row[detailed_list]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有担保人')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.guarantee"}
+                <label for="row[guarantee]-{$key}"><input id="row[guarantee]-{$key}" name="row[guarantee]" type="radio"
+                                                              value="yes"/>有</label>
+                <label for="row[guarantee]-{$key}"><input id="row[guarantee]-{$key}" name="row[guarantee]" type="radio"
+                                                              value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[guarantee]-{$key}">
+                    {if condition="$key==$row['guarantee']"}
+                    <input id="row[guarantee]-{$key}" name="row[guarantee]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[guarantee]-{$key}" name="row[guarantee]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有居住证/租房合同/房产证')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.residence_permitimages"}
+                <label for="row[residence_permitimages]-{$key}"><input id="row[residence_permitimages]-{$key}" name="row[residence_permitimages]" type="radio"
+                                                          value="yes"/>有</label>
+                <label for="row[residence_permitimages]-{$key}"><input id="row[residence_permitimages]-{$key}" name="row[residence_permitimages]" type="radio"
+                                                          value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[residence_permitimages]-{$key}">
+                    {if condition="$key==$row['residence_permitimages']"}
+                    <input id="row[residence_permitimages]-{$key}" name="row[residence_permitimages]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[residence_permitimages]-{$key}" name="row[residence_permitimages]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有驾照')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.driving_license"}
+                <label for="row[driving_license]-{$key}"><input id="row[driving_license]-{$key}" name="row[driving_license]" type="radio"
+                                                                       value="yes"/>有</label>
+                <label for="row[driving_license]-{$key}"><input id="row[driving_license]-{$key}" name="row[driving_license]" type="radio"
+                                                                       value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[driving_license]-{$key}">
+                    {if condition="$key==$row['driving_license']"}
+                    <input id="row[driving_license]-{$key}" name="row[driving_license]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[driving_license]-{$key}" name="row[driving_license]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有公司合同')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.company_contractimages"}
+                <label for="row[company_contractimages]-{$key}"><input id="row[company_contractimages]-{$key}" name="row[company_contractimages]" type="radio"
+                                                                value="yes"/>有</label>
+                <label for="row[company_contractimages]-{$key}"><input id="row[company_contractimages]-{$key}" name="row[company_contractimages]" type="radio"
+                                                                value="no" checked/>无</label>
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[company_contractimages]-{$key}">
+                    {if condition="$key==$row['company_contractimages']"}
+                    <input id="row[company_contractimages]-{$key}" name="row[company_contractimages]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[company_contractimages]-{$key}" name="row[company_contractimages]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有车钥匙')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+                {empty name="$row.car_keys"}
+                <label for="row[car_keys]-{$key}"><input id="row[car_keys]-{$key}" name="row[car_keys]" type="radio"
+                                                         value="yes"/>有</label>
+                <label for="row[car_keys]-{$key}"><input id="row[car_keys]-{$key}" name="row[car_keys]" type="radio"
+                                                         value="no" checked/>无</label>
+
+
+                {else /}
                 {foreach name="keylist" item="vo"}
                 <label for="row[car_keys]-{$key}">
                     {if condition="$key==$row['car_keys']"}
@@ -14,269 +307,132 @@
                     {/if}
                     {$vo}</label>
                 {/foreach}
+                {/empty}
+
             </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Explain_situation')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-explain_situation" data-rule="required" class="form-control form-control" name="row[explain_situation]" type="text" value="{$row.explain_situation}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Mortgage_registration_fee')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-mortgage_registration_fee" data-rule="required" class="form-control form-control" step="0.01" name="row[mortgage_registration_fee]" type="number" value="{$row.mortgage_registration_fee}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Information_remark')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-information_remark" data-rule="required" class="form-control form-control" name="row[information_remark]" type="text" value="{$row.information_remark}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Marry_and_divorceimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-marry_and_divorceimages" class="form-control form-control" size="50" name="row[marry_and_divorceimages]" type="text" value="{$row.marry_and_divorceimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-marry_and_divorceimages" class="btn btn-danger plupload" data-input-id="c-marry_and_divorceimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-marry_and_divorceimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-marry_and_divorceimages" class="btn btn-primary fachoose" data-input-id="c-marry_and_divorceimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-marry_and_divorceimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-marry_and_divorceimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Halfyear_bank_flowimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-halfyear_bank_flowimages" data-rule="required" class="form-control form-control" size="50" name="row[halfyear_bank_flowimages]" type="text" value="{$row.halfyear_bank_flowimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-halfyear_bank_flowimages" class="btn btn-danger plupload" data-input-id="c-halfyear_bank_flowimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-halfyear_bank_flowimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-halfyear_bank_flowimages" class="btn btn-primary fachoose" data-input-id="c-halfyear_bank_flowimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-halfyear_bank_flowimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-halfyear_bank_flowimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Residence_permitimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-residence_permitimages" data-rule="required" class="form-control form-control" size="50" name="row[residence_permitimages]" type="text" value="{$row.residence_permitimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-residence_permitimages" class="btn btn-danger plupload" data-input-id="c-residence_permitimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-residence_permitimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-residence_permitimages" class="btn btn-primary fachoose" data-input-id="c-residence_permitimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-residence_permitimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-residence_permitimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Company_contractimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-company_contractimages" data-rule="required" class="form-control form-control" size="50" name="row[company_contractimages]" type="text" value="{$row.company_contractimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-company_contractimages" class="btn btn-danger plupload" data-input-id="c-company_contractimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-company_contractimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-company_contractimages" class="btn btn-primary fachoose" data-input-id="c-company_contractimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-company_contractimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-company_contractimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Rent_house_contactimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-rent_house_contactimages" data-rule="required" class="form-control form-control" size="50" name="row[rent_house_contactimages]" type="text" value="{$row.rent_house_contactimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-rent_house_contactimages" class="btn btn-danger plupload" data-input-id="c-rent_house_contactimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-rent_house_contactimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-rent_house_contactimages" class="btn btn-primary fachoose" data-input-id="c-rent_house_contactimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-rent_house_contactimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-rent_house_contactimages"></ul>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Lift_listimages')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有提车单')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-lift_listimages" data-rule="required" class="form-control form-control" size="50" name="row[lift_listimages]" type="text" value="{$row.lift_listimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-lift_listimages" class="btn btn-danger plupload" data-input-id="c-lift_listimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-lift_listimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-lift_listimages" class="btn btn-primary fachoose" data-input-id="c-lift_listimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-lift_listimages"></span>
+
+            <div class="radio">
+                {empty name="$row.lift_listimages"}
+                <label for="row[lift_listimages]-{$key}"><input id="row[lift_listimages]-{$key}" name="row[lift_listimages]" type="radio"
+                                                         value="yes"/>有</label>
+                <label for="row[lift_listimages]-{$key}"><input id="row[lift_listimages]-{$key}" name="row[lift_listimages]" type="radio"
+                                                         value="no" checked/>无</label>
+
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[lift_listimages]-{$key}">
+                    {if condition="$key==$row['lift_listimages']"}
+                    <input id="row[lift_listimages]-{$key}" name="row[lift_listimages]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[lift_listimages]-{$key}" name="row[lift_listimages]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
             </div>
-            <ul class="row list-inline plupload-preview" id="p-lift_listimages"></ul>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Truth_management_protocolimages')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有定金协议')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-truth_management_protocolimages" data-rule="required" class="form-control form-control" size="50" name="row[truth_management_protocolimages]" type="text" value="{$row.truth_management_protocolimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-truth_management_protocolimages" class="btn btn-danger plupload" data-input-id="c-truth_management_protocolimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-truth_management_protocolimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-truth_management_protocolimages" class="btn btn-primary fachoose" data-input-id="c-truth_management_protocolimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-truth_management_protocolimages"></span>
+
+            <div class="radio">
+                {empty name="$row.deposit"}
+                <label for="row[deposit]-{$key}"><input id="row[deposit]-{$key}" name="row[deposit]" type="radio"
+                                                                value="yes"/>有</label>
+                <label for="row[deposit]-{$key}"><input id="row[deposit]-{$key}" name="row[deposit]" type="radio"
+                                                                value="no" checked/>无</label>
+
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[deposit]-{$key}">
+                    {if condition="$key==$row['deposit']"}
+                    <input id="row[deposit]-{$key}" name="row[deposit]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[deposit]-{$key}" name="row[deposit]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
             </div>
-            <ul class="row list-inline plupload-preview" id="p-truth_management_protocolimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Confidentiality_agreementimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-confidentiality_agreementimages" data-rule="required" class="form-control form-control" size="50" name="row[confidentiality_agreementimages]" type="text" value="{$row.confidentiality_agreementimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-confidentiality_agreementimages" class="btn btn-danger plupload" data-input-id="c-confidentiality_agreementimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-confidentiality_agreementimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-confidentiality_agreementimages" class="btn btn-primary fachoose" data-input-id="c-confidentiality_agreementimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-confidentiality_agreementimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-confidentiality_agreementimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Supplementary_contract_agreementimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-supplementary_contract_agreementimages" data-rule="required" class="form-control form-control" size="50" name="row[supplementary_contract_agreementimages]" type="text" value="{$row.supplementary_contract_agreementimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-supplementary_contract_agreementimages" class="btn btn-danger plupload" data-input-id="c-supplementary_contract_agreementimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-supplementary_contract_agreementimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-supplementary_contract_agreementimages" class="btn btn-primary fachoose" data-input-id="c-supplementary_contract_agreementimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-supplementary_contract_agreementimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-supplementary_contract_agreementimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Tianfu_bank_cardimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-tianfu_bank_cardimages" data-rule="required" class="form-control form-control" size="50" name="row[tianfu_bank_cardimages]" type="text" value="{$row.tianfu_bank_cardimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-tianfu_bank_cardimages" class="btn btn-danger plupload" data-input-id="c-tianfu_bank_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-tianfu_bank_cardimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-tianfu_bank_cardimages" class="btn btn-primary fachoose" data-input-id="c-tianfu_bank_cardimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-tianfu_bank_cardimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-tianfu_bank_cardimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Other_documentsimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-other_documentsimages" data-rule="required" class="form-control form-control" size="50" name="row[other_documentsimages]" type="text" value="{$row.other_documentsimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-other_documentsimages" class="btn btn-danger plupload" data-input-id="c-other_documentsimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-other_documentsimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-other_documentsimages" class="btn btn-primary fachoose" data-input-id="c-other_documentsimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-other_documentsimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-other_documentsimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Tax_proofimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-tax_proofimages" data-rule="required" class="form-control form-control" size="50" name="row[tax_proofimages]" type="text" value="{$row.tax_proofimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-tax_proofimages" class="btn btn-danger plupload" data-input-id="c-tax_proofimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-tax_proofimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-tax_proofimages" class="btn btn-primary fachoose" data-input-id="c-tax_proofimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-tax_proofimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-tax_proofimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Invoice_or_deduction_coupletimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-invoice_or_deduction_coupletimages" data-rule="required" class="form-control form-control" size="50" name="row[invoice_or_deduction_coupletimages]" type="text" value="{$row.invoice_or_deduction_coupletimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-invoice_or_deduction_coupletimages" class="btn btn-danger plupload" data-input-id="c-invoice_or_deduction_coupletimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-invoice_or_deduction_coupletimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-invoice_or_deduction_coupletimages" class="btn btn-primary fachoose" data-input-id="c-invoice_or_deduction_coupletimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-invoice_or_deduction_coupletimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-invoice_or_deduction_coupletimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Registration_certificateimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-registration_certificateimages" data-rule="required" class="form-control form-control" size="50" name="row[registration_certificateimages]" type="text" value="{$row.registration_certificateimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-registration_certificateimages" class="btn btn-danger plupload" data-input-id="c-registration_certificateimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-registration_certificateimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-registration_certificateimages" class="btn btn-primary fachoose" data-input-id="c-registration_certificateimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-registration_certificateimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-registration_certificateimages"></ul>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Maximum_guarantee_contractimages')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有道路管理条例告知书')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-maximum_guarantee_contractimages" data-rule="required" class="form-control form-control" size="50" name="row[maximum_guarantee_contractimages]" type="text" value="{$row.maximum_guarantee_contractimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-maximum_guarantee_contractimages" class="btn btn-danger plupload" data-input-id="c-maximum_guarantee_contractimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-maximum_guarantee_contractimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-maximum_guarantee_contractimages" class="btn btn-primary fachoose" data-input-id="c-maximum_guarantee_contractimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-maximum_guarantee_contractimages"></span>
+
+            <div class="radio">
+                {empty name="$row.truth_management_protocolimages"}
+                <label for="row[truth_management_protocolimages]-{$key}"><input id="row[truth_management_protocolimages]-{$key}" name="row[truth_management_protocolimages]" type="radio"
+                                                        value="yes"/>有</label>
+                <label for="row[truth_management_protocolimages]-{$key}"><input id="row[truth_management_protocolimages]-{$key}" name="row[truth_management_protocolimages]" type="radio"
+                                                        value="no" checked/>无</label>
+
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[truth_management_protocolimages]-{$key}">
+                    {if condition="$key==$row['truth_management_protocolimages']"}
+                    <input id="row[truth_management_protocolimages]-{$key}" name="row[truth_management_protocolimages]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[truth_management_protocolimages]-{$key}" name="row[truth_management_protocolimages]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
             </div>
-            <ul class="row list-inline plupload-preview" id="p-maximum_guarantee_contractimages"></ul>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Credit_reportimages')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-credit_reportimages" data-rule="required" class="form-control form-control" size="50" name="row[credit_reportimages]" type="text" value="{$row.credit_reportimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-credit_reportimages" class="btn btn-danger plupload" data-input-id="c-credit_reportimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-credit_reportimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-credit_reportimages" class="btn btn-primary fachoose" data-input-id="c-credit_reportimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-credit_reportimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-credit_reportimages"></ul>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Driving_licenseimages')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否有保密协议')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-driving_licenseimages" data-rule="required" class="form-control form-control" size="50" name="row[driving_licenseimages]" type="text" value="{$row.driving_licenseimages}">
-                <div class="input-group-addon no-border no-padding">
-                    <span><button type="button" id="plupload-driving_licenseimages" class="btn btn-danger plupload" data-input-id="c-driving_licenseimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-driving_licenseimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
-                    <span><button type="button" id="fachoose-driving_licenseimages" class="btn btn-primary fachoose" data-input-id="c-driving_licenseimages" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
-                </div>
-                <span class="msg-box n-right" for="c-driving_licenseimages"></span>
+
+            <div class="radio">
+                {empty name="$row.confidentiality_agreementimages"}
+                <label for="row[confidentiality_agreementimages]-{$key}"><input id="row[confidentiality_agreementimages]-{$key}" name="row[confidentiality_agreementimages]" type="radio"
+                                                                                value="yes"/>有</label>
+                <label for="row[confidentiality_agreementimages]-{$key}"><input id="row[confidentiality_agreementimages]-{$key}" name="row[confidentiality_agreementimages]" type="radio"
+                                                                                value="no" checked/>无</label>
+
+
+                {else /}
+                {foreach name="keylist" item="vo"}
+                <label for="row[confidentiality_agreementimages]-{$key}">
+                    {if condition="$key==$row['confidentiality_agreementimages']"}
+                    <input id="row[confidentiality_agreementimages]-{$key}" name="row[confidentiality_agreementimages]" type="radio" value="{$key}" checked/>
+                    {else /}
+                    <input id="row[confidentiality_agreementimages]-{$key}" name="row[confidentiality_agreementimages]" type="radio" value="{$key}"/>
+                    {/if}
+                    {$vo}</label>
+                {/foreach}
+                {/empty}
+
             </div>
-            <ul class="row list-inline plupload-preview" id="p-driving_licenseimages"></ul>
         </div>
     </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('备注')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-information_remark" class="form-control editor" rows="5" name="row[information_remark]"
+                      cols="50" placeholder="选填">{$row.information_remark}</textarea>
+        </div>
+    </div>
+
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
@@ -285,3 +441,7 @@
         </div>
     </div>
 </form>
+{php}
+dump($row);
+dump($row['halfyear_bank_flowimages']);
+{/php}

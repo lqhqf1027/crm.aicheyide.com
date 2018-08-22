@@ -90,11 +90,9 @@ class Newcarscustomer extends Backend
         if ($this->request->isAjax()) {
             $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop,car_new_inventory_id")
                 ->where("review_the_data", "the_car")
-                ->where("car_new_inventory_id", "not null")
                 ->count();
             $list = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop,car_new_inventory_id")
                 ->where("review_the_data", "the_car")
-                ->where("car_new_inventory_id", "not null")
                 ->select();
 
             $result = array("total" => $total, "rows" => $list);
