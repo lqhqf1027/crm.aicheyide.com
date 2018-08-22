@@ -29,6 +29,32 @@ class Newcarinfo extends Backend
 
     public function index()
     {
+//        $list = Db::table("crm_order_view")
+//            ->select();
+//        foreach ($list as $k => $v) {
+//
+//            if ($v['sales_id']) {
+//                $res = Db::name("admin")
+//                    ->alias("a")
+//                    ->join("auth_group_access ga", "a.id = ga.uid")
+//                    ->join("auth_group g", "ga.group_id = g.id")
+//                    ->where("a.id", $v['sales_id'])
+//                    ->field("a.nickname,g.name")
+//                    ->find();
+//
+//                $list[$k]['sales_name'] = $res['name']."-".$res['nickname'];
+//            }
+//
+//
+//        }
+//
+//        foreach ($list as $k=>$v){
+//            if($v['sales_name']){
+//                echo $v['sales_name'];
+//            }
+//        }
+//
+//        die();
 
         return $this->view->fetch();
     }
@@ -41,6 +67,25 @@ class Newcarinfo extends Backend
                 ->select();
             $total = Db::table("crm_order_view")
                 ->count();
+
+            foreach ($list as $k => $v) {
+
+                if ($v['sales_id']) {
+                    $res = Db::name("admin")
+                        ->alias("a")
+                        ->join("auth_group_access ga", "a.id = ga.uid")
+                        ->join("auth_group g", "ga.group_id = g.id")
+                        ->where("a.id", $v['sales_id'])
+                        ->field("a.nickname,g.name")
+                        ->find();
+
+                    $list[$k]['sales_name'] = $res['name']."-".$res['nickname'];
+                }
+
+
+            }
+
+
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -103,7 +148,20 @@ class Newcarinfo extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
 
+            $check_mortgage = $this->request->post("mortgage");
+
+
             if ($params) {
+
+                if (!$check_mortgage) {
+                    $params['mortgage_people'] = null;
+                }
+
+                if (!$params['transfer']) {
+                    $params['transferdate'] = null;
+                }
+
+//pr($params);die();
 
                 try {
                     //是否采用模型验证
@@ -118,7 +176,6 @@ class Newcarinfo extends Backend
                         'signdate' => $gage['delivery_datetime'],
                         'end_money' => $params['end_money'],
                         'hostdate' => $params['hostdate'],
-                        'mortgage' => $params['mortgage'],
                         'mortgage_people' => $params['mortgage_people'],
                         'ticketdate' => $params['ticketdate'],
                         'supplier' => $params['supplier'],
@@ -131,7 +188,9 @@ class Newcarinfo extends Backend
                         'car_boat_tax' => $params['car_boat_tax'],
                         'insurance_policy' => $params['insurance_policy'],
                         'commercial_insurance_policy' => $params['commercial_insurance_policy'],
+                        'transfer' => $params['transfer'],
                         'transferdate' => $params['transferdate'],
+                        'yearly_inspection' => $params['yearly_inspection'],
                         'classification' => 'new'
                     ];
 
