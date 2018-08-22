@@ -48,7 +48,9 @@ class Creditreview extends Backend
             'total1' => DB::name('rental_order')
 
                 ->where($where)
-                ->where('review_the_data', 'NEQ', 'is_reviewing_false')
+                ->where('review_the_data', 'is_reviewing_pass')
+                ->whereOr('review_the_data', 'is_reviewing_nopass')
+                ->whereOr('review_the_data', 'is_reviewing_control')
                 ->order($sort, $order)
                 ->count(),
             'total2' => DB::name('second_sales_order')
@@ -138,14 +140,18 @@ class Creditreview extends Backend
 
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'NEQ', 'is_reviewing_false')
+                ->where('review_the_data', 'is_reviewing_pass')
+                ->whereOr('review_the_data', 'is_reviewing_nopass')
+                ->whereOr('review_the_data', 'is_reviewing_control')
                 ->count();
 
             $list = DB::name('rental_order')
 
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'NEQ', 'is_reviewing_false')
+                ->where('review_the_data', 'is_reviewing_pass')
+                ->whereOr('review_the_data', 'is_reviewing_nopass')
+                ->whereOr('review_the_data', 'is_reviewing_control')
                 ->limit($offset, $limit)
                 ->select();
 
@@ -511,29 +517,31 @@ class Creditreview extends Backend
 
             $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
-            $result = $this->model->save(['review_the_data' => 'is_reviewing_pass'], function ($query) use ($id) {
+            $result = $this->model->save(['review_the_data' => 'is_reviewing_pass', 'delivery_datetime' => time()], function ($query) use ($id) {
                 $query->where('id', $id);
             });
 
-            //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-rentalpass",
-                'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核"
-            ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
-            // print_r($return);
-
             if ($result) {
+
+                //实时推送----各个负责人签字
+                //请求地址
+                $uri = "http://goeasy.io/goeasy/publish";
+                // 参数数组
+                $data = [
+                    'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                    'channel' => "demo-rentalpass",
+                    'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核，请签字处理！"
+                ];
+                $ch = curl_init ();
+                curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+                curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+                curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+                curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+                $return = curl_exec ( $ch );
+                curl_close ( $ch );
+                // print_r($return);
+
                 $this->success();
             } else {
                 $this->error();

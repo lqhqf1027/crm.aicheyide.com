@@ -422,7 +422,9 @@ class Rentalorder extends Backend
         $result = DB::name('car_rental_models_info')->alias('a')
             ->join('models b', 'b.id=a.models_id')
 
-            ->field('a.id,a.licenseplatenumber,a.companyaccount,a.cashpledge,a.threemonths,a.sixmonths,a.manysixmonths,a.note,b.name as models_name')
+            ->field('a.id,a.licenseplatenumber,a.kilometres,a.Parkingposition,a.companyaccount,a.cashpledge,a.threemonths,a.sixmonths,a.manysixmonths,a.note,b.name as models_name')
+
+            ->where('a.review_the_data', '')
 
             ->select();
 
@@ -449,7 +451,7 @@ class Rentalorder extends Backend
                     }
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
-                        // 如果添加成功,将状态改为提交审核
+                        // 如果添加成功,将状态改为车管正在审核
                         $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing_true']);
 
                         $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $this->model->id)->value('a.nickname');
@@ -460,25 +462,27 @@ class Rentalorder extends Backend
 
                         $this->model->isUpdate(true)->save(['id'=>$params['plan_car_rental_name'],'review_the_data'=>'is_reviewing']);
                         
-                        //请求地址
-                        $uri = "http://goeasy.io/goeasy/publish";
-                        // 参数数组
-                        $data = [
-                            'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                            'channel' => "demo-reserve",
-                            'content' => "销售员" . $admin_nickname . "提交的租车单，请及时处理"
-                        ];
-                        $ch = curl_init ();
-                        curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-                        curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-                        curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-                        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-                        curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-                        $return = curl_exec ( $ch );
-                        curl_close ( $ch );
-
                         if ($result_s) {
+                            
+                            //请求地址
+                            $uri = "http://goeasy.io/goeasy/publish";
+                            // 参数数组
+                            $data = [
+                                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                                'channel' => "demo-reserve",
+                                'content' => "销售员" . $admin_nickname . "提交的租车单，请及时处理"
+                            ];
+                            $ch = curl_init ();
+                            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+                            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+                            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+                            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+                            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+                            $return = curl_exec ( $ch );
+                            curl_close ( $ch );
+                            
                             $this->success();
+
                         } else {
                             $this->error('更新状态失败');
                         }
@@ -520,8 +524,227 @@ class Rentalorder extends Backend
     }
 
     //租车客户信息的补全
-    public function add()
+    public function add($ids = null)
     {
+        $row = $this->model->get($ids);
+        if ($row) {
+
+            $result = DB::name('rental_order')->alias('a')
+
+            ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
+
+            ->join('models c', 'c.id=b.models_id')
+
+            ->field('a.id,a.username,a.plan_car_rental_name,a.phone,a.deposit_receiptimages,a.down_payment,a.plan_name,b.licenseplatenumber,b.kilometres,b.Parkingposition,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,c.name as models_name')
+
+            ->where('a.id',$row['id'])
+
+            ->find();
+        }   
+        
+        $this->view->assign('result', $result);
+        
+        if ($this->request->isPost()) {
+
+            $params = $this->request->post('row/a');
+            //生成订单编号
+            $params['order_no'] = date('Ymdhis');
+            $params['plan_car_rental_name'] = $result['plan_car_rental_name'];
+            $params['username'] = $result['username'];
+            $params['phone'] = $result['phone'];
+            $params['plan_name'] = $result['plan_name'];
+            $params['deposit_receiptimages'] = $result['deposit_receiptimages'];
+            $params['down_payment'] = $result['down_payment'];
+        
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        //如果添加成功,将状态改为暂不提交风控审核
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing_false']);
+                        if ($result_s) {
+                            $this->success();
+                        } else {
+                            $this->error('更新状态失败');
+                        }
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+        return $this->view->fetch();
+    }
+
+    // 租车订单修改
+    public function edit($ids = NULL) 
+    {
+        $row = $this->model->get($ids);
+        if ($row) {
+
+            $result = DB::name('rental_order')->alias('a')
+
+            ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
+
+            ->join('models c', 'c.id=b.models_id')
+
+            ->field('a.id,a.username,a.plan_car_rental_name,a.phone,a.deposit_receiptimages,a.down_payment,a.plan_name,b.licenseplatenumber,b.kilometres,b.Parkingposition,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,c.name as models_name')
+
+            ->where('a.id',$row['id'])
+
+            ->find();
+        }   
+        
+        $this->view->assign('result', $result);
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
+ 
+    /**
+     * 删除
+     */
+    public function del($ids = "")
+    {
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $plan_car_rental_name = DB::name('rental_order')->where('id',$ids)->value('plan_car_rental_name');
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('review_the_data', '');
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+
+    //提交风控审核
+    public function control()
+    {
+
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+
+            $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+
+            $result = DB::name('rental_order')->where('id',$id)->setField('review_the_data', 'is_reviewing_control');
+
+            if($result!==false){
+                
+                //请求地址
+                $uri = "http://goeasy.io/goeasy/publish";
+                // 参数数组
+                $data = [
+                    'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                    'channel' => "demo-control",
+                    'content' => "销售员" . $admin_nickname . "提交的租车单，请及时进行审核处理"
+                ];
+                $ch = curl_init ();
+                curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+                curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+                curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+                curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+                $return = curl_exec ( $ch );
+                curl_close ( $ch );
+                // print_r($return);
+
+
+
+                // //推送模板消息给风控
+                // $sedArr = array(
+                //     'touser' => 'oklZR1J5BGScztxioesdguVsuDoY',
+                //     'template_id' => 'LGTN0xKp69odF_RkLjSmCltwWvCDK_5_PuAVLKvX0WQ', /**以租代购新车模板id */
+                //     "topcolor" => "#FF0000",
+                //     'url' => '',
+                //     'data' => array(
+                //         'first' =>array('value'=>'你有新客户资料待审核','color'=>'#FF5722') ,
+                //         'keyword1' => array('value'=>$params['username'],'color'=>'#01AAED'),
+                //         'keyword2' => array('value'=>'以租代购（新车）','color'=>'#01AAED'),
+                //         'keyword3' => array('value'=>Session::get('admin')['nickname'],'color'=>'#01AAED'),
+                //         'keyword4' =>array('value'=>date('Y年m月d日 H:i:s'),'color'=>'#01AAED') , 
+                //         'remark' => array('value'=>'请前往系统进行查看操作')
+                //     )
+                // );
+                // $sedResult= posts("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".self::$token,json_encode($sedArr));
+                // if( $sedResult['errcode']==0 && $sedResult['errmsg'] =='ok'){
+                //     $this->success('提交成功，请等待审核结果'); 
+                // }else{
+                //     $this->error('微信推送失败',null,$sedResult);
+                // }
+                    $this->success('提交成功，请等待审核结果'); 
+               
+                
+            }else{
+                $this->error('提交失败',null,$result);
+                
+            }
+        }
+    }
+
+    // 签字确认
+    public function signature($ids = NULL)
+    {
+        $row = $this->model->get($ids);
+        $id = $row['id'];
+        // var_dump($id);
+        // die;
+        $result = DB::name('rental_order')->alias('a')
+                ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
+                ->join('models c', 'c.id=b.models_id')
+                ->where('a.id', $id)
+                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,
+                    a.gps_installation_name,a.gps_installation_datetime,a.information_audition_name,a.information_audition_datetime,
+                    a.Insurance_status_name,a.Insurance_status_datetime,a.general_manager_name,a.general_manager_datetime,
+                    c.name as models_name,b.licenseplatenumber as licenseplatenumber')
+                ->find();
+                
+        $this->view->assign('result', $result);
         return $this->view->fetch();
     }
 }

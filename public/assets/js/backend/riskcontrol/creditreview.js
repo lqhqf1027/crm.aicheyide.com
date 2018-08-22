@@ -382,7 +382,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         //等于is_reviewing_pass 的时候操作栏显示的是通过审核四个字，
                                         //....
                                         hidden: function (row) { /**审核 */
-                                            if (row.review_the_data == 'is_reviewing_true') {
+                                            if (row.review_the_data == 'is_reviewing_control') {
                                                 return false;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
@@ -397,7 +397,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
                                         url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
                                         hidden: function (row, value, index) {
-                                            if (row.review_the_data == 'is_reviewing_true') {
+                                            if (row.review_the_data == 'is_reviewing_control') {
                                                 return false;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
@@ -414,13 +414,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             if (row.review_the_data == 'is_reviewing_pass') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                            else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_nopass') {
                                                 return true;
                                             }
                                         }
+                                    },
+                                    {
+                                        name: 'signature', text: '签字确认', title: '签字确认', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-signature btn-dialog',
+                                        url: 'order/rentalorder/signature',/**签字确认 */
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_nopass') {
+                                                return true;
+                                            }
+                                        },
                                     },
                                     {
                                         name: 'is_reviewing_nopass', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
@@ -432,7 +447,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                            else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
                                         }
@@ -452,6 +467,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
                 Table.api.bindevent(rentalcarAudit);
 
+                //实时推送 -- 关闭弹窗
                 goeasy.subscribe({
                     channel: 'demo5',
                     onMessage: function(message){
@@ -459,20 +475,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         $(".btn-refresh").trigger("click");
                     }
                 });
-                //弹框   提交审核
+
+                //表格 --- 提交审核
                 goeasy.subscribe({
-                    channel: 'demo-pop_rental',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
-                //表格   提交审核
-                goeasy.subscribe({
-                    channel: 'demo-table_rental',
+                    channel: 'demo-control',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -487,6 +493,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     $(".btn-rentalauditResult").data("area", ["95%", "95%"]);
                     $(".btn-rentalcardetails").data("area", ["95%", "95%"]);
                     $(".btn-bigData").data("area", ["95%", "95%"]);
+                    $(".btn-signature").data("area", ["80%", "80%"]);
                     var rentalcarAudit = $('#badge_rental_audit').text(data.total);
                 })
 
@@ -794,6 +801,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             }
                         })
                     },
+
+                    //风控签字确认
+                    'click .btn-signature': function (e, value, row, index) { 
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = 'order/rentalorder/signature';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+                            callback: function (value) {
+                                alert(value);
+                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            },success:function(ret){
+                                console.log(ret);
+                            }
+                        })
+                    },
                 }
 
             },
@@ -968,48 +994,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     return false;
                 });
 
-
             }
         );
-
-    });
-
-    $('#rentaldata').click(function () {
-        // alert(123);
-        // return false;   
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('是否需要提供担保人吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/rentaldata',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo5', 
-                        message: '123'
-                    });
-                    
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
 
     });
 
