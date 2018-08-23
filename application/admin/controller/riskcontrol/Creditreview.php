@@ -55,8 +55,9 @@ class Creditreview extends Backend
                 ->count(),
             'total2' => DB::name('second_sales_order')
                 ->where($where)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_control')
+                ->whereOr('review_the_data', 'not_through')
+                ->whereOr('review_the_data', 'through')
                 ->order($sort, $order)
                 ->count(),
 
@@ -182,7 +183,6 @@ class Creditreview extends Backend
 
     { 
         
-
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -195,15 +195,17 @@ class Creditreview extends Backend
             $total = DB::name('second_sales_order')
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_control')
+                ->whereOr('review_the_data', 'not_through')
+                ->whereOr('review_the_data', 'through')
                 ->count();
 
             $list = DB::name('second_sales_order')
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_control')
+                ->whereOr('review_the_data', 'not_through')
+                ->whereOr('review_the_data', 'through')
                 ->limit($offset, $limit)
                 ->select();
 

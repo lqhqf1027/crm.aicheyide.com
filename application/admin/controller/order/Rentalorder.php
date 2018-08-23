@@ -739,12 +739,45 @@ class Rentalorder extends Backend
                 ->join('models c', 'c.id=b.models_id')
                 ->where('a.id', $id)
                 ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,
-                    a.gps_installation_name,a.gps_installation_datetime,a.information_audition_name,a.information_audition_datetime,
-                    a.Insurance_status_name,a.Insurance_status_datetime,a.general_manager_name,a.general_manager_datetime,
                     c.name as models_name,b.licenseplatenumber as licenseplatenumber')
                 ->find();
+        $data = DB::name('car_rental_confirmation')->where('rental_order_id', $id)->find();
                 
-        $this->view->assign('result', $result);
+        $this->view->assign(
+            [
+                'result' => $result,
+                'data' => $data
+            ]
+        );
+
+        if($this->request->isPost()){
+
+            $params = $this->request->post("row/a");
+
+            pr($params);
+            die;
+            
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
         return $this->view->fetch();
     }
 }

@@ -584,16 +584,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
                                         //....
                                         hidden: function (row) { /**审核 */
-                                            if (row.review_the_data == 'is_reviewing_true') {
+                                            if (row.review_the_data == 'is_reviewing_control') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'for_the_car') {
+                                            else if (row.review_the_data == 'through') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'not_through') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
                                         }
@@ -602,33 +599,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
                                         url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
                                         hidden: function (row, value, index) {
-                                            if (row.review_the_data == 'is_reviewing_true') {
+                                            if (row.review_the_data == 'is_reviewing_control') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'for_the_car') {
+                                            else if (row.review_the_data == 'through') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'not_through') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
                                         },
                                     },
                                     {
-                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
+                                        name: 'through', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
                                         hidden: function (row) {  /**征信已通过 */
-                                            if (row.review_the_data == 'for_the_car') {
+                                            if (row.review_the_data == 'through') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                            else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'not_through') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
                                         }
@@ -640,38 +631,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             if (row.review_the_data == 'not_through') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'for_the_car') {
+                                            else if (row.review_the_data == 'through') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing_true') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'the_car') {
+                                            else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
                                         }
                                     },
-                                    {
 
-                                        name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
-                                        hidden: function (row) {  /**已提车 */
-                                            if (row.review_the_data == 'the_car') {
-                                                return false;
-                                            }
-                                            else if (row.review_the_data == 'not_through') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'for_the_car') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_true') {
-                                                return true;
-                                            }
-                                        }
-                                    }
-
-
-                            
                                 ],
                                 events: Controller.api.events.operate,
 
@@ -694,6 +662,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 //提供保证金
                 goeasy.subscribe({
                     channel: 'demo-second-the_guarantor',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
+                //车管提交的二手车审核
+                goeasy.subscribe({
+                    channel: 'demo-second_setaudit',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);

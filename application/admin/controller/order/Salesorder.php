@@ -258,7 +258,7 @@ class Salesorder extends Backend
            
             $params['car_total_price'] = $data['payment'] + $data['monthly'] * $data['nperlist'];
             $params['downpayment'] = $data['payment'] + $data['monthly'] + $data['margin'] + $data['gps'];
-            $params['difference'] = $params['downpayment'];  
+            // $params['difference'] = $params['downpayment'];  
             
             $params['plan_name'] = Session::get('plan_name'); //
             //生成订单编号
