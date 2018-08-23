@@ -1,89 +1,102 @@
-
 <h3>
     <center>
-        <h2>基本资料</h2>
+        <span style="float: left;font-size: medium"><strong>{:__('订单编号')}：</strong> {$row.order_no}</span>
+        <h2><span style="margin-left: -20%">基本资料</span></h2> <span style="float: right;margin-top: -35px;font-size: medium"><strong>{:__('提车日期')}：</strong> {$row.delivery_datetime}</span>
+        <span style="float: right;margin-top: -35px;margin-right: 15%;font-size: medium"><strong>{:__('订车日期')}：</strong> {$row.createtime}</span>
     </center>
 </h3>
 <br>
 <div class="container-fulid" style="border: 1px solid #ddd">
+
     <!--<br>-->
-    <!--<br>-->
+    <!--<hr>-->
+
+
+
     <div class="form-group" style="margin-top: 1%">
-        <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('订单编号')}：</strong> {$row.order_no}
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('客户来源')}：</strong> {eq name="$row.customer_source" value="direct_the_guest"}直客{else/}转介绍{/eq}
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">按揭客户登记</h3>
+
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('订车日期')}：</strong> {$row.createtime}
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('提车日期')}：</strong> {$row.delivery_datetime}
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('放款日期')}：</strong> {$row.lending_date}
-        </div>
-        <!--<div class="col-xs-12 col-sm-8 col-md-5">-->
-        <!--<strong>{:__('销售车型/方案')}：</strong> {$row.plan_name}-->
-        <!--</div>-->
     </div>
     <br>
+    <br>
+    <br>
+
     <hr>
+    <!--<br>-->
     <div class="form-group">
-
-        <div class="col-xs-12 col-sm-8 col-md-1">
-            <!--<strong>{:__('姓名')}：</strong> {:__($row.username)} {eq name="$row.genderdata" value="male"} <span class="fa fa-male text-info"></span>{else /} <span class="fa fa-female" style="color:palevioletred"></span>{/eq}-->
-        </div>
-
+        <div class="col-xs-12 col-sm-8 col-md-3"></div>
         <div class="col-xs-12 col-sm-8 col-md-6">
             <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('是否购买保险')}：</strong> {eq name="$row.buy_insurancedata" value="yes"}已购买{else/}未购买{/eq}
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('销售员')}：</strong>{$row.sales_name}
         </div>
-        <!--<div class="col-xs-12 col-sm-8 col-md-3">-->
-        <!--<strong>{:__('身份证号')}：</strong> {$row.id_card}-->
-        <!--</div>-->
-        <!--<div class="col-xs-12 col-sm-8 col-md-5">-->
-        <!--<strong>{:__('详细地址')}：</strong> {$row.city}{$row.detailed_address}-->
-        <!--</div>-->
     </div>
     <br>
     <hr>
     <div class="form-group">
 
-        <div class="col-xs-12 col-sm-8 col-md-2">
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('姓名')}：</strong> {:__($row.username)} {eq name="$row.genderdata" value="male"} <span
                 class="fa fa-male text-info"></span>{else /} <span class="fa fa-female"
                                                                    style="color:palevioletred"></span>{/eq}
         </div>
 
-        <div class="col-xs-12 col-sm-8 col-md-2">
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('联系电话')}：</strong> {$row.phone}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('身份证号')}：</strong> {$row.id_card}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-5">
-            <strong>{:__('详细地址')}：</strong> {$row.city}{$row.detailed_address}
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('客户来源')}：</strong> {eq name="$row.customer_source" value="direct_the_guest"}直客{else/}转介绍{/eq}
         </div>
+
     </div>
     <br>
     <hr>
-    <!--<br>-->
+    <div class="form-group">
+
+
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('档案编码')}：</strong> {$row.archival_coding}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('过户日期')}：</strong> {$row.transferdate}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('签订日期')}：</strong> {empty name="$row.signdate"} <span class="text-warning">请填写签订日期</span>{else /}{$row.signdate}{/empty}
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('备注信息')}：</strong> {empty name="$row.registry_remark"} <span class="text-info">暂无</span>{else /}{$row.registry_remark}{/empty}
+        </div>
+
+    </div>
+    <br>
+    <hr>
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-2">
             <strong>{:__('licensenumber')}：</strong>{$row.licensenumber}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-2">
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('engine_number')}：</strong> {$row.engine_number}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-2">
             <strong>{:__('frame_number')}：</strong> {$row.frame_number}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-3">
+        <div class="col-xs-12 col-sm-8 col-md-2">
             <strong>{:__('household')}：</strong> {$row.household}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
@@ -92,42 +105,192 @@
     </div>
     <br>
     <hr>
+    <!--<br>-->
     <div class="form-group">
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('扣款卡号')}：</strong>{$row.bank_card}
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('年检日期')}：</strong>{$row.yearly_inspection}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('登记编码')}：</strong>{$row.registration_code}
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('上户日期')}：</strong> {$row.hostdate}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('抵押类型')}：</strong> {switch name="$row.mortgage_type"}
-            {case value="new_car"}新车{/case}
-            {case value="used_car"}二手车{/case}
-            {case value="yueda_car"}悦达{/case}
-            {case value="other_car"}其他{/case}
-            {/switch}
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('合同总价')}：</strong> {empty name="$row.contract_total"} <span class="text-info">暂无</span>{else /}{$row.contract_total}{/empty}
         </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('抵押人')}：</strong> {empty name="$row.mortgage_people"} <span class="text-info">暂无</span>{else /}{$row.mortgage_people}{/empty}
+        </div>
+
     </div>
     <br>
     <hr>
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('开票金额（元）')}：</strong> {$row.invoice_monney}
+            <strong>{:__('扣款卡号')}：</strong>{$row.bank_card}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('购置税（元）')}：</strong> {$row.tax}
+            <strong>{:__('登记编码')}：</strong>{$row.registration_code}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('商业险（元）')}：</strong> {$row.business_risks}
+            <strong>{:__('车款总价')}：</strong>{$row.car_total_price}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('交强险（元）')}：</strong> {$row.insurance}
+            <strong>{:__('首期款')}：</strong>{$row.downpayment}
         </div>
     </div>
     <br>
     <hr>
     <div class="form-group">
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('差额')}：</strong>{$row.difference}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('实收订车金额')}：</strong>{$row.amount_collected}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('装饰')}：</strong>{$row.decorate}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">购车发票登记</h3>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('开票日期')}：</strong> {$row.ticketdate}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('供货商')}：</strong> {$row.supplier}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('含税金额')}：</strong> {$row.tax_amount}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('不含税金额')}：</strong> {$row.no_tax_amount}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">购置税及上户登记</h3>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('缴税日期')}：</strong> {$row.pay_taxesdate}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('购置税费(元)')}：</strong> {$row.tax}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('上户费(元)')}：</strong> {$row.house_fee}
+        </div>
+
+
+    </div>
+    <br>
+    <hr>
+    <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">保险</h3>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('购买日期')}：</strong> {$row.insurance_buydate}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('路桥费(元)')}：</strong> {$row.luqiao_fee}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('车船税金额(元)')}：</strong> {$row.car_boat_tax}
+        </div>
+
+
+    </div>
+    <br>
+    <hr>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('交强险保单号')}：</strong> {$row.insurance_policy}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('交强险（元）')}：</strong> {$row.insurance}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('商业险保单号')}：</strong> {$row.commercial_insurance_policy}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('商业险（元）')}：</strong> {$row.business_risks}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">个人相关资料</h3>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+
+    <div class="form-group">
+
 
         <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('紧急联系人电话1')}：</strong> {$row.emergency_contact_1}
@@ -145,18 +308,43 @@
     <hr>
     <div class="form-group">
 
+        {empty name="$row.turn_to_introduce_name"}
+        <div class="col-xs-12 col-sm-8 col-md-5">
+
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('介绍人')}：</strong> <span class="text-info">暂无</span>
+
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3" style="margin-top: -6px">
+            <strong>{:__('通话清单')}：</strong>
+            {foreach $call_listfiles_arr as $k => $v}
+            <a href="{$v}" target="_blank">
+                <button type="button" class="btn btn-info">查看通话清单</button>
+            </a> {/foreach}
+        </div>
+        {else /}
         <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('介绍人姓名')}：</strong> {empty name="$row.turn_to_introduce_name"}暂无{else
             /}{$row.turn_to_introduce_name}{/empty}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('介绍人电话')}：</strong> {empty name="$row.turn_to_introduce_phone"}暂无{else
             /}{$row.turn_to_introduce_phone}{/empty}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-5">
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('介绍人身份证')}：</strong> {empty name="$row.turn_to_introduce_card"}暂无{else
             /}{$row.turn_to_introduce_card}{/empty}
         </div>
+        <div class="col-xs-12 col-sm-8 col-md-3" style="margin-top: -6px">
+            <strong>{:__('通话清单')}：</strong>
+            {foreach $call_listfiles_arr as $k => $v}
+            <a href="{$v}" target="_blank">
+                <button type="button" class="btn btn-info">查看通话清单</button>
+            </a> {/foreach}
+        </div>
+        {/empty}
+
 
     </div>
 
@@ -164,6 +352,24 @@
     <hr>
     <br>
     <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 5px" class="text-info">个人相关图片</h3>
+
+        </div>
+    </div>
+    <br>
+    <br>
+
+    <br>
+    <div class="form-group">
+
 
         <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$id_cardimages_arr"}
@@ -178,18 +384,7 @@
             {/empty}
 
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            {empty name="$drivers_licenseimages_arr"}
-            <p style="margin-top: 8%"><strong>{:__('驾照正副页（多图）')}：</strong>暂无<span class="text-info">驾驶证信息</span></p>
 
-            {else /}
-            <strong>{:__('Drivers_licenseimages')}：</strong>
-            {foreach $drivers_licenseimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;">
-            {/foreach}
-            {/empty}
-
-        </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$residence_bookletimages_arr"}
             <p style="margin-top: 8%"><strong>{:__('户口簿【首页、主人页、本人页】')}：</strong>暂无<span class="text-info">户口簿相关信息</span>
@@ -205,18 +400,32 @@
 
         </div>
 
-    </div>
-    <br>
-    <br>
-    <hr>
-    <br>
-    <div class="form-group">
         <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$bank_cardimages_arr"}
             <p style="margin-top: 8%"><strong>{:__('银行卡照（可多图）')}：</strong>暂无<span class="text-info">银行卡相关信息</span></p>
             {else /}
             <strong>{:__('Bank_cardimages')}：</strong>
             {foreach $bank_cardimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+            {/empty}
+
+        </div>
+
+    </div>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-3"></div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$drivers_licenseimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('驾照正副页（多图）')}：</strong>暂无<span class="text-info">驾驶证信息</span></p>
+
+            {else /}
+            <strong>{:__('Drivers_licenseimages')}：</strong>
+            {foreach $drivers_licenseimages_arr as $k => $v}
             <img src="{$v}" alt="" style="width:80px;height:80px;">
             {/foreach}
             {/empty}
@@ -234,6 +443,32 @@
             {/empty}
 
         </div>
+
+
+
+    </div>
+    <br>
+    <br>
+    <hr>
+    <br>
+    <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 5px" class="text-info">车辆相关图片</h3>
+
+        </div>
+    </div>
+    <br>
+    <br>
+
+    <br>
+    <div class="form-group">
         <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$application_formimages_arr"}
             <p style="margin-top: 8%"><strong>{:__('申请表（多图）')}：</strong>暂无<span class="text-info">申请表相关信息</span></p>
@@ -247,27 +482,6 @@
 
         </div>
 
-
-    </div>
-    <br>
-    <br>
-    <hr>
-    <br>
-    <div class="form-group">
-        <div class="col-xs-12 col-sm-8 col-md-4">
-
-            {empty name="$new_car_marginimages_arr"}
-            <p style="margin-top: 8%"><strong>{:__('保证金收据')}：</strong>暂无<span class="text-info">保证金收据</span></p>
-
-
-            {else/}
-            <strong>{:__('保证金收据')}：</strong>
-            {foreach $new_car_marginimages_arr as $k => $v}
-            <img src="{$v}" alt="" style="width:80px;height:80px;">
-            {/foreach}
-            {/empty}
-
-        </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$deposit_contractimages_arr"}
             <p style="margin-top: 8%"><strong>{:__('定金合同（多图）')}：</strong>暂无<span class="text-info">定金合同相关信息</span></p>
@@ -301,7 +515,8 @@
     <div class="form-group">
         <div class="col-xs-12 col-sm-8 col-md-6">
             {empty name="$car_imgeas_arr"}
-            <p style="margin-top: 8%"><strong>{:__('车辆所有的扫描件')}：</strong>暂无<span class="text-info">车辆所有的扫描件相关信息</span></p>
+            <p style="margin-top: 8%"><strong>{:__('车辆所有的扫描件')}：</strong>暂无<span class="text-info">车辆所有的扫描件相关信息</span>
+            </p>
 
             {else /}
             <strong>{:__('车辆所有的扫描件（多图）')}：</strong>
@@ -311,12 +526,19 @@
             {/empty}
 
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-3" style="line-height: 80px">
-            <strong>{:__('通话清单')}：</strong>
-            {foreach $call_listfiles_arr as $k => $v}
-            <a href="{$v}" target="_blank">
-                <button type="button" class="btn btn-info">查看通话清单</button>
-            </a> {/foreach}
+        <div class="col-xs-12 col-sm-8 col-md-3">
+
+            {empty name="$new_car_marginimages_arr"}
+            <p style="margin-top: 8%"><strong>{:__('保证金收据')}：</strong>暂无<span class="text-info">保证金收据</span></p>
+
+
+            {else/}
+            <strong>{:__('保证金收据')}：</strong>
+            {foreach $new_car_marginimages_arr as $k => $v}
+            <img src="{$v}" alt="" style="width:80px;height:80px;">
+            {/foreach}
+            {/empty}
+
         </div>
 
 
@@ -327,13 +549,11 @@
     <br>
 
 </div>
-
-
 <script>
-
-
     image_preview($("img"));
 
-
-
 </script>
+
+{php}
+//dump($row);
+{/php}

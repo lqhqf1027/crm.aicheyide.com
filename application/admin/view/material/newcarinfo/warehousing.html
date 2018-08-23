@@ -240,19 +240,19 @@
 
         <tr class="tr-click">
             <td colspan="2">是否有定金协议</td>
-            {empty name="$row.lift_listimages"}
+            {empty name="$row.deposit"}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
 
-            <input type="hidden" name="row[lift_listimages]" value="no">
+            <input type="hidden" name="row[deposit]" value="no">
             {else /}
-            {eq name="$row.lift_listimages" value="yes"}
+            {eq name="$row.deposit" value="yes"}
             <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
 
-            <input type="hidden" name="row[lift_listimages]" value="yes">
+            <input type="hidden" name="row[deposit]" value="yes">
             {else /}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
 
-            <input type="hidden" name="row[lift_listimages]" value="no">
+            <input type="hidden" name="row[deposit]" value="no">
             {/eq}
             {/empty}
         </tr>
@@ -504,24 +504,7 @@
             {/empty}
         </tr>
 
-        <tr class="tr-click">
-            <td colspan="2">是否有购置税</td>
-            {empty name="$row.tax"}
-            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
 
-            <input type="hidden" name="row[tax]" value="no">
-            {else /}
-            {eq name="$row.tax" value="yes"}
-            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
-
-            <input type="hidden" name="row[tax]" value="yes">
-            {else /}
-            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
-
-            <input type="hidden" name="row[tax]" value="no">
-            {/eq}
-            {/empty}
-        </tr>
 
         <tr class="tr-click">
             <td colspan="2">是否有最高保障合同</td>
@@ -542,24 +525,7 @@
             {/empty}
         </tr>
 
-        <tr class="tr-click">
-            <td colspan="2">是否有最高保障合同</td>
-            {empty name="$row.maximum_guarantee_contractimages"}
-            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
 
-            <input type="hidden" name="row[maximum_guarantee_contractimages]" value="no">
-            {else /}
-            {eq name="$row.maximum_guarantee_contractimages" value="yes"}
-            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
-
-            <input type="hidden" name="row[maximum_guarantee_contractimages]" value="yes">
-            {else /}
-            <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
-
-            <input type="hidden" name="row[maximum_guarantee_contractimages]" value="no">
-            {/eq}
-            {/empty}
-        </tr>
         </tbody>
     </table>
     <div class="form-group">
