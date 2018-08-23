@@ -34,7 +34,7 @@ class Secondsalesorder extends Backend
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
     
-    /**提交审核 */
+    /**提交内勤处理 */
     public function setAudit()
     {
         if ($this->request->isAjax()) {
@@ -46,7 +46,25 @@ class Secondsalesorder extends Backend
 
             if($result){
 
-                $this->success('提交成功，请等待审核结果');
+                //请求地址
+                $uri = "http://goeasy.io/goeasy/publish";
+                // 参数数组
+                $data = [
+                    'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                    'channel' => "demo-backoffice",
+                    'content' => "内勤提交的二手车单，请及时进行处理"
+                ];
+                $ch = curl_init ();
+                curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+                curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+                curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+                curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+                $return = curl_exec ( $ch );
+                curl_close ( $ch );
+                // print_r($return);
+
+                $this->success('提交成功，请等待内勤处理');
             }
             else{
 
@@ -249,7 +267,7 @@ class Secondsalesorder extends Backend
         foreach ((array) $res as $key => $value) {
             $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices')
+                ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond')
                 ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
@@ -269,6 +287,11 @@ class Secondsalesorder extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
             $ex = explode(',', $params['plan_car_second_name']);
+
+            $result = DB::name('secondcar_rental_models_info')->where('id', $params['plan_car_second_name'])->field('newpayment,monthlypaymen,periods,bond')->find();
+
+            $params['car_total_price'] = $result['newpayment'] + $result['monthlypaymen'] * $result['periods'];
+            $params['downpayment'] = $result['newpayment'] + $result['monthlypaymen'] + $result['bond'];
 
             $params['plan_car_second_name'] = reset($ex); //截取id
             $params['plan_name'] = addslashes(end($ex)); //

@@ -1,5 +1,8 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    var goeasy = new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
 
     var Controller = {
         index: function () {
@@ -29,24 +32,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
-            not_entry: function () {
-                // 表格1
-                var notEntry = $("#notEntry");
-                notEntry.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
-                    $('#new-customer').text(data.total);
-
-                })
-                notEntry.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-editone").data("area", ["50%", "40%"]);
-                    $(".btn-edit").data("area", ["50%", "40%"]);
-                });
+            newcar_entry: function () {
+                // 新车录入定金
+                var newcarEntry = $("#newcarEntry");
+               
                 // 初始化表格
-                notEntry.bootstrapTable({
-                    url: 'backoffice/carreservation/not_entry',
+                newcarEntry.bootstrapTable({
+                    url: 'backoffice/carreservation/newcarEntry',
                     extend: {
-                        edit_url: 'backoffice/carreservation/actual_amount',
-
+                        // edit_url: 'backoffice/carreservation/newactual_amount',
+                        table: 'sales_order',
                     },
                     toolbar: '#toolbar1',
                     pk: 'id',
@@ -71,26 +66,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'gps', title: __('GPS(服务费)')},
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
-                            {field: 'difference', title: __('差额(元)')},
-                            {field: 'delivery_datetime', title: __('提车日期')},
-                            {field: 'licensenumber', title: __('车牌号')},
+                            // {field: 'difference', title: __('差额(元)')},
+                            // {field: 'delivery_datetime', title: __('提车日期')},
+                            // {field: 'licensenumber', title: __('车牌号')},
                             {field: 'frame_number', title: __('车架号')},
                             {field: 'engine_number', title: __('发动机号')},
                             {field: 'household', title: __('行驶证所有户')},
                             {field: '4s_shop', title: __('4S店')},
-
                             {
-                                field: 'operate', title: __('Operate'), table: notEntry,
+                                field: 'operate', title: __('Operate'), table: newcarEntry,
                                 buttons: [
                                     {
-                                        name: 'detail',
-                                        text: '实际金额',
-                                        icon: 'fa fa-pencil',
-                                        title: __('Edit'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-danger btn-editone',
-                                        url: 'backoffice/carreservation/actual_amount'
-                                    }
+                                        name: 'newactual_amount', text: '录入实际订车金额', title: __('录入实际订车金额'), icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-danger btn-newactual_amount',
+                                        url: 'backoffice/carreservation/newactual_amount',
+                                        hidden: function (row) { /**录入实际订车金额 */
+                                            if (row.review_the_data == 'inhouse_handling') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                        }
+                            
+                                    },
+                                    {
+                                        name: 'send_car_tube', text: '已录入实际订车金额',
+                                        hidden: function (row) { /**已录入实际订车金额 */
+                                            if (row.review_the_data == 'send_car_tube') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                        }
+                                    },
                                 ],
 
                                 events: Controller.api.events.operate,
@@ -100,13 +109,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 });
                 // 为表格1绑定事件
-                Table.api.bindevent(notEntry);
+                Table.api.bindevent(newcarEntry);
 
+                //数据实时统计
+                newcarEntry.on('load-success.bs.table',function(e,data){ 
 
-                var goeasy = new GoEasy({
-                    appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-                });
+                    $(".btn-newactual_amount").data("area", ["50%", "40%"]);
+                    var newcarEntry =  $('#badge_newcar_entry').text(data.total); 
+                    newcarEntry = parseInt($('#badge_newcar_entry').text());
+                    
+                   
+                })
 
+                //销售推送
                 goeasy.subscribe({
                     channel: 'demo-sales',
                     onMessage: function (message) {
@@ -120,20 +135,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
-            entry: function () {
-                // 表格1
-                var entrys = $("#entrys");
-                // entrys.on('load-success.bs.table', function (e, data) {
-                //     console.log(data.total);
-                //     $('#new-customer').text(data.total);
-                //
-                // })
-                // entrys.on('post-body.bs.table', function (e, settings, json, xhr) {
-                //
-                // });
+            secondcar_entry: function () {
+                // 二手车录入定金
+                var secondcarEntry = $("#secondcarEntry");
+               
                 // 初始化表格
-                entrys.bootstrapTable({
-                    url: 'backoffice/carreservation/entry',
+                secondcarEntry.bootstrapTable({
+                    url: 'backoffice/carreservation/secondcarEntry',
+                    extend: {
+                        // edit_url: 'backoffice/carreservation/secondactual_amount',
+                        table: 'second_sales_order',
+                    },
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
@@ -142,36 +154,80 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: '编号'},
                             {field: 'createtime', title: __('订车日期')},
-                            {field: 'household', title: __('公司')},
                             {field: 'sales_name', title: __('销售员')},
+                            {field: 'companyaccount', title: __('所属公司户')},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'detailed_address', title: __('地址')},
                             {field: 'phone', title: __('联系电话')},
                             {field: 'models_name', title: __('订车车型')},
-                            {field: 'payment', title: __('首付(元)')},
-                            {field: 'monthly', title: __('月供(元)')},
-                            {field: 'nperlist', title: __('期数')},
-                            {field: 'margin', title: __('保证金(元)')},
-                            {field: 'tail_section', title: __('尾款(元)')},
-                            {field: 'gps', title: __('GPS(服务费)')},
+                            {field: 'newpayment', title: __('首付(元)')},
+                            {field: 'monthlypaymen', title: __('月供(元)')},
+                            {field: 'periods', title: __('期数')},
+                            {field: 'bond', title: __('保证金(元)')},
+                            {field: 'tailmoney', title: __('尾款(元)')},
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
-                            {field: 'difference', title: __('差额(元)')},
-                            {field: 'delivery_datetime', title: __('提车日期')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
-                            {field: 'engine_number', title: __('发动机号')},
-                            {field: 'household', title: __('行驶证所有户')},
-                            {field: '4s_shop', title: __('4S店')},
-                            {field: 'amount_collected', title: __('实收金额')},
-                            {field: 'decorate', title: __('装饰')},
+                            {
+                                field: 'operate', title: __('Operate'), table: secondcarEntry,
+                                buttons: [
+                                    {
+                                        name: 'secondactual_amount', text: '录入实际订车金额', title: '录入实际订车金额', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-secondactual_amount',
+                                        url: 'backoffice/carreservation/secondactual_amount',
+                                       
+                                        hidden: function (row) { /**录入实际订车金额 */
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'send_car_tube', text: '已录入实际订车金额',
+                                        hidden: function (row) {  /**已录入实际订车金额 */
+                                            if (row.review_the_data == 'send_car_tube') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                ],
+                                events: Controller.api.events.operate,
 
+                                formatter: Controller.api.formatter.operate
+
+                            }
                         ]
                     ]
                 });
                 // 为表格1绑定事件
-                Table.api.bindevent(entrys);
+                Table.api.bindevent(secondcarEntry);
+
+                //数据实时统计
+                secondcarEntry.on('load-success.bs.table',function(e,data){ 
+
+                    $(".btn-secondactual_amount").data("area", ["50%", "40%"]);
+                    var secondcarEntry =  $('#badge_secondcar_entry').text(data.total); 
+                    secondcarEntry = parseInt($('#badge_secondcar_entry').text());
+                    
+                   
+                })
+
+                //销售推送
+                goeasy.subscribe({
+                    channel: 'demo-backoffice',
+                    onMessage: function (message) {
+                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+
+                    }
+                });
 
             },
 
@@ -184,22 +240,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
-        actual_amount: function () {
+        newactual_amount: function () {
             Controller.api.bindevent();
-            var goeasy = new GoEasy({
-                appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-            });
 
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-
-
-                goeasy.publish({
-                    channel: 'pushyou',
-                    message: data.toString()
-                });
-
 
 
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
@@ -215,19 +261,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // Controller.api.bindevent();
             // console.log(Config.id);
 
+        },
+        secondactual_amount: function () {
+            Controller.api.bindevent();
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
 
 
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
 
 
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
 
         },
         api: {
             bindevent: function () {
-                $(document).on('click', "input[name='row[ismenu]']", function () {
-                    var name = $("input[name='row[name]']");
-                    name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
-                });
-                $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
             },
             formatter: {
@@ -243,9 +301,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
             },
+            
             events: {
                 operate: {
-                    'click .btn-editone': function (e, value, row, index) {
+                    //新车录入订车金额
+                    'click .btn-newactual_amount': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -253,7 +313,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
 
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'backoffice/carreservation/actual_amount';
+                        var url = 'backoffice/carreservation/newactual_amount';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
+                    },
+                    //二手车录入订车金额
+                    'click .btn-secondactual_amount': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'backoffice/carreservation/secondactual_amount';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
                     },
                 }

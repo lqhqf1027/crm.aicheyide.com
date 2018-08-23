@@ -1045,16 +1045,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate', title: __('Operate'), table: orderSecond,
                                 buttons: [
                                     {
-                                        name: 'second_audit', text: '提交审核', title: '审核征信', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-second_audit',
+                                        name: 'second_audit', text: '提交内勤', title: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-second_audit',
                                         url: 'order/secondsalesorder/setAudit',
                                         //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
                                         //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
                                         //....
-                                        hidden: function (row) { /**提交审核 */
+                                        hidden: function (row) { /**提交内勤 */
                                             if (row.review_the_data == 'is_reviewing') {
                                                 return false;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
@@ -1082,6 +1088,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
@@ -1107,6 +1119,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_true') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
@@ -1122,12 +1140,76 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         },
                                     },
                                     {
-                                        name: 'is_reviewing_true', text: '正在审核中',
-                                        hidden: function (row) {  /**正在审核 */
+                                        name: 'is_reviewing_true', text: '内勤正在处理中',
+                                        hidden: function (row) {  /**内勤正在处理中 */
                                             if (row.review_the_data == 'is_reviewing_true') {
                                                 return false;
                                             }
                                             else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'is_reviewing_control', text: '风控正在审核中',
+                                        hidden: function (row) {  /**风控正在审核中 */
+                                            if (row.review_the_data == 'is_reviewing_control') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'send_car_tube', text: '车管正在处理中',
+                                        hidden: function (row) {  /**车管正在处理中 */
+                                            if (row.review_the_data == 'send_car_tube') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
@@ -1156,6 +1238,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'not_through') {
                                                 return true;
                                             }
@@ -1178,6 +1266,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing') {
@@ -1207,6 +1301,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_true') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'is_reviewing') {
                                                 return true;
                                             }
@@ -1232,6 +1332,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing') {
