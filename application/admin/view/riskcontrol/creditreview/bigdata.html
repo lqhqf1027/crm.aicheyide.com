@@ -48,24 +48,19 @@
         </div>
         <div class="col-xs-12 col-sm-8 col-md-12">
             <ul id="myTab" class="nav nav-tabs">
-                <li class=" text-center active" style="width: 25%">
+                <li class=" text-center active" style="width: 33.33%">
                     <a href="#tab1" data-toggle="tab">
                         <span>共享数据/基础信息</span>
                     </a>
                 </li>
-                <li style="width: 25%" class="text-center ">
+                <li style="width: 33.33%" class="text-center ">
                     <a href="#tab2" data-toggle="tab">
                         <span> 福网欺诈评估</span>
                     </a>
-                </li>
-                <li style="width: 25%" class="text-center ">
+                </li> 
+                <li style="width: 33.33%" class="text-center ">
                     <a href="#tab3" data-toggle="tab">
-                        <span>综合决策评分</span>
-                    </a>
-                </li>
-                <li style="width: 25%" class="text-center ">
-                    <a href="#tab4" data-toggle="tab">
-                        <span>号码失联探测</span>
+                        <span>贷中预警、综合决策报告</span>
                     </a>
                 </li>
             </ul>
@@ -325,7 +320,8 @@
                                 {case value="3"} 一致 {/case} {/switch}
                             </td>
                             <td>
-                                {foreach $bigdata.risk_data.data.mobileVerifyList as $v} {$v.desc} {/foreach}
+                                {foreach  $bigdata.risk_data.data.mobileVerifyList as $v}
+                                 {$v.desc} {/foreach}
 
                             </td>
                             <td>
@@ -648,12 +644,12 @@
                 </div>
 
                 {/if}
-            </div>
+            </div> 
             <div class="tab-pane fade" id="tab3">
-                qq
-            </div>
-            <div class="tab-pane fade" id="tab4">
-                bb
+                 
+            <center><p style="padding-top:10%"><strong>该产品没有api接口可调用，请访问web（电脑端）进行查看</strong></p>
+                <p><a target="_blank" href="https://star.afufintech.com/" class="btn btn-success btn-md active" role="button">前往</a></p>
+            </center>
             </div>
         </div>
 
@@ -663,8 +659,4 @@
 
     </div>
 </form>
-<script>
-    b =false;
-    var a = b?6:0;
-    console.log(a);
-</script>
+ 

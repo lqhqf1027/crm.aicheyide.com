@@ -28,7 +28,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
-        new_car_bigdata:function(){
+        bigdata:function(){
             //欺诈评分图表
             
                 var myChart = Echarts.init(document.getElementById('echart'));
@@ -78,7 +78,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
             myChart.setOption(option);
         },
         table: {
-
+            /**新车 */
             newcar_audit: function () {
                 // 待审核
                 var newcarAudit = $("#newcarAudit"); 
@@ -86,13 +86,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 newcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/newcarAudit',
                     extend: {
-                        // index_url: 'customer/customerresource/index',
-                        // add_url: 'customer/customerresource/add',
-                        // edit_url: 'customer/customerresource/edit',
-                        // del_url: 'customer/customerresource/del',
-                        // multi_url: 'customer/customerresource/multi',
-                        // distribution_url: 'promote/customertabs/distribution',
-                        // import_url: 'customer/customerresource/import',
+                         add_url: 'order/salesorder/add',
+                        edit_url: 'order/salesorder/edit',
+                        del_url: 'order/salesorder/del',
+                        multi_url: 'order/salesorder/multi',
                         table: 'sales_order',
                     },
                     toolbar: '#toolbar1',
@@ -132,32 +129,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'nperlist', title: __('期数') },
                             { field: 'margin', title: __('保证金（元）') },
                             { field: 'tail_section', title: __('尾款（元）') },
-                            { field: 'gps', title: __('GPS（元）') },
-                            // {
-                            //     field: 'operate', title: __('Operate'), table: newcarAudit,
-                            //     buttons: [
-                            //         {
-                            //             name: 'newauditResult',
-                            //             text: '审核',
-                            //             title: '审核',
-                            //             icon: 'fa fa-check-square-o',
-                            //             classname: 'btn btn-xs btn-info btn-newauditResult btn-dialog',
-                            //         },
-                            //         {
-                            //             name: 'bigData',
-                            //             text: '查看大数据',
-                            //             title: '查看大数据征信',
-                            //             icon: 'fa fa-eye',
-                            //             classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
-
-                            //         }
-
-                            //     ],
-                            //     events: Controller.api.events.operate,
-
-                            //     formatter: Controller.api.formatter.operate
-                            // }
-
+                            { field: 'gps', title: __('GPS（元）') },  
                             {
                                 field: 'operate', title: __('Operate'), table: newcarAudit,
                                 buttons: [
@@ -296,6 +268,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 })
 
             },
+            /**租车 */
             rentalcar_audit: function () {
                 // 审核租车单
                 var rentalcarAudit = $("#rentalcarAudit");
@@ -316,14 +289,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
-                            // {field: 'plan_car_rental_name', title: __('Plan_car_rental_name')},
-                            // {field: 'sales_id', title: __('Sales_id')},
-                            // {field: 'admin_id', title: __('Admin_id')},
-                            // {field: 'control_id', title: __('Control_id')},
-                            // {field: 'rental_car_id', title: __('Rental_car_id')},
-                            // {field: 'insurance_id', title: __('Insurance_id')},
-                            // {field: 'general_manager_id', title: __('General_manager_id')},
+                            {field: 'id', title: __('Id')}, 
                             {field: 'order_no', title: __('Order_no')}, 
                             {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'models_name', title: __('租车车型') },
@@ -346,32 +312,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
                             {field: 'cash_pledge', title: __('押金（元）')},
                             {field: 'rental_price', title: __('租金（元）')},
-                            {field: 'tenancy_term', title: __('租期（月）')},
-                            // {
-                            //     field: 'operate', title: __('Operate'), table: rentalcarAudit,
-                            //     buttons: [
-                            //         {
-                            //             name: 'rentalauditResult',
-                            //             text: '审核',
-                            //             title: '审核',
-                            //             icon: 'fa fa-check-square-o',
-                            //             classname: 'btn btn-xs btn-info btn-rentalauditResult btn-dialog',
-                            //         },
-                            //         {
-                            //             name: 'bigData',
-                            //             text: '查看大数据',
-                            //             title: '查看大数据征信',
-                            //             icon: 'fa fa-eye',
-                            //             classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
-
-                            //         }
-
-                            //     ],
-                            //     events: Controller.api.events.operate,
-
-                            //     formatter: Controller.api.formatter.operate
-                            // }
-
+                            {field: 'tenancy_term', title: __('租期（月）')}, 
                             {
                                 field: 'operate', title: __('Operate'), table: rentalcarAudit,
                                 buttons: [
@@ -498,6 +439,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 })
 
             },
+            /**二手车 */
             secondhandcar_audit: function () {
                 // 待审核
                 var secondhandcarAudit = $("#secondhandcarAudit"); 
@@ -548,32 +490,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'newpayment', title: __('新首付（元）') },
                             { field: 'monthlypaymen', title: __('月供（元）') },
                             { field: 'periods', title: __('期数（月）') },
-                            { field: 'totalprices', title: __('总价（元）') },
-                            // {
-                            //     field: 'operate', title: __('Operate'), table: newcarAudit,
-                            //     buttons: [
-                            //         {
-                            //             name: 'newauditResult',
-                            //             text: '审核',
-                            //             title: '审核',
-                            //             icon: 'fa fa-check-square-o',
-                            //             classname: 'btn btn-xs btn-info btn-newauditResult btn-dialog',
-                            //         },
-                            //         {
-                            //             name: 'bigData',
-                            //             text: '查看大数据',
-                            //             title: '查看大数据征信',
-                            //             icon: 'fa fa-eye',
-                            //             classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
-
-                            //         }
-
-                            //     ],
-                            //     events: Controller.api.events.operate,
-
-                            //     formatter: Controller.api.formatter.operate
-                            // }
-
+                            { field: 'totalprices', title: __('总价（元）') }, 
                             {
                                 field: 'operate', title: __('Operate'), table: secondhandcarAudit,
                                 buttons: [
@@ -791,8 +708,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, { ids: ids });
-                        var url = 'riskcontrol/creditreview/new_car_bigdata';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+
+                        var bigdatatype = row.plan_acar_name?'sales_order':row.plan_car_rental_name?'rental_order':row.plan_car_second_name?'second_sales_order':0;
+                        var url = 'riskcontrol/creditreview/bigdata'+'/bigdatatype/'+bigdatatype; 
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
                             callback: function (value) {
                                 alert(value);
                                 //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据

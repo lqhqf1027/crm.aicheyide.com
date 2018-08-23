@@ -1799,18 +1799,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     //提交保证金
                     'click .btn-the_guarantor': function (e, value, row, index) { /**提交保证金 */
-                        $(".btn-the_guarantor").data("area", ["95%", "95%"]);
-
+                        $(".btn-the_guarantor").data("area", ["95%", "95%"]); 
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = [options.pk];
                         row = $.extend({}, row ? row : {}, { ids:ids}); 
-                        var url = options.extend.edit_url+'/posttype/the_guarantor';
-
-
-                        // console.log(url);
+                        var url = options.extend.edit_url+'/posttype/the_guarantor';  
                         Fast.api.open(Table.api.replaceurl(url,row, table), __('请上传保证金收据'), $(this).data() || {});
                     },
                 }
