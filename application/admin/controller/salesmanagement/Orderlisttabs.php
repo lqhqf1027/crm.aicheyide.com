@@ -23,6 +23,7 @@ class Orderlisttabs extends Backend
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected  $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
     // protected  $dataLimit = 'false'; //表示显示当前自己和所有子级管理员的所有数据
+    // protected $relationSearch = true;
     static protected $token = null;
     
     public function _initialize()
@@ -89,8 +90,8 @@ class Orderlisttabs extends Backend
 
            $list = $this->model
                ->where($where)
-            //    ->order($sort, $order)
-            //    ->limit($offset, $limit)
+               ->order($sort, $order)
+               ->limit($offset, $limit)
                ->select();
          
            $list = collection($list)->toArray();
@@ -139,7 +140,7 @@ class Orderlisttabs extends Backend
             $sales_name = DB::name('admin')->where('id', $this->auth->id)->value('nickname');
 
             //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
+            $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
                 'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
