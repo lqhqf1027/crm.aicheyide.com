@@ -30,11 +30,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             new_customer: function () {
                 // 表格1
                 var newCustomer = $("#newCustomer");
-                // newCustomer.on('load-success.bs.table', function (e, data) {
-                //     console.log(data.total);
-                //     $('#new-customer').text(data.total);
-                //
-                // })
+
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-editone").data("area", ["80%", "80%"]);
                     $(".btn-detail").data("area", ["95%", "95%"]);
@@ -52,6 +48,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
@@ -145,7 +142,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格2
                 var registryRegistration = $("#registryRegistration");
                 registryRegistration.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-edittwo").data("area", ["80%", "80%"]);
+                    $(".btn-edittwo").data("area", ["50%", "80%"]);
                     $(".btn-edit").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
@@ -154,7 +151,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'registry/Newcarinfo/index',
                         add_url: 'registry/registration/add',
-                        edit_url: 'material/newcarinfo/edit3',
+                        edit_url: 'material/newcarinfo/warehousing',
                         del_url: 'registry/registration/del',
                         multi_url: 'registry/registration/multi',
                         table: 'registry_registration',
@@ -171,13 +168,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'full_mortgage', title: __('全款/按揭')},
                             {field: 'financial_name', title: __('金融公司')},
                             {field: 'phone', title: __('电话')},
-                            {field: 'licensenumber', title: __('车票号')},
+                            {field: 'licensenumber', title: __('车牌号')},
                             {field: 'frame_number', title: __('车架号')},
                             {field: 'household', title: __('所属分公司')},
                             {field: 'sales_name', title: __('销售员')},
-                            {field: 'id_cardimages', title: __('身份证复印件'), formatter: Controller.api.formatter.judge},
+                            {field: 'rr_id_card', title: __('身份证复印件'), formatter: Controller.api.formatter.judge},
                             {
-                                field: 'residence_bookletimages',
+                                field: 'registered_residence',
                                 title: __('户口复印件'),
                                 formatter: Controller.api.formatter.judge
                             },
@@ -192,20 +189,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('半年银行流水'),
                                 formatter: Controller.api.formatter.judge
                             },
-                            {field: 'call_listfiles', title: __('通话清单'), formatter: Controller.api.formatter.judge},
+                            {field: 'detailed_list', title: __('通话清单'), formatter: Controller.api.formatter.judge},
                             {
-                                field: 'guarantee_id_cardimages',
+                                field: 'guarantee',
                                 title: __('担保人'),
                                 formatter: Controller.api.formatter.judge
                             },
-                            {field: 'housingimages', title: __('房产复印件'), formatter: Controller.api.formatter.judge},
+                            {field: 'residence_permitimages', title: __('居住证/租房合同/房产证'), formatter: Controller.api.formatter.judge},
                             {
-                                field: 'drivers_licenseimages',
+                                field: 'driving_license',
                                 title: __('驾照'),
                                 formatter: Controller.api.formatter.judge
                             },
-                            {field: 'residence_permitimages', title: __('居住证'), formatter: Controller.api.formatter.judge},
-                            {field: 'rent_house_contactimages', title: __('租房合同'), formatter: Controller.api.formatter.judge},
                             {field: 'company_contractimages', title: __('公司合同'), formatter: Controller.api.formatter.judge},
                             {field: 'car_keys', title: __('钥匙'), formatter: Controller.api.formatter.judge},
                             {field: 'lift_listimages', title: __('提车单'), formatter: Controller.api.formatter.judge},
@@ -237,7 +232,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'other_documentsimages', title: __('其他'), formatter: Controller.api.formatter.judge},
                             {field: 'driving_licenseimages', title: __('行驶证'), formatter: Controller.api.formatter.judge},
-                            {field: 'insurance', title: __('交强险'), formatter: Controller.api.formatter.judge},
+                            {field: 'strong_insurance', title: __('交强险'), formatter: Controller.api.formatter.judge},
                             {field: 'tax_proofimages', title: __('完税证明'), formatter: Controller.api.formatter.judge},
                             {
                                 field: 'invoice_or_deduction_coupletimages',
@@ -249,13 +244,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('登记证书'),
                                 formatter: Controller.api.formatter.judge
                             },
-                            {field: 'business_risks', title: __('商业险'), formatter: Controller.api.formatter.judge},
-                            {
-                                field: 'mortgage_registration_fee',
-                                title: __('抵押登记费'),
-                                formatter: Controller.api.formatter.judge
-                            },
-                            {field: 'tax', title: __('购置税'), formatter: Controller.api.formatter.judge},
+                            {field: 'commercial_insurance', title: __('商业险'), formatter: Controller.api.formatter.judge},
+
+                            {field: 'rr_tax', title: __('购置税'), formatter: Controller.api.formatter.judge},
                             {
                                 field: 'maximum_guarantee_contractimages',
                                 title: __('最高保障合同'),
@@ -300,10 +291,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
-        edit2: function () {
-            Controller.api.bindevent();
-        },
-        edit3: function () {
+
+        warehousing: function () {
             Controller.api.bindevent();
         },
         api: {
@@ -367,7 +356,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 judge: function (value) {
                     var res = "";
                     var color = "";
-                    if (value == null || value == "") {
+                    if (value == "no" ||value==""||value==null) {
                         res = "<i class='fa fa-times'></i>";
                         color = "danger";
                     } else {

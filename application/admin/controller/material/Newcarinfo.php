@@ -19,6 +19,7 @@ class Newcarinfo extends Backend
      * @var \app\admin\model\DriverInfo
      */
     protected $model = null;
+    protected $searchFields = 'id,username';
 
     public function _initialize()
     {
@@ -122,7 +123,7 @@ class Newcarinfo extends Backend
 
 
             if ($params) {
-
+//pr($params);die();
                 if (!$check_mortgage) {
                     $params['mortgage_people'] = null;
                 }
@@ -159,7 +160,9 @@ class Newcarinfo extends Backend
                         'transfer' => $params['transfer'],
                         'transferdate' => $params['transferdate'],
                         'yearly_inspection' => $params['yearly_inspection'],
-                        'classification' => 'new'
+                        'classification' => 'new',
+                        'contract_total'=>$params['contract_total'],
+                        'registry_remark'=>$params['registry_remark']
                     ];
 
 
@@ -199,7 +202,7 @@ class Newcarinfo extends Backend
     /**
      * 编辑
      */
-    public function edit3($ids = NULL)
+    public function warehousing($ids = NULL)
     {
 
 
@@ -218,7 +221,7 @@ class Newcarinfo extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
-pr($params);die();
+//pr($params);die();
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
@@ -227,27 +230,34 @@ pr($params);die();
                         $row->validate($validate);
                     }
                     $data = array(
+                        'id_card' => $params['id_card'],
+                        'registered_residence' => $params['registered_residence'],
                         'marry_and_divorceimages' => $params['marry_and_divorceimages'],
+                        'credit_reportimages' => $params['credit_reportimages'],
                         'halfyear_bank_flowimages' => $params['halfyear_bank_flowimages'],
+                        'detailed_list' => $params['detailed_list'],
+                        'guarantee' => $params['guarantee'],
                         'residence_permitimages' => $params['residence_permitimages'],
+                        'driving_license' => $params['driving_license'],
                         'company_contractimages' => $params['company_contractimages'],
-                        'rent_house_contactimages' => $params['rent_house_contactimages'],
                         'car_keys' => $params['car_keys'],
                         'lift_listimages' => $params['lift_listimages'],
-                        'explain_situation' => $params['explain_situation'],
+                        'deposit' => $params['deposit'],
                         'truth_management_protocolimages' => $params['truth_management_protocolimages'],
                         'confidentiality_agreementimages' => $params['confidentiality_agreementimages'],
                         'supplementary_contract_agreementimages' => $params['supplementary_contract_agreementimages'],
+                        'explain_situation' => $params['explain_situation'],
                         'tianfu_bank_cardimages' => $params['tianfu_bank_cardimages'],
                         'other_documentsimages' => $params['other_documentsimages'],
+                        'driving_licenseimages' => $params['driving_licenseimages'],
+                        'strong_insurance' => $params['strong_insurance'],
                         'tax_proofimages' => $params['tax_proofimages'],
                         'invoice_or_deduction_coupletimages' => $params['invoice_or_deduction_coupletimages'],
                         'registration_certificateimages' => $params['registration_certificateimages'],
-                        'mortgage_registration_fee' => $params['mortgage_registration_fee'],
+                        'commercial_insurance'=>$params['commercial_insurance'],
+                        'tax'=>$params['tax'],
                         'maximum_guarantee_contractimages' => $params['maximum_guarantee_contractimages'],
-                        'credit_reportimages' => $params['credit_reportimages'],
                         'information_remark' => $params['information_remark'],
-                        'driving_licenseimages' => $params['driving_licenseimages'],
                         'classification' => 'new'
                     );
 
@@ -290,7 +300,11 @@ pr($params);die();
         $row = Db::table("crm_order_view")
             ->where("id", $ids)
             ->select();
+
+        $row = $this->get_sale($row);
+
         $row = $row[0];
+//pr($row);die();
 
         if ($row['new_car_marginimages'] == "") {
             $row['new_car_marginimages'] = null;
@@ -487,8 +501,6 @@ pr($params);die();
 
         return $arr;
     }
-
-
 
 
 }
