@@ -5,6 +5,7 @@ namespace app\admin\controller\salesmanagement;
 use app\common\controller\Backend;
 use app\admin\model\PlanAcar as planAcarModel;
 use app\admin\model\Models as modelsModel;
+use app\admin\model\SalesOrder as salesOrderModel;
 use think\Db;
 use think\Config;
 /**
@@ -71,47 +72,56 @@ class Orderlisttabs extends Backend
     /**以租代购（新车）*/
     public function orderAcar()
     { 
+        $a =salesOrderModel::get(9);
         
+        pr($a->mo());
         // pr(collection($this->getPlanAcarData(5))->toArray());
-
+        //当前是否为关联查询
+        $this->relationSearch = true;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
        //设置过滤方法
         $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
+        // if ($this->request->isAjax()) {
            //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
+                ->with(['mo'])
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
+                ->with(['mo'])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
-
-            $list = collection($list)->toArray();
+           
+                $list = collection($list)->toArray();
+                pr($list);
+    
         //    $newList = array();
-            foreach ((array)$list as $k => $row) {
-                $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
-
-                $list[$k]['payment'] = $planData['payment'];
-                $list[$k]['monthly'] = $planData['monthly'];
-                $list[$k]['nperlist'] = $planData['nperlist'];
-                $list[$k]['margin'] = $planData['margin'];
-                $list[$k]['gps'] = $planData['gps'];
-                $list[$k]['models_name'] = $planData['models_name'];
+            foreach ($list as $row) {
+                $row->visible(['order_no','username']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['margin']);
+                // $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray(); 
+                // $list[$k]['payment'] = $planData['payment'];
+                // $list[$k]['monthly'] = $planData['monthly'];
+                // $list[$k]['nperlist'] = $planData['nperlist'];
+                // $list[$k]['margin'] = $planData['margin'];
+                // $list[$k]['gps'] = $planData['gps'];
+                // $list[$k]['models_name'] = $planData['models_name']; 
             }
-
+          
             $result = array("total" => $total, "rows" => $list);
             return json($result);
-        }
+        // }
 
         return $this->view->fetch('index');
 

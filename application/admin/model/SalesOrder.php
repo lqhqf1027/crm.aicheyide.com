@@ -88,9 +88,9 @@ class SalesOrder extends Model
         return $this->belongsTo('PlanAcar', 'plan_acar_name', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
-    public function models()
+    public function mo()
     {
-        return $this->hasManyThrough('Models', 'PlanAcar', 'plan_acar_name', 'id', 'id');
+        return $this->hasManyThrough('SalesOrder', 'PlanAcar', 'plan_acar_name', 'id', 'id');
     }
 
 
