@@ -99,7 +99,7 @@ class Fullparmentorder extends Backend
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
                         //如果添加成功,将状态改为提交审核
-                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing']);
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'send_to_internal']);
                         if ($result_s) {
                             $this->success();
                         } else {
@@ -198,7 +198,7 @@ class Fullparmentorder extends Backend
         return $this->view->fetch();
     }
 
-    //提交车管
+    //提交内勤
     public function submitCar()
     {
         if ($this->request->isAjax()) {
@@ -206,7 +206,7 @@ class Fullparmentorder extends Backend
 
             $admin_nickname = DB::name('admin')->alias('a')->join('full_parment_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
            
-            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'is_reviewing_true']);
+            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'inhouse_handling']);
 
             //请求地址
             $uri = "http://goeasy.io/goeasy/publish";

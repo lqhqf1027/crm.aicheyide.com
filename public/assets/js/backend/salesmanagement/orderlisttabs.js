@@ -30,7 +30,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         table: {
             order_acar: function () {
 
-                // 表格1
+                // 新车单
                 var orderAcar = $("#orderAcar");
 
                 $(".btn-add").data("area", ["95%", "95%"]);
@@ -990,7 +990,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             order_second: function () {
 
-                // 表格3
+                // 二手车单
                 var orderSecond = $("#orderSecond");
 
                 $(".btn-add").data("area", ["95%", "95%"]);
@@ -1408,7 +1408,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             order_full: function () {
 
-                // 表格1
+                // 全款单
                 var orderFull = $("#orderFull");
 
                 $(".btn-add").data("area", ["95%", "95%"]);
@@ -1461,16 +1461,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate', title: __('Operate'), table: orderFull,
                                 buttons: [
                                     {
-                                        name: 'submitCar', text: '提交车管备车', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交车管备车'), classname: 'btn btn-xs btn-success btn-submitCar',
-                                        url: 'order/fullparmentorder/submitCar',/**提交给车管 */
-                                        //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
-                                        //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
-                                        //....
-                                        hidden: function (row) { /**提交审核 */
-                                            if (row.review_the_data == 'is_reviewing') {
+                                        name: 'submitCar', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-success btn-submitCar',
+                                        url: 'order/fullparmentorder/submitCar',/**提交内勤 */
+                                       
+                                        hidden: function (row) { /**提交内勤 */
+                                            if (row.review_the_data == 'send_to_internal') {
                                                 return false;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
@@ -1486,10 +1487,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
                                         url: 'order/fullparmentorder/del',/**删除 */
                                         hidden: function (row) {
-                                            if (row.review_the_data == 'is_reviewing') {
+                                            if (row.review_the_data == 'send_to_internal') {
                                                 return false;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
@@ -1506,10 +1510,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
                                         url: 'order/fullparmentorder/edit',/**编辑 */
                                         hidden: function (row, value, index) {
-                                            if (row.review_the_data == 'is_reviewing') {
+                                            if (row.review_the_data == 'send_to_internal') {
                                                 return false;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
@@ -1526,10 +1533,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             if (row.review_the_data == 'is_reviewing_true') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing') {
+                                            else if (row.review_the_data == 'send_to_internal') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                           
+                                        }
+                                    },
+                                    {
+                                        name: 'inhouse_handling', icon: 'fa fa-check-circle', text: '内勤正在处理', classname: ' text-info ',
+                                        hidden: function (row) {  /**内勤正在处理 */
+                                            if (row.review_the_data == 'inhouse_handling') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
@@ -1545,10 +1576,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             if (row.review_the_data == 'is_reviewing_pass') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing') {
+                                            else if (row.review_the_data == 'send_to_internal') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
@@ -1570,9 +1604,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_true') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing') {
-
-
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
                                                 return true;
                                             }
                                         }
@@ -1599,6 +1634,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
                 // 为表格1绑定事件
                 Table.api.bindevent(orderFull);
+
+                //可以提车
+                goeasy.subscribe({
+                    channel: 'demo-full_setaudit',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
 
                 // alert(Table.api.getrowdata(table, index));
             },

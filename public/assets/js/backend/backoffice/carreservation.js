@@ -230,6 +230,95 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
             },
+            fullcar_entry: function () {
+                // 全款车录入定金
+                var fullcarEntry = $("#fullcarEntry");
+               
+                // 初始化表格
+                fullcarEntry.bootstrapTable({
+                    url: 'backoffice/carreservation/fullcarEntry',
+                    extend: {
+                        // edit_url: 'backoffice/carreservation/secondactual_amount',
+                        table: 'full_parment_order',
+                    },
+                    toolbar: '#toolbar3',
+                    pk: 'id',
+                    sortName: 'id',
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: '编号'},
+                            {field: 'createtime', title: __('订车日期')},
+                            {field: 'sales_name', title: __('销售员')},
+                            {field: 'models_name', title: __('订车车型')},
+                            {field: 'full_total_price', title: __('车款总价(元)')},
+                            {field: 'username', title: __('客户姓名')},
+                            {field: 'id_card', title: __('身份证号')},
+                            {field: 'phone', title: __('联系电话')},
+                            {field: 'detailed_address', title: __('地址')},
+                           
+                            {
+                                field: 'operate', title: __('Operate'), table: fullcarEntry,
+                                buttons: [
+                                    {
+                                        name: 'fullactual_amount', text: '录入实际订车金额', title: '录入实际订车金额', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-fullactual_amount',
+                                        url: 'backoffice/carreservation/fullactual_amount',
+                                       
+                                        hidden: function (row) { /**录入实际订车金额 */
+                                            if (row.review_the_data == 'inhouse_handling') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'send_car_tube', text: '已录入实际订车金额',
+                                        hidden: function (row) {  /**已录入实际订车金额 */
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                ],
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(fullcarEntry);
+
+                //数据实时统计
+                fullcarEntry.on('load-success.bs.table',function(e,data){ 
+
+                    $(".btn-fullactual_amount").data("area", ["50%", "40%"]);
+                    var fullcarEntry =  $('#badge_fullcar_entry').text(data.total); 
+                    fullcarEntry = parseInt($('#badge_fullcar_entry').text());
+                    
+                   
+                })
+
+                //销售推送
+                goeasy.subscribe({
+                    channel: 'demo-submitCar',
+                    onMessage: function (message) {
+                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+
+                    }
+                });
+
+            },
 
 
         },
@@ -263,6 +352,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         secondactual_amount: function () {
+            Controller.api.bindevent();
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+
+
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+
+
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+
+        },
+        fullactual_amount: function () {
             Controller.api.bindevent();
             
             // $(".btn-add").data("area", ["300px","200px"]);
@@ -326,6 +437,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'backoffice/carreservation/secondactual_amount';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
+                    },
+                    //全款车录入订车金额
+                    'click .btn-fullactual_amount': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'backoffice/carreservation/fullactual_amount';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
                     },
                 }
