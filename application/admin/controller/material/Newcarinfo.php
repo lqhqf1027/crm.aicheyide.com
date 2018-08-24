@@ -19,7 +19,8 @@ class Newcarinfo extends Backend
      * @var \app\admin\model\DriverInfo
      */
     protected $model = null;
-    protected $searchFields = 'id,username';
+//    protected $searchFields = 'id,username';
+    protected $multiFields = 'shelfismenu';
 
     public function _initialize()
     {
@@ -33,7 +34,6 @@ class Newcarinfo extends Backend
 
     public function index()
     {
-
 
         return $this->view->fetch();
     }
@@ -50,6 +50,20 @@ class Newcarinfo extends Backend
                 ->count();
 
             $list = $this->get_sale($list);
+
+            foreach ($list as $k => $v) {
+                if ($v['yearly_inspection']) {
+                    $date = $v['yearly_inspection'];
+
+                    $date = strtotime("$date +2 year");
+
+                    $mon_first = date("Y-m-01", $date);
+                    $mon_last = date("Y-m-d", strtotime("$mon_first +1 month -1 day"));
+
+                    $list[$k]['mon_first'] = $mon_first;
+                    $list[$k]['mon_last'] = $mon_last;
+                }
+            }
 
 
             $result = array("total" => $total, "rows" => $list);
@@ -75,9 +89,6 @@ class Newcarinfo extends Backend
 
                 $list[$k]['full_mortgage'] = '按揭';
 
-                if (!$v['registry_registration_id']) {
-
-                }
 
 
             }
@@ -161,8 +172,8 @@ class Newcarinfo extends Backend
                         'transferdate' => $params['transferdate'],
                         'yearly_inspection' => $params['yearly_inspection'],
                         'classification' => 'new',
-                        'contract_total'=>$params['contract_total'],
-                        'registry_remark'=>$params['registry_remark']
+                        'contract_total' => $params['contract_total'],
+                        'registry_remark' => $params['registry_remark']
                     ];
 
 
@@ -254,8 +265,8 @@ class Newcarinfo extends Backend
                         'tax_proofimages' => $params['tax_proofimages'],
                         'invoice_or_deduction_coupletimages' => $params['invoice_or_deduction_coupletimages'],
                         'registration_certificateimages' => $params['registration_certificateimages'],
-                        'commercial_insurance'=>$params['commercial_insurance'],
-                        'tax'=>$params['tax'],
+                        'commercial_insurance' => $params['commercial_insurance'],
+                        'tax' => $params['tax'],
                         'maximum_guarantee_contractimages' => $params['maximum_guarantee_contractimages'],
                         'information_remark' => $params['information_remark'],
                         'classification' => 'new'

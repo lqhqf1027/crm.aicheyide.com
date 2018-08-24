@@ -303,14 +303,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
-                                    // {
-                                    //     name: 'details',
-                                    //     text: __('查看详情'),
-                                    //     icon: 'fa fa-eye',
-                                    //     title: __('查看详情'),
-                                    //     extend: 'data-toggle="tooltip"',
-                                    //     classname: 'btn btn-xs btn-info btn-details',
-                                    // },
 
                                 ]
                             }

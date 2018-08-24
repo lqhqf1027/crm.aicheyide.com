@@ -60,7 +60,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('签订日期'),
                                 operate: false
                             },
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'),formatter:Controller.api.formatter.inspection},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
                             {field: 'payment', title: __('首付')},
@@ -74,25 +74,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'licensenumber', title: __('车牌号')},
                             {field: 'frame_number', title: __('车架号')},
                             {field: 'mortgage_people', title: __('抵押人')},
-                            // {field: 'ticketdate', title: __('开票日期'), operate: false},
-                            // {field: 'supplier', title: __('供货商')},
-                            // {field: 'tax_amount', title: __('含税金额(元)')},
-                            // {field: 'no_tax_amount', title: __('不含税金额(元)')},
-                            // {field: 'pay_taxesdate', title: __('缴税日期'), operate: false},
-                            // {field: 'tax', title: __('购置税(元)'), operate: false},
-                            // {field: 'house_fee', title: __('上户费(元)'), operate: false},
-                            // {field: 'luqiao_fee', title: __('路桥费(元)'), operate: false},
-                            // {field: 'insurance_buydate', title: __('保险购买日期'), operate: false},
-                            // {field: 'insurance_policy', title: __('交强险保单'), operate: false},
-                            // {field: 'insurance', title: __('交强险金额'), operate: false},
-                            // {field: 'insurance', title: __('交强险金额'), operate: false},
-                            // {field: 'car_boat_tax', title: __('车船税金额(元)'), operate: false},
-                            // {field: 'commercial_insurance_policy', title: __('商业险保单'), operate: false},
-                            // {field: 'business_risks', title: __('商业险金额(元)'), operate: false},
-                            // {field: 'transferdate', title: __('过户日期'), operate: false},
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
+
                                     {
                                         name: 'edit',
                                         icon: 'fa fa-pencil',
@@ -100,6 +85,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: __('Edit'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-success btn-editone',
+                                        // hidden:function (row) {
+                                        //     // return false;
+                                        // }
                                     },
                                     {
                                         name: 'detail',
@@ -109,6 +97,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-info btn-detail',
                                     },
+
+
 
                                 ],
                                 events: Controller.api.events.operate,
@@ -368,6 +358,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var html = '<span class="text-' + color + '"> ' + __(res) + '</span>';
 
                     return html;
+                },
+
+                inspection:function (value, row, index) {
+                    var first = row.mon_first;
+                    var last = row.mon_last;
+                    var now = new Date().getTime();
+
+                    first = new Date(first).getTime();
+                    last = new Date(last).getTime();
+
+                    if(now>first && now<last){
+                        return value+"<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
+                    }else if(now>last){
+                        return value+"<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
+                    }else{
+                        return value;
+                    }
                 }
             }
         }

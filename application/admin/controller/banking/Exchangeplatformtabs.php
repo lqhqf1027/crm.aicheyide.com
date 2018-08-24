@@ -32,13 +32,7 @@ class Exchangeplatformtabs extends Backend
      */
     public function index()
     {
-//        $ids = Db::name("sales_order")
-//            ->alias("so")
-//            ->join("car_new_inventory ni","so.car_new_inventory_id = ni.id")
-//            ->field("ni.id,ni.car_mortgage_id")
-//            ->select();
-//
-//        pr($ids);die();
+
 
 
         $this->loadlang('banking/exchangeplatformtabs');
@@ -139,11 +133,15 @@ class Exchangeplatformtabs extends Backend
         $result = array();
 
         $result[0] = Db::table("crm_order_view")
-            ->where("mortgage_type", $condition)
+            ->where(function ($query) use ($condition) {
+                $query->where("mortgage_type", $condition);
+            })
             ->count();
 
         $result[1] = Db::table("crm_order_view")
-            ->where("mortgage_type", $condition)
+            ->where(function ($query) use ($condition) {
+                $query->where("mortgage_type", $condition);
+            })
             ->select();
 
         return $result;
