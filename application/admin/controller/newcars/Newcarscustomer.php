@@ -49,12 +49,11 @@ class Newcarscustomer extends Backend
 
         $prepare_total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
             ->where("review_the_data", "for_the_car")
-            ->where("car_new_inventory_id", null)
+            ->where("car_new_inventory_id",null)
             ->count();
 
         $already_total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
             ->where("review_the_data", "the_car")
-            ->where("car_new_inventory_id", "not null")
             ->count();
 
         $this->view->assign([
@@ -68,13 +67,18 @@ class Newcarscustomer extends Backend
     public function prepare_lift_car()
     {
         if ($this->request->isAjax()) {
-            $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
-                ->where("review_the_data", "for_the_car")
+            $total = Db::table("crm_order_view")
+                ->where(function ($query) {
+                    $query->where("car_new_inventory_id", null)
+                        ->where("review_the_data", "for_the_car");
+                })
                 ->where("car_new_inventory_id", null)
                 ->count();
-            $list = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
-                ->where("review_the_data", "for_the_car")
-                ->where("car_new_inventory_id", null)
+            $list = Db::table("crm_order_view")
+                ->where(function ($query) {
+                    $query->where("car_new_inventory_id", null)
+                        ->where("review_the_data", "for_the_car");
+                })
                 ->select();
 
             $result = array("total" => $total, "rows" => $list);
@@ -88,10 +92,16 @@ class Newcarscustomer extends Backend
     public function already_lift_car()
     {
         if ($this->request->isAjax()) {
-            $total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop,car_new_inventory_id")
+            $total = Db::table("crm_order_view")
+                ->where(function ($query) {
+                    $query->where("review_the_data", "the_car");
+                })
                 ->where("review_the_data", "the_car")
                 ->count();
-            $list = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,delivery_datetime,licensenumber,frame_number,engine_number,household,4s_shop,car_new_inventory_id")
+            $list = Db::table("crm_order_view")
+                ->where(function ($query) {
+                    $query->where("review_the_data", "the_car");
+                })
                 ->where("review_the_data", "the_car")
                 ->select();
 
@@ -457,7 +467,7 @@ class Newcarscustomer extends Backend
 
         foreach ($data as $k => $v) {
             if ($v[0] == "https://static.aicheyide.com") {
-                 $data[$k] = null;
+                $data[$k] = null;
             }
         }
 

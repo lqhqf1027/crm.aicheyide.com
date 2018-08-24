@@ -60,7 +60,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('签订日期'),
                                 operate: false
                             },
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'),formatter:Controller.api.formatter.inspection},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
                             {field: 'payment', title: __('首付')},
@@ -77,52 +77,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
-                                    {
-                                        name: 'detail',
-                                        text: '即将年检',
-                                        title: __('detail'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'text-warning',
-                                        hidden:function (row) {
 
-                                            var first = row.mon_first;
-                                            var last = row.mon_last;
-                                            var now = new Date().getTime();
-
-                                            first = new Date(first).getTime();
-                                            last = new Date(last).getTime();
-
-                                            if(now>first && now<last){
-                                                return false;
-                                            }else{
-                                                return true;
-                                            }
-
-
-                                        }
-                                    },
-                                    {
-                                        name: 'detail',
-                                        text: '年检已过期',
-                                        title: __('detail'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'text-danger',
-                                        hidden:function (row) {
-
-                                            var first = row.mon_first;
-                                            var last = row.mon_last;
-                                            var now = new Date().getTime();
-
-                                            first = new Date(first).getTime();
-                                            last = new Date(last).getTime();
-
-                                            if(now>last){
-                                                return false;
-                                            }else{
-                                                return true;
-                                            }
-                                        }
-                                    },
                                     {
                                         name: 'edit',
                                         icon: 'fa fa-pencil',
@@ -403,6 +358,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var html = '<span class="text-' + color + '"> ' + __(res) + '</span>';
 
                     return html;
+                },
+
+                inspection:function (value, row, index) {
+                    var first = row.mon_first;
+                    var last = row.mon_last;
+                    var now = new Date().getTime();
+
+                    first = new Date(first).getTime();
+                    last = new Date(last).getTime();
+
+                    if(now>first && now<last){
+                        return value+"<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
+                    }else if(now>last){
+                        return value+"<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
+                    }else{
+                        return value;
+                    }
                 }
             }
         }

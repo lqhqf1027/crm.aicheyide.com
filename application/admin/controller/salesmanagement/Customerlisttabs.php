@@ -80,6 +80,14 @@ class Customerlisttabs extends Backend
     public function index()
     {
 
+        $q = $this->model
+        ->with('platform')
+        ->select();
+        $q = collection($q)->toArray();
+        pr($q);
+
+        die();
+
 
         $this->loadlang('salesmanagement/customerlisttabs');
 

@@ -2,12 +2,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-          
+
             // 初始化表格参数配置
-            Table.api.init({
-               
-            });
-          
+            Table.api.init({});
+
             //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var panel = $($(this).attr("href"));
@@ -20,170 +18,197 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //移除绑定的事件
                 $(this).unbind('shown.bs.tab');
             });
-            
+
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
 
         //单个分配
-        dstribution:function(){
- 
+        dstribution: function () {
+
             // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-               
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
+
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
                 // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
+            }, function (data, ret) {
                 // console.log(data); 
-                Toastr.success("失败"); 
+                Toastr.success("失败");
             });
             // Controller.api.bindevent();
             // console.log(Config.id);
- 
+
         },
         //批量分配 
-        distribution:function(){
-            
-          
+        distribution: function () {
+
+
             // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-               
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
+
                 // console.log(data);
                 // newAllocationNum = parseInt($('#badge_new_allocation').text());
                 // num = parseInt(data);
                 // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
-                
+
                 // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
+            }, function (data, ret) {
                 // console.log(data);
-                
+
                 Toastr.success("失败");
-                
+
             });
             // Controller.api.bindevent();
             // console.log(Config.id);
-            
- 
+
+
         },
         //批量导入
-        import:function(){
+        import: function () {
             // console.log(123);
             // return;
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 console.log(data);
                 // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
+            }, function (data, ret) {
                 // console.log(data);
-                
+
                 Toastr.success("失败");
-                
+
             });
             Controller.api.bindevent();
             // console.log(Config.id); 
- 
+
         },
         table: {
-         
+
             new_customer: function () {
                 // 新客户
-                var newCustomer = $("#newCustomer"); 
-               
+                var newCustomer = $("#newCustomer");
+
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-newCustomer").data("area", ["30%", "30%"]);
                 });
-                 // 初始化表格
-                 newCustomer.bootstrapTable({
-                url: 'promote/Customertabs/newCustomer',
-                extend: {
-                    index_url: 'customer/customerresource/index',
-                    add_url: 'customer/customerresource/add',
-                    // edit_url: 'customer/customerresource/edit',
-                    del_url: 'customer/customerresource/del',
-                    // multi_url: 'customer/customerresource/multi',
-                    distribution_url: 'promote/customertabs/distribution',
-                    import_url: 'customer/customerresource/import',
-                    table: 'customer_resource',
-                },
-                toolbar: '#toolbar1',
-                pk: 'id',
-                sortName: 'id',
-                searchFormVisible: true,
-                columns: [
-                    [
-                        {checkbox: true},
-                        {field: 'id', title: __('Id')},
-                        // {field: 'platform_id', title: __('Platform_id')},
-                        // {field: 'backoffice_id', title: __('Backoffice_id')},
-                        {field: 'platform.name', title: __('所属平台')},
-                        
-                        // {field: 'sales_id', title: __('Sales_id')},
-                        {field: 'username', title: __('Username')},
-                        {field: 'phone', title: __('Phone')},
-                        {field: 'age', title: __('Age')},
-                        {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                        {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        // {field: 'allocationtime', title: __('Allocationtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        // {field: 'feedbacktime', title: __('Feedbacktime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        // {field: 'feedback', title: __('Feedback')},
-                        // {field: 'note', title: __('Note')},
-                        {field: 'operate', title: __('Operate'), table: newCustomer, events: Table.api.events.operate,
-                        buttons: [
-                                    {name: 'detail', text: '分配', title: '分配', icon: 'fa fa-share', classname: 'btn btn-xs btn-info btn-newCustomer btn-dialog', url:'promote/customertabs/dstribution', 
-                                       success:function(data, ret){
+                // 初始化表格
+                newCustomer.bootstrapTable({
+                    url: 'promote/Customertabs/newCustomer',
+                    extend: {
+                        index_url: 'customer/customerresource/index',
+                        add_url: 'customer/customerresource/add',
+                        // edit_url: 'customer/customerresource/edit',
+                        del_url: 'customer/customerresource/del',
+                        // multi_url: 'customer/customerresource/multi',
+                        distribution_url: 'promote/customertabs/distribution',
+                        import_url: 'customer/customerresource/import',
+                        table: 'customer_resource',
+                    },
+                    toolbar: '#toolbar1',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id')},
+                            // {field: 'platform_id', title: __('Platform_id')},
+                            // {field: 'backoffice_id', title: __('Backoffice_id')},
+                            {field: 'platform.name', title: __('所属平台')},
 
-                                    }, error:function(){}
+                            // {field: 'sales_id', title: __('Sales_id')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'age', title: __('Age')},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {
+                                field: 'createtime',
+                                title: __('Createtime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'updatetime',
+                                title: __('Updatetime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            // {field: 'allocationtime', title: __('Allocationtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            // {field: 'feedbacktime', title: __('Feedbacktime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            // {field: 'feedback', title: __('Feedback')},
+                            // {field: 'note', title: __('Note')},
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: newCustomer,
+                                events: Table.api.events.operate,
+                                buttons: [
+                                    {
+                                        name: 'detail',
+                                        text: '分配',
+                                        title: '分配',
+                                        icon: 'fa fa-share',
+                                        classname: 'btn btn-xs btn-info btn-newCustomer btn-dialog',
+                                        url: 'promote/customertabs/dstribution',
+                                        success: function (data, ret) {
+
+                                        },
+                                        error: function () {
+                                        }
                                     }
                                 ],
-                                
-                                 events: Table.api.events.operate,formatter: Table.api.formatter.operate}
+
+                                events: Table.api.events.operate,
+                                formatter: Table.api.formatter.operate
+                            }
+                        ]
                     ]
-                ]
-            });
-          
+                });
+
                 // 为表格newCustomer绑定事件
                 Table.api.bindevent(newCustomer);
                 // 批量分配 
                 var num = 0;
-                $(document).on("click", ".btn-selected", function () {   
+                $(document).on("click", ".btn-selected", function () {
                     var ids = Table.api.selectedids(newCustomer);
-                    num= parseInt(ids.length);
+                    num = parseInt(ids.length);
                     //    console.log(num);
-                    var url = 'promote/customertabs/distribution?ids='+ids;
+                    var url = 'promote/customertabs/distribution?ids=' + ids;
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
-                        area:['30%','30%'],
-                        callback:function(value){
-                                                        
+                        area: ['30%', '30%'],
+                        callback: function (value) {
+
                         }
                     }
-                    Fast.api.open(url,'批量分配',options)
+                    Fast.api.open(url, '批量分配', options)
                 })
 
                 //数据实时统计
-                newCustomer.on('load-success.bs.table',function(e,data){ 
-                
-                    var newCustomerNum =  $('#badge_new_customer').text(data.total); 
-                        newCustomerNum = parseInt($('#badge_new_customer').text());
-                    
+                newCustomer.on('load-success.bs.table', function (e, data) {
+
+                    var newCustomerNum = $('#badge_new_customer').text(data.total);
+                    newCustomerNum = parseInt($('#badge_new_customer').text());
+
                     // var newAllocationNum = parseInt($('#badge_new_allocation').text());
                     // num = parseInt(num);
                     // $('#badge_new_allocation').text(num+newAllocationNum); 
-                   
+
                 })
 
                 //导出新客户的信息
@@ -216,7 +241,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         success: function (layero, index) {
                             $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
                         }
-                        , 
+                        ,
                         yes: function (index, layero) {
                             submitForm(ids.join(","), layero);
                             // return false;
@@ -264,16 +289,39 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
-                            
+
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'age', title: __('Age')},
-                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                            {field: 'distributinternaltime', title: __('Distributinternaltime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {
+                                field: 'distributinternaltime',
+                                title: __('Distributinternaltime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'createtime',
+                                title: __('Createtime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'updatetime',
+                                title: __('Updatetime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
                             // {field: 'operate', title: __('Operate'), table: newAllocation, events: Table.api.events.operate,formatter: Table.api.formatter.operate}
@@ -286,13 +334,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Table.api.bindevent(newAllocation);
 
                 //数据实时统计
-                newAllocation.on('load-success.bs.table',function(e,data){ 
-                
-                    var newAllocationNum =  $('#badge_new_allocation').text(data.total); 
+                newAllocation.on('load-success.bs.table', function (e, data) {
+
+                    var newAllocationNum = $('#badge_new_allocation').text(data.total);
                     // var newAllocationNum = parseInt($('#badge_new_allocation').text());
                     // num = parseInt(num);
                     // $('#badge_new_allocation').text(num+newAllocationNum); 
-                   
+
                 })
 
                 //导出分配客户的信息
@@ -371,16 +419,39 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
-                            
+
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'age', title: __('Age')},
-                            {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                            {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                            {field: 'feedbacktime', title: __('Feedbacktime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {
+                                field: 'genderdata',
+                                title: __('Genderdata'),
+                                visible: false,
+                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                            },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {
+                                field: 'feedbacktime',
+                                title: __('Feedbacktime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'createtime',
+                                title: __('Createtime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'updatetime',
+                                title: __('Updatetime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
                             {field: 'feedback', title: __('Feedback')},
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
@@ -388,18 +459,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
-                
+
                 // 为已反馈的客户表格绑定事件
                 Table.api.bindevent(newFeedback);
 
                 //数据实时统计
-                newFeedback.on('load-success.bs.table',function(e,data){ 
-                
-                    var newFeedback =  $('#badge_new_feedback').text(data.total); 
+                newFeedback.on('load-success.bs.table', function (e, data) {
+
+                    var newFeedback = $('#badge_new_feedback').text(data.total);
                     // var newFeedback = parseInt($('#badge_new_feedback').text());
                     // num = parseInt(num);
                     // $('#badge_new_allocation').text(num+newFeedback); 
-                   
+
                 })
 
                 //导出反馈客户的信息
@@ -454,13 +525,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
             }
         },
-        import: function () { 
+        import: function () {
             Controller.api.bindevent();
-               
+
         },
-        add: function () { 
-        Controller.api.bindevent();
-           
+        add: function () {
+            Controller.api.bindevent();
+
         },
         edit: function () {
             Controller.api.bindevent();
@@ -475,7 +546,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Form.api.bindevent($("form[role=form]"));
             }
         }
-         
+
     };
     return Controller;
 });

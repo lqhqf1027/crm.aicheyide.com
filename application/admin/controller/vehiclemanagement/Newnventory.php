@@ -41,14 +41,6 @@ class Newnventory extends Backend
     public function index()
     {
 
-//        $list = $this->model
-//            ->with(['models'])
-//
-//            ->where("status",1)
-//
-//            ->select();
-//        die();
-
         //当前是否为关联查询
         $this->relationSearch = true;
         //设置过滤方法
@@ -137,6 +129,7 @@ class Newnventory extends Backend
         $validate = $this->getReally($ids);
 
         $row = $this->model->get($ids);
+
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();

@@ -35,7 +35,6 @@ class Newcarinfo extends Backend
     public function index()
     {
 
-
         return $this->view->fetch();
     }
 
@@ -90,9 +89,6 @@ class Newcarinfo extends Backend
 
                 $list[$k]['full_mortgage'] = '按揭';
 
-                if (!$v['registry_registration_id']) {
-
-                }
 
 
             }
