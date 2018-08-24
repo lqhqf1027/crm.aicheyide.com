@@ -82,20 +82,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
             newcar_audit: function () {
                 // 待审核
                 var newcarAudit = $("#newcarAudit"); 
-                // 初始化表格
+                console.log($('.fixed-table-toolbar').attr('class'));
+                // 初始化表格 
                 newcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/newcarAudit',
                     extend: {
-                         add_url: 'order/salesorder/add',
-                        edit_url: 'order/salesorder/edit',
-                        del_url: 'order/salesorder/del',
-                        multi_url: 'order/salesorder/multi',
-                        table: 'sales_order',
+                        //  add_url: 'order/salesorder/add',
+                        // edit_url: 'order/salesorder/edit',
+                        // del_url: 'order/salesorder/del',
+                        // multi_url: 'order/salesorder/multi',
+                        // table: 'sales_order',
                     },
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
-                    searchFormVisible: true,
+                    search:false,
+                    // searchFormVisible: true,
                     columns: [
                         [
                             { checkbox: true },
@@ -257,7 +259,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         
                     }
                 });
-
+                 //指定搜索条件
+            $(document).on("click", ".btn-singlesearch", function () {
+               
+                var options = newcarAudit.bootstrapTable('getOptions');
+                options.pageNumber = 1;
+                options.queryParams = function (params) {
+                    return {
+                        search: params.search,
+                        sort: params.sort,
+                        order: params.order,
+                        filter: JSON.stringify({username: '测试客户'}),
+                        op: JSON.stringify({username: '='}),
+                        offset: params.offset,
+                        limit: params.limit,
+                    };
+                };
+                newcarAudit.bootstrapTable('refresh', {});
+                Toastr.info("当前执行的是自定义搜索");
+                return false;
+            });
                 //数据实时统计
                 newcarAudit.on('load-success.bs.table', function (e, data) {
                     $(".btn-newauditResult").data("area", ["95%", "95%"]);
