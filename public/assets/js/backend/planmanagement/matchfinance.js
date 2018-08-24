@@ -89,9 +89,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
                             {field: 'difference', title: __('差额(元)')},
-                            {field: 'delivery_datetime', title: __('提车日期')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
                             {field: 'engine_number', title: __('发动机号')},
                             {field: 'household', title: __('行驶证所有户')},
                             {field: '4s_shop', title: __('4S店')},
@@ -123,25 +120,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 Controller.api.bindevent(prepareMatch);
 
+                  $(document).on('click','.btn-test',function () {
+                      var ids = Table.api.selectedids(prepareMatch);
 
+                      var url = 'planmanagement/matchfinance/batch';
 
+                      var row = {ids:ids};
+                      Fast.api.open(Table.api.replaceurl(url, row, prepareMatch), __('Edit'), $(this).data() || {});
+                  })
 
-                // 批量编辑按钮事件
-                // $(".btn-test").on('click', function () {
-                //
-                //     var that = this;
-                //     //循环弹出多个编辑框
-                //     $.each(prepareMatch.bootstrapTable('getSelections'), function (index, row) {
-                //         console.log(index);
-                //         console.log(row);
-                //         var url = 'planmanagement/matchfinance/edit';
-                //
-                //         var options = prepareMatch.bootstrapTable('getOptions');
-                //         row = $.extend({}, row ? row : {}, {ids: row[options.pk]});
-                //         var url = Table.api.replaceurl(url, row, prepareMatch);
-                //         Fast.api.open(url, __('Edit'), $(that).data() || {});
-                //     });
-                // });
             },
             already_match: function () {
 
@@ -190,10 +177,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
                             {field: 'difference', title: __('差额(元)')},
-                            {field: 'delivery_datetime', title: __('提车日期')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
-                            {field: 'engine_number', title: __('发动机号')},
                             {field: 'household', title: __('行驶证所有户')},
                             {field: '4s_shop', title: __('4S店')},
                             {field: 'amount_collected', title: __('实收金额')},
@@ -217,6 +200,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+        batch:function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function (table) {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
@@ -235,17 +221,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var toolbar = $(options.toolbar, parenttable);
 
 
-                // 批量编辑按钮事件
-                $(toolbar).on('click', '.btn-test', function () {
-                    var that = this;
-                    //循环弹出多个编辑框
-                    $.each(table.bootstrapTable('getSelections'), function (index, row) {
-                        var url = 'planmanagement/matchfinance/edit';
-                        row = $.extend({}, row ? row : {}, {ids: row[options.pk]});
-                        var url = Table.api.replaceurl(url, row, table);
-                        Fast.api.open(url, __('Edit'), $(that).data() || {});
-                    });
-                });
 
             },
             formatter: {
@@ -264,15 +239,36 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             events: {
                 operate: {
                     'click .btn-editone': function (e, value, row, index) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var table = $(this).closest('table');
-                        var options = table.bootstrapTable('getOptions');
-                        var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'planmanagement/matchfinance/edit';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+
+                        Layer.prompt(
+                            // __('请输入客户手机服务密码'),测试服务密码：202304
+                            { title: __('请输入客户手机服务密码'), shadeClose: true },
+                            //text为输入的服务密码
+                            function (text, index) {
+                                Fast.api.ajax({
+                                    url:"planmanagement/matchfinance/edit",
+                                    data:{
+                                        text:text,
+                                        id:row.id
+                                    }
+                                },function (data,ret) {
+                                    alert(data);
+                                    layer.close(index);
+                                },function (data,ret) {
+                                    alert(ret);
+                                })
+                            })
+
+                        // e.stopPropagation();
+                        // e.preventDefault();
+                        // var table = $(this).closest('table');
+                        // var options = table.bootstrapTable('getOptions');
+                        // var ids = row[options.pk];
+                        // row = $.extend({}, row ? row : {}, {ids: ids});
+                        // var url = 'planmanagement/matchfinance/edit';
+                        // Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
+
                 }
             }
         }

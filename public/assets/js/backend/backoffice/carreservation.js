@@ -66,11 +66,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'gps', title: __('GPS(服务费)')},
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
-                            // {field: 'difference', title: __('差额(元)')},
-                            // {field: 'delivery_datetime', title: __('提车日期')},
-                            // {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
-                            {field: 'engine_number', title: __('发动机号')},
                             {field: 'household', title: __('行驶证所有户')},
                             {field: '4s_shop', title: __('4S店')},
                             {

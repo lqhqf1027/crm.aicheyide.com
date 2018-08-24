@@ -71,6 +71,70 @@ class Matchfinance extends Backend
      */
     public function edit($ids = NULL)
     {
+
+        if($this->request->isAjax()){
+            $id = input("id");
+            $v = input("text");
+
+           $res = Db::name("sales_order")
+            ->where("id",$id)
+            ->setField("financial_name",$v);
+
+           if($res){
+               $this->success('','',$v);
+           }else{
+               $this->error();
+           }
+
+
+        }
+
+//        $row = Db::name("financial_platform")
+//            ->where("status", "normal")
+//            ->field("id,name")
+//            ->select();
+//
+//        if ($this->request->isPost()) {
+//
+//            $params = $this->request->post("row/a");
+//
+//            $plan_id = Db::name("sales_order")
+//                ->where("id", $ids)
+//                ->field("plan_acar_name")
+//                ->find()['plan_acar_name'];
+//
+//
+//            if ($params) {
+//                $result = false;
+//                $res = Db::name("plan_acar")
+//                    ->where("id", $plan_id)
+//                    ->setField("financial_platform_id", $params['financial_platform_id']);
+//
+//                $res2 = Db::name("sales_order")
+//                    ->where("id", $ids)
+//                    ->setField("review_the_data", "is_reviewing_true");
+//
+//                if ($res && $res2) {
+//                    $result = true;
+//                }
+//
+//                if ($result !== false) {
+//                    $this->success();
+//                } else {
+//                    $this->error();
+//                }
+//
+//
+//            }
+//            $this->error(__('Parameter %s can not be empty', ''));
+//        }
+//        $this->view->assign("row", $row);
+//        return $this->view->fetch('planmanagement/matchfinance/edit');
+    }
+
+    //批量分配
+    public function batch($ids = null)
+    {
         $row = Db::name("financial_platform")
             ->where("status", "normal")
             ->field("id,name")
@@ -81,22 +145,29 @@ class Matchfinance extends Backend
             $params = $this->request->post("row/a");
 
             $plan_id = Db::name("sales_order")
-                ->where("id", $ids)
+                ->where("id", 'in', $ids)
                 ->field("plan_acar_name")
-                ->find()['plan_acar_name'];
+                ->select();
+
+
+//            pr($plan_id);die();
 
 
             if ($params) {
                 $result = false;
-                $res = Db::name("plan_acar")
-                    ->where("id", $plan_id)
-                    ->setField("financial_platform_id", $params['financial_platform_id']);
+
+                foreach ($plan_id as $k => $v) {
+                    Db::name("plan_acar")
+                        ->where("id", $v['plan_acar_name'])
+                        ->setField("financial_platform_id", $params['financial_platform_id']);
+                }
+
 
                 $res2 = Db::name("sales_order")
-                    ->where("id", $ids)
+                    ->where("id","in", $ids)
                     ->setField("review_the_data", "is_reviewing_true");
 
-                if ($res && $res2) {
+                if ($res2) {
                     $result = true;
                 }
 
@@ -111,7 +182,7 @@ class Matchfinance extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
         $this->view->assign("row", $row);
-        return $this->view->fetch();
+        return $this->view->fetch('planmanagement/matchfinance/edit');
     }
 
     //添加销售员名称
