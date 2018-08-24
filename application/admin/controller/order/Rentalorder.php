@@ -727,39 +727,4 @@ class Rentalorder extends Backend
         }
     }
 
-    // 签字确认
-    public function signature($ids = NULL)
-    {
-        $row = $this->model->get($ids);
-        $id = $row['id'];
-        // var_dump($id);
-        // die;
-        $result = DB::name('rental_order')->alias('a')
-                ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
-                ->join('models c', 'c.id=b.models_id')
-                ->where('a.id', $id)
-                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,
-                    c.name as models_name,b.licenseplatenumber as licenseplatenumber')
-                ->find();
-        $data = DB::name('car_rental_confirmation')->where('rental_order_id', $id)->find();
-                
-        $this->view->assign(
-            [
-                'result' => $result,
-                'data' => $data
-            ]
-        );
-
-        if($this->request->isPost()){
-
-            $params = $this->request->post("row/a");
-
-            pr($params);
-            die;
-            
-            
-        }
-
-        return $this->view->fetch();
-    }
 }

@@ -541,14 +541,14 @@ class Creditreview extends Backend
 
             if ($result) {
 
-                //实时推送----各个负责人签字
+                //实时推送----可以提车
                 //请求地址
                 $uri = "https://goeasy.io/goeasy/publish";
                 // 参数数组
                 $data = [
                     'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                     'channel' => "demo-rentalpass",
-                    'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核，请签字处理！"
+                    'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！"
                 ];
                 $ch = curl_init ();
                 curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
@@ -995,59 +995,6 @@ class Creditreview extends Backend
         $this->view->assign('bigdata',$bigdata);
         return $this->view->fetch(); 
     } 
-
-
-    // 风控签字确认
-    public function signature($ids = NULL)
-    {
-        $this->model = new \app\admin\model\rental\Order;
-        $row = $this->model->get($ids);
-        $id = $row['id'];
-        // var_dump($id);
-        // die;
-        $result = DB::name('rental_order')->alias('a')
-                ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
-                ->join('models c', 'c.id=b.models_id')
-                ->where('a.id', $id)
-                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,
-                    c.name as models_name,b.licenseplatenumber as licenseplatenumber')
-                ->find();
-        $data = DB::name('car_rental_confirmation')->where('rental_order_id', $id)->find();
-                
-        $this->view->assign(
-            [
-                'result' => $result,
-                'data' => $data
-            ]
-        );
-
-        if($this->request->isPost()){
-
-            $params = $this->request->post("row/a");
-
-            // pr($params);
-            // die;
-
-            $result = DB::name('car_rental_confirmation')->where('rental_order_id', $id)->setField(
-                [
-                    'information_audition_name'=>$params['information_audition_name'],
-                    'information_audition_datetime'=>strtotime($params['information_audition_datetime']),
-                    'information_audition_note'=>$params['information_audition_note'],
-                ]);
-
-            if($result){
-                $this->success();
-            }
-            else{
-                $this->error();
-            }
-            
-            
-        }
-
-        return $this->view->fetch();
-    }
-
 
 }
   

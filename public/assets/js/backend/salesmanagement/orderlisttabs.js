@@ -452,7 +452,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
 
                                         name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
-                                        hidden: function (row) {  /**提供担保人 */
+                                        hidden: function (row) {  /**已提车 */
                                             if (row.review_the_data == 'the_car') {
                                                 return false;
                                             }
@@ -650,6 +650,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_pass'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'for_the_car'){
+                                        return true;
+                                    }
                                     else if(row.review_the_data == 'is_reviewing_false'){
                                         return true;
                                     }
@@ -669,6 +672,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_pass'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_argee'){
@@ -694,6 +700,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     } 
                                     else if(row.review_the_data == 'is_reviewing_control'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_false'){
@@ -725,6 +734,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                        return true;
+                                    }
                                     else if(row.review_the_data == 'is_reviewing_control'){
                                         return true;
                                     }
@@ -752,6 +764,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_control'){
                                         return true;
                                     } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                        return true;
+                                    }
                                     else if(row.review_the_data == 'is_reviewing_true'){ 
                                         return true;
                                     } 
@@ -776,6 +791,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_control'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_argee'){
@@ -806,14 +824,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                        return true;
+                                    }
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
                                         return true;
                                     }
                                 }
                             },
                             {
-                                name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
-                                hidden: function (row) {  /**征信已通过 */
+                                name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过，待提车', classname: ' text-info ',
+                                hidden: function (row) {  /**征信已通过，待提车 */
                                     if (row.review_the_data == 'is_reviewing_pass') {
                                         return false;
                                     }
@@ -828,6 +849,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_false'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){
                                         return true;
                                     }
                                     else if (row.review_the_data == 'is_reviewing_nopass') {
@@ -852,6 +876,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                        return true;
+                                    }
                                     else if (row.review_the_data == 'is_reviewing_true') {
                                         return true;
                                     }
@@ -860,6 +887,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }
                                 }
                             },
+                            {
+
+                                name: 'for_the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                hidden: function (row) {  /**已提车 */
+                                    if (row.review_the_data == 'for_the_car') {
+                                        return false;
+                                    }
+                                    else if (row.review_the_data == 'is_reviewing_pass') {
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_control'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_argee'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_nopass'){
+                                        return true;
+                                    }
+                                    else if (row.review_the_data == 'is_reviewing_true') {
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_false'){
+                                        return true;
+                                    }
+                                }
+                            }
 
                         ],
                             events: Controller.api.events.operate,

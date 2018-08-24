@@ -385,21 +385,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         }
                                     },
                                     {
-                                        name: 'signature', text: '签字确认', title: '签字确认', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-signature btn-dialog',
-                                        url: 'riskcontrol/creditreview/signature',/**签字确认 */
-                                        hidden: function (row, value, index) {
-                                            if (row.review_the_data == 'is_reviewing_pass') {
-                                                return false;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_control') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_nopass') {
-                                                return true;
-                                            }
-                                        },
-                                    },
-                                    {
                                         name: 'is_reviewing_nopass', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
                                         hidden: function (row) {  /**征信不通过 */
 
@@ -632,34 +617,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
             },
         },
-        //风控签字
-        signature:function(){
-            
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-               
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
-                Fast.api.close(data);//这里是重点
-                
-                // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
-                // console.log(data);
-                
-                Toastr.success("失败");
-                
-            });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-            
- 
-        },
 
         add: function () {
             Controller.api.bindevent();
@@ -741,25 +698,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         var bigdatatype = row.plan_acar_name?'sales_order':row.plan_car_rental_name?'rental_order':row.plan_car_second_name?'second_sales_order':0;
                         var url = 'riskcontrol/creditreview/bigdata'+'/bigdatatype/'+bigdatatype; 
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
-                            callback: function (value) {
-                                alert(value);
-                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
-                            },success:function(ret){
-                                console.log(ret);
-                            }
-                        })
-                    },
-
-                    //风控签字确认
-                    'click .btn-signature': function (e, value, row, index) { 
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var table = $(this).closest('table');
-                        var options = table.bootstrapTable('getOptions');
-                        var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, { ids: ids });
-                        var url = 'riskcontrol/creditreview/signature';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
                             callback: function (value) {
                                 alert(value);
                                 //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
