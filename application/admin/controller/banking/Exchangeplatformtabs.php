@@ -17,6 +17,7 @@ class Exchangeplatformtabs extends Backend
 
     protected $model = null;
     protected $dataLimit = false; //表示不启用，显示所有数据
+    protected $searchFields = 'username,licensenumber,frame_number';
 
 
 //    protected $multiFields = 'batch';
@@ -32,7 +33,9 @@ class Exchangeplatformtabs extends Backend
      */
     public function index()
     {
-
+//        $list = Db::name("nanchong_driver")->select();
+//
+//        pr($list);die();
 
 
         $this->loadlang('banking/exchangeplatformtabs');
