@@ -63,7 +63,7 @@ class Planacar extends Backend
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
-
+            
             foreach ($list as $row) {
                 $row->visible(['id', 'payment', 'monthly', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime']);
                 $row->visible(['models']);
