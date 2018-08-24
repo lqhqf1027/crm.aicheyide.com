@@ -261,4 +261,60 @@ class Vehicleinformation extends Backend
 
     }
 
+    // 车管签字确认
+    public function signature($ids = NULL)
+    {
+        $this->model = new \app\admin\model\rental\Order;
+        $row = $this->model->get($ids);
+        $id = $row['id'];
+        // var_dump($id);
+        // die;
+        $rental_order_id = $this->model->where('plan_car_rental_name', $id)->value('id');
+        // var_dump($rental_order_id);
+        // die;
+        $result = DB::name('rental_order')->alias('a')
+                ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
+                ->join('models c', 'c.id=b.models_id')
+                ->where('a.id', $rental_order_id)
+                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,
+                    c.name as models_name,b.licenseplatenumber as licenseplatenumber')
+                ->find();
+        $data = DB::name('car_rental_confirmation')->where('rental_order_id', $rental_order_id)->find();
+                
+        $this->view->assign(
+            [
+                'result' => $result,
+                'data' => $data
+            ]
+        );
+
+        if($this->request->isPost()){
+
+            $params = $this->request->post("row/a");
+
+            // pr($params);
+            // pr($rental_order_id);
+            // die;
+
+            $result = DB::name('car_rental_confirmation')->where('rental_order_id', $rental_order_id)->setField(
+                [
+                    'gps_installation_name'=>$params['gps_installation_name'],
+                    'gps_installation_datetime'=>strtotime($params['gps_installation_datetime']),
+                    'gps_installation_note'=>$params['gps_installation_note'],
+                ]);
+
+            if($result){
+                $this->success();
+            }
+            else{
+                $this->error();
+            }
+            
+            
+        }
+
+        return $this->view->fetch();
+    }
+
+
 }

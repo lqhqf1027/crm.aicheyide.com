@@ -521,6 +521,10 @@ class Creditreview extends Backend
                 $query->where('id', $id);
             });
 
+            $plan_car_rental_name = $this->model->where('id', $id)->value('plan_car_rental_name');
+
+            DB::name('crm_car_rental_models_info')->where('id', $plan_car_rental_name)->setField('reciew_the_data', 'is_reviewing_pass');
+
             if ($result) {
 
                 //实时推送----各个负责人签字
@@ -977,6 +981,61 @@ class Creditreview extends Backend
         $this->view->assign('bigdata',$bigdata);
         return $this->view->fetch(); 
     } 
-  
+
+
+    // 风控签字确认
+    public function signature($ids = NULL)
+    {
+        $this->model = new \app\admin\model\rental\Order;
+        $row = $this->model->get($ids);
+        $id = $row['id'];
+        // var_dump($id);
+        // die;
+        $result = DB::name('rental_order')->alias('a')
+                ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
+                ->join('models c', 'c.id=b.models_id')
+                ->where('a.id', $id)
+                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,
+                    c.name as models_name,b.licenseplatenumber as licenseplatenumber')
+                ->find();
+        $data = DB::name('car_rental_confirmation')->where('rental_order_id', $id)->find();
+                
+        $this->view->assign(
+            [
+                'result' => $result,
+                'data' => $data
+            ]
+        );
+
+        if($this->request->isPost()){
+
+            $params = $this->request->post("row/a");
+
+            // pr($params);
+            // die;
+
+            $result = DB::name('car_rental_confirmation')->where('rental_order_id', $id)->setField(
+                [
+                    'information_audition_name'=>$params['information_audition_name'],
+                    'information_audition_datetime'=>strtotime($params['information_audition_datetime']),
+                    'information_audition_note'=>$params['information_audition_note'],
+                ]);
+
+            if($result){
+                $this->success();
+            }
+            else{
+                $this->error();
+            }
+            
+            
+        }
+
+        return $this->view->fetch();
+    }
+
 
 }
+  
+
+

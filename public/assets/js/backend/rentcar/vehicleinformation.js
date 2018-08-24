@@ -1,5 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    var goeasy = new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
+
     var Controller = {
         index: function () {
             // 初始化表格参数配置
@@ -14,9 +18,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             });
             //实时消息
-            var goeasy = new GoEasy({
-                appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-            });
+           
             goeasy.subscribe({
                 channel: 'demo',
                 onMessage: function(message){
@@ -156,6 +158,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.review_the_data == 'is_reviewing_pass'){
+                                      
+                                        return true;
+                                    } 
                                     else if(row.review_the_data == ''){
                                       
                                         return true;
@@ -163,6 +169,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 },
                                 
                             },
+                            {
+                                name: 'signature', text: '签字确认', title: '签字确认', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-signature btn-dialog',
+                                url: 'rentcar/vehicleinformation/signature',/**签字确认 */
+                                hidden: function (row, value, index) {
+                                    if (row.review_the_data == 'is_reviewing_pass') {
+                                        return false;
+                                    }
+                                    else if (row.review_the_data == 'is_reviewing_true') {
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == ''){
+                                      
+                                        return true;
+                                    } 
+                                },
+                            },
+
                         ],
                             events: Controller.api.events.operate,
                              
@@ -175,6 +202,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
+            //风控通过
+            goeasy.subscribe({
+                channel: 'demo-rentalpass',
+                onMessage: function(message){
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                    
+                }
+            });
+
+            //数据实时统计
+            table.on('load-success.bs.table', function (e, data) {
+               
+                $(".btn-signature").data("area", ["80%", "80%"]);
+                
+            })
+
         },
         //销售预定
         salesbook:function(){
@@ -214,6 +260,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
             // Controller.api.bindevent();
             // console.log(Config.id);
+ 
+        },
+        //车管签字
+        signature:function(){
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+            
  
         },
         add: function () {
@@ -313,6 +387,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         );
 
+                    },
+                    //车管签字确认
+                    'click .btn-signature': function (e, value, row, index) { 
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = 'rentcar/vehicleinformation/signature';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+                            callback: function (value) {
+                                alert(value);
+                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            },success:function(ret){
+                                console.log(ret);
+                            }
+                        })
                     },
                 }
                

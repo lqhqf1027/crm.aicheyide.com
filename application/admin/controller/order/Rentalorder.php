@@ -757,25 +757,7 @@ class Rentalorder extends Backend
             pr($params);
             die;
             
-            if ($params) {
-                try {
-                    //是否采用模型验证
-                    if ($this->modelValidate) {
-                        $name = basename(str_replace('\\', '/', get_class($this->model)));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-                        $row->validate($validate);
-                    }
-                    $result = $row->allowField(true)->save($params);
-                    if ($result !== false) {
-                        $this->success();
-                    } else {
-                        $this->error($row->getError());
-                    }
-                } catch (\think\exception\PDOException $e) {
-                    $this->error($e->getMessage());
-                }
-            }
-            $this->error(__('Parameter %s can not be empty', ''));
+            
         }
 
         return $this->view->fetch();
