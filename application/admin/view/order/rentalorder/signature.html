@@ -74,22 +74,41 @@
                                 <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
                                 <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
                             </tr>
-                                    
                             <tr>
                                 <td class="col-xs-12 col-sm-1 ">
-                                    <input type="text" style="height: 40px;">
+                                    {empty name="$data.gps_installation_name"}
+                                    <input type="text" style="height: 40px;width: 170px;" id="c-gps_installation_name"  class="form-control form-control" name="row[gps_installation_name]">
+                                    {else /} 
+                                    {$data.gps_installation_name}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-2 ">
-                                    <input type="text" style="height: 40px;">
+                                    {empty name="$data.information_audition_name"}
+                                    <input type="text" style="height: 40px;width: 170px;" id="c-information_audition_name"  class="form-control form-control" name="row[information_audition_name]">
+                                    {else /} 
+                                    {$data.information_audition_name}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-2 ">
-                                    <input type="text" style="height: 40px;">
+                                    {empty name="$data.Insurance_status_name"}
+                                    <input type="text" style="height: 40px;width: 170px;" id="c-Insurance_status_name" class="form-control form-control" name="row[Insurance_status_name]">
+                                    {else /} 
+                                    {$data.Insurance_status_name}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-2 ">
-                                    <input type="text" style="height: 40px;">
+                                    {empty name="$data.finance_name"}
+                                    <input type="text" style="height: 40px;width: 170px;" id="c-finance_name" class="form-control form-control" name="row[finance_name]">
+                                    {else /} 
+                                    {$data.finance_name}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-2 ">
-                                    <input type="text" style="height: 40px;">
+                                    {empty name="$data.general_manager_name"}
+                                    <input type="text" style="height: 40px;width: 170px;" id="c-general_manager_name" class="form-control form-control" name="row[general_manager_name]">
+                                    {else /} 
+                                    {$data.general_manager_name}
+                                    {/empty}
                                 </td>
                             </tr>
 
@@ -99,19 +118,39 @@
                                           
                                 </th>
                                 <td class="col-xs-12 col-sm-1 ">
-                                    <input type="text">
+                                    {empty name="$data.gps_installation_note"}
+                                    <textarea style="height: 100px;width: 170px;resize:none;" id="c-gps_installation_note" class="form-control form-control" name="row[gps_installation_note]"></textarea>
+                                    {else /} 
+                                    {$data.gps_installation_note}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-2 ">
-                                    <input type="text">
+                                    {empty name="$data.information_audition_note"}
+                                    <textarea style="height: 100px;width: 170px;resize:none;" id="c-information_audition_note" class="form-control form-control" name="row[information_audition_note]"></textarea>
+                                    {else /} 
+                                    {$data.information_audition_note}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-2 ">
-                                    <input type="text">
+                                    {empty name="$data.Insurance_status_note"}
+                                    <textarea style="height: 100px;width: 170px;resize:none;" id="c-Insurance_status_note" class="form-control form-control" name="row[Insurance_status_note]"></textarea>
+                                    {else /} 
+                                    {$data.Insurance_status_note}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-2 ">
-                                    <input type="text">
+                                    {empty name="$data.finance_note"}
+                                    <textarea style="height: 100px;width: 170px;resize:none;" id="c-finance_note" class="form-control form-control" name="row[finance_note]"></textarea>
+                                    {else /} 
+                                    {$data.finance_note}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-2 ">
-                                    <input type="text">
+                                    {empty name="$data.general_manager_note"}
+                                    <textarea style="height: 100px;width: 170px;resize:none;" id="c-general_manager_note" class="form-control form-control" name="row[general_manager_note]"></textarea>
+                                    {else /} 
+                                    {$data.general_manager_note}
+                                    {/empty}
                                 </td>
                             </tr>
 
@@ -127,32 +166,51 @@
 
                             <tr>
                                 <td class="col-xs-12 col-sm-8 col-md-1">
-                                    <input type="text">
+                                    {$result.createtime|date='Y-m-d H:i:s',###}
                                 </td>
                                 <td class="col-xs-12 col-sm-8 col-md-1">
-                                    <input type="text">
+                                    {$result.createtime|date='Y-m-d H:i:s',###}
                                 </td>
                                 <td class="col-xs-12 col-sm-8 col-md-2">
-                                    <input type="text">
+                                    {empty name="$data.gps_installation_datetime"}
+                                    <input style="height: 40px;width: 170px;" id="c-gps_installation_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[gps_installation_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                                    {else /} 
+                                    {$data.gps_installation_datetime|date='Y-m-d H:i:s',###}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-8 col-md-2">
-                                    <input type="text">
+                                    {empty name="$data.information_audition_datetime"}
+                                    <input style="height: 40px;width: 170px;" id="c-information_audition_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[information_audition_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                                    {else /} 
+                                    {$data.information_audition_datetime|date='Y-m-d H:i:s',###}
+                                    {/empty}
                                 </td>
                                 <td class="col-xs-12 col-sm-8 col-md-2">
-                                    <input type="text">
+                                    {empty name="$data.Insurance_status_datetime"}
+                                    <input style="height: 40px;width: 170px;" id="c-Insurance_status_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[Insurance_status_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                                    {else /} 
+                                    {$data.Insurance_status_datetime|date='Y-m-d H:i:s',###}
+                                    {/empty} 
                                 </td>
                                 <td class="col-xs-12 col-sm-8 col-md-2">
-                                    <input type="text">
+                                    {empty name="$data.finance_datetime"}
+                                    <input style="height: 40px;width: 170px;" id="c-finance_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[finance_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                                    {else /} 
+                                    {$data.finance_datetime|date='Y-m-d H:i:s',###}
+                                    {/empty} 
                                 </td>
                                 <td class="col-xs-12 col-sm-8 col-md-2">
-                                    <input type="text">
+                                    {empty name="$data.general_manager_datetime"}
+                                    <input style="height: 40px;width: 170px;" id="c-general_manager_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[general_manager_datetime]" type="text" value="{:date('Y-m-d H:i:s')}">
+                                    {else /} 
+                                    {$data.general_manager_datetime|date='Y-m-d H:i:s',###}
+                                    {/empty} 
                                 </td>
                             </tr>
                                     
                             </table>
                         </div>
                     </div>
-                
         </div>
 
     
@@ -161,7 +219,7 @@
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="submit" class="btn btn-success btn-embossed">{:__('OK')}</button>
             <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
         </div>
     </div>

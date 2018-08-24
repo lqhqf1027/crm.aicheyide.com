@@ -31,31 +31,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
-            prepare_submit: function () {
+            secondcar_waitconfirm: function () {
                 // 表格1
-                var prepareSubmit = $("#prepareSubmit");
-                prepareSubmit.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
-                    $('#badge_prepare').text(data.total);
-
-                });
-                prepareSubmit.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-chooseStock").data("area", ["60%", "60%"]);
-                    $(".btn-showOrder").data("area", ["95%", "95%"]);
-                });
-
-
-
+                var secondcarWaitconfirm = $("#secondcarWaitconfirm");
+                
                 // 初始化表格
-                prepareSubmit.bootstrapTable({
-                    url: "newcars/carreservation/prepare_submit",
+                secondcarWaitconfirm.bootstrapTable({
+                    url: "secondhandcar/carreservation/secondcarWaitconfirm",
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
                         // edit_url: 'order/salesorder/edit',
                         // del_url: 'order/salesorder/del',
                         multi_url: 'order/salesorder/multi',
-                        table: 'sales_order',
+                        table: 'second_sales_order',
                     },
                     toolbar: '#toolbar1',
                     pk: 'id',
@@ -65,41 +54,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: '编号'},
                             {field: 'createtime', title: __('订车日期')},
-                            {field: 'household', title: __('公司')},
+                            {field: 'licenseplatenumber', title: __('车牌号')},
+                            {field: 'companyaccount', title: __('所属公司户')},
                             {field: 'sales_name', title: __('销售员')},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'detailed_address', title: __('地址')},
                             {field: 'phone', title: __('联系电话')},
                             {field: 'models_name', title: __('订车车型')},
-                            {field: 'payment', title: __('首付(元)')},
-                            {field: 'monthly', title: __('月供(元)')},
-                            {field: 'nperlist', title: __('期数')},
-                            {field: 'margin', title: __('保证金(元)')},
-                            {field: 'tail_section', title: __('尾款(元)')},
-                            {field: 'gps', title: __('GPS(服务费)')},
+                            {field: 'newpayment', title: __('首付(元)')},
+                            {field: 'monthlypaymen', title: __('月供(元)')},
+                            {field: 'periods', title: __('期数')},
+                            {field: 'bond', title: __('保证金(元)')},
+                            {field: 'tailmoney', title: __('尾款(元)')},
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
-                            {field: 'difference', title: __('差额(元)')},
-                            {field: 'delivery_datetime', title: __('提车日期')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
-                            {field: 'engine_number', title: __('发动机号')},
-                            {field: 'household', title: __('行驶证所有户')},
-                            {field: '4s_shop', title: __('4S店')},
-                            {field: 'amount_collected', title: __('实收金额')},
-                            {field: 'decorate', title: __('装饰')},
+                            
 
                             {
-                                field: 'operate', title: __('Operate'), table: prepareSubmit,
+                                field: 'operate', title: __('Operate'), table: secondcarWaitconfirm,
                                 buttons: [
                                     {
-                                        name: 'detail',
-                                        text: '提交给金融',
+                                        name: 'secondcarWaitconfirm',
+                                        text: '提交风控审核',
                                         icon: 'fa fa-pencil',
-                                        title: __('Edit'),
+                                        title: __('提交风控审核'),
                                         extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-danger btn-editone',
+                                        classname: 'btn btn-xs btn-danger btn-secondcarWaitconfirm',
 
                                     }
                                 ],
@@ -111,11 +92,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 });
                 // 为表格1绑定事件
-                Table.api.bindevent(prepareSubmit);
+                Table.api.bindevent(secondcarWaitconfirm);
+
+                //数据实时统计
+                secondcarWaitconfirm.on('load-success.bs.table',function(e,data){ 
+
+                    var secondcarWaitconfirm =  $('#badge_secondcar_waitconfirm').text(data.total); 
+                    secondcarWaitconfirm = parseInt($('#badge_secondcar_waitconfirm').text());
+                    
+                   
+                })
 
                 //通过
                 goeasy.subscribe({
-                    channel: 'demo-new_amount',
+                    channel: 'demo-second_amount',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -125,70 +115,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                // 批量提交金融事件
-                $(".btn-mass-finance").on('click',  function () {
-
-                    var ids = Table.api.selectedids(prepareSubmit);
-
-                    Layer.confirm(
-                        __('确定提交匹配金融?', ids.length),
-                        {icon: 3, title: __('Warning'), offset: 'auto', shadeClose: true},
-                        function (index) {
-
-
-                            Fast.api.ajax({
-                                    url: "newcars/carreservation/mass_finance",
-                                    data: {id:JSON.stringify(ids)},
-
-                                }, function (data, ret) {
-
-
-                                var goeasy = new GoEasy({
-                                    appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-                                });
-
-                                goeasy.publish({
-                                    channel: 'pushFinance',
-                                    message: data.toString()
-                                });
-
-                                Toastr.success("成功");
-                                    Layer.close(index);
-                                prepareSubmit.bootstrapTable('refresh');
-                                return false;
-                                }, function (data, ret) {
-
-                                    console.log("error");
-                                return false;
-                                },
-                            )
-                        }
-                    );
-                });
-
-
             },
-            already_submit: function () {
+            secondcar_confirm: function () {
 
                 // 表格2
-                var alreadySubmit = $("#alreadySubmit");
-                alreadySubmit.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
-                    $('#badge_already').text(data.total);
-
-                });
-                alreadySubmit.on('post-body.bs.table', function (e, settings, json, xhr) {
-                });
+                var secondcarConfirm = $("#secondcarConfirm");
+                
                 // 初始化表格
-                alreadySubmit.bootstrapTable({
-                    url: "newcars/carreservation/already_submit",
+                secondcarConfirm.bootstrapTable({
+                    url: "secondhandcar/carreservation/secondcarConfirm",
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
                         // edit_url: 'order/salesorder/edit',
                         // del_url: 'order/salesorder/del',
                         multi_url: 'order/salesorder/multi',
-                        table: 'sales_order',
+                        table: 'second_sales_order',
                     },
                     toolbar: '#toolbar2',
                     pk: 'id',
@@ -198,41 +140,36 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: '编号'},
                             {field: 'createtime', title: __('订车日期')},
-                            {field: 'household', title: __('公司')},
+                            {field: 'licenseplatenumber', title: __('车牌号')},
+                            {field: 'companyaccount', title: __('所属公司户')},
                             {field: 'sales_name', title: __('销售员')},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'detailed_address', title: __('地址')},
                             {field: 'phone', title: __('联系电话')},
                             {field: 'models_name', title: __('订车车型')},
-                            {field: 'payment', title: __('首付(元)')},
-                            {field: 'monthly', title: __('月供(元)')},
-                            {field: 'nperlist', title: __('期数')},
-                            {field: 'margin', title: __('保证金(元)')},
-                            {field: 'tail_section', title: __('尾款(元)')},
-                            {field: 'gps', title: __('GPS(服务费)')},
+                            {field: 'newpayment', title: __('首付(元)')},
+                            {field: 'monthlypaymen', title: __('月供(元)')},
+                            {field: 'periods', title: __('期数')},
+                            {field: 'bond', title: __('保证金(元)')},
+                            {field: 'tailmoney', title: __('尾款(元)')},
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
-                            {field: 'difference', title: __('差额(元)')},
-                            {field: 'delivery_datetime', title: __('提车日期')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
-                            {field: 'engine_number', title: __('发动机号')},
-                            {field: 'household', title: __('行驶证所有户')},
-                            {field: '4s_shop', title: __('4S店')},
-                            {field: 'amount_collected', title: __('实收金额')},
-                            {field: 'decorate', title: __('装饰')},
 
                         ]
                     ]
                 });
                 // 为表格2绑定事件
-                Table.api.bindevent(alreadySubmit);
+                Table.api.bindevent(secondcarConfirm);
 
-                // alreadyLiftCar.on('load-success.bs.table', function (e, data) {
-                //     $('#assigned-customer').text(data.total);
-                //
-                // })
+                //数据实时统计
+                secondcarConfirm.on('load-success.bs.table',function(e,data){ 
+
+                    var secondcarConfirm =  $('#badge_secondcar_confirm').text(data.total); 
+                    secondcarConfirm = parseInt($('#badge_secondcar_confirm').text());
+                    
+                   
+                })
 
             }
 
@@ -269,7 +206,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
-                    'click .btn-editone': function (e, value, row, index) {
+                    'click .btn-secondcarWaitconfirm': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
                         var that = this;
@@ -282,31 +219,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             top = left = undefined;
                         }
                         Layer.confirm(
-                            __('确定提交匹配金融?'),
+                            __('确定提交风控进行审核吗?'),
                             {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
                             function (index) {
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
 
                                 Fast.api.ajax({
-                                        url: "newcars/carreservation/matching_finance",
+                                        url: "secondhandcar/carreservation/setAudit",
                                         data: {id: row[options.pk]},
 
                                     }, function (data, ret) {
                                         // console.log(data);
-
-                                    var res = data;
-
-                                    res = data.toString();
-
-                                    var goeasy = new GoEasy({
-                                        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-                                    });
-
-                                    goeasy.publish({
-                                        channel: 'pushFinance',
-                                        message: res
-                                    });
 
                                         // Toastr.success("成功");
                                         Layer.close(index);

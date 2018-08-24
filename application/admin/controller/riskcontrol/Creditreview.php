@@ -6,7 +6,8 @@ use app\common\controller\Backend;
 use think\DB;
 use think\Config;
 use think\db\exception\DataNotFoundException;
-
+use app\admin\model\SalesOrder as salesOrderModel;
+use app\admin\controller\Bigdata as bg;
 /**
  * 订单列管理.
  *
@@ -55,8 +56,9 @@ class Creditreview extends Backend
                 ->count(),
             'total2' => DB::name('second_sales_order')
                 ->where($where)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_control')
+                ->whereOr('review_the_data', 'not_through')
+                ->whereOr('review_the_data', 'through')
                 ->order($sort, $order)
                 ->count(),
 
@@ -94,7 +96,7 @@ class Creditreview extends Backend
                 ->whereOr('review_the_data', 'not_through')
                 ->limit($offset, $limit)
                 ->select();
-
+           
             $list = collection($list)->toArray();
 
             foreach ((array)$list as $k => $row) {
@@ -102,7 +104,7 @@ class Creditreview extends Backend
 
                 $admin_id = $row['admin_id'];
 
-                $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname');
+                $admin_nickname = Db::name('admin')->where('id', $admin_id)->value('nickname');
 
                 $list[$k]['admin_nickname'] = $admin_nickname;
 
@@ -136,7 +138,7 @@ class Creditreview extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = DB::name('rental_order')
+            $total = Db::name('rental_order')
 
                 ->where($where)
                 ->order($sort, $order)
@@ -145,7 +147,7 @@ class Creditreview extends Backend
                 ->whereOr('review_the_data', 'is_reviewing_control')
                 ->count();
 
-            $list = DB::name('rental_order')
+            $list = Db::name('rental_order')
 
                 ->where($where)
                 ->order($sort, $order)
@@ -161,12 +163,8 @@ class Creditreview extends Backend
 
                 $admin_id = $row['admin_id'];
                 $plan_car_rental_name = $row['plan_car_rental_name'];
-                $models_name = DB::name('car_rental_models_info')->alias('a')->join('models b', 'b.id=a.models_id')->where('a.id', $plan_car_rental_name)->value('b.name');
-                $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname');
-
-                $list[$k]['admin_nickname'] = $admin_nickname;
-                $list[$k]['models_name'] = $models_name;
-
+                $models_name = Db::name('car_rental_models_info')->alias('a')->join('models b', 'b.id=a.models_id')->where('a.id', $plan_car_rental_name)->value('b.name');
+                $admin_nickname = Db::name('admin')->where('id', $admin_id)->value('nickname'); 
             }
 
             $result = array("total" => $total, "rows" => $list);
@@ -176,13 +174,13 @@ class Creditreview extends Backend
         return $this->view->fetch('index');
 
     }
+ 
 
     //展示需要审核的二手车单
     public function secondhandcarAudit()
 
     { 
         
-
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -195,15 +193,17 @@ class Creditreview extends Backend
             $total = DB::name('second_sales_order')
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_control')
+                ->whereOr('review_the_data', 'not_through')
+                ->whereOr('review_the_data', 'through')
                 ->count();
 
             $list = DB::name('second_sales_order')
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'NEQ', 'is_reviewing')
-                ->where('review_the_data', 'NEQ', 'the_guarantor')
+                ->where('review_the_data', 'is_reviewing_control')
+                ->whereOr('review_the_data', 'not_through')
+                ->whereOr('review_the_data', 'through')
                 ->limit($offset, $limit)
                 ->select();
 
@@ -435,7 +435,7 @@ class Creditreview extends Backend
             });
 
             //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
+            $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
                 'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
@@ -525,7 +525,7 @@ class Creditreview extends Backend
 
                 //实时推送----各个负责人签字
                 //请求地址
-                $uri = "http://goeasy.io/goeasy/publish";
+                $uri = "https://goeasy.io/goeasy/publish";
                 // 参数数组
                 $data = [
                     'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
@@ -568,7 +568,7 @@ class Creditreview extends Backend
             });
 
             //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
+            $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
                 'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
@@ -675,7 +675,7 @@ class Creditreview extends Backend
             });
 
             //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
+            $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
                 'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
@@ -765,7 +765,7 @@ class Creditreview extends Backend
             });
 
             //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
+            $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
                 'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
@@ -963,118 +963,20 @@ class Creditreview extends Backend
     /**查看新车大数据 */
 
 
-    public function new_car_bigdata($ids = null)
+    public function bigdata($ids = null,$bigdatatype= null)
     {
-
-        $row = $this->model->get($ids);
-        $params = array();
-        $params['sign'] = $this->sign;
-        $params['userid'] = $this->userid;
-        $params['params'] = json_encode(
-            [
-                'tx' => '101',
-                'data' => [
-                    'name' => $row['username'], 
-                    'idNo' => $row['id_card'],
-                    'queryReason' => '10',
-                ],
-            ]
-        );
-        // return $this->bigDataHtml(); 
-        //判断数据库里是否有当前用户的大数据
-        $data = $this->getBigData($row['id']);
-        if (empty($data)) {
-            //如果数据为空，调取大数据接口
-            $result['sales_order_id'] = $row['id'];
-            $result['name'] = $row['username'];
-            $result['phone'] = $row['phone'];
-            $result['id_card'] = $row['id_card'];
-            $result['createtime'] = time(); 
-            // pr($result);die;
-            $result['share_data'] = posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params);
-            /**共享数据接口 */
-            //只有errorCode返回 '0000'  '0001'  '0005' 时为正确查询
-            if ($result['share_data']['errorCode'] == '0000' || $result['share_data']['errorCode'] == '0001' || $result['share_data']['errorCode'] == '0005') {
-                //风险数据接口
-
-                 /**
-                  * @params pricedAuthentification
-                 * 收费验证环节
-                 * 1-身份信息认证
-                 * 2-手机号实名验证
-                 * 3-银行卡三要素验证 
-                 * 4-银行卡四要素 
-                 * 当提交 3、4时 银行卡为必填项
-                 */
-                $params_risk['sign'] = $this->sign;
-                $params_risk['userid'] = $this->userid;
-                $params_risk['params'] = json_encode(
-                    [
-                        'data'=>[
-                            'name' => $row['username'],
-                          
-                            'idNo' => $row['id_card'],
-                            'mobile' => $row['phone'],
-                        ],
-                        'queryReason' => '10',//贷前审批s 
-                        'pricedAuthentification' => '1,2'
-                        
-                    ]
-                );   
-                
-                $result['risk_data'] = posts('https://www.zhichengcredit.com/echo-center/api/mixedRiskQuery/queryMixedRiskList/v3 ', $params_risk); 
-                /**风险数据接口 */
-                if ($result['risk_data']['errorcode'] == '0000' || $result['risk_data']['errorcode'] == '0001' || $result['risk_data']['errorcode'] == '0005') {
-                    //转义base64入库
-                    $result['share_data'] = base64_encode(ARRAY_TO_JSON($result['share_data']));
-                    $result['risk_data'] = base64_encode(ARRAY_TO_JSON($result['risk_data'])); 
-                    $writeDatabases = Db::name('big_data')->insert($result);
-                    if ($writeDatabases) { 
-                        $this->view->assign('bigdata',  $this->getBigData($row['id'])); 
-
-                    } else {
-                        return '<h1><center>数据写入失败</center></h1>';
-                    }
-                } else {
-                    return "<h1><center>风险接口-》{$result['risk_data']['message']}</center></h1>";
-
-                }
-
-            } else {
-                return "<h1><center>共享接口-》{$result['message']}</center></h1>";
-                
-            }
-        } else { 
-                $this->view->assign('bigdata', $data);
-                
-                $this->assignconfig([
-            
-                    'zcFraudScore' =>$this->getBigData($row['id'])['risk_data']['data']['zcFraudScore']
-                ]); 
-        }
-        return $this->view->fetch();
+        
+      
+        //$bigdatatype为表名
+        $bg = new bg();
+        $bigdata= $bg->toViewBigData($ids,$bigdatatype); 
+        // pr($bigdata);
+        $this->assignconfig([ 
+            'zcFraudScore' => $bigdata['risk_data']['data']['zcFraudScore']
+        ]);
+        $this->view->assign('bigdata',$bigdata);
+        return $this->view->fetch(); 
     } 
-    /**
-     * 查询大数据表
-     * @param int $sales_order_id
-     * @return data
-     */
-    public function getBigData($sales_order_id)
-    {
-        $bigData = Db::name('big_data')->alias('a')
-            ->join('sales_order b', 'a.sales_order_id = b.id')
-            ->where(['a.sales_order_id' => $sales_order_id])
-            ->field('a.*')
-            ->find();
-        if (!empty($bigData)) {
-            $bigData['share_data'] = object_to_array(json_decode(base64_decode($bigData['share_data'])));
-            $bigData['risk_data'] = object_to_array(json_decode(base64_decode($bigData['risk_data'])));
-            return $bigData;
-
-        } else {
-            return [];
-        }
-    }
- 
+  
 
 }
