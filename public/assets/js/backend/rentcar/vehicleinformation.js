@@ -81,72 +81,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'sales', title: __('预定销售人员')},
                         {field: 'operate', title: __('Operate'), table: table, 
                         buttons: [
-                            {
-                                name:'detail',text:'销售预定', title:'销售预定', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
-                                url: 'rentcar/vehicleinformation/salesbook',  
-                                //等于null 的时候操作栏显示的是销售预定四个字，
-                                //不等于null 的时候操作栏显示的是已有销售人员预定 四个字，
-                                //....
-                                hidden:function(row){ /**销售预定 */
-                                    if(row.sales_id == null){ 
-                                        return false; 
-                                    }  
-                                    else if(row.sales_id != null){
-                                        return true;
-                                    }
-                                }
-                            },
-                            { 
-                                name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',title: __('Del'),classname: 'btn btn-xs btn-danger btn-delone',
-                                url:'rentcar/vehicleinformation/del',/**删除 */
-                                hidden:function(row){
-                                    if(row.sales_id == null){ 
-                                        return false; 
-                                    }
-                                    else if(row.sales_id != null){
-                                      
-                                        return true;
-                                    } 
-                                },
-                                
-                            },
-                            { 
-                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',  title: __('Edit'),classname: 'btn btn-xs btn-success btn-editone', 
-                                url:'rentcar/vehicleinformation/edit',/**编辑 */
-                                hidden:function(row,value,index){ 
-                                    if(row.sales_id == null){ 
-                                        return false; 
-                                    } 
-                                    else if(row.sales_id != null){ 
-                                        return true;
-                                    } 
-                                }, 
-                            },
-                            {
-                                name: 'detail',icon:'fa fa-check-circle',text: '已有销售人员预定', classname: ' text-info ',
-                                hidden:function(row){  /**已有销售人员预定 */ 
-                                    if(row.sales_id != null){ 
-                                        return false; 
-                                    }
-                                    else if(row.sales_id == null){ 
-                                        return true; 
-                                    }
-                                }
-                            },
-                            { 
-                                name: 'salesbookedit',text:'修改销售预定', title:'修改销售预定',icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-success btn-dialog btn-newCustomer',
-                                url:'rentcar/vehicleinformation/salesbookedit',/**修改销售预定 */
-                                hidden:function(row){
-                                    if(row.sales_id != null){ 
-                                        return false; 
-                                    }
-                                    else if(row.sales_id == null){
-                                      
-                                        return true;
-                                    } 
-                                },
-                                
-                            },
                             { 
                                 name: 'rentalrequest',text:'销售员租车请求', title:'销售员租车请求',icon: 'fa fa-automobile', extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-success btn-dialog btn-rentalrequest',
                                 // url:'rentcar/vehicleinformation/rentalrequest',/**销售员租车请求 */
@@ -162,6 +96,74 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == ''){
+                                      
+                                        return true;
+                                    } 
+                                },
+                                
+                            },
+                            { 
+                                name: 'is_reviewing_pass',text:'打印提车单', title:'打印提车单',icon: 'fa fa-automobile', extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-success btn-dialog btn-carsingle',
+                                // url:'rentcar/vehicleinformation/rentalrequest',/**打印提车单 */
+                                hidden:function(row){
+                                    if(row.review_the_data == 'is_reviewing_pass'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == ''){
+                                      
+                                        return true;
+                                    } 
+                                },
+                                
+                            },
+                            { 
+                                name: 'for_the_car',text:'确认提车', title:'确认提车',icon: 'fa fa-automobile', extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-success btn-dialog btn-takecar',
+                                // url:'rentcar/vehicleinformation/rentalrequest',/**打印提车单 */
+                                hidden:function(row){
+                                    if(row.review_the_data == 'for_the_car'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_pass'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
                                     else if(row.review_the_data == ''){
                                       
                                         return true;
@@ -170,16 +172,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 
                             },
                             {
-                                name: 'signature', text: '签字确认', title: '签字确认', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-signature btn-dialog',
-                                url: 'rentcar/vehicleinformation/signature',/**签字确认 */
-                                hidden: function (row, value, index) {
-                                    if (row.review_the_data == 'is_reviewing_pass') {
-                                        return false;
+                                name: 'is_reviewing_true', icon: 'fa fa-check-circle', text: '已有销售预定', classname: ' text-info ',
+                                hidden: function (row) {  /**已有销售预定 */
+                                    if(row.review_the_data == 'is_reviewing_true'){ 
+                                        return false; 
                                     }
-                                    else if (row.review_the_data == 'is_reviewing_true') {
+                                    else if(row.review_the_data == 'is_reviewing_pass'){
+                                      
                                         return true;
-                                    }
+                                    } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
                                     else if(row.review_the_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'the_car'){
                                       
                                         return true;
                                     } 
@@ -187,8 +197,66 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
-                                },
+                                }
                             },
+                            {
+                                name: '', icon: 'fa fa-check-circle', text: '等待出租', classname: ' text-info ',
+                                hidden: function (row) {  /**等待出租 */
+                                    if(row.review_the_data == ''){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_pass'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                }
+                            },
+                            {
+
+                                name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                hidden: function (row) {  /**已提车 */
+                                    if(row.review_the_data == 'the_car'){ 
+                                        return false; 
+                                    }
+                                    else if(row.review_the_data == ''){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_pass'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                }
+                            }
+
 
                         ],
                             events: Controller.api.events.operate,
@@ -202,7 +270,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
-            //风控通过
+            //风控通过---可以提车
             goeasy.subscribe({
                 channel: 'demo-rentalpass',
                 onMessage: function(message){
@@ -217,79 +285,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             //数据实时统计
             table.on('load-success.bs.table', function (e, data) {
                
-                $(".btn-signature").data("area", ["80%", "80%"]);
+                $(".btn-carsingle").data("area", ["80%", "80%"]);
                 
             })
 
         },
-        //销售预定
-        salesbook:function(){
- 
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-               
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
+        carsingle: function () {
+            // console.log(123);
+            // return;
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
-                // console.log(data);
+                console.log(data);
                 // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
-                // console.log(data); 
-                Toastr.success("失败"); 
-            });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
- 
-        },
-        //修改销售预定
-        salesbookedit:function(){
- 
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-               
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                Fast.api.close(data);//这里是重点
+            }, function (data, ret) {
                 // console.log(data);
-                // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
-                // console.log(data); 
-                Toastr.success("失败"); 
-            });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
- 
-        },
-        //车管签字
-        signature:function(){
-            
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({
-               
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
-                Fast.api.close(data);//这里是重点
-                
-                // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
-                // console.log(data);
-                
+
                 Toastr.success("失败");
-                
+
             });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-            
- 
+            Controller.api.bindevent();
+            // console.log(Config.id); 
+
         },
+        
         add: function () {
             Controller.api.bindevent();
         },
@@ -388,23 +407,69 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //车管签字确认
-                    'click .btn-signature': function (e, value, row, index) { 
+                    /**打印提车单 */
+                    'click .btn-carsingle': function (e, value, row, index) {
+    
+                            e.stopPropagation();
+                            e.preventDefault();
+                            var table = $(this).closest('table');
+                            var options = table.bootstrapTable('getOptions');
+                            var ids = row[options.pk];
+                            row = $.extend({}, row ? row : {}, {ids: ids});
+                            var url = 'rentcar/vehicleinformation/carsingle';
+                            Fast.api.open(Table.api.replaceurl(url, row, table), __('打印提车单'), $(this).data() || {});
+                    },
+                    /**确认提车按钮 */
+                    'click .btn-takecar': function (e, value, row, index) {  
+
                         e.stopPropagation();
                         e.preventDefault();
-                        var table = $(this).closest('table');
-                        var options = table.bootstrapTable('getOptions');
-                        var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, { ids: ids });
-                        var url = 'rentcar/vehicleinformation/signature';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
-                            callback: function (value) {
-                                alert(value);
-                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
-                            },success:function(ret){
-                                console.log(ret);
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('确定进行车辆提取吗?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                                Fast.api.ajax({
+
+                                    url: 'rentcar/vehicleinformation/takecar',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success(ret.msg);
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+
+                                    Layer.alert('提车成功后，可到租车客户信息查看客户信息',{ icon:0},function(index){
+                                        Layer.close(index);
+                                        $(".btn-refresh").trigger("click");
+                                    });
+
+                                    
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
                             }
-                        })
+                        );
                     },
                 }
                
