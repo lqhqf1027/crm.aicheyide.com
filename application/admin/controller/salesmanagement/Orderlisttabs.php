@@ -8,6 +8,7 @@ use app\admin\model\Models as modelsModel;
 use app\admin\model\SalesOrder as salesOrderModel;
 use think\Db;
 use think\Config;
+
 /**
  * 订单列管理
  *
@@ -31,10 +32,11 @@ class Orderlisttabs extends Backend
     {
         parent::_initialize();
         $this->model = model('SalesOrder');
-        
+
         //获取token
         // self::$token = $this->getAccessToken();
     }
+
     public function index()
     {
         $this->loadlang('order/salesorder');
@@ -69,63 +71,67 @@ class Orderlisttabs extends Backend
 
         return $this->view->fetch();
     }
-    /**以租代购（新车）*/
+
+    /**
+     * 以租代购（新车
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function orderAcar()
-    { 
-        $a =salesOrderModel::get(9);
-        
-        pr($a->mo());
-        // pr(collection($this->getPlanAcarData(5))->toArray());
+    {
         //当前是否为关联查询
         $this->relationSearch = true;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
-       //设置过滤方法
+        //设置过滤方法
         $this->request->filter(['strip_tags']);
-        // if ($this->request->isAjax()) {
-           //如果发送的来源是Selectpage，则转发到Selectpage
+
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = $this->model
-                ->with(['mo'])
-                ->where($where)
-                ->order($sort, $order)
-                ->count();
-
+//            $total = $this->model
+//                ->with(['planacar'=>['models']])
+//                ->where($where)
+//                ->order($sort, $order)
+//                ->count();
             $list = $this->model
-                ->with(['mo'])
+//                ->with(['planacar'=>function($query){
+//                    $query->withField('models_id');
+//                }])
+                    ->with(['planacar'=>['models']])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
-           
-                $list = collection($list)->toArray();
-                pr($list);
-    
-        //    $newList = array();
-            foreach ($list as $row) {
-                $row->visible(['order_no','username']);
-                $row->visible(['planacar']);
-                $row->getRelation('planacar')->visible(['margin']);
-                // $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray(); 
-                // $list[$k]['payment'] = $planData['payment'];
-                // $list[$k]['monthly'] = $planData['monthly'];
-                // $list[$k]['nperlist'] = $planData['nperlist'];
-                // $list[$k]['margin'] = $planData['margin'];
-                // $list[$k]['gps'] = $planData['gps'];
-                // $list[$k]['models_name'] = $planData['models_name']; 
-            }
-          
+            $list = collection($list)->toArray();
+            dump($list);die;
+//            foreach ($list as $k => $row) {
+//
+//                $row->visible(['id', 'order_no', 'financial_name', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+//                $row->visible(['planacar']);
+//                $row->getRelation('planacar')->visible(['payment', 'margin', 'nperlist', 'tail_section', 'gps',]);
+//                $row->visible(['plan']);
+//                $row->getRelation('plan')->visible(['standard_price']);
+//            }
+
+
+
+//            $list = collection($list)->toArray();
+
             $result = array("total" => $total, "rows" => $list);
             return json($result);
-        // }
+        }
 
         return $this->view->fetch('index');
 
     }
+
+
+
     /**
      * 根据方案id查询 车型名称，首付、月供等
      */
@@ -141,6 +147,7 @@ class Orderlisttabs extends Backend
             ->find();
 
     }
+
     /**提交内勤 */
     public function sedAudit()
     {
@@ -199,6 +206,7 @@ class Orderlisttabs extends Backend
             }
         }
     }
+
     /**查看详细资料 */
     public function details($ids = null)
     {
@@ -212,31 +220,31 @@ class Orderlisttabs extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-        
+
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
-        
+
         //定金收据上传
         $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-        
+
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-        
+
         //户口簿【首页、主人页、本人页】
         $residence_bookletimages = explode(',', $row['residence_bookletimages']);
-        
+
         //住房合同/房产证（多图）
         $housingimages = explode(',', $row['housingimages']);
-        
+
         //银行卡照（可多图）
         $bank_cardimages = explode(',', $row['bank_cardimages']);
 
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
-        
+
         //通话清单（文件上传）
         $call_listfiles = explode(',', $row['call_listfiles']);
 
@@ -269,10 +277,10 @@ class Orderlisttabs extends Backend
 
         $this->model = new \app\admin\model\rental\Order;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
-       //设置过滤方法
+        //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-           //如果发送的来源是Selectpage，则转发到Selectpage
+            //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
@@ -304,6 +312,7 @@ class Orderlisttabs extends Backend
         return $this->view->fetch('index');
 
     }
+
     /**
      * 根据方案id查询 车型名称，首付、月供等
      */
@@ -318,6 +327,7 @@ class Orderlisttabs extends Backend
             ->find();
 
     }
+
     /**查看纯租详细资料 */
     public function rentaldetails($ids = null)
     {
@@ -337,7 +347,7 @@ class Orderlisttabs extends Backend
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-        
+
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
 
@@ -369,10 +379,10 @@ class Orderlisttabs extends Backend
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
-       //设置过滤方法
+        //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-           //如果发送的来源是Selectpage，则转发到Selectpage
+            //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
@@ -436,31 +446,31 @@ class Orderlisttabs extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-        
+
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
-        
+
         //定金收据上传
         $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-        
+
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-        
+
         //户口簿【首页、主人页、本人页】
         $residence_bookletimages = explode(',', $row['residence_bookletimages']);
-        
+
         //住房合同/房产证（多图）
         $housingimages = explode(',', $row['housingimages']);
-        
+
         //银行卡照（可多图）
         $bank_cardimages = explode(',', $row['bank_cardimages']);
 
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
-        
+
         //通话清单（文件上传）
         $call_listfiles = explode(',', $row['call_listfiles']);
 
@@ -492,10 +502,10 @@ class Orderlisttabs extends Backend
     {
         $this->model = new \app\admin\model\full\parment\Order;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
-       //设置过滤方法
+        //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-           //如果发送的来源是Selectpage，则转发到Selectpage
+            //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
@@ -561,14 +571,14 @@ class Orderlisttabs extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-        
+
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-        
+
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-        
+
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
 
@@ -592,7 +602,6 @@ class Orderlisttabs extends Backend
         );
         return $this->view->fetch();
     }
-
 
 
 }

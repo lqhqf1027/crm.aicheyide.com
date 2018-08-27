@@ -53,9 +53,15 @@ class PlanAcar extends Model
 
 
 
+//    public function models()
+//    {
+//        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+//    }
+
     public function models()
     {
-        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+//        return $this->belongsTo('Models','models_id','id' )->setEagerlyType(0);;
+        return self::with('models')->select();
     }
 
 
@@ -63,4 +69,11 @@ class PlanAcar extends Model
     {
         return $this->belongsTo('FinancialPlatform', 'financial_platform_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+
+////第三个表  对不对
+//    public function testgxA()
+//    {
+//        return  $this->hasOne('Models','id','models_id');
+//    }
 }

@@ -58,7 +58,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
 
                             // { field: 'financial_platform_name', title: __('金融平台') },
-                            { field: 'models_name', title: __('销售车型') },
+                            { field: 'planacar.models.name', title: __('销售车型') },
                             { field: 'username', title: __('Username') },
                             { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
                             { field: 'genderdata_text', title: __('Genderdata'), operate: false },
@@ -76,12 +76,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
-                            { field: 'payment', title: __('首付（元）') },
-                            { field: 'monthly', title: __('月供（元）') },
-                            { field: 'nperlist', title: __('期数') },
-                            { field: 'margin', title: __('保证金（元）') },
-                            { field: 'tail_section', title: __('尾款（元）') },
-                            { field: 'gps', title: __('GPS（元）') },
+                            { field: 'planacar.payment', title: __('首付（元）') },
+                            { field: 'planacar.monthly', title: __('月供（元）') },
+                            { field: 'planacar.nperlist', title: __('期数') },
+                            { field: 'planacar.margin', title: __('保证金（元）') },
+                            { field: 'planacar.tail_section', title: __('尾款（元）') },
+                            { field: 'planacar.gps', title: __('GPS（元）') },
 
                             {
                                 field: 'operate', title: __('Operate'), table: orderAcar,

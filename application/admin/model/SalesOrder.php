@@ -81,17 +81,28 @@ class SalesOrder extends Model
 //    {
 //        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
 //    }
-
+//    public  function  joinorders(){
+////        return $this->hasManyThrough('PlanAcar','Models','plan_acar_name','models_id','id');
+//        return $this->belongsToMany('PlanAcar','Models','plan_acar_name','models_id','id');
+//
+//    }
 
     public function planacar()
     {
-        return $this->belongsTo('PlanAcar', 'plan_acar_name', 'id', [], 'LEFT')->setEagerlyType(0);
+//        return $this->belongsTo('PlanAcar', 'plan_acar_name', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->belongsTo('PlanAcar','plan_acar_name','id')->setEagerlyType(0);
     }
 
-    public function mo()
-    {
-        return $this->hasManyThrough('SalesOrder', 'PlanAcar', 'plan_acar_name', 'id', 'id');
-    }
-
+//
+//    public function models()
+//    {
+////        return $this->hasManyThrough('SalesOrder', 'PlanAcar', 'plan_acar_name', 'id', 'id');
+//        return $this->belongsTo('PlanAcar', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+//    }
+//
+//    public function testgx()
+//    {
+//       return  $this->hasOne('PlanAcar','id','plan_acar_name')->field('models_id,margin');
+//    }
 
 }
