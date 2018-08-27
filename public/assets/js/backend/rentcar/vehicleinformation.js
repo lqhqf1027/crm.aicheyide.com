@@ -293,10 +293,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         carsingle: function () {
             // console.log(123);
             // return;
+           
+
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
                 console.log(data);
+                 
+                var printHtml = document.getElementById("myDiv").innerHTML;
+                var wind = window.open("",'newwindow', 'height=300, width=700, top=100, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no');
+                wind.document.body.innerHTML = printHtml;
+                wind.print();
                 // Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
                 // console.log(data);
@@ -457,7 +464,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         Layer.close(index);
                                         $(".btn-refresh").trigger("click");
                                     });
-
                                     
                                     return false;
                                 }, function (data, ret) {

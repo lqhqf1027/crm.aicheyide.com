@@ -1,5 +1,7 @@
 <form id="signature-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
+    <!--startprint-->
+
         <h2>
             <center>客户租车事项确认单</center>
         </h2>
@@ -62,10 +64,10 @@
                             </tr>
 
                             <tr>
-                                <td class="col-xs-12 col-sm-1 " rowspan="2" align="center"valign="middle">
+                                <td class="col-xs-12 col-sm-1 " rowspan="3" align="center"valign="middle">
                                     {$result.cash_pledge}
                                 </td>
-                                <td class="col-xs-12 col-sm-1 " rowspan="2" align="center"valign="middle">
+                                <td class="col-xs-12 col-sm-1 " rowspan="3" align="center"valign="middle">
                                     {$result.rental_price}
                                 </td>
                                 <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
@@ -75,7 +77,7 @@
                                 <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
                             </tr>
                             <tr>
-                                <td class="col-xs-12 col-sm-1 ">
+                                <td class="col-xs-12 col-sm-1 " style="height: 50px;">
                                     
                                     <!-- <input type="text" style="height: 40px;width: 170px;" id="c-gps_installation_name"  class="form-control form-control" name="row[gps_installation_name]"> -->
                                     
@@ -103,11 +105,8 @@
                             </tr>
 
                             <tr>
-                                <th class="col-xs-12 col-sm-1 " colspan="2">
-                                      <span >备注</span>
-                                          
-                                </th>
-                                <td class="col-xs-12 col-sm-1 ">
+                               
+                                <td class="col-xs-12 col-sm-1 " style="height: 80px;">
                                     
                                     <!-- <input style="height: 100px;width: 170px;resize:none;" id="c-gps_installation_note" class="form-control form-control" name="row[gps_installation_note]"> -->
                                    
@@ -145,7 +144,7 @@
                             </tr>
 
                             <tr>
-                                <td class="col-xs-12 col-sm-8 col-md-1">
+                                <td class="col-xs-12 col-sm-8 col-md-1" style="height: 40px;">
                                     {$result.createtime|date='Y-m-d H:i:s',###}
                                 </td>
                                 <td class="col-xs-12 col-sm-8 col-md-1">
@@ -184,14 +183,25 @@
                     </div>
         </div>
 
+    <!-- endprint -->
     
-        
-
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed">{:__('OK')}</button>
-            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+
+            <button type="submit" class="btn btn-success btn-embossed" onclick="doPrint()">打印</button>
+            
         </div>
     </div>
 </form>
+<script>
+    function doPrint() {   
+    // bdhtml=window.document.body.innerHTML;   
+    // sprnstr="<!--startprint-->";   
+    // eprnstr="<!--endprint-->";   
+    // prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);   
+    // prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));   
+    // window.document.body.innerHTML=prnhtml;  
+    window.print();   
+}   
+</script>
