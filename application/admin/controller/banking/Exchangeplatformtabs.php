@@ -144,13 +144,13 @@ class Exchangeplatformtabs extends Backend
             ->order("lending_date desc")
             ->select();
 
-        foreach ($result[1] as $k=>$v){
-            if($v['lending_date'] && $v['firm_stage']){
-                 $v['lending_date'] = str_replace("-",".",$v['lending_date']);
+        foreach ($result[1] as $k => $v) {
+            if ($v['lending_date'] && $v['firm_stage']) {
+                $v['lending_date'] = str_replace("-", ".", $v['lending_date']);
 
-                 $v['firm_stage'] = str_replace("/","",$v['firm_stage']);
+                $v['firm_stage'] = str_replace("/", "", $v['firm_stage']);
 
-                $v['lending_date'] = $v['lending_date'].$v['firm_stage'];
+                $v['lending_date'] = $v['lending_date'] . $v['firm_stage'];
 
                 $result[1][$k]['merge'] = $v['lending_date'];
 
@@ -262,7 +262,11 @@ class Exchangeplatformtabs extends Backend
 
             $result = Db::name("mortgage")
                 ->where("id", $getId)
-                ->setField("mortgage_type", $params);
+                ->update([
+                    "mortgage_type" => $params,
+//                    "lending_date"=>null,
+//                    "firm_stage"=>null
+                ]);
 
             if ($result !== false) {
                 $this->success();
@@ -273,6 +277,58 @@ class Exchangeplatformtabs extends Backend
         }
         return $this->view->fetch();
     }
+
+    //更改平台
+    public function batch_change_platform($ids = null)
+    {
+        $change = Db::table("crm_order_view")
+            ->where("id", "in", $ids)
+            ->field("mortgage_type")
+            ->find();
+
+
+
+
+        $this->view->assign([
+            'mortgage_type_list' => ['new_car' => '新车', 'yueda_car' => '悦达', 'other_car' => '其他'],
+            'mortgage_type'=>$change['mortgage_type']
+        ]);
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post("mortgage_type");
+
+            $getId = Db::name("sales_order")
+                ->alias("so")
+                ->join("car_new_inventory ni", "so.car_new_inventory_id=ni.id")
+                ->where("so.id", "in", $ids)
+                ->field("ni.car_mortgage_id")
+                ->select();
+
+            $getIds = array();
+
+            foreach ($getId as $k => $v) {
+                array_push($getIds, $v['car_mortgage_id']);
+            }
+
+            $result = Db::name("mortgage")
+                ->where("id", "in", $getIds)
+                ->update([
+                    "mortgage_type" => $params
+//                    "lending_date"=>null,
+//                    "firm_stage"=>null
+
+                ]);
+
+            if ($result !== false) {
+                $this->success();
+            } else {
+                $this->error();
+            }
+
+        }
+        return $this->view->fetch();
+    }
+
 
     //查看详情信息
     public function details($ids = null)
@@ -313,8 +369,8 @@ class Exchangeplatformtabs extends Backend
                     $result = Db::name("mortgage")
                         ->where("id", "in", $id_arr)
                         ->update([
-                            "lending_date"=> $params['lending_date'],
-                            'firm_stage'=>$params['firm_stage']
+                            "lending_date" => $params['lending_date'],
+                            'firm_stage' => $params['firm_stage']
                         ]);
 
 

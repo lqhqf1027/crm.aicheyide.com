@@ -43,6 +43,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
         },
+        batch_change_platform: function () {
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                // console.log(data);
+
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);
+                // console.log(data);
+                Toastr.success("成功");
+            }, function (data, ret) {
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+        },
 
         table: {
 
@@ -51,49 +67,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var newCar = $("#newCar");
                 newCar.on('load-success.bs.table', function (e, data) {
                     var arr = data.rows;
-
-
-                    var hash = [];
-                    var data_arr = [];
-                    for (var i in arr) {
-                        if (hash.indexOf(arr[i]['lending_date']) == -1) {
-                            // arr[i].style.backgroundColor = 'red'
-                            hash.push(arr[i]['lending_date']);
-
-                            data_arr.push([i, arr[i]['lending_date'], 0]);
-                        }
-
-
-                    }
-
-
-                    for (var i in arr) {
-                        for (var j in data_arr) {
-                            if (arr[i]['lending_date'] == data_arr[j][1]) {
-                                data_arr[j][2]++;
-                            }
-                        }
-                    }
-
-
-                    for (var i in data_arr) {
-
-                        $("#newCar").bootstrapTable("mergeCells", {
-                            index: data_arr[i][0],
-                            field: 'merge',
-                            rowspan: data_arr[i][2]
-                        });
-
-
-                        var a = $("tr[data-index="+data_arr[i][0]+"]").find("td");
-                        if(i%2==0){
-                            a.eq(2).css("backgroundColor","#fcbd20");
-                        }else{
-                            a.eq(2).css("backgroundColor","skyblue");
-                        }
-
-                    }
-
+                    // merge(arr, $("#newCar"));
+                    Controller.merge(arr, $("#newCar"),$('#new_car'));
                     $('#badge_new_car').text(data.total);
 
                 });
@@ -102,6 +77,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
                     $(".btn-btn-editone").data("area", ["80%", "80%"]);
                     $(".btn-edit").data("area", ["80%", "80%"]);
+                    $(".btn-loan").data("area", ["40%", "40%"]);
+
 
                 });
                 // 初始化表格
@@ -176,14 +153,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
-                                    // {
-                                    //     name: 'details',
-                                    //     text: __('查看详情'),
-                                    //     icon: 'fa fa-eye',
-                                    //     title: __('查看详情'),
-                                    //     extend: 'data-toggle="tooltip"',
-                                    //     classname: 'btn btn-xs btn-info btn-details',
-                                    // },
+
                                 ]
                             }
                         ]
@@ -192,47 +162,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(newCar);
 
-                //
-
                 $(document).on('click', '.btn-loan', function () {
-                    // $('#exampleModal').modal('show');
-                    var table = $(this).closest(table);
-
-                    var ids = Table.api.selectedids(newCar);
-
-                    row = {ids:ids};
 
                     var url = "banking/exchangeplatformtabs/loan";
+                    platform(newCar, url, '放款日期')
 
-                    Fast.api.open(Table.api.replaceurl(url, row, table),__('操作'));
+                });
 
+                $(document).on('click', '.btn-platform', function () {
+                    var url = "banking/exchangeplatformtabs/batch_change_platform";
 
-                    // Layer.prompt(
-                    //     {title: __('请输入放款时间'), shadeClose: true},
-                    //     function (text, index) {
-                    //         Fast.api.ajax({
-                    //             url: "banking/exchangeplatformtabs/loan",
-                    //             data: {
-                    //                 text: text,
-                    //                 id: JSON.stringify(ids)
-                    //             }
-                    //         }, function (data, ret) {
-                    //             // alert(data);
-                    //             layer.close(index);
-                    //             newCar.bootstrapTable('refresh');
-                    //         }, function (data, ret) {
-                    //             console.log(ret);
-                    //         })
-                    //     })
+                    platform(newCar, url, '更换平台')
 
                 })
 
             },
             yue_da_car: function () {
-                // 表格1
+                // 表格2
                 var yueDaCar = $("#yueDaCar");
                 yueDaCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
+
+                    var arr = data.rows;
+
+
+                    // merge(arr, $("#yueDaCar"));
+                    Controller.merge(arr, $("#yueDaCar"),$('#yue_da_car'))
+
                     $('#badge_yue_da').text(data.total);
 
                 });
@@ -260,7 +215,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'lending_date', title: __('放款日期')},
+                            {field: 'merge', title: __('放款日期')},
                             {field: 'household', title: __('开户公司名')},
                             {
                                 field: 'createtime',
@@ -313,14 +268,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
-                                    // {
-                                    //     name: 'details',
-                                    //     text: __('查看详情'),
-                                    //     icon: 'fa fa-eye',
-                                    //     title: __('查看详情'),
-                                    //     extend: 'data-toggle="tooltip"',
-                                    //     classname: 'btn btn-xs btn-info btn-details',
-                                    // },
+
                                 ]
                             }
                         ]
@@ -329,13 +277,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(yueDaCar);
 
+                $(document).on('click', '.btn-loan2', function () {
+
+                    var url = "banking/exchangeplatformtabs/loan";
+                    platform(yueDaCar, url, '放款日期')
+
+                });
+
+                $(document).on('click', '.btn-platform2', function () {
+                    var url = "banking/exchangeplatformtabs/batch_change_platform";
+
+                    platform(yueDaCar, url, '更换平台')
+
+                })
+
             },
             other_car: function () {
-                // 表格1
+                console.log(Controller);
+                // 表格3
                 var otherCar = $("#otherCar");
                 otherCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
+                    var arr = data.rows;
+                    // merge(arr, $("#otherCar"));
                     $('#badge_other').text(data.total);
+
+                    Controller.merge(arr, $("#otherCar"),$('#other_car'))
+
 
                 });
 
@@ -362,7 +329,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'lending_date', title: __('放款日期')},
+                            {field: 'merge', title: __('放款日期')},
                             {field: 'household', title: __('开户公司名')},
                             {
                                 field: 'createtime',
@@ -425,6 +392,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(otherCar);
 
+                $(document).on('click', '.btn-loan3', function () {
+
+                    var url = "banking/exchangeplatformtabs/loan";
+                    platform(otherCar, url, '放款日期')
+
+                });
+
+                $(document).on('click', '.btn-platform3', function () {
+                    var url = "banking/exchangeplatformtabs/batch_change_platform";
+
+                    platform(otherCar, url, '更换平台')
+
+                })
+
             },
 
             nanchong_driver: function () {
@@ -441,7 +422,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-editone").data("area", ["80%", "80%"]);
                     $(".btn-add").data("area", ["80%", "80%"]);
                     $(".btn-edit").data("area", ["80%", "80%"]);
-                    d
                 });
                 // 初始化表格
                 nanchongDriver.bootstrapTable({
@@ -543,10 +523,53 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
-        loan:function(){
+        loan: function () {
             Controller.api.bindevent();
         },
-        api: {
+         merge:function(arr, obj,parentDom) {
+        // alert(1)
+        var hash = [];
+        var data_arr = [];
+        for (var i in arr) {
+            if (hash.indexOf(arr[i]['lending_date']) == -1) {
+
+                hash.push(arr[i]['lending_date']);
+
+                data_arr.push([i, arr[i]['lending_date'], 0]);
+            }
+
+
+        }
+
+
+        for (var i in arr) {
+            for (var j in data_arr) {
+                if (arr[i]['lending_date'] == data_arr[j][1]) {
+                    data_arr[j][2]++;
+                }
+            }
+        }
+
+
+        for (var i in data_arr) {
+
+            obj.bootstrapTable("mergeCells", {
+                index: data_arr[i][0],
+                field: 'merge',
+                rowspan: data_arr[i][2]
+            });
+            // console.log(this);
+
+            var td = $(parentDom).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
+
+            // td[2].style.backgroundColor="red";
+            // console.log(td.eq(2).html());
+
+            i % 2 == 0 ? td.eq(2).css({"background-color": "#fcbd20"}) : td.eq(2).css({"background-color": "skyblue"});
+        }
+    },
+
+    api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
                     var name = $("input[name='row[name]']");
@@ -608,5 +631,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
+
+    /**
+     *
+     * @param arr
+     * @param obj
+     */
+
+    function platform(tab, url, title) {
+        var table = $(this).closest(table);
+
+        var ids = Table.api.selectedids(tab);
+
+        row = {ids: ids};
+
+
+        Fast.api.open(Table.api.replaceurl(url, row, table), __(title));
+    }
+
     return Controller;
 });
