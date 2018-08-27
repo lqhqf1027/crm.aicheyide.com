@@ -78,7 +78,13 @@ class Matchfinance extends Backend
 
            $res = Db::name("sales_order")
             ->where("id",$id)
-            ->setField("financial_name",$v);
+            ->update([
+                "financial_name"=>$v,
+                "review_the_data"=>"is_reviewing_true"
+            ]);
+
+
+
 
            if($res){
                $this->success('','',$v);
@@ -133,56 +139,78 @@ class Matchfinance extends Backend
     }
 
     //批量分配
-    public function batch($ids = null)
+    public function batch()
     {
-        $row = Db::name("financial_platform")
-            ->where("status", "normal")
-            ->field("id,name")
-            ->select();
+        if($this->request->isAjax()){
+            $ids = input("id");
 
-        if ($this->request->isPost()) {
+            $text = input("text");
 
-            $params = $this->request->post("row/a");
+            $ids = json_decode($ids,true);
 
-            $plan_id = Db::name("sales_order")
-                ->where("id", 'in', $ids)
-                ->field("plan_acar_name")
-                ->select();
+            $res = Db::name("sales_order")
+            ->where("id",'in',$ids)
+            ->update([
+                'financial_name'=>$text,
+                'review_the_data'=>'is_reviewing_true'
+            ]);
 
+            if($res){
+                $this->success('','','success');
 
-//            pr($plan_id);die();
-
-
-            if ($params) {
-                $result = false;
-
-                foreach ($plan_id as $k => $v) {
-                    Db::name("plan_acar")
-                        ->where("id", $v['plan_acar_name'])
-                        ->setField("financial_platform_id", $params['financial_platform_id']);
-                }
-
-
-                $res2 = Db::name("sales_order")
-                    ->where("id","in", $ids)
-                    ->setField("review_the_data", "is_reviewing_true");
-
-                if ($res2) {
-                    $result = true;
-                }
-
-                if ($result !== false) {
-                    $this->success();
-                } else {
-                    $this->error();
-                }
-
-
+            }else{
+                $this->error();
             }
-            $this->error(__('Parameter %s can not be empty', ''));
+
+
         }
-        $this->view->assign("row", $row);
-        return $this->view->fetch('planmanagement/matchfinance/edit');
+
+//        $row = Db::name("financial_platform")
+//            ->where("status", "normal")
+//            ->field("id,name")
+//            ->select();
+//
+//        if ($this->request->isPost()) {
+//
+//            $params = $this->request->post("row/a");
+//
+//            $plan_id = Db::name("sales_order")
+//                ->where("id", 'in', $ids)
+//                ->field("plan_acar_name")
+//                ->select();
+//
+//
+//
+//            if ($params) {
+//                $result = false;
+//
+//                foreach ($plan_id as $k => $v) {
+//                    Db::name("plan_acar")
+//                        ->where("id", $v['plan_acar_name'])
+//                        ->setField("financial_platform_id", $params['financial_platform_id']);
+//                }
+//
+//
+//                $res2 = Db::name("sales_order")
+//                    ->where("id","in", $ids)
+//                    ->setField("review_the_data", "is_reviewing_true");
+//
+//                if ($res2) {
+//                    $result = true;
+//                }
+//
+//                if ($result !== false) {
+//                    $this->success();
+//                } else {
+//                    $this->error();
+//                }
+//
+//
+//            }
+//            $this->error(__('Parameter %s can not be empty', ''));
+//        }
+//        $this->view->assign("row", $row);
+//        return $this->view->fetch('planmanagement/matchfinance/edit');
     }
 
     //添加销售员名称

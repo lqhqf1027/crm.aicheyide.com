@@ -76,9 +76,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'household', title: __('公司')},
                             {field: 'sales_name', title: __('销售员')},
                             {field: 'username', title: __('客户姓名')},
-                            {field: 'id_card', title: __('身份证号')},
-                            {field: 'detailed_address', title: __('地址')},
-                            {field: 'phone', title: __('联系电话')},
+                            // {field: 'id_card', title: __('身份证号')},
+                            // {field: 'detailed_address', title: __('地址')},
+                            // {field: 'phone', title: __('联系电话')},
                             {field: 'models_name', title: __('订车车型')},
                             {field: 'payment', title: __('首付(元)')},
                             {field: 'monthly', title: __('月供(元)')},
@@ -89,8 +89,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
                             {field: 'difference', title: __('差额(元)')},
-                            {field: 'engine_number', title: __('发动机号')},
-                            {field: 'household', title: __('行驶证所有户')},
+                            // {field: 'engine_number', title: __('发动机号')},
+                            // {field: 'household', title: __('行驶证所有户')},
                             {field: '4s_shop', title: __('4S店')},
                             {field: 'amount_collected', title: __('实收金额')},
                             {field: 'decorate', title: __('装饰')},
@@ -121,12 +121,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Controller.api.bindevent(prepareMatch);
 
                   $(document).on('click','.btn-test',function () {
+
                       var ids = Table.api.selectedids(prepareMatch);
 
-                      var url = 'planmanagement/matchfinance/batch';
+                      Layer.prompt(
 
-                      var row = {ids:ids};
-                      Fast.api.open(Table.api.replaceurl(url, row, prepareMatch), __('Edit'), $(this).data() || {});
+                          { title: __('请匹配对应的金融平台'), shadeClose: true },
+                          function (text, index) {
+                              Fast.api.ajax({
+                                  url:"planmanagement/matchfinance/batch",
+                                  data:{
+                                      text:text,
+                                      id:JSON.stringify(ids)
+                                  }
+                              },function (data,ret) {
+                                  layer.close(index);
+                                  prepareMatch.bootstrapTable('refresh');
+                              },function (data,ret) {
+                                  console.log(ret);
+                              })
+                          })
+
+                      // var row = {ids:ids};
+                      // Fast.api.open(Table.api.replaceurl(url, row, prepareMatch), __('Edit'), $(this).data() || {});
                   })
 
             },
@@ -164,9 +181,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'household', title: __('公司')},
                             {field: 'sales_name', title: __('销售员')},
                             {field: 'username', title: __('客户姓名')},
-                            {field: 'id_card', title: __('身份证号')},
-                            {field: 'detailed_address', title: __('地址')},
-                            {field: 'phone', title: __('联系电话')},
+                            // {field: 'id_card', title: __('身份证号')},
+                            // {field: 'detailed_address', title: __('地址')},
+                            // {field: 'phone', title: __('联系电话')},
                             {field: 'models_name', title: __('订车车型')},
                             {field: 'payment', title: __('首付(元)')},
                             {field: 'monthly', title: __('月供(元)')},
@@ -177,7 +194,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'car_total_price', title: __('车款总价(元)')},
                             {field: 'downpayment', title: __('首期款(元)')},
                             {field: 'difference', title: __('差额(元)')},
-                            {field: 'household', title: __('行驶证所有户')},
+                            // {field: 'household', title: __('行驶证所有户')},
                             {field: '4s_shop', title: __('4S店')},
                             {field: 'amount_collected', title: __('实收金额')},
                             {field: 'decorate', title: __('装饰')},
@@ -239,10 +256,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             events: {
                 operate: {
                     'click .btn-editone': function (e, value, row, index) {
-
+                        var table = $(this).closest('table');
                         Layer.prompt(
                             // __('请输入客户手机服务密码'),测试服务密码：202304
-                            { title: __('请输入客户手机服务密码'), shadeClose: true },
+                            { title: __('请匹配对应的金融平台'), shadeClose: true },
                             //text为输入的服务密码
                             function (text, index) {
                                 Fast.api.ajax({
@@ -252,8 +269,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         id:row.id
                                     }
                                 },function (data,ret) {
-                                    alert(data);
                                     layer.close(index);
+                                    table.bootstrapTable('refresh');
                                 },function (data,ret) {
                                     alert(ret);
                                 })

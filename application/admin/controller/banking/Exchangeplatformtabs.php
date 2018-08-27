@@ -33,10 +33,6 @@ class Exchangeplatformtabs extends Backend
      */
     public function index()
     {
-//        $list = Db::name("nanchong_driver")->select();
-//
-//        pr($list);die();
-
 
         $this->loadlang('banking/exchangeplatformtabs');
         $new_car = $this->getCar("new_car");
@@ -145,7 +141,21 @@ class Exchangeplatformtabs extends Backend
             ->where(function ($query) use ($condition) {
                 $query->where("mortgage_type", $condition);
             })
+            ->order("lending_date desc")
             ->select();
+
+        foreach ($result[1] as $k=>$v){
+            if($v['lending_date'] && $v['firm_stage']){
+                 $v['lending_date'] = str_replace("-",".",$v['lending_date']);
+
+                 $v['firm_stage'] = str_replace("/","",$v['firm_stage']);
+
+                $v['lending_date'] = $v['lending_date'].$v['firm_stage'];
+
+                $result[1][$k]['merge'] = $v['lending_date'];
+
+            }
+        }
 
         return $result;
     }
@@ -277,6 +287,54 @@ class Exchangeplatformtabs extends Backend
         ]);
 
         return $this->view->fetch();
+    }
+
+    //放款时间
+    public function loan($ids = null)
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+
+                try {
+
+                    $mortgage_id = Db::name("sales_order")
+                        ->alias("so")
+                        ->join("car_new_inventory ni", "so.car_new_inventory_id = ni.id")
+                        ->field("ni.car_mortgage_id")
+                        ->where("so.id", "in", $ids)
+                        ->select();
+
+                    $id_arr = array();
+                    foreach ($mortgage_id as $k => $v) {
+                        array_push($id_arr, $v['car_mortgage_id']);
+                    }
+
+                    $result = Db::name("mortgage")
+                        ->where("id", "in", $id_arr)
+                        ->update([
+                            "lending_date"=> $params['lending_date'],
+                            'firm_stage'=>$params['firm_stage']
+                        ]);
+
+
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error();
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+
+        return $this->view->fetch();
+
     }
 
 }

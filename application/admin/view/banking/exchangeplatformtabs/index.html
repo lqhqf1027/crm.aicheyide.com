@@ -9,6 +9,42 @@
             <!--<li><a href="#new_feedback" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center"><i class="fa fa-flag-o"></i> 已反馈</a></li>-->
         </ul>
     </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                </div>
+                <!--<div class="modal-body">-->
+                    <!--<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">-->
+                        <!--<div class="form-group" id="checks">-->
+                            <!--<label class="control-label col-xs-12 col-sm-2">下次跟进时间</label>-->
+                            <!--<div class="col-xs-12 col-sm-8">-->
+                                <!--<input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" value="">-->
+
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                            <!--<label for="message-text" class="control-label">Message:</label>-->
+                            <!--<textarea class="form-control" id="message-text"></textarea>-->
+                        <!--</div>-->
+                        <!--<div class="form-group layer-footer">-->
+                            <!--<label class="control-label col-xs-12 col-sm-2"></label>-->
+                            <!--<div class="col-xs-12 col-sm-8">-->
+                                <!--<button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>-->
+                                <!--<button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</form>-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
 
@@ -19,7 +55,7 @@
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
                     <!--<a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
                     <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>
-                    <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
+                    <a href="javascript:;" class="btn btn-danger btn-loan btn-disabled disabled" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('放款时间')}</a>
                     <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('customer/customerresource/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>-->
                     <!--<a class="btn btn-info   btn-disabled disabled btn-selected" href="javascript:;" ><i class="fa fa-eye"></i> {:__('Distribution')}</a>-->
                     <!--data-params="batch"-->
