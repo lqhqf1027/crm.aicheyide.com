@@ -50,7 +50,50 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var newCar = $("#newCar");
                 newCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
+                    var arr = data.rows;
+
+
+                    var hash = [];
+                    var data_arr = [];
+                    for (var i in arr) {
+                        if (hash.indexOf(arr[i]['lending_date']) == -1) {
+                            // arr[i].style.backgroundColor = 'red'
+                            hash.push(arr[i]['lending_date']);
+
+                            data_arr.push([i, arr[i]['lending_date'], 0]);
+                        }
+
+
+                    }
+
+
+                    for (var i in arr) {
+                        for (var j in data_arr) {
+                            if (arr[i]['lending_date'] == data_arr[j][1]) {
+                                data_arr[j][2]++;
+                            }
+                        }
+                    }
+
+
+                    for (var i in data_arr) {
+
+                        $("#newCar").bootstrapTable("mergeCells", {
+                            index: data_arr[i][0],
+                            field: 'merge',
+                            rowspan: data_arr[i][2]
+                        });
+
+
+                        var a = $("tr[data-index="+data_arr[i][0]+"]").find("td");
+                        if(i%2==0){
+                            a.eq(2).css("backgroundColor","#fcbd20");
+                        }else{
+                            a.eq(2).css("backgroundColor","skyblue");
+                        }
+
+                    }
+
                     $('#badge_new_car').text(data.total);
 
                 });
@@ -80,9 +123,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'lending_date', title: __('放款日期')},
+                            {field: 'merge', title: __('放款日期')},
                             {field: 'household', title: __('开户公司名')},
-                            {field: 'createtime', title: __('订车时间'), formatter: Table.api.formatter.datetime, operate: false},
+                            {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
                             {field: 'bank_card', title: __('扣款卡号')},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号')},
@@ -96,7 +144,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'insurance', title: __('交强险(元)')},
                             {field: 'licensenumber', title: __('车牌号')},
                             {field: 'frame_number', title: __('车架号')},
-                            {field: 'delivery_datetime', title: __('提车时间'), formatter: Table.api.formatter.datetime, operate: false},
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
                             {field: 'payment', title: __('首付')},
                             {field: 'monthly', title: __('月供')},
                             {field: 'nperlist', title: __('期数')},
@@ -139,6 +192,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(newCar);
 
+                //
+
+                $(document).on('click', '.btn-loan', function () {
+                    // $('#exampleModal').modal('show');
+                    var table = $(this).closest(table);
+
+                    var ids = Table.api.selectedids(newCar);
+
+                    row = {ids:ids};
+
+                    var url = "banking/exchangeplatformtabs/loan";
+
+                    Fast.api.open(Table.api.replaceurl(url, row, table),__('操作'));
+
+
+                    // Layer.prompt(
+                    //     {title: __('请输入放款时间'), shadeClose: true},
+                    //     function (text, index) {
+                    //         Fast.api.ajax({
+                    //             url: "banking/exchangeplatformtabs/loan",
+                    //             data: {
+                    //                 text: text,
+                    //                 id: JSON.stringify(ids)
+                    //             }
+                    //         }, function (data, ret) {
+                    //             // alert(data);
+                    //             layer.close(index);
+                    //             newCar.bootstrapTable('refresh');
+                    //         }, function (data, ret) {
+                    //             console.log(ret);
+                    //         })
+                    //     })
+
+                })
+
             },
             yue_da_car: function () {
                 // 表格1
@@ -174,7 +262,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: __('ID')},
                             {field: 'lending_date', title: __('放款日期')},
                             {field: 'household', title: __('开户公司名')},
-                            {field: 'createtime', title: __('订车时间'), formatter: Table.api.formatter.datetime, operate: false},
+                            {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
                             {field: 'bank_card', title: __('扣款卡号')},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号')},
@@ -188,7 +281,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'insurance', title: __('交强险(元)')},
                             {field: 'licensenumber', title: __('车牌号')},
                             {field: 'frame_number', title: __('车架号')},
-                            {field: 'delivery_datetime', title: __('提车时间'), formatter: Table.api.formatter.datetime, operate: false},
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
                             {field: 'payment', title: __('首付')},
                             {field: 'monthly', title: __('月供')},
                             {field: 'nperlist', title: __('期数')},
@@ -266,7 +364,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: __('ID')},
                             {field: 'lending_date', title: __('放款日期')},
                             {field: 'household', title: __('开户公司名')},
-                            {field: 'createtime', title: __('订车时间'), formatter: Table.api.formatter.datetime, operate: false},
+                            {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
                             {field: 'bank_card', title: __('扣款卡号')},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号')},
@@ -280,7 +383,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'insurance', title: __('交强险(元)')},
                             {field: 'licensenumber', title: __('车牌号')},
                             {field: 'frame_number', title: __('车架号')},
-                            {field: 'delivery_datetime', title: __('提车时间'), formatter: Table.api.formatter.datetime, operate: false},
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                formatter: Table.api.formatter.datetime,
+                                operate: false
+                            },
                             {field: 'payment', title: __('首付')},
                             {field: 'monthly', title: __('月供')},
                             {field: 'nperlist', title: __('期数')},
@@ -332,7 +440,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
                     $(".btn-editone").data("area", ["80%", "80%"]);
                     $(".btn-add").data("area", ["80%", "80%"]);
-                    $(".btn-edit").data("area", ["80%", "80%"]);d
+                    $(".btn-edit").data("area", ["80%", "80%"]);
+                    d
                 });
                 // 初始化表格
                 nanchongDriver.bootstrapTable({
@@ -361,28 +470,61 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'household', title: __('Household')},
                             {field: 'payment', title: __('Payment')},
                             {field: 'monthly', title: __('Monthly')},
-                            {field: 'nperlist', title: __('Nperlist'), searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}, formatter: Table.api.formatter.normal},
+                            {
+                                field: 'nperlist',
+                                title: __('Nperlist'),
+                                searchList: {
+                                    "12": __('Nperlist 12'),
+                                    "24": __('Nperlist 24'),
+                                    "36": __('Nperlist 36'),
+                                    "48": __('Nperlist 48'),
+                                    "60": __('Nperlist 60')
+                                },
+                                formatter: Table.api.formatter.normal
+                            },
                             {field: 'car_images', title: __('Car_images'), formatter: Table.api.formatter.images},
-                            {field: 'lending_date', title: __('Lending_date'), operate:'RANGE', addclass:'datetimerange'},
+                            {
+                                field: 'lending_date',
+                                title: __('Lending_date'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange'
+                            },
                             {field: 'bank_card', title: __('Bank_card')},
-                            {field: 'invoice_monney', title: __('Invoice_monney'), operate:'BETWEEN'},
+                            {field: 'invoice_monney', title: __('Invoice_monney'), operate: 'BETWEEN'},
                             {field: 'registration_code', title: __('Registration_code')},
-                            {field: 'tax', title: __('Tax'), operate:'BETWEEN'},
-                            {field: 'business_risks', title: __('Business_risks'), operate:'BETWEEN'},
-                            {field: 'insurance', title: __('Insurance'), operate:'BETWEEN'},
-                            {field: 'booking_time', title: __('Booking_time'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'operate', title: __('Operate'), table: nanchongDriver, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
-                            buttons:[
-                                // {
-                                //     name: 'details',
-                                //     text: __('查看详情'),
-                                //     icon: 'fa fa-eye',
-                                //     title: __('查看详情'),
-                                //     extend: 'data-toggle="tooltip"',
-                                //     classname: 'btn btn-xs btn-info btn-nan-details',
-                                // },
-                            ]
+                            {field: 'tax', title: __('Tax'), operate: 'BETWEEN'},
+                            {field: 'business_risks', title: __('Business_risks'), operate: 'BETWEEN'},
+                            {field: 'insurance', title: __('Insurance'), operate: 'BETWEEN'},
+                            {
+                                field: 'booking_time',
+                                title: __('Booking_time'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'delivery_datetime',
+                                title: __('Delivery_datetime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: nanchongDriver,
+                                events: Table.api.events.operate,
+                                formatter: Table.api.formatter.operate,
+                                buttons: [
+                                    // {
+                                    //     name: 'details',
+                                    //     text: __('查看详情'),
+                                    //     icon: 'fa fa-eye',
+                                    //     title: __('查看详情'),
+                                    //     extend: 'data-toggle="tooltip"',
+                                    //     classname: 'btn btn-xs btn-info btn-nan-details',
+                                    // },
+                                ]
                             }
                         ]
                     ]
@@ -393,14 +535,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
 
 
-
-
         },
         add: function () {
             Controller.api.bindevent();
 
         },
         edit: function () {
+            Controller.api.bindevent();
+        },
+        loan:function(){
             Controller.api.bindevent();
         },
         api: {
@@ -425,8 +568,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
             },
-            events:{
-                operate:{
+            events: {
+                operate: {
                     'click .btn-editone': function (e, value, row, index) {  //编辑
                         e.stopPropagation();
                         e.preventDefault();
