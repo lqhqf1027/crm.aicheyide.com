@@ -58,14 +58,14 @@ class Vehicleinformation extends Backend
             $total = $this->model
                     ->with(['models'])
                     ->where($where)
-                    ->where('review_the_data', 'NEQ', 'the_car')
+                    // ->where('review_the_data', 'NEQ', 'the_car')
                     ->order($sort, $order)
                     ->count();
 
             $list = $this->model
                     ->with(['models'])
                     ->where($where)
-                    ->where('review_the_data','NEQ', 'the_car')
+                    // ->where('review_the_data','NEQ', 'the_car')
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -293,7 +293,7 @@ class Vehicleinformation extends Backend
         if($this->request->isPost()){
 
             $result_s = DB::name('car_rental_models_info')->where('id', $id)->setField('review_the_data', 'for_the_car');
-        
+            
             if($result_s){
                 $this->success();
             }
