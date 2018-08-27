@@ -686,7 +686,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         })
                     },
                     //查看大数据
-
                     'click .btn-bigData': function (e, value, row, index) { 
                         e.stopPropagation();
                         e.preventDefault();
@@ -694,20 +693,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, { ids: ids });
-
                         var bigdatatype = row.plan_acar_name?'sales_order':row.plan_car_rental_name?'rental_order':row.plan_car_second_name?'second_sales_order':0;
                         var url = 'riskcontrol/creditreview/bigdata'+'/bigdatatype/'+bigdatatype; 
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
                             callback: function (value) {
                                 alert(value);
-                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
                             },success:function(ret){
                                 console.log(ret);
                             }
                         })
                     },
                 }
-
             },
             formatter: {
                 operate: function (value, row, index) {
