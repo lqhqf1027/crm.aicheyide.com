@@ -286,6 +286,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.on('load-success.bs.table', function (e, data) {
                
                 $(".btn-carsingle").data("area", ["80%", "80%"]);
+                $(".btn-add").data("area", ["90%", "90%"]);
+                $(".btn-edit").data("area", ["90%", "90%"]);
                 
             })
 
@@ -300,10 +302,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Fast.api.close(data);//这里是重点
                 console.log(data);
                  
-                var printHtml = document.getElementById("myDiv").innerHTML;
-                var wind = window.open("",'newwindow', 'height=300, width=700, top=100, left=100, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no');
-                wind.document.body.innerHTML = printHtml;
-                wind.print();
                 // Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
                 // console.log(data);

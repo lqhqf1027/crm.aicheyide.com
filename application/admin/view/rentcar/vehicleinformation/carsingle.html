@@ -1,48 +1,119 @@
-<form id="signature-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
-    <!--startprint-->
+<style media="print">
+    .print{
+        width: 1200px;
+        float: left;
+    }
+    .username{
+        width: 300px;
+    }
+    .phone{
+        width: 300px;
+    }
+    .createtime{
+        width: 300px;
+    }
+    .delivery_datetime{
+        width: 300px;
+    }
+    .models_name{
+        width: 300px;
+    }
+    .licenseplatenumber{
+        width: 300px;
+    }
+    .rental_price{
+        width: 300px;
+    }
+    .tenancy_term{
+        width: 300px;
+    }
+
+    .cash_pledge{
+        width: 100px;
+    }
+    .rental{
+        width: 100px;
+    }
+    .gps{
+        width: 200px;
+    }
+    .information{
+        width: 200px;
+    }
+    .Insurance{
+        width: 200px;
+    }
+    .finance{
+        width: 200px;
+    }
+    .general{
+        width: 200px;
+    }
+    table{
+        border-collapse: collapse;
+        text-align: center;
+        width: 1200px;
+    }
+    table, td, th
+    {
+        border:2px solid black;
+    }
+    th, td{
+        text-align:center;
+    }
+   
+</style>
+
+<style>
+    th,td{
+        text-align: center;
+    }
+</style>
+
+<form id="signature-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
         <h2>
             <center>客户租车事项确认单</center>
         </h2>
         <br>
 
-        <div class="container-fulid">
+        <div class="container-fulid print">
 
                 <br>
 
                 <div class="form-group">
         
-                    <div class="col-xs-12 col-sm-8 col-md-3">
+                    <div class="col-xs-12 col-sm-8 col-md-3 username">
                         <strong>{:__('客户姓名')}：</strong> {$result.username}
                     </div>
-                    <div class="col-xs-12 col-sm-8 col-md-3">
+                    <div class="col-xs-12 col-sm-8 col-md-3 phone">
                         <strong>{:__('电话')}：</strong> {$result.phone}
                     </div>
-                    <div class="col-xs-12 col-sm-8 col-md-3">
+                    <div class="col-xs-12 col-sm-8 col-md-3 createtime">
                         <strong>{:__('订车日期')}：</strong> {$result.createtime|date='Y-m-d H:i:s',###}
                     </div>
-                    <div class="col-xs-12 col-sm-8 col-md-3">
+                    <div class="col-xs-12 col-sm-8 col-md-3 delivery_datetime">
                         <strong>{:__('提车日期')}：</strong> {$result.delivery_datetime|date='Y-m-d H:i:s',###}
                     </div>
         
         
                 </div>
         
-                <hr>
+               <hr>
         
                 <div class="form-group">
         
-                    <div class="col-xs-12 col-sm-8 col-md-3">
+                    <div class="col-xs-12 col-sm-8 col-md-3 models_name">
                         <strong>{:__('车型')}：</strong> {$result.models_name}
                     </div>
-                    <div class="col-xs-12 col-sm-8 col-md-3">
+                    <div class="col-xs-12 col-sm-8 col-md-3 licenseplatenumber">
                         <strong>{:__('车牌')}：</strong> {$result.licenseplatenumber}
                     </div>
-                    <div class="col-xs-12 col-sm-8 col-md-3">
+                    <div class="col-xs-12 col-sm-8 col-md-3 rental_price">
                         <strong>{:__('租金（元）')}：</strong> {$result.rental_price}元
                     </div>
-                    <div class="col-xs-12 col-sm-8 col-md-3">
+                    <div class="col-xs-12 col-sm-8 col-md-3 tenancy_term">
                         <strong>{:__('租期（月）')}：</strong> {$result.tenancy_term}
                     </div>
         
@@ -54,136 +125,74 @@
                     
                         <table class="table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
                             <tr>
-                                <th class="col-xs-12 col-sm-8 col-md-1">押金（元）</th>
-                                <th class="col-xs-12 col-sm-8 col-md-1">租金（元）</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">GPS安装（车管）</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">资料审核（风控）</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">保险专员（签字）</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">收款情况（总公司财务）</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">总经理(签字)</th>
+                                <th class="col-xs-12 col-sm-8 col-md-1 cash_pledge">押金（元）</th>
+                                <th class="col-xs-12 col-sm-8 col-md-1 rental">租金（元）</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 gps">GPS安装（车管）</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 information">资料审核（风控）</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 Insurance">保险专员（签字）</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 finance">收款情况（总公司财务）</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 general">总经理(签字)</th>
                             </tr>
 
                             <tr>
-                                <td class="col-xs-12 col-sm-1 " rowspan="3" align="center"valign="middle">
+                                <td class="col-xs-12 col-sm-1 cash_pledge" rowspan="3">
                                     {$result.cash_pledge}
                                 </td>
-                                <td class="col-xs-12 col-sm-1 " rowspan="3" align="center"valign="middle">
+                                <td class="col-xs-12 col-sm-1 rental" rowspan="3">
                                     {$result.rental_price}
                                 </td>
-                                <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
-                                <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
-                                <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
-                                <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
-                                <th class="col-xs-12 col-sm-2 ">责任人（签字）</th>
+                                <th class="col-xs-12 col-sm-2 gps">责任人（签字）</th>
+                                <th class="col-xs-12 col-sm-2 information">责任人（签字）</th>
+                                <th class="col-xs-12 col-sm-2 Insurance">责任人（签字）</th>
+                                <th class="col-xs-12 col-sm-2 finance">责任人（签字）</th>
+                                <th class="col-xs-12 col-sm-2 general">责任人（签字）</th>
                             </tr>
                             <tr>
-                                <td class="col-xs-12 col-sm-1 " style="height: 50px;">
-                                    
-                                    <!-- <input type="text" style="height: 40px;width: 170px;" id="c-gps_installation_name"  class="form-control form-control" name="row[gps_installation_name]"> -->
-                                    
-                                </td>
-                                <td class="col-xs-12 col-sm-2 ">
                                 
-                                    <!-- <input type="text" style="height: 40px;width: 170px;" id="c-information_audition_name" value=""  class="form-control form-control" name="row[information_audition_name]" disabled> -->
-                                   
-                                </td>
-                                <td class="col-xs-12 col-sm-2 ">
-                                    
-                                    <!-- <input type="text" style="height: 40px;width: 170px;" id="c-Insurance_status_name" class="form-control form-control" name="row[Insurance_status_name]" disabled> -->
-                                    
-                                </td>
-                                <td class="col-xs-12 col-sm-2 ">
-                                    
-                                    <!-- <input type="text" style="height: 40px;width: 170px;" id="c-finance_name" class="form-control form-control" name="row[finance_name]" disabled> -->
-                                   
-                                </td>
-                                <td class="col-xs-12 col-sm-2 ">
-                                    
-                                    <!-- <input type="text" style="height: 40px;width: 170px;" id="c-general_manager_name" class="form-control form-control" name="row[general_manager_name]" disabled> -->
-                                    
-                                </td>
+                                <td class="col-xs-12 col-sm-2 gps" style="height: 50px;"></td>
+                                <td class="col-xs-12 col-sm-2 information"></td>
+                                <td class="col-xs-12 col-sm-2 Insurance"></td>
+                                <td class="col-xs-12 col-sm-2 finance"></td>
+                                <td class="col-xs-12 col-sm-2 general"></td>
                             </tr>
 
                             <tr>
-                               
-                                <td class="col-xs-12 col-sm-1 " style="height: 80px;">
-                                    
-                                    <!-- <input style="height: 100px;width: 170px;resize:none;" id="c-gps_installation_note" class="form-control form-control" name="row[gps_installation_note]"> -->
-                                   
-                                </td>
-                                <td class="col-xs-12 col-sm-2 ">
-                                    
-                                    <!-- <input style="height: 100px;width: 170px;resize:none;" id="c-information_audition_note" class="form-control form-control" name="row[information_audition_note]" disabled> -->
-                                    
-                                </td>
-                                <td class="col-xs-12 col-sm-2 ">
-                                   
-                                    <!-- <input style="height: 100px;width: 170px;resize:none;" id="c-Insurance_status_note" class="form-control form-control" name="row[Insurance_status_note]" disabled> -->
-                                   
-                                </td>
-                                <td class="col-xs-12 col-sm-2 ">
-                                   
-                                    <!-- <input style="height: 100px;width: 170px;resize:none;" id="c-finance_note" class="form-control form-control" name="row[finance_note]" disabled> -->
-                                    
-                                </td>
-                                <td class="col-xs-12 col-sm-2 ">
-                                    
-                                    <!-- <input style="height: 100px;width: 170px;resize:none;" id="c-general_manager_note" class="form-control form-control" name="row[general_manager_note]" disabled> -->
-                                    
-                                </td>
+                                
+                                <td class="col-xs-12 col-sm-2 gps" style="height: 80px;"></td>
+                                <td class="col-xs-12 col-sm-2 information"></td>
+                                <td class="col-xs-12 col-sm-2 Insurance"></td>
+                                <td class="col-xs-12 col-sm-2 finance"></td>
+                                <td class="col-xs-12 col-sm-2 general"></td>
                             </tr>
 
                             <tr>
-                                <th class="col-xs-12 col-sm-8 col-md-1">收款日期</th>
-                                <th class="col-xs-12 col-sm-8 col-md-1">收款日期</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">日期</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">日期</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">日期</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">日期</th>
-                                <th class="col-xs-12 col-sm-8 col-md-2">日期</th>
+                                <th class="col-xs-12 col-sm-8 col-md-1 cash_pledge">收款日期</th>
+                                <th class="col-xs-12 col-sm-8 col-md-1 rental">收款日期</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 gps">日期</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 information">日期</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 Insurance">日期</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 finance">日期</th>
+                                <th class="col-xs-12 col-sm-8 col-md-2 general">日期</th>
                             </tr>
 
                             <tr>
-                                <td class="col-xs-12 col-sm-8 col-md-1" style="height: 40px;">
-                                    {$result.createtime|date='Y-m-d H:i:s',###}
+                                <td class="col-xs-12 col-sm-8 col-md-1 cash_pledge" style="height: 40px;">
+                                    {$result.createtime|date='Y-m-d ',###}
                                 </td>
-                                <td class="col-xs-12 col-sm-8 col-md-1">
-                                    {$result.createtime|date='Y-m-d H:i:s',###}
+                                <td class="col-xs-12 col-sm-8 col-md-1 rental">
+                                    {$result.createtime|date='Y-m-d ',###}
                                 </td>
-                                <td class="col-xs-12 col-sm-8 col-md-2">
-                                    
-                                    <!-- <input style="height: 40px;width: 170px;" id="c-gps_installation_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[gps_installation_datetime]" type="text" value="{:date('Y-m-d H:i:s')}"> -->
-                                   
-                                </td>
-                                <td class="col-xs-12 col-sm-8 col-md-2">
-                                   
-                                    <!-- <input style="height: 40px;width: 170px;" id="c-information_audition_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[information_audition_datetime]" type="text" value="{:date('Y-m-d H:i:s')}" > -->
-
-                                   
-                                </td>
-                                <td class="col-xs-12 col-sm-8 col-md-2">
-                                   
-                                    <!-- <input style="height: 40px;width: 170px;" id="c-Insurance_status_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[Insurance_status_datetime]" type="text" value="{:date('Y-m-d H:i:s')}" > -->
-                                    
-                                </td>
-                                <td class="col-xs-12 col-sm-8 col-md-2">
-                                    
-                                    <!-- <input style="height: 40px;width: 170px;" id="c-finance_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[finance_datetime]" type="text" value="{:date('Y-m-d H:i:s')}" > -->
-                                    
-                                </td>
-                                <td class="col-xs-12 col-sm-8 col-md-2">
-                                   
-                                    <!-- <input style="height: 40px;width: 170px;" id="c-general_manager_datetime" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[general_manager_datetime]" type="text" value="{:date('Y-m-d H:i:s')}" > -->
-                                   
-                                </td>
+                                <td class="col-xs-12 col-sm-8 col-md-2 gps"></td>
+                                <td class="col-xs-12 col-sm-8 col-md-2 information"></td>
+                                <td class="col-xs-12 col-sm-8 col-md-2 Insurance"></td>
+                                <td class="col-xs-12 col-sm-8 col-md-2 finance"></td>
+                                <td class="col-xs-12 col-sm-8 col-md-2 general"></td>
                             </tr>
                                     
-                            </table>
-                        </div>
+                        </table>
                     </div>
+                </div>
         </div>
-
-    <!-- endprint -->
     
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
@@ -196,12 +205,7 @@
 </form>
 <script>
     function doPrint() {   
-    // bdhtml=window.document.body.innerHTML;   
-    // sprnstr="<!--startprint-->";   
-    // eprnstr="<!--endprint-->";   
-    // prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);   
-    // prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));   
-    // window.document.body.innerHTML=prnhtml;  
+    
     window.print();   
 }   
 </script>
