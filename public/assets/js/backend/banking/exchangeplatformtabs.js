@@ -496,14 +496,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 events: Table.api.events.operate,
                                 formatter: Table.api.formatter.operate,
                                 buttons: [
-                                    // {
-                                    //     name: 'details',
-                                    //     text: __('查看详情'),
-                                    //     icon: 'fa fa-eye',
-                                    //     title: __('查看详情'),
-                                    //     extend: 'data-toggle="tooltip"',
-                                    //     classname: 'btn btn-xs btn-info btn-nan-details',
-                                    // },
+
                                 ]
                             }
                         ]
@@ -527,7 +520,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
          merge:function(arr, obj,parentDom) {
-        // alert(1)
         var hash = [];
         var data_arr = [];
         for (var i in arr) {
@@ -558,12 +550,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 field: 'merge',
                 rowspan: data_arr[i][2]
             });
-            // console.log(this);
 
-            var td = $(parentDom).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
-
-            // td[2].style.backgroundColor="red";
-            // console.log(td.eq(2).html());
+            var td = $(obj).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
 
             i % 2 == 0 ? td.eq(2).css({"background-color": "#fcbd20"}) : td.eq(2).css({"background-color": "skyblue"});
         }

@@ -133,7 +133,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var registryRegistration = $("#registryRegistration");
                 registryRegistration.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-edittwo").data("area", ["50%", "80%"]);
-                    $(".btn-edit").data("area", ["80%", "80%"]);
+                    $(".btn-edit").data("area", ["50%", "80%"]);
                 });
                 // 初始化表格
                 registryRegistration.bootstrapTable({
@@ -361,6 +361,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
 
                 inspection:function (value, row, index) {
+
                     var first = row.mon_first;
                     var last = row.mon_last;
                     var now = new Date().getTime();
