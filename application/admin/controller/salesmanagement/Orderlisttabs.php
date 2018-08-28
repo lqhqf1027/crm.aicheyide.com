@@ -6,6 +6,7 @@ use app\common\controller\Backend;
 use app\admin\model\PlanAcar as planAcarModel;
 use app\admin\model\Models as modelsModel;
 use app\admin\model\SalesOrder as salesOrderModel;
+use fast\Tree;
 use think\Db;
 use think\Config;
 
@@ -80,56 +81,66 @@ class Orderlisttabs extends Backend
     public function orderAcar()
     {
         //当前是否为关联查询
-        $this->relationSearch = true;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+//        pr(collection($this->model->with('planacar.models')->select())->toArray());die();
+
+
         //设置过滤方法
         $this->request->filter(['strip_tags']);
-
         if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-//            $total = $this->model
-//                ->with(['planacar'=>['models']])
-//                ->where($where)
-//                ->order($sort, $order)
-//                ->count();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
+
+
             $list = $this->model
-//                ->with(['planacar'=>function($query){
-//                    $query->withField('models_id');
-//                }])
-                    ->with(['planacar'=>['models']])
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
+            foreach ($list as $k => $row) {
+
+                $row->visible(['id', 'order_no', 'financial_name', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
+
+
             $list = collection($list)->toArray();
-            dump($list);die;
-//            foreach ($list as $k => $row) {
-//
-//                $row->visible(['id', 'order_no', 'financial_name', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
-//                $row->visible(['planacar']);
-//                $row->getRelation('planacar')->visible(['payment', 'margin', 'nperlist', 'tail_section', 'gps',]);
-//                $row->visible(['plan']);
-//                $row->getRelation('plan')->visible(['standard_price']);
-//            }
 
-
-
-//            $list = collection($list)->toArray();
-
-            $result = array("total" => $total, "rows" => $list);
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
 
         return $this->view->fetch('index');
 
     }
-
 
 
     /**
@@ -315,6 +326,8 @@ class Orderlisttabs extends Backend
 
     /**
      * 根据方案id查询 车型名称，首付、月供等
+     *
+     *
      */
     public function getPlanCarRentalData($planId)
     {

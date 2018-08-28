@@ -25,7 +25,11 @@ class Salesorder extends Backend
     protected $userid = null; //用户id
     protected $apikey = null; //apikey
     protected $sign = null; //sign  md5加密
-
+    /**
+     * models_id
+     * @var null
+     */
+    protected $models_id = null;
     protected static $token = null;
 
     public function _initialize()
@@ -243,24 +247,21 @@ class Salesorder extends Backend
         //销售方案类别
         $category = DB::name('scheme_category')->field('id,name')->select();
 
-        // pr($category);
         // die;
         
         $this->view->assign('category', $category);
 
         if ($this->request->isPost()) {
-            $params = $this->request->post('row/a');
-            // $ex = explode(',', $params['plan_acar_name']);
-
-            $params['plan_acar_name'] = Session::get('plan_id'); 
+             $params = $this->request->post('row/a');
+            //方案id
+            $params['plan_acar_name'] = Session::get('plan_id');
+            //方案重组名字
+            $params['plan_name'] = Session::get('plan_name');
+            //models_id
+            $params['models_id'] = Session::get('models_id');
             $data = DB::name('plan_acar')->where('id', $params['plan_acar_name'])->field('payment,monthly,nperlist,gps,margin,tail_section')->find();
-           
-           
             $params['car_total_price'] = $data['payment'] + $data['monthly'] * $data['nperlist'];
             $params['downpayment'] = $data['payment'] + $data['monthly'] + $data['margin'] + $data['gps'];
-            // $params['difference'] = $params['downpayment'];  
-            
-            $params['plan_name'] = Session::get('plan_name'); //
             //生成订单编号
             $params['order_no'] = date('Ymdhis');
             //把当前销售员所在的部门的内勤id 入库
@@ -318,20 +319,16 @@ class Salesorder extends Backend
         
             $plan_id = input("id");
             $plan_id = json_decode($plan_id, true);
-            
             $sql = Db::name('models')->alias('a')
                 ->join('plan_acar b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id')
+                ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id,b.models_id')
                 ->where(['b.ismenu' => 1, 'b.id' => $plan_id])
-                    
                 ->find();
-                
             $plan_name = $sql['models_name'].'【首付'.$sql['payment'].'，'.'月供'.$sql['monthly'].'，'.'GPS '.$sql['gps'].'，'.'尾款 '.$sql['tail_section'].'，'.'保证金'.$sql['margin'].'】';
 
             Session::set('plan_id',$plan_id);
-
             Session::set('plan_name',$plan_name);
-
+            Session::set('models_id',$sql['models_id']);
         }
     }
     
@@ -353,7 +350,7 @@ class Salesorder extends Backend
 
                     ->whereOr('sales_id', $this->auth->id)
 
-                    ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,b.name as models_name')
+                    ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,b.name as models_name,b.id as models_id')
 
                     ->select();
             foreach ($result as $k =>$v) {

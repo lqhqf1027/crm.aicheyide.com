@@ -65,8 +65,8 @@
                 data: { category_id: JSON.stringify(that.value) },
 
                 success: function (data) {
-
                     var data = JSON.parse(data);
+                    // console.log(data);
 
                     var html = '<tr>';
 
@@ -97,8 +97,9 @@
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
-
+                        html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id+ '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
+                        //models_id
+                        html+= '<input>';
                         html += '</tr>';
 
                     }

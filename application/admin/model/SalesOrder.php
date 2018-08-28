@@ -76,33 +76,24 @@ class SalesOrder extends Model
         return $value && !is_numeric($value) ? strtotime($value) : $value;
     }
 
-
-//    public function models()
-//    {
-//        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
-//    }
-//    public  function  joinorders(){
-////        return $this->hasManyThrough('PlanAcar','Models','plan_acar_name','models_id','id');
-//        return $this->belongsToMany('PlanAcar','Models','plan_acar_name','models_id','id');
-//
-//    }
-
+    /**
+     * 关联方案
+     * @return \think\model\relation\BelongsTo|\think\model\relation\HasOne
+     */
     public function planacar()
     {
-//        return $this->belongsTo('PlanAcar', 'plan_acar_name', 'id', [], 'LEFT')->setEagerlyType(0);
-        return $this->belongsTo('PlanAcar','plan_acar_name','id')->setEagerlyType(0);
+        return $this->belongsTo('PlanAcar', 'plan_acar_name', 'id', [], 'LEFT')->setEagerlyType(0);
+       return $this->hasOne('PlanAcar','id','plan_acar_name');
     }
 
-//
-//    public function models()
-//    {
-////        return $this->hasManyThrough('SalesOrder', 'PlanAcar', 'plan_acar_name', 'id', 'id');
-//        return $this->belongsTo('PlanAcar', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
-//    }
-//
-//    public function testgx()
-//    {
-//       return  $this->hasOne('PlanAcar','id','plan_acar_name')->field('models_id,margin');
-//    }
-
+    /**查询销售id的昵称
+     * @return \think\model\relation\BelongsTo
+     */
+    public function admin()
+    {
+        return $this->belongsTo('Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+    public  function models(){
+        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
 }
