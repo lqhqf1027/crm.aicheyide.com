@@ -54,7 +54,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
                             {field: 'archival_coding', title: __('档案编码')},
-                            {field: 'sales_name', title: __('部门-销售员')},
+                            {field: 'sales_name', title: __('部门-销售员'),operate: false},
                             {
                                 field: 'signdate',
                                 title: __('签订日期'),

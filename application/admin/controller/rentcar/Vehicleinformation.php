@@ -76,7 +76,6 @@ class Vehicleinformation extends Backend
                 $rule_message = DB::name('auth_group_access')->alias('a')->join('auth_group b','a.group_id=b.id')->field('b.name as sales_name')->where('a.uid',$value['sales_id'])->select();
                 $sales_name = $rule_message['0']['sales_name'] . '---' . $sql[0]['nickname'];
                 $list[$key]['sales'] = $sales_name;
-               
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);

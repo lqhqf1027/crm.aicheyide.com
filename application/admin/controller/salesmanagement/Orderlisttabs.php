@@ -34,8 +34,6 @@ class Orderlisttabs extends Backend
         parent::_initialize();
         $this->model = model('SalesOrder');
 
-        //获取token
-        // self::$token = $this->getAccessToken();
     }
 
     public function index()

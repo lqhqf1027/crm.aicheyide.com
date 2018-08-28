@@ -573,6 +573,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 toolbar: '#toolbar2',
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
@@ -584,7 +585,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'rental_car_id', title: __('Rental_car_id')},
                         // {field: 'insurance_id', title: __('Insurance_id')},
                         // {field: 'general_manager_id', title: __('General_manager_id')},
-                        {field: 'order_no', title: __('Order_no')}, 
+                        {field: 'order_no', title: __('Order_no')},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'username', title: __('Username'),formatter:function(value,row,index){
                             if(row.order_no ==  null){ /**如果订单编号为空，就处于预定状态 */
@@ -608,9 +609,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             operate:false, formatter: Table.api.formatter.buttons
                         },
                         {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
-                        {field: 'cash_pledge', title: __('Cash_pledge')},
-                        {field: 'rental_price', title: __('Rental_price')},
-                        {field: 'tenancy_term', title: __('Tenancy_term')},
+                        {field: 'cash_pledge', title: __('Cash_pledge'),operate:false},
+                        {field: 'rental_price', title: __('Rental_price'),operate:false},
+                        {field: 'tenancy_term', title: __('Tenancy_term'),operate:false},
                         // {field: 'gps_installation_name', title: __('Gps_installation_name')},
                         // {field: 'gps_installation_datetime', title: __('Gps_installation_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         // {field: 'information_audition_name', title: __('Information_audition_name')},
