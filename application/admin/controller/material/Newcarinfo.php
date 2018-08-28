@@ -134,7 +134,6 @@ class Newcarinfo extends Backend
 
 
             if ($params) {
-//pr($params);die();
                 if (!$check_mortgage) {
                     $params['mortgage_people'] = null;
                 }
@@ -315,7 +314,7 @@ class Newcarinfo extends Backend
         $row = $this->get_sale($row);
 
         $row = $row[0];
-//pr($row);die();
+
 
         if ($row['new_car_marginimages'] == "") {
             $row['new_car_marginimages'] = null;
