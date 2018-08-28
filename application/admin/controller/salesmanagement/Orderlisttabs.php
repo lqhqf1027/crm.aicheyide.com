@@ -119,7 +119,6 @@ class Orderlisttabs extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-
                 $row->visible(['id', 'order_no', 'financial_name', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
