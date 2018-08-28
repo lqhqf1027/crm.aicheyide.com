@@ -25,10 +25,17 @@ class Fullsectioninfo extends Backend
         $this->loadlang('newcars/newcarscustomer');
         $this->loadlang('order/salesorder');
 
+        $this->model = new \app\admin\model\full\parment\Order;
+
     }
 
     public function index()
     {
+
+       $res = $this->model
+            ->select();
+
+       pr($res);die();
 
 
         return $this->view->fetch();
@@ -37,24 +44,63 @@ class Fullsectioninfo extends Backend
     //全款购车登记
     public function full_register()
     {
-        if ($this->request->isAjax()) {
+        //当前是否为关联查询
+        $this->relationSearch = true;
 
-            $list = Db::table("crm_order_full_view")
-                ->where("review_the_data", "for_the_car")
-                ->select();
-            $total = Db::table("crm_order_full_view")
-                ->where("review_the_data", "for_the_car")
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $total = $this->model
+                ->where($where)
+                ->order($sort, $order)
                 ->count();
 
-            $list = $this->get_all($list);
-
+            $list = $this->model
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
-
         }
-        return true;
+        return $this->view->fetch();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        if ($this->request->isAjax()) {
+//
+//            $list = Db::table("crm_order_full_view")
+//                ->where("review_the_data", "for_the_car")
+//                ->select();
+//            $total = Db::table("crm_order_full_view")
+//                ->where("review_the_data", "for_the_car")
+//                ->count();
+//
+//            $list = $this->get_all($list);
+//
+//
+//            $result = array("total" => $total, "rows" => $list);
+//
+//            return json($result);
+//
+//        }
+//        return true;
     }
 
     /**
