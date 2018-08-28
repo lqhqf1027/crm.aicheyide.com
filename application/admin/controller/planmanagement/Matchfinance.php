@@ -24,46 +24,131 @@ class Matchfinance extends Backend
     //待匹配
     public function prepare_match()
     {
+        $this->model = model('SalesOrder');
+       //设置过滤方法
+       $this->request->filter(['strip_tags']);
+       if ($this->request->isAjax()) {
+           //如果发送的来源是Selectpage，则转发到Selectpage
+           if ($this->request->request('keyField')) {
+               return $this->selectpage();
+           }
+           list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+           $total = $this->model
+               ->with(['planacar' => function ($query) {
+                   $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+               }, 'admin' => function ($query) {
+                   $query->withField('nickname');
+               }, 'models' => function ($query) {
+                   $query->withField('name');
+               }, 'newinventory' => function ($query) {
+                $query->withField('frame_number,engine_number,household,4s_shop');
+                }])
+               ->where($where)
+               ->where("review_the_data", "is_reviewing")
+               ->order($sort, $order)
+               ->count();
 
-        if ($this->request->isAjax()) {
 
-            $list = Db::table("crm_order_view")
-                ->where("review_the_data", "is_reviewing")
-                ->select();
+           $list = $this->model
+               ->with(['planacar' => function ($query) {
+                   $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+               }, 'admin' => function ($query) {
+                   $query->withField('nickname');
+               }, 'models' => function ($query) {
+                   $query->withField('name');
+               }, 'newinventory' => function ($query) {
+                $query->withField('frame_number,engine_number,household,4s_shop');
+                }])
+               ->where($where)
+               ->where("review_the_data", "is_reviewing")
+               ->order($sort, $order)
+               ->limit($offset, $limit)
+               ->select();
+           foreach ($list as $k => $row) {
 
-            $total = Db::table("crm_order_view")
-                ->where("review_the_data", "is_reviewing")
-                ->count();
+               $row->visible(['id', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'review_the_data']);
+               $row->visible(['planacar']);
+               $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+               $row->visible(['admin']);
+               $row->getRelation('admin')->visible(['nickname']);
+               $row->visible(['models']);
+               $row->getRelation('models')->visible(['name']);
+               $row->visible(['newinventory']);
+                $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
+           }
 
-            $list = $this->add_sales($list);
 
+           $list = collection($list)->toArray();
 
-            $result = array("total" => $total, "rows" => $list);
-
-            return json($result);
-        }
+           $result = array('total' => $total, "rows" => $list);
+           return json($result);
+       }
         return $this->view->fetch();
     }
 
     //已匹配
     public function already_match()
     {
+        $this->model = model('SalesOrder');
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-
-            $list = Db::table("crm_order_view")
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'newinventory' => function ($query) {
+                 $query->withField('frame_number,engine_number,household,4s_shop');
+                 }])
+                ->where($where)
                 ->where("review_the_data", "is_reviewing_true")
-                ->select();
-
-            $total = Db::table("crm_order_view")
-                ->where("review_the_data", "is_reviewing_true")
+                ->order($sort, $order)
                 ->count();
-            $list = $this->add_sales($list);
-
-            $result = array("total" => $total, "rows" => $list);
-
+ 
+ 
+            $list = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'newinventory' => function ($query) {
+                 $query->withField('frame_number,engine_number,household,4s_shop');
+                 }])
+                ->where($where)
+                ->where("review_the_data", "is_reviewing_true")
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+            foreach ($list as $k => $row) {
+ 
+                $row->visible(['id', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'review_the_data']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+                $row->visible(['newinventory']);
+                 $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
+            }
+ 
+ 
+            $list = collection($list)->toArray();
+ 
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
-        return $this->view->fetch();
+         return $this->view->fetch();
     }
 
     /**

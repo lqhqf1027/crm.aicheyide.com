@@ -83,7 +83,7 @@ class SalesOrder extends Model
     public function planacar()
     {
         return $this->belongsTo('PlanAcar', 'plan_acar_name', 'id', [], 'LEFT')->setEagerlyType(0);
-       return $this->hasOne('PlanAcar','id','plan_acar_name');
+    //    return $this->hasOne('PlanAcar','id','plan_acar_name');
     }
 
     /**查询销售id的昵称
@@ -96,4 +96,8 @@ class SalesOrder extends Model
     public  function models(){
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+    public  function newinventory(){
+        return $this->belongsTo('CarNewInventory', 'car_new_inventory_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+    
 }
