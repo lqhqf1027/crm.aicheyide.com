@@ -93,16 +93,9 @@ class Fullsectioninfo extends Backend
                     $params['transferdate'] = null;
                 }
 
-
                 try {
-                    //是否采用模型验证
-                    if ($this->modelValidate) {
-                        $name = basename(str_replace('\\', '/', get_class($this->model)));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-                        $row->validate($validate);
-                    }
 
-                    $data = array(
+                    $data = [
                         "archival_coding" => $params['archival_coding'],
                         "signdate" => $params["signdate"],
                         'hostdate' => $params['hostdate'],
@@ -122,36 +115,37 @@ class Fullsectioninfo extends Backend
                         'transferdate' => $params['transferdate'],
                         'yearly_inspection' => $params['yearly_inspection'],
                         'contract_total' => $params['contract_total'],
-                        'registry_remark' => $params['registry_remark']
-                    );
+                        'registry_remark' => $params['registry_remark'],
+                        'classification' => 'full'
+                    ];
 
-                    $order_data = array(
+
+                    $order_data = [
                         'purchase_tax' => $params['purchase_tax'],
                         'car_images' => $params['car_images'],
                         'business_risks' => $params['business_risks'],
                         'insurance' => $params['insurance']
-                    );
+                    ];
 
-                    $first = Db::name("full_parment_order")
+                    Db::name("full_parment_order")
                         ->where("id", $ids)
                         ->update($order_data);
 
-                    if ($first) {
 
-                        if ($register) {
-                            $result = Db::name("mortgage_registration")
-                                ->where("id", $register)
-                                ->update($data);
-                        } else {
-                            $result = Db::name("mortgage_registration")->insert($data);
+                    if ($register) {
+                        $result = Db::name("mortgage_registration")
+                            ->where("id", $register)
+                            ->update($data);
 
-                            $insert_id = Db::name("mortgage_registration")->getLastInsID();
+                    } else {
+                        $result = Db::name("mortgage_registration")->insert($data);
 
-                            Db::name("full_parment_order")
-                                ->where("id", $ids)
-                                ->setField("mortgage_registration_id", $insert_id);
+                        $insert_id = Db::name("mortgage_registration")->getLastInsID();
 
-                        }
+                        Db::name("full_parment_order")
+                            ->where("id", $ids)
+                            ->setField("mortgage_registration_id", $insert_id);
+
                     }
 
 
@@ -182,6 +176,8 @@ class Fullsectioninfo extends Backend
         $row = $this->get_all($row);
 
         $row = $row[0];
+
+
 
         //身份证正反面（多图）
         $id_cardimages = $row['id_cardimages'];
@@ -286,16 +282,17 @@ class Fullsectioninfo extends Backend
                     ->field("mortgage_registration_id")
                     ->find()['mortgage_registration_id'];
 
-                $v['createtime'] = date("Y-m-d",$v['createtime']);
+                $v['createtime'] = date("Y-m-d", $v['createtime']);
 
                 Db::name("mortgage_registration")
-                ->where("id",$register_id)
-                ->setField("signdate",$v['createtime']);
+                    ->where("id", $register_id)
+                    ->setField("signdate", $v['createtime']);
 
                 $list[$k]['signdate'] = $v['createtime'];
             }
 
-            if($v['yearly_inspection']){
+            //得到判断年检时间信息
+            if ($v['yearly_inspection']) {
                 $date = $v['yearly_inspection'];
 
                 $date = strtotime("$date +2 year");

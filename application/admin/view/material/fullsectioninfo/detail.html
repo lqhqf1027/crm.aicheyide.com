@@ -176,7 +176,56 @@
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">购车发票登记</h3>
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">车辆信息</h3>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('上户日期')}：</strong> {$row.hostdate}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('规格型号')}：</strong> {$row.models_name}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('车牌号')}：</strong> {$row.licensenumber}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('车架号')}：</strong> {$row.frame_number}
+        </div>
+
+    </div>
+    <br>
+    <hr>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('所属分公司')}：</strong> {$row.household}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('销售员')}：</strong> {$row.sales_name}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('抵押人')}：</strong> {empty name="$row.mortgage_people"} <span class="text-info">暂无</span>{else /}{$row.mortgage_people}{/empty}
+        </div>
+
+
+    </div>
+    <br>
+    <hr>
+    <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">购车发票</h3>
 
         </div>
     </div>
@@ -192,10 +241,10 @@
             <strong>{:__('供货商')}：</strong> {$row.supplier}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('含税金额')}：</strong> {$row.tax_amount}
+            <strong>{:__('含税金额(元)')}：</strong> {$row.tax_amount}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('不含税金额')}：</strong> {$row.no_tax_amount}
+            <strong>{:__('不含税金额(元)')}：</strong> {$row.no_tax_amount}
         </div>
 
     </div>
@@ -210,7 +259,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">购置税及上户登记</h3>
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">购置税及上户路桥费</h3>
 
         </div>
     </div>
@@ -219,16 +268,18 @@
     <br>
     <hr>
     <div class="form-group">
-        <div class="col-xs-12 col-sm-8 col-md-4">
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('缴税日期')}：</strong> {$row.pay_taxesdate}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('购置税费(元)')}：</strong> {$row.tax}
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('购置税(元)')}：</strong> {$row.purchase_tax}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('上户费(元)')}：</strong> {$row.house_fee}
         </div>
-
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('路桥费(元)')}：</strong> {$row.luqiao_fee}
+        </div>
 
     </div>
     <br>
@@ -242,7 +293,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">保险</h3>
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">交强险丶商业险</h3>
 
         </div>
     </div>
@@ -255,27 +306,26 @@
             <strong>{:__('购买日期')}：</strong> {$row.insurance_buydate}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('路桥费(元)')}：</strong> {$row.luqiao_fee}
+            <strong>{:__('交强险保单号')}：</strong> {$row.insurance_policy}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('车船税金额(元)')}：</strong> {$row.car_boat_tax}
+            <strong>{:__('交强险（元）')}：</strong> {$row.insurance}
         </div>
+
+
 
 
     </div>
     <br>
     <hr>
     <div class="form-group">
-        <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('交强险保单号')}：</strong> {$row.insurance_policy}
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('车船税金额(元)')}：</strong> {$row.car_boat_tax}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('交强险（元）')}：</strong> {$row.insurance}
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-3">
+        <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('商业险保单号')}：</strong> {$row.commercial_insurance_policy}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-3">
+        <div class="col-xs-12 col-sm-8 col-md-4">
             <strong>{:__('商业险（元）')}：</strong> {$row.business_risks}
         </div>
 
@@ -303,20 +353,67 @@
     <div class="form-group">
 
 
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('紧急联系人电话1')}：</strong> {$row.emergency_contact_1}
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('客户来源')}：</strong> {$row.customer_source}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('紧急联系人电话2')}：</strong> {$row.emergency_contact_2}
+        {eq name="$row.customer_source" value="introduce"}
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('介绍人姓名')}：</strong> {$row.introduce_name}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('Family_members')}：</strong> {$row.family_members}
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('介绍人电话')}：</strong> {$row.introduce_phone}
         </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('介绍人身份证号码')}：</strong> {$row.introduce_card}
+        </div>
+        {else /}
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <strong>{:__('介绍人')}：</strong> <span class="text-info">无</span>
+        </div>
+        {/eq}
+
 
     </div>
 
     <br>
     <hr>
+    <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            <h3 style="margin-left: 25%;margin-top: 13px" class="text-info">其他信息</h3>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div class="form-group">
+
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('过户时间')}：</strong> {empty name="$row.transferdate"} <span class="text-info">未过户</span>{else /}{$row.transferdate}{/empty}
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-9">
+            <strong>{:__('备注')}：</strong> {empty name="$row.registry_remark"} <span class="text-info">暂无</span>{else /}{$row.registry_remark}{/empty}
+        </div>
+
+
+
+
+
+    </div>
+
+    <br>
+    <hr>
+
     <div class="form-group">
 
         {empty name="$row.turn_to_introduce_name"}
