@@ -93,7 +93,13 @@ class SalesOrder extends Model
     {
         return $this->belongsTo('Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+    /**
+     * 关联车型
+     * @return \think\model\relation\BelongsTo
+     */
     public  function models(){
+
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 }
