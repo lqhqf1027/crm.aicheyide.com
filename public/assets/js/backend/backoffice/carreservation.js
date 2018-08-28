@@ -50,7 +50,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: '编号'},
-                            {field: 'createtime', title: __('订车日期')},
+                            {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+                            {field: 'amount_collected', title: __('定金金额（元）')},
+
                             {field: 'household', title: __('公司')},
                             {field: 'sales_name', title: __('销售员')},
                             {field: 'username', title: __('客户姓名')},
