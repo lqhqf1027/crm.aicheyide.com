@@ -45,7 +45,7 @@ class Orderlisttabs extends Backend
             ->order($sort, $order)
             ->count();
 
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder;
         $total1 = $this->model
             ->where($where)
             ->order($sort, $order)
@@ -57,7 +57,7 @@ class Orderlisttabs extends Backend
             ->order($sort, $order)
             ->count();
 
-        $this->model = new \app\admin\model\full\parment\Order;
+        $this->model = new \app\admin\model\FullParmentOrder;
         $total3 = $this->model
             ->where($where)
             ->order($sort, $order)
@@ -283,7 +283,7 @@ class Orderlisttabs extends Backend
     public function orderRental()
     {
 
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         //设置过滤方法
         $this->request->filter(['strip_tags']);
@@ -292,26 +292,46 @@ class Orderlisttabs extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
+                ->with(['sales'=>function ($query){
+                    $query->withField('nickname');
+                },'models'=> function ($query){
+                    $query->withField('name');
+                },'carrentalmodelsinfo'=>function ($query){
+                    $query->withField('licenseplatenumber,vin');
+                }])
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
+                ->with(['sales'=>function ($query){
+                    $query->withField('nickname');
+                },'models'=> function ($query){
+                    $query->withField('name');
+                },'carrentalmodelsinfo'=>function ($query){
+                    $query->withField('licenseplatenumber,vin');
+                }])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
 
+            foreach ($list as $k=>$v){
+                $v->visible(['id','order_no','username','phone','id_card','cash_pledge','rental_price','tenancy_term','genderdata','review_the_data','createtime','delivery_datetime']);
+                $v->visible(['sales']);
+                $v->getRelation('sales')->visible(['nickname']);
+                $v->visible(['models']);
+                $v->getRelation('models')->visible(['name']);
+                $v->visible(['carrentalmodelsinfo']);
+                $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber','vin']);
+            }
+
+
             $list = collection($list)->toArray();
 
-            foreach ((array)$list as $k => $row) {
-                $planData = collection($this->getPlanCarRentalData($row['plan_car_rental_name']))->toArray();
 
-                $list[$k]['licenseplatenumber'] = $planData['licenseplatenumber'];
-                $list[$k]['models_name'] = $planData['models_name'];
-            }
 
             $result = array("total" => $total, "rows" => $list);
             return json($result);
@@ -510,7 +530,7 @@ class Orderlisttabs extends Backend
     /**全款 */
     public function orderFull()
     {
-        $this->model = new \app\admin\model\full\parment\Order;
+        $this->model = new \app\admin\model\FullParmentOrder;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         //设置过滤方法
         $this->request->filter(['strip_tags']);

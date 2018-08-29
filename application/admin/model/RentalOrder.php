@@ -1,21 +1,27 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: EDZ
+ * Date: 2018/8/29
+ * Time: 14:14
+ */
 
-namespace app\admin\model\rental;
+namespace app\admin\model;
 
 use think\Model;
 
-class Order extends Model
+class RentalOrder extends Model
 {
-    // 表名
+// 表名
     protected $name = 'rental_order';
-    
+
     // 自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';
 
     // 定义时间戳字段名
     protected $createTime = 'createtime';
     protected $updateTime = false;
-    
+
     // 追加属性
     protected $append = [
         'genderdata_text',
@@ -25,17 +31,17 @@ class Order extends Model
         'general_manager_datetime_text',
         'delivery_datetime_text'
     ];
-    
 
-    
+
+
     public function getGenderdataList()
     {
         return ['male' => __('Genderdata male'),'female' => __('Genderdata female')];
-    }     
+    }
 
 
     public function getGenderdataTextAttr($value, $data)
-    {        
+    {
         $value = $value ? $value : (isset($data['genderdata']) ? $data['genderdata'] : '');
         $list = $this->getGenderdataList();
         return isset($list[$value]) ? $list[$value] : '';
@@ -101,5 +107,18 @@ class Order extends Model
         return $value && !is_numeric($value) ? strtotime($value) : $value;
     }
 
+    public function sales()
+    {
+        return $this->belongsTo('Admin','sales_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 
+    public function models()
+    {
+        return $this->belongsTo('Models','models_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+    public function carrentalmodelsinfo()
+    {
+        return $this->belongsTo('CarRentalModelsInfo','car_rental_models_info_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }

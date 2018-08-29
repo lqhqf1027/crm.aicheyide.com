@@ -24,7 +24,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
 
-
         table: {
 
             full_register: function () {
@@ -53,21 +52,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'archival_coding', title: __('档案编码')},
-                            {field: 'sales_name', title: __('部门-销售员'),operate: false},
-                            {
-                                field: 'signdate',
-                                title: __('签订日期'),
-                                operate: false
-                            },
-                            {field: 'username', title: __('Username'),formatter:Controller.api.formatter.inspection},
+                            {field: 'mortgageregistration.archival_coding', title: __('档案编码')},
+                            {field: 'sales.nickname', title: __('部门-销售员')},
+                            {field: 'mortgageregistration.signdate', title: __('签订日期')},
+                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.inspection},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
-                            {field: 'hostdate', title: __('上户日期'), operate: false},
-                            {field: 'models_name', title: __('规格型号')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
-                            {field: 'mortgage_people', title: __('抵押人')},
+                            {field: 'mortgageregistration.hostdate', title: __('上户日期'), operate: false},
+                            {field: 'models.name', title: __('规格型号')},
+                            {field: 'carnewinventory.licensenumber', title: __('车牌号')},
+                            {field: 'carnewinventory.frame_number', title: __('车架号')},
+                            {field: 'mortgageregistration.mortgage_people', title: __('抵押人')},
                             {
                                 field: 'operate', title: __('Operate'), table: fullRegister,
                                 buttons: [
@@ -89,7 +84,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-info btn-detail',
                                     },
-
 
 
                                 ],
@@ -142,7 +136,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Form.api.bindevent($("form[role=form]"));
             },
             events: {
-                operate:{
+                operate: {
 
                     'click .btn-editone': function (e, value, row, index) {
                         e.stopPropagation();
@@ -165,7 +159,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    'click .btn-detail':function (e, value, row, index) {
+                    'click .btn-detail': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -193,7 +187,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 judge: function (value) {
                     var res = "";
                     var color = "";
-                    if (value == "no" ||value==""||value==null) {
+                    if (value == "no" || value == "" || value == null) {
                         res = "<i class='fa fa-times'></i>";
                         color = "danger";
                     } else {
@@ -207,22 +201,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return html;
                 },
 
-                inspection:function (value, row, index) {
+                inspection: function (value, row, index) {
 
-                    var first = row.mon_first;
-                    var last = row.mon_last;
-                    var now = new Date().getTime();
+                      if(row.mortgageregistration.year_range){
+                          var range = row.mortgageregistration.year_range;
 
-                    first = new Date(first).getTime();
-                    last = new Date(last).getTime();
+                          var arr = range.split(";");
+                          console.log(arr);
 
-                    if(now>first && now<last){
-                        return value+"<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
-                    }else if(now>last){
-                        return value+"<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
-                    }else{
-                        return value;
-                    }
+
+                          var first = arr[0];
+                          var last = arr[1];
+
+                          var now = new Date().getTime();
+
+                          first = new Date(first).getTime();
+                          last = new Date(last).getTime();
+
+                          if (now > first && now < last) {
+                              return value + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
+                          } else if (now > last) {
+                              return value + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
+                          } else {
+                              return value;
+                          }
+                      }
+
+
                 }
             }
         }
