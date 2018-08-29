@@ -30,6 +30,8 @@ class Newcarinfo extends Backend
         $this->loadlang('material/mortgageregistration');
         $this->loadlang('newcars/newcarscustomer');
         $this->loadlang('order/salesorder');
+
+        $this->model = new \app\admin\model\SalesOrder;
     }
 
     public function index()
@@ -41,66 +43,94 @@ class Newcarinfo extends Backend
 
     public function new_customer()
     {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            $list = Db::table("crm_order_view")
-                ->where("review_the_data", "the_car")
-                ->select();
-            $total = Db::table("crm_order_view")
-                ->where("review_the_data", "the_car")
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username',true);
+            $total = $this->model
+                ->with(['sales'=>function ($query){
+                    $query->withField('nickname');
+                },'models'=>function ($query){
+                    $query->withField('name');
+                },'newinventory'=>function ($query){
+                    $query->withField('licensenumber,frame_number');
+                },'planacar'=>function ($query){
+                    $query->withField('payment,monthly,nperlist,tail_section,margin');
+                },'mortgageregistration'=>function ($query){
+                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people');
+                }])
+                ->where($where)
+                ->order($sort, $order)
                 ->count();
 
-            $list = $this->get_sale($list);
-
-            foreach ($list as $k => $v) {
-                if ($v['yearly_inspection']) {
-                    $date = $v['yearly_inspection'];
-
-                    $date = strtotime("$date +2 year");
-
-                    $mon_first = date("Y-m-01", $date);
-                    $mon_last = date("Y-m-d", strtotime("$mon_first +1 month -1 day"));
-
-                    $list[$k]['mon_first'] = $mon_first;
-                    $list[$k]['mon_last'] = $mon_last;
-                }
-            }
-
+            $list = $this->model
+                ->with(['sales'=>function ($query){
+                    $query->withField('nickname');
+                },'models'=>function ($query){
+                    $query->withField('name');
+                },'newinventory'=>function ($query){
+                    $query->withField('licensenumber,frame_number');
+                },'planacar'=>function ($query){
+                    $query->withField('payment,monthly,nperlist,tail_section,margin');
+                },'mortgageregistration'=>function ($query){
+                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
             $result = array("total" => $total, "rows" => $list);
 
-            return json($result);
 
+            return json($result);
         }
-        return true;
+        return $this->view->fetch();
+
     }
 
     //按揭客户资料入库表
     public function data_warehousing()
     {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            $list = Db::table("crm_order_view")
-                ->where("review_the_data", "the_car")
-                ->select();
-            $total = Db::table("crm_order_view")
-                ->where("review_the_data", "the_car")
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username',true);
+            $total = $this->model
+                ->with(['sales'=>function ($query){
+                    $query->withField('nickname');
+                },'newinventory'=>function ($query){
+                    $query->withField('licensenumber,frame_number');
+                },'planacar'=>function ($query){
+                    $query->withField('payment,monthly,nperlist,tail_section,margin');
+                },'mortgageregistration'=>function ($query){
+                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people');
+                },'registryregistration'])
+                ->where($where)
+                ->order($sort, $order)
                 ->count();
 
-            foreach ($list as $k => $v) {
-
-                $list[$k]['full_mortgage'] = '按揭';
-
-
-
-            }
-
-            $list = $this->get_sale($list);
+            $list = $this->model
+                ->with(['sales'=>function ($query){
+                    $query->withField('nickname');
+                },'newinventory'=>function ($query){
+                    $query->withField('licensenumber,frame_number');
+                },'planacar'=>function ($query){
+                    $query->withField('payment,monthly,nperlist,tail_section,margin');
+                },'mortgageregistration'=>function ($query){
+                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people');
+                },'registryregistration'])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
             $result = array("total" => $total, "rows" => $list);
 
-            return json($result);
 
+            return json($result);
         }
-        return true;
+        return $this->view->fetch();
     }
 
     /**
@@ -110,11 +140,11 @@ class Newcarinfo extends Backend
     {
         $gage = Db::name("sales_order")
             ->where("id", $ids)
-            ->field("mortgage_registration_id,delivery_datetime")
+            ->field("mortgage_registration_id,createtime")
             ->find();
 
-        if ($gage['delivery_datetime']) {
-            $gage['delivery_datetime'] = date("Y-m-d", $gage['delivery_datetime']);
+        if ($gage['createtime']) {
+            $gage['createtime'] = date("Y-m-d", $gage['createtime']);
         }
 
 
@@ -152,7 +182,7 @@ class Newcarinfo extends Backend
 
                     $doUpdate = [
                         'archival_coding' => $params['archival_coding'],
-                        'signdate' => $gage['delivery_datetime'],
+                        'signdate' => $gage['createtime'],
                         'end_money' => $params['end_money'],
                         'hostdate' => $params['hostdate'],
                         'mortgage_people' => $params['mortgage_people'],
@@ -231,7 +261,7 @@ class Newcarinfo extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
-//pr($params);die();
+
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {

@@ -53,27 +53,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'archival_coding', title: __('档案编码')},
-                            {field: 'sales_name', title: __('部门-销售员')},
-                            {
-                                field: 'signdate',
-                                title: __('签订日期'),
-                                operate: false
-                            },
+                            {field: 'mortgageregistration.archival_coding', title: __('档案编码')},
+                            {field: 'sales.nickname', title: __('部门-销售员')},
+                            {field: 'mortgageregistration.signdate',title: __('签订日期'),operate: 'RANGE', addclass:'datetimerange'},
                             {field: 'username', title: __('Username'),formatter:Controller.api.formatter.inspection},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
-                            {field: 'payment', title: __('首付')},
-                            {field: 'monthly', title: __('月供')},
-                            {field: 'nperlist', title: __('期数')},
-                            {field: 'end_money', title: __('末期租金')},
-                            {field: 'tail_section', title: __('尾款')},
-                            {field: 'margin', title: __('保证金')},
-                            {field: 'hostdate', title: __('上户日期'), operate: false},
-                            {field: 'models_name', title: __('规格型号')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
-                            {field: 'mortgage_people', title: __('抵押人')},
+                            {field: 'planacar.payment', title: __('首付')},
+                            {field: 'planacar.monthly', title: __('月供')},
+                            {field: 'planacar.nperlist', title: __('期数')},
+                            {field: 'mortgageregistration.end_money', title: __('末期租金')},
+                            {field: 'planacar.tail_section', title: __('尾款')},
+                            {field: 'planacar.margin', title: __('保证金')},
+                            {field: 'mortgageregistration.hostdate', title: __('上户日期'),},
+                            {field: 'models.name', title: __('规格型号')},
+                            {field: 'newinventory.licensenumber', title: __('车牌号')},
+                            {field: 'newinventory.frame_number', title: __('车架号')},
+                            {field: 'mortgageregistration.mortgage_people', title: __('抵押人')},
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
@@ -149,100 +145,95 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'archival_coding', title: __('档案编码')},
+                            {field: 'mortgageregistration.archival_coding', title: __('档案编码')},
                             {field: 'username', title: __('Username')},
-                            {field: 'full_mortgage', title: __('全款/按揭')},
                             {field: 'financial_name', title: __('金融公司')},
                             {field: 'phone', title: __('电话')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
-                            {field: 'household', title: __('所属分公司')},
-                            {field: 'sales_name', title: __('销售员')},
-                            {field: 'rr_id_card', title: __('身份证复印件'), formatter: Controller.api.formatter.judge},
+                            {field: 'newinventory.licensenumber', title: __('车牌号')},
+                            {field: 'newinventory.frame_number', title: __('车架号')},
+                            {field: 'newinventory.household', title: __('所属分公司')},
+                            {field: 'sales.nickname', title: __('销售员')},
+                            {field: 'registryregistration.id_card', title: __('身份证复印件'), formatter: Controller.api.formatter.judge,operate:false},
+                            {field: 'registryregistration.registered_residence',title: __('户口复印件'),formatter: Controller.api.formatter.judge,operate:false},
+                            {field: 'registryregistration.marry_and_divorceimages',title: __('结婚证或者离婚证'),formatter: Controller.api.formatter.judge,operate:false},
+                            {field: 'registryregistration.credit_reportimages', title: __('征信报告'), formatter: Controller.api.formatter.judge,operate:false},
                             {
-                                field: 'registered_residence',
-                                title: __('户口复印件'),
-                                formatter: Controller.api.formatter.judge
-                            },
-                            {
-                                field: 'marry_and_divorceimages',
-                                title: __('结婚证或者离婚证'),
-                                formatter: Controller.api.formatter.judge
-                            },
-                            {field: 'credit_reportimages', title: __('征信报告'), formatter: Controller.api.formatter.judge},
-                            {
-                                field: 'halfyear_bank_flowimages',
+                                field: 'registryregistration.halfyear_bank_flowimages',
                                 title: __('半年银行流水'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,
+                                operate:false
                             },
-                            {field: 'detailed_list', title: __('通话清单'), formatter: Controller.api.formatter.judge},
+                            {field: 'registryregistration.detailed_list', title: __('通话清单'), formatter: Controller.api.formatter.judge,operate:false},
                             {
-                                field: 'guarantee',
+                                field: 'registryregistration.guarantee',
                                 title: __('担保人'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,
+                                operate:false
                             },
-                            {field: 'residence_permitimages', title: __('居住证/租房合同/房产证'), formatter: Controller.api.formatter.judge},
+                            {field: 'registryregistration.residence_permitimages', title: __('居住证/租房合同/房产证'), formatter: Controller.api.formatter.judge,operate:false},
                             {
-                                field: 'driving_license',
+                                field: 'registryregistration.driving_license',
                                 title: __('驾照'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,
+                                operate:false
                             },
-                            {field: 'company_contractimages', title: __('公司合同'), formatter: Controller.api.formatter.judge},
-                            {field: 'car_keys', title: __('钥匙'), formatter: Controller.api.formatter.judge},
-                            {field: 'lift_listimages', title: __('提车单'), formatter: Controller.api.formatter.judge},
+                            {field: 'registryregistration.company_contractimages', title: __('公司合同'), formatter: Controller.api.formatter.judge,operate:false},
+                            {field: 'registryregistration.car_keys', title: __('钥匙'), formatter: Controller.api.formatter.judge,operate:false},
+                            {field: 'registryregistration.lift_listimages', title: __('提车单'), formatter: Controller.api.formatter.judge,operate:false},
                             {
-                                field: 'deposit_contractimages',
+                                field: 'registryregistration.deposit_contractimages',
                                 title: __('定金协议'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,operate:false
                             },
                             {
-                                field: 'truth_management_protocolimages',
+                                field: 'registryregistration.truth_management_protocolimages',
                                 title: __('道路管理条例告知书'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,operate:false
                             },
                             {
-                                field: 'confidentiality_agreementimages',
+                                field: 'registryregistration.confidentiality_agreementimages',
                                 title: __('保密协议'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,operate:false
                             },
                             {
-                                field: 'supplementary_contract_agreementimages',
+                                field: 'registryregistration.supplementary_contract_agreementimages',
                                 title: __('合同补充协议/客户告知书'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,operate:false
                             },
-                            {field: 'explain_situation', title: __('情况说明'), formatter: Controller.api.formatter.judge},
+                            {field: 'registryregistration.explain_situation', title: __('情况说明'), formatter: Controller.api.formatter.judge,operate:false},
                             {
                                 field: 'tianfu_bank_cardimages',
                                 title: __('天府银行卡附件'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,operate:false
                             },
-                            {field: 'other_documentsimages', title: __('其他'), formatter: Controller.api.formatter.judge},
-                            {field: 'driving_licenseimages', title: __('行驶证'), formatter: Controller.api.formatter.judge},
-                            {field: 'strong_insurance', title: __('交强险'), formatter: Controller.api.formatter.judge},
-                            {field: 'tax_proofimages', title: __('完税证明'), formatter: Controller.api.formatter.judge},
+                            {field: 'registryregistration.other_documentsimages', title: __('其他'), formatter: Controller.api.formatter.judge,operate:false},
+                            {field: 'registryregistration.driving_licenseimages', title: __('行驶证'), formatter: Controller.api.formatter.judge,operate:false},
+                            {field: 'registryregistration.strong_insurance', title: __('交强险'), formatter: Controller.api.formatter.judge,operate:false},
+                            {field: 'registryregistration.tax_proofimages', title: __('完税证明'), formatter: Controller.api.formatter.judge,operate:false},
                             {
-                                field: 'invoice_or_deduction_coupletimages',
+                                field: 'registryregistration.invoice_or_deduction_coupletimages',
                                 title: __('发票或抵扣联'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,operate:false
                             },
                             {
-                                field: 'registration_certificateimages',
+                                field: 'registryregistration.registration_certificateimages',
                                 title: __('登记证书'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,operate:false
                             },
-                            {field: 'commercial_insurance', title: __('商业险'), formatter: Controller.api.formatter.judge},
-
-                            {field: 'rr_tax', title: __('购置税'), formatter: Controller.api.formatter.judge},
+                            {field: 'registryregistration.commercial_insurance', title: __('商业险'), formatter: Controller.api.formatter.judge,operate:false},
+                            //
+                            {field: 'registryregistration.rr_tax', title: __('购置税'), formatter: Controller.api.formatter.judge,operate:false},
                             {
-                                field: 'maximum_guarantee_contractimages',
+                                field: 'registryregistration.maximum_guarantee_contractimages',
                                 title: __('最高保障合同'),
-                                formatter: Controller.api.formatter.judge
+                                formatter: Controller.api.formatter.judge,operate:false
                             },
-                            {field: 'information_remark', title: __('备注')},
+                            {field: 'registryregistration.information_remark', title: __('备注'),operate:false},
                             {
                                 field: 'operate', title: __('Operate'), table: registryRegistration,
                                 buttons: [

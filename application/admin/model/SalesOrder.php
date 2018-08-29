@@ -83,7 +83,7 @@ class SalesOrder extends Model
     public function planacar()
     {
         return $this->belongsTo('PlanAcar', 'plan_acar_name', 'id', [], 'LEFT')->setEagerlyType(0);
-    //    return $this->hasOne('PlanAcar','id','plan_acar_name');
+        //    return $this->hasOne('PlanAcar','id','plan_acar_name');
     }
 
     /**查询销售id的昵称
@@ -98,12 +98,32 @@ class SalesOrder extends Model
      * 关联车型
      * @return \think\model\relation\BelongsTo
      */
-    public  function models(){
+    public function models()
+    {
 
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
-    public  function newinventory(){
+
+    public function sales()
+    {
+        return $this->belongsTo('Admin', 'sales_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    public function newinventory()
+    {
         return $this->belongsTo('CarNewInventory', 'car_new_inventory_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+    public function mortgageregistration()
+    {
+        return $this->belongsTo('MortgageRegistration', 'mortgage_registration_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    public function registryregistration()
+    {
+        return $this->belongsTo('RegistryRegistration','registry_registration_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+
     
 }
