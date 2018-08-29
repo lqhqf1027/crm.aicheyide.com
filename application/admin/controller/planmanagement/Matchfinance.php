@@ -9,7 +9,7 @@
 namespace app\admin\controller\planmanagement;
 
 use app\common\controller\Backend;
-use think\Db;
+use think\DB;
 
 class Matchfinance extends Backend
 {
@@ -19,6 +19,21 @@ class Matchfinance extends Backend
     {
         parent::_initialize();
 
+    }
+
+    public function index()
+    {
+        $total = DB::name('sales_order')
+                ->where("review_the_data", "is_reviewing")
+                ->count();
+        $total1 = DB::name('sales_order')
+                ->where("review_the_data", "is_reviewing_true")
+                ->count();
+        $this->view->assign([
+            "total" => $total,
+            "total1" => $total1
+        ]);
+        return $this->view->fetch();
     }
 
     //待匹配

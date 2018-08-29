@@ -212,6 +212,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 }, function (data, ret) {
                     textarea.val(data.result);
                     window.parent.$(".toolbar .btn-refresh").trigger('click');
+                    top.window.Fast.api.refreshmenu();
                     return false;
                 }, function () {
                     window.parent.$(".toolbar .btn-refresh").trigger('click');

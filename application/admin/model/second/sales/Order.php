@@ -91,5 +91,32 @@ class Order extends Model
         return $value && !is_numeric($value) ? strtotime($value) : $value;
     }
 
+    /**
+     * 关联方案
+     * @return \think\model\relation\BelongsTo|\think\model\relation\HasOne
+     */
+    public function plansecond()
+    {
+        return $this->belongsTo('app\admin\model\SecondcarRentalModelsInfo', 'plan_car_second_name', 'id', [], 'LEFT')->setEagerlyType(0);
+    //    return $this->hasOne('PlanAcar','id','plan_acar_name');
+    }
+
+    /**查询销售id的昵称
+     * @return \think\model\relation\BelongsTo
+     */
+    public function admin()
+    {
+        return $this->belongsTo('app\admin\model\Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    /**
+     * 关联车型
+     * @return \think\model\relation\BelongsTo
+     */
+    public  function models(){
+
+        return $this->belongsTo('app\admin\model\Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }    
+
 
 }

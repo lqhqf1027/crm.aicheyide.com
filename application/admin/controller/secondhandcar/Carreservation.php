@@ -55,72 +55,126 @@ class Carreservation extends Backend
     //待车管确认
     public function secondcarWaitconfirm()
     {
-
+        $this->model = new \app\admin\model\second\sales\Order;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            
+            $total = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("review_the_data", "send_car_tube")
+                    ->where("amount_collected", "not null")
+                    ->order($sort, $order)
+                    ->count();
 
-            $list = Db::name("second_sales_order")->alias('a')
-                ->join('secondcar_rental_models_info b', 'b.id=a.plan_car_second_name')
-                ->join('models c', 'c.id=b.models_id')
-                ->field('a.id,a.order_no,a.username,a.phone,a.id_card,a.city,a.detailed_address,a.createtime,a.car_total_price,a.downpayment,a.sales_id,
-                        b.companyaccount,b.newpayment,b.monthlypaymen,b.periods,b.bond,b.tailmoney,b.licenseplatenumber,
-                        c.name as models_name')
-                ->where("review_the_data", "send_car_tube")
-                ->where("amount_collected", "not null")
-                ->select();
 
-            $total = count($list);
-
-            foreach ($list as $k => $v) {
-                $res = Db::name("admin")
-                    ->where("id", $v['sales_id'])
-                    ->field("nickname")
+            $list = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("review_the_data", "send_car_tube")
+                    ->where("amount_collected", "not null")
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
                     ->select();
-                $res = $res[0];
-    
-                $list[$k]['sales_name'] = $res['nickname'];
-                $list[$k]['detailed_address'] = $v['city'] . "/" . $v['detailed_address'];
+            foreach ($list as $k => $row) {
+                    $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                    $row->visible(['plansecond']);
+                    $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                    $row->visible(['admin']);
+                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->visible(['models']);
+                    $row->getRelation('models')->visible(['name']);
             }
 
-            $result = array("total" => $total, "rows" => $list);
+            $list = collection($list)->toArray();
 
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
+
         return $this->view->fetch();
+
     }
 
     //车管已确认
     public function secondcarConfirm()
     {
+        $this->model = new \app\admin\model\second\sales\Order;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            
+            $total = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("review_the_data", "is_reviewing_control")
+                    ->where("amount_collected", "not null")
+                    ->order($sort, $order)
+                    ->count();
 
-            $list = Db::name("second_sales_order")->alias('a')
-                ->join('secondcar_rental_models_info b', 'b.id=a.plan_car_second_name')
-                ->join('models c', 'c.id=b.models_id')
-                ->field('a.id,a.order_no,a.username,a.phone,a.id_card,a.city,a.detailed_address,a.createtime,a.car_total_price,a.downpayment,a.sales_id,
-                        b.companyaccount,b.newpayment,b.monthlypaymen,b.periods,b.bond,b.tailmoney,b.licenseplatenumber,
-                        c.name as models_name')
-                ->where("review_the_data", "is_reviewing_control")
-                ->where("amount_collected", "not null")
-                ->select();
 
-            $total = count($list);
-
-            foreach ($list as $k => $v) {
-                $res = Db::name("admin")
-                    ->where("id", $v['sales_id'])
-                    ->field("nickname")
+            $list = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("review_the_data", "is_reviewing_control")
+                    ->where("amount_collected", "not null")
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
                     ->select();
-                $res = $res[0];
-    
-                $list[$k]['sales_name'] = $res['nickname'];
-                $list[$k]['detailed_address'] = $v['city'] . "/" . $v['detailed_address'];
+            foreach ($list as $k => $row) {
+                    $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                    $row->visible(['plansecond']);
+                    $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                    $row->visible(['admin']);
+                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->visible(['models']);
+                    $row->getRelation('models')->visible(['name']);
+                    
             }
 
-            $result = array("total" => $total, "rows" => $list);
+            $list = collection($list)->toArray();
 
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
+
         return $this->view->fetch();
+
     }
 
     //提交的风控审核

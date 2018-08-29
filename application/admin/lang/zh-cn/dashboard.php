@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Custom'                  => '自定义',
+    'Dashboard xi an'                  => '控制台/西安',
     'Pid'                     => '父ID',
     'Type'                    => '栏目类型',
     'Image'                   => '图片',

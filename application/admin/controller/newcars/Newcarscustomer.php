@@ -47,13 +47,14 @@ class Newcarscustomer extends Backend
         $this->loadlang('newcars/newcarscustomer');
         $this->loadlang('order/salesorder');
 
-        $prepare_total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
+        $prepare_total = Db::name("sales_order")
             ->where("review_the_data", "for_the_car")
             ->where("car_new_inventory_id",null)
             ->count();
 
-        $already_total = Db::view("order_view", "id,order_no,review_the_data,createtime,financial_name,models_name,username,phone,id_card,payment,monthly,nperlist,margin,tail_section,gps,car_new_inventory_id")
+        $already_total = Db::name("sales_order")
             ->where("review_the_data", "the_car")
+            ->where("car_new_inventory_id", "not null")
             ->count();
 
         $this->view->assign([
@@ -66,50 +67,140 @@ class Newcarscustomer extends Backend
     //待提车
     public function prepare_lift_car()
     {
+        $this->model = model('SalesOrder');
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            $total = Db::table("crm_order_view")
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
                 ->where(function ($query) {
                     $query->where("car_new_inventory_id", null)
                         ->where("review_the_data", "for_the_car");
                 })
-                ->where("car_new_inventory_id", null)
+                ->order($sort, $order)
                 ->count();
-            $list = Db::table("crm_order_view")
+
+
+            $list = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
                 ->where(function ($query) {
                     $query->where("car_new_inventory_id", null)
                         ->where("review_the_data", "for_the_car");
                 })
+                ->order($sort, $order)
+                ->limit($offset, $limit)
                 ->select();
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+                
+            }
 
-            $result = array("total" => $total, "rows" => $list);
 
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
-        return true;
+
+        return $this->view->fetch();
+
     }
 
     //已提车
     public function already_lift_car()
     {
+        $this->model = model('SalesOrder');
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            $total = Db::table("crm_order_view")
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'newinventory' => function ($query) {
+                    $query->withField('frame_number,engine_number,licensenumber,household,4s_shop');
+                }])
+                ->where($where)
                 ->where(function ($query) {
-                    $query->where("review_the_data", "the_car");
+                    $query->where("car_new_inventory_id", "not null")
+                        ->where("review_the_data", "the_car");
                 })
-                ->where("review_the_data", "the_car")
+                ->order($sort, $order)
                 ->count();
-            $list = Db::table("crm_order_view")
+
+
+            $list = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'newinventory' => function ($query) {
+                    $query->withField('frame_number,engine_number,licensenumber,household,4s_shop');
+                }])
+                ->where($where)
                 ->where(function ($query) {
-                    $query->where("review_the_data", "the_car");
+                    $query->where("car_new_inventory_id", "not null")
+                        ->where("review_the_data", "the_car");
                 })
-                ->where("review_the_data", "the_car")
+                ->order($sort, $order)
+                ->limit($offset, $limit)
                 ->select();
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+                $row->visible(['newinventory']);
+                $row->getRelation('newinventory')->visible(['frame_number', 'licensenumber', 'engine_number', 'household', '4s_shop']);
+            }
 
-            $result = array("total" => $total, "rows" => $list);
 
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
-        return true;
+
+        return $this->view->fetch();
+
     }
 
     //选择库存车
