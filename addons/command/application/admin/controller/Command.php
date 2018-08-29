@@ -133,14 +133,14 @@ class Command extends Backend
         $allowfields = array_filter(array_intersect_key($params, array_flip($allowfields)));
         if (isset($params['local']) && !$params['local']) {
             $allowfields['local'] = $params['local'];
-        }else{
+        } else {
             unset($allowfields['local']);
         }
         foreach ($allowfields as $key => $param) {
             $argv[] = "--{$key}=" . (is_array($param) ? implode(',', $param) : $param);
         }
         if ($commandtype == 'crud') {
-            $extend = 'setcheckboxsuffix,enumradiosuffix,imagefield,filefield,intdatesuffix,switchsuffix,citysuffix,selectpagesuffix,selectpagessuffix,ignorefields,sortfield,editorclass';
+            $extend = 'setcheckboxsuffix,enumradiosuffix,imagefield,filefield,intdatesuffix,switchsuffix,citysuffix,selectpagesuffix,selectpagessuffix,ignorefields,sortfield,editorsuffix,headingfilterfield';
             $extendArr = explode(',', $extend);
             foreach ($params as $index => $item) {
                 if (in_array($index, $extendArr)) {
@@ -208,6 +208,7 @@ class Command extends Backend
             $result .= $e->getMessage();
             $this->model->status = 'failured';
         }
+        $result = trim($result);
         $this->model->content = $result;
         $this->model->save();
         return $result;
