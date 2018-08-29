@@ -43,4 +43,9 @@ class CarRentalModelsInfo extends Model
     {
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+    public function sales()
+    {
+        return $this->belongsTo('Admin','sales_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }

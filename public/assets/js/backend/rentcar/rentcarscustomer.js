@@ -22,12 +22,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'licenseplatenumber', title: __('车牌号')}, 
+                        {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
                         {field: 'order_no', title: __('订单编号')}, 
-                        {field: 'createtime', title: __('订车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'delivery_datetime', title: __('提车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'models_name', title: __('租车型号')}, 
-                        {field: 'sales_name', title: __('销售员')}, 
+                        {field: 'createtime', title: __('订车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
+                        {field: 'delivery_datetime', title: __('提车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
+                        {field: 'models.name', title: __('租车型号')},
+                        {field: 'sales.nickname', title: __('销售员')},
 
                         {field: 'username', title: __('客户姓名')}, 
                         {field: 'phone', title: __('手机号')},
@@ -76,7 +76,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
+            },
+            formatter:{
+                datetime:function (value, row, index) {
+
+                    return timestampToTime(value);
+
+                    function timestampToTime(timestamp) {
+                        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                        var Y = date.getFullYear() + '-';
+                        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                        var D = date.getDate()<10? '0'+date.getDate():date.getDate();
+
+                        return Y+M+D;
+                    }
+
+                }
             }
+
         }
     };
     return Controller;

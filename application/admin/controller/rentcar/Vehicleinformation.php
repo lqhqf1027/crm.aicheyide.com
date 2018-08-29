@@ -15,7 +15,7 @@ use app\common\model\Config as ConfigModel;
  */
 class Vehicleinformation extends Backend
 {
-    
+
     /**
      * CarRentalModelsInfo模型对象
      * @var \app\admin\model\CarRentalModelsInfo
@@ -29,55 +29,57 @@ class Vehicleinformation extends Backend
         $this->model = model('CarRentalModelsInfo');
         $this->view->assign("shelfismenuList", $this->model->getShelfismenuList());
     }
-    
+
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-    
+
 
     /**
      * 查看
      */
     public function index()
     {
-        //当前是否为关联查询
-        $this->relationSearch = true;
+
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         $this->view->assign("shelfismenuList", $this->model->getShelfismenuList());
-        if ($this->request->isAjax())
-        {
+        if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
+            if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams("username", true);
             $total = $this->model
-                    ->with(['models'])
-                    ->where($where)
-                    // ->where('review_the_data', 'NEQ', 'the_car')
-                    ->order($sort, $order)
-                    ->count();
+                ->with(['models' => function ($query) {
+                    $query->withField('name');
+                }, 'sales' => function ($query) {
+                    $query->withField('nickname');
+                }])
+                ->where($where)
+                // ->where('review_the_data', 'NEQ', 'the_car')
+                ->order($sort, $order)
+                ->count();
 
             $list = $this->model
-                    ->with(['models'])
-                    ->where($where)
-                    // ->where('review_the_data','NEQ', 'the_car')
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
+                ->with(['models' => function ($query) {
+                    $query->withField('name');
+                }, 'sales' => function ($query) {
+                    $query->withField('nickname');
+                }])
+                ->where($where)
+                // ->where('review_the_data','NEQ', 'the_car')
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
-            foreach ($list as $key => $value) {
-                $sql = DB::name('admin')->where('id',$value['sales_id'])->field('nickname,rule_message')->select();
-                // $rule_message = $sql[0]['rule_message'];
-                $rule_message = DB::name('auth_group_access')->alias('a')->join('auth_group b','a.group_id=b.id')->field('b.name as sales_name')->where('a.uid',$value['sales_id'])->select();
-                $sales_name = $rule_message['0']['sales_name'] . '---' . $sql[0]['nickname'];
-                $list[$key]['sales'] = $sales_name;
-            }
+
             $list = collection($list)->toArray();
+
+
+
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -90,7 +92,7 @@ class Vehicleinformation extends Backend
     {
         $this->model = model('CarRentalModelsInfo');
         $id = $this->model->get(['id' => $ids]);
-        
+
         $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
             $query->where('rule_message', 'message8')->whereOr('rule_message', 'message9');
         })->select();
@@ -133,7 +135,7 @@ class Vehicleinformation extends Backend
 
 
             $params = $this->request->post('row/a');
-           
+
             $result = $this->model->save(['sales_id' => $params['id']], function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
@@ -148,12 +150,13 @@ class Vehicleinformation extends Backend
 
         return $this->view->fetch();
     }
+
     //修改销售预定
     public function salesbookedit($ids = NULL)
     {
         $this->model = model('CarRentalModelsInfo');
         $id = $this->model->get(['id' => $ids]);
-        
+
         $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
             $query->where('rule_message', 'message8')->whereOr('rule_message', 'message9');
         })->select();
@@ -197,10 +200,10 @@ class Vehicleinformation extends Backend
 
             $params = $this->request->post('row/a');
 
-            if($params['id'] == 0){
+            if ($params['id'] == 0) {
                 $params['id'] = NULL;
             }
-           
+
             $result = $this->model->save(['sales_id' => $params['id']], function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
@@ -215,7 +218,6 @@ class Vehicleinformation extends Backend
 
         return $this->view->fetch();
     }
-
 
 
     //车管人员对租车请求的同意
@@ -238,23 +240,22 @@ class Vehicleinformation extends Backend
             $uri = "http://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-argee",
                 'content' => "车管人员已同意你的租车预定请求"
             ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
-            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);//地址
+            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+            $return = curl_exec($ch);
+            curl_close($ch);
+
             if ($result) {
                 $this->success();
-            }
-            else{
+            } else {
                 $this->error();
             }
 
@@ -274,33 +275,32 @@ class Vehicleinformation extends Backend
         // var_dump($rental_order_id);
         // die;
         $result = DB::name('rental_order')->alias('a')
-                ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
-                ->join('models c', 'c.id=b.models_id')
-                ->where('a.id', $rental_order_id)
-                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,b.review_the_data,
+            ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
+            ->join('models c', 'c.id=b.models_id')
+            ->where('a.id', $rental_order_id)
+            ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,b.review_the_data,
                     c.name as models_name,b.licenseplatenumber as licenseplatenumber')
-                ->find();
-        
-                
+            ->find();
+
+
         $this->view->assign(
             [
                 'result' => $result,
-                
+
             ]
         );
 
-        if($this->request->isPost()){
+        if ($this->request->isPost()) {
 
             $result_s = DB::name('car_rental_models_info')->where('id', $id)->setField('review_the_data', 'for_the_car');
-            
-            if($result_s){
+
+            if ($result_s) {
                 $this->success();
-            }
-            else{
+            } else {
                 $this->error();
             }
         }
-    
+
         return $this->view->fetch();
     }
 

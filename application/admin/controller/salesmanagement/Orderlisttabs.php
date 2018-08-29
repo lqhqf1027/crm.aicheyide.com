@@ -361,7 +361,7 @@ class Orderlisttabs extends Backend
     /**查看纯租详细资料 */
     public function rentaldetails($ids = null)
     {
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder;
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));

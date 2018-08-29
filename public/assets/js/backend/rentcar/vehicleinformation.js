@@ -74,11 +74,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'Parkingposition', title: __('Parkingposition')},
                         {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Table.api.formatter.toggle},
                         {field: 'vehiclestate', title: __('Vehiclestate')},
-                        {field: 'note', title: __('Note')},
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+
+
                         // {field: 'models.name', title: __('Models.name')},
-                        {field: 'sales', title: __('预定销售人员')},
+                        {field: 'sales.nickname', title: __('预定销售人员')},
+                        {field: 'note', title: __('Note')},
                         {field: 'operate', title: __('Operate'), table: table, 
                         buttons: [
                             { 

@@ -13,7 +13,7 @@ use think\Config;
  */
 class Rentcarscustomer extends Backend
 {
-    
+
     /**
      * Rentalpeople模型对象
      * @var \app\admin\model\Rentalpeople
@@ -26,52 +26,69 @@ class Rentcarscustomer extends Backend
         $this->model = new \app\admin\model\Rentalpeople;
 
     }
-    
+
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-    
 
-     /**纯租 */
+
+    /**纯租 */
     public function index()
     {
 
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder();
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
-       //设置过滤方法
+        //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-           //如果发送的来源是Selectpage，则转发到Selectpage
+            //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
+
+                ->with(['models' => function ($query) {
+                    $query->withField("name");
+                }, 'sales' => function ($query) {
+                    $query->withField('nickname');
+                }, 'carrentalmodelsinfo' => function ($query) {
+                    $query->withField(['licenseplatenumber','review_the_data'=>'data']);
+                }])
+                ->where('review_the_data', 'for_the_car')
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', 'for_the_car')
                 ->count();
 
             $list = $this->model
-                ->where($where)
+
+                ->with(['models' => function ($query) {
+                    $query->withField("name");
+                }, 'sales' => function ($query) {
+                    $query->withField('nickname');
+                }, 'carrentalmodelsinfo' => function ($query) {
+                    $query->withField(['licenseplatenumber','review_the_data'=>'data']);
+                }])
                 ->where('review_the_data', 'for_the_car')
+                ->where($where)
+
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
 
-            $list = collection($list)->toArray();
-
-            foreach ((array)$list as $k => $row) {
-                $planData = collection($this->getPlanCarRentalData($row['plan_car_rental_name']))->toArray();
-
-                $sales_name = DB::name('admin')->where('id',$list[$k]['sales_id'])->value('nickname');
-
-                $list[$k]['licenseplatenumber'] = $planData['licenseplatenumber'];
-                $list[$k]['models_name'] = $planData['models_name'];
-                $list[$k]['sales_name'] = $sales_name;
+            foreach ($list as $k => $v) {
+                $v->visible(['id','order_no','username','phone','id_card','cash_pledge','rental_price','tenancy_term','genderdata','createtime','delivery_datetime','review_the_data']);
+                $v->visible(['models']);
+                $v->getRelation('models')->visible(['name']);
+                $v->visible(['sales']);
+                $v->getRelation('sales')->visible(['nickname']);
+                $v->visible(['carrentalmodelsinfo']);
+                $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber']);
             }
+
+            $list = collection($list)->toArray();
 
             $result = array("total" => $total, "rows" => $list);
             return json($result);
@@ -98,7 +115,7 @@ class Rentcarscustomer extends Backend
     /**查看纯租详细资料 */
     public function rentaldetails($ids = null)
     {
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder();
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
@@ -111,7 +128,7 @@ class Rentcarscustomer extends Backend
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-        
+
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
 
