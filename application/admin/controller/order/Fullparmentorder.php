@@ -66,11 +66,14 @@ class Fullparmentorder extends Backend
             $params = $this->request->post('row/a');
             $ex = explode(',', $params['plan_plan_full_name']);
 
+            $result = DB::name('plan_full')->where('id', $params['plan_plan_full_name'])->field('models_id')->find();
+
             $params['plan_plan_full_name'] = reset($ex); //截取id
             $params['plan_name'] = addslashes(end($ex)); //
             //生成订单编号
             $params['order_no'] = date('Ymdhis');
             $params['admin_id'] = $this->auth->id;
+            $params['models_id'] = $result['models_id'];
             //把当前销售员所在的部门的内勤id 入库
 
             //message8=>销售一部顾问，message13=>内勤一部

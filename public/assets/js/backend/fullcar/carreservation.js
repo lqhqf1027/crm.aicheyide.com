@@ -54,13 +54,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: '编号'},
                             {field: 'createtime', title: __('订车日期')},
-                            {field: 'sales_name', title: __('销售员')},
-                            {field: 'models_name', title: __('订车车型')},
-                            {field: 'full_total_price', title: __('车款总价(元)')},
+                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'models.name', title: __('订车车型')},
+                            {field: 'planfull.full_total_price', title: __('车款总价(元)')},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系电话')},
-                            {field: 'detailed_address', title: __('地址')},
+                            {field: 'city', title: __('居住地址')},
+                            {field: 'detailed_address', title: __('详细地址')},
                             
 
                             {
@@ -132,13 +133,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: '编号'},
                             {field: 'createtime', title: __('订车日期')},
-                            {field: 'sales_name', title: __('销售员')},
-                            {field: 'models_name', title: __('订车车型')},
-                            {field: 'full_total_price', title: __('车款总价(元)')},
+                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'models.name', title: __('订车车型')},
+                            {field: 'planfull.full_total_price', title: __('车款总价(元)')},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系电话')},
-                            {field: 'detailed_address', title: __('地址')},
+                            {field: 'city', title: __('居住地址')},
+                            {field: 'detailed_address', title: __('详细地址')},
                             {field: 'operate', title: __('Operate'), table: fullcarConfirm, 
                                 buttons: [
                                     {

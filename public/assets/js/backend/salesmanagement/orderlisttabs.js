@@ -1073,7 +1073,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
 
-                            { field: 'models_name', title: __('销售车型') },
+                            { field: 'models.name', title: __('销售车型') },
+                            { field: 'admin.nickname', title: __('销售员') },
                             { field: 'username', title: __('Username') },
                             { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
                             { field: 'genderdata_text', title: __('Genderdata'), operate: false },
@@ -1092,10 +1093,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             { field: 'id_card', title: __('Id_card') },
                             
-                            { field: 'newpayment', title: __('新首付（元）') },
-                            { field: 'monthlypaymen', title: __('月供（元）') },
-                            { field: 'periods', title: __('期数') },
-                            { field: 'totalprices', title: __('总价（元）') },
+                            { field: 'plansecond.newpayment', title: __('新首付（元）') },
+                            { field: 'plansecond.monthlypaymen', title: __('月供（元）') },
+                            { field: 'plansecond.periods', title: __('期数') },
+                            { field: 'plansecond.totalprices', title: __('总价（元）') },
+                            { field: 'plansecond.bond', title: __('保证金（元）') },
+                            { field: 'plansecond.tailmoney', title: __('尾款（元）') },
 
                             {
                                 field: 'operate', title: __('Operate'), table: orderSecond,
@@ -1491,8 +1494,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
                             { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            { field: 'models_name', title: __('销售车型') },
-                            { field: 'full_total_price', title: __('全款总价（元）') },
+                            { field: 'models.name', title: __('销售车型') },
+                            { field: 'admin.nickname', title: __('销售员') },
+                            { field: 'planfull.full_total_price', title: __('全款总价（元）') },
 
                             {
                                 field: 'id', title: __('查看详细资料'), table: orderFull, buttons: [
@@ -1510,8 +1514,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
-                            {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
-                            {field: 'city', title: __('City')},
+                            {field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
+                            {field: 'genderdata_text', title: __('Genderdata'), operate: false },
+                            {field: 'city', title: __('居住地址')},
+                            {field: 'detailed_address', title: __('详细地址')},
                             // {field: 'detailed_address', title: __('Detailed_address')},
                             {
                                 field: 'operate', title: __('Operate'), table: orderFull,

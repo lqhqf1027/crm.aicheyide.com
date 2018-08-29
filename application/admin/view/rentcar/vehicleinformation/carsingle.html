@@ -69,6 +69,10 @@
     th,td{
         text-align: center;
     }
+    h3{
+        margin-left: 800px;
+    }
+    
 </style>
 
 <form id="signature-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
@@ -77,6 +81,9 @@
             <center>客户租车事项确认单</center>
         </h2>
         <br>
+        <h3>
+            单据编号:  {$result.order_no}
+        </h3>
 
         <div class="container-fulid print">
 

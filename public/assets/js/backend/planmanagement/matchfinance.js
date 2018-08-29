@@ -46,7 +46,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var prepareMatch = $("#prepareMatch");
                 prepareMatch.on('load-success.bs.table', function (e, data) {
                     console.log(data.total);
-                    $('#badge_prepare').text(data.total);
+                    $('#badge_prepare_match').text(data.total);
 
                 });
                 prepareMatch.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -153,7 +153,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var alreadyMatch = $("#alreadyMatch");
                 alreadyMatch.on('load-success.bs.table', function (e, data) {
                     console.log(data.total);
-                    $('#badge_already').text(data.total);
+                    $('#badge_already_match').text(data.total);
 
                 });
                 alreadyMatch.on('post-body.bs.table', function (e, settings, json, xhr) {

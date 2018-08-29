@@ -40,8 +40,7 @@ class Carreservation extends Backend
                 ->where("amount_collected", 'not null')
                 ->count();        
         $total1 = Db::name("full_parment_order")
-                ->where("review_the_data", "is_reviewing_pass")
-                ->whereOr("review_the_data", "for_the_car")
+                ->where("review_the_data", ["=","is_reviewing_pass"], ["=","for_the_car"], "or")
                 ->where("amount_collected", 'not null')
                 ->count();
         $this->view->assign(
@@ -56,71 +55,125 @@ class Carreservation extends Backend
     //待车管确认
     public function fullcarWaitconfirm()
     {
-
+        $this->model = new \app\admin\model\full\parment\Order;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where("review_the_data", "is_reviewing_true")
+                ->where("amount_collected", 'not null')
+                ->order($sort, $order)
+                ->count();
 
-            $list = Db::name("full_parment_order")->alias('a')
-                    ->join('plan_full b', 'b.id=a.plan_plan_full_name')
-                    ->join('models c', 'c.id=b.models_id')
-                    ->field('a.id,a.order_no,a.username,a.phone,a.id_card,a.city,a.detailed_address,a.sales_id,a.review_the_data,a.createtime,
-                            b.full_total_price,c.name as models_name')
-                    ->where("review_the_data", "is_reviewing_true")
-                    ->where("amount_collected", 'not null')
-                    ->select();
 
-            $total = count($list);
-
-            foreach ($list as $k => $v) {
-                $res = Db::name("admin")
-                    ->where("id", $v['sales_id'])
-                    ->field("nickname")
-                    ->select();
-                $res = $res[0];
-    
-                $list[$k]['sales_name'] = $res['nickname'];
-                $list[$k]['detailed_address'] = $v['city'] . "/" . $v['detailed_address'];
+            $list = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where("review_the_data", "is_reviewing_true")
+                ->where("amount_collected", 'not null')
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['planfull']);
+                $row->getRelation('planfull')->visible(['full_total_price']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
             }
 
-            $result = array("total" => $total, "rows" => $list);
 
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
+
         return $this->view->fetch();
+
     }
 
     //车管已确认
     public function fullcarConfirm()
     {
+        $this->model = new \app\admin\model\full\parment\Order;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where("review_the_data", ["=","is_reviewing_pass"], ["=","for_the_car"], "or")
+                ->where("amount_collected", 'not null')
+                ->order($sort, $order)
+                ->count();
 
-            $list = Db::name("full_parment_order")->alias('a')
-                    ->join('plan_full b', 'b.id=a.plan_plan_full_name')
-                    ->join('models c', 'c.id=b.models_id')
-                    ->field('a.id,a.order_no,a.username,a.phone,a.id_card,a.city,a.detailed_address,a.sales_id,a.review_the_data,a.createtime,
-                            b.full_total_price,c.name as models_name')
-                    ->where("review_the_data", "is_reviewing_pass")
-                    ->whereOr("review_the_data", "for_the_car")
-                    ->where("amount_collected", 'not null')
-                    ->select();
 
-            $total = count($list);
-
-            foreach ($list as $k => $v) {
-                $res = Db::name("admin")
-                    ->where("id", $v['sales_id'])
-                    ->field("nickname")
-                    ->select();
-                $res = $res[0];
-    
-                $list[$k]['sales_name'] = $res['nickname'];
-                $list[$k]['detailed_address'] = $v['city'] . "/" . $v['detailed_address'];
+            $list = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where("review_the_data", ["=","is_reviewing_pass"], ["=","for_the_car"], "or")
+                ->where("amount_collected", 'not null')
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['planfull']);
+                $row->getRelation('planfull')->visible(['full_total_price']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
             }
 
-            $result = array("total" => $total, "rows" => $list);
 
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
+
         return $this->view->fetch();
+
     }
 
     //可以进行提车

@@ -105,9 +105,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
 
-                            { field: 'financial_platform_name', title: __('金融平台') },
-                            { field: 'models_name', title: __('销售车型') },
-                            { field: 'admin_nickname', title: __('销售员') },
+                            { field: 'financial_name', title: __('金融平台') },
+                            { field: 'models.name', title: __('销售车型') },
+                            { field: 'admin.nickname', title: __('销售员') },
                             {
                                 field: 'id', title: __('查看详细资料'), table: newcarAudit, buttons: [
                                     {
@@ -126,12 +126,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
 
-                            { field: 'payment', title: __('首付（元）') },
-                            { field: 'monthly', title: __('月供（元）') },
-                            { field: 'nperlist', title: __('期数') },
-                            { field: 'margin', title: __('保证金（元）') },
-                            { field: 'tail_section', title: __('尾款（元）') },
-                            { field: 'gps', title: __('GPS（元）') },  
+                            { field: 'planacar.payment', title: __('首付（元）') },
+                            { field: 'planacar.monthly', title: __('月供（元）') },
+                            { field: 'planacar.nperlist', title: __('期数') },
+                            { field: 'planacar.margin', title: __('保证金（元）') },
+                            { field: 'planacar.tail_section', title: __('尾款（元）') },
+                            { field: 'planacar.gps', title: __('GPS（元）') },  
                             {
                                 field: 'operate', title: __('Operate'), table: newcarAudit,
                                 buttons: [
@@ -473,8 +473,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
 
-                            { field: 'models_name', title: __('销售车型') },
-                            { field: 'admin_nickname', title: __('销售员') },
+                            { field: 'models.name', title: __('销售车型') },
+                            { field: 'admin.nickname', title: __('销售员') },
                             {
                                 field: 'id', title: __('查看详细资料'), table: secondhandcarAudit, buttons: [
                                     {
@@ -493,10 +493,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
 
-                            { field: 'newpayment', title: __('新首付（元）') },
-                            { field: 'monthlypaymen', title: __('月供（元）') },
-                            { field: 'periods', title: __('期数（月）') },
-                            { field: 'totalprices', title: __('总价（元）') }, 
+                            { field: 'plansecond.newpayment', title: __('新首付（元）') },
+                            { field: 'plansecond.monthlypaymen', title: __('月供（元）') },
+                            { field: 'plansecond.periods', title: __('期数（月）') },
+                            { field: 'plansecond.totalprices', title: __('总价（元）') }, 
+                            { field: 'plansecond.bond', title: __('保证金（元）') }, 
+                            { field: 'plansecond.tailmoney', title: __('尾款（元）') }, 
                             {
                                 field: 'operate', title: __('Operate'), table: secondhandcarAudit,
                                 buttons: [
