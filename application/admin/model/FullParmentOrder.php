@@ -76,5 +76,15 @@ class FullParmentOrder extends Model
         return $this->belongsTo('Admin','sales_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
+    public function admin()
+    {
+        return $this->belongsTo('Admin','admin_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+    public function planfull()
+    {
+        return $this->belongsTo('PlanFull','plan_plan_full_name','id',[],'LEFT')->setEagerlyType(0);
+    }
+
 
 }

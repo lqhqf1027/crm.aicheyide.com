@@ -55,7 +55,7 @@ class Carreservation extends Backend
     //待车管确认
     public function fullcarWaitconfirm()
     {
-        $this->model = new \app\admin\model\full\parment\Order;
+        $this->model = new \app\admin\model\FullParmentOrder;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -117,7 +117,7 @@ class Carreservation extends Backend
     //车管已确认
     public function fullcarConfirm()
     {
-        $this->model = new \app\admin\model\full\parment\Order;
+        $this->model = new \app\admin\model\FullParmentOrder;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
