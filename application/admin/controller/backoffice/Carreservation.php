@@ -29,21 +29,15 @@ class Carreservation extends Backend
     {
         $total = Db::name("sales_order")
             ->where("backoffice_id", "not null")
-            ->where("review_the_data", "inhouse_handling")
-            ->whereOr("review_the_data", "send_car_tube")
-            ->where("amount_collected", null)
+            ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
             ->count();
         $total1 = Db::name("second_sales_order")
             ->where("backoffice_id", "not null")
-            ->where("review_the_data", "is_reviewing_true")
-            ->whereOr("review_the_data", "send_car_tube")
-            ->where("amount_collected", null)
+            ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
             ->count();
         $total2 = Db::name("full_parment_order")
             ->where("backoffice_id", "not null")
-            ->where("review_the_data", "inhouse_handling")
-            ->whereOr("review_the_data", "is_reviewing_true")
-            ->where("amount_collected", null)
+            ->where("review_the_data", ["=","inhouse_handling"], ["=","is_reviewing_true"],'or')
             ->count();
         $this->view->assign(
             [
@@ -85,8 +79,6 @@ class Carreservation extends Backend
                    
                     ->where("backoffice_id", "not null")
                     ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
-                   
-                    ->where("amount_collected", null)
                     ->order($sort, $order)
                     ->count();
                 $list = $this->model
@@ -103,8 +95,6 @@ class Carreservation extends Backend
                     
                     ->where("backoffice_id", "not null")
                     ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
-                    
-                    ->where("amount_collected", null)
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -196,108 +186,206 @@ class Carreservation extends Backend
     //二手车录入实际订车金额
     public function secondcarEntry()
     {
+        $this->model = new \app\admin\model\second\sales\Order;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+
             $can_use_id = $this->getUserId();
-
             if (in_array($this->auth->id, $can_use_id['admin'])) {
-                $list = Db::name("second_sales_order")->alias('a')
-                    ->join('secondcar_rental_models_info b', 'b.id=a.plan_car_second_name')
-                    ->join('models c', 'c.id=b.models_id')
-                    ->field('a.id,a.order_no,a.username,a.phone,a.id_card,a.city,a.detailed_address,a.car_total_price,a.downpayment,a.createtime,a.sales_id,a.review_the_data,
-                            b.companyaccount,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.tailmoney,b.vin,
-                            c.name as models_name')
+
+                $total = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "is_reviewing_true")
-                    ->whereOr("review_the_data", "send_car_tube")
-                    ->where("amount_collected", null)
+                    ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+                    ->order($sort, $order)
+                    ->count();
+
+
+                $list = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("backoffice_id", "not null")
+                    ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
                     ->select();
-
-                $total = count($list);
-
+                foreach ($list as $k => $row) {
+                    $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                    $row->visible(['plansecond']);
+                    $row->getRelation('plansecond')->visible(['newpayment', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                    $row->visible(['admin']);
+                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->visible(['models']);
+                    $row->getRelation('models')->visible(['name']);
+                }
             } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
-                $list = Db::name("second_sales_order")->alias('a')
-                    ->join('secondcar_rental_models_info b', 'b.id=a.plan_car_second_name')
-                    ->join('models c', 'c.id=b.models_id')
-                    ->field('a.id,a.order_no,a.username,a.phone,a.id_card,a.city,a.detailed_address,a.car_total_price,a.downpayment,a.createtime,a.sales_id,a.review_the_data,
-                            b.companyaccount,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.tailmoney,b.vin,
-                            c.name as models_name')
-                    ->where("backoffice_id", $this->auth->id)
-                    ->where("review_the_data", "is_reviewing_true")
-                    ->whereOr("review_the_data", "send_car_tube")
-                    ->where("amount_collected", null)
-                    ->select();
+                $total = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("backoffice_id", "not null")
+                    ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+                    ->order($sort, $order)
+                    ->count();
 
-                $total = count($list);
+
+                $list = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("backoffice_id", "not null")
+                    ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+                foreach ($list as $k => $row) {
+                    $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                    $row->visible(['plansecond']);
+                    $row->getRelation('plansecond')->visible(['newpayment', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                    $row->visible(['admin']);
+                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->visible(['models']);
+                    $row->getRelation('models')->visible(['name']);
+                }
             }
 
-            foreach ($list as $k => $v) {
-                $res = Db::name("admin")
-                    ->where("id", $v['sales_id'])
-                    ->field("nickname")
-                    ->select();
-                $res = $res[0];
 
-                $list[$k]['sales_name'] = $res['nickname'];
-                $list[$k]['detailed_address'] = $v['city'] . "/" . $v['detailed_address'];
-            }
+            $list = collection($list)->toArray();
 
-
-            $result = array("total" => $total, "rows" => $list);
-
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
+
         return $this->view->fetch();
+
     }
 
     //全款车录入实际订车金额
     public function fullcarEntry()
     {
+        $this->model = new \app\admin\model\full\parment\Order;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+
             $can_use_id = $this->getUserId();
 
             if (in_array($this->auth->id, $can_use_id['admin'])) {
-                $list = Db::name("full_parment_order")->alias('a')
-                    ->join('plan_full b', 'b.id=a.plan_plan_full_name')
-                    ->join('models c', 'c.id=b.models_id')
-                    ->field('a.id,a.order_no,a.username,a.phone,a.id_card,a.city,a.detailed_address,a.sales_id,a.review_the_data,a.createtime,
-                            b.full_total_price,c.name as models_name')
+                $total = $this->model
+                    ->with(['planfull' => function ($query) {
+                        $query->withField('full_total_price');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "inhouse_handling")
-                    ->whereOr("review_the_data", "is_reviewing_true")
-                    ->where("amount_collected", null)
-                    ->select();
+                    ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
+                    ->order($sort, $order)
+                    ->count();
 
-                $total = count($list);
+                $list = $this->model
+                    ->with(['planfull' => function ($query) {
+                        $query->withField('full_total_price');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("backoffice_id", "not null")
+                    ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+                foreach ($list as $k => $row) {
+                    $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                    $row->visible(['planfull']);
+                    $row->getRelation('planfull')->visible(['full_total_price']);
+                    $row->visible(['admin']);
+                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->visible(['models']);
+                    $row->getRelation('models')->visible(['name']);
+                }
 
             } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
-                $list = Db::name("second_sales_order")->alias('a')
-                    ->join('plan_full b', 'b.id=a.plan_plan_full_name')
-                    ->join('models c', 'c.id=b.models_id')
-                    ->field('a.id,a.order_no,a.username,a.phone,a.id_card,a.city,a.detailed_address,a.sales_id,a.review_the_data,a.createtime,
-                            b.full_total_price,c.name as models_name')
+                
+                $total = $this->model
+                    ->with(['planfull' => function ($query) {
+                        $query->withField('full_total_price');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "inhouse_handling")
-                    ->whereOr("review_the_data", "is_reviewing_true")
-                    ->where("amount_collected", null)
-                    ->select();
+                    ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
+                    ->order($sort, $order)
+                    ->count();
 
-                $total = count($list);
+                $list = $this->model
+                    ->with(['planfull' => function ($query) {
+                        $query->withField('full_total_price');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("backoffice_id", "not null")
+                    ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+                foreach ($list as $k => $row) {
+                    $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                    $row->visible(['planfull']);
+                    $row->getRelation('planfull')->visible(['full_total_price']);
+                    $row->visible(['admin']);
+                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->visible(['models']);
+                    $row->getRelation('models')->visible(['name']);
+                }
             }
 
-            foreach ($list as $k => $v) {
-                $res = Db::name("admin")
-                    ->where("id", $v['sales_id'])
-                    ->field("nickname")
-                    ->select();
-                $res = $res[0];
+            $list = collection($list)->toArray();
 
-                $list[$k]['sales_name'] = $res['nickname'];
-                $list[$k]['detailed_address'] = $v['city'] . "/" . $v['detailed_address'];
-            }
-
-
-            $result = array("total" => $total, "rows" => $list);
-
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
         return $this->view->fetch();

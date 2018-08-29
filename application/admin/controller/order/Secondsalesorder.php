@@ -267,7 +267,7 @@ class Secondsalesorder extends Backend
         foreach ((array) $res as $key => $value) {
             $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond')
+                ->field('a.id,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond')
                 ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
@@ -288,7 +288,7 @@ class Secondsalesorder extends Backend
             $params = $this->request->post('row/a');
             $ex = explode(',', $params['plan_car_second_name']);
 
-            $result = DB::name('secondcar_rental_models_info')->where('id', $params['plan_car_second_name'])->field('newpayment,monthlypaymen,periods,bond')->find();
+            $result = DB::name('secondcar_rental_models_info')->where('id', $params['plan_car_second_name'])->field('newpayment,monthlypaymen,periods,bond,models_id')->find();
 
             $params['car_total_price'] = $result['newpayment'] + $result['monthlypaymen'] * $result['periods'];
             $params['downpayment'] = $result['newpayment'] + $result['monthlypaymen'] + $result['bond'];
@@ -298,6 +298,7 @@ class Secondsalesorder extends Backend
             //生成订单编号
             $params['order_no'] = date('Ymdhis');
             $params['admin_id'] = $this->auth->id;
+            $params['models_id'] = $result['models_id'];
             //把当前销售员所在的部门的内勤id 入库
 
             //message8=>销售一部顾问，message13=>内勤一部

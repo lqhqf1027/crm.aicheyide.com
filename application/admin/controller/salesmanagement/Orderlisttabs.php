@@ -72,7 +72,7 @@ class Orderlisttabs extends Backend
     }
 
     /**
-     * 以租代购（新车
+     * 以租代购（新车）
      * @return string|\think\response\Json
      * @throws \think\Exception
      */
@@ -82,7 +82,7 @@ class Orderlisttabs extends Backend
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
-//        pr(collection($this->model->with('planacar.models')->select())->toArray());die();
+        // pr(collection($this->model->with('planacar.models')->select())->toArray());die();
 
 
         //设置过滤方法
@@ -416,31 +416,46 @@ class Orderlisttabs extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
 
+
             $list = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['plansecond']);
+                $row->getRelation('plansecond')->visible(['newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
+
 
             $list = collection($list)->toArray();
 
-            foreach ((array)$list as $k => $row) {
-                $planData = collection($this->getPlanCarSecondData($row['plan_car_second_name']))->toArray();
-
-                $list[$k]['newpayment'] = $planData['newpayment'];
-                $list[$k]['monthlypaymen'] = $planData['monthlypaymen'];
-                $list[$k]['periods'] = $planData['periods'];
-                $list[$k]['totalprices'] = $planData['totalprices'];
-                $list[$k]['models_name'] = $planData['models_name'];
-            }
-
-            $result = array("total" => $total, "rows" => $list);
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
 
@@ -539,37 +554,50 @@ class Orderlisttabs extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
 
+
             $list = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['planfull']);
+                $row->getRelation('planfull')->visible(['full_total_price']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
+
 
             $list = collection($list)->toArray();
 
-            foreach ((array)$list as $k => $row) {
-                $planData = collection($this->getPlanCarFullData($row['plan_plan_full_name']))->toArray();
-
-                $list[$k]['full_total_price'] = $planData['full_total_price'];
-                $list[$k]['models_name'] = $planData['models_name'];
-                $city = $list[$k]['city'];
-                $detailed_address = $list[$k]['detailed_address'];
-                $list[$k]['city'] = $city . $detailed_address;
-
-
-            }
-
-            $result = array("total" => $total, "rows" => $list);
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
 
-        return $this->view->fetch('index');
+        return $this->view->fetch();
 
     }
 

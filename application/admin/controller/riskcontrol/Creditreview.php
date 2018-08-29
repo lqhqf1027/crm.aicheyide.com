@@ -41,9 +41,7 @@ class Creditreview extends Backend
             'total' => $this->model
 
                 ->where($where)
-                ->where('review_the_data', 'is_reviewing_true')
-                ->whereOr('review_the_data', 'for_the_car')
-                ->whereOr('review_the_data', 'not_through')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
                 ->order($sort, $order)
                 ->count(),
 
@@ -57,9 +55,7 @@ class Creditreview extends Backend
                 ->count(),
             'total2' => DB::name('second_sales_order')
                 ->where($where)
-                ->where('review_the_data', 'is_reviewing_control')
-                ->whereOr('review_the_data', 'not_through')
-                ->whereOr('review_the_data', 'through')
+                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
                 ->order($sort, $order)
                 ->count(),
 
@@ -85,7 +81,6 @@ class Creditreview extends Backend
     //展示需要审核的新车销售单
     public function newcarAudit()
     {  
-
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -93,50 +88,55 @@ class Creditreview extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
+                
                 ->order($sort, $order)
-                ->where('review_the_data', 'is_reviewing_true')
-                ->whereOr('review_the_data', 'for_the_car')
-                ->whereOr('review_the_data', 'not_through')
                 ->count();
 
+
             $list = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
+               
                 ->order($sort, $order)
-                ->where('review_the_data', 'is_reviewing_true')
-                ->whereOr('review_the_data', 'for_the_car')
-                ->whereOr('review_the_data', 'not_through')
                 ->limit($offset, $limit)
                 ->select();
-           
-            $list = collection($list)->toArray();
-
-            foreach ((array)$list as $k => $row) {
-                $planData = collection($this->getPlanAcarData($row['plan_acar_name']))->toArray();
-
-                $admin_id = $row['admin_id'];
-
-                $admin_nickname = Db::name('admin')->where('id', $admin_id)->value('nickname');
-
-                $list[$k]['admin_nickname'] = $admin_nickname;
-
-                $list[$k]['payment'] = $planData['payment'];
-                $list[$k]['monthly'] = $planData['monthly'];
-                $list[$k]['nperlist'] = $planData['nperlist'];
-                $list[$k]['margin'] = $planData['margin'];
-                $list[$k]['gps'] = $planData['gps'];
-                $list[$k]['models_name'] = $planData['models_name'];
-                $list[$k]['financial_platform_name'] = $planData['financial_platform_name'];
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'username', 'financial_name', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
             }
 
-            $result = array('total' => $total, 'rows' => $list);
 
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
 
-        return $this->view->fetch('index');
+        return $this->view->fetch("index");
+
     }
 
 
@@ -194,7 +194,7 @@ class Creditreview extends Backend
     public function secondhandcarAudit()
 
     { 
-        
+        $this->model = new \app\admin\model\second\sales\Order;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -202,50 +202,56 @@ class Creditreview extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            
+            $total = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
+                    
+                    ->order($sort, $order)
+                    ->count();
 
-            $total = DB::name('second_sales_order')
-                ->where($where)
-                ->order($sort, $order)
-                ->where('review_the_data', 'is_reviewing_control')
-                ->whereOr('review_the_data', 'not_through')
-                ->whereOr('review_the_data', 'through')
-                ->count();
 
-            $list = DB::name('second_sales_order')
-                ->where($where)
-                ->order($sort, $order)
-                ->where('review_the_data', 'is_reviewing_control')
-                ->whereOr('review_the_data', 'not_through')
-                ->whereOr('review_the_data', 'through')
-                ->limit($offset, $limit)
-                ->select();
+            $list = $this->model
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
+
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+            foreach ($list as $k => $row) {
+                    $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                    $row->visible(['plansecond']);
+                    $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                    $row->visible(['admin']);
+                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->visible(['models']);
+                    $row->getRelation('models')->visible(['name']);
+                    
+            }
 
             $list = collection($list)->toArray();
 
-            foreach ((array)$list as $k => $row) {
-                $planData = collection($this->getPlanSecondCarData($row['plan_car_second_name']))->toArray();
-
-
-                $admin_id = $row['admin_id'];
-
-                $admin_nickname = DB::name('admin')->where('id', $admin_id)->value('nickname');
-
-                $list[$k]['admin_nickname'] = $admin_nickname;
-
-                $list[$k]['newpayment'] = $planData['newpayment'];
-                $list[$k]['monthlypaymen'] = $planData['monthlypaymen'];
-                $list[$k]['periods'] = $planData['periods'];
-                $list[$k]['totalprices'] = $planData['totalprices'];
-                $list[$k]['models_name'] = $planData['models_name'];
-            }
-
-            $result = array('total' => $total, 'rows' => $list);
-
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
 
-        return $this->view->fetch('index');
+        return $this->view->fetch();
+
     }
 
     /**
