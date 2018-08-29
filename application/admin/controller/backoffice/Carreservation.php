@@ -292,7 +292,7 @@ class Carreservation extends Backend
     //全款车录入实际订车金额
     public function fullcarEntry()
     {
-        $this->model = new \app\admin\model\full\parment\Order;
+        $this->model = new \app\admin\model\FullParmentOrder;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
