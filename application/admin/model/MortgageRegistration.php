@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\model\mortgage;
+namespace app\admin\model;
 
 use think\Model;
 

@@ -586,7 +586,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'insurance_id', title: __('Insurance_id')},
                         // {field: 'general_manager_id', title: __('General_manager_id')},
                         {field: 'order_no', title: __('Order_no')},
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+
+                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
+                        {field: 'sales.nickname', title: __('销售员')},
+                        {field: 'models.name', title: __('车型')},
+                        {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
+                        {field: 'carrentalmodelsinfo.vin', title: __('车架号')},
                         {field: 'username', title: __('Username'),formatter:function(value,row,index){
                             if(row.order_no ==  null){ /**如果订单编号为空，就处于预定状态 */
                                 return row.username+' <span class="label label-success">预定中</span>'
@@ -597,7 +602,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         }}, 
                         {field: 'phone', title: __('Phone')},
-                        {field: 'id_card', title: __('Id_card')},
+                        // {field: 'id_card', title: __('Id_card')},
                         {field: 'id', title: __('查看详细资料'), table: orderRental, buttons: [
                             {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 
                                 url: 'salesmanagement/Orderlisttabs/rentaldetails', callback:function(data){
@@ -608,10 +613,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             
                             operate:false, formatter: Table.api.formatter.buttons
                         },
-                        {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
+                        // {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
                         {field: 'cash_pledge', title: __('Cash_pledge'),operate:false},
                         {field: 'rental_price', title: __('Rental_price'),operate:false},
                         {field: 'tenancy_term', title: __('Tenancy_term'),operate:false},
+                        {field: 'delivery_datetime', title: __('开始租车日期'),operate:false,formatter:Controller.api.formatter.datetime},
+                        {field: 'delivery_datetime', title: __('退车日期'),operate:false,formatter:Controller.api.formatter.car_back},
                         // {field: 'gps_installation_name', title: __('Gps_installation_name')},
                         // {field: 'gps_installation_datetime', title: __('Gps_installation_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         // {field: 'information_audition_name', title: __('Information_audition_name')},
@@ -1704,7 +1711,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
 
-                // alert(Table.api.getrowdata(table, index));
             },
         },
         add: function () {
@@ -2032,7 +2038,69 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var buttons = $.extend([], this.buttons || []);
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
+                datetime: function (value, row, index) {
+
+                  return timestampToTime(value);
+
+
+                    function timestampToTime(timestamp) {
+                        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                        var Y = date.getFullYear() + '-';
+                        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                        var D = date.getDate()<10? '0'+date.getDate():date.getDate();
+
+                        return Y+M+D;
+                    }
+                },
+                car_back:function (value, row, index) {
+
+                    if(value && row.tenancy_term){
+                        value = timestampToTime(value);
+
+
+                         return GetNextMonthDay(value,row.tenancy_term);
+                    }
+
+                    //获取几个月后的日期
+                     function GetNextMonthDay(date, monthNum){
+                         var dateArr = date.split('-');
+                         var year = dateArr[0]; //获取当前日期的年份
+                         var month = dateArr[1]; //获取当前日期的月份
+                         var day = dateArr[2]; //获取当前日期的日
+                         var days = new Date(year, month, 0);
+                         days = days.getDate(); //获取当前日期中的月的天数
+                         var year2 = year;
+                         var month2 = parseInt(month) + parseInt(monthNum);
+                         if (month2 >12) {
+                             year2 = parseInt(year2) + parseInt((parseInt(month2) / 12 == 0 ? 1 : parseInt(month2) / 12));
+                             month2 = parseInt(month2) % 12;
+                         }
+                         var day2 = day;
+                         var days2 = new Date(year2, month2, 0);
+                         days2 = days2.getDate();
+                         if (day2 > days2) {
+                             day2 = days2;
+                         }
+                         if (month2 < 10) {
+                             month2 = '0' + month2;
+                         }
+
+                         var t2 = year2 + '-' + month2 + '-' + day2;
+                         return t2;
+                     }
+
+                    function timestampToTime(timestamp) {
+                        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                        var Y = date.getFullYear() + '-';
+                        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                        var D = date.getDate()<10? '0'+date.getDate():date.getDate();
+
+                        return Y+M+D;
+                    }
+
                 }
+
                 // status: function (value, row, index) {
 
                 //     var colorArr = {relation: 'info', intention: 'success', nointention: 'danger'};

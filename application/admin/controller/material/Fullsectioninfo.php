@@ -8,7 +8,6 @@
 
 namespace app\admin\controller\material;
 
-
 use app\common\controller\Backend;
 use think\Db;
 use think\Config;
@@ -25,18 +24,12 @@ class Fullsectioninfo extends Backend
         $this->loadlang('newcars/newcarscustomer');
         $this->loadlang('order/salesorder');
 
-        $this->model = new \app\admin\model\full\parment\Order;
+        $this->model = new \app\admin\model\FullParmentOrder;
 
     }
 
     public function index()
     {
-
-       $res = $this->model
-            ->select();
-
-       pr($res);die();
-
 
         return $this->view->fetch();
     }
@@ -44,23 +37,55 @@ class Fullsectioninfo extends Backend
     //全款购车登记
     public function full_register()
     {
-        //当前是否为关联查询
-        $this->relationSearch = true;
 
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
+                ->with(['mortgageregistration',
+                    'models' => function ($query) {
+                        $query->withField('name,standard_price');
+                    }, 'carnewinventory' => function ($query) {
+                        $query->withField('carnumber,reservecar,licensenumber,presentationcondition,frame_number,engine_number,household,4s_shop');
+                    },'sales'=>function ($query){
+                        $query->withField('nickname');
+                    }])
                 ->where($where)
+                ->where('review_the_data', 'for_the_car')
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
+                ->with(['mortgageregistration',
+                    'models' => function ($query) {
+                        $query->withField('name,standard_price');
+                    }, 'carnewinventory' => function ($query) {
+                        $query->withField('carnumber,reservecar,licensenumber,presentationcondition,frame_number,engine_number,household,4s_shop');
+                    },'sales'=>function ($query){
+                        $query->withField('nickname');
+                    }])
                 ->where($where)
+                ->where('review_the_data', 'for_the_car')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
+
+            foreach ($list as $k=>$v){
+                $v->visible(['id','order_no','username','phone','id_card','genderdata','city','detailed_address','customer_source','introduce_name','introduce_phone','introduce_card','plan_name','purchase_tax','car_images','business_risks','insurance']);
+                $v->visible(['mortgageregistration']);
+                $v->getRelation('mortgageregistration')->visible(['archival_coding','signdate','hostdate','mortgage_people','ticketdate','supplier','tax_amount','no_tax_amount','pay_taxesdate','house_fee','luqiao_fee','insurance_buydate','car_boat_tax','insurance_policy','commercial_insurance_policy','transfer','transferdate','yearly_inspection','contract_total','registry_remark','classification','year_range']);
+                $v->visible(['sales']);
+                $v->getRelation('sales')->visible(['nickname']);
+                $v->visible(['models']);
+                $v->getRelation('models')->visible(['name','standard_price']);
+                $v->visible(['carnewinventory']);
+                $v->getRelation('carnewinventory')->visible(['carnumber','reservecar','licensenumber','presentationcondition','frame_number','engine_number','household','4s_shop']);
+            }
+
+
+            $list = collection($list)->toArray();
+
 
             $result = array("total" => $total, "rows" => $list);
 
@@ -68,39 +93,6 @@ class Fullsectioninfo extends Backend
         }
         return $this->view->fetch();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        if ($this->request->isAjax()) {
-//
-//            $list = Db::table("crm_order_full_view")
-//                ->where("review_the_data", "for_the_car")
-//                ->select();
-//            $total = Db::table("crm_order_full_view")
-//                ->where("review_the_data", "for_the_car")
-//                ->count();
-//
-//            $list = $this->get_all($list);
-//
-//
-//            $result = array("total" => $total, "rows" => $list);
-//
-//            return json($result);
-//
-//        }
-//        return true;
     }
 
     /**
@@ -139,6 +131,18 @@ class Fullsectioninfo extends Backend
                     $params['transferdate'] = null;
                 }
 
+                //自动根据年检日期得到年检的时间段
+                $date = $params['yearly_inspection'];
+
+                $date = strtotime("$date +2 year");
+
+                $mon_first = date("Y-m-01", $date);
+                $mon_last = date("Y-m-d", strtotime("$mon_first +1 month -1 day"));
+
+                $params['year_range'] = $mon_first.";".$mon_last;
+
+
+
                 try {
 
                     $data = [
@@ -160,6 +164,7 @@ class Fullsectioninfo extends Backend
                         'transfer' => $params['transfer'],
                         'transferdate' => $params['transferdate'],
                         'yearly_inspection' => $params['yearly_inspection'],
+                        'year_range'=>$params['year_range'],
                         'contract_total' => $params['contract_total'],
                         'registry_remark' => $params['registry_remark'],
                         'classification' => 'full'
@@ -184,6 +189,13 @@ class Fullsectioninfo extends Backend
                             ->update($data);
 
                     } else {
+
+
+
+
+
+
+
                         $result = Db::name("mortgage_registration")->insert($data);
 
                         $insert_id = Db::name("mortgage_registration")->getLastInsID();
@@ -222,7 +234,6 @@ class Fullsectioninfo extends Backend
         $row = $this->get_all($row);
 
         $row = $row[0];
-
 
 
         //身份证正反面（多图）
