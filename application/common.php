@@ -743,3 +743,80 @@ if (!function_exists('posts')) {
     }
 }
 
+/**
+推广到内勤分配客户
+ */
+if (!function_exists('dstribution_inform')) {
+
+
+    function dstribution_inform()
+    {
+        $arr = [
+            'subject' => "新客户通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你有推广分配过来的新客户，请及时登录后台进行处理. '</div>'
+        ];
+
+        return $arr;
+    }
+}
+/**
+以租代购（新车）发送给内勤
+ */
+if (!function_exists('newinternal_inform')) {
+
+
+    function newinternal_inform($models_name=NULL,$admin_name=NULL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "新车待录入金额通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户：. $username . 对车型： . $models_name . 的购买，请及时登录后台进行金额录入 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（新车）内勤发送给车管
+ */
+if (!function_exists('newcar_inform')) {
+
+
+    function newcar_inform($models_name=NULL,$admin_name=NULLL,$username=NULL)
+    {
+        if ($models_name && $admin_name & $username) {
+            $arr = [
+                'subject' => "新车待车管确认通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，待车管确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（新车）车管发送给匹配金融
+ */
+if (!function_exists('newfinance_inform')) {
+
+
+    function newfinance_inform($models_name=NULL,$admin_name=NULLL,$username=NULL)
+    {
+        if ($models_name && $admin_name & $username) {
+            $arr = [
+                'subject' => "新车金融匹配通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行金融匹配 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+

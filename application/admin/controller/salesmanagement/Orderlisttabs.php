@@ -9,6 +9,7 @@ use app\admin\model\SalesOrder as salesOrderModel;
 use fast\Tree;
 use think\Db;
 use think\Config;
+use app\common\library\Email;
 
 /**
  * 订单列管理
@@ -273,16 +274,24 @@ class Orderlisttabs extends Backend
             $id = $this->request->post('id');
 
             $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'inhouse_handling']);
+            //销售员
+            $admin_name = DB::name('admin')->where('id', $this->auth->id)->value('nickname');
 
-            $sales_name = DB::name('admin')->where('id', $this->auth->id)->value('nickname');
+            $models_id = $this->model->where('id', $id)->value('models_id');
 
+            $backoffice_id = $this->model->where('id', $id)->value('backoffice_id');
+            //车型
+            $models_name = DB::name('models')->where('id', $models_id)->value('name');
+            //客户姓名
+            $username = $this->model->where('id', $id)->value('username');
+            
             //请求地址
             $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
                 'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-sales",
-                'content' => "销售员" . $sales_name . "发出新车销售请求，请处理"
+                'content' => "销售员" . $admin_name . "发出新车销售请求，请处理"
             ];
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $uri);//地址
@@ -315,7 +324,23 @@ class Orderlisttabs extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
-                $this->success('提交成功，请等待金融匹配结果');
+                $data = newinternal_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $backoffice_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
 
 
             } else {
