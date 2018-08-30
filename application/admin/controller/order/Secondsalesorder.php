@@ -17,6 +17,17 @@ class Secondsalesorder extends Backend
      * @var \app\admin\model\second\sales\Order
      */
     protected $model = null;
+    /**
+     * //数据关联字段,当前控制器对应的模型表中必须存在该字段
+     * @var string
+     */
+    protected $dataLimitField = 'admin_id';
+    /**
+     *  //表示显示当前自己和所有子级管理员的所有数据
+     * @var string
+     */
+    protected $dataLimit = 'auth';
+
 
     public function _initialize()
     {
@@ -297,7 +308,6 @@ class Secondsalesorder extends Backend
             $params['plan_name'] = addslashes(end($ex)); //
             //生成订单编号
             $params['order_no'] = date('Ymdhis');
-            $params['admin_id'] = $this->auth->id;
             $params['models_id'] = $result['models_id'];
             //把当前销售员所在的部门的内勤id 入库
 

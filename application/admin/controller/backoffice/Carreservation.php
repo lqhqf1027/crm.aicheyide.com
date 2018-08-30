@@ -186,7 +186,7 @@ class Carreservation extends Backend
     //二手车录入实际订车金额
     public function secondcarEntry()
     {
-        $this->model = new \app\admin\model\second\sales\Order;
+        $this->model = new \app\admin\model\SecondSalesOrder;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {

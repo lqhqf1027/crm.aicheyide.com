@@ -121,4 +121,13 @@ class RentalOrder extends Model
     {
         return $this->belongsTo('CarRentalModelsInfo','car_rental_models_info_id','id',[],'LEFT')->setEagerlyType(0);
     }
+
+    /**
+     * 关联admin
+     * @return \think\model\relation\BelongsTo
+     */
+    public function admin()
+    {
+        return $this->belongsTo('Admin','admin_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }

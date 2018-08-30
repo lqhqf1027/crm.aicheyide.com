@@ -32,42 +32,14 @@ class Orderlisttabs extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = model('SalesOrder');
-
     }
 
     public function index()
     {
-        $this->loadlang('order/salesorder');
-
-        $total = $this->model
-            ->where($where)
-            ->order($sort, $order)
-            ->count();
-
-        $this->model = new \app\admin\model\RentalOrder;
-        $total1 = $this->model
-            ->where($where)
-            ->order($sort, $order)
-            ->count();
-
-        $this->model = new \app\admin\model\second\sales\Order;
-        $total2 = $this->model
-            ->where($where)
-            ->order($sort, $order)
-            ->count();
-
-        $this->model = new \app\admin\model\FullParmentOrder;
-        $total3 = $this->model
-            ->where($where)
-            ->order($sort, $order)
-            ->count();
-
-        $this->view->assign('total', $total);
-        $this->view->assign('total1', $total1);
-        $this->view->assign('total2', $total2);
-        $this->view->assign('total3', $total3);
-
+        $this->view->assign('total', model('SalesOrder')->count());
+        $this->view->assign('total1', model('RentalOrder')->count());
+        $this->view->assign('total2', model('SecondSalesOrder')->count());
+        $this->view->assign('total3',model('FullParmentOrder')->count());
         return $this->view->fetch();
     }
 
@@ -78,6 +50,7 @@ class Orderlisttabs extends Backend
      */
     public function orderAcar()
     {
+        $this->model = model('SalesOrder');
         //当前是否为关联查询
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
@@ -139,7 +112,144 @@ class Orderlisttabs extends Backend
 
     }
 
+    /**
+     * 纯租订单
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function orderRental()
+    {
 
+        $this->model = new \app\admin\model\RentalOrder;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['admin'=>function ($query){
+                    $query->withField('nickname');
+                },'models'=> function ($query){
+                    $query->withField('name');
+                },'carrentalmodelsinfo'=>function ($query){
+                    $query->withField('licenseplatenumber,vin');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->with(['sales'=>function ($query){
+                    $query->withField('nickname');
+                },'models'=> function ($query){
+                    $query->withField('name');
+                },'carrentalmodelsinfo'=>function ($query){
+                    $query->withField('licenseplatenumber,vin');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            foreach ($list as $k=>$v){
+                $v->visible(['id','order_no','username','phone','id_card','cash_pledge','rental_price','tenancy_term','genderdata','review_the_data','createtime','delivery_datetime']);
+                $v->visible(['sales']);
+                $v->getRelation('sales')->visible(['nickname']);
+                $v->visible(['models']);
+                $v->getRelation('models')->visible(['name']);
+                $v->visible(['carrentalmodelsinfo']);
+                $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber','vin']);
+            }
+
+
+            $list = collection($list)->toArray();
+
+
+
+            $result = array("total" => $total, "rows" => $list);
+            return json($result);
+        }
+
+        return $this->view->fetch('index');
+
+    }
+
+    /**
+     * 以租代购（二手车）
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function orderSecond()
+    {
+
+        $this->model = new \app\admin\model\SecondSalesOrder;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
+        $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
+        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
+
+
+            $list = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['plansecond']);
+                $row->getRelation('plansecond')->visible(['newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
+
+
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
+            return json($result);
+        }
+
+        return $this->view->fetch('index');
+
+    }
     /**
      * 根据方案id查询 车型名称，首付、月供等
      */
@@ -279,67 +389,7 @@ class Orderlisttabs extends Backend
         return $this->view->fetch();
     }
 
-    /**纯租 */
-    public function orderRental()
-    {
 
-        $this->model = new \app\admin\model\RentalOrder;
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
-            $total = $this->model
-                ->with(['sales'=>function ($query){
-                    $query->withField('nickname');
-                },'models'=> function ($query){
-                    $query->withField('name');
-                },'carrentalmodelsinfo'=>function ($query){
-                    $query->withField('licenseplatenumber,vin');
-                }])
-                ->where($where)
-                ->order($sort, $order)
-                ->count();
-
-            $list = $this->model
-                ->with(['sales'=>function ($query){
-                    $query->withField('nickname');
-                },'models'=> function ($query){
-                    $query->withField('name');
-                },'carrentalmodelsinfo'=>function ($query){
-                    $query->withField('licenseplatenumber,vin');
-                }])
-                ->where($where)
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-
-            foreach ($list as $k=>$v){
-                $v->visible(['id','order_no','username','phone','id_card','cash_pledge','rental_price','tenancy_term','genderdata','review_the_data','createtime','delivery_datetime']);
-                $v->visible(['sales']);
-                $v->getRelation('sales')->visible(['nickname']);
-                $v->visible(['models']);
-                $v->getRelation('models')->visible(['name']);
-                $v->visible(['carrentalmodelsinfo']);
-                $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber','vin']);
-            }
-
-
-            $list = collection($list)->toArray();
-
-
-
-            $result = array("total" => $total, "rows" => $list);
-            return json($result);
-        }
-
-        return $this->view->fetch('index');
-
-    }
 
     /**
      * 根据方案id查询 车型名称，首付、月供等
@@ -400,68 +450,7 @@ class Orderlisttabs extends Backend
         return $this->view->fetch();
     }
 
-    /**以租代购（二手车）*/
-    public function orderSecond()
-    {
 
-        $this->model = new \app\admin\model\second\sales\Order;
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
-        $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
-        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
-            $total = $this->model
-                ->with(['plansecond' => function ($query) {
-                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                }, 'admin' => function ($query) {
-                    $query->withField('nickname');
-                }, 'models' => function ($query) {
-                    $query->withField('name');
-                }])
-                ->where($where)
-                ->order($sort, $order)
-                ->count();
-
-
-            $list = $this->model
-                ->with(['plansecond' => function ($query) {
-                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                }, 'admin' => function ($query) {
-                    $query->withField('nickname');
-                }, 'models' => function ($query) {
-                    $query->withField('name');
-                }])
-                ->where($where)
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-            foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
-                $row->visible(['plansecond']);
-                $row->getRelation('plansecond')->visible(['newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
-                $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname']);
-                $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
-            }
-
-
-            $list = collection($list)->toArray();
-
-            $result = array('total' => $total, "rows" => $list);
-            return json($result);
-        }
-
-        return $this->view->fetch('index');
-
-    }
 
     /**
      * 根据方案id查询 车型名称，首付、月供等
@@ -481,7 +470,7 @@ class Orderlisttabs extends Backend
     /**查看二手车单详细资料 */
     public function seconddetails($ids = null)
     {
-        $this->model = new \app\admin\model\second\sales\Order;
+        $this->model = new \app\admin\model\SecondSalesOrder;
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
@@ -619,7 +608,7 @@ class Orderlisttabs extends Backend
     /**查看全款单详细资料 */
     public function fulldetails($ids = null)
     {
-        $this->model = new \app\admin\model\full\parment\Order;
+        $this->model = new \app\admin\model\FullParmentOrder;
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
