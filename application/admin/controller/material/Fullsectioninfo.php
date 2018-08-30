@@ -34,7 +34,10 @@ class Fullsectioninfo extends Backend
         return $this->view->fetch();
     }
 
-    //全款购车登记
+    /**
+     * 全款购车登记
+     * @return string|\think\response\Json
+     */
     public function full_register()
     {
 
@@ -224,7 +227,11 @@ class Fullsectioninfo extends Backend
         return $this->view->fetch();
     }
 
-    //查看详细信息
+    /**
+     * 查看详细信息
+     * @param null $ids
+     * @return string
+     */
     public function detail($ids = null)
     {
         $row = Db::table("crm_order_full_view")
@@ -307,7 +314,11 @@ class Fullsectioninfo extends Backend
 
     }
 
-    //得到需要的所有信息
+    /**
+     * 得到需要的所有信息
+     * @param $list
+     * @return mixed
+     */
     public function get_all($list)
     {
         foreach ($list as $k => $v) {

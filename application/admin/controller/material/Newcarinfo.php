@@ -483,7 +483,11 @@ class Newcarinfo extends Backend
         return ['yes' => '有', 'no' => '无'];
     }
 
-
+    /**
+     * 得到销售的信息
+     * @param array $arr
+     * @return array
+     */
     public function get_sale($arr = array())
     {
         foreach ($arr as $k => $v) {
