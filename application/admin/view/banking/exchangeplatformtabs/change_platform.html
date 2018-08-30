@@ -11,7 +11,15 @@
                 <!--<h4><b style="margin: auto">销售1部:</b></h4>-->
                 {foreach name="mortgage_type_list" id="vo"}
 
-                <label>{notin name="key" value="$my_type"}<input name="mortgage_type" type="radio" value="{$key}"/> {$vo}{/notin}</label>
+                {empty name="$my_type"}
+                <label>{notin name="key" value="new_car"}<input name="mortgage_type" data-rule="required" type="radio" value="{$key}"/> {$vo}{/notin}</label>
+                {else /}
+
+                <label>{notin name="key" value="$my_type"}<input name="mortgage_type" data-rule="required" type="radio" value="{$key}"/> {$vo}{/notin}</label>
+
+
+                {/empty}
+
 
                 {/foreach}
 
