@@ -109,16 +109,26 @@ class SalesOrder extends Model
         return $this->belongsTo('Admin', 'sales_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * 新车库存表
+     * @return \think\model\relation\BelongsTo
+     */
     public function newinventory()
     {
         return $this->belongsTo('CarNewInventory', 'car_new_inventory_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
     public function mortgageregistration()
     {
         return $this->belongsTo('MortgageRegistration', 'mortgage_registration_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
     public function registryregistration()
     {
         return $this->belongsTo('RegistryRegistration','registry_registration_id','id',[],'LEFT')->setEagerlyType(0);

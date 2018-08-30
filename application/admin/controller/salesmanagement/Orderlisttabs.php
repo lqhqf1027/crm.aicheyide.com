@@ -74,6 +74,8 @@ class Orderlisttabs extends Backend
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
                     $query->withField('name');
+                },'newinventory'=>function($query){
+                    $query->withField('licensenumber');
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -87,6 +89,8 @@ class Orderlisttabs extends Backend
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
                     $query->withField('name');
+                },'newinventory'=>function($query){
+                    $query->withField('licensenumber');
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -100,6 +104,8 @@ class Orderlisttabs extends Backend
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
+                $row->visible(['newinventory']);
+                $row->getRelation('newinventory')->visible(['licensenumber']);
             }
 
 

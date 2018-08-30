@@ -309,7 +309,7 @@ class Vehicleinformation extends Backend
                 ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
                 ->join('models c', 'c.id=b.models_id')
                 ->where('a.id', $rental_order_id)
-                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,b.status,a.order_no,
+                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,b.status ,a.order_no,
 
                     c.name as models_name,b.licenseplatenumber as licenseplatenumber')
             ->find();
