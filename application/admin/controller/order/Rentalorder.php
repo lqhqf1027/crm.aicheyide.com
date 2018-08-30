@@ -6,6 +6,7 @@ use app\common\controller\Backend;
 use think\Db;
 use think\Session;
 use think\Request;
+use app\common\library\Email;
 
 /**
  * 租车订单列管理
@@ -437,6 +438,10 @@ class Rentalorder extends Backend
             $params['plan_car_rental_name'] = Session::get('plan_id'); 
             
             $params['plan_name'] = Session::get('plan_name'); 
+
+            $models_id = DB::name('car_rental_models_info')->where('id', Session::get('plan_id'))->value('models_id');
+
+            $params['models_id'] = $models_id;
             
             if ($params) {
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
@@ -460,7 +465,7 @@ class Rentalorder extends Backend
 
                         $this->model = model('car_rental_models_info');
 
-                        $this->model->isUpdate(true)->save(['id'=>$params['plan_car_rental_name'],'review_the_data'=>'is_reviewing']);
+                        $this->model->isUpdate(true)->save(['id'=>$params['plan_car_rental_name'],'status'=>'is_reviewing']);
                         
                         if ($result_s) {
                             
@@ -481,7 +486,32 @@ class Rentalorder extends Backend
                             $return = curl_exec ( $ch );
                             curl_close ( $ch );
                             
-                            $this->success();
+                            $data = Db::name("rental_order")->where('id', Session::get('rental_id'))->find();
+                            //车型
+                            $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                            //销售员
+                            $admin_id = $data['admin_id'];
+                            $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                            //客户姓名
+                            $username= $data['username'];
+
+                            $data = rentalcar_inform($models_name,$admin_name,$username);
+                            // var_dump($data);
+                            // die;
+                            $email = new Email;
+                            // $receiver = "haoqifei@cdjycra.club";
+                            $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                            $result_ss = $email
+                                ->to($receiver)
+                                ->subject($data['subject'])
+                                ->message($data['message'])
+                                ->send();
+                            if($result_ss){
+                                $this->success();
+                            }
+                            else {
+                                $this->error('邮箱发送失败');
+                            }
 
                         } else {
                             $this->error('更新状态失败');
@@ -695,6 +725,33 @@ class Rentalorder extends Backend
                 // print_r($return);
 
 
+                $data = Db::name("rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = rentalcontrol_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
 
                 // //推送模板消息给风控
                 // $sedArr = array(
@@ -717,7 +774,6 @@ class Rentalorder extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
-                    $this->success('提交成功，请等待审核结果'); 
                
                 
             }else{

@@ -8,6 +8,7 @@ use think\Config;
 use think\db\exception\DataNotFoundException;
 use app\admin\model\SalesOrder as salesOrderModel;
 use app\admin\controller\Bigdata as bg;
+use app\common\library\Email;
 
 /**
  * 订单列管理.
@@ -372,7 +373,34 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+
+                $data = Db::name("sales_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = newpass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
@@ -417,7 +445,35 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("sales_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = newdata_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
+                
             } else {
                 $this->error();
             }
@@ -464,7 +520,34 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("sales_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = newnopass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }

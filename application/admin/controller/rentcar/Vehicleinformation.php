@@ -7,6 +7,7 @@ use app\common\controller\Backend;
 use think\Db;
 use think\Session;
 use app\common\model\Config as ConfigModel;
+use app\common\library\Email;
 
 /**
  * 租车管理车辆信息
@@ -254,7 +255,34 @@ class Vehicleinformation extends Backend
             curl_close($ch);
 
             if ($result) {
-                $this->success();
+
+                $data = Db::name("rental_order")->where('id', $rental_id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                
+                //客户姓名
+                $username= $data['username'];
+
+                $data = rentalcar_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
