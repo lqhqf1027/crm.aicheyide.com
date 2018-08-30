@@ -312,9 +312,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {checkbox: true},
                             {field: 'id', title: __('Id')}, 
                             {field: 'order_no', title: __('Order_no')}, 
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'models_name', title: __('租车车型') },
-                            {field: 'admin_nickname', title: __('销售员') },
+                            {field: 'createtime', title: __('提交时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {field: 'models.name', title: __('租车车型') },
+                            {field: 'admin.nickname', title: __('销售员') },
+
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'id_card', title: __('Id_card')},
+                            {field: 'cash_pledge', title: __('押金（元）')},
+                            {field: 'rental_price', title: __('租金（元）')},
+                            {field: 'tenancy_term', title: __('租期（月）')},
                             {
                                 field: 'id', title: __('查看详细资料'), table: rentalcarAudit, buttons: [
                                     {
@@ -327,13 +334,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
-                            {field: 'username', title: __('Username')},
-                            {field: 'phone', title: __('Phone')},
-                            {field: 'id_card', title: __('Id_card')},
-                            {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
-                            {field: 'cash_pledge', title: __('押金（元）')},
-                            {field: 'rental_price', title: __('租金（元）')},
-                            {field: 'tenancy_term', title: __('租期（月）')}, 
                             {
                                 field: 'operate', title: __('Operate'), table: rentalcarAudit,
                                 buttons: [
@@ -696,10 +696,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, { ids: ids });
                         var bigdatatype = row.plan_acar_name?'sales_order':row.plan_car_rental_name?'rental_order':row.plan_car_second_name?'second_sales_order':0;
-                        var url = 'riskcontrol/creditreview/bigdata'+'/bigdatatype/'+bigdatatype; 
+                        var url = 'riskcontrol/creditreview/bigdata'+'/bigdatatype/'+bigdatatype;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
                             callback: function (value) {
-                                alert(value);
                             },success:function(ret){
                                 console.log(ret);
                             }

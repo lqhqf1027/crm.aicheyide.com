@@ -1,10 +1,10 @@
 <?php
 
-namespace app\admin\model\car\rental;
+namespace app\admin\model;
 
 use think\Model;
 
-class Confirmation extends Model
+class CarRentalConfirmation extends Model
 {
     // 表名
     protected $name = 'car_rental_confirmation';

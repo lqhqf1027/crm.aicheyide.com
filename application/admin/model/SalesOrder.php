@@ -124,6 +124,11 @@ class SalesOrder extends Model
         return $this->belongsTo('RegistryRegistration','registry_registration_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
+    public function mortgage()
+    {
+        return $this->belongsTo('Mortgage','mortgage_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
 
     
 }

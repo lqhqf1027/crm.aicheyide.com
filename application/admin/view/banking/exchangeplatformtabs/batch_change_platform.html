@@ -9,7 +9,12 @@
 
                 {foreach name="mortgage_type_list" id="vo"}
 
+                {empty name="$mortgage_type"}
+                {notin name="key" value="new_car"}<label><input name="mortgage_type" type="radio" value="{$key}"/> {$vo}</label>{/notin}
+                {else /}
                 {notin name="key" value="$mortgage_type"}<label><input name="mortgage_type" type="radio" value="{$key}"/> {$vo}</label>{/notin}
+                {/empty}
+
 
                 {/foreach}
 
@@ -27,7 +32,7 @@
     </div>
 </form>
 {php}
-//dump($mortgage_type_list);
+dump($mortgage_type);
 {/php}
 
 

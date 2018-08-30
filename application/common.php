@@ -722,7 +722,6 @@ if (!function_exists('gets')) {
  */
 if (!function_exists('posts')) {
 
-
     function posts($url = null, $data = null)
     {
         if ($url && $data) {
@@ -743,6 +742,7 @@ if (!function_exists('posts')) {
         exit('post远程请求，参数错误');
     }
 }
+
 /**
 推广到内勤分配客户
  */
@@ -819,3 +819,4 @@ if (!function_exists('newfinance_inform')) {
         
     }
 }
+

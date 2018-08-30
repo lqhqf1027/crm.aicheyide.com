@@ -18,11 +18,14 @@ class Fullparmentorder extends Backend
      * @var \app\admin\model\full\parment\Order
      */
     protected $model = null;
+    protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
+    protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
+
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\full\parment\Order;
+        $this->model = new \app\admin\model\FullParmentOrder;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
     }
     
@@ -72,7 +75,7 @@ class Fullparmentorder extends Backend
             $params['plan_name'] = addslashes(end($ex)); //
             //生成订单编号
             $params['order_no'] = date('Ymdhis');
-            $params['admin_id'] = $this->auth->id;
+
             $params['models_id'] = $result['models_id'];
             //把当前销售员所在的部门的内勤id 入库
 

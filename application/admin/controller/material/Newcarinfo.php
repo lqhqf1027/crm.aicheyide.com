@@ -40,7 +40,13 @@ class Newcarinfo extends Backend
         return $this->view->fetch();
     }
 
-
+    /**
+     * 按揭客户购车信息
+     * @return string|\think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function new_customer()
     {
         //设置过滤方法
@@ -89,7 +95,13 @@ class Newcarinfo extends Backend
 
     }
 
-    //按揭客户资料入库表
+    /**
+     * 按揭客户资料入库表
+     * @return string|\think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function data_warehousing()
     {
         //设置过滤方法
@@ -143,9 +155,9 @@ class Newcarinfo extends Backend
             ->field("mortgage_registration_id,createtime")
             ->find();
 
-        if ($gage['createtime']) {
-            $gage['createtime'] = date("Y-m-d", $gage['createtime']);
-        }
+//        if ($gage['createtime']) {
+//            $gage['createtime'] = date("Y-m-d", $gage['createtime']);
+//        }
 
 
         if ($gage['mortgage_registration_id']) {
@@ -162,6 +174,9 @@ class Newcarinfo extends Backend
 
             $check_mortgage = $this->request->post("mortgage");
 
+            if($gage['createtime']){
+                $params['signdate'] = date('Y-m-d',$gage['createtime']);
+            }
 
             if ($params) {
                 if (!$check_mortgage) {
@@ -180,38 +195,12 @@ class Newcarinfo extends Backend
                         $row->validate($validate);
                     }
 
-                    $doUpdate = [
-                        'archival_coding' => $params['archival_coding'],
-                        'signdate' => $gage['createtime'],
-                        'end_money' => $params['end_money'],
-                        'hostdate' => $params['hostdate'],
-                        'mortgage_people' => $params['mortgage_people'],
-                        'ticketdate' => $params['ticketdate'],
-                        'supplier' => $params['supplier'],
-                        'tax_amount' => $params['tax_amount'],
-                        'no_tax_amount' => $params['no_tax_amount'],
-                        'pay_taxesdate' => $params['pay_taxesdate'],
-                        'house_fee' => $params['house_fee'],
-                        'luqiao_fee' => $params['luqiao_fee'],
-                        'insurance_buydate' => $params['insurance_buydate'],
-                        'car_boat_tax' => $params['car_boat_tax'],
-                        'insurance_policy' => $params['insurance_policy'],
-                        'commercial_insurance_policy' => $params['commercial_insurance_policy'],
-                        'transfer' => $params['transfer'],
-                        'transferdate' => $params['transferdate'],
-                        'yearly_inspection' => $params['yearly_inspection'],
-                        'classification' => 'new',
-                        'contract_total' => $params['contract_total'],
-                        'registry_remark' => $params['registry_remark']
-                    ];
-
-
                     if ($gage['mortgage_registration_id']) {
                         $result = Db::name("mortgage_registration")
                             ->where("id", $gage['mortgage_registration_id'])
-                            ->update($doUpdate);
+                            ->update($params);
                     } else {
-                        Db::name("mortgage_registration")->insert($doUpdate);
+                        Db::name("mortgage_registration")->insert($params);
 
                         $lastId = Db::name("mortgage_registration")->getLastInsID();
 
@@ -269,44 +258,13 @@ class Newcarinfo extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
                         $row->validate($validate);
                     }
-                    $data = array(
-                        'id_card' => $params['id_card'],
-                        'registered_residence' => $params['registered_residence'],
-                        'marry_and_divorceimages' => $params['marry_and_divorceimages'],
-                        'credit_reportimages' => $params['credit_reportimages'],
-                        'halfyear_bank_flowimages' => $params['halfyear_bank_flowimages'],
-                        'detailed_list' => $params['detailed_list'],
-                        'guarantee' => $params['guarantee'],
-                        'residence_permitimages' => $params['residence_permitimages'],
-                        'driving_license' => $params['driving_license'],
-                        'company_contractimages' => $params['company_contractimages'],
-                        'car_keys' => $params['car_keys'],
-                        'lift_listimages' => $params['lift_listimages'],
-                        'deposit' => $params['deposit'],
-                        'truth_management_protocolimages' => $params['truth_management_protocolimages'],
-                        'confidentiality_agreementimages' => $params['confidentiality_agreementimages'],
-                        'supplementary_contract_agreementimages' => $params['supplementary_contract_agreementimages'],
-                        'explain_situation' => $params['explain_situation'],
-                        'tianfu_bank_cardimages' => $params['tianfu_bank_cardimages'],
-                        'other_documentsimages' => $params['other_documentsimages'],
-                        'driving_licenseimages' => $params['driving_licenseimages'],
-                        'strong_insurance' => $params['strong_insurance'],
-                        'tax_proofimages' => $params['tax_proofimages'],
-                        'invoice_or_deduction_coupletimages' => $params['invoice_or_deduction_coupletimages'],
-                        'registration_certificateimages' => $params['registration_certificateimages'],
-                        'commercial_insurance' => $params['commercial_insurance'],
-                        'tax' => $params['tax'],
-                        'maximum_guarantee_contractimages' => $params['maximum_guarantee_contractimages'],
-                        'information_remark' => $params['information_remark'],
-                        'classification' => 'new'
-                    );
 
                     if ($registr) {
                         $result = Db::name("registry_registration")
                             ->where("id", $registr)
-                            ->update($data);
+                            ->update($params);
                     } else {
-                        Db::name("registry_registration")->insert($data);
+                        Db::name("registry_registration")->insert($params);
 
                         $last_id = Db::name("registry_registration")->getLastInsID();
 
@@ -334,7 +292,11 @@ class Newcarinfo extends Backend
         return $this->view->fetch();
     }
 
-    //查看详细信息
+    /**
+     * 查看详细信息
+     * @param null $ids
+     * @return string
+     */
     public function detail($ids = null)
     {
         $row = Db::table("crm_order_view")
@@ -344,6 +306,8 @@ class Newcarinfo extends Backend
         $row = $this->get_sale($row);
 
         $row = $row[0];
+
+        
 
 
         if ($row['new_car_marginimages'] == "") {

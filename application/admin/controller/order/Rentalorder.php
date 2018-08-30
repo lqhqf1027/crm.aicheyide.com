@@ -26,7 +26,7 @@ class Rentalorder extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
     }
     
@@ -424,7 +424,7 @@ class Rentalorder extends Backend
 
             ->field('a.id,a.licenseplatenumber,a.kilometres,a.Parkingposition,a.companyaccount,a.cashpledge,a.threemonths,a.sixmonths,a.manysixmonths,a.note,b.name as models_name')
 
-            ->where('a.review_the_data', '')
+            ->where('a.status', '')
 
             ->select();
 
