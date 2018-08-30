@@ -15,7 +15,7 @@
   "window": {
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#DE3639",
-    "navigationBarTitleText": "FastAdmin",
+    "navigationBarTitleText": "友车友家",
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
@@ -34,13 +34,13 @@
         "pagePath": "page/news/index",
         "iconPath": "assets/images/tabbar/store.png",
         "selectedIconPath": "assets/images/tabbar/store-hl.png",
-        "text": "资讯"
+        "text": "低首付"
       },
       {
         "pagePath": "page/product/index",
         "iconPath": "assets/images/tabbar/addon.png",
         "selectedIconPath": "assets/images/tabbar/addon-hl.png",
-        "text": "产品"
+        "text": "新能源"
       },
       {
         "pagePath": "page/my/index",

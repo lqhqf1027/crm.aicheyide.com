@@ -8,6 +8,7 @@ use think\Config;
 use think\db\exception\DataNotFoundException;
 use app\admin\model\SalesOrder as salesOrderModel;
 use app\admin\controller\Bigdata as bg;
+
 /**
  * 订单列管理.
  *
@@ -24,11 +25,12 @@ class Creditreview extends Backend
     protected $userid = 'junyi_testusr'; //用户id
     protected $Rc4 = '12b39127a265ce21'; //apikey
     protected $sign = null; //sign  md5加密
-    protected $searchFields ='username';
+    protected $searchFields = 'username';
+
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = model('SalesOrder'); 
+        $this->model = model('SalesOrder');
         //共享userid 、sign
         $this->sign = md5($this->userid . $this->Rc4);
     }
@@ -39,40 +41,28 @@ class Creditreview extends Backend
 
         $this->view->assign([
             'total' => $this->model
-
-                ->where($where)
                 ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
-                ->order($sort, $order)
                 ->count(),
 
             'total1' => DB::name('rental_order')
-
-                ->where($where)
                 ->where('review_the_data', 'is_reviewing_pass')
                 ->whereOr('review_the_data', 'is_reviewing_nopass')
                 ->whereOr('review_the_data', 'is_reviewing_control')
-                ->order($sort, $order)
                 ->count(),
             'total2' => DB::name('second_sales_order')
-                ->where($where)
                 ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
-                ->order($sort, $order)
                 ->count(),
 
         ]);
 
         $list = $this->model
-            ->where($where)
-            ->order($sort, $order)
             ->where('review_the_data', 'is_reviewing_true')
             ->whereOr('review_the_data', 'for_the_car')
             ->whereOr('review_the_data', 'not_through')
-            ->limit($offset, $limit)
             ->select();
 
         $list = collection($list)->toArray();
 
-        
 
         return $this->view->fetch();
     }
@@ -80,7 +70,7 @@ class Creditreview extends Backend
 
     //展示需要审核的新车销售单
     public function newcarAudit()
-    {  
+    {
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -99,7 +89,6 @@ class Creditreview extends Backend
                 }])
                 ->where($where)
                 ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
-                
                 ->order($sort, $order)
                 ->count();
 
@@ -114,12 +103,11 @@ class Creditreview extends Backend
                 }])
                 ->where($where)
                 ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
-               
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'financial_name', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['id', 'plan_acar_name', 'order_no', 'username', 'financial_name', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
@@ -142,59 +130,8 @@ class Creditreview extends Backend
 
     //展示需要审核的租车单
     public function rentalcarAudit()
-    { 
-        
-       //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-           //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = Db::name('rental_order')
-
-                ->where($where)
-                ->order($sort, $order)
-                ->where('review_the_data', 'is_reviewing_pass')
-                ->whereOr('review_the_data', 'is_reviewing_nopass')
-                ->whereOr('review_the_data', 'is_reviewing_control')
-                ->count();
-
-            $list = Db::name('rental_order')
-
-                ->where($where)
-                ->order($sort, $order)
-                ->where('review_the_data', 'is_reviewing_pass')
-                ->whereOr('review_the_data', 'is_reviewing_nopass')
-                ->whereOr('review_the_data', 'is_reviewing_control')
-                ->limit($offset, $limit)
-                ->select();
-
-            $list = collection($list)->toArray();
-
-            foreach ((array)$list as $k => $row) {
-
-                $admin_id = $row['admin_id'];
-                $plan_car_rental_name = $row['plan_car_rental_name'];
-                $models_name = Db::name('car_rental_models_info')->alias('a')->join('models b', 'b.id=a.models_id')->where('a.id', $plan_car_rental_name)->value('b.name');
-                $admin_nickname = Db::name('admin')->where('id', $admin_id)->value('nickname'); 
-            }
-
-            $result = array("total" => $total, "rows" => $list);
-            return json($result);
-        }
-
-        return $this->view->fetch('index');
-
-    }
- 
-
-    //展示需要审核的二手车单
-    public function secondhandcarAudit()
-
-    { 
-        $this->model = new \app\admin\model\second\sales\Order;
+    {
+        $this->model = model('RentalOrder');
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -203,45 +140,99 @@ class Creditreview extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
-            
             $total = $this->model
-                    ->with(['plansecond' => function ($query) {
-                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name');
-                    }])
-                    ->where($where)
-                    ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
-                    
-                    ->order($sort, $order)
-                    ->count();
+                ->with(['admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'carrentalmodelsinfo' => function ($query) {
+                    $query->withField('licenseplatenumber,vin');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], 'or')
+                ->count();
+
+            $list = $this->model
+                ->with(['admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'carrentalmodelsinfo' => function ($query) {
+                    $query->withField('licenseplatenumber,vin');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], 'or')
+                ->select();
+            foreach ($list as $row) {
+                $row->visible(['id', 'plan_car_rental_name','order_no', 'createtime', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term',  'review_the_data']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
+            $list = collection($list)->toArray();
+//            pr($list);die;
+            $result = array("total" => $total, "rows" => $list);
+            return json($result);
+        }
+
+        return $this->view->fetch('index');
+
+    }
+
+
+    //展示需要审核的二手车单
+    public function secondhandcarAudit()
+
+    {
+        $this->model = new \app\admin\model\SecondSalesOrder;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+
+            $total = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
+                ->order($sort, $order)
+                ->count();
 
 
             $list = $this->model
-                    ->with(['plansecond' => function ($query) {
-                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name');
-                    }])
-                    ->where($where)
-                    ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
-
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
             foreach ($list as $k => $row) {
-                    $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
-                    $row->visible(['plansecond']);
-                    $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
-                    $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
-                    $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
-                    
+                $row->visible(['id','plan_car_second_name', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['plansecond']);
+                $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+
             }
 
             $list = collection($list)->toArray();
@@ -366,18 +357,18 @@ class Creditreview extends Backend
             $uri = "http://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-newpass",
                 'content' => "销售员" . $admin_nickname . "提交的新车销售单已通过风控审核"
             ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);//地址
+            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+            $return = curl_exec($ch);
+            curl_close($ch);
             // print_r($return);
 
             if ($result) {
@@ -411,18 +402,18 @@ class Creditreview extends Backend
             $uri = "http://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-newdata",
                 'content' => "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金"
             ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);//地址
+            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+            $return = curl_exec($ch);
+            curl_close($ch);
             // print_r($return);
 
             if ($result) {
@@ -458,18 +449,18 @@ class Creditreview extends Backend
             $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-newnopass",
                 'content' => "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核"
             ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);//地址
+            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+            $return = curl_exec($ch);
+            curl_close($ch);
             // print_r($return);
 
             if ($result) {
@@ -495,16 +486,16 @@ class Creditreview extends Backend
             if (!in_array($row[$this->dataLimitField], $adminIds)) {
                 $this->error(__('You have no permission'));
             }
-        }   
+        }
         // $list = collection($row)->toArray();
         // pr($row);die;
-      
+
         //身份证图片
-        $id_cardimages = explode(',', $row['id_cardimages']); 
+        $id_cardimages = explode(',', $row['id_cardimages']);
         //驾照图片 
-        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']); 
+        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
         //户口簿图片 
-        $residence_bookletimages = explode(',', $row['residence_bookletimages']);   
+        $residence_bookletimages = explode(',', $row['residence_bookletimages']);
         //通话清单
         $call_listfilesimages = explode(',', $row['call_listfilesimages']);
         $this->view->assign(
@@ -552,18 +543,18 @@ class Creditreview extends Backend
                 $uri = "https://goeasy.io/goeasy/publish";
                 // 参数数组
                 $data = [
-                    'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                    'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                     'channel' => "demo-rentalpass",
                     'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！"
                 ];
-                $ch = curl_init ();
-                curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-                curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-                curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-                curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-                $return = curl_exec ( $ch );
-                curl_close ( $ch );
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $uri);//地址
+                curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+                curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+                $return = curl_exec($ch);
+                curl_close($ch);
                 // print_r($return);
 
                 $this->success();
@@ -595,18 +586,18 @@ class Creditreview extends Backend
             $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-rentalnopass",
                 'content' => "销售员" . $admin_nickname . "提交的租车单没有通过风控审核"
             ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);//地址
+            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+            $return = curl_exec($ch);
+            curl_close($ch);
             // print_r($return);
 
             if ($result) {
@@ -614,7 +605,6 @@ class Creditreview extends Backend
             } else {
                 $this->error();
             }
-
 
 
         }
@@ -702,18 +692,18 @@ class Creditreview extends Backend
             $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-secondpass",
                 'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核"
             ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);//地址
+            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+            $return = curl_exec($ch);
+            curl_close($ch);
             // print_r($return);
 
             if ($result) {
@@ -747,18 +737,18 @@ class Creditreview extends Backend
             $uri = "http://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-seconddata",
                 'content' => "销售员" . $admin_nickname . "提交的租车单需要提交保证金"
             ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);//地址
+            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+            $return = curl_exec($ch);
+            curl_close($ch);
             // print_r($return);
 
             if ($result) {
@@ -792,18 +782,18 @@ class Creditreview extends Backend
             $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
             $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                 'channel' => "demo-secondnopass",
                 'content' => "销售员" . $admin_nickname . "提交的租车单没有通过风控审核"
             ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uri);//地址
+            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
+            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
+            $return = curl_exec($ch);
+            curl_close($ch);
             // print_r($return);
 
             if ($result) {
@@ -811,7 +801,6 @@ class Creditreview extends Backend
             } else {
                 $this->error();
             }
-
 
 
         }
@@ -830,31 +819,31 @@ class Creditreview extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-        
+
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
-        
+
         //定金收据上传
         $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-        
+
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-        
+
         //户口簿【首页、主人页、本人页】
         $residence_bookletimages = explode(',', $row['residence_bookletimages']);
-        
+
         //住房合同/房产证（多图）
         $housingimages = explode(',', $row['housingimages']);
-        
+
         //银行卡照（可多图）
         $bank_cardimages = explode(',', $row['bank_cardimages']);
 
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
-        
+
         //通话清单（文件上传）
         $call_listfiles = explode(',', $row['call_listfiles']);
 
@@ -885,7 +874,7 @@ class Creditreview extends Backend
     public function rentalcardetails($ids = null)
     {
 
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder;
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
@@ -894,15 +883,15 @@ class Creditreview extends Backend
             if (!in_array($row[$this->dataLimitField], $adminIds)) {
                 $this->error(__('You have no permission'));
             }
-        }   
-        
-         //身份证图片
-        $id_cardimages = explode(',', $row['id_cardimages']); 
-         //驾照图片 
-        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']); 
-         //户口簿图片 
-        $residence_bookletimages = explode(',', $row['residence_bookletimages']);   
-         //通话清单
+        }
+
+        //身份证图片
+        $id_cardimages = explode(',', $row['id_cardimages']);
+        //驾照图片
+        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
+        //户口簿图片
+        $residence_bookletimages = explode(',', $row['residence_bookletimages']);
+        //通话清单
 
         $call_listfilesimages = explode(',', $row['call_listfilesimages']);
         $this->view->assign(
@@ -923,7 +912,7 @@ class Creditreview extends Backend
     /**查看二手车单详细资料 */
     public function secondhandcardetails($ids = null)
     {
-        $this->model = new \app\admin\model\second\sales\Order;
+        $this->model = new \app\admin\model\SecondSalesOrder;
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
@@ -933,31 +922,31 @@ class Creditreview extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-        
+
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
-        
+
         //定金收据上传
         $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-        
+
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-        
+
         //户口簿【首页、主人页、本人页】
         $residence_bookletimages = explode(',', $row['residence_bookletimages']);
-        
+
         //住房合同/房产证（多图）
         $housingimages = explode(',', $row['housingimages']);
-        
+
         //银行卡照（可多图）
         $bank_cardimages = explode(',', $row['bank_cardimages']);
 
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
-        
+
         //通话清单（文件上传）
         $call_listfiles = explode(',', $row['call_listfiles']);
 
@@ -984,23 +973,30 @@ class Creditreview extends Backend
         return $this->view->fetch();
     }
 
-    /**查看新车大数据 */
 
 
-    public function bigdata($ids = null,$bigdatatype= null)
+
+
+    /**
+     * 查看大数据  新车、二手车、租车
+     * @param null $ids
+     * @param null $bigdatatype
+     * @return null|string
+     * @throws \think\Exception
+     */
+    public function bigdata($ids = null, $bigdatatype = null)
     {
-        
-      
+
         //$bigdatatype为表名
         $bg = new bg();
-        $bigdata= $bg->toViewBigData($ids,$bigdatatype); 
+        $bigdata = $bg->toViewBigData($ids, $bigdatatype);
         // pr($bigdata);
-        $this->assignconfig([ 
+        $this->assignconfig([
             'zcFraudScore' => $bigdata['risk_data']['data']['zcFraudScore']
         ]);
-        $this->view->assign('bigdata',$bigdata);
-        return $this->view->fetch(); 
-    } 
+        $this->view->assign('bigdata', $bigdata);
+        return $this->view->fetch();
+    }
 
 }
   

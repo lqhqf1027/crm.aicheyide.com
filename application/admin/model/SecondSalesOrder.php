@@ -1,10 +1,10 @@
 <?php
 
-namespace app\admin\model\second\sales;
+namespace app\admin\model;
 
 use think\Model;
 
-class Order extends Model
+class SecondSalesOrder extends Model
 {
     // 表名
     protected $name = 'second_sales_order';
