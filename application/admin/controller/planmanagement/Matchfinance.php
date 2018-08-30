@@ -197,7 +197,7 @@ class Matchfinance extends Backend
                 //客户姓名
                 $username= $data['username'];
 
-                $data = newfinance_inform($models_name,$admin_name,$username);
+                $data = newcontrol_inform($models_name,$admin_name,$username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -292,7 +292,7 @@ class Matchfinance extends Backend
                 //客户姓名
                 $username= $data['username'];
 
-                $data = newfinance_inform($models_name,$admin_name,$username);
+                $data = newcontrol_inform($models_name,$admin_name,$username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
