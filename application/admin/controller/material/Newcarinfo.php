@@ -40,7 +40,13 @@ class Newcarinfo extends Backend
         return $this->view->fetch();
     }
 
-
+    /**
+     * 按揭客户购车信息
+     * @return string|\think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function new_customer()
     {
         //设置过滤方法
@@ -89,7 +95,13 @@ class Newcarinfo extends Backend
 
     }
 
-    //按揭客户资料入库表
+    /**
+     * 按揭客户资料入库表
+     * @return string|\think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function data_warehousing()
     {
         //设置过滤方法
@@ -280,7 +292,11 @@ class Newcarinfo extends Backend
         return $this->view->fetch();
     }
 
-    //查看详细信息
+    /**
+     * 查看详细信息
+     * @param null $ids
+     * @return string
+     */
     public function detail($ids = null)
     {
         $row = Db::table("crm_order_view")
