@@ -129,7 +129,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
                             {field: 'planacar.payment', title: __('首付')},
@@ -249,7 +249,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
                             {field: 'planacar.payment', title: __('首付')},
@@ -368,7 +368,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
                             {field: 'planacar.payment', title: __('首付')},
@@ -606,7 +606,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
                 datetime:function (value, row, index) {
 
-                    return timestampToTime(value);
+                    if(value){
+                        return timestampToTime(value);
+                    }
 
                     function timestampToTime(timestamp) {
                         var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
