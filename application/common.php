@@ -743,3 +743,220 @@ if (!function_exists('posts')) {
     }
 }
 
+/**
+推广到内勤分配客户
+ */
+if (!function_exists('dstribution_inform')) {
+
+
+    function dstribution_inform()
+    {
+        $arr = [
+            'subject' => "新客户通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你有推广分配过来的新客户，请及时登录后台进行处理. '</div>'
+        ];
+
+        return $arr;
+    }
+}
+/**
+以租代购（新车）发送给内勤
+ */
+if (!function_exists('newinternal_inform')) {
+
+
+    function newinternal_inform($models_name=NULL,$admin_name=NULL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "新车待录入金额通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户：. $username . 对车型： . $models_name . 的购买，请及时登录后台进行金额录入 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（新车）内勤发送给车管
+ */
+if (!function_exists('newcar_inform')) {
+
+
+    function newcar_inform($models_name=NULL,$admin_name=NULLL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "新车待车管确认通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，待车管确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（新车）车管发送给匹配金融
+ */
+if (!function_exists('newfinance_inform')) {
+
+
+    function newfinance_inform($models_name=NULL,$admin_name=NULLL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "新车金融匹配通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行金融匹配 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（新车）匹配金融发送给风控审核
+ */
+if (!function_exists('newcontrol_inform')) {
+
+
+    function newcontrol_inform($models_name=NULL,$admin_name=NULLL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "新车风控审核通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，金融已匹配，请及时登录后台进行风控审核 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（新车）风控审核发送给销售，审核通过
+ */
+if (!function_exists('newpass_inform')) {
+
+
+    function newpass_inform($models_name=NULL,$username=NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车风控审核通过通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .  你发起的客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（新车）风控审核发送给销售，审核需要保证金
+ */
+if (!function_exists('newdata_inform')) {
+
+
+    function newdata_inform($models_name=NULL,$username=NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车风控审核通过通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .  你发起的客户： . $username . 对车型： . $models_name . 的购买，风控需要你提交保证金收据，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（新车）风控审核发送给销售，审核不通过
+ */
+if (!function_exists('newnopass_inform')) {
+
+
+    function newnopass_inform($models_name=NULL,$username=NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车风控审核通过通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .  你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+租车 发送给车管进行预定
+ */
+if (!function_exists('rentalcar_inform')) {
+
+
+    function rentalcar_inform($models_name=NULL,$admin_name=NULL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "租车预定通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户：. $username . 对车型： . $models_name . 的租车预定，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+租车 车管同意预定，发送给销售员，可补全客户信息
+ */
+if (!function_exists('rentalsales_inform')) {
+
+
+    function rentalsales_inform($models_name=NULL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "车管租车预定成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .你发起的客户：. $username . 对车型： . $models_name . 的租车预定，车管已经同意，请及时登录后台进行客户信息的补全 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+租车 销售员补全客户信息后，发送给风控审核
+ */
+if (!function_exists('rentalcontrol_inform')) {
+
+
+    function rentalcontrol_inform($models_name=NULL,$admin_name=NULL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "租车风控审核通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户：. $username . 对车型： . $models_name . 的租车请求，车管已经同意，客户信息已补全，请及时登录后台进行风控审核 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+

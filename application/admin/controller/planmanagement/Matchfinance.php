@@ -10,6 +10,7 @@ namespace app\admin\controller\planmanagement;
 
 use app\common\controller\Backend;
 use think\DB;
+use app\common\library\Email;
 
 class Matchfinance extends Backend
 {
@@ -187,7 +188,33 @@ class Matchfinance extends Backend
 
 
            if($res){
-               $this->success('','',$v);
+
+                $data = Db::name("sales_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = newcontrol_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('rule_message', "message2")->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success('','','success');
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
            }else{
                $this->error();
            }
@@ -256,7 +283,32 @@ class Matchfinance extends Backend
             ]);
 
             if($res){
-                $this->success('','','success');
+
+                $data = Db::name("sales_order")->where('id', $ids)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = newcontrol_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('rule_message', "message2")->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success('','','success');
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
 
             }else{
                 $this->error();

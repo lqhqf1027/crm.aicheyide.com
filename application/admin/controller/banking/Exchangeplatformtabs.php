@@ -25,6 +25,8 @@ class Exchangeplatformtabs extends Backend
     {
 
         parent::_initialize();
+
+        $this->model = new \app\admin\model\SalesOrder();
     }
 
 
@@ -51,39 +53,65 @@ class Exchangeplatformtabs extends Backend
         return $this->view->fetch();
     }
 
-    //新车
+    /**
+     * 新车
+     * @return string|\think\response\Json
+     */
     public function new_car()
     {
+
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $ids = Db::name("sales_order")
-                ->alias("so")
-                ->join("car_new_inventory ni", "so.car_new_inventory_id = ni.id")
-                ->field("ni.id,ni.car_mortgage_id")
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams("username", true);
+            $total = $this->model
+                ->with(['mortgage' => function ($query) {
+                    $query->withField('lending_date,bank_card,invoice_monney,registration_code,tax,business_risks,insurance,firm_stage,mortgage_type');
+                }, 'newinventory' => function ($query) {
+                    $query->withField('household,licensenumber,frame_number');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist');
+                }])
+                ->where('mortgage_type', 'new_car')
+                ->whereOr('mortgage_type', null)
+                ->where($where)
+                ->order("mortgage.lending_date desc")
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->with(['mortgage' => function ($query) {
+                    $query->withField('lending_date,bank_card,invoice_monney,registration_code,tax,business_risks,insurance,firm_stage,mortgage_type');
+                }, 'newinventory' => function ($query) {
+                    $query->withField('household,licensenumber,frame_number');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist');
+                }])
+                ->where('mortgage_type', 'new_car')
+                ->whereOr('mortgage_type', null)
+                ->where($where)
+                ->order("mortgage.lending_date desc")
+                ->order($sort, $order)
+                ->limit($offset, $limit)
                 ->select();
 
-            foreach ($ids as $k => $v) {
-                if (empty($v['car_mortgage_id'])) {
-                    Db::name("mortgage")->insert(["mortgage_type" => "new_car"]);
-
-                    $last_id = Db::name("mortgage")->getLastInsID();
-
-                    Db::name("car_new_inventory")
-                        ->where("id", $v['id'])
-                        ->setField("car_mortgage_id", $last_id);
-                }
-            }
-
-            $res = $this->getCar("new_car");
-
-            $result = array("total" => $res[0], "rows" => $res[1]);
+            $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
-        return true;
+        return $this->view->fetch();
+
     }
 
-    //悦达车
+    /**
+     * 悦达车
+     * @return bool|\think\response\Json
+     */
     public function yue_da_car()
     {
         if ($this->request->isAjax()) {
@@ -96,7 +124,10 @@ class Exchangeplatformtabs extends Backend
         return true;
     }
 
-    //其他车
+    /**
+     * 其他车
+     * @return bool|\think\response\Json
+     */
     public function other_car()
     {
         if ($this->request->isAjax()) {
@@ -110,7 +141,10 @@ class Exchangeplatformtabs extends Backend
         return true;
     }
 
-    //南充司机
+    /**
+     * 南充司机
+     * @return \think\response\Json
+     */
     public function nanchong_driver()
     {
 
@@ -126,38 +160,48 @@ class Exchangeplatformtabs extends Backend
 
     }
 
-    public function getCar($condition)
+    /**
+     * 得到需要查询的内容
+     * @param null $condition
+     * @return array
+     */
+    public function getCar($condition = null)
     {
-
-        $result = array();
-
-        $result[0] = Db::table("crm_order_view")
-            ->where(function ($query) use ($condition) {
-                $query->where("mortgage_type", $condition);
-            })
+        list($where, $sort, $order, $offset, $limit) = $this->buildparams("username", true);
+        $total = $this->model
+            ->with(['mortgage' => function ($query) {
+                $query->withField('lending_date,bank_card,invoice_monney,registration_code,tax,business_risks,insurance,firm_stage,mortgage_type');
+            }, 'newinventory' => function ($query) {
+                $query->withField('household,licensenumber,frame_number');
+            }, 'models' => function ($query) {
+                $query->withField('name');
+            }, 'planacar' => function ($query) {
+                $query->withField('payment,monthly,nperlist');
+            }])
+            ->where('mortgage_type', $condition)
+            ->where($where)
+            ->order("mortgage.lending_date desc")
+            ->order($sort, $order)
             ->count();
 
-        $result[1] = Db::table("crm_order_view")
-            ->where(function ($query) use ($condition) {
-                $query->where("mortgage_type", $condition);
-            })
-            ->order("lending_date desc")
+        $list = $this->model
+            ->with(['mortgage' => function ($query) {
+                $query->withField('lending_date,bank_card,invoice_monney,registration_code,tax,business_risks,insurance,firm_stage,mortgage_type');
+            }, 'newinventory' => function ($query) {
+                $query->withField('household,licensenumber,frame_number');
+            }, 'models' => function ($query) {
+                $query->withField('name');
+            }, 'planacar' => function ($query) {
+                $query->withField('payment,monthly,nperlist');
+            }])
+            ->where('mortgage_type', $condition)
+            ->where($where)
+            ->order("mortgage.lending_date desc")
+            ->order($sort, $order)
+            ->limit($offset, $limit)
             ->select();
 
-        foreach ($result[1] as $k => $v) {
-            if ($v['lending_date'] && $v['firm_stage']) {
-                $v['lending_date'] = str_replace("-", ".", $v['lending_date']);
-
-                $v['firm_stage'] = str_replace("/", "", $v['firm_stage']);
-
-                $v['lending_date'] = $v['lending_date'] . $v['firm_stage'];
-
-                $result[1][$k]['merge'] = $v['lending_date'];
-
-            }
-        }
-
-        return $result;
+        return array($total, $list);
     }
 
     /**
@@ -165,28 +209,24 @@ class Exchangeplatformtabs extends Backend
      */
     public function edit($ids = NULL)
     {
+
+        $this->model = new \app\admin\model\Mortgage();
+
+
         $gage_id = Db::name("sales_order")
-            ->alias("so")
-            ->join("car_new_inventory ni", "so.car_new_inventory_id = ni.id")
-            ->where("so.id", $ids)
-            ->field("ni.car_mortgage_id")
-            ->find()['car_mortgage_id'];
+            ->where("id", $ids)
+            ->field("mortgage_id")
+            ->find()['mortgage_id'];
 
-        $row = Db::name("mortgage")
-            ->where("id", $gage_id)
-            ->find();
+        $row = $this->model->get($gage_id);
 
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
+        if ($row) {
+            $this->view->assign("row", $row);
         }
+
+
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-//            pr($params);die();
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -196,22 +236,19 @@ class Exchangeplatformtabs extends Backend
                         $row->validate($validate);
                     }
 
-                    $data = array(
-                        'lending_date' => $params['lending_date'],
-                        'bank_card' => $params['bank_card'],
-                        'invoice_monney' => $params['invoice_monney'],
-                        'registration_code' => $params['registration_code'],
-                        'tax' => $params['tax'],
-                        'business_risks' => $params['business_risks'],
-                        'insurance' => $params['insurance'],
-                        'car_imgeas' => $params['car_images']
+                    if ($row) {
+                        $result = $row->allowField(true)->save($params);
+                    } else {
+                        $params['mortgage_type'] = 'new_car';
 
-                    );
+                        $this->model->data($params);
+                        $this->model->save();
 
+                        $result = Db::name("sales_order")
+                            ->where("id", $ids)
+                            ->setField("mortgage_id", $this->model->id);
 
-                    $result = Db::name("mortgage")
-                        ->where("id", $gage_id)
-                        ->update($data);
+                    }
 
                     if ($result !== false) {
                         $this->success();
@@ -226,47 +263,50 @@ class Exchangeplatformtabs extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign([
-            "row" => $row,
-        ]);
+
         return $this->view->fetch();
     }
 
-    //更改平台
+    /**
+     * 更改平台
+     * @param null $ids
+     * @return string
+     */
     public function change_platform($ids = null)
     {
-        $row = Db::table("crm_order_view")
+        $motagage = Db::name("sales_order")
             ->where("id", $ids)
-            ->field("mortgage_type")
-            ->select();
+            ->field("mortgage_id")
+            ->find()['mortgage_id'];
 
-        $row = $row[0];
+        if ($motagage) {
+            $row = Db::name("mortgage")
+                ->where("id", $motagage)
+                ->find();
 
-        $this->view->assign([
-            'mortgage_type_list' => ['new_car' => '新车', 'yueda_car' => '悦达', 'other_car' => '其他'],
+            $this->view->assign('my_type', $row['mortgage_type']);
+        }
 
-            'my_type' => $row['mortgage_type']
-        ]);
+        $this->view->assign('mortgage_type_list', ['new_car' => '新车', 'yueda_car' => '悦达', 'other_car' => '其他']);
 
         if ($this->request->isPost()) {
             $params = $this->request->post("mortgage_type");
 
-            $getId = Db::name("sales_order")
-                ->alias("so")
-                ->join("car_new_inventory ni", "so.car_new_inventory_id=ni.id")
-                ->where("so.id", $ids)
-                ->field("ni.car_mortgage_id")
-                ->select();
 
-            $getId = $getId[0]['car_mortgage_id'];
+            if ($motagage) {
+                $result = Db::name("mortgage")
+                    ->where("id", $motagage)
+                    ->setField("mortgage_type", $params);
+            } else {
+                Db::name("mortgage")->insert(['mortgage_type' => $params]);
 
-            $result = Db::name("mortgage")
-                ->where("id", $getId)
-                ->update([
-                    "mortgage_type" => $params,
-//                    "lending_date"=>null,
-//                    "firm_stage"=>null
-                ]);
+                $last_id = Db::name("mortgage")->getLastInsID();
+
+                $result = Db::name("sales_order")
+                    ->where("id", $ids)
+                    ->setField("mortgage_id", $last_id);
+            }
+
 
             if ($result !== false) {
                 $this->success();
@@ -278,59 +318,62 @@ class Exchangeplatformtabs extends Backend
         return $this->view->fetch();
     }
 
-    //更改平台
+    /**
+     * 批量更改平台
+     * @param null $ids
+     * @return string
+     */
     public function batch_change_platform($ids = null)
     {
-        $change = Db::table("crm_order_view")
-            ->where("id", "in", $ids)
-            ->field("mortgage_type")
+        $change = Db::name("sales_order")
+            ->alias("so")
+            ->join("mortgage m", "so.mortgage_id = m.id")
+            ->where("so.id", "in", $ids)
+            ->field("m.mortgage_type")
             ->find();
 
+        if ($change) {
+            $this->view->assign('mortgage_type', $change['mortgage_type']);
+        }
 
-
-
-        $this->view->assign([
-            'mortgage_type_list' => ['new_car' => '新车', 'yueda_car' => '悦达', 'other_car' => '其他'],
-            'mortgage_type'=>$change['mortgage_type']
-        ]);
+        $this->view->assign('mortgage_type_list', ['new_car' => '新车', 'yueda_car' => '悦达', 'other_car' => '其他']);
 
         if ($this->request->isPost()) {
             $params = $this->request->post("mortgage_type");
 
-            $getId = Db::name("sales_order")
-                ->alias("so")
-                ->join("car_new_inventory ni", "so.car_new_inventory_id=ni.id")
-                ->where("so.id", "in", $ids)
-                ->field("ni.car_mortgage_id")
+            $use_id = Db::name("sales_order")
+                ->where("id", "in", $ids)
+                ->field("mortgage_id,id")
                 ->select();
 
-            $getIds = array();
+            foreach ($use_id as $k => $v) {
+                if ($v['mortgage_id']) {
+                    Db::name("mortgage")
+                        ->where("id", $v['mortgage_id'])
+                        ->setField("mortgage_type", $params);
+                } else {
+                    Db::name("mortgage")->insert(['mortgage_type' => $params]);
 
-            foreach ($getId as $k => $v) {
-                array_push($getIds, $v['car_mortgage_id']);
+                    $last = Db::name("mortgage")->getLastInsID();
+
+                    Db::name("sales_order")
+                        ->where("id", $v['id'])
+                        ->setField("mortgage_id", $last);
+                }
             }
 
-            $result = Db::name("mortgage")
-                ->where("id", "in", $getIds)
-                ->update([
-                    "mortgage_type" => $params
-//                    "lending_date"=>null,
-//                    "firm_stage"=>null
-
-                ]);
-
-            if ($result !== false) {
-                $this->success();
-            } else {
-                $this->error();
-            }
+            $this->success();
 
         }
         return $this->view->fetch();
     }
 
 
-    //查看详情信息
+    /**
+     * 查看详情信息
+     * @param null $ids
+     * @return string
+     */
     public function details($ids = null)
     {
         $res = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,margin,tail_section,gps,note,4s_shop,engine_number,frame_number,presentationcondition,car_imgeas,plan_name,emergency_contact_1,emergency_contact_2,family_members,id_cardimages,drivers_licenseimages,residence_bookletimages,housingimages,bank_cardimages,application_formimages,call_listfiles,deposit_contractimages,deposit_receiptimages,genderdata,city")
@@ -345,25 +388,30 @@ class Exchangeplatformtabs extends Backend
         return $this->view->fetch();
     }
 
-    //放款时间
+    /**
+     * 输入放款时间
+     * @param null $ids
+     * @return string
+     */
     public function loan($ids = null)
     {
+
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
 
+
                 try {
 
                     $mortgage_id = Db::name("sales_order")
-                        ->alias("so")
-                        ->join("car_new_inventory ni", "so.car_new_inventory_id = ni.id")
-                        ->field("ni.car_mortgage_id")
-                        ->where("so.id", "in", $ids)
+                        ->field("mortgage_id")
+                        ->where("id", "in", $ids)
                         ->select();
+
 
                     $id_arr = array();
                     foreach ($mortgage_id as $k => $v) {
-                        array_push($id_arr, $v['car_mortgage_id']);
+                        array_push($id_arr, $v['mortgage_id']);
                     }
 
                     $result = Db::name("mortgage")

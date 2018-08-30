@@ -5,7 +5,8 @@ namespace app\admin\controller\promote;
 use app\common\controller\Backend;
 use app\admin\controller\wechat\WechatMessage;
 use app\admin\model\Admin as adminModel;
-use app\admin\controller\wechat\Wechatuser;
+use app\common\library\Email;
+// use app\admin\controller\wechat\Wechatuser;
 use think\Db;
 use think\Config;
 /**
@@ -18,12 +19,12 @@ class Customertabs extends Backend
 {
 
     protected $model = null;
-    static public $token = null;
+    // static public $token = null;
 
     public function _initialize()   
     {
         parent::_initialize();
-        self::$token= $this->getAccessToken();
+        // self::$token= $this->getAccessToken();
         
     }
 
@@ -155,26 +156,37 @@ class Customertabs extends Backend
                 //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
                 //dump($sendmessage->sendMsgToAll());exit; 
 
-                $token = self::$token;
-                $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
-                $openid = $getAdminOpenid['openid'];
+                // $token = self::$token;
+                // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                // $openid = $getAdminOpenid['openid'];
 
                 // var_dump($openid);
                 // die;
 
-                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
 
                 // $msg = $sendmessage->sendMsgToAll();
                 // dump($msg);
                 // die;
-                if($msg['errcode'] == 0){
+                // if($msg['errcode'] == 0){
+                $data = dstribution_inform();
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
                     $this->success();
                 }
                 else {
-                    $this->error('消息推送失败');
+                    $this->error('邮箱发送失败');
                 }
-               
-                //$this->error('消息推送失败'); 
+                
             }
             else{
                 $this->error(); 
@@ -322,23 +334,33 @@ class Customertabs extends Backend
                 //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
                 //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
                 //dump($sendmessage->sendMsgToAll());exit; 
-                $token = self::$token;
-                $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
-                $openid = $getAdminOpenid['openid'];
+                // $token = self::$token;
+                // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
+                // $openid = $getAdminOpenid['openid'];
                 // // var_dump($openid);
                 // // die;
-                $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
+                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
 
                 // $msg = $sendmessage->sendMsgToAll();
                 // // dump($msg);
                 // // die;
-                if($msg['errcode'] == 0){
+                $data = dstribution_inform();
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
                     $this->success();
                 }
                 else {
-                    $this->error('消息推送失败');
+                    $this->error('邮箱发送失败');
                 }
-                //$this->error('消息推送失败'); 
             }
             else{
 

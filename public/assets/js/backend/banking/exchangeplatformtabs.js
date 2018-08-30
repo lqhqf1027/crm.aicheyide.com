@@ -67,8 +67,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var newCar = $("#newCar");
                 newCar.on('load-success.bs.table', function (e, data) {
                     var arr = data.rows;
-                    // merge(arr, $("#newCar"));
-                    Controller.merge(arr, $("#newCar"),$('#new_car'));
+
+                    console.log(arr);
+                    Controller.merge(arr, $("#newCar"), $('#new_car'));
                     $('#badge_new_car').text(data.total);
 
                 });
@@ -100,36 +101,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'merge', title: __('放款日期')},
-                            {field: 'household', title: __('开户公司名')},
+                            {
+                                field: 'mortgage.lending_date',
+                                title: __('放款日期'),
+                                formatter: Controller.api.formatter.Loan
+                            },
+                            {field: 'newinventory.household', title: __('开户公司名')},
                             {
                                 field: 'createtime',
                                 title: __('订车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'bank_card', title: __('扣款卡号')},
+                            {field: 'mortgage.bank_card', title: __('扣款卡号')},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'detailed_address', title: __('身份证地址')},
                             {field: 'phone', title: __('电话号码')},
-                            {field: 'models_name', title: __('车型')},
-                            {field: 'invoice_monney', title: __('开票金额(元)')},
-                            {field: 'registration_code', title: __('登记编码')},
-                            {field: 'tax', title: __('购置税(元)')},
-                            {field: 'business_risks', title: __('商业险(元)')},
-                            {field: 'insurance', title: __('交强险(元)')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
+                            {field: 'models.name', title: __('车型')},
+                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)')},
+                            {field: 'mortgage.registration_code', title: __('登记编码')},
+                            {field: 'mortgage.tax', title: __('购置税(元)')},
+                            {field: 'mortgage.business_risks', title: __('商业险(元)')},
+                            {field: 'mortgage.insurance', title: __('交强险(元)')},
+                            {field: 'newinventory.licensenumber', title: __('车牌号')},
+                            {field: 'newinventory.frame_number', title: __('车架号')},
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'payment', title: __('首付')},
-                            {field: 'monthly', title: __('月供')},
-                            {field: 'nperlist', title: __('期数')},
+                            {field: 'planacar.payment', title: __('首付')},
+                            {field: 'planacar.monthly', title: __('月供')},
+                            {field: 'planacar.nperlist', title: __('期数')},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -186,7 +191,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                     // merge(arr, $("#yueDaCar"));
-                    Controller.merge(arr, $("#yueDaCar"),$('#yue_da_car'))
+                    Controller.merge(arr, $("#yueDaCar"), $('#yue_da_car'))
 
                     $('#badge_yue_da').text(data.total);
 
@@ -211,40 +216,45 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'merge', title: __('放款日期')},
-                            {field: 'household', title: __('开户公司名')},
+                            {
+                                field: 'mortgage.lending_date',
+                                title: __('放款日期'),
+                                formatter: Controller.api.formatter.Loan
+                            },
+                            {field: 'newinventory.household', title: __('开户公司名')},
                             {
                                 field: 'createtime',
                                 title: __('订车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'bank_card', title: __('扣款卡号')},
+                            {field: 'mortgage.bank_card', title: __('扣款卡号')},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'detailed_address', title: __('身份证地址')},
                             {field: 'phone', title: __('电话号码')},
-                            {field: 'models_name', title: __('车型')},
-                            {field: 'invoice_monney', title: __('开票金额(元)')},
-                            {field: 'registration_code', title: __('登记编码')},
-                            {field: 'tax', title: __('购置税(元)')},
-                            {field: 'business_risks', title: __('商业险(元)')},
-                            {field: 'insurance', title: __('交强险(元)')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
+                            {field: 'models.name', title: __('车型')},
+                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)')},
+                            {field: 'mortgage.registration_code', title: __('登记编码')},
+                            {field: 'mortgage.tax', title: __('购置税(元)')},
+                            {field: 'mortgage.business_risks', title: __('商业险(元)')},
+                            {field: 'mortgage.insurance', title: __('交强险(元)')},
+                            {field: 'newinventory.licensenumber', title: __('车牌号')},
+                            {field: 'newinventory.frame_number', title: __('车架号')},
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'payment', title: __('首付')},
-                            {field: 'monthly', title: __('月供')},
-                            {field: 'nperlist', title: __('期数')},
+                            {field: 'planacar.payment', title: __('首付')},
+                            {field: 'planacar.monthly', title: __('月供')},
+                            {field: 'planacar.nperlist', title: __('期数')},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -301,7 +311,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // merge(arr, $("#otherCar"));
                     $('#badge_other').text(data.total);
 
-                    Controller.merge(arr, $("#otherCar"),$('#other_car'))
+                    Controller.merge(arr, $("#otherCar"), $('#other_car'))
 
 
                 });
@@ -325,41 +335,45 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar3',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
-                            {field: 'merge', title: __('放款日期')},
-                            {field: 'household', title: __('开户公司名')},
+                            {
+                                field: 'mortgage.lending_date',
+                                title: __('放款日期'),
+                                formatter: Controller.api.formatter.Loan
+                            },
+                            {field: 'newinventory.household', title: __('开户公司名')},
                             {
                                 field: 'createtime',
                                 title: __('订车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'bank_card', title: __('扣款卡号')},
+                            {field: 'mortgage.bank_card', title: __('扣款卡号')},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'detailed_address', title: __('身份证地址')},
                             {field: 'phone', title: __('电话号码')},
-                            {field: 'models_name', title: __('车型')},
-                            {field: 'invoice_monney', title: __('开票金额(元)')},
-                            {field: 'registration_code', title: __('登记编码')},
-                            {field: 'tax', title: __('购置税(元)')},
-                            {field: 'business_risks', title: __('商业险(元)')},
-                            {field: 'insurance', title: __('交强险(元)')},
-                            {field: 'licensenumber', title: __('车牌号')},
-                            {field: 'frame_number', title: __('车架号')},
+                            {field: 'models.name', title: __('车型')},
+                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)')},
+                            {field: 'mortgage.registration_code', title: __('登记编码')},
+                            {field: 'mortgage.tax', title: __('购置税(元)')},
+                            {field: 'mortgage.business_risks', title: __('商业险(元)')},
+                            {field: 'mortgage.insurance', title: __('交强险(元)')},
+                            {field: 'newinventory.licensenumber', title: __('车牌号')},
+                            {field: 'newinventory.frame_number', title: __('车架号')},
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'payment', title: __('首付')},
-                            {field: 'monthly', title: __('月供')},
-                            {field: 'nperlist', title: __('期数')},
-
+                            {field: 'planacar.payment', title: __('首付')},
+                            {field: 'planacar.monthly', title: __('月供')},
+                            {field: 'planacar.nperlist', title: __('期数')},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -495,9 +509,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 table: nanchongDriver,
                                 events: Table.api.events.operate,
                                 formatter: Table.api.formatter.operate,
-                                buttons: [
-
-                                ]
+                                buttons: []
                             }
                         ]
                     ]
@@ -519,45 +531,48 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         loan: function () {
             Controller.api.bindevent();
         },
-         merge:function(arr, obj,parentDom) {
-        var hash = [];
-        var data_arr = [];
-        for (var i in arr) {
-            if (hash.indexOf(arr[i]['lending_date']) == -1) {
+        merge: function (arr, obj, parentDom) {
+            var hash = [];
+            var data_arr = [];
+            for (var i in arr) {
 
-                hash.push(arr[i]['lending_date']);
 
-                data_arr.push([i, arr[i]['lending_date'], 0]);
+
+                if (hash.indexOf(arr[i]['mortgage']['lending_date']) == -1) {
+
+                    hash.push(arr[i]['mortgage']['lending_date']);
+
+                    data_arr.push([i, arr[i]['mortgage']['lending_date'], 0]);
+                }
+
+
             }
 
 
-        }
-
-
-        for (var i in arr) {
-            for (var j in data_arr) {
-                if (arr[i]['lending_date'] == data_arr[j][1]) {
-                    data_arr[j][2]++;
+            for (var i in arr) {
+                for (var j in data_arr) {
+                    if (arr[i]['mortgage']['lending_date'] == data_arr[j][1]) {
+                        data_arr[j][2]++;
+                    }
                 }
             }
-        }
 
 
-        for (var i in data_arr) {
+            for (var i in data_arr) {
 
-            obj.bootstrapTable("mergeCells", {
-                index: data_arr[i][0],
-                field: 'merge',
-                rowspan: data_arr[i][2]
-            });
+                obj.bootstrapTable("mergeCells", {
+                    index: data_arr[i][0],
+                    field: 'mortgage.lending_date',
+                    rowspan: data_arr[i][2]
+                });
 
-            var td = $(obj).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
+                var td = $(obj).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
 
-            i % 2 == 0 ? td.eq(2).css({"background-color": "#fcbd20"}) : td.eq(2).css({"background-color": "skyblue"});
-        }
-    },
+                i % 2 == 0 ? td.eq(2).css({"background-color": "#fcbd20"}) : td.eq(2).css({"background-color": "skyblue"});
+            }
+        },
 
-    api: {
+        api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
                     var name = $("input[name='row[name]']");
@@ -578,6 +593,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+                Loan: function (value, row, index) {
+
+
+                    if (row.mortgage.firm_stage && value) {
+                        return value + "" + row.mortgage.firm_stage;
+                    } else {
+                        return value
+                    }
+
+
+                },
+                datetime:function (value, row, index) {
+
+                    if(value){
+                        return timestampToTime(value);
+                    }
+
+                    function timestampToTime(timestamp) {
+                        var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                        var Y = date.getFullYear() + '-';
+                        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                        var D = date.getDate()<10? '0'+date.getDate():date.getDate();
+
+                        return Y+M+D;
+                    }
+
+                }
             },
             events: {
                 operate: {
