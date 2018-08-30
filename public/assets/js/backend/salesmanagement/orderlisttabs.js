@@ -2047,8 +2047,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
                 datetime: function (value, row, index) {
 
-                  return timestampToTime(value);
-
+                    if(value){
+                        return timestampToTime(value);
+                    }
 
                     function timestampToTime(timestamp) {
                         var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
