@@ -53,7 +53,10 @@ class Exchangeplatformtabs extends Backend
         return $this->view->fetch();
     }
 
-    //新车
+    /**
+     * 新车
+     * @return string|\think\response\Json
+     */
     public function new_car()
     {
 
@@ -105,7 +108,10 @@ class Exchangeplatformtabs extends Backend
 
     }
 
-    //悦达车
+    /**
+     * 悦达车
+     * @return bool|\think\response\Json
+     */
     public function yue_da_car()
     {
         if ($this->request->isAjax()) {
@@ -118,7 +124,10 @@ class Exchangeplatformtabs extends Backend
         return true;
     }
 
-    //其他车
+    /**
+     * 其他车
+     * @return bool|\think\response\Json
+     */
     public function other_car()
     {
         if ($this->request->isAjax()) {
@@ -132,7 +141,10 @@ class Exchangeplatformtabs extends Backend
         return true;
     }
 
-    //南充司机
+    /**
+     * 南充司机
+     * @return \think\response\Json
+     */
     public function nanchong_driver()
     {
 
@@ -148,6 +160,11 @@ class Exchangeplatformtabs extends Backend
 
     }
 
+    /**
+     * 得到需要查询的内容
+     * @param null $condition
+     * @return array
+     */
     public function getCar($condition = null)
     {
         list($where, $sort, $order, $offset, $limit) = $this->buildparams("username", true);
@@ -250,7 +267,11 @@ class Exchangeplatformtabs extends Backend
         return $this->view->fetch();
     }
 
-    //更改平台
+    /**
+     * 更改平台
+     * @param null $ids
+     * @return string
+     */
     public function change_platform($ids = null)
     {
         $motagage = Db::name("sales_order")
@@ -297,7 +318,11 @@ class Exchangeplatformtabs extends Backend
         return $this->view->fetch();
     }
 
-    //批量更改平台
+    /**
+     * 批量更改平台
+     * @param null $ids
+     * @return string
+     */
     public function batch_change_platform($ids = null)
     {
         $change = Db::name("sales_order")
@@ -344,7 +369,11 @@ class Exchangeplatformtabs extends Backend
     }
 
 
-    //查看详情信息
+    /**
+     * 查看详情信息
+     * @param null $ids
+     * @return string
+     */
     public function details($ids = null)
     {
         $res = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,margin,tail_section,gps,note,4s_shop,engine_number,frame_number,presentationcondition,car_imgeas,plan_name,emergency_contact_1,emergency_contact_2,family_members,id_cardimages,drivers_licenseimages,residence_bookletimages,housingimages,bank_cardimages,application_formimages,call_listfiles,deposit_contractimages,deposit_receiptimages,genderdata,city")
@@ -359,7 +388,11 @@ class Exchangeplatformtabs extends Backend
         return $this->view->fetch();
     }
 
-    //放款时间
+    /**
+     * 输入放款时间
+     * @param null $ids
+     * @return string
+     */
     public function loan($ids = null)
     {
 
