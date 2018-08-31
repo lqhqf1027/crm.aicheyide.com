@@ -44,14 +44,14 @@ class Fullsectioninfo extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('carnewinventory.frame_number', true);
             $total = $this->model
                 ->with(['mortgageregistration',
                     'models' => function ($query) {
                         $query->withField('name,standard_price');
                     }, 'carnewinventory' => function ($query) {
                         $query->withField('carnumber,reservecar,licensenumber,presentationcondition,frame_number,engine_number,household,4s_shop');
-                    }, 'sales' => function ($query) {
+                    }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }])
                 ->where($where)
@@ -65,7 +65,7 @@ class Fullsectioninfo extends Backend
                         $query->withField('name,standard_price');
                     }, 'carnewinventory' => function ($query) {
                         $query->withField('carnumber,reservecar,licensenumber,presentationcondition,frame_number,engine_number,household,4s_shop');
-                    }, 'sales' => function ($query) {
+                    }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }])
                 ->where($where)
@@ -78,8 +78,8 @@ class Fullsectioninfo extends Backend
                 $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'genderdata', 'city', 'detailed_address', 'customer_source', 'introduce_name', 'introduce_phone', 'introduce_card', 'plan_name', 'purchase_tax', 'car_images', 'business_risks', 'insurance','mortgage_registration_id']);
                 $v->visible(['mortgageregistration']);
                 $v->getRelation('mortgageregistration')->visible(['archival_coding', 'signdate', 'hostdate', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'car_boat_tax', 'insurance_policy', 'commercial_insurance_policy', 'transfer', 'transferdate', 'yearly_inspection', 'contract_total', 'registry_remark', 'classification', 'year_range','year_status']);
-                $v->visible(['sales']);
-                $v->getRelation('sales')->visible(['nickname']);
+                $v->visible(['admin']);
+                $v->getRelation('admin')->visible(['nickname']);
                 $v->visible(['models']);
                 $v->getRelation('models')->visible(['name', 'standard_price']);
                 $v->visible(['carnewinventory']);
@@ -300,17 +300,14 @@ class Fullsectioninfo extends Backend
             $list[$k]['models_name'] = $models_name;
 
 
-            //得到销售信息
-            if ($v['sales_id']) {
+            //得到销售员信息
+            if ($v['admin_id']) {
                 $sales_name = Db::name("admin")
-                    ->alias("a")
-                    ->join("auth_group_access ga", "a.id = ga.uid")
-                    ->join("auth_group g", "ga.group_id = g.id")
-                    ->where("a.id", $v['sales_id'])
-                    ->field("a.nickname,g.name")
-                    ->find();
+                    ->where("id", $v['admin_id'])
+                    ->field("nickname")
+                    ->find()['nickname'];
+                $list[$k]['sales_name'] = $sales_name;
 
-                $list[$k]['sales_name'] = $sales_name['name'] . " - " . $sales_name['nickname'];
             }
 
             if (!$v['signdate'] && $v['createtime']) {

@@ -35,6 +35,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-detail").data("area", ["95%", "95%"]);
                     $(".btn-edit").data("area", ["80%", "80%"]);
                 });
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:车架号";};
+
                 // 初始化表格
                 newCustomer.bootstrapTable({
                     url: 'material/Newcarinfo/new_customer',

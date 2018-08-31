@@ -35,6 +35,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-detail").data("area", ["95%", "95%"]);
                     $(".btn-edit").data("area", ["80%", "80%"]);
                 });
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:车架号";};
+
                 // 初始化表格
                 fullRegister.bootstrapTable({
                     url: 'material/Fullsectioninfo/full_register',
@@ -53,7 +55,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
                             {field: 'mortgageregistration.archival_coding', title: __('档案编码')},
-                            {field: 'sales.nickname', title: __('部门-销售员')},
+                            {field: 'admin.nickname', title: __('部门-销售员')},
                             {field: 'mortgageregistration.signdate', title: __('签订日期')},
                             {field: 'username', title: __('Username'), formatter: Controller.api.formatter.inspection},
                             {field: 'id_card', title: __('身份证号')},
@@ -209,8 +211,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
 
                 inspection: function (value, row, index) {
-console.log(row);
-
 
                     var status = -1;
 
