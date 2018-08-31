@@ -115,8 +115,29 @@ class SecondSalesOrder extends Model
      */
     public  function models(){
 
-        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+
+        return $this->belongsTo('app\admin\model\Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
+    public function mortgageregistration()
+    {
+        return $this->belongsTo('MortgageRegistration', 'mortgage_registration_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
+    public function secondcarrentalmodelsinfo()
+    {
+        return $this->belongsTo('SecondcarRentalModelsInfo','plan_car_second_name','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+      
     }    
+
 
 
 }

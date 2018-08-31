@@ -106,7 +106,7 @@ class SalesOrder extends Model
 
     public function sales()
     {
-        return $this->belongsTo('Admin', 'sales_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->belongsTo('Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
     /**

@@ -52,7 +52,7 @@ class Newcarinfo extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('newinventory.frame_number', true);
             $total = $this->model
                 ->with(['sales' => function ($query) {
                     $query->withField('nickname');
@@ -86,20 +86,14 @@ class Newcarinfo extends Backend
                 ->limit($offset, $limit)
                 ->select();
 
-
-
-
-
-
             $used = new \app\admin\model\SecondcarRentalModelsInfo();
             $used = $used->column('licenseplatenumber');
 
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $list[$k]['used_car'] = $used;
             }
             $list = collection($list)->toArray();
-
 
 
             $result = array("total" => $total, "rows" => $list);
@@ -171,8 +165,6 @@ class Newcarinfo extends Backend
             ->where("id", $ids)
             ->field("mortgage_registration_id,createtime")
             ->find();
-
-
 
 
         if ($gage['mortgage_registration_id']) {
@@ -330,11 +322,17 @@ class Newcarinfo extends Backend
     {
         $row = Db::table("crm_order_view")
             ->where("id", $ids)
-            ->select();
+            ->find();
 
-        $row = $this->get_sale($row);
+        //得到销售员信息
+        if ($row['admin_id']) {
+            $sales_name = Db::name("admin")
+                ->where("id", $row['admin_id'])
+                ->field("nickname")
+                ->find()['nickname'];
+          $row['sales_name'] = $sales_name;
 
-        $row = $row[0];
+        }
 
 
         if ($row['new_car_marginimages'] == "") {
@@ -473,6 +471,14 @@ class Newcarinfo extends Backend
             $car_imgeas_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
+        if($row['createtime']){
+            $row['createtime'] = date("Y-m-d",$row['createtime']);
+        }
+
+        if($row['delivery_datetime']){
+            $row['delivery_datetime'] = date("Y-m-d",$row['delivery_datetime']);
+        }
+
 
         $data = array(
             'deposit_contractimages_arr' => $deposit_contractimages_arr,
@@ -496,14 +502,6 @@ class Newcarinfo extends Backend
             }
         }
 
-        if ($row['createtime']) {
-            $row['createtime'] = date("Y-m-d", $row['createtime']);
-        }
-
-        if ($row['delivery_datetime']) {
-            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
-        }
-
 
         $this->view->assign($data);
         $this->view->assign("row", $row);
@@ -514,33 +512,6 @@ class Newcarinfo extends Backend
     public function keylist()
     {
         return ['yes' => '有', 'no' => '无'];
-    }
-
-    /**
-     * 得到销售的信息
-     * @param array $arr
-     * @return array
-     */
-    public function get_sale($arr = array())
-    {
-        foreach ($arr as $k => $v) {
-
-            if ($v['sales_id']) {
-                $res = Db::name("admin")
-                    ->alias("a")
-                    ->join("auth_group_access ga", "a.id = ga.uid")
-                    ->join("auth_group g", "ga.group_id = g.id")
-                    ->where("a.id", $v['sales_id'])
-                    ->field("a.nickname,g.name")
-                    ->find();
-
-                $arr[$k]['sales_name'] = $res['name'] . " - " . $res['nickname'];
-            }
-
-
-        }
-
-        return $arr;
     }
 
 
@@ -556,12 +527,11 @@ class Newcarinfo extends Backend
                 ->where("id", $id)
                 ->setField("year_status", $num);
 
-            if($res){
+            if ($res) {
                 echo json_encode("yes");
-            }else{
+            } else {
                 echo json_encode("no");
             }
-
 
 
         }
