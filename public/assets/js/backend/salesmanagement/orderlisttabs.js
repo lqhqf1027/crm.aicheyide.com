@@ -51,6 +51,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             { checkbox: true },
@@ -80,16 +81,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             { field: 'planacar.payment', title: __('首付（元）') },
                             { field: 'planacar.monthly', title: __('月供（元）') },
-                            { field: 'planacar.nperlist', title: __('期数') },
-                            { field: 'planacar.margin', title: __('保证金（元）') },
-                            { field: 'planacar.tail_section', title: __('尾款（元）') },
-                            { field: 'planacar.gps', title: __('GPS（元）') },
+                            { field: 'planacar.nperlist', title: __('期数') ,operate:false},
+                            { field: 'planacar.margin', title: __('保证金（元）'),operate:false },
+                            { field: 'planacar.tail_section', title: __('尾款（元）'),operate:false },
+                            { field: 'planacar.gps', title: __('GPS（元）'),operate:false },
 
                             {
                                 field: 'operate', title: __('Operate'), table: orderAcar,
                                 buttons: [
                                     {
-                                        name: 'submit_audit', text: '提交给内勤', title: '提交给内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_audit',
+                                        name: 'submit_audit', text: '提交给内勤', title: '提交到当前部门内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_audit',
                                         url: 'salesmanagement/orderlisttabs/sedAudit',
                                         //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
                                         //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
@@ -620,14 +621,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'rental_price', title: __('Rental_price'),operate:false},
                         {field: 'tenancy_term', title: __('Tenancy_term'),operate:false},
                         {field: 'delivery_datetime', title: __('开始租车日期'),operate:false,formatter:Controller.api.formatter.datetime},
-                        {field: 'delivery_datetime', title: __('退车日期'),operate:false,formatter:Controller.api.formatter.car_back},
+                        {field: 'delivery_datetime', title: __('应退车日期'),operate:false,formatter:Controller.api.formatter.car_back},
                         {field: 'operate', title: __('Operate'), table: orderRental, 
                         buttons: [
                             /**
                              * 补全客户信息，开始提车
                              */
                             {
-                                name:'customerInformation',text:'补全客户信息，开始提车', title:'开始提车', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-customerInformation',
+                                name:'customerInformation',text:'开始提车', title:'补全客户信息，开始提车', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-customerInformation',
                                 url: 'order/rentalorder/add',
                                 hidden:function(row){
                                     if(row.review_the_data == 'is_reviewing_argee'){ 
@@ -786,7 +787,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 车管正在处理中
                              */
                             {
-                                name: 'is_reviewing_true',text: '车管正在处理中',title:'车管正在处理中',
+                                name: 'is_reviewing_true',text: '车管正在处理中',title:'车管正在处理你的租车请求',extend: 'data-toggle="tooltip"',
                                 hidden:function(row){  /**车管正在处理中 */
                                     if(row.review_the_data == 'is_reviewing_true'){ 
                                         return false; 
@@ -1062,6 +1063,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 二手车单
+             */
             order_second: function () {
 
                 // 二手车单
@@ -1083,19 +1087,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     toolbar: '#toolbar3',
                     pk: 'id',
+                    searchFormVisible: true,
                     sortName: 'id',
                     columns: [
                         [
                             { checkbox: true },
                             { field: 'id', title: __('Id') },
                             { field: 'order_no', title: __('Order_no') },
-                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime ,datetimeFormat:"YYYY-MM-DD" },
 
+                            { field: 'plansecond.licenseplatenumber', title: __('车牌号') },
                             { field: 'models.name', title: __('销售车型') },
                             { field: 'admin.nickname', title: __('销售员') },
                             { field: 'username', title: __('Username') },
-                            { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
-                            { field: 'genderdata_text', title: __('Genderdata'), operate: false },
                             { field: 'phone', title: __('Phone') },
                             {
                                 field: 'id', title: __('查看详细资料'), table: orderSecond, buttons: [
@@ -1113,10 +1117,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             
                             { field: 'plansecond.newpayment', title: __('新首付（元）') },
                             { field: 'plansecond.monthlypaymen', title: __('月供（元）') },
-                            { field: 'plansecond.periods', title: __('期数') },
-                            { field: 'plansecond.totalprices', title: __('总价（元）') },
-                            { field: 'plansecond.bond', title: __('保证金（元）') },
-                            { field: 'plansecond.tailmoney', title: __('尾款（元）') },
+                            { field: 'plansecond.periods', title: __('期数') , operate: false},
+                            { field: 'plansecond.totalprices', title: __('总价（元）'), operate: false },
+                            { field: 'plansecond.bond', title: __('保证金（元）') , operate: false},
+                            { field: 'plansecond.tailmoney', title: __('尾款（元）'), operate: false },
 
                             {
                                 field: 'operate', title: __('Operate'), table: orderSecond,
@@ -1483,6 +1487,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 // alert(Table.api.getrowdata(table, index));
             },
+            /**
+             * 全款单
+             */
             order_full: function () {
 
                 // 全款单
@@ -1505,13 +1512,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar4',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             { checkbox: true },
                             { field: 'id', title: __('Id') },
                             { field: 'order_no', title: __('Order_no') },
-                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
-                            { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime, datetimeFormat:"YYYY-MM-DD" },
                             { field: 'models.name', title: __('销售车型') },
                             { field: 'admin.nickname', title: __('销售员') },
                             { field: 'planfull.full_total_price', title: __('全款总价（元）') },
@@ -1531,12 +1538,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'id_card', title: __('Id_card')},
-                            {field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false },
-                            {field: 'city', title: __('居住地址')},
-                            {field: 'detailed_address', title: __('详细地址')},
+                            // {field: 'id_card', title: __('Id_card')},
+                            // {field: 'city', title: __('居住地址')},
+                            // {field: 'detailed_address', title: __('详细地址')},
                             // {field: 'detailed_address', title: __('Detailed_address')},
+                            { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
+
                             {
                                 field: 'operate', title: __('Operate'), table: orderFull,
                                 buttons: [
@@ -1701,6 +1708,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.operate
 
                             }
+
                         ]
                     ]
 

@@ -22,16 +22,9 @@
             <!--以租代购订单(新车)-->
             
             <div class="tab-pane fade active in" id="order_acar">
-                <div style="color:brown">
-                    新车销售订单完成步骤
-                </div> 
-                
-                <!--<img src="/assets/img/Sales_single_step.png" alt="">-->
-
-                <div id="toolbar1" class="toolbar">
-                
+                <div id="toolbar1" class="toolbar"> 
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('order/salesorder/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('新增销售单')}</a>
+                    <a href="javascript:;" class="btn btn-info btn-add {:$auth->check('order/salesorder/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('新增销售单')}</a>
                     <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('order/salesorder/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a> -->
                     <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('order/salesorder/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
                     <!-- <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('order/salesorder/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
@@ -58,8 +51,8 @@
                     <div id="toolbar2" class="toolbar">
                        
                         <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                        <a href="javascript:;" class="btn btn-success rental-list" title="{:__('新增租车单')}" ><i class="fa fa-plus"></i> {:__('新增租车单')}</a>
-                        <a href="javascript:;" class="btn btn-success btn-reserve" data-params="reserve" title="{:__('租车预定')}" ><i class="fa fa-plus"></i> {:__('租车预定')}</a>
+                        <!--<a href="javascript:;" class="btn btn-success rental-list" title="{:__('新增租车单')}" ><i class="fa fa-plus"></i> {:__('新增租车单')}</a>-->
+                        <a href="javascript:;" class="btn btn-info btn-reserve" data-params="reserve" title="{:__('租车预定')}" ><i class="fa fa-plus"></i> {:__('租车预定')}</a>
                         <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('order/rentalorder/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a> -->
                         <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('order/rentalorder/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
                         <!-- <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('order/rentalorder/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
@@ -86,7 +79,7 @@
                 <div id="toolbar3" class="toolbar">
                         
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('order/salesorder/add')?'':'hide'}" title="{:__('新增二手车单')}" ><i class="fa fa-plus"></i> {:__('新增二手车单')}</a>
+                    <a href="javascript:;" class="btn btn-info btn-add {:$auth->check('order/salesorder/add')?'':'hide'}" title="{:__('新增二手车单')}" ><i class="fa fa-plus"></i> {:__('新增二手车单')}</a>
                     <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('order/secondsalesorder/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a> -->
                     <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('order/secondsalesorder/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
                     <!-- <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('order/secondsalesorder/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
@@ -113,7 +106,7 @@
                 <div id="toolbar4" class="toolbar">
                         
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('order/fullparmentorder/add')?'':'hide'}" title="{:__('新增全款单')}" ><i class="fa fa-plus"></i> {:__('新增全款单')}</a>
+                    <a href="javascript:;" class="btn btn-info btn-add {:$auth->check('order/fullparmentorder/add')?'':'hide'}" title="{:__('新增全款单')}" ><i class="fa fa-plus"></i> {:__('新增全款单')}</a>
                     <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('order/fullparmentorder/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a> -->
                     <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('order/fullparmentorder/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
                     <!-- <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('order/fullparmentorder/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a> -->

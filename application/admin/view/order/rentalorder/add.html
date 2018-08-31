@@ -1,3 +1,11 @@
+
+<style>
+
+    #p-deposit_receiptimages .btn-trash{
+        display: none !important;
+    }
+</style>
+
 <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
         <h2>
@@ -122,7 +130,7 @@
             
             <div class="radio">
             {foreach name="genderdataList" item="vo"}
-            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"}checked{/in} /> {$vo}</label> 
+            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"}checked{/in} /> {$vo}</label>
             {/foreach}
             </div>
 
