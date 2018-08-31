@@ -33,7 +33,6 @@ class Customertabs extends Backend
      */
     public function index()
     {
-       
         $this->loadlang('customer/customerresource');
         $this->model = model('CustomerResource');
         $total = $this->model
