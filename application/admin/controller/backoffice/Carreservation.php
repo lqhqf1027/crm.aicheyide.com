@@ -126,13 +126,10 @@ class Carreservation extends Backend
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
                     ->where($where)
-                    ->where([
-                        "backoffice_id" => "not null",
-                        "review_the_data" => "inhouse_handling"
-                    ])
-                    ->where("backoffice_id", "not null")
+                   
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
-                    ->where("amount_collected", null)
+                    
                     ->order($sort, $order)
                     ->count();
                 $list = $this->model
@@ -146,13 +143,10 @@ class Carreservation extends Backend
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
                     ->where($where)
-                    ->where([
-                        "backoffice_id" => "not null",
-                        "review_the_data" => "inhouse_handling"
-                    ])
-                    ->where("backoffice_id", "not null")
+                    
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
-                    ->where("amount_collected", null)
+                    
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -248,7 +242,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id", "not null")
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
                     ->order($sort, $order)
                     ->count();
@@ -263,7 +257,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id", "not null")
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
                     ->order($sort, $order)
                     ->limit($offset, $limit)
@@ -354,7 +348,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id", "not null")
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
                     ->order($sort, $order)
                     ->count();
@@ -368,7 +362,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id", "not null")
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
                     ->order($sort, $order)
                     ->limit($offset, $limit)
