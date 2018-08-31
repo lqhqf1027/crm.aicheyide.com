@@ -64,6 +64,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'carnewinventory.frame_number', title: __('车架号')},
                             {field: 'mortgageregistration.mortgage_people', title: __('抵押人')},
                             {
+                                field: 'mortgageregistration.year_status',
+                                title: __('年检是否过期'),
+                                searchList: {"1": __('即将过期'), "2": __('已过期')},
+                                visible: false,
+
+                            },
+                            {
                                 field: 'operate', title: __('Operate'), table: fullRegister,
                                 buttons: [
 
@@ -202,6 +209,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
 
                 inspection: function (value, row, index) {
+console.log(row);
+
+
+                    var status = -1;
 
                       if(row.mortgageregistration.year_range){
                           var range = row.mortgageregistration.year_range;
@@ -213,19 +224,42 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                           var first = arr[0];
                           var last = arr[1];
 
-                          var now = new Date().getTime();
+                          var now = new Date(getNowFormatDate()).getTime();
 
                           first = new Date(first).getTime();
                           last = new Date(last).getTime();
 
-                          if (now > first && now < last) {
-                              return value + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
-                          } else if (now > last) {
-                              return value + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
-                          } else {
-                              return value;
+                          if (now >= first && now <= last) {
+                              status = 1;
+                          }else if(now > last){
+                              status = 2;
                           }
+
+
+                          $.ajax({
+                              url:'material/Fullsectioninfo/check_year',
+                              dataType:"json",
+                              type:"post",
+                              data:{
+                                  status: status,
+                                  id:row.mortgage_registration_id
+                              }, success:function (data) {
+                                  console.log(data);
+                              },error:function (type) {
+                                  console.log(type);
+                              }
+                          });
+
                       }
+
+
+                    if (status == 1) {
+                        return value + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
+                    } else if (status == 2) {
+                        return value + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
+                    } else {
+                        return value;
+                    }
 
 
                 }
@@ -233,5 +267,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
     return Controller;
 });

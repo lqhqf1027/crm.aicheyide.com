@@ -93,9 +93,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'mortgageregistration.registry_remark', title: __('备注信息'), operate: false},
                             {
-                                field: 'mortgageregistration.yearly_inspection',
+                                field: 'mortgageregistration.year_status',
                                 title: __('年检是否过期'),
-                                searchList: {"1": __('即将过期'), "0": __('已过期')},
+                                searchList: {"1": __('即将过期'), "2": __('已过期')},
                                 visible: false,
 
                             },
@@ -461,6 +461,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 inspection: function (value, row, index) {
 
+                    var license_status = -1;
+                    var status = -1;
+
+                    var new_license = row.newinventory.licensenumber;
+
+                    var license_arr = row.used_car;
+
+
+                    for (var i in license_arr){
+                        if(new_license == license_arr[i]){
+                            license_status = -2;
+                        }
+                    }
+
                     if (row.mortgageregistration.year_range) {
                         var range = row.mortgageregistration.year_range;
 
@@ -470,32 +484,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var first = arr[0];
                         var last = arr[1];
 
-                        var now = new Date().getTime();
+                        var now = new Date(getNowFormatDate()).getTime();
 
                         first = new Date(first).getTime();
                         last = new Date(last).getTime();
 
-                        var status = -1;
 
-                        if (now > first && now < last) {
+
+
+                        if (now >= first && now <= last) {
                             status = 1;
                         } else if (now > last) {
                             status = 2;
                         } else {
-                            status = -1;
+                            status = 0;
                         }
 
-                        if(row.mortgageregistration.yearly_inspection){
-                            // Fast.api.ajax({
-                            //     url: 'material/Newcarinfo/check_year',
-                            //     data: {status: status,id:row.mortgage_registration_id}
-                            // },function (data,ret) {
-                            //     console.log(data);
-                            // },function (data,ret) {
-                            //     console.log(ret);
-                            // });
 
-                            $.ajax({
+                        $.ajax({
                                 url:'material/Newcarinfo/check_year',
                                 dataType:"json",
                                 type:"post",
@@ -503,24 +509,58 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     status: status,
                                     id:row.mortgage_registration_id
                                 }, success:function (data) {
-                                    console.log(data);
+
                                 },error:function (type) {
                                     console.log(type);
                                 }
-                            })
-                        }
+                            });
 
 
-                        if (now > first && now < last) {
-                            return value + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
-                        } else if (now > last) {
-                            return value + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
-                        } else {
-                            return value;
-                        }
+
+
+                    }
+
+                    switch (status){
+                        case 0:
+                            if(license_status == -1){
+                                return value
+                            }else{
+                                return value +  "  " + "<span class='label label-info' style='cursor: pointer'>新车转卖</span>";
+                            }
+
+                        case 1:
+                            if(license_status == -1){
+                                return value +  "  " + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
+                            }else{
+                                return value +  "  " + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>" + "  " + "<span class='label label-info' style='cursor: pointer'>新车转卖</span>";
+                            }
+                        case 2:
+
+                            if(license_status == -1){
+                                return value +  "  " + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
+                            }else{
+                                return value +  "  " + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>" +"  "+ "<span class='label label-info' style='cursor: pointer'>新车转卖</span>";
+                            }
+
+                        default:
+                            if(license_status == -1){
+                                return value
+                            }else{
+                                return value +  "  " + "<span class='label label-info' style='cursor: pointer'>新车转卖</span>";
+                            }
+                    }
+
+
+
+                    if (status==1 &&license_status == -2) {
+                        return value + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
+                    } else if (status==2) {
+                        return value + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
                     } else {
                         return value;
                     }
+
+
 
 
                 },
@@ -535,5 +575,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
+
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
     return Controller;
 });
