@@ -207,7 +207,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                           var range = row.mortgageregistration.year_range;
 
                           var arr = range.split(";");
-                          console.log(arr);
+
 
 
                           var first = arr[0];

@@ -51,7 +51,7 @@ class Fullsectioninfo extends Backend
                         $query->withField('name,standard_price');
                     }, 'carnewinventory' => function ($query) {
                         $query->withField('carnumber,reservecar,licensenumber,presentationcondition,frame_number,engine_number,household,4s_shop');
-                    },'sales'=>function ($query){
+                    }, 'sales' => function ($query) {
                         $query->withField('nickname');
                     }])
                 ->where($where)
@@ -65,7 +65,7 @@ class Fullsectioninfo extends Backend
                         $query->withField('name,standard_price');
                     }, 'carnewinventory' => function ($query) {
                         $query->withField('carnumber,reservecar,licensenumber,presentationcondition,frame_number,engine_number,household,4s_shop');
-                    },'sales'=>function ($query){
+                    }, 'sales' => function ($query) {
                         $query->withField('nickname');
                     }])
                 ->where($where)
@@ -74,16 +74,16 @@ class Fullsectioninfo extends Backend
                 ->limit($offset, $limit)
                 ->select();
 
-            foreach ($list as $k=>$v){
-                $v->visible(['id','order_no','username','phone','id_card','genderdata','city','detailed_address','customer_source','introduce_name','introduce_phone','introduce_card','plan_name','purchase_tax','car_images','business_risks','insurance']);
+            foreach ($list as $k => $v) {
+                $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'genderdata', 'city', 'detailed_address', 'customer_source', 'introduce_name', 'introduce_phone', 'introduce_card', 'plan_name', 'purchase_tax', 'car_images', 'business_risks', 'insurance']);
                 $v->visible(['mortgageregistration']);
-                $v->getRelation('mortgageregistration')->visible(['archival_coding','signdate','hostdate','mortgage_people','ticketdate','supplier','tax_amount','no_tax_amount','pay_taxesdate','house_fee','luqiao_fee','insurance_buydate','car_boat_tax','insurance_policy','commercial_insurance_policy','transfer','transferdate','yearly_inspection','contract_total','registry_remark','classification','year_range']);
+                $v->getRelation('mortgageregistration')->visible(['archival_coding', 'signdate', 'hostdate', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'car_boat_tax', 'insurance_policy', 'commercial_insurance_policy', 'transfer', 'transferdate', 'yearly_inspection', 'contract_total', 'registry_remark', 'classification', 'year_range']);
                 $v->visible(['sales']);
                 $v->getRelation('sales')->visible(['nickname']);
                 $v->visible(['models']);
-                $v->getRelation('models')->visible(['name','standard_price']);
+                $v->getRelation('models')->visible(['name', 'standard_price']);
                 $v->visible(['carnewinventory']);
-                $v->getRelation('carnewinventory')->visible(['carnumber','reservecar','licensenumber','presentationcondition','frame_number','engine_number','household','4s_shop']);
+                $v->getRelation('carnewinventory')->visible(['carnumber', 'reservecar', 'licensenumber', 'presentationcondition', 'frame_number', 'engine_number', 'household', '4s_shop']);
             }
 
 
@@ -124,6 +124,8 @@ class Fullsectioninfo extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
 
+            $order = $this->request->post("order/a");
+
             $check = $this->request->post("mortgage");
             if ($params) {
                 if (!$check) {
@@ -142,64 +144,24 @@ class Fullsectioninfo extends Backend
                 $mon_first = date("Y-m-01", $date);
                 $mon_last = date("Y-m-d", strtotime("$mon_first +1 month -1 day"));
 
-                $params['year_range'] = $mon_first.";".$mon_last;
-
+                $params['year_range'] = $mon_first . ";" . $mon_last;
 
 
                 try {
 
-                    $data = [
-                        "archival_coding" => $params['archival_coding'],
-                        "signdate" => $params["signdate"],
-                        'hostdate' => $params['hostdate'],
-                        'mortgage_people' => $params['mortgage_people'],
-                        'ticketdate' => $params['ticketdate'],
-                        'supplier' => $params['supplier'],
-                        'tax_amount' => $params['tax_amount'],
-                        'no_tax_amount' => $params['no_tax_amount'],
-                        'pay_taxesdate' => $params['pay_taxesdate'],
-                        'house_fee' => $params['house_fee'],
-                        'luqiao_fee' => $params['luqiao_fee'],
-                        'insurance_buydate' => $params['insurance_buydate'],
-                        'car_boat_tax' => $params['car_boat_tax'],
-                        'insurance_policy' => $params['insurance_policy'],
-                        'commercial_insurance_policy' => $params['commercial_insurance_policy'],
-                        'transfer' => $params['transfer'],
-                        'transferdate' => $params['transferdate'],
-                        'yearly_inspection' => $params['yearly_inspection'],
-                        'year_range'=>$params['year_range'],
-                        'contract_total' => $params['contract_total'],
-                        'registry_remark' => $params['registry_remark'],
-                        'classification' => 'full'
-                    ];
-
-
-                    $order_data = [
-                        'purchase_tax' => $params['purchase_tax'],
-                        'car_images' => $params['car_images'],
-                        'business_risks' => $params['business_risks'],
-                        'insurance' => $params['insurance']
-                    ];
 
                     Db::name("full_parment_order")
                         ->where("id", $ids)
-                        ->update($order_data);
+                        ->update($order);
 
 
                     if ($register) {
                         $result = Db::name("mortgage_registration")
                             ->where("id", $register)
-                            ->update($data);
+                            ->update($params);
 
                     } else {
-
-
-
-
-
-
-
-                        $result = Db::name("mortgage_registration")->insert($data);
+                        $result = Db::name("mortgage_registration")->insert($params);
 
                         $insert_id = Db::name("mortgage_registration")->getLastInsID();
 
@@ -242,6 +204,13 @@ class Fullsectioninfo extends Backend
 
         $row = $row[0];
 
+        if($row['createtime']){
+            $row['createtime'] = date("Y-m-d",$row['createtime']);
+        }
+
+        if($row['delivery_datetime']){
+            $row['delivery_datetime'] = date("Y-m-d",$row['delivery_datetime']);
+        }
 
         //身份证正反面（多图）
         $id_cardimages = $row['id_cardimages'];

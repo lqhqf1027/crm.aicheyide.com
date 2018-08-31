@@ -129,7 +129,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('购置税金额(元)')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-purchase_tax" data-rule="required" class="form-control form-control" name="row[purchase_tax]"
+            <input id="c-purchase_tax" data-rule="required" class="form-control form-control" name="order[purchase_tax]"
                    type="number" value="{$row.purchase_tax}">
         </div>
     </div>
@@ -153,7 +153,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('交强险金额(元)')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-insurance" data-rule="required" class="form-control form-control" name="row[insurance]"
+            <input id="c-insurance" data-rule="required" class="form-control form-control" name="order[insurance]"
                    type="number" value="{$row.insurance}">
         </div>
     </div>
@@ -167,7 +167,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('商业险金额(元)')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-business_risks" data-rule="required" class="form-control form-control" name="row[business_risks]"
+            <input id="c-business_risks" data-rule="required" class="form-control form-control" name="order[business_risks]"
                    type="number" value="{$row.business_risks}">
         </div>
     </div>
@@ -258,7 +258,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('车辆所有的扫描件(多图)')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-car_images" data-rule="required" class="form-control form-control" size="50" name="row[car_images]" type="text" value="{$row.car_images}">
+                <input id="c-car_images" data-rule="required" class="form-control form-control" size="50" name="order[car_images]" type="text" value="{$row.car_images}">
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-car_images" class="btn btn-danger plupload" data-input-id="c-car_images" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-car_images"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                     <span><button type="button" id="fachoose-car_images" class="btn btn-primary fachoose" data-input-id="c-car_images" data-mimetype="image/*" data-multiple="true"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
@@ -268,7 +268,7 @@
             <ul class="row list-inline plupload-preview" id="p-car_images"></ul>
         </div>
     </div>
-
+    <input type="hidden" value="full" name="row[classification]">
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
