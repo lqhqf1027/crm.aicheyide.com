@@ -640,7 +640,32 @@ class Creditreview extends Backend
                 curl_close($ch);
                 // print_r($return);
 
-                $this->success();
+                $data = Db::name("rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+
+                $data = rentalpass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+                
             } else {
                 $this->error();
             }
@@ -684,7 +709,33 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+
+                $data = rentalnopass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
@@ -790,7 +841,34 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = secondpass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
@@ -835,7 +913,34 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = seconddata_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
@@ -880,7 +985,34 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = secondnopass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
