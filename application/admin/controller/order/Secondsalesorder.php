@@ -34,7 +34,7 @@ class Secondsalesorder extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\second\sales\Order;
+        $this->model = new \app\admin\model\SecondSalesOrder;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
@@ -58,6 +58,12 @@ class Secondsalesorder extends Backend
                 });
 
             if($result){
+
+                $this->model = model('secondcar_rental_models_info');
+
+                $plan_car_second_name = DB::name('second_sales_order')->where('id', $id)->value('plan_car_second_name');
+
+                $this->model->isUpdate(true)->save(['id'=>$plan_car_second_name,'status_data'=>'for_the_car']);
 
                 //请求地址
                 $uri = "http://goeasy.io/goeasy/publish";

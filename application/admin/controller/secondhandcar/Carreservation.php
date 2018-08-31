@@ -178,14 +178,14 @@ class Carreservation extends Backend
 
     }
 
-    //提交的风控审核
+    //提交匹配金融
     public function setAudit()
     {
         if ($this->request->isAjax()) {
 
             $id = $this->request->post('id');
 
-            $result = DB::name('second_sales_order')->where('id',$id)->setField('review_the_data', 'is_reviewing_control');
+            $result = DB::name('second_sales_order')->where('id',$id)->setField('review_the_data', 'is_reviewing_finance');
 
             if($result!==false){
                 
@@ -195,7 +195,7 @@ class Carreservation extends Backend
                 $data = [
                     'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                     'channel' => "demo-second_setaudit",
-                    'content' => "车管提交的二手车单，请及时进行审核处理"
+                    'content' => "车管提交的二手车单，请及时进行匹配金融"
                 ];
                 $ch = curl_init ();
                 curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
@@ -239,7 +239,7 @@ class Carreservation extends Backend
                 //客户姓名
                 $username= $data['username'];
 
-                $data = secondcontrol_inform($models_name,$admin_name,$username);
+                $data = secondfinance_inform($models_name,$admin_name,$username);
                 // var_dump($data);
                 // die;
                 $email = new Email;

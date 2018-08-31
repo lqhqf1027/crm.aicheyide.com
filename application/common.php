@@ -1057,7 +1057,27 @@ if (!function_exists('secondcar_inform')) {
     }
 }
 /**
-以租代购（二手车）车管发送给风控
+以租代购（二手车）车管发送给金融匹配
+ */
+if (!function_exists('secondfinance_inform')) {
+
+
+    function secondfinance_inform($models_name=NULL,$admin_name=NULL,$username=NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "二手车待匹配金融通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户：. $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行金融匹配 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+        
+    }
+}
+/**
+以租代购（二手车）金融发送给风控
  */
 if (!function_exists('secondcontrol_inform')) {
 
@@ -1067,7 +1087,7 @@ if (!function_exists('secondcontrol_inform')) {
         if ($models_name && $admin_name && $username) {
             $arr = [
                 'subject' => "二手车待风控审核通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户：. $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行风控审核 . '</div>'
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户：. $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，金融已匹配，请及时登录后台进行风控审核 . '</div>'
             ];
 
             return $arr;

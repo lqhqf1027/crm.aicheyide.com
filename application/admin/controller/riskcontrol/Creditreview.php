@@ -560,7 +560,7 @@ class Creditreview extends Backend
     public function rentalauditResult($ids = null)
     {
 
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder;
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
@@ -602,7 +602,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\rental\Order;
+            $this->model = new \app\admin\model\RentalOrder;
 
             $id = input("id");
 
@@ -617,7 +617,7 @@ class Creditreview extends Backend
 
             $plan_car_rental_name = $this->model->where('id', $id)->value('plan_car_rental_name');
 
-            DB::name('crm_car_rental_models_info')->where('id', $plan_car_rental_name)->setField('reciew_the_data', 'is_reviewing_pass');
+            DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('status_data', 'is_reviewing_pass');
 
             if ($result) {
 
@@ -678,7 +678,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\rental\Order;
+            $this->model = new \app\admin\model\RentalOrder;
 
             $id = input("id");
 
@@ -747,7 +747,7 @@ class Creditreview extends Backend
     /** 审核销售提交过来的销售二手车单*/
     public function secondhandcarResult($ids = null)
     {
-        $this->model = new \app\admin\model\second\sales\Order;
+        $this->model = new \app\admin\model\SecondSalesOrder;
         $row = $this->model->get($ids);
         if (!$row) {
             $this->error(__('No Results were found'));
@@ -810,7 +810,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\second\sales\Order;
+            $this->model = new \app\admin\model\SecondSalesOrder;
 
             $id = input("id");
 
@@ -821,6 +821,11 @@ class Creditreview extends Backend
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            $plan_car_second_name = $this->model->where('id', $id)->value('plan_car_second_name');
+
+            DB::name('secondcar_rental_models_info')->where('id', $plan_car_second_name)->setField('status_data', 'is_reviewing_pass');
+
 
             //请求地址
             $uri = "https://goeasy.io/goeasy/publish";
@@ -882,7 +887,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\second\sales\Order;
+            $this->model = new \app\admin\model\SecondSalesOrder;
 
             $id = input("id");
 
@@ -954,7 +959,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\second\sales\Order;
+            $this->model = new \app\admin\model\SecondSalesOrder;
 
             $id = input("id");
 
