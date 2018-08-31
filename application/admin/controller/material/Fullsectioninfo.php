@@ -75,9 +75,9 @@ class Fullsectioninfo extends Backend
                 ->select();
 
             foreach ($list as $k => $v) {
-                $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'genderdata', 'city', 'detailed_address', 'customer_source', 'introduce_name', 'introduce_phone', 'introduce_card', 'plan_name', 'purchase_tax', 'car_images', 'business_risks', 'insurance']);
+                $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'genderdata', 'city', 'detailed_address', 'customer_source', 'introduce_name', 'introduce_phone', 'introduce_card', 'plan_name', 'purchase_tax', 'car_images', 'business_risks', 'insurance','mortgage_registration_id']);
                 $v->visible(['mortgageregistration']);
-                $v->getRelation('mortgageregistration')->visible(['archival_coding', 'signdate', 'hostdate', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'car_boat_tax', 'insurance_policy', 'commercial_insurance_policy', 'transfer', 'transferdate', 'yearly_inspection', 'contract_total', 'registry_remark', 'classification', 'year_range']);
+                $v->getRelation('mortgageregistration')->visible(['archival_coding', 'signdate', 'hostdate', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'car_boat_tax', 'insurance_policy', 'commercial_insurance_policy', 'transfer', 'transferdate', 'yearly_inspection', 'contract_total', 'registry_remark', 'classification', 'year_range','year_status']);
                 $v->visible(['sales']);
                 $v->getRelation('sales')->visible(['nickname']);
                 $v->visible(['models']);
@@ -345,5 +345,29 @@ class Fullsectioninfo extends Backend
         }
 
         return $list;
+    }
+
+    public function check_year()
+    {
+        if($this->request->isAjax()){
+           $id = $this->request->post("id");
+
+           $status = $this->request->post("status");
+
+           if($status == -1){
+               $status = 0;
+           }
+
+           $res = Db::name("mortgage_registration")
+           ->where("id",$id)
+           ->setField("year_status",$status);
+
+           if($res){
+               echo json_encode("OK");
+           }else{
+               echo json_encode("ERROR");
+           }
+
+        }
     }
 }

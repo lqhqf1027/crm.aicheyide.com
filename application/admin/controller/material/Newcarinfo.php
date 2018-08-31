@@ -25,8 +25,7 @@ class Newcarinfo extends Backend
     public function _initialize()
     {
         parent::_initialize();
-//        $this->model = model('MortgageRegistration');
-//        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+
         $this->loadlang('material/mortgageregistration');
         $this->loadlang('newcars/newcarscustomer');
         $this->loadlang('order/salesorder');
@@ -36,6 +35,7 @@ class Newcarinfo extends Backend
 
     public function index()
     {
+
 
         return $this->view->fetch();
     }
@@ -63,7 +63,7 @@ class Newcarinfo extends Backend
                 }, 'planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,tail_section,margin');
                 }, 'mortgageregistration' => function ($query) {
-                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range');
+                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status');
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -79,12 +79,28 @@ class Newcarinfo extends Backend
                 }, 'planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,tail_section,margin');
                 }, 'mortgageregistration' => function ($query) {
-                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range');
+                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status');
                 }])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
+
+
+
+
+
+
+            $used = new \app\admin\model\SecondcarRentalModelsInfo();
+            $used = $used->column('licenseplatenumber');
+
+
+            foreach ($list as $k=>$v){
+                $list[$k]['used_car'] = $used;
+            }
+            $list = collection($list)->toArray();
+
+
 
             $result = array("total" => $total, "rows" => $list);
 
@@ -156,9 +172,7 @@ class Newcarinfo extends Backend
             ->field("mortgage_registration_id,createtime")
             ->find();
 
-//        if ($gage['createtime']) {
-//            $gage['createtime'] = date("Y-m-d", $gage['createtime']);
-//        }
+
 
 
         if ($gage['mortgage_registration_id']) {
@@ -537,9 +551,6 @@ class Newcarinfo extends Backend
 
             $id = input("id");
 
-            if($num==-1){
-                $num = 0;
-            }
 
             $res = Db::name("mortgage_registration")
                 ->where("id", $id)
