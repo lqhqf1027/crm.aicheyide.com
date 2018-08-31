@@ -40,7 +40,7 @@ class Orderlisttabs extends Backend
         $this->view->assign('total', model('SalesOrder')->count());
         $this->view->assign('total1', model('RentalOrder')->count());
         $this->view->assign('total2', model('SecondSalesOrder')->count());
-        $this->view->assign('total3',model('FullParmentOrder')->count());
+        $this->view->assign('total3', model('FullParmentOrder')->count());
         return $this->view->fetch();
     }
 
@@ -74,7 +74,7 @@ class Orderlisttabs extends Backend
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
                     $query->withField('name');
-                },'newinventory'=>function($query){
+                }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber');
                 }])
                 ->where($where)
@@ -89,7 +89,7 @@ class Orderlisttabs extends Backend
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
                     $query->withField('name');
-                },'newinventory'=>function($query){
+                }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber');
                 }])
                 ->where($where)
@@ -141,11 +141,11 @@ class Orderlisttabs extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
-                ->with(['admin'=>function ($query){
+                ->with(['admin' => function ($query) {
                     $query->withField('nickname');
-                },'models'=> function ($query){
+                }, 'models' => function ($query) {
                     $query->withField('name');
-                },'carrentalmodelsinfo'=>function ($query){
+                }, 'carrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin');
                 }])
                 ->where($where)
@@ -153,11 +153,11 @@ class Orderlisttabs extends Backend
                 ->count();
 
             $list = $this->model
-                ->with(['sales'=>function ($query){
+                ->with(['sales' => function ($query) {
                     $query->withField('nickname');
-                },'models'=> function ($query){
+                }, 'models' => function ($query) {
                     $query->withField('name');
-                },'carrentalmodelsinfo'=>function ($query){
+                }, 'carrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin');
                 }])
                 ->where($where)
@@ -165,19 +165,18 @@ class Orderlisttabs extends Backend
                 ->limit($offset, $limit)
                 ->select();
 
-            foreach ($list as $k=>$v){
-                $v->visible(['id','order_no','username','phone','id_card','cash_pledge','rental_price','tenancy_term','genderdata','review_the_data','createtime','delivery_datetime']);
+            foreach ($list as $k => $v) {
+                $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
                 $v->visible(['sales']);
                 $v->getRelation('sales')->visible(['nickname']);
                 $v->visible(['models']);
                 $v->getRelation('models')->visible(['name']);
                 $v->visible(['carrentalmodelsinfo']);
-                $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber','vin']);
+                $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber', 'vin']);
             }
 
 
             $list = collection($list)->toArray();
-
 
 
             $result = array("total" => $total, "rows" => $list);
@@ -196,6 +195,7 @@ class Orderlisttabs extends Backend
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
+
     public function orderSecond()
     {
 
@@ -214,7 +214,7 @@ class Orderlisttabs extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['plansecond' => function ($query) {
-                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,licenseplatenumber');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
@@ -227,7 +227,7 @@ class Orderlisttabs extends Backend
 
             $list = $this->model
                 ->with(['plansecond' => function ($query) {
-                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,licenseplatenumber');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
@@ -240,7 +240,7 @@ class Orderlisttabs extends Backend
             foreach ($list as $k => $row) {
                 $row->visible(['id', 'order_no', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
                 $row->visible(['plansecond']);
-                $row->getRelation('plansecond')->visible(['newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                $row->getRelation('plansecond')->visible(['newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney', 'licenseplatenumber']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
@@ -257,6 +257,66 @@ class Orderlisttabs extends Backend
         return $this->view->fetch('index');
 
     }
+
+    /**全款 */
+    public function orderFull()
+    {
+        $this->model = new \app\admin\model\FullParmentOrder;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
+
+
+            $list = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['planfull']);
+                $row->getRelation('planfull')->visible(['full_total_price']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
+
+
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
+            return json($result);
+        }
+
+        return $this->view->fetch();
+
+    }
+
     /**
      * 根据方案id查询 车型名称，首付、月供等
      */
@@ -290,7 +350,7 @@ class Orderlisttabs extends Backend
             $models_name = DB::name('models')->where('id', $models_id)->value('name');
             //客户姓名
             $username = $this->model->where('id', $id)->value('username');
-            
+
             //请求地址
             $uri = "https://goeasy.io/goeasy/publish";
             // 参数数组
@@ -330,7 +390,7 @@ class Orderlisttabs extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
-                $data = newinternal_inform($models_name,$admin_name,$username);
+                $data = newinternal_inform($models_name, $admin_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -341,10 +401,9 @@ class Orderlisttabs extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -421,7 +480,6 @@ class Orderlisttabs extends Backend
     }
 
 
-
     /**
      * 根据方案id查询 车型名称，首付、月供等
      *
@@ -480,7 +538,6 @@ class Orderlisttabs extends Backend
         );
         return $this->view->fetch();
     }
-
 
 
     /**
@@ -562,64 +619,6 @@ class Orderlisttabs extends Backend
         return $this->view->fetch();
     }
 
-    /**全款 */
-    public function orderFull()
-    {
-        $this->model = new \app\admin\model\FullParmentOrder;
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
-            $total = $this->model
-                ->with(['planfull' => function ($query) {
-                    $query->withField('full_total_price');
-                }, 'admin' => function ($query) {
-                    $query->withField('nickname');
-                }, 'models' => function ($query) {
-                    $query->withField('name');
-                }])
-                ->where($where)
-                ->order($sort, $order)
-                ->count();
-
-
-            $list = $this->model
-                ->with(['planfull' => function ($query) {
-                    $query->withField('full_total_price');
-                }, 'admin' => function ($query) {
-                    $query->withField('nickname');
-                }, 'models' => function ($query) {
-                    $query->withField('name');
-                }])
-                ->where($where)
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-            foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
-                $row->visible(['planfull']);
-                $row->getRelation('planfull')->visible(['full_total_price']);
-                $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname']);
-                $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
-            }
-
-
-            $list = collection($list)->toArray();
-
-            $result = array('total' => $total, "rows" => $list);
-            return json($result);
-        }
-
-        return $this->view->fetch();
-
-    }
 
     /**
      * 根据方案id查询 车型名称，首付、月供等
