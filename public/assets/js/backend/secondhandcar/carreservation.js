@@ -77,9 +77,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 buttons: [
                                     {
                                         name: 'secondcarWaitconfirm',
-                                        text: '提交风控审核',
+                                        text: '提交金融匹配',
                                         icon: 'fa fa-pencil',
-                                        title: __('提交风控审核'),
+                                        title: __('提交金融匹配'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-secondcarWaitconfirm',
 
@@ -221,7 +221,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             top = left = undefined;
                         }
                         Layer.confirm(
-                            __('确定提交风控进行审核吗?'),
+                            __('确定提交金融进行匹配吗?'),
                             {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
                             function (index) {
                                 var table = $(that).closest('table');

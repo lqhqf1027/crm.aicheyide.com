@@ -1137,6 +1137,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
@@ -1166,6 +1169,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_car_tube') {
@@ -1199,6 +1205,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
@@ -1228,6 +1237,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
@@ -1250,6 +1262,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         hidden: function (row) {  /**风控正在审核中 */
                                             if (row.review_the_data == 'is_reviewing_control') {
                                                 return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'is_reviewing_finance', text: '正在匹配金融',
+                                        hidden: function (row) {  /**正在匹配金融 */
+                                            if (row.review_the_data == 'is_reviewing_finance') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing') {
                                                 return true;
@@ -1286,6 +1333,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'is_reviewing_true') {
                                                 return true;
                                             }
@@ -1318,6 +1368,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
@@ -1346,6 +1399,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_car_tube') {
@@ -1381,6 +1437,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_control') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
                                             else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
@@ -1412,6 +1471,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_car_tube') {

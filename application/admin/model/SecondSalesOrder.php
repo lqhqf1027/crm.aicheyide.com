@@ -97,7 +97,7 @@ class SecondSalesOrder extends Model
      */
     public function plansecond()
     {
-        return $this->belongsTo('app\admin\model\SecondcarRentalModelsInfo', 'plan_car_second_name', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->belongsTo('SecondcarRentalModelsInfo', 'plan_car_second_name', 'id', [], 'LEFT')->setEagerlyType(0);
     //    return $this->hasOne('PlanAcar','id','plan_acar_name');
     }
 
@@ -106,7 +106,7 @@ class SecondSalesOrder extends Model
      */
     public function admin()
     {
-        return $this->belongsTo('app\admin\model\Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->belongsTo('Admin', 'admin_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
     /**
@@ -114,6 +114,7 @@ class SecondSalesOrder extends Model
      * @return \think\model\relation\BelongsTo
      */
     public  function models(){
+
 
         return $this->belongsTo('app\admin\model\Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
@@ -133,6 +134,10 @@ class SecondSalesOrder extends Model
     {
         return $this->belongsTo('SecondcarRentalModelsInfo','plan_car_second_name','id',[],'LEFT')->setEagerlyType(0);
     }
+
+      
+    }    
+
 
 
 }

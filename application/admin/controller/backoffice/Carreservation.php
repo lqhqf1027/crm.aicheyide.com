@@ -126,13 +126,10 @@ class Carreservation extends Backend
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
                     ->where($where)
-                    ->where([
-                        "backoffice_id" => "not null",
-                        "review_the_data" => "inhouse_handling"
-                    ])
-                    ->where("backoffice_id", "not null")
+                   
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
-                    ->where("amount_collected", null)
+                    
                     ->order($sort, $order)
                     ->count();
                 $list = $this->model
@@ -146,13 +143,10 @@ class Carreservation extends Backend
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
                     ->where($where)
-                    ->where([
-                        "backoffice_id" => "not null",
-                        "review_the_data" => "inhouse_handling"
-                    ])
-                    ->where("backoffice_id", "not null")
+                    
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
-                    ->where("amount_collected", null)
+                    
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -248,7 +242,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id", "not null")
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
                     ->order($sort, $order)
                     ->count();
@@ -263,7 +257,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id", "not null")
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
                     ->order($sort, $order)
                     ->limit($offset, $limit)
@@ -354,7 +348,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id", "not null")
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
                     ->order($sort, $order)
                     ->count();
@@ -368,7 +362,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id", "not null")
+                    ->where("backoffice_id",  $this->auth->id)
                     ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
                     ->order($sort, $order)
                     ->limit($offset, $limit)
@@ -555,7 +549,33 @@ class Carreservation extends Backend
                 curl_close($ch);
                 // print_r($return);
 
-                $this->success('', '', $result);
+                $data = Db::name("second_sales_order")->where('id', $ids)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = secondcar_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
@@ -601,7 +621,33 @@ class Carreservation extends Backend
                 curl_close($ch);
                 // print_r($return);
 
-                $this->success('', '', $result);
+                $data = Db::name("full_parment_order")->where('id', $ids)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = fullcar_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }

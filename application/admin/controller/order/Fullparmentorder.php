@@ -4,6 +4,7 @@ namespace app\admin\controller\order;
 
 use app\common\controller\Backend;
 use think\DB;
+use app\common\library\Email;
 
 /**
  * 订单列管理
@@ -254,8 +255,33 @@ class Fullparmentorder extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
-                    $this->success('提交成功，请等待备车结果'); 
-               
+                
+                $data = Db::name("full_parment_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = fullinternal_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
                 
             }else{
                 $this->error('提交失败',null,$result);
@@ -314,8 +340,33 @@ class Fullparmentorder extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
-                    $this->success('提交成功'); 
-               
+                   
+                $data = Db::name("full_parment_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = fullautomobile_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
                 
             }else{
                 $this->error('提交失败',null,$result);

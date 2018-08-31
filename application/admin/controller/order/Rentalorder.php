@@ -425,7 +425,7 @@ class Rentalorder extends Backend
 
             ->field('a.id,a.licenseplatenumber,a.kilometres,a.Parkingposition,a.companyaccount,a.cashpledge,a.threemonths,a.sixmonths,a.manysixmonths,a.note,b.name as models_name')
 
-            ->where('a.status', '')
+            ->where('a.status_data', '')
 
             ->select();
 
@@ -465,7 +465,7 @@ class Rentalorder extends Backend
 
                         $this->model = model('car_rental_models_info');
 
-                        $this->model->isUpdate(true)->save(['id'=>$params['plan_car_rental_name'],'status'=>'is_reviewing']);
+                        $this->model->isUpdate(true)->save(['id'=>$params['plan_car_rental_name'],'status_data'=>'is_reviewing']);
                         
                         if ($result_s) {
                             

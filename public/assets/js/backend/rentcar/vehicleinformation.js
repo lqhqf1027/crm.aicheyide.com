@@ -55,7 +55,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         // {field: 'sales_id', title: __('Sales_id')},
-                        {field: 'licenseplatenumber', title: __('Licenseplatenumber')},
+                        {field: 'licenseplatenumber', title: __('Licenseplatenumber'), formatter:function(value,row,index){
+                            if(row.status_data !=  ""){
+                                return row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中</span>';
+
+                            }
+                            else{
+                                return row.licenseplatenumber
+                            }
+                        }},
                         // {field: 'models_id', title: __('Models_id')},
                         {field: 'models.name', title: __('Models.name')},
                         {field: 'kilometres', title: __('Kilometres'), operate:'BETWEEN'},
@@ -72,7 +80,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'aeratedcard', title: __('Aeratedcard')},
                         {field: 'volumekeys', title: __('Volumekeys')},
                         {field: 'Parkingposition', title: __('Parkingposition')},
-                        {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Table.api.formatter.toggle},
+                        {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Controller.api.formatter.toggle},
                         {field: 'vehiclestate', title: __('Vehiclestate')},
 
 
@@ -88,23 +96,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     if(row.status == 'is_reviewing'){
                                         return false; 
                                     }
-                                    else if(row.status == 'is_reviewing_true'){
+                                    else if(row.status_data == 'is_reviewing_true'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing_pass'){
+                                    else if(row.status_data == 'is_reviewing_pass'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'for_the_car'){
+                                    else if(row.status_data == 'for_the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'the_car'){
+                                    else if(row.status_data == 'the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == ''){
+                                    else if(row.status_data == ''){
                                       
                                         return true;
                                     } 
@@ -118,23 +126,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     if(row.status == 'is_reviewing_pass'){
                                         return false; 
                                     }
-                                    else if(row.status == 'is_reviewing_true'){
+                                    else if(row.status_data == 'is_reviewing_true'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing'){
+                                    else if(row.status_data == 'is_reviewing'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'for_the_car'){
+                                    else if(row.status_data == 'for_the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'the_car'){
+                                    else if(row.status_data == 'the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == ''){
+                                    else if(row.status_data == ''){
                                       
                                         return true;
                                     } 
@@ -145,26 +153,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 name: 'for_the_car',text:'确认提车', title:'确认提车',icon: 'fa fa-automobile', extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-success btn-dialog btn-takecar',
                                 // url:'rentcar/vehicleinformation/rentalrequest',/**打印提车单 */
                                 hidden:function(row){
-                                    if(row.status == 'for_the_car'){
+                                    if(row.status_data == 'for_the_car'){
                                         return false; 
                                     }
-                                    else if(row.status == 'is_reviewing_pass'){
+                                    else if(row.status_data == 'is_reviewing_pass'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing_true'){
+                                    else if(row.status_data == 'is_reviewing_true'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing'){
+                                    else if(row.status_data == 'is_reviewing'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'the_car'){
+                                    else if(row.status_data == 'the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == ''){
+                                    else if(row.status_data == ''){
                                       
                                         return true;
                                     } 
@@ -174,26 +182,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 name: 'is_reviewing_true', icon: 'fa fa-check-circle', text: '已有销售预定', classname: ' text-info ',
                                 hidden: function (row) {  /**已有销售预定 */
-                                    if(row.status == 'is_reviewing_true'){
+                                    if(row.status_data == 'is_reviewing_true'){
                                         return false; 
                                     }
-                                    else if(row.status == 'is_reviewing_pass'){
+                                    else if(row.status_data == 'is_reviewing_pass'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'for_the_car'){
+                                    else if(row.status_data == 'for_the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing'){
+                                    else if(row.status_data == 'is_reviewing'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'the_car'){
+                                    else if(row.status_data == 'the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == ''){
+                                    else if(row.status_data == ''){
                                       
                                         return true;
                                     } 
@@ -202,55 +210,121 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 name: '', icon: 'fa fa-check-circle', text: '等待出租', classname: ' text-info ',
                                 hidden: function (row) {  /**等待出租 */
-                                    if(row.status == ''){
+                                    if(row.status_data == ''){
                                         return false; 
                                     }
-                                    else if(row.status == 'is_reviewing_pass'){
+                                    else if(row.status_data == 'is_reviewing_pass'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'for_the_car'){
+                                    else if(row.status_data == 'for_the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing'){
+                                    else if(row.status_data == 'is_reviewing'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'the_car'){
+                                    else if(row.status_data == 'the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing_true'){
+                                    else if(row.status_data == 'is_reviewing_true'){
                                       
                                         return true;
                                     } 
                                 }
                             },
+                            /**
+                             * 删除
+                             */
+                            { 
+                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
+                                url:'rentcar/vehicleinformation/del',/** */
+                                hidden:function(row){
+                                    if(row.status_data == ''){
+                                        return false; 
+                                    }
+                                    else if(row.status_data == 'is_reviewing_pass'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                   
+                                },
+                                
+                            },
+                            /**
+                             * 编辑
+                             */
+                            { 
+                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'编辑信息', title: __('编辑信息'),classname: 'btn btn-xs btn-success btn-editone', 
+                                url:'rencar/vehicleinformation/edit',/**编辑信息 */
+                                hidden:function(row,value,index){ 
+                                    if(row.status_data == ''){
+                                        return false; 
+                                    }
+                                    else if(row.status_data == 'is_reviewing_pass'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                }, 
+                            },
                             {
 
                                 name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
                                 hidden: function (row) {  /**已提车 */
-                                    if(row.status == 'the_car'){
+                                    if(row.status_data == 'the_car'){
                                         return false; 
                                     }
-                                    else if(row.status == ''){
+                                    else if(row.status_data == ''){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing_pass'){
+                                    else if(row.status_data == 'is_reviewing_pass'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'for_the_car'){
+                                    else if(row.status_data == 'for_the_car'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing'){
+                                    else if(row.status_data == 'is_reviewing'){
                                       
                                         return true;
                                     } 
-                                    else if(row.status == 'is_reviewing_true'){
+                                    else if(row.status_data == 'is_reviewing_true'){
                                       
                                         return true;
                                     } 
@@ -488,6 +562,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var buttons = $.extend([], this.buttons || []);
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
+                toggle: function (value, row, index) {
+                    if(row.status_data == ''){
+                        var color = typeof this.color !== 'undefined' ? this.color : 'success';
+                        var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
+                        var no = typeof this.no !== 'undefined' ? this.no : 0;
+                        return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+                    }
+                    else{
+                        return "该车在签单流程中";
+                    }
+                    
                 }
                 // status: function (value, row, index) {
 

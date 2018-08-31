@@ -60,7 +60,7 @@ class Vehicleinformation extends Backend
                     $query->withField('nickname');
                 }])
                 ->where($where)
-                // ->where('review_the_data', 'NEQ', 'the_car')
+                ->where('status_data', 'NEQ', 'the_car')
                 ->order($sort, $order)
                 ->count();
 
@@ -71,7 +71,7 @@ class Vehicleinformation extends Backend
                     $query->withField('nickname');
                 }])
                 ->where($where)
-                // ->where('review_the_data','NEQ', 'the_car')
+                ->where('status_data', 'NEQ', 'the_car')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -231,7 +231,7 @@ class Vehicleinformation extends Backend
 
             $result = $this->model
                 ->where("id", $id)
-                ->setField("review_the_data", "is_reviewing_true");
+                ->setField("status_data", "is_reviewing_true");
 
             $rental_id = Session::get('rental_id');
 
@@ -324,7 +324,7 @@ class Vehicleinformation extends Backend
 
         if ($this->request->isPost()) {
 
-            $result_s = DB::name('car_rental_models_info')->where('id', $id)->setField('review_the_data', 'for_the_car');
+            $result_s = DB::name('car_rental_models_info')->where('id', $id)->setField('status_data', 'for_the_car');
 
             if ($result_s) {
                 $this->success();
@@ -342,7 +342,7 @@ class Vehicleinformation extends Backend
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
 
-            $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'the_car']);
+            $result = $this->model->isUpdate(true)->save(['id' => $id, 'status_data' => 'the_car']);
 
             $rental_order_id = DB::name('rental_order')->where('plan_car_rental_name', $id)->value('id');
 

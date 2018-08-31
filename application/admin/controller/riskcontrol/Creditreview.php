@@ -560,7 +560,7 @@ class Creditreview extends Backend
     public function rentalauditResult($ids = null)
     {
 
-        $this->model = new \app\admin\model\rental\Order;
+        $this->model = new \app\admin\model\RentalOrder;
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
@@ -602,7 +602,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\rental\Order;
+            $this->model = new \app\admin\model\RentalOrder;
 
             $id = input("id");
 
@@ -617,7 +617,7 @@ class Creditreview extends Backend
 
             $plan_car_rental_name = $this->model->where('id', $id)->value('plan_car_rental_name');
 
-            DB::name('crm_car_rental_models_info')->where('id', $plan_car_rental_name)->setField('reciew_the_data', 'is_reviewing_pass');
+            DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('status_data', 'is_reviewing_pass');
 
             if ($result) {
 
@@ -640,7 +640,32 @@ class Creditreview extends Backend
                 curl_close($ch);
                 // print_r($return);
 
-                $this->success();
+                $data = Db::name("rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+
+                $data = rentalpass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+                
             } else {
                 $this->error();
             }
@@ -653,7 +678,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\rental\Order;
+            $this->model = new \app\admin\model\RentalOrder;
 
             $id = input("id");
 
@@ -684,7 +709,33 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+
+                $data = rentalnopass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
@@ -696,7 +747,7 @@ class Creditreview extends Backend
     /** 审核销售提交过来的销售二手车单*/
     public function secondhandcarResult($ids = null)
     {
-        $this->model = new \app\admin\model\second\sales\Order;
+        $this->model = new \app\admin\model\SecondSalesOrder;
         $row = $this->model->get($ids);
         if (!$row) {
             $this->error(__('No Results were found'));
@@ -759,7 +810,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\second\sales\Order;
+            $this->model = new \app\admin\model\SecondSalesOrder;
 
             $id = input("id");
 
@@ -770,6 +821,11 @@ class Creditreview extends Backend
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
+
+            $plan_car_second_name = $this->model->where('id', $id)->value('plan_car_second_name');
+
+            DB::name('secondcar_rental_models_info')->where('id', $plan_car_second_name)->setField('status_data', 'is_reviewing_pass');
+
 
             //请求地址
             $uri = "https://goeasy.io/goeasy/publish";
@@ -790,7 +846,34 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = secondpass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
@@ -804,7 +887,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\second\sales\Order;
+            $this->model = new \app\admin\model\SecondSalesOrder;
 
             $id = input("id");
 
@@ -835,7 +918,34 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = seconddata_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }
@@ -849,7 +959,7 @@ class Creditreview extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $this->model = new \app\admin\model\second\sales\Order;
+            $this->model = new \app\admin\model\SecondSalesOrder;
 
             $id = input("id");
 
@@ -880,7 +990,34 @@ class Creditreview extends Backend
             // print_r($return);
 
             if ($result) {
-                $this->success();
+                
+                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售id
+                $admin_id = $data['admin_id'];
+                //客户姓名
+                $username= $data['username'];
+                
+                $data = secondnopass_inform($models_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
             } else {
                 $this->error();
             }

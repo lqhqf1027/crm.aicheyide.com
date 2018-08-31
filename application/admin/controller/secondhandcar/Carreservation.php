@@ -4,6 +4,7 @@ namespace app\admin\controller\secondhandcar;
 
 use app\common\controller\Backend;
 use think\DB;
+use app\common\library\Email;
 
 /**
  * 短信验证码管理
@@ -55,7 +56,7 @@ class Carreservation extends Backend
     //待车管确认
     public function secondcarWaitconfirm()
     {
-        $this->model = new \app\admin\model\second\sales\Order;
+        $this->model = new \app\admin\model\SecondSalesOrder;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -117,7 +118,7 @@ class Carreservation extends Backend
     //车管已确认
     public function secondcarConfirm()
     {
-        $this->model = new \app\admin\model\second\sales\Order;
+        $this->model = new \app\admin\model\SecondSalesOrder;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -177,14 +178,14 @@ class Carreservation extends Backend
 
     }
 
-    //提交的风控审核
+    //提交匹配金融
     public function setAudit()
     {
         if ($this->request->isAjax()) {
 
             $id = $this->request->post('id');
 
-            $result = DB::name('second_sales_order')->where('id',$id)->setField('review_the_data', 'is_reviewing_control');
+            $result = DB::name('second_sales_order')->where('id',$id)->setField('review_the_data', 'is_reviewing_finance');
 
             if($result!==false){
                 
@@ -194,7 +195,7 @@ class Carreservation extends Backend
                 $data = [
                     'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
                     'channel' => "demo-second_setaudit",
-                    'content' => "车管提交的二手车单，请及时进行审核处理"
+                    'content' => "车管提交的二手车单，请及时进行匹配金融"
                 ];
                 $ch = curl_init ();
                 curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
@@ -228,8 +229,33 @@ class Carreservation extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
-                    $this->success('提交成功，请等待审核结果'); 
-               
+                 
+                $data = Db::name("second_sales_order")->where('id', $id)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = secondfinance_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
                 
             }else{
                 $this->error('提交失败',null,$result);
