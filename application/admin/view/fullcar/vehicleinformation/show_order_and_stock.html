@@ -11,31 +11,34 @@
 
         <br>
         <div class="form-group">
-            <div class="col-xs-12 col-sm-8 col-md-3">
-                <strong>{:__('Createtime')}：</strong> {$row.createtime|date='Y-m-d H:i:s',###}
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('订车时间')}：</strong> {$row.createtime}
             </div>
-            <div class="col-xs-12 col-sm-8 col-md-9">
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('提车时间')}：</strong> {$row.delivery_datetime}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-5">
                 <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('身份证号')}：</strong> {$row.id_card}
             </div>
         </div>
         <hr>
         <div class="form-group">
 
             <div class="col-xs-12 col-sm-8 col-md-2">
-                <strong>{:__('Username')}：</strong> {$row.username} {if condition="$row.genderdata_text eq '男'"} &nbsp;
+                <strong>{:__('客户姓名')}：</strong> {$row.username} {if condition="$row.genderdata_text eq '男'"} &nbsp;
                 <span class="fa fa-male text-info"></span>
                 {else /}
                 <span class="fa fa-female" style="color:palevioletred"></span>
 
                 {/if}
-
             </div>
             <div class="col-xs-12 col-sm-8 col-md-2">
-                <strong>{:__('Phone')}：</strong> {$row.phone}
+                <strong>{:__('手机号')}：</strong> {$row.phone}
             </div>
-            <div class="col-xs-12 col-sm-8 col-md-3">
-                <strong>{:__('Id_card')}：</strong> {$row.id_card}
-            </div>
+            
             <div class="col-xs-12 col-sm-8 col-md-5">
                 <strong>{:__('现居住地址（同联系地址）')}：</strong> {$row.city}{$row.detailed_address}
             </div>
@@ -43,6 +46,27 @@
 
         </div>
         <hr>
+        <div class="form-group">
+
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('车牌号')}：</strong>{$data.licensenumber}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('发动机号')}：</strong> {$data.engine_number}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-2">
+                <strong>{:__('车架号')}：</strong> {$data.frame_number}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('所属户')}：</strong> {$data.household}
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-3">
+                <strong>{:__('4s店')}：</strong> {$data.4s_shop}
+            </div>
+        </div>
+       
+        <hr>
+    
         <div class="form-group">
 
             <div class="col-xs-12 col-sm-8 col-md-4">
