@@ -75,9 +75,9 @@ class Fullsectioninfo extends Backend
                 ->select();
 
             foreach ($list as $k => $v) {
-                $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'genderdata', 'city', 'detailed_address', 'customer_source', 'introduce_name', 'introduce_phone', 'introduce_card', 'plan_name', 'purchase_tax', 'car_images', 'business_risks', 'insurance','mortgage_registration_id']);
+                $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'genderdata', 'city', 'detailed_address', 'customer_source', 'introduce_name', 'introduce_phone', 'introduce_card', 'plan_name', 'purchase_tax', 'car_images', 'business_risks', 'insurance', 'mortgage_registration_id']);
                 $v->visible(['mortgageregistration']);
-                $v->getRelation('mortgageregistration')->visible(['archival_coding', 'signdate', 'hostdate', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'car_boat_tax', 'insurance_policy', 'commercial_insurance_policy', 'transfer', 'transferdate', 'yearly_inspection', 'contract_total', 'registry_remark', 'classification', 'year_range','year_status']);
+                $v->getRelation('mortgageregistration')->visible(['archival_coding', 'signdate', 'hostdate', 'mortgage_people', 'ticketdate', 'supplier', 'tax_amount', 'no_tax_amount', 'pay_taxesdate', 'house_fee', 'luqiao_fee', 'insurance_buydate', 'car_boat_tax', 'insurance_policy', 'commercial_insurance_policy', 'transfer', 'transferdate', 'yearly_inspection', 'contract_total', 'registry_remark', 'classification', 'year_range', 'year_status']);
                 $v->visible(['admin']);
                 $v->getRelation('admin')->visible(['nickname']);
                 $v->visible(['models']);
@@ -136,16 +136,19 @@ class Fullsectioninfo extends Backend
                     $params['transferdate'] = null;
                 }
 
-                //自动根据年检日期得到年检的时间段
-                $date = $params['yearly_inspection'];
+                if ($params['next_inspection']) {
 
-                $date = strtotime("$date +2 year");
+                    //自动根据年检日期得到年检的时间段
+                    $date = $params['next_inspection'];
 
-                $mon_first = date("Y-m-01", $date);
-                $mon_last = date("Y-m-d", strtotime("$mon_first +1 month -1 day"));
+                    $first_day = date("Y-m-01",strtotime("-1 month",strtotime($date)));
 
-                $params['year_range'] = $mon_first . ";" . $mon_last;
+                    $last_date = date("Y-m-01",strtotime($date));
 
+                    $last_date = date("Y-m-d",strtotime("-1 day",strtotime($last_date)));
+
+                    $params['year_range'] = $first_day . ";" . $last_date;
+                }
 
                 try {
 
@@ -204,12 +207,12 @@ class Fullsectioninfo extends Backend
 
         $row = $row[0];
 
-        if($row['createtime']){
-            $row['createtime'] = date("Y-m-d",$row['createtime']);
+        if ($row['createtime']) {
+            $row['createtime'] = date("Y-m-d", $row['createtime']);
         }
 
-        if($row['delivery_datetime']){
-            $row['delivery_datetime'] = date("Y-m-d",$row['delivery_datetime']);
+        if ($row['delivery_datetime']) {
+            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
         }
 
         //身份证正反面（多图）
@@ -346,25 +349,127 @@ class Fullsectioninfo extends Backend
 
     public function check_year()
     {
-        if($this->request->isAjax()){
-           $id = $this->request->post("id");
+        if ($this->request->isAjax()) {
+            $id = $this->request->post("id");
 
-           $status = $this->request->post("status");
+            $status = $this->request->post("status");
 
-           if($status == -1){
-               $status = 0;
-           }
+            if ($status == -1) {
+                $status = 0;
+            }
 
-           $res = Db::name("mortgage_registration")
-           ->where("id",$id)
-           ->setField("year_status",$status);
+            $res = Db::name("mortgage_registration")
+                ->where("id", $id)
+                ->setField("year_status", $status);
 
-           if($res){
-               echo json_encode("OK");
-           }else{
-               echo json_encode("ERROR");
-           }
+            if ($res) {
+                echo json_encode("OK");
+            } else {
+                echo json_encode("ERROR");
+            }
 
         }
+    }
+
+    //资料入库登记表
+    public function data_warehousing()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams("carnewinventory.frame_number", true);
+            $total = $this->model
+                ->with(['mortgageregistration' => function ($query) {
+                    $query->withField('archival_coding');
+                }, 'carnewinventory' => function ($query) {
+                    $query->withField('licensenumber,frame_number,household');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'registryregistration'])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->with(['mortgageregistration' => function ($query) {
+                    $query->withField('archival_coding');
+                }, 'carnewinventory' => function ($query) {
+                    $query->withField('licensenumber,frame_number,household');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'registryregistration'])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+        return $this->view->fetch();
+    }
+
+    public function edit_dataware($ids = null)
+    {
+
+        $registry_registration_id = Db::name("full_parment_order")
+            ->where("id", $ids)
+            ->value("registry_registration_id");
+
+        if ($registry_registration_id) {
+            $row = Db::name("registry_registration")
+                ->where("id", $registry_registration_id)
+                ->find();
+
+            $this->view->assign("row", $row);
+        }
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+
+                    if ($registry_registration_id) {
+                        $result = Db::name("registry_registration")
+                            ->where("id", $registry_registration_id)
+                            ->update($params);
+                    } else {
+                        Db::name("registry_registration")->insert($params);
+
+                        $last_id = Db::name("registry_registration")->getLastInsID();
+
+                        $result = Db::name("full_parment_order")
+                            ->where("id", $ids)
+                            ->setField("registry_registration_id", $last_id);
+                    }
+
+
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+        return $this->view->fetch();
     }
 }
