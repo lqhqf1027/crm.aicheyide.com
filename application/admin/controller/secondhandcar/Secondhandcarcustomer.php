@@ -35,7 +35,6 @@ class Secondhandcarcustomer extends Backend
     /**二手车 */
     public function index()
     {
-
         $this->model = new \app\admin\model\SecondSalesOrder;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
@@ -46,50 +45,50 @@ class Secondhandcarcustomer extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
-                ->with(['plansecond' => function ($query) {
-                    $query->withField(['licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney']);
-                }, 'models' => function ($query) {
-                    $query->withField("name");
-                }, 'admin' => function ($query) {
-                    $query->withField('nickname');
-                }])
-                ->where($where)
-                ->where('review_the_data', 'the_car')
-                ->order($sort, $order)
-                ->count();
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where('review_the_data', 'the_car')
+                    ->order($sort, $order)
+                    ->count();
+
 
             $list = $this->model
-                ->with(['plansecond' => function ($query) {
-                    $query->withField(['licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney']);
-                }, 'models' => function ($query) {
-                    $query->withField("name");
-                }, 'admin' => function ($query) {
-                    $query->withField('nickname');
-                }])
-                ->where($where)
-                ->where('review_the_data', 'the_car')
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-
-            foreach ($list as $k => $v) {
-                $v->visible(['id','order_no','username','phone','id_card','genderdata','createtime','delivery_datetime','review_the_data']);
-                $v->visible(['plansecond']);
-                $v->getRelation('plansecond')->visible(['licenseplatenumber', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney']);
-                $v->visible(['models']);
-                $v->getRelation('models')->visible(['name']);
-                $v->visible(['admin']);
-                $v->getRelation('admin')->visible(['nickname']);
-                
-            }
+                    ->with(['plansecond' => function ($query) {
+                        $query->withField('licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where('review_the_data', 'the_car')
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+            foreach ($list as $k => $row) {
+                    $row->visible(['id', 'order_no', 'username', 'genderdata', 'createtime', 'delivery_datetime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                    $row->visible(['plansecond']);
+                    $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                    $row->visible(['admin']);
+                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->visible(['models']);
+                    $row->getRelation('models')->visible(['name']);
+                }
+            
 
             $list = collection($list)->toArray();
 
-            $result = array("total" => $total, "rows" => $list);
+            $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
 
-        return $this->view->fetch('index');
+        return $this->view->fetch();
 
     }
 

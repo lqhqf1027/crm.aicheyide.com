@@ -123,7 +123,225 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            data_warehousing: function () {
 
+                // 表格2
+                var dataWarehousing = $("#dataWarehousing");
+                dataWarehousing.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-edittwo").data("area", ["50%", "80%"]);
+                    $(".btn-edit").data("area", ["50%", "80%"]);
+                });
+                // 初始化表格
+                dataWarehousing.bootstrapTable({
+                    url: 'material/Fullsectioninfo/data_warehousing',
+                    extend: {
+                        index_url: 'registry/Newcarinfo/index',
+                        add_url: 'registry/registration/add',
+                        edit_url: 'material/newcarinfo/warehousing',
+                        del_url: 'registry/registration/del',
+                        multi_url: 'registry/registration/multi',
+                        table: 'registry_registration',
+                    },
+                    toolbar: '#toolbar2',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('ID')},
+                            {field: 'mortgageregistration.archival_coding', title: __('档案编码')},
+                            {field: 'username', title: __('Username')},
+                            {field: 'financial_name', title: __('金融公司')},
+                            {field: 'phone', title: __('电话')},
+                            {field: 'carnewinventory.licensenumber', title: __('车牌号')},
+                            {field: 'carnewinventory.frame_number', title: __('车架号')},
+                            {field: 'carnewinventory.household', title: __('所属分公司')},
+                            {field: 'admin.nickname', title: __('销售员')},
+                            {
+                                field: 'registryregistration.id_card',
+                                title: __('身份证复印件'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.registered_residence',
+                                title: __('户口复印件'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.marry_and_divorceimages',
+                                title: __('结婚证或者离婚证'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.credit_reportimages',
+                                title: __('征信报告'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.halfyear_bank_flowimages',
+                                title: __('半年银行流水'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.detailed_list',
+                                title: __('通话清单'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.guarantee',
+                                title: __('担保人'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.residence_permitimages',
+                                title: __('居住证/租房合同/房产证'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.driving_license',
+                                title: __('驾照'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.company_contractimages',
+                                title: __('公司合同'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.car_keys',
+                                title: __('钥匙'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.lift_listimages',
+                                title: __('提车单'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.deposit_contractimages',
+                                title: __('定金协议'),
+                                formatter: Controller.api.formatter.judge, operate: false
+                            },
+                            {
+                                field: 'registryregistration.truth_management_protocolimages',
+                                title: __('道路管理条例告知书'),
+                                formatter: Controller.api.formatter.judge, operate: false
+                            },
+                            {
+                                field: 'registryregistration.confidentiality_agreementimages',
+                                title: __('保密协议'),
+                                formatter: Controller.api.formatter.judge, operate: false
+                            },
+                            {
+                                field: 'registryregistration.supplementary_contract_agreementimages',
+                                title: __('合同补充协议/客户告知书'),
+                                formatter: Controller.api.formatter.judge, operate: false
+                            },
+                            {
+                                field: 'registryregistration.explain_situation',
+                                title: __('情况说明'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'tianfu_bank_cardimages',
+                                title: __('天府银行卡附件'),
+                                formatter: Controller.api.formatter.judge, operate: false
+                            },
+                            {
+                                field: 'registryregistration.other_documentsimages',
+                                title: __('其他'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.driving_licenseimages',
+                                title: __('行驶证'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.strong_insurance',
+                                title: __('交强险'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.tax_proofimages',
+                                title: __('完税证明'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.invoice_or_deduction_coupletimages',
+                                title: __('发票或抵扣联'),
+                                formatter: Controller.api.formatter.judge, operate: false
+                            },
+                            {
+                                field: 'registryregistration.registration_certificateimages',
+                                title: __('登记证书'),
+                                formatter: Controller.api.formatter.judge, operate: false
+                            },
+                            {
+                                field: 'registryregistration.commercial_insurance',
+                                title: __('商业险'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            //
+                            {
+                                field: 'registryregistration.rr_tax',
+                                title: __('购置税'),
+                                formatter: Controller.api.formatter.judge,
+                                operate: false
+                            },
+                            {
+                                field: 'registryregistration.maximum_guarantee_contractimages',
+                                title: __('最高保障合同'),
+                                formatter: Controller.api.formatter.judge, operate: false
+                            },
+                            {field: 'registryregistration.information_remark', title: __('备注'), operate: false},
+                            {
+                                field: 'operate', title: __('Operate'), table: dataWarehousing,
+                                buttons: [
+                                    {
+                                        name: 'edit2',
+                                        icon: 'fa fa-pencil',
+                                        title: __('Edit'),
+
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-dataware',
+                                    },
+
+                                ],
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            },
+                        ]
+                    ]
+                });
+                // 为表格2绑定事件
+                Table.api.bindevent(dataWarehousing);
+
+                dataWarehousing.on('load-success.bs.table', function (e, data) {
+                    $('#assigned-customer').text(data.total);
+
+                })
+
+            }
 
         },
         add: function () {
@@ -133,7 +351,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
-
+        edit_dataware:function (){
+            Controller.api.bindevent();
+        },
 
         api: {
             bindevent: function () {
@@ -158,14 +378,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
 
-                    'click .btn-edittwo': function (e, value, row, index) {
+                    'click .btn-dataware':function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = options.extend.edit_url;
+                        var url = "material/Fullsectioninfo/edit_dataware";
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
                     'click .btn-detail': function (e, value, row, index) {
@@ -254,9 +474,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                     if (status == 1) {
-                        return value + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
+                        return value + " "+"<span class='label label-warning' style='cursor: pointer'>即将年检</span>";
                     } else if (status == 2) {
-                        return value + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
+                        return value +  " "+"<span class='label label-danger' style='cursor: pointer'>年检已过期</span>";
                     } else {
                         return value;
                     }

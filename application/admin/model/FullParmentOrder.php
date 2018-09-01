@@ -86,5 +86,11 @@ class FullParmentOrder extends Model
         return $this->belongsTo('PlanFull','plan_plan_full_name','id',[],'LEFT')->setEagerlyType(0);
     }
 
-
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
+    public function registryregistration()
+    {
+        return $this->belongsTo('RegistryRegistration','registry_registration_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }
