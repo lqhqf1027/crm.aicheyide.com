@@ -140,17 +140,18 @@ class Usedcarinfo extends Backend
                 $params['transferdate'] = null;
             }
 
-            if ($params['yearly_inspection']) {
+            if ($params['next_inspection']) {
 
                 //自动根据年检日期得到年检的时间段
-                $date = $params['yearly_inspection'];
+                $date = $params['next_inspection'];
 
-                $date = strtotime("$date +2 year");
+                $first_day = date("Y-m-01",strtotime("-1 month",strtotime($date)));
 
-                $mon_first = date("Y-m-01", $date);
-                $mon_last = date("Y-m-d", strtotime("$mon_first +1 month -1 day"));
+                $last_date = date("Y-m-01",strtotime($date));
 
-                $params['year_range'] = $mon_first . ";" . $mon_last;
+                $last_date = date("Y-m-d",strtotime("-1 day",strtotime($last_date)));
+
+                $params['year_range'] = $first_day . ";" . $last_date;
             }
 
             if ($params) {
@@ -235,7 +236,7 @@ class Usedcarinfo extends Backend
 
         $deposit_contractimages_arr = [];
 
-        if($deposit_contractimage[0]){
+        if ($deposit_contractimage[0]) {
             foreach ($deposit_contractimage as $k => $v) {
                 $deposit_contractimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -247,7 +248,7 @@ class Usedcarinfo extends Backend
 
         $deposit_receiptimages_arr = [];
 
-        if($deposit_receiptimage[0]){
+        if ($deposit_receiptimage[0]) {
             foreach ($deposit_receiptimage as $k => $v) {
                 $deposit_receiptimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -259,7 +260,7 @@ class Usedcarinfo extends Backend
 
         $id_cardimages_arr = [];
 
-        if($id_cardimage[0]){
+        if ($id_cardimage[0]) {
             foreach ($id_cardimage as $k => $v) {
                 $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -271,7 +272,7 @@ class Usedcarinfo extends Backend
 
         $drivers_licenseimages_arr = [];
 
-        if($drivers_licenseimage[0]){
+        if ($drivers_licenseimage[0]) {
             foreach ($drivers_licenseimage as $k => $v) {
                 $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -283,7 +284,7 @@ class Usedcarinfo extends Backend
 
         $residence_bookletimages_arr = [];
 
-        if($residence_bookletimage[0]){
+        if ($residence_bookletimage[0]) {
             foreach ($residence_bookletimage as $k => $v) {
                 $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -295,7 +296,7 @@ class Usedcarinfo extends Backend
 
         $housingimages_arr = [];
 
-        if($housingimage[0]){
+        if ($housingimage[0]) {
             foreach ($housingimage as $k => $v) {
                 $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -307,7 +308,7 @@ class Usedcarinfo extends Backend
 
         $bank_cardimages_arr = [];
 
-        if($bank_cardimage[0]){
+        if ($bank_cardimage[0]) {
             foreach ($bank_cardimage as $k => $v) {
                 $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -319,7 +320,7 @@ class Usedcarinfo extends Backend
 
         $application_formimages_arr = [];
 
-        if($application_formimage[0]){
+        if ($application_formimage[0]) {
             foreach ($application_formimage as $k => $v) {
                 $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -331,7 +332,7 @@ class Usedcarinfo extends Backend
 
         $call_listfiles_arr = [];
 
-        if($call_listfile[0]){
+        if ($call_listfile[0]) {
             foreach ($call_listfile as $k => $v) {
                 $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -343,7 +344,7 @@ class Usedcarinfo extends Backend
 
         $new_car_marginimages_arr = [];
 
-        if($new_car_marginimages[0]){
+        if ($new_car_marginimages[0]) {
             foreach ($new_car_marginimages as $k => $v) {
                 $new_car_marginimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -354,13 +355,11 @@ class Usedcarinfo extends Backend
         $guarantee_id_cardimage = explode(',', $guarantee_id_cardimages);
 
         $guarantee_id_cardimages_arr = [];
-        if($guarantee_id_cardimage[0]){
+        if ($guarantee_id_cardimage[0]) {
             foreach ($guarantee_id_cardimage as $k => $v) {
                 $guarantee_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
         }
-
-
 
 
         //担保协议（多图）
@@ -369,7 +368,7 @@ class Usedcarinfo extends Backend
 
         $guarantee_agreementimages_arr = [];
 
-        if($guarantee_agreementimage[0]){
+        if ($guarantee_agreementimage[0]) {
             foreach ($guarantee_agreementimage as $k => $v) {
                 $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -379,10 +378,10 @@ class Usedcarinfo extends Backend
 
         //征信审核图片(多图)
         $credit_reviewimages = $row['credit_reviewimages'];
-        $credit_reviewimages = explode(",",$credit_reviewimages);
+        $credit_reviewimages = explode(",", $credit_reviewimages);
 
         $credit_reviewimages_arr = [];
-        foreach ($credit_reviewimages as $k=>$v){
+        foreach ($credit_reviewimages as $k => $v) {
             $credit_reviewimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
@@ -390,21 +389,21 @@ class Usedcarinfo extends Backend
 
         $drivinglicenseimages = $row['drivinglicenseimages'];
 
-        $drivinglicenseimages = explode(",",$drivinglicenseimages);
+        $drivinglicenseimages = explode(",", $drivinglicenseimages);
 
         $drivinglicenseimages_arr = [];
-        foreach ($drivinglicenseimages as $k=>$v){
+        foreach ($drivinglicenseimages as $k => $v) {
             $drivinglicenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
         //车辆所有扫描件相关信息
         $car_images = $row['car_images'];
 
-        $car_images = explode(",",$car_images);
+        $car_images = explode(",", $car_images);
 
         $car_images_arr = [];
 
-        foreach ($car_images as $k=>$v){
+        foreach ($car_images as $k => $v) {
             $car_images_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
@@ -416,12 +415,12 @@ class Usedcarinfo extends Backend
             $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
         }
 
-        if($row['expirydate']){
-            $row['expirydate'] = date("Y-m-d",$row['expirydate']);
+        if ($row['expirydate']) {
+            $row['expirydate'] = date("Y-m-d", $row['expirydate']);
         }
 
-        if($row['annualverificationdate']){
-            $row['annualverificationdate'] = date("Y-m-d",$row['annualverificationdate']);
+        if ($row['annualverificationdate']) {
+            $row['annualverificationdate'] = date("Y-m-d", $row['annualverificationdate']);
         }
 
         $this->view->assign([
@@ -440,7 +439,7 @@ class Usedcarinfo extends Backend
             'credit_reviewimages_arr' => $credit_reviewimages_arr,
             'drivinglicenseimages_arr' => $drivinglicenseimages_arr,
             'car_images_arr' => $car_images_arr,
-            'row' =>$row
+            'row' => $row
         ]);
 
         return $this->view->fetch();
@@ -457,20 +456,27 @@ class Usedcarinfo extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams("username",true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams("secondcarrentalmodelsinfo.vin", true);
             $total = $this->model
-                ->with(['mortgageregistration'=>function ($query){
+                ->with(['mortgageregistration' => function ($query) {
                     $query->withField('archival_coding');
-                },'secondcarrentalmodelsinfo'=>function ($query){
+                }, 'secondcarrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin,companyaccount');
-                },'admin'=>function ($query){
+                }, 'admin' => function ($query) {
                     $query->withField('nickname');
-                }])
+                }, 'registryregistration'])
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
+                ->with(['mortgageregistration' => function ($query) {
+                    $query->withField('archival_coding');
+                }, 'secondcarrentalmodelsinfo' => function ($query) {
+                    $query->withField('licenseplatenumber,vin,companyaccount');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'registryregistration'])
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -481,6 +487,64 @@ class Usedcarinfo extends Backend
 
             return json($result);
         }
+        return $this->view->fetch();
+    }
+
+    public function edit_dataware($ids = null)
+    {
+        $registry_registration_id = Db::name("second_sales_order")
+            ->where("id", $ids)
+            ->value("registry_registration_id");
+
+        if ($registry_registration_id) {
+            $row = Db::name("registry_registration")
+                ->where("id", $registry_registration_id)
+                ->find();
+
+            $this->view->assign("row", $row);
+        }
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+
+                    if ($registry_registration_id) {
+                        $result = Db::name("registry_registration")
+                            ->where("id", $registry_registration_id)
+                            ->update($params);
+                    } else {
+                        Db::name("registry_registration")->insert($params);
+
+                        $last_id = Db::name("registry_registration")->getLastInsID();
+
+                        $result = Db::name("second_sales_order")
+                            ->where("id", $ids)
+                            ->setField("registry_registration_id", $last_id);
+                    }
+
+
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
         return $this->view->fetch();
     }
 }

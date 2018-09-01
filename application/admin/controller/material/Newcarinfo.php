@@ -194,17 +194,18 @@ class Newcarinfo extends Backend
                     $params['transferdate'] = null;
                 }
 
-                if ($params['yearly_inspection']) {
+                if ($params['next_inspection']) {
 
                     //自动根据年检日期得到年检的时间段
-                    $date = $params['yearly_inspection'];
+                    $date = $params['next_inspection'];
 
-                    $date = strtotime("$date +2 year");
+                    $first_day = date("Y-m-01",strtotime("-1 month",strtotime($date)));
 
-                    $mon_first = date("Y-m-01", $date);
-                    $mon_last = date("Y-m-d", strtotime("$mon_first +1 month -1 day"));
+                    $last_date = date("Y-m-01",strtotime($date));
 
-                    $params['year_range'] = $mon_first . ";" . $mon_last;
+                    $last_date = date("Y-m-d",strtotime("-1 day",strtotime($last_date)));
+
+                    $params['year_range'] = $first_day . ";" . $last_date;
                 }
 
 

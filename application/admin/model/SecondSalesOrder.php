@@ -135,7 +135,13 @@ class SecondSalesOrder extends Model
         return $this->belongsTo('SecondcarRentalModelsInfo','plan_car_second_name','id',[],'LEFT')->setEagerlyType(0);
     }
 
-    
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
+    public function registryregistration()
+    {
+        return $this->belongsTo('RegistryRegistration','registry_registration_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 
       
 
