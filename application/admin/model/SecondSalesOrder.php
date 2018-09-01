@@ -133,7 +133,8 @@ class SecondSalesOrder extends Model
     public function secondcarrentalmodelsinfo()
     {
         return $this->belongsTo('SecondcarRentalModelsInfo','plan_car_second_name','id',[],'LEFT')->setEagerlyType(0);
-    } 
+
+    }
 
 
 
