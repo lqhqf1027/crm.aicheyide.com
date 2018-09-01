@@ -181,6 +181,14 @@ class Fullparmentorder extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $ex = explode(',', $params['plan_plan_full_name']);
+
+            $result = DB::name('plan_full')->where('id', $params['plan_plan_full_name'])->field('models_id')->find();
+
+            $params['plan_plan_full_name'] = reset($ex); //截取id
+            $params['plan_name'] = addslashes(end($ex)); 
+            $params['models_id'] = $result['models_id'];
+
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -291,89 +299,89 @@ class Fullparmentorder extends Backend
     }
 
     //提取车辆
-    public function getCar()
-    {
-        if ($this->request->isAjax()) {
-            $id = $this->request->post('id');
+    // public function getCar()
+    // {
+    //     if ($this->request->isAjax()) {
+    //         $id = $this->request->post('id');
 
-            $admin_nickname = DB::name('admin')->alias('a')->join('full_parment_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+    //         $admin_nickname = DB::name('admin')->alias('a')->join('full_parment_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
            
-            $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'for_the_car']);
+    //         $result = $this->model->isUpdate(true)->save(['id'=>$id,'review_the_data'=>'for_the_car']);
 
-            //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-submitCar",
-                'content' => "销售员" . $admin_nickname . "要进行提车"
-            ];
-            $ch = curl_init ();
-            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-            $return = curl_exec ( $ch );
-            curl_close ( $ch );
-            // print_r($return);
+    //         //请求地址
+    //         $uri = "http://goeasy.io/goeasy/publish";
+    //         // 参数数组
+    //         $data = [
+    //             'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
+    //             'channel' => "demo-submitCar",
+    //             'content' => "销售员" . $admin_nickname . "要进行提车"
+    //         ];
+    //         $ch = curl_init ();
+    //         curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
+    //         curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
+    //         curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
+    //         curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
+    //         curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
+    //         $return = curl_exec ( $ch );
+    //         curl_close ( $ch );
+    //         // print_r($return);
 
-            if($result!==false){
-                // //推送模板消息给风控
-                // $sedArr = array(
-                //     'touser' => 'oklZR1J5BGScztxioesdguVsuDoY',
-                //     'template_id' => 'LGTN0xKp69odF_RkLjSmCltwWvCDK_5_PuAVLKvX0WQ', /**以租代购新车模板id */
-                //     "topcolor" => "#FF0000",
-                //     'url' => '',
-                //     'data' => array(
-                //         'first' =>array('value'=>'你有新客户资料待审核','color'=>'#FF5722') ,
-                //         'keyword1' => array('value'=>$params['username'],'color'=>'#01AAED'),
-                //         'keyword2' => array('value'=>'以租代购（新车）','color'=>'#01AAED'),
-                //         'keyword3' => array('value'=>Session::get('admin')['nickname'],'color'=>'#01AAED'),
-                //         'keyword4' =>array('value'=>date('Y年m月d日 H:i:s'),'color'=>'#01AAED') , 
-                //         'remark' => array('value'=>'请前往系统进行查看操作')
-                //     )
-                // );
-                // $sedResult= posts("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".self::$token,json_encode($sedArr));
-                // if( $sedResult['errcode']==0 && $sedResult['errmsg'] =='ok'){
-                //     $this->success('提交成功，请等待审核结果'); 
-                // }else{
-                //     $this->error('微信推送失败',null,$sedResult);
-                // }
+    //         if($result!==false){
+    //             // //推送模板消息给风控
+    //             // $sedArr = array(
+    //             //     'touser' => 'oklZR1J5BGScztxioesdguVsuDoY',
+    //             //     'template_id' => 'LGTN0xKp69odF_RkLjSmCltwWvCDK_5_PuAVLKvX0WQ', /**以租代购新车模板id */
+    //             //     "topcolor" => "#FF0000",
+    //             //     'url' => '',
+    //             //     'data' => array(
+    //             //         'first' =>array('value'=>'你有新客户资料待审核','color'=>'#FF5722') ,
+    //             //         'keyword1' => array('value'=>$params['username'],'color'=>'#01AAED'),
+    //             //         'keyword2' => array('value'=>'以租代购（新车）','color'=>'#01AAED'),
+    //             //         'keyword3' => array('value'=>Session::get('admin')['nickname'],'color'=>'#01AAED'),
+    //             //         'keyword4' =>array('value'=>date('Y年m月d日 H:i:s'),'color'=>'#01AAED') , 
+    //             //         'remark' => array('value'=>'请前往系统进行查看操作')
+    //             //     )
+    //             // );
+    //             // $sedResult= posts("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".self::$token,json_encode($sedArr));
+    //             // if( $sedResult['errcode']==0 && $sedResult['errmsg'] =='ok'){
+    //             //     $this->success('提交成功，请等待审核结果'); 
+    //             // }else{
+    //             //     $this->error('微信推送失败',null,$sedResult);
+    //             // }
                    
-                $data = Db::name("full_parment_order")->where('id', $id)->find();
-                //车型
-                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
-                //销售员
-                $admin_id = $data['admin_id'];
-                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
-                //客户姓名
-                $username= $data['username'];
+    //             $data = Db::name("full_parment_order")->where('id', $id)->find();
+    //             //车型
+    //             $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+    //             //销售员
+    //             $admin_id = $data['admin_id'];
+    //             $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+    //             //客户姓名
+    //             $username= $data['username'];
 
-                $data = fullautomobile_inform($models_name,$admin_name,$username);
-                // var_dump($data);
-                // die;
-                $email = new Email;
-                // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
-                $result_s = $email
-                    ->to($receiver)
-                    ->subject($data['subject'])
-                    ->message($data['message'])
-                    ->send();
-                if($result_s){
-                    $this->success();
-                }
-                else {
-                    $this->error('邮箱发送失败');
-                }
+    //             $data = fullautomobile_inform($models_name,$admin_name,$username);
+    //             // var_dump($data);
+    //             // die;
+    //             $email = new Email;
+    //             // $receiver = "haoqifei@cdjycra.club";
+    //             $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+    //             $result_s = $email
+    //                 ->to($receiver)
+    //                 ->subject($data['subject'])
+    //                 ->message($data['message'])
+    //                 ->send();
+    //             if($result_s){
+    //                 $this->success();
+    //             }
+    //             else {
+    //                 $this->error('邮箱发送失败');
+    //             }
                 
-            }else{
-                $this->error('提交失败',null,$result);
+    //         }else{
+    //             $this->error('提交失败',null,$result);
                 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
         
        
 }

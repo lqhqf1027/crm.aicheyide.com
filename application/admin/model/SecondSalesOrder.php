@@ -116,7 +116,7 @@ class SecondSalesOrder extends Model
     public  function models(){
 
 
-        return $this->belongsTo('app\admin\model\Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
     /**
@@ -133,6 +133,7 @@ class SecondSalesOrder extends Model
     public function secondcarrentalmodelsinfo()
     {
         return $this->belongsTo('SecondcarRentalModelsInfo','plan_car_second_name','id',[],'LEFT')->setEagerlyType(0);
+
     }
 
     /**
@@ -142,9 +143,6 @@ class SecondSalesOrder extends Model
     {
         return $this->belongsTo('RegistryRegistration','registry_registration_id','id',[],'LEFT')->setEagerlyType(0);
     }
-
-      
-
 
 
 
