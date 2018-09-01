@@ -1,6 +1,7 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
-
+    var liActive;
     var Controller = {
+
         index: function () {
 
             // 初始化表格参数配置
@@ -25,9 +26,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         table: {
-
+            /**
+             * 新客户
+             */
             new_customer: function () {
-
+                liActive = $('.nav-tabs').find('li.active .tabs-text').text();
+                // console.log($('.nav-tabs').find('li.active .tabs-text').text());
                 // 表格1
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
@@ -58,7 +62,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id')},
-                            {field: 'platform.name', title: __('Platform_id')},
+                            {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
@@ -118,19 +122,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
-
-
-                // 为表格1绑定事件
                 Table.api.bindevent(newCustomer);
-
                 optionns = {
-
                     minDate: Date(), //支持string，Date，Moment
                     maxDate: Date(),
                 };
-
                 // 批量加入放弃客户
-
                 $(document).on("click", ".btn-selected1", function (e, value, row, index) {
                     var ids = Table.api.selectedids(newCustomer);
                     e.stopPropagation();
@@ -176,9 +173,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     );
 
                 });
-
-
-
+                //批量反馈
                 newCustomer.on('load-success.bs.table', function (e, data) {
                     $('#badge_new_customer').text(data.total);
 
@@ -186,8 +181,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             },
+            /**
+             * 待联系
+             */
             relation: function () {
-                // 表格2     待联系
+                liActive = $('.nav-tabs').find('li.active .tabs-text').text();
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
@@ -216,7 +214,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id')},
-                            {field: 'platform.name', title: __('Platform_id')},
+                            {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
@@ -289,7 +287,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 为表格1绑定事件
                 Table.api.bindevent(relations);
+                /**
+                 * 批量反馈
+                 */
+                $(document).on("click", ".btn-batchfeedback", function () {
+                    alert(1);return
+                    var ids = Table.api.selectedids(newCustomer);
+                    num = parseInt(ids.length);
+                    //    console.log(num);
+                    var url = 'promote/customertabs/distribution?ids=' + ids;
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area: ['30%', '30%'],
+                        callback: function (value) {
 
+                        }
+                    }
+                    Fast.api.open(url, '批量分配', options)
+                })
+                /**
+                 * 批量放弃
+                 */
                 $(document).on("click", ".btn-selected2", function (e, value, row, index) {
                     var ids = Table.api.selectedids(relations);
                     e.stopPropagation();
@@ -342,8 +361,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 有意向
+             */
             intention: function () {
-                // 表格3     有意向
+                liActive = $('.nav-tabs').find('li.active .tabs-text').text();
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
@@ -371,7 +393,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id')},
-                            {field: 'platform.name', title: __('Platform_id')},
+                            {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
@@ -492,12 +514,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             },
+            /**
+             *  暂无意向
+             */
             nointention: function () {
-                // 表格4     暂无意向
+                liActive = $('.nav-tabs').find('li.active .tabs-text').text();
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
-
                 var nointentions = $("#nointentions");
                 nointentions.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-newSalesList").data("area", ["50%", "50%"]);
@@ -521,7 +545,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id')},
-                            {field: 'platform.name', title: __('Platform_id')},
+                            {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
@@ -643,8 +667,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 已放弃
+             */
             giveup: function () {
-                // 表格5     已放弃
+                liActive = $('.nav-tabs').find('li.active .tabs-text').text();
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
@@ -672,7 +699,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id')},
-                            {field: 'platform.name', title: __('Platform_id')},
+                            {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
@@ -700,13 +727,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
-
+            /**
+             * 跟进过期用户
+             */
             overdue: function () {
-                // 表格3     有意向
+                liActive = $('.nav-tabs').find('li.active .tabs-text').text();
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
-
                 var overdues = $("#overdues");
                 overdues.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-showFeedback").data("area", ["80%", "80%"]);
@@ -730,7 +758,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id')},
-                            {field: 'platform.name', title: __('Platform_id')},
+                            {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
@@ -750,8 +778,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false,
                                 formatter: Controller.api.formatter.status
                             },
-
-
                             {
                                 field: 'operate', title: __('Operate'), table: overdues,
                                 buttons: [
@@ -851,6 +877,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             },
+            /**
+             *
+             */
+            liText:function () {
+                return liActive;
+            }
 
         },
         add: function () {
@@ -859,15 +891,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         edit: function () {
-            Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                //切换跳转tabs
+                var tablsToger = $(window.parent.document).find('.nav-tabs li');
+                console.log();
+                tablsToger.each(function () {
+                    var liHtml = $(this).find('.tabs-text');
+
+                    if(liHtml.text()===ret.data){
+                       // $(window.parent.document).find('.nav-tabs').on('click',$(window.parent.document).find($(this)),function () {
+                       //
+                       //  })
+                        //绑定事件
+                    
+                    }
+                    //     // var liTx = $(window.parent.document).find($(this)).click();
+                    //     // console.log($(window.parent.document).find($(this)).find('.tabs-text').text());
+                    //     $(window.parent.document).find('#myTabContent .tab-pane').each(function () {
+                    //         if(liHtml.parent().attr('href').slice(1) ===$(this).attr('id')){
+                    //             console.log(2222)
+                    //             $(window.parent.document).find($(this)).addClass("active in").siblings('.tab-pane').removeClass('active in');
+                    //             var bulidTable = $(window.parent.document).find($(this)).find('table').attr('id');
+                    //             // console.log(bulidTable);
+                    //             bulidTable.bootstrapTable('refresh');
+                    //         }
+                    //     })
+                    //
+                    //     $(window.parent.document).find($(this)).addClass("active").siblings('li').removeClass('active');
+                    //     // console.log(liHtml);
+                    //     // console.log(liHtml.parent().parent('li'));
+                    //     // liHtml.parent().parent('li').trigger('click');
+                    //
+                    // }
+                })
 
                 Controller.api.bindevent();
 
             }, function (data, ret) {
-                // console.log(data);
-                alert(22222)
-
                 Toastr.error("失败");
 
             });
@@ -894,8 +954,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'salesmanagement/customerlisttabs/edit';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('反馈'), $(this).data() || {});
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('反馈'), $(this).data() || {
+                            callback: function (value) {
+                                console.log(value)
+                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            },
+                            success:function (data) {
 
+                            }
+
+                        });
 
                     },
 
@@ -1040,56 +1108,5 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
-    function f(arr)
-    {
-        Fast.api.ajax({
-            url: 'salesmanagement/Customerlisttabs/returnTotal',
-            data: {
-                arr:arr
-            }
-        }, function (data, rets) {
-
-            // console.log(data);
-
-
-            for (var key in data){
-                switch (key){
-                    case 'new_customer':
-                        $('#badge_new_customer').text(data['new_customer']);
-                        break;
-                    case 'intention':
-                        $("#badge_intention").text(data['intention']);
-                        break;
-                    case 'nointention':
-                        $("#badge_no_intention").text(data['nointention']);
-                        break;
-                    case 'overdue':
-                        $("#badge_overdue").text(data['overdue']);
-                        break;
-                    case 'relation':
-                        $("#badge_relation").text(data['relation']);
-                        break;
-
-                }
-            }
-
-            // $("#badge_relation").text(data['relationTotal']);
-            // $("#badge_intention").text(data['intentionTotal']);
-            // $("#badge_no_intention").text(data['nointentionTotal']);
-            // $("#badge_overdue").text(data['overdueTotal']);
-            // $('#badge_new_customer').text(data['newCustomTotal']);
-            // $("#badge_relation").text();
-
-
-            return false;
-        }, function (data, ret) {
-            //失败的回调
-
-            return false;
-        });
-    }
-
-
-
     return Controller;
 });

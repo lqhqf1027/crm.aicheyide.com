@@ -1610,7 +1610,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate', title: __('Operate'), table: orderFull,
                                 buttons: [
                                     {
-                                        name: 'submitCar', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-success btn-submitCar',
+                                        name: 'submitCar', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-info btn-submitCar',
                                         url: 'order/fullparmentorder/submitCar',/**提交内勤 */
                                        
                                         hidden: function (row) { /**提交内勤 */
@@ -1698,7 +1698,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     },
                                     {
-                                        name: 'inhouse_handling', icon: 'fa fa-check-circle', text: '内勤正在处理', classname: ' text-info ',
+                                        name: 'inhouse_handling', text: '内勤正在处理',
                                         hidden: function (row) {  /**内勤正在处理 */
                                             if (row.review_the_data == 'inhouse_handling') {
                                                 return false;
@@ -1984,14 +1984,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             top = left = undefined;
                         }
                         Layer.confirm(
-                            __('请确认资料完整，是否开始提交内勤处理?'),
+ 
+                            __('请确认资料完整并发送给内勤生成提车单?'),
+ 
+ 
                             { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
 
                             function (index) {
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
-
-
                                 Fast.api.ajax({
 
                                     url: 'order/fullparmentorder/submitCar',
@@ -1999,7 +2000,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
  
                                 }, function (data, ret) {
 
-                                    Toastr.success(ret.msg);
+                                    Toastr.success('操作成功');
                                     Layer.close(index);
                                     table.bootstrapTable('refresh');
                                     return false;

@@ -136,6 +136,7 @@ class SecondSalesOrder extends Model
 
     }
 
+ 
     /**
      * @return \think\model\relation\BelongsTo
      */
@@ -143,6 +144,7 @@ class SecondSalesOrder extends Model
     {
         return $this->belongsTo('RegistryRegistration','registry_registration_id','id',[],'LEFT')->setEagerlyType(0);
     }
+ 
 
 
 

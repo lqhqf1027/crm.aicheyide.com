@@ -1156,12 +1156,17 @@ if (!function_exists('secondnopass_inform')) {
         
     }
 }
-/**
-全款车 销售发送给内勤
- */
+
+
 if (!function_exists('fullinternal_inform')) {
 
-
+    /**
+     * 全款车 销售发送给内勤
+     * @param null $models_name
+     * @param null $admin_name
+     * @param null $username
+     * @return array
+     */
     function fullinternal_inform($models_name=NULL,$admin_name=NULL,$username=NULL)
     {
         if ($models_name && $admin_name && $username) {
