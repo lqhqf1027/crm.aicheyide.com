@@ -136,7 +136,7 @@ class SecondSalesOrder extends Model
     }
 
       
-    }    
+
 
 
 

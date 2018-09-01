@@ -1260,7 +1260,14 @@ class Customerlisttabs extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            //转换为数组，截取等级
+            $customerlevel = reset(explode(',',$params['level']));
+            $params['customerlevel'] = $customerlevel ;
+            //获取等级内容
+            $customerlevelText = end(explode(',',$params['level']));
+
             if ($params) {
+                unset($params['level']);
 
                 $sql1 = $this->model->where('id', $ids)->update([
                     'feedbacktime' => time(),
@@ -1297,7 +1304,7 @@ class Customerlisttabs extends Backend
 
 
                 if ($sql1 && $sql2) {
-                    $this->success();
+                    $this->success('操作成功',null,$customerlevelText);
                 } else {
                     $this->error();
                 }

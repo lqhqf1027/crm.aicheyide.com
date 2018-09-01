@@ -2,12 +2,12 @@
     <div class="panel-heading">
         <div class="panel-lead"><em>新客户&待联系客户&有意向客户&暂无意向客户&待成交客户&已成交客户&放弃客户&跟进时间过期客户</em></div>
         <ul class="nav nav-tabs" >
-            <li class="active text-center" style=""><a href="#new_customer" data-toggle="tab" style="font-weight: bold">新客户&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_customer">{$newCustomTotal}</small></span></a></li>
-            <li><a href="#relation" data-toggle="tab" style="font-weight: bold" class="text-center" >待联系&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_relation">{$relationTotal}</small></span></a></li>
-            <li><a href="#intention" data-toggle="tab" style="color:#18bc9c;font-weight: bold" class="text-center">有意向&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_intention">{$intentionTotal}</small></span></a></li>
-            <li><a href="#nointention" data-toggle="tab" style="font-weight: bold" class="text-center">暂无意向&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_no_intention">{$nointentionTotal}</small></span></a></li>
-            <li><a href="#giveup" data-toggle="tab" style="font-weight: bold" class="text-center">已放弃&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_give_up">{$giveupTotal}</small></span></a></li>
-            <li><a href="#overdue" data-toggle="tab" style="color:#e74c3c;font-size:15px;font-weight: bold" class="text-center">跟进时间过期客户&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_overdue">{$overdueTotal}</small></span></a></li>
+            <li class="active text-center" style=""><a href="#new_customer" data-toggle="tab" style="font-weight: bold"><span class="tabs-text">新客户</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_customer">{$newCustomTotal}</small></span></a></li>
+            <li><a href="#relation" data-toggle="tab" style="font-weight: bold" class="text-center" ><span class="tabs-text">待联系</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_relation">{$relationTotal}</small></span></a></li>
+            <li><a href="#intention" data-toggle="tab" style="color:#18bc9c;font-weight: bold" class="text-center"><span class="tabs-text">有意向</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_intention">{$intentionTotal}</small></span></a></li>
+            <li><a href="#nointention" data-toggle="tab" style="font-weight: bold" class="text-center"><span class="tabs-text">暂无意向</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_no_intention">{$nointentionTotal}</small></span></a></li>
+            <li><a href="#giveup" data-toggle="tab" style="font-weight: bold" class="text-center"><span class="tabs-text">已放弃</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_give_up">{$giveupTotal}</small></span></a></li>
+            <li><a href="#overdue" data-toggle="tab" style="color:#e74c3c;font-size:15px;font-weight: bold" class="text-center"><span class="tabs-text">跟进时间过期客户</span>&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_overdue">{$overdueTotal}</small></span></a></li>
         </ul>
     </div>
     <div class="panel-body">
@@ -19,7 +19,7 @@
 
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
                     <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
-                    <a href="javascript:;" class="btn btn-info btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
+                    <a href="javascript:;" class="btn btn-info btn-edit btn-disabled  disabled {:$auth->check('customer/customerresource/new_customer')?'':'hide'}" title="{:__('Batchfeedback')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
                     <a class="btn btn-danger   btn-disabled disabled btn-selected1" href="javascript:;" data-params="batch"><i class="fa fa-eye"></i>批量放弃</a>
                     <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
 
@@ -39,7 +39,7 @@
                 <div id="toolbar2" class="toolbar">
 
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-info btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
+                    <a href="javascript:;" class="btn btn-info btn-edit btn-disabled disabled {:$auth->check('customer/customerresource/edit')?'':'hide'}" title="{:__('Batchfeedback')}" ><i class="fa fa-pencil"></i> {:__('Batchfeedback')}</a>
                     <a class="btn btn-danger   btn-disabled disabled btn-selected2" href="javascript:;" data-params="batch"><i class="fa fa-eye"></i>批量放弃</a>
 
                 </div>

@@ -534,6 +534,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         edit: function () {
+            console.log($('#c-customlevel').val());
+            return;
             Controller.api.bindevent();
         },
         api: {

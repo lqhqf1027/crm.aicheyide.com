@@ -12,7 +12,7 @@
         <label class="control-label col-xs-12 col-sm-2">客户等级</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[customerlevel]">
+            <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[level]" >
               {empty name="$row.customerlevel"}
                 <option value="" selected style="display: none">未选择任何项</option>
 
@@ -21,7 +21,7 @@
                 {/foreach}
                 {else /}
                 {foreach name="costomlevelList" item="vo"}
-                <option value="{$key}" {in name="key" value="$row.customerlevel"}selected{/in}>{$vo}</option>
+                <option value="{$key},{$vo}" {in name="key" value="$row.customerlevel"}selected{/in}>{$vo}</option>
                 {/foreach}
                 {/empty}
 
@@ -33,13 +33,11 @@
     <div class="form-group" id="checks">
         <label class="control-label col-xs-12 col-sm-2">下次跟进时间</label>
         <div class="col-xs-12 col-sm-8">
-            {empty name="$default_date"}
-            <input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" value="{$row.followupdate}" onblur="remind()">
 
-            {else /}
-            <input id="c-followupdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" value="{$default_date}" onblur="remind()">
+            <input id="c-followupdate" class="form-control datetimepicker" data-rule="required" data-date-format="YYYY-MM-DD" placeholder="" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" onblur="remind()">
 
-            {/empty}
+
+
         </div>
     </div>
 
@@ -61,6 +59,8 @@
 </form>
 <script>
 
+//设置时间提示
+$('#c-followupdate').attr('placeholder','请选择大于'+getNowFormatDate()+'的日期');
 //错误时间提醒
     function remind() {
 
@@ -73,19 +73,22 @@
 
         if(choose<now){
             // 您选择的时间无效，请重新选择
-            layer.alert('您选择的时间无效，请重新选择', {
-                icon: 1,
+           var index =  layer.alert('您选择的时间无效，请重新选择', {
+                icon: 5,
                 skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+            },function () {
+               layer.close(index);
+                $('#c-followupdate').val(getNowFormatDate(1));
             })
 
         }
     }
-    function getNowFormatDate() {
+    function getNowFormatDate(date1= null) {
         var date = new Date();
         var seperator1 = "-";
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
-        var strDate = date.getDate();
+        var strDate = date.getDate()+ parseInt(date1) ?  date.getDate()+ parseInt(date1): date.getDate();
         if (month >= 1 && month <= 9) {
             month = "0" + month;
         }
