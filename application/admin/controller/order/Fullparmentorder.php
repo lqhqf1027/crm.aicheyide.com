@@ -181,6 +181,14 @@ class Fullparmentorder extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $ex = explode(',', $params['plan_plan_full_name']);
+
+            $result = DB::name('plan_full')->where('id', $params['plan_plan_full_name'])->field('models_id')->find();
+
+            $params['plan_plan_full_name'] = reset($ex); //截取id
+            $params['plan_name'] = addslashes(end($ex)); 
+            $params['models_id'] = $result['models_id'];
+
             if ($params) {
                 try {
                     //是否采用模型验证

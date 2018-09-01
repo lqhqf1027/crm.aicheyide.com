@@ -275,6 +275,17 @@ class Secondsalesorder extends Backend
             }
             if ($this->request->isPost()) {
                 $params = $this->request->post('row/a');
+                $ex = explode(',', $params['plan_car_second_name']);
+
+                $result = DB::name('secondcar_rental_models_info')->where('id', $params['plan_car_second_name'])->field('newpayment,monthlypaymen,periods,bond,models_id')->find();
+
+                $params['car_total_price'] = $result['newpayment'] + $result['monthlypaymen'] * $result['periods'];
+                $params['downpayment'] = $result['newpayment'] + $result['monthlypaymen'] + $result['bond'];
+
+                $params['plan_car_second_name'] = reset($ex); //截取id
+                $params['plan_name'] = addslashes(end($ex)); //
+            
+                $params['models_id'] = $result['models_id'];
                 if ($params) {
                     try {
                         //是否采用模型验证
