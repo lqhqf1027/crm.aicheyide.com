@@ -336,6 +336,8 @@ class Orderlisttabs extends Backend
     /**提交内勤 */
     public function sedAudit()
     {
+        $this->model = model('SalesOrder');
+
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
 
