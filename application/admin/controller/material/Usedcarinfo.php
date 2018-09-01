@@ -26,13 +26,14 @@ class Usedcarinfo extends Backend
         parent::_initialize();
 
         $this->loadlang('material/mortgageregistration');
+        $this->loadlang('newcars/newcarscustomer');
+        $this->loadlang('order/salesorder');
 
         $this->model = new \app\admin\model\SecondSalesOrder();
     }
 
     public function index()
     {
-
         return $this->view->fetch();
     }
 
@@ -233,8 +234,11 @@ class Usedcarinfo extends Backend
         $deposit_contractimage = explode(',', $deposit_contractimages);
 
         $deposit_contractimages_arr = [];
-        foreach ($deposit_contractimage as $k => $v) {
-            $deposit_contractimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($deposit_contractimage[0]){
+            foreach ($deposit_contractimage as $k => $v) {
+                $deposit_contractimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //定金收据上传
@@ -242,8 +246,11 @@ class Usedcarinfo extends Backend
         $deposit_receiptimage = explode(',', $deposit_receiptimages);
 
         $deposit_receiptimages_arr = [];
-        foreach ($deposit_receiptimage as $k => $v) {
-            $deposit_receiptimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($deposit_receiptimage[0]){
+            foreach ($deposit_receiptimage as $k => $v) {
+                $deposit_receiptimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //身份证正反面（多图）
@@ -251,8 +258,11 @@ class Usedcarinfo extends Backend
         $id_cardimage = explode(',', $id_cardimages);
 
         $id_cardimages_arr = [];
-        foreach ($id_cardimage as $k => $v) {
-            $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($id_cardimage[0]){
+            foreach ($id_cardimage as $k => $v) {
+                $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //驾照正副页（多图）
@@ -260,8 +270,11 @@ class Usedcarinfo extends Backend
         $drivers_licenseimage = explode(',', $drivers_licenseimages);
 
         $drivers_licenseimages_arr = [];
-        foreach ($drivers_licenseimage as $k => $v) {
-            $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($drivers_licenseimage[0]){
+            foreach ($drivers_licenseimage as $k => $v) {
+                $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //户口簿【首页、主人页、本人页】
@@ -269,8 +282,11 @@ class Usedcarinfo extends Backend
         $residence_bookletimage = explode(',', $residence_bookletimages);
 
         $residence_bookletimages_arr = [];
-        foreach ($residence_bookletimage as $k => $v) {
-            $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($residence_bookletimage[0]){
+            foreach ($residence_bookletimage as $k => $v) {
+                $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //住房合同/房产证（多图）
@@ -278,8 +294,11 @@ class Usedcarinfo extends Backend
         $housingimage = explode(',', $housingimages);
 
         $housingimages_arr = [];
-        foreach ($housingimage as $k => $v) {
-            $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($housingimage[0]){
+            foreach ($housingimage as $k => $v) {
+                $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //银行卡照（可多图）
@@ -287,8 +306,11 @@ class Usedcarinfo extends Backend
         $bank_cardimage = explode(',', $bank_cardimages);
 
         $bank_cardimages_arr = [];
-        foreach ($bank_cardimage as $k => $v) {
-            $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($bank_cardimage[0]){
+            foreach ($bank_cardimage as $k => $v) {
+                $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //申请表（多图）
@@ -296,8 +318,11 @@ class Usedcarinfo extends Backend
         $application_formimage = explode(',', $application_formimages);
 
         $application_formimages_arr = [];
-        foreach ($application_formimage as $k => $v) {
-            $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($application_formimage[0]){
+            foreach ($application_formimage as $k => $v) {
+                $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //通话清单（文件上传）
@@ -305,8 +330,11 @@ class Usedcarinfo extends Backend
         $call_listfile = explode(',', $call_listfiles);
 
         $call_listfiles_arr = [];
-        foreach ($call_listfile as $k => $v) {
-            $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($call_listfile[0]){
+            foreach ($call_listfile as $k => $v) {
+                $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //保证金收据（多图）
@@ -314,8 +342,11 @@ class Usedcarinfo extends Backend
         $new_car_marginimages = explode(',', $new_car_marginimages);
 
         $new_car_marginimages_arr = [];
-        foreach ($new_car_marginimages as $k => $v) {
-            $new_car_marginimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($new_car_marginimages[0]){
+            foreach ($new_car_marginimages as $k => $v) {
+                $new_car_marginimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
 
         //担保人身份证正反面（多图）
@@ -323,18 +354,28 @@ class Usedcarinfo extends Backend
         $guarantee_id_cardimage = explode(',', $guarantee_id_cardimages);
 
         $guarantee_id_cardimages_arr = [];
-        foreach ($guarantee_id_cardimage as $k => $v) {
-            $guarantee_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        if($guarantee_id_cardimage[0]){
+            foreach ($guarantee_id_cardimage as $k => $v) {
+                $guarantee_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
         }
+
+
+
 
         //担保协议（多图）
         $guarantee_agreementimages = $row['guarantee_agreementimages'];
         $guarantee_agreementimage = explode(',', $guarantee_agreementimages);
 
         $guarantee_agreementimages_arr = [];
-        foreach ($guarantee_agreementimage as $k => $v) {
-            $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+
+        if($guarantee_agreementimage[0]){
+            foreach ($guarantee_agreementimage as $k => $v) {
+                $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+
         }
+
 
         //征信审核图片(多图)
         $credit_reviewimages = $row['credit_reviewimages'];
@@ -404,5 +445,42 @@ class Usedcarinfo extends Backend
 
         return $this->view->fetch();
 
+    }
+
+    //资料入库登记表
+    public function data_warehousing()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams("username",true);
+            $total = $this->model
+                ->with(['mortgageregistration'=>function ($query){
+                    $query->withField('archival_coding');
+                },'secondcarrentalmodelsinfo'=>function ($query){
+                    $query->withField('licenseplatenumber,vin,companyaccount');
+                },'admin'=>function ($query){
+                    $query->withField('nickname');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+        return $this->view->fetch();
     }
 }
