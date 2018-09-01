@@ -1719,8 +1719,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     },
                                     {
-                                        name: 'getCar', text: '是否提取车辆', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('车管备车成功，等待提车'), classname: 'btn btn-xs btn-success btn-getCar',
-                                        url: 'order/fullparmentorder/getCar',
+                                        name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '车管备车成功，等待提车', classname: ' text-info ',
                                         hidden: function (row) {  /**车管备车成功，等待提车 */
                                             if (row.review_the_data == 'is_reviewing_pass') {
                                                 return false;
@@ -1924,7 +1923,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //二手车提交风控审核
+                    //二手车提交内勤
                     'click .btn-second_audit': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1970,7 +1969,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //全款车提交车管
+                    //全款车提交内勤
                     'click .btn-submitCar': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1985,7 +1984,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             top = left = undefined;
                         }
                         Layer.confirm(
-                            __('请确认资料完整，是否开始提交车管备车?'),
+                            __('请确认资料完整，是否开始提交内勤处理?'),
                             { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
 
                             function (index) {
@@ -1996,52 +1995,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Fast.api.ajax({
 
                                     url: 'order/fullparmentorder/submitCar',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
-
-                                    Toastr.success(ret.msg);
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
-
-                                    return false;
-                                });
-
-
-                            }
-                        );
-
-                    },
-                    //全款车提取
-                    'click .btn-getCar': function (e, value, row, index) {
-
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var that = this;
-                        var top = $(that).offset().top - $(window).scrollTop();
-                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                        if (top + 154 > $(window).height()) {
-                            top = top - 154;
-                        }
-                        if ($(window).width() < 480) {
-                            top = left = undefined;
-                        }
-                        Layer.confirm(
-                            __('车管备车成功，是否进行提取?'),
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
-
-                            function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-
-
-                                Fast.api.ajax({
-
-                                    url: 'order/fullparmentorder/getCar',
                                     data: {id: row[options.pk]}
  
                                 }, function (data, ret) {
