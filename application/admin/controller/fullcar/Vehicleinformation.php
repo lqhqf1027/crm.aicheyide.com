@@ -294,6 +294,10 @@ class Vehicleinformation extends Backend
                 $this->error(__('You have no permission'));
             }
         }
+
+        $data = DB::name('car_new_inventory')
+                    ->where('id', $row['car_new_inventory_id'])
+                    ->find();
         
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
