@@ -82,6 +82,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                 });
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:车牌号";};
+
                 // 初始化表格
                 newCar.bootstrapTable({
                     url: "banking/Exchangeplatformtabs/new_car",
@@ -100,30 +102,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('ID')},
+                            {field: 'id', title: __('ID'),operate: false},
                             {
                                 field: 'mortgage.lending_date',
                                 title: __('放款日期'),
-                                formatter: Controller.api.formatter.Loan
+                                formatter: Controller.api.formatter.Loan,
+                                operate: false
                             },
-                            {field: 'newinventory.household', title: __('开户公司名')},
+                            {field: 'newinventory.household', title: __('开户公司名'),operate: false},
                             {
                                 field: 'createtime',
                                 title: __('订车时间'),
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'mortgage.bank_card', title: __('扣款卡号')},
+                            {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
-                            {field: 'id_card', title: __('身份证号')},
-                            {field: 'detailed_address', title: __('身份证地址')},
-                            {field: 'phone', title: __('电话号码')},
-                            {field: 'models.name', title: __('车型')},
-                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)')},
-                            {field: 'mortgage.registration_code', title: __('登记编码')},
-                            {field: 'mortgage.tax', title: __('购置税(元)')},
-                            {field: 'mortgage.business_risks', title: __('商业险(元)')},
-                            {field: 'mortgage.insurance', title: __('交强险(元)')},
+                            {field: 'id_card', title: __('身份证号'),operate: false},
+                            {field: 'detailed_address', title: __('身份证地址'),operate: false},
+                            {field: 'phone', title: __('电话号码'),operate: false},
+                            {field: 'models.name', title: __('车型'),operate: false},
+                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)'),operate: false},
+                            {field: 'mortgage.registration_code', title: __('登记编码'),operate: false},
+                            {field: 'mortgage.tax', title: __('购置税(元)'),operate: false},
+                            {field: 'mortgage.business_risks', title: __('商业险(元)'),operate: false},
+                            {field: 'mortgage.insurance', title: __('交强险(元)'),operate: false},
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
                             {
@@ -132,9 +135,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'planacar.payment', title: __('首付')},
-                            {field: 'planacar.monthly', title: __('月供')},
-                            {field: 'planacar.nperlist', title: __('期数')},
+                            {field: 'planacar.payment', title: __('首付'),operate: false},
+                            {field: 'planacar.monthly', title: __('月供'),operate: false},
+                            {field: 'planacar.nperlist', title: __('期数'),operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -220,30 +223,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('ID')},
+                            {field: 'id', title: __('ID'),operate: false},
                             {
                                 field: 'mortgage.lending_date',
                                 title: __('放款日期'),
-                                formatter: Controller.api.formatter.Loan
+                                formatter: Controller.api.formatter.Loan,
+                                operate: false
                             },
-                            {field: 'newinventory.household', title: __('开户公司名')},
+                            {field: 'newinventory.household', title: __('开户公司名'),operate: false},
                             {
                                 field: 'createtime',
                                 title: __('订车时间'),
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'mortgage.bank_card', title: __('扣款卡号')},
+                            {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
-                            {field: 'id_card', title: __('身份证号')},
-                            {field: 'detailed_address', title: __('身份证地址')},
-                            {field: 'phone', title: __('电话号码')},
-                            {field: 'models.name', title: __('车型')},
-                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)')},
-                            {field: 'mortgage.registration_code', title: __('登记编码')},
-                            {field: 'mortgage.tax', title: __('购置税(元)')},
-                            {field: 'mortgage.business_risks', title: __('商业险(元)')},
-                            {field: 'mortgage.insurance', title: __('交强险(元)')},
+                            {field: 'id_card', title: __('身份证号'),operate: false},
+                            {field: 'detailed_address', title: __('身份证地址'),operate: false},
+                            {field: 'phone', title: __('电话号码'),operate: false},
+                            {field: 'models.name', title: __('车型'),operate: false},
+                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)'),operate: false},
+                            {field: 'mortgage.registration_code', title: __('登记编码'),operate: false},
+                            {field: 'mortgage.tax', title: __('购置税(元)'),operate: false},
+                            {field: 'mortgage.business_risks', title: __('商业险(元)'),operate: false},
+                            {field: 'mortgage.insurance', title: __('交强险(元)'),operate: false},
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
                             {
@@ -252,9 +256,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'planacar.payment', title: __('首付')},
-                            {field: 'planacar.monthly', title: __('月供')},
-                            {field: 'planacar.nperlist', title: __('期数')},
+                            {field: 'planacar.payment', title: __('首付'),operate: false},
+                            {field: 'planacar.monthly', title: __('月供'),operate: false},
+                            {field: 'planacar.nperlist', title: __('期数'),operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -339,30 +343,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('ID')},
+                            {field: 'id', title: __('ID'),operate: false},
                             {
                                 field: 'mortgage.lending_date',
                                 title: __('放款日期'),
-                                formatter: Controller.api.formatter.Loan
+                                formatter: Controller.api.formatter.Loan,
+                                operate: false
                             },
-                            {field: 'newinventory.household', title: __('开户公司名')},
+                            {field: 'newinventory.household', title: __('开户公司名'),operate: false},
                             {
                                 field: 'createtime',
                                 title: __('订车时间'),
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'mortgage.bank_card', title: __('扣款卡号')},
+                            {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
-                            {field: 'id_card', title: __('身份证号')},
-                            {field: 'detailed_address', title: __('身份证地址')},
-                            {field: 'phone', title: __('电话号码')},
-                            {field: 'models.name', title: __('车型')},
-                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)')},
-                            {field: 'mortgage.registration_code', title: __('登记编码')},
-                            {field: 'mortgage.tax', title: __('购置税(元)')},
-                            {field: 'mortgage.business_risks', title: __('商业险(元)')},
-                            {field: 'mortgage.insurance', title: __('交强险(元)')},
+                            {field: 'id_card', title: __('身份证号'),operate: false},
+                            {field: 'detailed_address', title: __('身份证地址'),operate: false},
+                            {field: 'phone', title: __('电话号码'),operate: false},
+                            {field: 'models.name', title: __('车型'),operate: false},
+                            {field: 'mortgage.invoice_monney', title: __('开票金额(元)'),operate: false},
+                            {field: 'mortgage.registration_code', title: __('登记编码'),operate: false},
+                            {field: 'mortgage.tax', title: __('购置税(元)'),operate: false},
+                            {field: 'mortgage.business_risks', title: __('商业险(元)'),operate: false},
+                            {field: 'mortgage.insurance', title: __('交强险(元)'),operate: false},
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
                             {
@@ -371,9 +376,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'planacar.payment', title: __('首付')},
-                            {field: 'planacar.monthly', title: __('月供')},
-                            {field: 'planacar.nperlist', title: __('期数')},
+                            {field: 'planacar.payment', title: __('首付'),operate: false},
+                            {field: 'planacar.monthly', title: __('月供'),operate: false},
+                            {field: 'planacar.nperlist', title: __('期数'),operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
