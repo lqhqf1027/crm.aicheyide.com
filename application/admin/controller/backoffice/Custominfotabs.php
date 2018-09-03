@@ -140,7 +140,7 @@ class Custominfotabs extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-            if (in_array($this->auth->id, $canUseId['back'])) {
+
                 $total = $this->model
                     ->with(['platform'])
                     ->where($where)
@@ -166,33 +166,7 @@ class Custominfotabs extends Backend
                     })
                     ->limit($offset, $limit)
                     ->select();
-            } else if (in_array($this->auth->id, $canUseId['admin'])) {
-                $total = $this->model
-                    ->with(['platform'])
-                    ->where($where)
-                    ->where(function ($query) {
-                        $query->where('backoffice_id', "not null")
-                            ->where('sales_id', 'null')
-                            ->where('platform_id', 'in', [2, 3, 4]);
-
-                    })
-                    ->order($sort, $order)
-                    ->count();
-
-
-                $list = $this->model
-                    ->with(['platform'])
-                    ->where($where)
-                    ->order($sort, $order)
-                    ->where(function ($query) {
-                        $query->where('backoffice_id', "not null")
-                            ->where('sales_id', 'null')
-                            ->where('platform_id', 'in', [2, 3, 4]);
-
-                    })
-                    ->limit($offset, $limit)
-                    ->select();
-            }
+           
 
 
             foreach ($list as $row) {

@@ -19,6 +19,7 @@ class Customertabs extends Backend
 {
 
     protected $model = null;
+    protected $noNeedRight = ['newCustomer', 'dstribution', 'newAllocation', 'newFeedback', 'distribution', 'download', 'export', 'allocationexport', 'feedbackexport', 'index'];
     // static public $token = null;
 
     public function _initialize()   
