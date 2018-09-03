@@ -39,12 +39,14 @@ class Platform extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
                     ->where($where)
+                    ->where('id', 'in', [2, 3, 4])
                     ->order($sort, $order)
                     ->count();
 
             $list = $this->model
                     ->where($where)
                     ->order($sort, $order)
+                    ->where('id', 'in', [2, 3, 4])
                     ->limit($offset, $limit)
                     ->select();
 
