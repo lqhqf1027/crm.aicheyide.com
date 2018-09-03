@@ -39,9 +39,9 @@
         }
 
         obj.each(function () {
-            $(this).on("click", function () {
-                // alert($(this).prop("src"));
-                // alert(obj.index(this));
+            $(this).on("click", function (event) {
+                event.stopPropagation();
+
                 //给body添加弹出层的html
                 $("body").append("<div class=\"mask-layer\" style=\"magin-bottom: 10px\">" +
                     "   <div class=\"mask-layer-black\"></div>" +

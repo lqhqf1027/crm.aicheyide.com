@@ -199,11 +199,11 @@ class Newcarinfo extends Backend
                     //自动根据年检日期得到年检的时间段
                     $date = $params['next_inspection'];
 
-                    $first_day = date("Y-m-01",strtotime("-1 month",strtotime($date)));
+                    $first_day = date("Y-m-01", strtotime("-1 month", strtotime($date)));
 
-                    $last_date = date("Y-m-01",strtotime($date));
+                    $last_date = date("Y-m-01", strtotime($date));
 
-                    $last_date = date("Y-m-d",strtotime("-1 day",strtotime($last_date)));
+                    $last_date = date("Y-m-d", strtotime("-1 day", strtotime($last_date)));
 
                     $params['year_range'] = $first_day . ";" . $last_date;
                 }
@@ -331,7 +331,7 @@ class Newcarinfo extends Backend
                 ->where("id", $row['admin_id'])
                 ->field("nickname")
                 ->find()['nickname'];
-          $row['sales_name'] = $sales_name;
+            $row['sales_name'] = $sales_name;
 
         }
 
@@ -472,12 +472,12 @@ class Newcarinfo extends Backend
             $car_imgeas_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
-        if($row['createtime']){
-            $row['createtime'] = date("Y-m-d",$row['createtime']);
+        if ($row['createtime']) {
+            $row['createtime'] = date("Y-m-d", $row['createtime']);
         }
 
-        if($row['delivery_datetime']){
-            $row['delivery_datetime'] = date("Y-m-d",$row['delivery_datetime']);
+        if ($row['delivery_datetime']) {
+            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
         }
 
 
@@ -536,6 +536,95 @@ class Newcarinfo extends Backend
 
 
         }
+    }
+
+
+    public function downloadsrc()
+    {
+        if ($this->request->isAjax()) {
+
+            $arr = $this->request->post("src");
+
+            $arr = json_decode($arr, true);
+
+            foreach ($arr as $k => $value) {
+              $this->download($value);
+
+            };
+
+            echo json_encode("ok");
+
+        }
+    }
+
+    /**
+     * @desc    实现文件下载
+     * @date    2017/7/11 13:15
+     * @param   [string $url]
+     * @author  1245049149@qq.com
+     * @return  [resource]
+     */
+    public function downPhoto($url)
+    {
+        if(gets($url)){
+
+            ob_start();
+            $filename = $url;
+            header("Content-type:  application/octet-stream ");
+            header("Accept-Ranges:  bytes ");
+            header("Content-Disposition:  attachment;  filename= {$url}");
+            $size = readfile($filename);
+            header("Accept-Length: " . $size);
+
+//return 1;
+//                Header("Content-type: application/octet-stream");
+//                Header("Content-Transfer-Encoding: binary");
+//                Header("Accept-Ranges: bytes");
+//                //说明：这里的filename生成下载后的文件名，可以进行优化，生成你自己想要的名字，后缀等等
+//                Header("Content-Disposition: attachment; filename=" . $url);
+//                return readfile($url);
+
+        }else{
+            return false;
+        }
+
+    }
+
+    /**
+     * @desc    判断文件路径是否存在
+     * @date    2017/7/11 13:17
+     * @param   [string $url]
+     * @author  1245049149@qq.com
+     * @return  [bool]
+     */
+    public function checkLoad($url)
+    {
+        $ch = curl_init();
+        $timeout = 10;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $contents = curl_exec($ch);
+        if (strpos($contents, '200')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function download($url, $path = 'images/')
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+        $file = curl_exec($ch);
+        curl_close($ch);
+        $filename = pathinfo($url, PATHINFO_BASENAME);
+        $resource = fopen($path . $filename, 'a');
+        fwrite($resource, $file);
+        fclose($resource);
     }
 
 

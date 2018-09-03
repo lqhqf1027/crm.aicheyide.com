@@ -207,6 +207,8 @@ class Fullsectioninfo extends Backend
 
         $row = $row[0];
 
+
+
         if ($row['createtime']) {
             $row['createtime'] = date("Y-m-d", $row['createtime']);
         }
@@ -309,7 +311,7 @@ class Fullsectioninfo extends Backend
                     ->where("id", $v['admin_id'])
                     ->field("nickname")
                     ->find()['nickname'];
-                $list[$k]['sales_name'] = $sales_name;
+                $list[$k]['nickname'] = $sales_name;
 
             }
 
@@ -328,18 +330,6 @@ class Fullsectioninfo extends Backend
                 $list[$k]['signdate'] = $v['createtime'];
             }
 
-            //得到判断年检时间信息
-            if ($v['yearly_inspection']) {
-                $date = $v['yearly_inspection'];
-
-                $date = strtotime("$date +2 year");
-
-                $mon_first = date("Y-m-01", $date);
-                $mon_last = date("Y-m-d", strtotime("$mon_first +1 month -1 day"));
-
-                $list[$k]['mon_first'] = $mon_first;
-                $list[$k]['mon_last'] = $mon_last;
-            }
 
 
         }

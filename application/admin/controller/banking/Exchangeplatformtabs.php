@@ -64,7 +64,7 @@ class Exchangeplatformtabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams("username", true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams("newinventory.licensenumber", true);
             $total = $this->model
                 ->with(['mortgage' => function ($query) {
                     $query->withField('lending_date,bank_card,invoice_monney,registration_code,tax,business_risks,insurance,firm_stage,mortgage_type');
@@ -167,7 +167,7 @@ class Exchangeplatformtabs extends Backend
      */
     public function getCar($condition = null)
     {
-        list($where, $sort, $order, $offset, $limit) = $this->buildparams("username", true);
+        list($where, $sort, $order, $offset, $limit) = $this->buildparams("newinventory.licensenumber", true);
         $total = $this->model
             ->with(['mortgage' => function ($query) {
                 $query->withField('lending_date,bank_card,invoice_monney,registration_code,tax,business_risks,insurance,firm_stage,mortgage_type');
