@@ -241,6 +241,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 });
                 Table.api.bindevent(newcarAudit);
 
+                //实时消息
+                //金融发送给风控
+                goeasy.subscribe({
+                    channel: 'demo-newcar_control',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
                 goeasy.subscribe({
                     channel: 'demo4',
                     onMessage: function(message){
@@ -423,9 +436,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     }
                 });
 
-                //表格 --- 提交审核
+                //实时消息
+                //租车销售发送给风控
                 goeasy.subscribe({
-                    channel: 'demo-control',
+                    channel: 'demo-rental_control',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -584,21 +598,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     }
                 });
                 
-                //提供保证金
-                goeasy.subscribe({
-                    channel: 'demo-second-the_guarantor',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
 
-                //车管提交的二手车审核
+                //实时消息
+                //金融发给风控
                 goeasy.subscribe({
-                    channel: 'demo-second_setaudit',
+                    channel: 'demo-second_control',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);

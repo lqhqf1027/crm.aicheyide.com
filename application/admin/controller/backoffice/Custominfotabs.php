@@ -345,6 +345,11 @@ class Custominfotabs extends Backend
                 // } else {
                     // $this->error("消息推送失败");
                 // }
+
+                $channel = "demo-internal";
+                $content =  "你有内勤给你分配的新客户，请登录后台进行处理";
+                goeary_push($channel, $content);
+
                 $data = sales_inform();
                 // var_dump($data);
                 // die;
@@ -450,6 +455,12 @@ class Custominfotabs extends Backend
                 // } else {
                     // $this->error('消息推送失败');
                 // }
+                
+                $channel = "demo-internal";
+                $content =  "你有内勤给你分配的新客户，请登录后台进行处理";
+                goeary_push($channel, $content);
+
+                $data = sales_inform();
 
                 $data = sales_inform();
                 // var_dump($data);

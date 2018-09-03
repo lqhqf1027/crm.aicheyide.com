@@ -1,5 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    var goeasy = new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
+
     var Controller = {
         index: function () {
 
@@ -132,6 +136,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
+
+                //实时消息
+                //车管发给金融
+                goeasy.subscribe({
+                    channel: 'demo-newcar_finance',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
                 // 为表格1绑定事件
                 Table.api.bindevent(newprepareMatch);
 
@@ -251,6 +269,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]
                     ]
                 });
+
+                //实时消息
+                //车管发给金融
+                goeasy.subscribe({
+                    channel: 'demo-second_finance',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
                 // 为表格2绑定事件
                 Table.api.bindevent(secondprepareMatch);
 

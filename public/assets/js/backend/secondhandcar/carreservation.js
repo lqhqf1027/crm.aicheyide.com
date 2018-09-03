@@ -104,7 +104,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                    
                 })
 
-                //通过
+                //实时消息
+                //内勤发送---车管
                 goeasy.subscribe({
                     channel: 'demo-second_amount',
                     onMessage: function(message){

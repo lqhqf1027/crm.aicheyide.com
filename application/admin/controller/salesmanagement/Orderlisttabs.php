@@ -353,23 +353,6 @@ class Orderlisttabs extends Backend
             //客户姓名
             $username = $this->model->where('id', $id)->value('username');
 
-            //请求地址
-            $uri = "https://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-sales",
-                'content' => "销售员" . $admin_name . "发出新车销售请求，请处理"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-
             if ($result !== false) {
                 // //推送模板消息给风控
                 // $sedArr = array(
@@ -392,6 +375,11 @@ class Orderlisttabs extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
+
+                $channel = "demo-sales";
+                $content =  "销售员" . $admin_name . "发出新车销售请求，请处理";
+                goeary_push($channel, $content);
+
                 $data = newinternal_inform($models_name, $admin_name, $username);
                 // var_dump($data);
                 // die;

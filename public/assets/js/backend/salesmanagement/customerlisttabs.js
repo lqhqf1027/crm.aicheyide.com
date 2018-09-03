@@ -1,4 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
+
+    var goeasy = new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
+
     var liActive;
     var Controller = {
 
@@ -179,6 +184,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     // f(['relation','intention','nointention','overdue']);
                 })
+
+                //实时消息
+                //内勤分配给销售
+                goeasy.subscribe({
+                    channel: 'demo-internal',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
 
             },
             /**

@@ -184,6 +184,10 @@ class Matchfinance extends Backend
 
            if($res){
 
+                $channel = "demo-newcar_control";
+                $content =  "金融已经匹配，请尽快进行风控审核处理";
+                goeary_push($channel, $content);
+
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -237,6 +241,11 @@ class Matchfinance extends Backend
             ]);
 
            if($res){
+
+                $channel = "demo-second_control";
+                $content =  "金融已经匹配，请尽快进行风控审核处理";
+                goeary_push($channel, $content);
+
 
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
@@ -292,6 +301,10 @@ class Matchfinance extends Backend
 
             if($res){
 
+                $channel = "demo-newcar_control";
+                $content =  "金融已经匹配，请尽快进行风控审核处理";
+                goeary_push($channel, $content);
+
                 $data = Db::name("sales_order")->where('id', $ids)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -345,6 +358,10 @@ class Matchfinance extends Backend
             ]);
 
             if($res){
+
+                $channel = "demo-second_control";
+                $content =  "金融已经匹配，请尽快进行风控审核处理";
+                goeary_push($channel, $content);
 
                 $data = Db::name("second_sales_order")->where('id', $ids)->find();
                 //车型

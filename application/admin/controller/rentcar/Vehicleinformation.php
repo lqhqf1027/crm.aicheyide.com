@@ -237,24 +237,11 @@ class Vehicleinformation extends Backend
 
             DB::name('rental_order')->where("id", $rental_id)->setField("review_the_data", "is_reviewing_argee");
 
-            //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-argee",
-                'content' => "车管人员已同意你的租车预定请求"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-
             if ($result) {
+
+                $channel = "demo-rental_argee";
+                $content =  "车管人员已同意提交的租车预定请求，请及时处理";
+                goeary_push($channel, $content);
 
                 $data = Db::name("rental_order")->where('id', $rental_id)->find();
                 //车型

@@ -1,5 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    var goeasy = new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
+
     var Controller = {
         index: function () {
             // 初始化表格参数配置
@@ -84,8 +88,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 
                             },
                             {
-                                name: '', icon: 'fa fa-check-circle', text: '等待出租', classname: ' text-info ',
-                                hidden: function (row) {  /**等待出租 */
+                                name: '', icon: 'fa fa-check-circle', text: '等待出售', classname: ' text-info ',
+                                hidden: function (row) {  /**等待出售 */
                                     if(row.status_data == ''){
                                         return false; 
                                     }
@@ -203,6 +207,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
                     ]
                 ]
+            });
+
+            //实时消息
+            //风控通过---可以提车
+            goeasy.subscribe({
+                channel: 'demo-second_pass',
+                onMessage: function(message){
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                    
+                }
             });
 
             // 为表格绑定事件

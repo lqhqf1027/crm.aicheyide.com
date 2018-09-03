@@ -516,7 +516,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //实时消息
                 //通过
                 goeasy.subscribe({
-                    channel: 'demo-newpass',
+                    channel: 'demo-newcar_pass',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -527,7 +527,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 //提供保证金
                 goeasy.subscribe({
-                    channel: 'demo-newdata',
+                    channel: 'demo-newcar_data',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -539,7 +539,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //不通过
                 goeasy.subscribe({
-                    channel: 'demo-newnopass',
+                    channel: 'demo-newcar_nopass',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -957,7 +957,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //车管同意预定---销售接受消息
             goeasy.subscribe({
-                channel: 'demo-argee',
+                channel: 'demo-rental_argee',
                 onMessage: function(message){
                     Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                         Layer.close(index);
@@ -966,9 +966,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             });
 
-            //通过
+            //实时消息
+            //风控通过---可以提车
             goeasy.subscribe({
-                channel: 'demo-rentalpass',
+                channel: 'demo-rental_pass',
                 onMessage: function(message){
                     Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                         Layer.close(index);
@@ -977,9 +978,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     
                 }
             });
+
+        
             //不通过
             goeasy.subscribe({
-                channel: 'demo-rentalnopass',
+                channel: 'demo-rental_nopass',
                 onMessage: function(message){
                     Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                         Layer.close(index);
@@ -1513,9 +1516,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(orderSecond);
 
-                 //通过
+                //实时消息
+                //风控通过---可以提车
                 goeasy.subscribe({
-                    channel: 'demo-secondpass',
+                    channel: 'demo-second_pass',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -1524,9 +1528,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         
                     }
                 });
-                 //提供保证金
+
+                //提供保证金
                 goeasy.subscribe({
-                    channel: 'demo-seconddata',
+                    channel: 'demo-second_data',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -1535,9 +1540,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         
                     }
                 });
+
                 //不通过
                 goeasy.subscribe({
-                    channel: 'demo-secondnopass',
+                    channel: 'demo-second_nopass',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -1784,9 +1790,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(orderFull);
 
-                //可以提车
+                //车管发送----可以进行提车
                 goeasy.subscribe({
-                    channel: 'demo-full_setaudit',
+                    channel: 'demo-full_takecar',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);

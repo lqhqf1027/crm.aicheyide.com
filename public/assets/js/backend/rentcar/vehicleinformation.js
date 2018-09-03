@@ -344,9 +344,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
+
+            //实时消息
             //风控通过---可以提车
             goeasy.subscribe({
-                channel: 'demo-rentalpass',
+                channel: 'demo-rental_pass',
+                onMessage: function(message){
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                    
+                }
+            });
+
+            //销售预定---发送车管
+            goeasy.subscribe({
+                channel: 'demo-reserve',
                 onMessage: function(message){
                     Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                         Layer.close(index);
