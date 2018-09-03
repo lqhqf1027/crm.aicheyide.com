@@ -65,23 +65,9 @@ class Secondsalesorder extends Backend
 
                 $this->model->isUpdate(true)->save(['id'=>$plan_car_second_name,'status_data'=>'for_the_car']);
 
-                //请求地址
-                $uri = "http://goeasy.io/goeasy/publish";
-                // 参数数组
-                $data = [
-                    'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                    'channel' => "demo-backoffice",
-                    'content' => "内勤提交的二手车单，请及时进行处理"
-                ];
-                $ch = curl_init ();
-                curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-                curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-                curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-                curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-                $return = curl_exec ( $ch );
-                curl_close ( $ch );
-                // print_r($return);
+                $channel = "demo-second_backoffice";
+                $content =  "提交的二手车单，请尽快进行处理";
+                goeary_push($channel, $content);
 
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型

@@ -188,25 +188,10 @@ class Carreservation extends Backend
             $result = DB::name('second_sales_order')->where('id',$id)->setField('review_the_data', 'is_reviewing_finance');
 
             if($result!==false){
-                
-                //请求地址
-                $uri = "http://goeasy.io/goeasy/publish";
-                // 参数数组
-                $data = [
-                    'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                    'channel' => "demo-second_setaudit",
-                    'content' => "车管提交的二手车单，请及时进行匹配金融"
-                ];
-                $ch = curl_init ();
-                curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-                curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-                curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-                curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-                $return = curl_exec ( $ch );
-                curl_close ( $ch );
-                // print_r($return);
 
+                $channel = "demo-second_finance";
+                $content =  "车管提交的二手车单，请及时进行匹配金融";
+                goeary_push($channel, $content);
 
                 // //推送模板消息给风控
                 // $sedArr = array(

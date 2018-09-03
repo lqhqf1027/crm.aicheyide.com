@@ -353,26 +353,12 @@ class Creditreview extends Backend
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
-
-            //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-newpass",
-                'content' => "销售员" . $admin_nickname . "提交的新车销售单已通过风控审核"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-            // print_r($return);
-
+ 
             if ($result) {
+
+                $channel = "demo-newcar_pass";
+                $content =  "销售员" . $admin_nickname . "提交的新车销售单已通过风控审核";
+                goeary_push($channel, $content);
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
@@ -426,25 +412,12 @@ class Creditreview extends Backend
                 $query->where('id', $id);
             });
 
-            //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-newdata",
-                'content' => "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-            // print_r($return);
-
             if ($result) {
+
+                $channel = "demo-newcar_data";
+                $content =  "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金";
+                goeary_push($channel, $content);
+
                 
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
@@ -501,25 +474,11 @@ class Creditreview extends Backend
                 $query->where('id', $id);
             });
 
-            //请求地址
-            $uri = "https://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-newnopass",
-                'content' => "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-            // print_r($return);
-
             if ($result) {
+
+                $channel = "demo-newcar_nopass";
+                $content =  "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核";
+                goeary_push($channel, $content);
                 
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
@@ -620,25 +579,10 @@ class Creditreview extends Backend
             DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('status_data', 'is_reviewing_pass');
 
             if ($result) {
-
-                //实时推送----可以提车
-                //请求地址
-                $uri = "https://goeasy.io/goeasy/publish";
-                // 参数数组
-                $data = [
-                    'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                    'channel' => "demo-rentalpass",
-                    'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！"
-                ];
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $uri);//地址
-                curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-                curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-                $return = curl_exec($ch);
-                curl_close($ch);
-                // print_r($return);
+                
+                $channel = "demo-rental_pass";
+                $content =  "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！";
+                goeary_push($channel, $content);
 
                 $data = Db::name("rental_order")->where('id', $id)->find();
                 //车型
@@ -690,25 +634,11 @@ class Creditreview extends Backend
                 $query->where('id', $id);
             });
 
-            //请求地址
-            $uri = "https://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-rentalnopass",
-                'content' => "销售员" . $admin_nickname . "提交的租车单没有通过风控审核"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-            // print_r($return);
-
             if ($result) {
+
+                $channel = "demo-rental_nopass";
+                $content =  "销售员" . $admin_nickname . "提交的租车单没有通过风控审核";
+                goeary_push($channel, $content);
                 
                 $data = Db::name("rental_order")->where('id', $id)->find();
                 //车型
@@ -827,26 +757,13 @@ class Creditreview extends Backend
             DB::name('secondcar_rental_models_info')->where('id', $plan_car_second_name)->setField('status_data', 'is_reviewing_pass');
 
 
-            //请求地址
-            $uri = "https://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-secondpass",
-                'content' => "销售员" . $admin_nickname . "提交的租车单通过风控审核"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-            // print_r($return);
-
+            
             if ($result) {
-                
+
+                $channel = "demo-second_pass";
+                $content =  "销售员" . $admin_nickname . "提交的二手车单通过风控审核";
+                goeary_push($channel, $content);
+
                 $data = Db::name("second_rental_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -899,26 +816,12 @@ class Creditreview extends Backend
                 $query->where('id', $id);
             });
 
-            //请求地址
-            $uri = "http://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-seconddata",
-                'content' => "销售员" . $admin_nickname . "提交的租车单需要提交保证金"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-            // print_r($return);
-
             if ($result) {
-                
+
+                $channel = "demo-second_data";
+                $content =  "销售员" . $admin_nickname . "提交的二手车单需要提交保证金";
+                goeary_push($channel, $content);
+         
                 $data = Db::name("second_rental_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -971,25 +874,11 @@ class Creditreview extends Backend
                 $query->where('id', $id);
             });
 
-            //请求地址
-            $uri = "https://goeasy.io/goeasy/publish";
-            // 参数数组
-            $data = [
-                'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                'channel' => "demo-secondnopass",
-                'content' => "销售员" . $admin_nickname . "提交的租车单没有通过风控审核"
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri);//地址
-            curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-            curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-            $return = curl_exec($ch);
-            curl_close($ch);
-            // print_r($return);
-
             if ($result) {
+
+                $channel = "demo-second_nopass";
+                $content =  "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核";
+                goeary_push($channel, $content);
                 
                 $data = Db::name("second_rental_order")->where('id', $id)->find();
                 //车型

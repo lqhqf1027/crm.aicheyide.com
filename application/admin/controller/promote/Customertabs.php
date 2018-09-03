@@ -169,6 +169,11 @@ class Customertabs extends Backend
                 // dump($msg);
                 // die;
                 // if($msg['errcode'] == 0){
+                
+                $channel = "demo-platform";
+                $content =  "你有推广平台给你分配的新客户，请登录后台进行处理";
+                goeary_push($channel, $content);
+
                 $data = dstribution_inform();
                 // var_dump($data);
                 // die;
@@ -344,6 +349,11 @@ class Customertabs extends Backend
                 // $msg = $sendmessage->sendMsgToAll();
                 // // dump($msg);
                 // // die;
+
+                $channel = "demo-platform";
+                $content =  "你有推广平台给你分配的新客户，请登录后台进行处理";
+                goeary_push($channel, $content);
+
                 $data = dstribution_inform();
                 // var_dump($data);
                 // die;

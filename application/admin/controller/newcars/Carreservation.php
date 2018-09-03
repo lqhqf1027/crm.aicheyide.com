@@ -189,6 +189,11 @@ class Carreservation extends Backend
                 ->setField("review_the_data", "is_reviewing");
 
             if ($res) {
+
+                $channel = "demo-newcar_finance";
+                $content =  "车管已同意，请尽快进行金融匹配";
+                goeary_push($channel, $content);
+
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -236,6 +241,10 @@ class Carreservation extends Backend
                 ->update(["review_the_data" => "is_reviewing"]);
 
             if ($res) {
+
+                $channel = "demo-newcar_finance";
+                $content =  "车管已同意，请尽快进行金融匹配";
+                goeary_push($channel, $content);
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型

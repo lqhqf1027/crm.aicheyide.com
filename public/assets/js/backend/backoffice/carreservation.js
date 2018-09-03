@@ -215,7 +215,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //销售推送
                 goeasy.subscribe({
-                    channel: 'demo-backoffice',
+                    channel: 'demo-second_backoffice',
                     onMessage: function (message) {
                         Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
                             Layer.close(index);
@@ -303,9 +303,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                    
                 })
 
-                //销售推送
+                //内勤推送 --- 是否可以提车
                 goeasy.subscribe({
-                    channel: 'demo-submitCar',
+                    channel: 'demo-fullcar_amount',
                     onMessage: function (message) {
                         Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
                             Layer.close(index);
@@ -314,6 +314,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     }
                 });
+
 
             },
 

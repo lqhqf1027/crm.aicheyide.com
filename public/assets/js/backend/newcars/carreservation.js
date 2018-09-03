@@ -110,9 +110,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(prepareSubmit);
 
-                //通过
+                //内勤推送---车管
                 goeasy.subscribe({
                     channel: 'demo-new_amount',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
+                //风控推送---车管
+                goeasy.subscribe({
+                    channel: 'demo-newcar_control',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
