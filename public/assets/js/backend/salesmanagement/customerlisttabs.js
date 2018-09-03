@@ -24,6 +24,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
 
         },
+        //批量反馈回调方法
+        batchfeedback:function(){
+            Table.api.init({
+
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                Toastr.success("失败");
+            });
+        },
 
         table: {
             /**
@@ -173,7 +189,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     );
 
                 });
-                //批量反馈
+                /**
+                 * 批量反馈
+                 */
+                $(document).on("click", ".btn-batch-feedback-1", function (e, value, row, index) {
+                    //获取ids对象
+                    var ids = Table.api.selectedids(relations);
+                    var url = 'salesmanagement/customerlisttabs/batchfeedback?ids=' + ids;
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area: ['50%', '50%'],
+                        callback: function (value) {
+
+                        }
+                    }
+                    Fast.api.open(url, '批量反馈', options)
+                })
                 newCustomer.on('load-success.bs.table', function (e, data) {
                     $('#badge_new_customer').text(data.total);
 
@@ -290,22 +322,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 批量反馈
                  */
-                $(document).on("click", ".btn-batchfeedback", function () {
-                    alert(1);return
-                    var ids = Table.api.selectedids(newCustomer);
-                    num = parseInt(ids.length);
-                    //    console.log(num);
-                    var url = 'promote/customertabs/distribution?ids=' + ids;
+                $(document).on("click", ".btn-batch-feedback-2", function (e, value, row, index) {
+                    //获取ids对象
+                    var ids = Table.api.selectedids(relations);
+                    var url = 'salesmanagement/customerlisttabs/batchfeedback?ids=' + ids;
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
-                        area: ['30%', '30%'],
+                        area: ['50%', '50%'],
                         callback: function (value) {
 
                         }
                     }
-                    Fast.api.open(url, '批量分配', options)
+                    Fast.api.open(url, '批量反馈', options)
                 })
+
                 /**
                  * 批量放弃
                  */
@@ -466,7 +497,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 为表格1绑定事件
                 Table.api.bindevent(intentions);
-
+                /**
+                 * 批量放弃
+                 */
                 $(document).on("click", ".btn-selected3", function (e, value, row, index) {
                     var ids = Table.api.selectedids(intentions);
                     e.stopPropagation();
@@ -506,7 +539,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     );
 
                 });
+                /**
+                 * 批量反馈
+                 */
+                $(document).on("click", ".btn-batch-feedback-3", function (e, value, row, index) {
+                    //获取ids对象
+                    var ids = Table.api.selectedids(intentions);
+                    var url = 'salesmanagement/customerlisttabs/batchfeedback?ids=' + ids;
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area: ['50%', '50%'],
+                        callback: function (value) {
 
+                        }
+                    }
+                    Fast.api.open(url, '批量反馈', options)
+                })
                 intentions.on('load-success.bs.table', function (e, data) {
                     $('#badge_intention').text(data.total);
 
@@ -518,7 +567,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
              *  暂无意向
              */
             nointention: function () {
-                liActive = $('.nav-tabs').find('li.active .tabs-text').text();
+
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
                 };
@@ -618,7 +667,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 为表格1绑定事件
                 Table.api.bindevent(nointentions);
-
+                /**
+                 * 批量放弃
+                 *
+                 */
                 $(document).on("click", ".btn-selected4", function (e, value, row, index) {
                     var ids = Table.api.selectedids(nointentions);
 
@@ -660,6 +712,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     );
 
                 });
+                /**
+                 * 批量反馈
+                 */
+                $(document).on("click", ".btn-batch-feedback-4", function (e, value, row, index) {
+                    //获取ids对象
+                    var ids = Table.api.selectedids(nointentions);
+                    var url = 'salesmanagement/customerlisttabs/batchfeedback?ids=' + ids;
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area: ['50%', '50%'],
+                        callback: function (value) {
+
+                        }
+                    }
+                    Fast.api.open(url, '批量反馈', options)
+                })
                 nointentions.on('load-success.bs.table', function (e, data) {
                     $('#badge_no_intention').text(data.total);
 
@@ -829,7 +898,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 为表格1绑定事件
                 Table.api.bindevent(overdues);
-
+                /**
+                 * 批量放弃
+                 */
                 $(document).on("click", ".btn-selected5", function (e, value, row, index) {
                     var ids = Table.api.selectedids(overdues);
                     e.stopPropagation();
@@ -869,7 +940,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     );
 
                 });
+                /**
+                 * 批量反馈
+                 */
+                $(document).on("click", ".btn-batch-feedback-5", function (e, value, row, index) {
+                    //获取ids对象
+                    var ids = Table.api.selectedids(overdues);
+                    var url = 'salesmanagement/customerlisttabs/batchfeedback?ids=' + ids;
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area: ['50%', '50%'],
+                        callback: function (value) {
 
+                        }
+                    }
+                    Fast.api.open(url, '批量反馈', options)
+                })
                 overdues.on('load-success.bs.table', function (e, data) {
                     $('#badge_overdue').text(data.total);
 
@@ -877,13 +964,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             },
-            /**
-             *
-             */
-            liText:function () {
-                return liActive;
-            }
-
         },
         add: function () {
 
@@ -978,7 +1058,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = "salesmanagement/customerlisttabs/showFeedback";
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看跟进信息'), $(this).data() || {});
                     },
-
+                    /***
+                     *
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-give_up': function (e, value, row, index) {
 
                         e.stopPropagation();
