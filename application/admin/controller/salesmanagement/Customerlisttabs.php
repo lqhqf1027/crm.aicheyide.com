@@ -393,7 +393,9 @@ class Customerlisttabs extends Backend
      * @return array
      */
     public  function encapsulationSelect($customerlevel=null){
+
         //如果发送的来源是Selectpage，则转发到Selectpage
+
         if ($this->request->request('keyField')) {
             return $this->selectpage();
         }

@@ -127,11 +127,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
                                     {
 
-                                        name: 'del',
+                                        name: 'giveup',
                                         text: '放弃',
                                         icon: 'fa fa-trash',
                                         extend: 'data-toggle="tooltip"',
-                                        title: __('Del'),
+                                        title: __('放弃客户'),
                                         classname: 'btn btn-xs btn-danger btn-give_up'
 
                                     }
@@ -203,7 +203,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  */
                 $(document).on("click", ".btn-batch-feedback-1", function (e, value, row, index) {
                     //获取ids对象
-                    var ids = Table.api.selectedids(relations);
+                    var ids = Table.api.selectedids(newCustomer);
                     var url = 'salesmanagement/customerlisttabs/batchfeedback?ids=' + ids;
                     var options = {
                         shadeClose: false,
@@ -1088,7 +1088,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param index
                      */
                     'click .btn-give_up': function (e, value, row, index) {
-
                         e.stopPropagation();
                         e.preventDefault();
                         var that = this;
@@ -1103,26 +1102,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         Layer.confirm(
                             __('确定加入放弃客户名单吗?'),
                             {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
-
                             function (index) {
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
-
-
                                 Fast.api.ajax({
                                     url: 'salesmanagement/Customerlisttabs/ajaxGiveup',
                                     data: {id: row[options.pk]}
                                 }, function (data, ret) {
-
-
                                     var pre = $('#badge_give_up').text();
-
                                     pre = parseInt(pre);
-
                                     $('#badge_give_up').text(pre + 1);
-
-                                    //成功的回调
-                                    // Fast.api.close(data);
                                     Toastr.success("成功");
                                     Layer.close(index);
                                     table.bootstrapTable('refresh');
@@ -1155,7 +1144,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             btn: ['前往'],
                             btn1: function () {
 
-                                window.location.href = "../backoffice/Custominfotabs/test1";
+                                window.top.location.href = "orderlisttabs?ref=addtabs";
                                 // var planid = $("input[name=plan]:checked").val();
                                 // window.location.href="Orderlisttabs/index"
                                 // window.location.href="../order/Salesorder/index";
