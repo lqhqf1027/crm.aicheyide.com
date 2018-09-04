@@ -473,13 +473,13 @@ class Newcarinfo extends Backend
             $car_imgeas_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
-        if ($row['createtime']) {
-            $row['createtime'] = date("Y-m-d", $row['createtime']);
-        }
-
-        if ($row['delivery_datetime']) {
-            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
-        }
+//        if ($row['createtime']) {
+//            $row['createtime'] = date("Y-m-d", $row['createtime']);
+//        }
+//
+//        if ($row['delivery_datetime']) {
+//            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
+//        }
 
 
         $data = array(
