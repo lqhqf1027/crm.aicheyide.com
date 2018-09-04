@@ -1596,7 +1596,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'fulldetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-fulldetails',
                                         url: 'salesmanagement/Orderlisttabs/fulldetails', callback: function (data) {
-                                            console.log(data)
+
                                         }
                                     }
                                 ],

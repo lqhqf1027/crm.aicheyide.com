@@ -1,0 +1,63 @@
+
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>月供管理中心</em></div>
+        <ol>
+            <p class="text-danger"><strong>批量导入月供须知：</strong></p>
+            <li>
+                <u>导入月供excel时如无模板请下载导入模板</u>
+            </li>
+            <p></p>
+            <li>
+               <u> 导入数据时表格里的“欠款月份”务必填写年月日，格式如：2018-8-8</u>
+            </li>
+            <p></p>
+            <li>
+                <u> 导入数据时表格里的“状态”列的数据需变换一下，如  成功  请改为 success  ，失败 改为 failure</u>
+            </li>
+            <p></p>
+            <li>
+                <u> 导入表格数据时里面不能有特殊字符、换行、空格等</u>
+            </li>
+
+        </ol>
+        <ul class="nav nav-tabs" >
+            <li class="active text-center"><a href="#newcar_monthly" data-toggle="tab">新车月供&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_newcar_audit"></small></span></a></li>
+            <!--<li><a href="#secondhandcar_monthly" data-toggle="tab" class="text-center" > 二手车月供 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_rental_audit">{</small></span></a></li>-->
+            <!--<li><a href="#rentalcar_monthly" data-toggle="tab"  class="text-center" > 租车月供&nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_secondhandcar_audit"></small></span></a></li>-->
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+
+
+            <!--新车月供-->
+
+            <div class="tab-pane fade active in" id="newcar_monthly">
+                <div id="toolbar1" class="toolbar" >
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                    <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('monthly/newcarmonthly/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
+                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('monthly/newcarmonthly/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
+                    <a href="monthlytabs/downloadExcelTemplate" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
+                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
+
+                    <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('monthly/newcarmonthly/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('批量导入')}</a>
+                    <!--<a href="javascript:;" class="btn btn-info btn-refresh" title="{:__('批量导入')}" ><i class="fa fa-refresh"></i> </a>-->
+                </div>
+                <table id="newcarMonthly" class="table table-striped table-bordered table-hover table-nowrap"
+                       data-operate-edit="{:$auth->check('monthly/newcarmonthly/edit')}"
+                       data-operate-del="{:$auth->check('monthly/newcarmonthly/del')}"  width="100%">
+                </table>
+            </div>
+
+
+            <!--二手车月供-->
+
+
+
+            <!--租车月供-->
+
+
+        </div>
+    </div>
+</div>

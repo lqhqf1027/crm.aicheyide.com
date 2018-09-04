@@ -370,14 +370,7 @@ class Customerlisttabs extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
-            $result = $this->encapsulationSelect($where, $sort, $order, $offset, $limit);
-
-
+            $result = $this->encapsulationSelect();
             return json($result);
         }
 
@@ -396,7 +389,11 @@ class Customerlisttabs extends Backend
      * @param $limit
      * @return array
      */
-    public  function encapsulationSelect($where, $sort, $order, $offset, $limit,$customerlevel=null){
+    public  function encapsulationSelect($customerlevel=null){
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
         $authId = $this->auth->id; // 当前操作员id
         $noPhone = $this->noPhone(); //判断销售单里的电话没有和客户池电话相同的数据
         $getUserId = $this->getUserId();//获取当前可操作权限的id
