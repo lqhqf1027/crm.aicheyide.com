@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\controller\material\Zipfile;
 use app\common\controller\Backend;
 
 /**
@@ -29,12 +30,72 @@ class Test extends Backend
         $this->view->assign("statusList", $this->model->getStatusList());
         $this->view->assign("stateList", $this->model->getStateList());
     }
-    
+
+
     /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
+     * 批量下载图片，生成ZIP文件
      */
-    
+    public function pack()
+    {
+
+        $dfile = tempnam('/tmp', 'tmp');//产生一个临时文件，用于缓存下载文件
+        $zip = new Zipfile();
+
+        $all_img = input("post.all");
+
+        $all_font = input("post.all_font");
+
+        $username = input("post.username");
+
+
+
+        $all_font = explode(",",$all_font);
+
+        $all_img = explode(",",$all_img);
+
+        $image = array();
+
+
+
+
+        foreach ($all_img as $k=>$v){
+            array_push($image,['image_src'=>$v,'image_name'=>trim($all_font[$k]).".jpg"]);
+        }
+
+
+//----------------------
+        $filename = $username.'的电子档资料.zip'; //下载的默认文件名
+        $filename = $filename;
+        $host = 'http://test.love11.com';
+
+
+        foreach($image as $v){
+            $zip->add_file(file_get_contents($v['image_src']), $v['image_name']);
+            // 添加打包的图片，第一个参数是图片内容，第二个参数是压缩包里面的显示的名称, 可包含路径
+            // 或是想打包整个目录 用 $zip->add_path($image_path);
+        }
+//----------------------
+        $zip->output($dfile);
+// 下载文件
+        ob_clean();
+        header('Pragma: public');
+        header('Last-Modified:'.gmdate('D, d M Y H:i:s') . 'GMT');
+        header('Cache-Control:no-store, no-cache, must-revalidate');
+        header('Cache-Control:pre-check=0, post-check=0, max-age=0');
+        header('Content-Transfer-Encoding:binary');
+        header('Content-Encoding:none');
+        header('Content-type:multipart/form-data');
+        header('Content-Disposition:attachment; filename="'.$filename.'"'); //设置下载的默认文件名
+        header('Content-length:'. filesize($dfile));
+        $fp = fopen($dfile, 'r');
+        while(connection_status() == 0 && $buf = @fread($fp, 8192)){
+            echo $buf;
+        }
+        fclose($fp);
+        @unlink($dfile);
+        @flush();
+        @ob_flush();
+        exit();
+    }
 
 }
