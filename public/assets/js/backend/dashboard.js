@@ -79,7 +79,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                 Ordernewdata.newtake.push(Math.floor(Math.random() * amount) + 1);
 
                 //按自己需求可以取消这个限制
-                if (Ordernewdata.column.length >= 20) {
+                if (Orderdata.column.length >= 20) {
                     //移除最开始的一条数据
                     Ordernewdata.column.shift();
                     Ordernewdata.newtake.shift();
@@ -110,6 +110,23 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                 top.window.$("[data-toggle=checkupdate]").trigger("click");
             });
 
+            //读取FastAdmin的更新信息和社区动态
+            // $.ajax({
+            //     url: Config.fastadmin.api_url + '/news/index',
+            //     type: 'post',
+            //     dataType: 'jsonp',
+            //     success: function (ret) {
+            //         $("#news-list").html(Template("newstpl", {news: ret.newslist}));
+            //     }
+            // });
+            // $.ajax({
+            //     url: Config.fastadmin.api_url + '/forum/discussion',
+            //     type: 'post',
+            //     dataType: 'jsonp',
+            //     success: function (ret) {
+            //         $("#discussion-list").html(Template("discussiontpl", {news: ret.discussionlist}));
+            //     }
+            // });
 
 
             //租车表
@@ -184,45 +201,6 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // 使用刚指定的配置项和数据显示图表。
             rentalEchart.setOption(option);
 
-            //动态添加数据，可以通过Ajax获取数据然后填充
-            setInterval(function () {
-                Orderrentaldata.column.push((new Date()).toLocaleTimeString().replace(/^\D*/, ''));
-                var amount = Math.floor(Math.random() * 200) + 20;
-                Orderrentaldata.rentalorder.push(amount);
-                Orderrentaldata.rentaltake.push(Math.floor(Math.random() * amount) + 1);
-
-                //按自己需求可以取消这个限制
-                if (Orderrentaldata.column.length >= 20) {
-                    //移除最开始的一条数据
-                    Orderrentaldata.column.shift();
-                    Orderrentaldata.rentalorder.shift();
-                    Orderrentaldata.rentaltake.shift();
-                }
-                // rentalEchart.setOption({
-                //     xAxis: {
-                //         data: Orderdata.column
-                //     },
-                //     series: [{
-                //         name: __('Sales'),
-                //         data: Orderdata.paydata
-                //     },
-                //         {
-                //             name: __('Orders'),
-                //             data: Orderdata.createdata
-                //         }]
-                // });
-                if ($("#rentalechart").width() != $("#rentalechart canvas").width() && $("#rentalechart canvas").width() < $("#rentalechart").width()) {
-                    rentalEchart.resize();
-                }
-            }, 2000);
-            $(window).resize(function () {
-                rentalEchart.resize();
-            });
-
-            $(document).on("click", ".btn-checkversion", function () {
-                top.window.$("[data-toggle=checkupdate]").trigger("click");
-            });
-
 
             //二手车表
             // 基于准备好的dom，初始化echarts实例
@@ -295,46 +273,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
 
             // 使用刚指定的配置项和数据显示图表。
             secondEchart.setOption(option);
-
-            //动态添加数据，可以通过Ajax获取数据然后填充
-            setInterval(function () {
-                Orderseconddata.column.push((new Date()).toLocaleTimeString().replace(/^\D*/, ''));
-                var amount = Math.floor(Math.random() * 200) + 20;
-                Orderseconddata.secondorder.push(amount);
-                Orderseconddata.secondtake.push(Math.floor(Math.random() * amount) + 1);
-
-                //按自己需求可以取消这个限制
-                if (Orderseconddata.column.length >= 20) {
-                    //移除最开始的一条数据
-                    Orderseconddata.column.shift();
-                    Orderseconddata.secondtake.shift();
-                    Orderseconddata.secondorder.shift();
-                }
-                // secondEchart.setOption({
-                //     xAxis: {
-                //         data: Orderdata.column
-                //     },
-                //     series: [{
-                //         name: __('Sales'),
-                //         data: Orderdata.paydata
-                //     },
-                //         {
-                //             name: __('Orders'),
-                //             data: Orderdata.createdata
-                //         }]
-                // });
-                if ($("#secondechart").width() != $("#secondechart canvas").width() && $("#secondechart canvas").width() < $("#secondechart").width()) {
-                    secondEchart.resize();
-                }
-            }, 2000);
-            $(window).resize(function () {
-                sedcondEchart.resize();
-            });
-
-            $(document).on("click", ".btn-checkversion", function () {
-                top.window.$("[data-toggle=checkupdate]").trigger("click");
-            });
-
+            
 
             //全款车表
             // 基于准备好的dom，初始化echarts实例
@@ -407,45 +346,6 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
 
             // 使用刚指定的配置项和数据显示图表。
             fullEchart.setOption(option);
-
-            //动态添加数据，可以通过Ajax获取数据然后填充
-            setInterval(function () {
-                Orderfulldata.column.push((new Date()).toLocaleTimeString().replace(/^\D*/, ''));
-                var amount = Math.floor(Math.random() * 200) + 20;
-                Orderfulldata.fullorder.push(amount);
-                Orderfulldata.fulltake.push(Math.floor(Math.random() * amount) + 1);
-
-                //按自己需求可以取消这个限制
-                if (Orderfulldata.column.length >= 20) {
-                    //移除最开始的一条数据
-                    Orderfulldata.column.shift();
-                    Orderfulldata.fulltake.shift();
-                    Orderfulldata.fullorder.shift();
-                }
-                // fullEchart.setOption({
-                //     xAxis: {
-                //         data: Orderdata.column
-                //     },
-                //     series: [{
-                //         name: __('Sales'),
-                //         data: Orderdata.paydata
-                //     },
-                //         {
-                //             name: __('Orders'),
-                //             data: Orderdata.createdata
-                //         }]
-                // });
-                if ($("#fullechart").width() != $("#fullechart canvas").width() && $("#fullechart canvas").width() < $("#fullechart").width()) {
-                    fullEchart.resize();
-                }
-            }, 2000);
-            $(window).resize(function () {
-                fullEchart.resize();
-            });
-
-            $(document).on("click", ".btn-checkversion", function () {
-                top.window.$("[data-toggle=checkupdate]").trigger("click");
-            });
 
         }
     };
