@@ -28,7 +28,8 @@
 
 
     function image_preview(obj) {
-        console.log(document.getElementsByClassName("sidebar-toggle"));
+
+
 
         var len = obj.length;
 
@@ -39,8 +40,7 @@
         }
 
         obj.each(function () {
-            $(this).on("click", function (event) {
-                event.stopPropagation();
+            $(this).on("click", function () {
 
                 //给body添加弹出层的html
                 $("body").append("<div class=\"mask-layer\" style=\"magin-bottom: 10px\">" +
@@ -49,7 +49,7 @@
                     "       <div class=\"mask-layer-container-operate\">" +
                     "           <button class=\"mask-prev btn-default-styles\">上一张</button>" +
                     "           <button class=\"mask-clockwise btn-default-styles\">旋转</button>" +
-                    "           <button class=\"mask-close btn-default-styles\">关闭</button>" +
+                    "           <button class=\"mask-close btn-default-styles\">关闭 <i class='fa fa-power-off'></i></button>" +
                     "           <button class=\"mask-next btn-default-styles\">下一张</button>" +
                     "           <button class=\"mask-all-screen btn-default-styles\">全屏/退出</button>" +
                     "       </div>" +
@@ -88,23 +88,13 @@
                         $(".auto-img-center img").css("margin-left", "25%");
                     }
 
-                    // if (initial_width > initial_height) {
-                    //     // $(".auto-img-center img").css("width", "100%");
-                    //     $(".auto-img-center img").css("height", "100%");
-                    //     var last_imgHeight = $(".auto-img-center img").height();
-                    //
-                    // } else {
-                    //     $(".auto-img-center img").css("height", "100%");
-                    //     var last_imgWidth = $(".auto-img-center img").width();
-                    //
-                    // }
-
 
                     var zs = 1;
 
                     function zoomImg(o) {
                         var zoom = parseInt(o.style.zoom, 10) || 100;
                         zoom += event.wheelDelta / 10; //可适合修改
+
 
                         if (zoom == 112) {
                             zs += 0.1;

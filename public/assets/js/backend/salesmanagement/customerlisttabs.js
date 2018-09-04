@@ -144,56 +144,60 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 });
                 Table.api.bindevent(newCustomer);
-                optionns = {
-                    minDate: Date(), //支持string，Date，Moment
-                    maxDate: Date(),
-                };
-                // 批量加入放弃客户
-                $(document).on("click", ".btn-selected1", function (e, value, row, index) {
-                    var ids = Table.api.selectedids(newCustomer);
-                    e.stopPropagation();
-                    e.preventDefault();
-                    var that = this;
-                    var top = $(that).offset().top - $(window).scrollTop() + 100;
-                    var left = $(that).offset().left - $(window).scrollLeft() + 500;
-                    if (top + 154 > $(window).height()) {
-                        top = top - 154;
-                    }
-                    if ($(window).width() < 480) {
-                        top = left = undefined;
-                    }
-                    Layer.confirm(
-                        __('确定加入放弃客户名单吗?'),
-                        {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
-
-                        function (index) {
-
-                            Fast.api.ajax({
-                                url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
-                                data: {id: JSON.stringify(ids)}
-                            }, function (data, rets) {
-
-                                var addData = parseInt(data);
-                                var pre = $('#badge_give_up').text();
-
-                                pre = parseInt(pre);
-
-                                $('#badge_give_up').text(pre + addData);
-                                Toastr.success("成功");
-                                Layer.close(index);
-                                newCustomer.bootstrapTable('refresh');
-                                return false;
-                            }, function (data, ret) {
-                                //失败的回调
-                                newCustomer.bootstrapTable('refresh');
-                                return false;
-                            });
-
-
-                        }
-                    );
-
+                $(".btn-selected1").on('click',function (e, value, row, index) {
+                    alert(e);
                 });
+
+                // $(document).on("click", ".btn-selected1",function (e, value, row, index) {
+                //     alert(1);
+                // });
+                // f(".btn-selected1",newCustomer,'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
+                // 批量加入放弃客户
+                // $(document).on("click", ".btn-selected1", function (e, value, row, index) {
+                //     var ids = Table.api.selectedids(newCustomer);
+                //     e.stopPropagation();
+                //     e.preventDefault();
+                //     var that = this;
+                //     var top = $(that).offset().top - $(window).scrollTop() + 100;
+                //     var left = $(that).offset().left - $(window).scrollLeft() + 500;
+                //     if (top + 154 > $(window).height()) {
+                //         top = top - 154;
+                //     }
+                //     if ($(window).width() < 480) {
+                //         top = left = undefined;
+                //     }
+                //     Layer.confirm(
+                //         __('确定加入放弃客户名单吗?'),
+                //         {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                //
+                //         function (index) {
+                //
+                //             Fast.api.ajax({
+                //                 url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                //                 data: {id: JSON.stringify(ids)}
+                //             }, function (data, rets) {
+                //
+                //                 var addData = parseInt(data);
+                //                 var pre = $('#badge_give_up').text();
+                //
+                //                 pre = parseInt(pre);
+                //
+                //                 $('#badge_give_up').text(pre + addData);
+                //                 Toastr.success("成功");
+                //                 Layer.close(index);
+                //                 newCustomer.bootstrapTable('refresh');
+                //                 return false;
+                //             }, function (data, ret) {
+                //                 //失败的回调
+                //                 newCustomer.bootstrapTable('refresh');
+                //                 return false;
+                //             });
+                //
+                //
+                //         }
+                //     );
+                //
+                // });
                 /**
                  * 批量反馈
                  */
@@ -1201,5 +1205,100 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
+    // 批量加入放弃客户
+    $(document).on("click", ".btn-selected1", function (e, value, row, index) {
+        var ids = Table.api.selectedids(newCustomer);
+        e.stopPropagation();
+        e.preventDefault();
+        var that = this;
+        var top = $(that).offset().top - $(window).scrollTop() + 100;
+        var left = $(that).offset().left - $(window).scrollLeft() + 500;
+        if (top + 154 > $(window).height()) {
+            top = top - 154;
+        }
+        if ($(window).width() < 480) {
+            top = left = undefined;
+        }
+        Layer.confirm(
+            __('确定加入放弃客户名单吗?'),
+            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+
+            function (index) {
+
+                Fast.api.ajax({
+                    url: 'salesmanagement/Customerlisttabs/ajaxBatchGiveup',
+                    data: {id: JSON.stringify(ids)}
+                }, function (data, rets) {
+
+                    var addData = parseInt(data);
+                    var pre = $('#badge_give_up').text();
+
+                    pre = parseInt(pre);
+
+                    $('#badge_give_up').text(pre + addData);
+                    Toastr.success("成功");
+                    Layer.close(index);
+                    newCustomer.bootstrapTable('refresh');
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+                    newCustomer.bootstrapTable('refresh');
+                    return false;
+                });
+
+
+            }
+        );
+
+    });
+    function f(clickobj,table,url) {
+        $(document).on("click", '.btn-selected1', function (e, value, row, index) {
+            alert(1);
+            // var ids = Table.api.selectedids(table);
+            // e.stopPropagation();
+            // e.preventDefault();
+            // var that = this;
+            //
+            // var top = $(that).offset().top - $(window).scrollTop() + 100;
+            // var left = $(that).offset().left - $(window).scrollLeft() + 500;
+            // if (top + 154 > $(window).height()) {
+            //     top = top - 154;
+            // }
+            // if ($(window).width() < 480) {
+            //     top = left = undefined;
+            // }
+            //
+            // Layer.confirm(
+            //     __('确定加入放弃客户名单吗?'),
+            //     {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+            //
+            //     function (index) {
+            //
+            //         Fast.api.ajax({
+            //             url: url,
+            //             data: {id: JSON.stringify(ids)}
+            //         }, function (data, rets) {
+            //
+            //             var addData = parseInt(data);
+            //             var pre = $('#badge_give_up').text();
+            //
+            //             pre = parseInt(pre);
+            //
+            //             $('#badge_give_up').text(pre + addData);
+            //             Toastr.success("成功");
+            //             Layer.close(index);
+            //             table.bootstrapTable('refresh');
+            //             return false;
+            //         }, function (data, ret) {
+            //             //失败的回调
+            //             table.bootstrapTable('refresh');
+            //             return false;
+            //         });
+            //
+            //
+            //     }
+            // );
+        });
+    }
     return Controller;
 });

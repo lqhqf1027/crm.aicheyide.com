@@ -370,7 +370,10 @@ class Customerlisttabs extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+
             $result = $this->encapsulationSelect();
+
+
             return json($result);
         }
 
@@ -390,6 +393,9 @@ class Customerlisttabs extends Backend
      * @return array
      */
     public  function encapsulationSelect($customerlevel=null){
+
+        //如果发送的来源是Selectpage，则转发到Selectpage
+
         if ($this->request->request('keyField')) {
             return $this->selectpage();
         }
@@ -403,15 +409,28 @@ class Customerlisttabs extends Backend
                 $query->withField('name');
             }])
             ->where(function ($query) use ($noPhone,$authId,$getUserId,$customerlevel){
-                //超级管理员
-                if(in_array($authId,$getUserId['admin'])){
 
-                    $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone]]);
+                if($customerlevel=="overdue"){
+                    //超级管理员
+                    if(in_array($authId,$getUserId['admin'])){
+                        $query->where(['phone'=>['not in',$noPhone],'feedbacktime'=>['<',time()]]);
+                    }else if(in_array($authId,$getUserId['sale'])){
+                        $query->where(['phone'=>['not in',$noPhone],'feedbacktime'=>['<',time()],'sales_id'=>$authId]);
+
+                    }
+                }else{
+                    //超级管理员
+                    if(in_array($authId,$getUserId['admin'])){
+
+                        $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone]]);
+                    }
+                    //当前销售
+                    else if (in_array($authId,$getUserId['sale'])){
+                        $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone],'sales_id'=>$authId]);
+                    }
                 }
-                //当前销售
-                else if (in_array($authId,$getUserId['sale'])){
-                    $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone],'sales_id'=>$authId]);
-                }
+
+
             })
             ->order($sort, $order)
             ->count();
@@ -421,20 +440,31 @@ class Customerlisttabs extends Backend
                 $query->withField('name');
             }])
             ->where(function ($query) use ($noPhone,$authId,$getUserId,$customerlevel){
-                //超级管理员
-                if(in_array($authId,$getUserId['admin'])){
-                    $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone]]);
-                }
-                //当前销售
-                else if (in_array($authId,$getUserId['sale'])){
-                    $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone],'sales_id'=>$authId]);
+                if($customerlevel=="overdue"){
+                    //超级管理员
+                    if(in_array($authId,$getUserId['admin'])){
+                        $query->where(['phone'=>['not in',$noPhone],'feedbacktime'=>['<',time()]]);
+                    }else if(in_array($authId,$getUserId['sale'])){
+                        $query->where(['phone'=>['not in',$noPhone],'feedbacktime'=>['<',time()],'sales_id'=>$authId]);
+
+                    }
+                }else{
+                    //超级管理员
+                    if(in_array($authId,$getUserId['admin'])){
+
+                        $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone]]);
+                    }
+                    //当前销售
+                    else if (in_array($authId,$getUserId['sale'])){
+                        $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone],'sales_id'=>$authId]);
+                    }
                 }
             })
             ->order($sort, $order)
             ->limit($offset, $limit)
             ->select();
         foreach ($list as $k => $row) {
-            $row->visible(['id', 'username', 'phone', 'age', 'genderdata']);
+            $row->visible(['id', 'username', 'phone', 'age', 'genderdata','customerlevel']);
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
         }
@@ -446,42 +476,18 @@ class Customerlisttabs extends Backend
     public function relation()
     {
 
-        $canUseId = $this->getUserId();
-        $this->model = model('CustomerResource');
-
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        //当前是否为关联查询
-        $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $noPhone = $this->noPhone();
+            $result = $this->encapsulationSelect('relation');
 
-
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-
-            $test_relation = $this->test("both", "relation", $this->auth->id);
-
-
-            $total = $test_relation['relation_total'];
-            $list = $test_relation['relation_list'];
-
-
-            foreach ($list as $row) {
-
-                $row->getRelation('platform')->visible(['name']);
-            }
-            $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
 
-        return $this->view->fetch('index');
+        return $this->view->fetch("index");
+
     }
 
 
@@ -489,39 +495,18 @@ class Customerlisttabs extends Backend
     public function intention()
     {
 
-        $canUseId = $this->getUserId();
-        $this->model = model('CustomerResource');
-
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        //当前是否为关联查询
-        $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $noPhone = $this->noPhone();
+            $result = $this->encapsulationSelect('intention');
 
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-
-            $intention_test = $this->test("both", "intention", $this->auth->id);
-
-            $list = $intention_test['intention_list'];
-            $total = $intention_test['intention_total'];
-
-            foreach ($list as $row) {
-
-                $row->getRelation('platform')->visible(['name']);
-            }
-            $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
 
-        return $this->view->fetch('index');
+        return $this->view->fetch("index");
+
     }
 
 
@@ -529,79 +514,36 @@ class Customerlisttabs extends Backend
     public function nointention()
     {
 
-        $canUseId = $this->getUserId();
-        $this->model = model('CustomerResource');
-
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        //当前是否为关联查询
-        $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $noPhone = $this->noPhone();
+            $result = $this->encapsulationSelect('nointention');
 
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-
-            $nointention_test = $this->test('both', 'nointention', $this->auth->id);
-
-            $list = $nointention_test['nointention_list'];
-            $total = $nointention_test['nointention_total'];
-
-
-            foreach ($list as $row) {
-
-                $row->getRelation('platform')->visible(['name']);
-            }
-            $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
 
-        return $this->view->fetch('index');
+        return $this->view->fetch("index");
+
     }
 
 
     //已放弃
     public function giveup()
     {
-        $canUseId = $this->getUserId();
-        $this->model = model('CustomerResource');
-
-        $this->view->assign("genderdataList", $this->model->getGenderdataList());
-        //当前是否为关联查询
-        $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $noPhone = $this->noPhone();
+            $result = $this->encapsulationSelect('giveup');
 
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-
-            $giveup_test = $this->test("both", "giveup", $this->auth->id);
-
-            $list = $giveup_test['giveup_list'];
-            $total = $giveup_test['giveup_total'];
-
-            foreach ($list as $row) {
-
-                $row->getRelation('platform')->visible(['name']);
-            }
-            $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
 
-        return $this->view->fetch('index');
+        return $this->view->fetch("index");
+
     }
 
 
@@ -609,47 +551,22 @@ class Customerlisttabs extends Backend
     public function overdue()
     {
 
-        $canUseId = $this->getUserId();
-        $this->model = model('CustomerResource');
-
-        $this->view->assign(["genderdataList" => $this->model->getGenderdataList(),
-
-        ]);
-
-        //当前是否为关联查询
-        $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $noPhone = $this->noPhone();
-
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-
-            $overdue_test = $this->test("both", "overdue", $this->auth->id);
-
-            $list = $overdue_test['overdue_list'];
-            $total = $overdue_test['overdue_total'];
-
-            foreach ($list as $row) {
-
-                $row->getRelation('platform')->visible(['name']);
-
-            }
-
-
-            $result = array("total" => $total, "rows" => $list);
+            $result = $this->encapsulationSelect('overdue');
 
 
             return json($result);
         }
 
+        return $this->view->fetch("index");
 
-        return $this->view->fetch('index');
     }
+
+
+
 
     public function add()
     {

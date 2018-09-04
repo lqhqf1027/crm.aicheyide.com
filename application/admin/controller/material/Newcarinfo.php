@@ -6,6 +6,7 @@ use app\common\controller\Backend;
 use think\Db;
 use think\Config;
 
+
 /**
  * 司机信息
  *
@@ -472,13 +473,13 @@ class Newcarinfo extends Backend
             $car_imgeas_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
-        if ($row['createtime']) {
-            $row['createtime'] = date("Y-m-d", $row['createtime']);
-        }
-
-        if ($row['delivery_datetime']) {
-            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
-        }
+//        if ($row['createtime']) {
+//            $row['createtime'] = date("Y-m-d", $row['createtime']);
+//        }
+//
+//        if ($row['delivery_datetime']) {
+//            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
+//        }
 
 
         $data = array(
@@ -628,4 +629,68 @@ class Newcarinfo extends Backend
     }
 
 
+
+
+    function pack()
+    {
+
+
+
+
+
+        $dfile = tempnam('/tmp', 'tmp');//产生一个临时文件，用于缓存下载文件
+        $zip = new Zipfile();
+
+
+
+
+
+//----------------------
+        $filename = 'image.zip'; //下载的默认文件名
+
+        $host = 'http://test.love11.com';
+//$dir_name = $host.'/images/point_qrcode/';
+        $image = array(
+            array('image_src' => 'https://static.aicheyide.com/uploads/20180828/73dc0f9a3808f92b9fa4526bb8788d5a.png', 'image_name' => '中文1.jpg'),
+//            array('image_src' => 'weixin.jpg', 'image_name' => '中文2.jpg'),
+        );
+
+//        $image = array();
+//
+
+
+//        foreach($image as $v){
+//            $zip->add_file(file_get_contents($dir_name.urlencode($v['image_src'])), $v['image_name']);
+//            // 添加打包的图片，第一个参数是图片内容，第二个参数是压缩包里面的显示的名称, 可包含路径
+//            // 或是想打包整个目录 用 $zip->add_path($image_path);
+//        }
+
+        foreach($image as $v){
+            $zip->add_file(file_get_contents($v['image_src']), $v['image_name']);
+            // 添加打包的图片，第一个参数是图片内容，第二个参数是压缩包里面的显示的名称, 可包含路径
+            // 或是想打包整个目录 用 $zip->add_path($image_path);
+        }
+//----------------------
+        $zip->output($dfile);
+// 下载文件
+        ob_clean();
+        header('Pragma: public');
+        header('Last-Modified:'.gmdate('D, d M Y H:i:s') . 'GMT');
+        header('Cache-Control:no-store, no-cache, must-revalidate');
+        header('Cache-Control:pre-check=0, post-check=0, max-age=0');
+        header('Content-Transfer-Encoding:binary');
+        header('Content-Encoding:none');
+        header('Content-type:multipart/form-data');
+        header('Content-Disposition:attachment; filename="'.$filename.'"'); //设置下载的默认文件名
+        header('Content-length:'. filesize($dfile));
+        $fp = fopen($dfile, 'r');
+        while(connection_status() == 0 && $buf = @fread($fp, 8192)){
+            echo $buf;
+        }
+        fclose($fp);
+        @unlink($dfile);
+        @flush();
+        @ob_flush();
+        exit();
+    }
 }

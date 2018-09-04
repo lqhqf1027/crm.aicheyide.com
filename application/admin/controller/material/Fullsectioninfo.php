@@ -209,13 +209,13 @@ class Fullsectioninfo extends Backend
 
 
 
-        if ($row['createtime']) {
-            $row['createtime'] = date("Y-m-d", $row['createtime']);
-        }
-
-        if ($row['delivery_datetime']) {
-            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
-        }
+//        if ($row['createtime']) {
+//            $row['createtime'] = date("Y-m-d", $row['createtime']);
+//        }
+//
+//        if ($row['delivery_datetime']) {
+//            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
+//        }
 
         //身份证正反面（多图）
         $id_cardimages = $row['id_cardimages'];

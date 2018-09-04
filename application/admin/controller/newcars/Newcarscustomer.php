@@ -255,7 +255,7 @@ class Newcarscustomer extends Backend
             ->join('plan_acar b', 'a.plan_acar_name = b.id')
             ->join('models c', 'b.models_id=c.id');
 
-        $row['createtime'] = date("Y-m-d", $row['createtime']);
+//        $row['createtime'] = date("Y-m-d", $row['createtime']);
 
 
         //定金合同（多图）
@@ -562,8 +562,8 @@ class Newcarscustomer extends Backend
             }
         }
 
-        $row['createtime'] = date("Y-m-d", $row['createtime']);
-        $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
+//        $row['createtime'] = date("Y-m-d", $row['createtime']);
+//        $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
 
         $this->view->assign($data);
         $this->view->assign("row", $row);
