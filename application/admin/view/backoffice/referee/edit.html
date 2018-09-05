@@ -16,19 +16,19 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Make_moneytime')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-make_moneytime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[make_moneytime]" type="text" value="{$row.make_moneytime|datetime}">
+            <input id="c-make_moneytime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[make_moneytime]" type="text" value="{$row.make_moneytime}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Request_fundstime')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-request_fundstime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[request_fundstime]" type="text" value="{$row.request_fundstime|datetime}">
+            <input id="c-request_fundstime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[request_fundstime]" type="text" value="{$row.request_fundstime}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Introduction_note')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <textarea id="c-introduction_note" data-rule="required" class="form-control editor" rows="5" name="row[introduction_note]" cols="50" placeholder="选填">{$row.introduction_note}</textarea>
+            <textarea id="c-introduction_note" class="form-control editor" rows="5" name="row[introduction_note]" cols="50" placeholder="选填">{$row.introduction_note}</textarea>
         </div>
     </div>
 
@@ -40,3 +40,6 @@
         </div>
     </div>
 </form>
+{php}
+//dump($row);
+{/php}

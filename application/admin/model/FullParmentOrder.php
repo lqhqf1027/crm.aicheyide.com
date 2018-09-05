@@ -55,6 +55,11 @@ class FullParmentOrder extends Model
         return $value && !is_numeric($value) ? strtotime($value) : $value;
     }
 
+    public function getCustomerSourceList()
+    {
+        return ['straight' => __('直客'), 'introduce' => __('转介绍')];
+    }
+
 
     public function mortgageregistration()
     {
