@@ -79,285 +79,21 @@ class Customerlisttabs extends Backend
 
     public function index()
     {
+        $this->view->assign([
+            'newCustomTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),null),
+            'relationTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'relation'),
+            'intentionTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'intention'),
+            'nointentionTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'nointention'),
+            'giveupTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'giveup'),
+            'overdueTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'overdue'),
+
+        ]);
 
 
         $this->loadlang('salesmanagement/customerlisttabs');
 
-//        $getTotal = $this->getTotal();
-//
-//        $this->view->assign([
-//            'newCustomTotal' => $getTotal['newCustomTotal'],
-//            'relationTotal' => $getTotal['relationTotal'],
-//            'intentionTotal' => $getTotal['intentionTotal'],
-//            'nointentionTotal' => $getTotal['nointentionTotal'],
-//            'giveupTotal' => $getTotal['giveupTotal'],
-//            'overdueTotal' => $getTotal['overdueTotal']]);
 
         return $this->view->fetch();
-    }
-
-    public function getTotal($get_one = null)
-    {
-        $canUseId = $this->getUserId();
-
-        $this->model = model('CustomerResource');
-
-        $noPhone = $this->noPhone();
-
-        if (in_array($this->auth->id, $canUseId['sale'])) {
-
-            $newCustomTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', $this->auth->id)
-                        ->where('customerlevel', null)
-                        ->where('phone', 'not in', $noPhone)
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', $this->auth->id)
-                                ->where('customerlevel', null)
-                                ->where('phone', 'not in', $noPhone);
-                        });
-
-                })
-                ->count();
-
-
-            $relationTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', $this->auth->id)
-                        ->where('customerlevel', 'relation')
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', $this->auth->id)
-                                ->where('customerlevel', 'relation')
-                                ->where('phone', 'not in', $noPhone)
-                                ->where('followuptimestamp', ">", time());
-                        });
-
-                })
-                ->count();
-
-
-            $intentionTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', $this->auth->id)
-                        ->where('customerlevel', 'intention')
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', $this->auth->id)
-                                ->where('customerlevel', 'intention')
-                                ->where('phone', 'not in', $noPhone)
-                                ->where('followuptimestamp', ">", time());
-                        });
-
-                })
-                ->count();
-
-
-            $nointentionTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', $this->auth->id)
-                        ->where('customerlevel', 'nointention')
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', $this->auth->id)
-                                ->where('phone', 'not in', $noPhone)
-                                ->where('customerlevel', 'nointention')
-                                ->where('followuptimestamp', ">", time());
-                        });
-
-                })
-                ->count();
-
-
-            $giveupTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('sales_id', $this->auth->id)
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('customerlevel', 'giveup');
-                })
-                ->count();
-
-
-            $overdueTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', $this->auth->id)
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('customerlevel', 'in', ['intention', 'nointention', 'relation'])
-                        ->where('followuptimestamp', "<", time())
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', $this->auth->id)
-                                ->where('phone', 'not in', $noPhone)
-                                ->where('followuptimestamp', "<", time())
-                                ->where('customerlevel', 'in', ['intention', 'nointention', 'relation']);
-                        });
-
-                })
-                ->count();
-        } else if (in_array($this->auth->id, $canUseId['admin'])) {
-
-            $newCustomTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', "not null")
-                        ->where('customerlevel', null)
-                        ->where('phone', 'not in', $noPhone)
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', "not null")
-                                ->where('customerlevel', null)
-                                ->where('phone', 'not in', $noPhone);
-                        });
-
-                })
-                ->count();
-
-
-            $relationTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', "not null")
-                        ->where('customerlevel', 'relation')
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', "not null")
-                                ->where('customerlevel', 'relation')
-                                ->where('phone', 'not in', $noPhone)
-                                ->where('followuptimestamp', ">", time());
-                        });
-
-                })
-                ->count();
-
-
-            $intentionTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', "not null")
-                        ->where('customerlevel', 'intention')
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', "not null")
-                                ->where('customerlevel', 'intention')
-                                ->where('phone', 'not in', $noPhone)
-                                ->where('followuptimestamp', ">", time());
-                        });
-
-                })
-                ->count();
-
-
-            $nointentionTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', "not null")
-                        ->where('customerlevel', 'nointention')
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('followuptimestamp', ">", time())
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', "not null")
-                                ->where('phone', 'not in', $noPhone)
-                                ->where('customerlevel', 'nointention')
-                                ->where('followuptimestamp', ">", time());
-                        });
-
-                })
-                ->count();
-
-
-            $giveupTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('sales_id', "not null")
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('customerlevel', 'giveup');
-                })
-                ->count();
-
-            $overdueTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) use ($noPhone) {
-                    $query->where('backoffice_id', 'not null')
-                        ->where('sales_id', "not null")
-                        ->where('phone', 'not in', $noPhone)
-                        ->where('customerlevel', 'in', ['intention', 'nointention', 'relation'])
-                        ->where('followuptimestamp', "<", time())
-                        ->whereOr(function ($query2) use ($noPhone) {
-                            $query2->where('platform_id', 'in', '5,6,7')
-                                ->where('backoffice_id', null)
-                                ->where('sales_id', "not null")
-                                ->where('phone', 'not in', $noPhone)
-                                ->where('followuptimestamp', "<", time())
-                                ->where('customerlevel', 'in', ['intention', 'nointention', 'relation']);
-                        });
-
-                })
-                ->count();
-        }
-
-        if (!empty($get_one)) {
-            switch ($get_one) {
-                case 'new_customer':
-                    return $newCustomTotal;
-                case 'relation':
-                    return $relationTotal;
-                case 'intention':
-                    return $intentionTotal;
-                case 'nointention':
-                    return $nointentionTotal;
-                case 'giveup':
-                    return $giveupTotal;
-                case 'overdue':
-                    return $overdueTotal;
-            }
-        }
-
-        return [
-            'newCustomTotal' => $newCustomTotal,
-            'relationTotal' => $relationTotal,
-            'intentionTotal' => $intentionTotal,
-            'nointentionTotal' => $nointentionTotal,
-            'giveupTotal' => $giveupTotal,
-            'overdueTotal' => $overdueTotal
-        ];
-
-
     }
 
 
@@ -382,6 +118,64 @@ class Customerlisttabs extends Backend
     }
 
     /**
+     * 得到总数
+     * @param $no_phone
+     * @param $getUserId
+     * @param $customerlevel
+     * @return int|string
+     */
+    public function get_total($no_phone, $getUserId, $customerlevel)
+    {
+        $this->model = model('CustomerResource');
+
+        $authId = $this->auth->id;
+        $count = $this->model
+            ->where(function ($query) use ($no_phone, $authId, $getUserId, $customerlevel) {
+                if ($customerlevel == null) {
+                    //超级管理员
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['phone' => ['not in', $no_phone], 'customerlevel' => null]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['phone' => ['not in', $no_phone], 'sales_id' => $authId, 'customerlevel' => null]);
+
+                    }
+                } else if ($customerlevel == "giveup") {
+                    //超级管理员
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['customerlevel' => $customerlevel]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['sales_id' => $authId, 'customerlevel' => $customerlevel]);
+
+                    }
+                } else if ($customerlevel == "overdue") {
+                    //超级管理员
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['phone' => ['not in', $no_phone], 'followuptimestamp' => ['<', time()], 'customerlevel' => ['neq', 'giveup']]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['phone' => ['not in', $no_phone], 'followuptimestamp' => ['<', time()], 'sales_id' => $authId, 'customerlevel' => ['neq', 'giveup']]);
+
+                    }
+                } else {
+                    //超级管理员
+                    if (in_array($authId, $getUserId['admin'])) {
+
+                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $no_phone], 'followuptimestamp' => ['>', time()]]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $no_phone], 'sales_id' => $authId, 'followuptimestamp' => ['>', time()]]);
+                    }
+                }
+            })
+            ->count();
+
+
+        return $count;
+    }
+
+    /**
      * 查询封装
      *
      * @param $where
@@ -392,7 +186,8 @@ class Customerlisttabs extends Backend
      * @param $limit
      * @return array
      */
-    public  function encapsulationSelect($customerlevel=null){
+    public function encapsulationSelect($customerlevel = null)
+    {
 
         //如果发送的来源是Selectpage，则转发到Selectpage
 
@@ -408,28 +203,45 @@ class Customerlisttabs extends Backend
             ->with(['platform' => function ($query) {
                 $query->withField('name');
             }])
-            ->where(function ($query) use ($noPhone,$authId,$getUserId,$customerlevel){
+            ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel) {
 
-                if($customerlevel=="overdue"){
+                if ($customerlevel == "overdue") {
                     //超级管理员
-                    if(in_array($authId,$getUserId['admin'])){
-                        $query->where(['phone'=>['not in',$noPhone],'feedbacktime'=>['<',time()]]);
-                    }else if(in_array($authId,$getUserId['sale'])){
-                        $query->where(['phone'=>['not in',$noPhone],'feedbacktime'=>['<',time()],'sales_id'=>$authId]);
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['phone' => ['not in', $noPhone], 'followuptimestamp' => ['<', time()], 'customerlevel' => ['neq', 'giveup']]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['phone' => ['not in', $noPhone], 'followuptimestamp' => ['<', time()], 'sales_id' => $authId, 'customerlevel' => ['neq', 'giveup']]);
 
                     }
-                }else{
+                } else if ($customerlevel == null) {
                     //超级管理员
-                    if(in_array($authId,$getUserId['admin'])){
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['phone' => ['not in', $noPhone], 'customerlevel' => null]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['phone' => ['not in', $noPhone], 'sales_id' => $authId, 'customerlevel' => null]);
 
-                        $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone]]);
                     }
-                    //当前销售
-                    else if (in_array($authId,$getUserId['sale'])){
-                        $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone],'sales_id'=>$authId]);
+                } else if ($customerlevel == "giveup") {
+                    //超级管理员
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['customerlevel' => $customerlevel]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['sales_id' => $authId, 'customerlevel' => $customerlevel]);
+
+                    }
+                } else {
+                    //超级管理员
+                    if (in_array($authId, $getUserId['admin'])) {
+
+                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'followuptimestamp' => ['>', time()]]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'sales_id' => $authId, 'followuptimestamp' => ['>', time()]]);
                     }
                 }
-
 
             })
             ->order($sort, $order)
@@ -439,39 +251,61 @@ class Customerlisttabs extends Backend
             ->with(['platform' => function ($query) {
                 $query->withField('name');
             }])
-            ->where(function ($query) use ($noPhone,$authId,$getUserId,$customerlevel){
-                if($customerlevel=="overdue"){
+            ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel) {
+
+                if ($customerlevel == "overdue") {
                     //超级管理员
-                    if(in_array($authId,$getUserId['admin'])){
-                        $query->where(['phone'=>['not in',$noPhone],'feedbacktime'=>['<',time()]]);
-                    }else if(in_array($authId,$getUserId['sale'])){
-                        $query->where(['phone'=>['not in',$noPhone],'feedbacktime'=>['<',time()],'sales_id'=>$authId]);
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['phone' => ['not in', $noPhone], 'followuptimestamp' => ['<', time()], 'customerlevel' => ['neq', 'giveup']]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['phone' => ['not in', $noPhone], 'followuptimestamp' => ['<', time()], 'sales_id' => $authId, 'customerlevel' => ['neq', 'giveup']]);
 
                     }
-                }else{
+                } else if ($customerlevel == null) {
                     //超级管理员
-                    if(in_array($authId,$getUserId['admin'])){
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['phone' => ['not in', $noPhone], 'customerlevel' => null]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['phone' => ['not in', $noPhone], 'sales_id' => $authId, 'customerlevel' => null]);
 
-                        $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone]]);
                     }
-                    //当前销售
-                    else if (in_array($authId,$getUserId['sale'])){
-                        $query->where(['customerlevel'=>$customerlevel,'phone'=>['not in',$noPhone],'sales_id'=>$authId]);
+                } else if ($customerlevel == "giveup") {
+                    //超级管理员
+                    if (in_array($authId, $getUserId['admin'])) {
+                        $query->where(['customerlevel' => $customerlevel]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['sales_id' => $authId, 'customerlevel' => $customerlevel]);
+
+                    }
+                } else {
+                    //超级管理员
+                    if (in_array($authId, $getUserId['admin'])) {
+
+                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'followuptimestamp' => ['>', time()]]);
+                    } //当前销售
+                    else if (in_array($authId, $getUserId['sale'])) {
+                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'sales_id' => $authId, 'followuptimestamp' => ['>', time()]]);
                     }
                 }
+
+
             })
             ->order($sort, $order)
             ->limit($offset, $limit)
             ->select();
         foreach ($list as $k => $row) {
-            $row->visible(['id', 'username', 'phone', 'age', 'genderdata','customerlevel']);
+            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel']);
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
         }
         $list = collection($list)->toArray();
 
-         return array('total' => $total, "rows" => $list);
+        return array('total' => $total, "rows" => $list);
     }
+
     //待联系
     public function relation()
     {
@@ -564,8 +398,6 @@ class Customerlisttabs extends Backend
         return $this->view->fetch("index");
 
     }
-
-
 
 
     public function add()
@@ -806,7 +638,6 @@ class Customerlisttabs extends Backend
 
 
     //查看跟进结果
-
     public function showFeedback($ids = NULL)
     {
 
@@ -829,20 +660,5 @@ class Customerlisttabs extends Backend
         return $this->view->fetch();
     }
 
-
-    public function returnTotal()
-    {
-        if ($this->request->isAjax()) {
-            $asd = $this->request->post("");
-
-            $arr = array();
-            for ($i = 0; $i < count($asd['arr']); $i++) {
-                $arr[$asd['arr'][$i]] = $this->getTotal($asd['arr'][$i]);
-            }
-
-
-            $this->success('', '', $arr);
-        }
-    }
 
 }

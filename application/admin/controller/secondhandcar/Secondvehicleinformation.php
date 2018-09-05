@@ -5,7 +5,9 @@ namespace app\admin\controller\secondhandcar;
 use app\common\controller\Backend;
 
 use think\Db;
+
 use think\Cache;
+
 
 /**
  * 二手车管理车辆信息
@@ -14,7 +16,7 @@ use think\Cache;
  */
 class Secondvehicleinformation extends Backend
 {
-    
+
     /**
      * SecondcarRentalModelsInfo模型对象
      * @var \app\admin\model\SecondcarRentalModelsInfo
@@ -28,13 +30,13 @@ class Secondvehicleinformation extends Backend
         $this->model = model('SecondcarRentalModelsInfo');
         $this->view->assign("shelfismenuList", $this->model->getShelfismenuList());
     }
-    
+
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-    
+
 
     /**
      * 查看
@@ -45,33 +47,28 @@ class Secondvehicleinformation extends Backend
         $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
+        if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
+            if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                    ->with(['models'])
-                    ->where($where)
-                    ->where('status_data', 'NEQ', 'the_car')
-                    ->order($sort, $order)
-                    ->count();
+                ->with(['models'])
+                ->where($where)
+                ->where('status_data', 'NEQ', 'the_car')
+                ->order($sort, $order)
+                ->count();
 
             $list = $this->model
-                    ->with(['models'])
-                    ->where($where)
-                    ->where('status_data', 'NEQ', 'the_car')
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
+                ->with(['models'])
+                ->where($where)
+                ->where('status_data', 'NEQ', 'the_car')
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
-            foreach ($list as $row) {
-                
-                
-            }
+
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
 
@@ -149,6 +146,35 @@ class Secondvehicleinformation extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
+
+                //添加进入推荐人列表
+                $order_info = Db::name("second_sales_order")
+                    ->where("plan_car_second_name", $id)
+                    ->field("admin_id,models_id,username,phone,customer_source,turn_to_introduce_name,turn_to_introduce_phone,turn_to_introduce_card")
+                    ->find();
+
+                if ($order_info['customer_source'] == 'turn_to_introduce') {
+                    $insertdata = [
+                        'models_id' => $order_info['models_id'],
+                        'admin_id' => $order_info['admin_id'],
+                        'referee_name' => $order_info['turn_to_introduce_name'],
+                        'referee_phone' => $order_info['turn_to_introduce_phone'],
+                        'referee_idcard' => $order_info['turn_to_introduce_card'],
+                        'customer_name' => $order_info['username'],
+                        'customer_phone' => $order_info['customer_phone'],
+                        'buy_way' => '二手车'
+                    ];
+
+                    Db::name("referee")->insert($insertdata);
+
+                    $last_id = Db::name("referee")->getLastInsID();
+
+                    Db::name("second_sales_order")
+                        ->where("plan_car_second_name", $id)
+                        ->setField("referee_id", $last_id);
+                }
+
+
                 $this->success();
 
 
@@ -159,5 +185,5 @@ class Secondvehicleinformation extends Backend
         }
     }
 
-    
+
 }

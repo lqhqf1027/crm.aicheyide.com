@@ -73,7 +73,63 @@
             <input id="c-detailed_address" data-rule="required" class="form-control" name="row[detailed_address]" type="text" value="{$row.detailed_address}">
         </div>
     </div>
+    <h3>
+        <center>客户来源</center>
+    </h3>
+    <br>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('客户来源')}:</label>
+        <div class="col-xs-12 col-sm-8">
 
+            <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)" >
+                {foreach name="customerSourceList" item="vo"}
+                <option value="{$key}"     {$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        function changeFun(that) {
+            var introduce = document.getElementById('introduce-view');
+
+            if (that.value == 'direct_the_guest') {
+
+                introduce.style.setProperty('display', 'none', 'important');
+
+
+            } else {
+
+                introduce.style.setProperty('display', 'block', 'important');
+            }
+
+        }
+
+    </script>
+    <div id="introduce-view" style="display: none">
+
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('介绍人姓名')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-introduce_name" class="form-control" name="row[introduce_name]" type="text" value="{$row.introduce_name}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('介绍人电话')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-introduce_phone" data-rule="mobile" class="form-control" name="row[introduce_phone]" type="text" value="{$row.introduce_phone}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('介绍人身份证')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input id="c-introduce_card" data-rule="IDcard" class="form-control" name="row[introduce_card]" type="text" value="{$row.introduce_card}"
+                       placeholder="可后期再填写，不必填">
+            </div>
+        </div>
+    </div>
     <h3>
             <center>资料上传（必填）</center>
         </h3>
