@@ -14,7 +14,7 @@ use app\common\library\Email;
  */
 class Vehicleinformation extends Backend
 {
-    
+
     /**
      * Fullpeople模型对象
      * @var \app\admin\model\Fullpeople
@@ -27,13 +27,13 @@ class Vehicleinformation extends Backend
         $this->model = new \app\admin\model\Fullpeople;
 
     }
-    
+
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-    
+
     /**
      * 查看
      */
@@ -44,7 +44,7 @@ class Vehicleinformation extends Backend
 
         $prepare_total = Db::name("full_parment_order")
             ->where("review_the_data", "is_reviewing_true")
-            ->where("car_new_inventory_id",null)
+            ->where("car_new_inventory_id", null)
             ->count();
 
         $already_total = Db::name("full_parment_order")
@@ -112,7 +112,7 @@ class Vehicleinformation extends Backend
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
-                
+
             }
 
 
@@ -186,7 +186,7 @@ class Vehicleinformation extends Backend
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['carnewinventory']);
                 $row->getRelation('carnewinventory')->visible(['frame_number', 'licensenumber', 'engine_number', 'household', '4s_shop']);
-                
+
             }
 
 
@@ -220,8 +220,35 @@ class Vehicleinformation extends Backend
                 ->setField("statuss", 0);
 
             $channel = "demo-full_takecar";
-            $content =  "销售提交的全款车单，可以进行提车处理";
+            $content = "销售提交的全款车单，可以进行提车处理";
             goeary_push($channel, $content);
+
+            $full_info = Db::name("full_parment_order")
+            ->where("id",$ids)
+            ->field("admin_id,models_id,username,phone,customer_source,introduce_name,introduce_phone,introduce_card")
+            ->find();
+
+            //如果是转介绍,到介绍人表
+            if($full_info['customer_source']=="introduce"){
+                $insert_data = [
+                    'models_id'=>$full_info['models_id'],
+                    'admin_id'=>$full_info['admin_id'],
+                    'referee_name'=>$full_info['introduce_name'],
+                    'referee_phone'=>$full_info['introduce_phone'],
+                    'referee_idcard'=>$full_info['introduce_card'],
+                    'customer_name'=>$full_info['username'],
+                    'customer_phone'=>$full_info['phone'],
+                    'buy_way'=>"全款车"
+                ];
+
+                Db::name("referee")->insert($insert_data);
+
+                $last_id = Db::name("referee")->getLastInsID();
+
+                Db::name("full_parment_order")
+                ->where("id",$ids)
+                ->setField("referee_id",$last_id);
+            }
 
 
             $this->success('', '', $ids);
@@ -300,9 +327,9 @@ class Vehicleinformation extends Backend
         }
 
         $data = DB::name('car_new_inventory')
-                    ->where('id', $row['car_new_inventory_id'])
-                    ->find();
-        
+            ->where('id', $row['car_new_inventory_id'])
+            ->find();
+
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
 
