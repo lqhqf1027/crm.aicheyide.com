@@ -49,7 +49,7 @@ class Newcarscustomer extends Backend
 
         $prepare_total = Db::name("sales_order")
             ->where("review_the_data", "for_the_car")
-            ->where("car_new_inventory_id",null)
+            ->where("car_new_inventory_id", null)
             ->count();
 
         $already_total = Db::name("sales_order")
@@ -117,7 +117,7 @@ class Newcarscustomer extends Backend
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
-                
+
             }
 
 
@@ -206,6 +206,8 @@ class Newcarscustomer extends Backend
     //选择库存车
     public function choose_stock($ids = null)
     {
+
+
         if ($this->request->isPost()) {
 
             $id = input("post.id");
@@ -223,8 +225,42 @@ class Newcarscustomer extends Backend
                 ->setField("statuss", 0);
 
 
+
+
+            //介绍人
+
+            $order_info = Db::name("sales_order")
+                ->where("id", $ids)
+                ->field("customer_source,turn_to_introduce_name,turn_to_introduce_phone,turn_to_introduce_card,admin_id,models_id,username,phone")
+                ->find();
+
+            if ($order_info['customer_source'] == "turn_to_introduce") {
+
+                $insert_data = [
+                    'models_id' => $order_info['models_id'],
+                    'admin_id' => $order_info['admin_id'],
+                    'referee_name' => $order_info['turn_to_introduce_name'],
+                    'referee_phone' => $order_info['turn_to_introduce_phone'],
+                    'referee_idcard' => $order_info['turn_to_introduce_card'],
+                    'customer_name' => $order_info['username'],
+                    'customer_phone' => $order_info['phone'],
+                    'buy_way' => '新车'
+                ];
+
+                Db::name("referee")->insert($insert_data);
+
+                $last_id = Db::name("referee")->getLastInsID();
+
+                Db::name("sales_order")
+                    ->where("id", $ids)
+                    ->setField("referee_id", $last_id);
+            }
+
             $this->success('', '', $ids);
+
         }
+
+        //展示的信息
         $stock = Db::name("car_new_inventory")
             ->alias("i")
             ->join("crm_models m", "i.models_id=m.id")
