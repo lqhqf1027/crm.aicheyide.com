@@ -28,6 +28,8 @@ class Fullparmentorder extends Backend
         parent::_initialize();
         $this->model = new \app\admin\model\FullParmentOrder;
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $this->view->assign('customerSourceList', $this->model->getCustomerSourceList());
+
     }
     
     /**
@@ -68,6 +70,8 @@ class Fullparmentorder extends Backend
 
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
+
+//            pr($params);die();
             $ex = explode(',', $params['plan_plan_full_name']);
 
             $result = DB::name('plan_full')->where('id', $params['plan_plan_full_name'])->field('models_id')->find();

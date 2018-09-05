@@ -3,6 +3,7 @@
 namespace app\admin\controller\backoffice;
 
 use app\common\controller\Backend;
+use think\Db;
 
 /**
  * 推荐人管理
@@ -11,7 +12,7 @@ use app\common\controller\Backend;
  */
 class Referee extends Backend
 {
-    
+
     /**
      * Referee模型对象
      * @var \app\admin\model\Referee
@@ -26,10 +27,60 @@ class Referee extends Backend
     }
 
     /**
+     * 如登录的是内勤,得到满足条件的数据进行显示
+     * @param $login
+     * @return array
+     *
+     */
+    public function satisfy_id($login)
+    {
+
+        $sales = $this->getCanUse($login);
+
+        $new_car = Db::name("sales_order")
+            ->where("admin_id", "in", $sales)
+            ->where("referee_id", "not null")
+            ->column("referee_id");
+
+        $used_car = Db::name("second_sales_order")
+            ->where("admin_id", "in", $sales)
+            ->where("referee_id", "not null")
+            ->column("referee_id");
+
+        $full_car = Db::name("full_parment_order")
+            ->where("admin_id", "in", $sales)
+            ->where("referee_id", "not null")
+            ->column("referee_id");
+
+        $satisfy = array_merge($new_car, $used_car, $full_car);
+
+        return $satisfy;
+
+    }
+
+    /**
      * 查看
      */
     public function index()
     {
+        $login =24;
+
+        $canUseId = $this->getUserId();
+
+        $this->model = new \app\admin\model\Referee;
+
+        $referee = null;
+        $phone = null;
+
+        //如果操作员是内勤,得到对应销售的客户电话
+        if (in_array($login, $canUseId['back'])) {
+            $referee = $this->satisfy_id($login);
+
+            $phone = Db::name("referee")
+                ->where("id", 'in', $referee)
+                ->column("customer_phone");
+        }
+
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -37,24 +88,34 @@ class Referee extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username',true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
-                ->with(['models'=>function ($query){
+                ->with(['models' => function ($query) {
                     $query->withField('name');
-                },'admin'=>function ($query){
+                }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }])
                 ->where($where)
+                ->where(function ($query) use ($login, $canUseId,$referee,$phone) {
+                    if (in_array($login, $canUseId['back'])) {
+                        $query->where('customer_phone','in',$phone);
+                    }
+                })
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
-                ->with(['models'=>function ($query){
+                ->with(['models' => function ($query) {
                     $query->withField('name');
-                },'admin'=>function ($query){
+                }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }])
                 ->where($where)
+                ->where(function ($query) use ($login, $canUseId,$referee,$phone) {
+                    if (in_array($login, $canUseId['back'])) {
+                        $query->where('customer_phone','in',$phone);
+                    }
+                })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -66,12 +127,59 @@ class Referee extends Backend
         }
         return $this->view->fetch();
     }
-    
-    /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
-    
+
+
+    //得到可行管理员ID
+    public function getUserId()
+    {
+        $this->model = model("Admin");
+        $back = $this->model->where("rule_message", "message13")
+            ->whereOr("rule_message", "message20")
+            ->field("id")
+            ->select();
+
+        $backArray = array();
+        $backArray['back'] = array();
+        $backArray['admin'] = array();
+
+        foreach ($back as $value) {
+            array_push($backArray['back'], $value['id']);
+        }
+
+        $superAdmin = $this->model->where("rule_message", "message21")
+            ->field("id")
+            ->select();
+
+        foreach ($superAdmin as $value) {
+            array_push($backArray['admin'], $value['id']);
+        }
+
+        return $backArray;
+    }
+
+    //根据内勤ID得到对应的销售信息
+    public function getCanUse($user)
+    {
+        $rules = Db::name("Admin")
+            ->where("id", $user)
+            ->value("rule_message");
+
+        switch ($rules) {
+            case 'message13':
+                $sales_id = Db::name("Admin")
+                    ->where("rule_message", "message8")
+                    ->column("id");
+
+                return $sales_id;
+
+            case 'message20':
+                $sales_id = Db::name("Admin")
+                    ->where("rule_message", "message9")
+                    ->column("id");
+
+                return $sales_id;
+        }
+    }
+
 
 }

@@ -10,7 +10,7 @@ use app\common\controller\Backend;
  *
  * @icon fa fa-circle-o
  */
-class Test extends Backend
+class Imagedownload extends Backend
 {
     
     /**
