@@ -50,7 +50,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
         table: {
             /**新车 */
             newcar_monthly: function () {
-                // 待审核
                 var newcarMonthly = $("#newcarMonthly");
                 newcarMonthly.bootstrapTable({
                     url: 'financial/monthlytabs/newcarMonthly',
@@ -60,7 +59,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         del_url: 'monthly/newcarmonthly/del',
                         import_url: 'monthly/newcarmonthly/import',
                         multi_url: 'monthly/newcarmonthly/multi',
-                        table: 'monthly',
+                        table: 'newcar_monthly',
                     },
                     toolbar: '#toolbar1',
                     pk: 'id',
@@ -83,6 +82,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'monthly_car_number', title: __('Monthly_car_number')},
                             {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
                             {field: 'monthly_note', title: __('Monthly_note')},
+                            {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
+
+
+                                    return value=='did_not_send'?"<span class='text-danger'><i class='fa fa-circle'></i> 待发送</span>":'未知状态'
+
+                                }},
                             {
                                 field: 'operate', title: __('Operate'), table: newcarMonthly,
                                 buttons: [
@@ -109,12 +114,106 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     ]
                 });
                 Table.api.bindevent(newcarMonthly);
+                // 批量删除按钮事件
+                $(toolbar).on('click', Table.config.delbtn, function () {
+                    var that = this;
+                    var ids = Table.api.selectedids(table);
+                    Layer.confirm(
+                        __('Are you sure you want to delete the %s selected item?', ids.length),
+                        {icon: 3, title: __('Warning'), offset: 0, shadeClose: true},
+                        function (index) {
+                            Table.api.multi("del", ids, table, that);
+                            Layer.close(index);
+                        }
+                    );
+                });
                 newcarMonthly.on('load-success.bs.table', function (e, data) {
 
                 })
 
             },
+            /**
+             * 租车
+             */
+            rentalcar_monthly: function () {
+                var rentalcarMonthly = $("#rentalcarMonthly");
+                rentalcarMonthly.bootstrapTable({
+                    url: 'financial/monthlytabs/rentalcarMonthly',
+                    extend: {
+                        add_url: 'monthly/rentalcarmonthly/add',
+                        edit_url: 'monthly/rentalcarmonthly/edit',
+                        del_url: 'monthly/rentalcarmonthly/del',
+                        multi_url: 'monthly/rentalcarmonthly/multi',
+                        table: 'rentalcar_monthly',
+                        import_url: 'monthly/rentalcarmonthly/import',
+                    },
+                    toolbar: '#toolbar2',
+                    pk: 'id',
+                    sortName: 'id',
+                    search:false,
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id')},
+                            {field: 'monthly_company', title: __('公司')},
+                            {field: 'monthly_username', title: __('客户姓名')},
+                            {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
+                            {field: 'monthly_car_from', title: __('车辆来源')},
+                            {field: 'monthly_models', title: __('车型')},
+                            {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            {field: 'monthly_batches', title: __('欠租期间')},
+                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {field: 'monthly_status', title: __('发送给风控状态'), searchList: {"has_been_sent":__('已发送'),"did_not_send":__('未发送')},formatter: Controller.api.formatter.status},
 
+                            {
+                                field: 'operate', title: __('Operate'), table: rentalcarMonthly,
+                                buttons: [
+                                    {
+                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        url: 'monthly/rentalcarmonthly/del',/**删除 */
+
+
+                                    },
+                                    {
+                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'monthly/rentalcarmonthly/edit',/**编辑 */
+
+                                    },
+
+
+                                ],
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+                        ]
+                    ]
+                });
+                Table.api.bindevent(rentalcarMonthly);
+                /**
+                 * 租车批量导入
+                 */
+                // $(document).on('click','.btn-import-rentalcar',function () {
+                //     console.log(options.extend.import_url);
+                //     require(['upload'], function (Upload) {
+                //         Upload.api.plupload($('.btn-import-rentalcar', toolbar), function (data, ret) {
+                //             Fast.api.ajax({
+                //                 url: options.extend.import_url,
+                //                 data: {file: data.url},
+                //             }, function (data, ret) {
+                //                 table.bootstrapTable('refresh');
+                //             });
+                //         });
+                //     });
+                // })
+
+                rentalcarMonthly.on('load-success.bs.table', function (e, data) {
+
+                })
+
+            },
         },
 
         add: function () {
@@ -185,7 +284,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     var buttons = $.extend([], this.buttons || []);
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
-                }
+                },
+                status: function (value, row, index) {
+
+                    var colorArr = { has_been_sent: 'success', did_not_send: 'danger'};
+                    //如果字段列有定义custom
+                    if (typeof this.custom !== 'undefined') {
+                        colorArr = $.extend(colorArr, this.custom);
+                    }
+                    value = value === null ? '' : value.toString();
+
+                    var color = value && typeof colorArr[value] !== 'undefined' ? colorArr[value] : 'primary';
+                    console.log(value);
+                    var newValue = value.charAt(0).toUpperCase() + value.slice(1);
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"><i class="fa fa-circle"></i> ' + __(newValue) + '</span>';
+                    // if (this.operate != false) {
+                    //     html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
+                    // }
+                    return html;
+                },
 
             }
         }

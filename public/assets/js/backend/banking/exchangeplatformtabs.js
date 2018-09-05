@@ -468,7 +468,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'detailed_address', title: __('Detailed_address')},
                             {field: 'household', title: __('Household')},
                             {field: 'payment', title: __('Payment')},
-                            {field: 'monthly', title: __('Monthly')},
+                            {field: 'monthly', title: __('NewcarMonthly')},
                             {
                                 field: 'nperlist',
                                 title: __('Nperlist'),

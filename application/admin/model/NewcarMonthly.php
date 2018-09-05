@@ -4,10 +4,10 @@ namespace app\admin\model;
 
 use think\Model;
 
-class Monthly extends Model
+class NewcarMonthly extends Model
 {
     // 表名
-    protected $name = 'monthly';
+    protected $name = 'newcar_monthly';
     
     // 自动写入时间戳字段
     protected $autoWriteTimestamp = false;

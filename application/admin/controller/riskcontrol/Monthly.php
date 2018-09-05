@@ -39,7 +39,7 @@ class Monthly extends Backend
      * @throws \think\Exception
      */
     public function newcarMonthly(){
-        $this->model = new \app\admin\model\Monthly;
+        $this->model = new \app\admin\model\NewcarMonthly;
         $this->view->assign("monthlyDataList", $this->model->getMonthlyDataList());
 
 

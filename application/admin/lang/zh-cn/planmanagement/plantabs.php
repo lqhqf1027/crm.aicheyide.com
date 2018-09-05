@@ -5,7 +5,7 @@ return [
     'Financial_platform_id'  =>  '所属金融平台',
     'Models_id'  =>  '销售车型',
     'Payment'  =>  '首付（元）',
-    'Monthly'  =>  '月供（元）',
+    'NewcarMonthly'  =>  '月供（元）',
     'Nperlist'  =>  '期数',
     'Nperlist 12'  =>  '12',
     'Nperlist 24'  =>  '24',

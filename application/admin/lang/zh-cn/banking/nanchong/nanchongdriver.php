@@ -9,7 +9,7 @@ return [
     'Detailed_address'  =>  '详细地址',
     'Household'  =>  '开户公司',
     'Payment'  =>  '首付',
-    'Monthly'  =>  '月供',
+    'NewcarMonthly'  =>  '月供',
     'Nperlist'  =>  '期数',
     'Nperlist 12'  =>  '12',
     'Nperlist 24'  =>  '24',
