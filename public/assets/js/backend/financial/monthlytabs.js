@@ -48,9 +48,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
         },
 
         table: {
-            /**新车 */
+            /**
+             * 新车月供（待发送）
+             */
             newcar_monthly: function () {
                 var newcarMonthly = $("#newcarMonthly");
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
                 newcarMonthly.bootstrapTable({
                     url: 'financial/monthlytabs/newcarMonthly',
                     extend: {
@@ -64,7 +69,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
-                    search:false,
+                    // search:false,
                     searchFormVisible: true,
                     columns: [
                         [
@@ -74,7 +79,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'monthly_name', title: __('Monthly_name')},
                             {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
                             {field: 'monthly_models', title: __('Monthly_models')},
-                            {field: 'monthly_monney', title: __('Monthly_monney'), operate:'BETWEEN'},
+                            {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
                             {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: Table.api.formatter.normal},
                             {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
                             {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
@@ -130,6 +135,87 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 newcarMonthly.on('load-success.bs.table', function (e, data) {
 
                 })
+                /**
+                 * 批量发送给风控
+                 */
+                var submitForm = function (ids, layero) {
+                    var options = newcarMonthly.bootstrapTable('getOptions');
+                    console.log(options);
+                    var columns = [];
+                    $.each(options.columns[0], function (i, j) {
+                        if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
+                            columns.push(j.field);
+                        }
+                    });
+                    var search = options.queryParams({});
+                    $("input[name=search]", layero).val(options.searchText);
+                    $("input[name=ids]", layero).val(ids);
+                    $("input[name=filter]", layero).val(search.filter);
+                    $("input[name=op]", layero).val(search.op);
+                    $("input[name=columns]", layero).val(columns.join(','));
+                    $("form", layero).submit();
+                };
+                $(document).on("click", ".btn-sed-risk", function () {
+                    var ids = Table.api.selectedids(newcarMonthly);
+                    var page = newcarMonthly.bootstrapTable('getData');
+                    var all = newcarMonthly.bootstrapTable('getOptions').data;
+                    var allLen = newcarMonthly.bootstrapTable('getOptions').totalRows;
+                   var closeLay =  Layer.confirm("请选择要发送的客户数据", {
+                        title: '发送数据',
+                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "<span class='text-danger'>全部(" + allLen + "条)</span>"],
+                        success: function (layero, index) {
+                            $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                        }
+                        ,
+                       //选中项
+                        yes: function (index, layero) {
+                            if(ids.length<1){
+                                Layer.alert('数据不能为空!',{icon:5})
+                                return false
+                            }
+                            Fast.api.ajax({
+                                url:'financial/monthlytabs/sedRisk',
+                                data:{ids:ids}
+                            },function (data,ret) {
+                                Layer.close(closeLay);
+
+                                newcarMonthly.bootstrapTable('refresh');
+                            })
+                        }
+                        ,
+                       //本页
+                        btn2: function (index, layero) {
+                            var ids = [];
+                            for (var i in page){
+                                ids.push(page[i]['id'])
+                            }
+                            Fast.api.ajax({
+                                url:'financial/monthlytabs/sedRisk',
+                                data:{ids:ids}
+                            },function (data,ret) {
+                                Layer.close(closeLay);
+
+                                newcarMonthly.bootstrapTable('refresh');
+                            })
+                        }
+                        ,
+                       //全部
+                        btn3: function (index, layero) {
+                            var ids = [];
+                            for (var i in all){
+                                ids.push(all[i]['id'])
+                            }
+                            Fast.api.ajax({
+                                url:'financial/monthlytabs/sedRisk',
+                                data:{ids:ids}
+                            },function (data,ret) {
+                                Layer.close(closeLay);
+
+                                newcarMonthly.bootstrapTable('refresh');
+                            })
+                        }
+                    })
+                });
 
             },
             /**

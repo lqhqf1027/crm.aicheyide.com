@@ -1240,4 +1240,17 @@ if (!function_exists('fullautomobile_inform')) {
         exit('参数错误');
         
     }
+
+    /**
+     * 新车月供扣款不成功通知
+     */
+    if (!function_exists('send_monthly_to_risk')) {
+        function send_monthly_to_risk($month)
+        {
+                $arr = [
+                    'subject' => "客户月供扣款不成功通知：",
+                    'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">'.你有客户月供扣款不成功数据，请登陆系统查看哈，欠款月份：.$month.'</div>'
+                ];
+                return $arr;
+        }
 }

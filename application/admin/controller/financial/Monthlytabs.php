@@ -50,17 +50,17 @@ class Monthlytabs extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('monthly_name');
             $total = $this->model
                 ->where($where)
-                ->where('monthly_status','did_not_send')
+                ->where('monthly_status', 'did_not_send')
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
                 ->where($where)
                 ->order($sort, $order)
-                ->where('monthly_status','did_not_send')
+                ->where('monthly_status', 'did_not_send')
                 ->limit($offset, $limit)
                 ->select();
 
@@ -72,6 +72,25 @@ class Monthlytabs extends Backend
         return $this->view->fetch('index');
     }
 
+    public function sedRisk()
+    {
+        if ($this->request->isAjax()) {
+            $this->model = new \app\admin\model\NewcarMonthly;
+            $id = input('post.');
+
+            foreach ((array)$id['ids'] as $key => $value) {
+                $new_params[] = ['id'=>$value,'monthly_status'=>'has_been_sent'];
+            }
+            if($this->model->saveAll($new_params)){
+                $email = new Email;
+//                $receiver = DB::name('admin')->where('id', $backoffice_id)->value('email');
+                send_monthly_to_risk();
+            }
+            return $this->model->saveAll($new_params)?$this->success():$this->error();
+        }
+
+    }
+
     /**
      * 租车月供
      * @return string|\think\response\Json
@@ -80,7 +99,8 @@ class Monthlytabs extends Backend
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function rentalcarMonthly(){
+    public function rentalcarMonthly()
+    {
         $this->model = new \app\admin\model\Rentalcarmonthly;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
@@ -128,7 +148,7 @@ class Monthlytabs extends Backend
         $myrow = 1;/*表头所需要行数的变量，方便以后修改*/
         /*表头数据填充*/
         $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);/*设置行高*/
-        $objPHPExcel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息
+        $objPHPExcel->setActiveSheetIndex(0)//设置一张sheet为活动表 添加表头信息
         // ->setCellValue('A' . $myrow, 'id')
         ->setCellValue('A' . $myrow, '账号')
             ->setCellValue('B' . $myrow, '姓名')
@@ -180,7 +200,7 @@ class Monthlytabs extends Backend
         $myrow = 1;/*表头所需要行数的变量，方便以后修改*/
         /*表头数据填充*/
         $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);/*设置行高*/
-        $objPHPExcel->setActiveSheetIndex(0)  //设置一张sheet为活动表 添加表头信息
+        $objPHPExcel->setActiveSheetIndex(0)//设置一张sheet为活动表 添加表头信息
         // ->setCellValue('A' . $myrow, 'id')
         ->setCellValue('A' . $myrow, '账号')
             ->setCellValue('B' . $myrow, '公司')
