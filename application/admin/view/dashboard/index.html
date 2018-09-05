@@ -135,41 +135,11 @@
             <div class="tab-pane fade active in" id="one">
 
                 <div class="row">
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="sm-st clearfix">
-                            <span class="sm-st-icon st-red"><i class="fa fa-users"></i></span>
-                            <div class="sm-st-info">
-                                <span>{$newcount}</span>
-                                {:__('新车订单数')}
-                            </div>
-                        </div>
+                    <div class="col-lg-6">
+                        <div id="city" style="height:300px;width:100%;"></div>
                     </div>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="sm-st clearfix">
-                            <span class="sm-st-icon st-violet"><i class="fa fa-users"></i></span>
-                            <div class="sm-st-info">
-                                <span>{$rentalcount}</span>
-                                {:__('租车订单数')}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="sm-st clearfix">
-                            <span class="sm-st-icon st-blue"><i class="fa fa-users"></i></span>
-                            <div class="sm-st-info">
-                                <span>{$secondcount}</span>
-                                {:__('二手车订单数')}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-xs-6">
-                        <div class="sm-st clearfix">
-                            <span class="sm-st-icon st-green"><i class="fa fa-users"></i></span>
-                            <div class="sm-st-info">
-                                <span>{$fullcount}</span>
-                                {:__('全款车订单数')}
-                            </div>
-                        </div>
+                    <div class="col-lg-6">
+                        <div id="today" style="height:300px;width:100%;"></div>
                     </div>
                 </div>
 
@@ -185,8 +155,8 @@
                                     <div class="col-xs-6 stat-col">
                                         <div class="stat-icon"> <i class="fa fa-rocket"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayusersignup} </div>
-                                            <div class="name"> {:__('Today user signup')} </div>
+                                            <div class="value"> {$newcount} </div>
+                                            <div class="name"> {:__('历史成交数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 30%"></div>
@@ -195,8 +165,8 @@
                                     <div class="col-xs-6 stat-col">
                                         <div class="stat-icon"> <i class="fa fa-shopping-cart"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayuserlogin} </div>
-                                            <div class="name"> {:__('Today user login')} </div>
+                                            <div class="value"> {$todaynewtake} </div>
+                                            <div class="name"> {:__('本月成交数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -205,8 +175,8 @@
                                     <div class="col-xs-6  stat-col">
                                         <div class="stat-icon"> <i class="fa fa-line-chart"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayorder} </div>
-                                            <div class="name"> {:__('Today order')} </div>
+                                            <div class="value"> {$todayneworder} </div>
+                                            <div class="name"> {:__('本月订车数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -215,8 +185,8 @@
                                     <div class="col-xs-6  stat-col">
                                         <div class="stat-icon"> <i class="fa fa-users"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$unsettleorder} </div>
-                                            <div class="name"> {:__('Unsettle order')} </div>
+                                            <div class="value"> {$newguest} </div>
+                                            <div class="name"> {:__('本月直客成交百分比')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -225,8 +195,8 @@
                                     <div class="col-xs-6  stat-col">
                                         <div class="stat-icon"> <i class="fa fa-list-alt"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$sevendnu} </div>
-                                            <div class="name"> {:__('Seven dnu')} </div>
+                                            <div class="value"> {$newintroduce} </div>
+                                            <div class="name"> {:__('本月转介绍成交百分比')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -260,8 +230,8 @@
                                     <div class="col-xs-6 stat-col">
                                         <div class="stat-icon"> <i class="fa fa-rocket"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayusersignup} </div>
-                                            <div class="name"> {:__('Today user signup')} </div>
+                                            <div class="value"> {$rentalcount} </div>
+                                            <div class="name"> {:__('历史成交数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 30%"></div>
@@ -270,8 +240,8 @@
                                     <div class="col-xs-6 stat-col">
                                         <div class="stat-icon"> <i class="fa fa-shopping-cart"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayuserlogin} </div>
-                                            <div class="name"> {:__('Today user login')} </div>
+                                            <div class="value"> {$todayrentaltake} </div>
+                                            <div class="name"> {:__('本月成交数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -280,8 +250,8 @@
                                     <div class="col-xs-6  stat-col">
                                         <div class="stat-icon"> <i class="fa fa-line-chart"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayorder} </div>
-                                            <div class="name"> {:__('Today order')} </div>
+                                            <div class="value"> {$todayrentalorder} </div>
+                                            <div class="name"> {:__('本月订车数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -291,7 +261,7 @@
                                         <div class="stat-icon"> <i class="fa fa-users"></i> </div>
                                         <div class="stat">
                                             <div class="value"> {$unsettleorder} </div>
-                                            <div class="name"> {:__('Unsettle order')} </div>
+                                            <div class="name"> {:__('本月直客成交百分比')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -301,7 +271,7 @@
                                         <div class="stat-icon"> <i class="fa fa-list-alt"></i> </div>
                                         <div class="stat">
                                             <div class="value"> {$sevendnu} </div>
-                                            <div class="name"> {:__('Seven dnu')} </div>
+                                            <div class="name"> {:__('本月转介绍成交百分比')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -335,8 +305,8 @@
                                     <div class="col-xs-6 stat-col">
                                         <div class="stat-icon"> <i class="fa fa-rocket"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayusersignup} </div>
-                                            <div class="name"> {:__('Today user signup')} </div>
+                                            <div class="value"> {$secondcount} </div>
+                                            <div class="name"> {:__('历史成交数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 30%"></div>
@@ -345,8 +315,8 @@
                                     <div class="col-xs-6 stat-col">
                                         <div class="stat-icon"> <i class="fa fa-shopping-cart"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayuserlogin} </div>
-                                            <div class="name"> {:__('Today user login')} </div>
+                                            <div class="value"> {$todaysecondtake} </div>
+                                            <div class="name"> {:__('本月成交数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -355,8 +325,8 @@
                                     <div class="col-xs-6  stat-col">
                                         <div class="stat-icon"> <i class="fa fa-line-chart"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayorder} </div>
-                                            <div class="name"> {:__('Today order')} </div>
+                                            <div class="value"> {$todaysecondorder} </div>
+                                            <div class="name"> {:__('本月订车数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -366,7 +336,7 @@
                                         <div class="stat-icon"> <i class="fa fa-users"></i> </div>
                                         <div class="stat">
                                             <div class="value"> {$unsettleorder} </div>
-                                            <div class="name"> {:__('Unsettle order')} </div>
+                                            <div class="name"> {:__('本月直客成交百分比')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -376,7 +346,7 @@
                                         <div class="stat-icon"> <i class="fa fa-list-alt"></i> </div>
                                         <div class="stat">
                                             <div class="value"> {$sevendnu} </div>
-                                            <div class="name"> {:__('Seven dnu')} </div>
+                                            <div class="name"> {:__('本月转介绍成交百分比')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -410,8 +380,8 @@
                                     <div class="col-xs-6 stat-col">
                                         <div class="stat-icon"> <i class="fa fa-rocket"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayusersignup} </div>
-                                            <div class="name"> {:__('Today user signup')} </div>
+                                            <div class="value"> {$fullcount} </div>
+                                            <div class="name"> {:__('历史成交数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 30%"></div>
@@ -420,8 +390,8 @@
                                     <div class="col-xs-6 stat-col">
                                         <div class="stat-icon"> <i class="fa fa-shopping-cart"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayuserlogin} </div>
-                                            <div class="name"> {:__('Today user login')} </div>
+                                            <div class="value"> {$todayfulltake} </div>
+                                            <div class="name"> {:__('本月成交数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -430,8 +400,8 @@
                                     <div class="col-xs-6  stat-col">
                                         <div class="stat-icon"> <i class="fa fa-line-chart"></i> </div>
                                         <div class="stat">
-                                            <div class="value"> {$todayorder} </div>
-                                            <div class="name"> {:__('Today order')} </div>
+                                            <div class="value"> {$todayfullorder} </div>
+                                            <div class="name"> {:__('本月订车数')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -441,7 +411,7 @@
                                         <div class="stat-icon"> <i class="fa fa-users"></i> </div>
                                         <div class="stat">
                                             <div class="value"> {$unsettleorder} </div>
-                                            <div class="name"> {:__('Unsettle order')} </div>
+                                            <div class="name"> {:__('本月直客成交百分比')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -451,7 +421,7 @@
                                         <div class="stat-icon"> <i class="fa fa-list-alt"></i> </div>
                                         <div class="stat">
                                             <div class="value"> {$sevendnu} </div>
-                                            <div class="name"> {:__('Seven dnu')} </div>
+                                            <div class="name"> {:__('本月转介绍成交百分比')} </div>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
@@ -679,23 +649,42 @@
 </script>
 <script>
     var Ordernewdata = {
-            column: {:json_encode(array_keys($newtake))},
-            neworder: {:json_encode(array_values($neworder))},
-            newtake: {:json_encode(array_values($newtake))},
+            column: {:json_encode(array_keys($newonesales))},
+            newonesales: {:json_encode(array_values($newonesales))},
+            newtwosales: {:json_encode(array_values($newtwosales))},
     };
     var Orderrentaldata = {
-            column: {:json_encode(array_keys($rentaltake))},
-            rentalorder: {:json_encode(array_values($rentalorder))},
-            rentaltake: {:json_encode(array_values($rentaltake))},
+            column: {:json_encode(array_keys($rentalonesales))},
+            rentalonesales: {:json_encode(array_values($rentalonesales))},
+            rentaltwosales: {:json_encode(array_values($rentaltwosales))},
     };
     var Orderseconddata = {
-            column: {:json_encode(array_keys($secondtake))},
-            secondorder: {:json_encode(array_values($secondorder))},
-            secondtake: {:json_encode(array_values($secondtake))},
+            column: {:json_encode(array_keys($secondonesales))},
+            secondonesales: {:json_encode(array_values($secondonesales))},
+            secondtwosales: {:json_encode(array_values($secondtwosales))},
     };
     var Orderfulldata = {
-            column: {:json_encode(array_keys($fulltake))},
-            fullorder: {:json_encode(array_values($fullorder))},
-            fulltake: {:json_encode(array_values($fulltake))},
+            column: {:json_encode(array_keys($fullonesales))},
+            fullonesales: {:json_encode(array_values($fullonesales))},
+            fulltwosales: {:json_encode(array_values($fulltwosales))},
+    };
+    // console.log(Orderrentaldata);
+    var Citydata = {
+        num: {:json_encode($num)},
+        newpeoplecity: {:json_encode($newpeoplecity)},
+        relationcity: {:json_encode($relationcity)},
+        intentioncity: {:json_encode($intentioncity)},
+        nointentioncity: {:json_encode($nointentioncity)},
+        giveupcity: {:json_encode($giveupcity)},
+        overduecity: {:json_encode($overduecity)},
+    };
+    var Todaydata = {
+        num: {:json_encode($num)},
+        newpeopletoday: {:json_encode($newpeopletoday)},
+        relationtoday: {:json_encode($relationtoday)},
+        intentiontoday: {:json_encode($intentiontoday)},
+        nointentiontoday: {:json_encode($nointentiontoday)},
+        giveuptoday: {:json_encode($giveuptoday)},
+        overduetoday: {:json_encode($overduetoday)},
     };
 </script>

@@ -3,6 +3,135 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
     var Controller = {
         index: function () {
 
+            //58同城
+            // 基于准备好的dom，初始化echarts实例
+            var cityEchart = Echarts.init(document.getElementById('city'), 'walden');
+
+            var option = {
+                title : {
+                    text: '58同城客户',
+                    subtext: '',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient : 'vertical',
+                    x : 'left',
+                    data:['新客户','待联系','有意向','暂无意向','已放弃', '跟进时间过期客户']
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {
+                            show: true, 
+                            type: ['pie', 'funnel'],
+                            option: {
+                                funnel: {
+                                    x: '25%',
+                                    width: '50%',
+                                    funnelAlign: 'left',
+                                    max: Citydata.num
+                                }
+                            }
+                        },
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                series : [
+                    {
+                        name:'访问来源',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:[
+                            {value:Citydata.newpeoplecity, name:'新客户'},
+                            {value:Citydata.relationcity, name:'待联系'},
+                            {value:Citydata.intentioncity, name:'有意向'},
+                            {value:Citydata.nointentioncity, name:'暂无意向'},
+                            {value:Citydata.giveupcity, name:'已放弃'},
+                            {value:Citydata.overduecity, name:'跟进时间过期客户'}
+                        ]
+                    }
+                ],
+                color: ['rgb(87,210,211)','rgb(252,157,154)','rgb(24,188,156)','rgb(190,180,228)','rgb(254,67,101)','rgb(229,207,13)']
+            };            
+
+            // 使用刚指定的配置项和数据显示图表。
+            cityEchart.setOption(option);
+
+
+            //今日头条
+            // 基于准备好的dom，初始化echarts实例
+            var todayEchart = Echarts.init(document.getElementById('today'), 'walden');
+
+            var option = {
+                title : {
+                    text: '今日头条客户',
+                    subtext: '',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient : 'vertical',
+                    x : 'left',
+                    data:['新客户','待联系','有意向','暂无意向','已放弃', '跟进时间过期客户']
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {
+                            show: true, 
+                            type: ['pie', 'funnel'],
+                            option: {
+                                funnel: {
+                                    x: '25%',
+                                    width: '50%',
+                                    funnelAlign: 'left',
+                                    max: Todaydata.num
+                                }
+                            }
+                        },
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                series : [
+                    {
+                        name:'访问来源',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:[
+                            {value:Todaydata.newpeopletoday, name:'新客户'},
+                            {value:Todaydata.relationtoday, name:'待联系'},
+                            {value:Todaydata.intentiontoday, name:'有意向'},
+                            {value:Todaydata.nointentiontoday, name:'暂无意向'},
+                            {value:Todaydata.giveuptoday, name:'已放弃'},
+                            {value:Todaydata.overduetoday, name:'跟进时间过期客户'}
+                        ],
+                        
+                    }
+                ],
+                color: ['rgb(87,210,211)','rgb(252,157,154)','rgb(24,188,156)','rgb(190,180,228)','rgb(254,67,101)','rgb(229,207,13)']
+            };   
+
+            // 使用刚指定的配置项和数据显示图表。
+            todayEchart.setOption(option);
+
+
             //新车表
             // 基于准备好的dom，初始化echarts实例
             var newEchart = Echarts.init(document.getElementById('newechart'), 'walden');
@@ -17,7 +146,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["提车数","订车数"]
+                    data: ["销售一部","销售二部"]
                 },
                 toolbox: {
                     show: false,
@@ -39,7 +168,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     bottom: 30
                 }],
                 series: [{
-                    name: "提车数",
+                    name: "销售一部",
                     type: 'line',
                     smooth: true,
                     areaStyle: {
@@ -50,10 +179,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             width: 1.5
                         }
                     },
-                    data: Ordernewdata.newtake
+                    data: Ordernewdata.newonesales
                 },
                     {
-                        name: "订车数",
+                        name: "销售二部",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
@@ -64,69 +193,12 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Ordernewdata.neworder
+                        data: Ordernewdata.newtwosales
                     }]
             };
 
             // 使用刚指定的配置项和数据显示图表。
             newEchart.setOption(option);
-
-            //动态添加数据，可以通过Ajax获取数据然后填充
-            setInterval(function () {
-                Ordernewdata.column.push((new Date()).toLocaleTimeString().replace(/^\D*/, ''));
-                var amount = Math.floor(Math.random() * 200) + 20;
-                Ordernewdata.neworder.push(amount);
-                Ordernewdata.newtake.push(Math.floor(Math.random() * amount) + 1);
-
-                //按自己需求可以取消这个限制
-                if (Orderdata.column.length >= 20) {
-                    //移除最开始的一条数据
-                    Ordernewdata.column.shift();
-                    Ordernewdata.newtake.shift();
-                    Ordernewdata.neworder.shift();
-                }
-                // newEchart.setOption({
-                //     xAxis: {
-                //         data: Orderdata.column
-                //     },
-                //     series: [{
-                //         name: "成交数",
-                //         data: Orderdata.paydata
-                //     },
-                //         {
-                //             name: "签单流程中数",
-                //             data: Orderdata.createdata
-                //         }]
-                // });
-                if ($("#newechart").width() != $("#newechart canvas").width() && $("#newechart canvas").width() < $("#newechart").width()) {
-                    newEchart.resize();
-                }
-            }, 2000);
-            $(window).resize(function () {
-                newEchart.resize();
-            });
-
-            $(document).on("click", ".btn-checkversion", function () {
-                top.window.$("[data-toggle=checkupdate]").trigger("click");
-            });
-
-            //读取FastAdmin的更新信息和社区动态
-            // $.ajax({
-            //     url: Config.fastadmin.api_url + '/news/index',
-            //     type: 'post',
-            //     dataType: 'jsonp',
-            //     success: function (ret) {
-            //         $("#news-list").html(Template("newstpl", {news: ret.newslist}));
-            //     }
-            // });
-            // $.ajax({
-            //     url: Config.fastadmin.api_url + '/forum/discussion',
-            //     type: 'post',
-            //     dataType: 'jsonp',
-            //     success: function (ret) {
-            //         $("#discussion-list").html(Template("discussiontpl", {news: ret.discussionlist}));
-            //     }
-            // });
 
 
             //租车表
@@ -143,7 +215,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["提车数","订车数"]
+                    data: ["销售一部","销售二部"]
                 },
                 toolbox: {
                     show: false,
@@ -165,7 +237,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     bottom: 30
                 }],
                 series: [{
-                    name: "提车数",
+                    name: "销售一部",
                     type: 'line',
                     smooth: true,
                     areaStyle: {
@@ -178,10 +250,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             width: 1.5
                         }
                     },
-                    data: Orderrentaldata.rentaltake
+                    data: Orderrentaldata.rentalonesales
                 },
                     {
-                        name: "订车数",
+                        name: "销售二部",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
@@ -194,7 +266,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderrentaldata.rentalorder
+                        data: Orderrentaldata.rentaltwosales
                     }]
             };
 
@@ -216,7 +288,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["提车数","订车数"]
+                    data: ["销售一部","销售二部"]
                 },
                 toolbox: {
                     show: false,
@@ -238,7 +310,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     bottom: 30
                 }],
                 series: [{
-                    name: "提车数",
+                    name: "销售一部",
                     type: 'line',
                     smooth: true,
                     areaStyle: {
@@ -251,10 +323,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             width: 1.5
                         }
                     },
-                    data: Orderseconddata.secondtake
+                    data: Orderseconddata.secondonesales
                 },
                     {
-                        name: "订车数",
+                        name: "销售二部",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
@@ -267,7 +339,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderseconddata.secondorder
+                        data: Orderseconddata.secondtwosales
                     }]
             };
 
@@ -289,7 +361,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["提车数","订车数"]
+                    data: ["销售一部","销售二部"]
                 },
                 toolbox: {
                     show: false,
@@ -311,7 +383,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     bottom: 30
                 }],
                 series: [{
-                    name: "提车数",
+                    name: "销售一部",
                     type: 'line',
                     smooth: true,
                     areaStyle: {
@@ -324,10 +396,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             width: 1.5
                         }
                     },
-                    data: Orderfulldata.fulltake
+                    data: Orderfulldata.fullonesales
                 },
                     {
-                        name: "订车数",
+                        name: "销售二部",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
@@ -340,7 +412,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderfulldata.fullorder
+                        data: Orderfulldata.fulltwosales
                     }]
             };
 

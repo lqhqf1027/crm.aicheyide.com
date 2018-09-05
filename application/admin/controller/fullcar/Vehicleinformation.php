@@ -6,6 +6,7 @@ use app\common\controller\Backend;
 use think\DB;
 use think\Config;
 use app\common\library\Email;
+use think\Cache;
 
 /**
  * 全款进件列管理
@@ -263,6 +264,41 @@ class Vehicleinformation extends Backend
         $this->view->assign([
             'stock' => $stock
         ]);
+
+        $seventtime = \fast\Date::unixtime('day', -14);
+        $fullonesales = $fulltwosales = [];
+        for ($i = 0; $i < 8; $i++)
+            {
+                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                //销售一部
+                $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+                foreach($one_sales as $k => $v){
+                    $one_admin[] = $v['uid'];
+                }
+                $fullonetake = Db::name('full_parment_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $one_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //销售二部
+                $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+                foreach($two_sales as $k => $v){
+                    $two_admin[] = $v['uid'];
+                }
+                $fulltwotake = Db::name('full_parment_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $two_admin)
+                        ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+
+                //全款车提车
+                $fullonesales[$month] = $fullonetake;
+                //全款车订车
+                $fulltwosales[$month] = $fulltwotake;
+            }
+            Cache::set('fullonesales', $fullonesales);
+            Cache::set('fulltwosales', $fulltwosales);
+
 
         return $this->view->fetch();
     }

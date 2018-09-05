@@ -8,6 +8,7 @@ use think\Db;
 use think\Session;
 use app\common\model\Config as ConfigModel;
 use app\common\library\Email;
+use think\Cache;
 
 /**
  * 租车管理车辆信息
@@ -334,6 +335,41 @@ class Vehicleinformation extends Backend
             $rental_order_id = DB::name('rental_order')->where('plan_car_rental_name', $id)->value('id');
 
             $result_s = DB::name('rental_order')->where('id', $rental_order_id)->setField('review_the_data', 'for_the_car');
+
+            $seventtime = \fast\Date::unixtime('day', -6);
+            $rentalonesales = $rentaltwosales = [];
+            for ($i = 0; $i < 8; $i++)
+            {
+                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                //销售一部
+                $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+                foreach($one_sales as $k => $v){
+                    $one_admin[] = $v['uid'];
+                }
+                $rentalonetake = Db::name('rental_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $one_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //销售二部
+                $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+                foreach($two_sales as $k => $v){
+                    $two_admin[] = $v['uid'];
+                }
+                $rentaltwotake = Db::name('rental_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $two_admin)
+                        ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                
+                //销售一部
+                $rentalonesales[$month] = $rentalonetake;
+                //销售二部
+                $rentaltwosales[$month] = $rentaltwotake;
+            
+            } 
+            Cache::set('rentalonesales', $rentalonesales);
+            Cache::set('rentaltwosales', $rentaltwosales);
 
             if ($result !== false) {
                 // //推送模板消息给风控

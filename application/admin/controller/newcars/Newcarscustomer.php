@@ -5,6 +5,7 @@ namespace app\admin\controller\newcars;
 use app\common\controller\Backend;
 use think\Db;
 use think\Config;
+use think\Cache;
 
 /**
  * 新车客户信息
@@ -271,6 +272,41 @@ class Newcarscustomer extends Backend
         $this->view->assign([
             'stock' => $stock
         ]);
+        
+        $seventtime = \fast\Date::unixtime('month', -6);
+        $newonesales = $newtwosales = [];
+        for ($i = 0; $i < 8; $i++)
+        {
+            $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+            //销售一部
+            $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+            foreach($one_sales as $k => $v){
+                $one_admin[] = $v['uid'];
+            }
+            $newonetake = Db::name('sales_order')
+                    ->where('review_the_data', 'the_car')
+                    ->where('admin_id', 'in', $one_admin)
+                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->count();
+            //销售二部
+            $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+            foreach($two_sales as $k => $v){
+                $two_admin[] = $v['uid'];
+            }
+            $newtwotake = Db::name('sales_order')
+                    ->where('review_the_data', 'the_car')
+                    ->where('admin_id', 'in', $two_admin)
+                    ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->count();
+
+            //销售一部
+            $newonesales[$month] = $newonetake;
+            //销售二部
+            $newtwosales[$month] = $newtwotake;
+        }
+        // pr($newtake);die;
+        Cache::set('newonesales', $newonesales);
+        Cache::set('newtwosales', $newtwosales);
 
         return $this->view->fetch();
     }
