@@ -39,7 +39,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         { field: 'models_id', title: __('Models_id') },
 
                         {field: 'payment', title: __('Payment')},
-                        {field: 'monthly', title: __('Monthly')},
+                        {field: 'monthly', title: __('NewcarMonthly')},
                         {field: 'nperlist', title: __('Nperlist')},
                         {field: 'margin', title: __('Margin')},
                         {field: 'tail_section', title: __('Tail_section')},

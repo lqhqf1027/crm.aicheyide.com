@@ -26,7 +26,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {field: 'payment', title: __('Payment'), operate:'BETWEEN'},
-                        {field: 'monthly', title: __('Monthly'), operate:'BETWEEN'},
+                        {field: 'monthly', title: __('NewcarMonthly'), operate:'BETWEEN'},
                         {field: 'nperlist', title: __('Nperlist'), visible:false, searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}},
                         {field: 'nperlist_text', title: __('Nperlist'), operate:false},
                         {field: 'margin', title: __('Margin'), operate:'BETWEEN'},

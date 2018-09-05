@@ -756,9 +756,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if(liHtml.text()===ret.data){
                        // $(window.parent.document).find('.nav-tabs').on('click',$(window.parent.document).find($(this)),function () {
                        //
-                       //  })
                         //绑定事件
-                    
+
+                        //  })
                     }
                     //     // var liTx = $(window.parent.document).find($(this)).click();
                     //     // console.log($(window.parent.document).find($(this)).find('.tabs-text').text());

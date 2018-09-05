@@ -5,26 +5,25 @@ namespace app\admin\controller\monthly;
 use app\common\controller\Backend;
 
 /**
- * 
+ * 租车月供
  *
  * @icon fa fa-circle-o
  */
-class Newcarmonthly extends Backend
+class Rentalcarmonthly extends Backend
 {
     
     /**
-     * Monthly模型对象
-     * @var \app\admin\model\NewcarMonthly
+     * Rentalcarmonthly模型对象
+     * @var \app\admin\model\Rentalcarmonthly
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\NewcarMonthly;
-        $this->view->assign("monthlyDataList", $this->model->getMonthlyDataList());
+        $this->model = new \app\admin\model\Rentalcarmonthly;
+
     }
-    //导入客户信息
     public function import () {
         $file = $this->request->request('file');
         if (!$file) {
@@ -89,7 +88,6 @@ class Newcarmonthly extends Backend
                 $insert[] = $row;
                 foreach ($insert as $key=>$value){
                     $insert[$key]['monthly_in_arrears_time'] = str_replace('.','-',$value['monthly_in_arrears_time']);
-                    $insert[$key]['monthly_status']  = 'did_not_send';
                 }
             }
         }
@@ -98,7 +96,6 @@ class Newcarmonthly extends Backend
         }
         try {
             $this->model->saveAll($insert);
-
         } catch (\think\exception\PDOException $exception) {
             $this->error($exception->getMessage());
         } catch (\Exception $e) {
@@ -107,7 +104,38 @@ class Newcarmonthly extends Backend
 
         $this->success();
     }
-    
+    public function add()
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+//                    pr($params);die;
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑

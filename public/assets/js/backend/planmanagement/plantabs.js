@@ -48,7 +48,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'models.name', title: '销售车型'},
                         {field: 'financialplatform.name', title: '所属金融平台'},
                         {field: 'payment', title: __('Payment'), operate:'BETWEEN'},
-                        {field: 'monthly', title: __('Monthly'), operate:'BETWEEN'},
+                        {field: 'monthly', title: __('NewcarMonthly'), operate:'BETWEEN'},
                         {field: 'nperlist', title: __('Nperlist'), visible:false, searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}},
                         {field: 'nperlist_text', title: __('Nperlist'), operate:false},
                         {field: 'margin', title: __('Margin'), operate:'BETWEEN'},

@@ -37,7 +37,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'detailed_address', title: __('Detailed_address')},
                         {field: 'household', title: __('Household')},
                         {field: 'payment', title: __('Payment')},
-                        {field: 'monthly', title: __('Monthly')},
+                        {field: 'monthly', title: __('NewcarMonthly')},
                         {field: 'nperlist', title: __('Nperlist'), searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}, formatter: Table.api.formatter.normal},
                         {field: 'car_images', title: __('Car_images'), formatter: Table.api.formatter.images},
                         {field: 'lending_date', title: __('Lending_date'), operate:'RANGE', addclass:'datetimerange'},
