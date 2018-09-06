@@ -21,7 +21,8 @@ class Vehicleinformation extends Backend
      * @var \app\admin\model\Fullpeople
      */
     protected $model = null;
-    protected $noNeedRight = ['index','prepare_lift_car','already_lift_car','choose_stock','show_order','show_order_and_stock'];
+    protected $noNeedRight = ['index', 'prepare_lift_car', 'already_lift_car', 'choose_stock', 'show_order', 'show_order_and_stock'];
+
     public function _initialize()
     {
         parent::_initialize();
@@ -225,21 +226,21 @@ class Vehicleinformation extends Backend
             goeary_push($channel, $content);
 
             $full_info = Db::name("full_parment_order")
-            ->where("id",$ids)
-            ->field("admin_id,models_id,username,phone,customer_source,introduce_name,introduce_phone,introduce_card")
-            ->find();
+                ->where("id", $ids)
+                ->field("admin_id,models_id,username,phone,customer_source,introduce_name,introduce_phone,introduce_card")
+                ->find();
 
             //如果是转介绍,到介绍人表
-            if($full_info['customer_source']=="introduce"){
+            if ($full_info['customer_source'] == "introduce") {
                 $insert_data = [
-                    'models_id'=>$full_info['models_id'],
-                    'admin_id'=>$full_info['admin_id'],
-                    'referee_name'=>$full_info['introduce_name'],
-                    'referee_phone'=>$full_info['introduce_phone'],
-                    'referee_idcard'=>$full_info['introduce_card'],
-                    'customer_name'=>$full_info['username'],
-                    'customer_phone'=>$full_info['phone'],
-                    'buy_way'=>"全款车"
+                    'models_id' => $full_info['models_id'],
+                    'admin_id' => $full_info['admin_id'],
+                    'referee_name' => $full_info['introduce_name'],
+                    'referee_phone' => $full_info['introduce_phone'],
+                    'referee_idcard' => $full_info['introduce_card'],
+                    'customer_name' => $full_info['username'],
+                    'customer_phone' => $full_info['phone'],
+                    'buy_way' => "全款车"
                 ];
 
                 Db::name("referee")->insert($insert_data);
@@ -247,8 +248,8 @@ class Vehicleinformation extends Backend
                 $last_id = Db::name("referee")->getLastInsID();
 
                 Db::name("full_parment_order")
-                ->where("id",$ids)
-                ->setField("referee_id",$last_id);
+                    ->where("id", $ids)
+                    ->setField("referee_id", $last_id);
             }
 
 
@@ -267,37 +268,36 @@ class Vehicleinformation extends Backend
 
         $seventtime = \fast\Date::unixtime('day', -14);
         $fullonesales = $fulltwosales = [];
-        for ($i = 0; $i < 8; $i++)
-            {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
-                //销售一部
-                $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-                foreach($one_sales as $k => $v){
-                    $one_admin[] = $v['uid'];
-                }
-                $fullonetake = Db::name('full_parment_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-                //销售二部
-                $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                foreach($two_sales as $k => $v){
-                    $two_admin[] = $v['uid'];
-                }
-                $fulltwotake = Db::name('full_parment_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-
-                //全款车提车
-                $fullonesales[$month] = $fullonetake;
-                //全款车订车
-                $fulltwosales[$month] = $fulltwotake;
+        for ($i = 0; $i < 8; $i++) {
+            $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+            //销售一部
+            $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+            foreach ($one_sales as $k => $v) {
+                $one_admin[] = $v['uid'];
             }
-            Cache::set('fullonesales', $fullonesales);
-            Cache::set('fulltwosales', $fulltwosales);
+            $fullonetake = Db::name('full_parment_order')
+                ->where('review_the_data', 'for_the_car')
+                ->where('admin_id', 'in', $one_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
+            //销售二部
+            $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+            foreach ($two_sales as $k => $v) {
+                $two_admin[] = $v['uid'];
+            }
+            $fulltwotake = Db::name('full_parment_order')
+                ->where('review_the_data', 'for_the_car')
+                ->where('admin_id', 'in', $two_admin)
+                ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
+
+            //全款车提车
+            $fullonesales[$month] = $fullonetake;
+            //全款车订车
+            $fulltwosales[$month] = $fulltwotake;
+        }
+        Cache::set('fullonesales', $fullonesales);
+        Cache::set('fulltwosales', $fulltwosales);
 
 
         return $this->view->fetch();
@@ -308,6 +308,7 @@ class Vehicleinformation extends Backend
     {
         $this->model = new \app\admin\model\FullParmentOrder;
         $row = $this->model->get($ids);
+
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -321,28 +322,41 @@ class Vehicleinformation extends Backend
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
 
+        foreach ($id_cardimages as $k => $v) {
+            $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-
+        foreach ($drivers_licenseimages as $k => $v) {
+            $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
-
+        foreach ($application_formimages as $k => $v) {
+            $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         /**不必填 */
         //银行卡照（可多图）
         $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
-
+        if($bank_cardimages){
+            foreach ($bank_cardimages as $k => $v) {
+                $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
         //通话清单（文件上传）
         $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
-
+        foreach ($call_listfiles as $k => $v) {
+            $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         $this->view->assign(
             [
                 'row' => $row,
                 'cdn' => Config::get('upload')['cdnurl'],
-                'id_cardimages' => $id_cardimages,
-                'drivers_licenseimages' => $drivers_licenseimages,
-                'application_formimages' => $application_formimages,
-                'bank_cardimages' => $bank_cardimages,
-                'call_listfiles' => $call_listfiles,
+                'id_cardimages_arr' => $id_cardimages,
+                'drivers_licenseimages_arr' => $drivers_licenseimages,
+                'application_formimages_arr' => $application_formimages,
+                'bank_cardimages_arr' => $bank_cardimages,
+                'call_listfiles_arr' => $call_listfiles,
             ]
         );
         return $this->view->fetch();
@@ -368,29 +382,41 @@ class Vehicleinformation extends Backend
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-
+        foreach ($id_cardimages as $k => $v) {
+            $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-
+        foreach ($drivers_licenseimages as $k => $v) {
+            $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
-
+        foreach ($application_formimages as $k => $v) {
+            $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         /**不必填 */
         //银行卡照（可多图）
         $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
-
+        if ($bank_cardimages) {
+            foreach ($bank_cardimages as $k => $v) {
+                $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
         //通话清单（文件上传）
         $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
-
+        foreach ($call_listfiles as $k => $v) {
+            $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         $this->view->assign(
             [
                 'row' => $row,
                 'cdn' => Config::get('upload')['cdnurl'],
-                'id_cardimages' => $id_cardimages,
-                'drivers_licenseimages' => $drivers_licenseimages,
-                'application_formimages' => $application_formimages,
-                'bank_cardimages' => $bank_cardimages,
-                'call_listfiles' => $call_listfiles,
+                'id_cardimages_arr' => $id_cardimages,
+                'drivers_licenseimages_arr' => $drivers_licenseimages,
+                'application_formimages_arr' => $application_formimages,
+                'bank_cardimages_arr' => $bank_cardimages,
+                'call_listfiles_arr' => $call_listfiles,
             ]
         );
 

@@ -27,8 +27,8 @@ class Creditreview extends Backend
     protected $Rc4 = '12b39127a265ce21'; //apikey
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
-    protected $noNeedRight = ['index','newcarAudit','rentalcarAudit','secondhandcarAudit','newauditResult','newpass','newdata','newnopass','rentalauditResult','rentalpass','rentalnopass','secondhandcarResult','secondpass','seconddata'
-    ,'secondnopass','newcardetails','rentalcardetails','secondhandcardetails','bigdata'];
+    protected $noNeedRight = ['index', 'newcarAudit', 'rentalcarAudit', 'secondhandcarAudit', 'newauditResult', 'newpass', 'newdata', 'newnopass', 'rentalauditResult', 'rentalpass', 'rentalnopass', 'secondhandcarResult', 'secondpass', 'seconddata'
+        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata'];
 
     public function _initialize()
     {
@@ -169,7 +169,7 @@ class Creditreview extends Backend
                 ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], 'or')
                 ->select();
             foreach ($list as $row) {
-                $row->visible(['id', 'plan_car_rental_name','order_no', 'createtime', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term',  'review_the_data']);
+                $row->visible(['id', 'plan_car_rental_name', 'order_no', 'createtime', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'review_the_data']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
@@ -228,7 +228,7 @@ class Creditreview extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id','plan_car_second_name', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['id', 'plan_car_second_name', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
                 $row->visible(['plansecond']);
                 $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
                 $row->visible(['admin']);
@@ -355,11 +355,11 @@ class Creditreview extends Backend
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
- 
+
             if ($result) {
 
                 $channel = "demo-newcar_pass";
-                $content =  "销售员" . $admin_nickname . "提交的新车销售单已通过风控审核";
+                $content = "销售员" . $admin_nickname . "提交的新车销售单已通过风控审核";
                 goeary_push($channel, $content);
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
@@ -368,24 +368,23 @@ class Creditreview extends Backend
                 //销售id
                 $admin_id = $data['admin_id'];
                 //客户姓名
-                $username= $data['username'];
-                
-                $data = newpass_inform($models_name,$username);
+                $username = $data['username'];
+
+                $data = newpass_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
-                
+
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -417,38 +416,37 @@ class Creditreview extends Backend
             if ($result) {
 
                 $channel = "demo-newcar_data";
-                $content =  "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金";
+                $content = "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金";
                 goeary_push($channel, $content);
 
-                
+
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
                 $admin_id = $data['admin_id'];
                 //客户姓名
-                $username= $data['username'];
-                
-                $data = newdata_inform($models_name,$username);
+                $username = $data['username'];
+
+                $data = newdata_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
-                
+
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
-                
+
             } else {
                 $this->error();
             }
@@ -479,33 +477,32 @@ class Creditreview extends Backend
             if ($result) {
 
                 $channel = "demo-newcar_nopass";
-                $content =  "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核";
+                $content = "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核";
                 goeary_push($channel, $content);
-                
+
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
                 $admin_id = $data['admin_id'];
                 //客户姓名
-                $username= $data['username'];
-                
-                $data = newnopass_inform($models_name,$username);
+                $username = $data['username'];
+
+                $data = newnopass_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
-                
+
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -581,9 +578,9 @@ class Creditreview extends Backend
             DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('status_data', 'is_reviewing_pass');
 
             if ($result) {
-                
+
                 $channel = "demo-rental_pass";
-                $content =  "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！";
+                $content = "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！";
                 goeary_push($channel, $content);
 
                 $data = Db::name("rental_order")->where('id', $id)->find();
@@ -592,9 +589,9 @@ class Creditreview extends Backend
                 //销售员
                 $admin_id = $data['admin_id'];
                 //客户姓名
-                $username= $data['username'];
+                $username = $data['username'];
 
-                $data = rentalpass_inform($models_name,$username);
+                $data = rentalpass_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -605,13 +602,12 @@ class Creditreview extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
-                
+
             } else {
                 $this->error();
             }
@@ -639,18 +635,18 @@ class Creditreview extends Backend
             if ($result) {
 
                 $channel = "demo-rental_nopass";
-                $content =  "销售员" . $admin_nickname . "提交的租车单没有通过风控审核";
+                $content = "销售员" . $admin_nickname . "提交的租车单没有通过风控审核";
                 goeary_push($channel, $content);
-                
+
                 $data = Db::name("rental_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
                 $admin_id = $data['admin_id'];
                 //客户姓名
-                $username= $data['username'];
+                $username = $data['username'];
 
-                $data = rentalnopass_inform($models_name,$username);
+                $data = rentalnopass_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -661,10 +657,9 @@ class Creditreview extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -759,11 +754,10 @@ class Creditreview extends Backend
             DB::name('secondcar_rental_models_info')->where('id', $plan_car_second_name)->setField('status_data', 'is_reviewing_pass');
 
 
-            
             if ($result) {
 
                 $channel = "demo-second_pass";
-                $content =  "销售员" . $admin_nickname . "提交的二手车单通过风控审核";
+                $content = "销售员" . $admin_nickname . "提交的二手车单通过风控审核";
                 goeary_push($channel, $content);
 
                 $data = Db::name("second_rental_order")->where('id', $id)->find();
@@ -772,24 +766,23 @@ class Creditreview extends Backend
                 //销售id
                 $admin_id = $data['admin_id'];
                 //客户姓名
-                $username= $data['username'];
-                
-                $data = secondpass_inform($models_name,$username);
+                $username = $data['username'];
+
+                $data = secondpass_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
-                
+
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -821,33 +814,32 @@ class Creditreview extends Backend
             if ($result) {
 
                 $channel = "demo-second_data";
-                $content =  "销售员" . $admin_nickname . "提交的二手车单需要提交保证金";
+                $content = "销售员" . $admin_nickname . "提交的二手车单需要提交保证金";
                 goeary_push($channel, $content);
-         
+
                 $data = Db::name("second_rental_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
                 $admin_id = $data['admin_id'];
                 //客户姓名
-                $username= $data['username'];
-                
-                $data = seconddata_inform($models_name,$username);
+                $username = $data['username'];
+
+                $data = seconddata_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
-                
+
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -879,33 +871,32 @@ class Creditreview extends Backend
             if ($result) {
 
                 $channel = "demo-second_nopass";
-                $content =  "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核";
+                $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核";
                 goeary_push($channel, $content);
-                
+
                 $data = Db::name("second_rental_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
                 $admin_id = $data['admin_id'];
                 //客户姓名
-                $username= $data['username'];
-                
-                $data = secondnopass_inform($models_name,$username);
+                $username = $data['username'];
+
+                $data = secondnopass_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
-                
+
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -934,48 +925,73 @@ class Creditreview extends Backend
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
 
+        foreach ($deposit_contractimages as $k => $v) {
+            $deposit_contractimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
+
         //定金收据上传
         $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
-
+        foreach ($deposit_receiptimages as $k => $v) {
+            $deposit_receiptimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
-
+        foreach ($id_cardimages as $k => $v) {
+            $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-
+        foreach ($drivers_licenseimages as $k => $v) {
+            $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //户口簿【首页、主人页、本人页】
         $residence_bookletimages = explode(',', $row['residence_bookletimages']);
-
+        foreach ($residence_bookletimages as $k => $v) {
+            $residence_bookletimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //住房合同/房产证（多图）
         $housingimages = explode(',', $row['housingimages']);
-
+        foreach ($housingimages as $k => $v) {
+            $housingimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //银行卡照（可多图）
         $bank_cardimages = explode(',', $row['bank_cardimages']);
-
+        foreach ($bank_cardimages as $k => $v) {
+            $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
-
+        foreach ($application_formimages as $k => $v) {
+            $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //通话清单（文件上传）
         $call_listfiles = explode(',', $row['call_listfiles']);
-
+        foreach ($call_listfiles as $k => $v) {
+            $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         /**不必填 */
         //保证金收据
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
 
+        if ($new_car_marginimages) {
+            foreach ($new_car_marginimages as $k => $v) {
+                $new_car_marginimages[$k] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
         $this->view->assign(
             [
                 'row' => $row,
                 'cdn' => Config::get('upload')['cdnurl'],
-                'deposit_contractimages' => $deposit_contractimages,
-                'deposit_receiptimages' => $deposit_receiptimages,
-                'id_cardimages' => $id_cardimages,
-                'drivers_licenseimages' => $drivers_licenseimages,
-                'residence_bookletimages' => $residence_bookletimages,
-                'housingimages' => $housingimages,
-                'bank_cardimages' => $bank_cardimages,
-                'application_formimages' => $application_formimages,
-                'call_listfiles' => $call_listfiles,
-                'new_car_marginimages' => $new_car_marginimages,
+                'deposit_contractimages_arr' => $deposit_contractimages,
+                'deposit_receiptimages_arr' => $deposit_receiptimages,
+                'id_cardimages_arr' => $id_cardimages,
+                'drivers_licenseimages_arr' => $drivers_licenseimages,
+                'residence_bookletimages_arr' => $residence_bookletimages,
+                'housingimages_arr' => $housingimages,
+                'bank_cardimages_arr' => $bank_cardimages,
+                'application_formimages_arr' => $application_formimages,
+                'call_listfiles_arr' => $call_listfiles,
+                'new_car_marginimages_arr' => $new_car_marginimages,
             ]
         );
         return $this->view->fetch();
@@ -1036,56 +1052,76 @@ class Creditreview extends Backend
 
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
-
+        foreach ($deposit_contractimages as $k => $v) {
+            $deposit_contractimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //定金收据上传
         $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
-
+        foreach ($deposit_receiptimages as $k => $v) {
+            $deposit_receiptimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
+        foreach ($id_cardimages as $k => $v) {
+            $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
 
         //驾照正副页（多图）
         $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-
+        foreach ($drivers_licenseimages as $k => $v) {
+            $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //户口簿【首页、主人页、本人页】
         $residence_bookletimages = explode(',', $row['residence_bookletimages']);
-
+        foreach ($residence_bookletimages as $k => $v) {
+            $residence_bookletimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //住房合同/房产证（多图）
         $housingimages = explode(',', $row['housingimages']);
-
+        foreach ($housingimages as $k => $v) {
+            $housingimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //银行卡照（可多图）
         $bank_cardimages = explode(',', $row['bank_cardimages']);
-
+        foreach ($bank_cardimages as $k => $v) {
+            $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //申请表（多图）
         $application_formimages = explode(',', $row['application_formimages']);
-
+        foreach ($application_formimages as $k => $v) {
+            $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         //通话清单（文件上传）
         $call_listfiles = explode(',', $row['call_listfiles']);
-
+        foreach ($call_listfiles as $k => $v) {
+            $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
         /**不必填 */
         //保证金收据
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
-
+        if ($new_car_marginimages) {
+            foreach ($new_car_marginimages as $k => $v) {
+                $new_car_marginimages[$k] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
         $this->view->assign(
             [
                 'row' => $row,
                 'cdn' => Config::get('upload')['cdnurl'],
-                'deposit_contractimages' => $deposit_contractimages,
-                'deposit_receiptimages' => $deposit_receiptimages,
-                'id_cardimages' => $id_cardimages,
-                'drivers_licenseimages' => $drivers_licenseimages,
-                'residence_bookletimages' => $residence_bookletimages,
-                'housingimages' => $housingimages,
-                'bank_cardimages' => $bank_cardimages,
-                'application_formimages' => $application_formimages,
-                'call_listfiles' => $call_listfiles,
-                'new_car_marginimages' => $new_car_marginimages,
+                'deposit_contractimages_arr' => $deposit_contractimages,
+                'deposit_receiptimages_arr' => $deposit_receiptimages,
+                'id_cardimages_arr' => $id_cardimages,
+                'drivers_licenseimages_arr' => $drivers_licenseimages,
+                'residence_bookletimages_arr' => $residence_bookletimages,
+                'housingimages_arr' => $housingimages,
+                'bank_cardimages_arr' => $bank_cardimages,
+                'application_formimages_arr' => $application_formimages,
+                'call_listfiles_arr' => $call_listfiles,
+                'new_car_marginimages_arr' => $new_car_marginimages,
             ]
         );
         return $this->view->fetch();
     }
-
-
-
 
 
     /**
