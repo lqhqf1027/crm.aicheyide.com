@@ -42,7 +42,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     url: 'salesmanagement/Orderlisttabs/orderAcar',
                     extend: {
                         // index_url: 'order/salesorder/index',
-                        add_url: 'order/salesorder/add',
+                        add_url: 'salesmanagement/Orderlisttabs/add',
                         edit_url: 'order/salesorder/edit',
                         del_url: 'order/salesorder/del',
                         multi_url: 'order/salesorder/multi',

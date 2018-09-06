@@ -10,6 +10,7 @@ use fast\Tree;
 use think\Db;
 use think\Config;
 use app\common\library\Email;
+use think\Session;
 
 /**
  * 订单列管理
@@ -24,7 +25,7 @@ class Orderlisttabs extends Backend
      * @var \app\admin\model\Ordertabs
      */
     protected $model = null;
-    protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull','sedAudit','details','rentaldetails','seconddetails','fulldetails'];
+    protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull','sedAudit','details','rentaldetails','seconddetails','fulldetails','add','planacar'];
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
     // protected  $dataLimit = 'false'; //表示显示当前自己和所有子级管理员的所有数据
@@ -34,6 +35,10 @@ class Orderlisttabs extends Backend
     public function _initialize()
     {
         parent::_initialize();
+        $this->model = model('SalesOrder');
+        $this->view->assign('genderdataList', $this->model->getGenderdataList());
+        $this->view->assign('customerSourceList', $this->model->getCustomerSourceList());
+        $this->view->assign('reviewTheDataList', $this->model->getReviewTheDataList());
     }
 
     public function index()
@@ -725,6 +730,134 @@ class Orderlisttabs extends Backend
         );
         return $this->view->fetch();
     }
+
+    /**
+     * 以租代购（新车）添加.
+     */
+    public function add()
+    {
+        $this->model = model('SalesOrder');
+        //销售方案类别
+        $category = DB::name('scheme_category')->field('id,name')->select();
+
+        // die;
+        
+        $this->view->assign('category', $category);
+
+        if ($this->request->isPost()) {
+             $params = $this->request->post('row/a');
+            //方案id
+            $params['plan_acar_name'] = Session::get('plan_id');
+            //方案重组名字
+            $params['plan_name'] = Session::get('plan_name');
+            //models_id
+            $params['models_id'] = Session::get('models_id');
+            $data = DB::name('plan_acar')->where('id', $params['plan_acar_name'])->field('payment,monthly,nperlist,gps,margin,tail_section')->find();
+            $params['car_total_price'] = $data['payment'] + $data['monthly'] * $data['nperlist'];
+            $params['downpayment'] = $data['payment'] + $data['monthly'] + $data['margin'] + $data['gps'];
+            //生成订单编号
+            $params['order_no'] = date('Ymdhis');
+            //把当前销售员所在的部门的内勤id 入库
+
+            //message8=>销售一部顾问，message13=>内勤一部
+             //message9=>销售二部顾问，message20=>内勤二部
+            // $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
+            $adminRule = 'message8'; //测试数据
+            if ($adminRule == 'message8') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message9') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
+                // return true;
+            }
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        //如果添加成功,将状态改为提交审核
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'send_to_internal']);
+                        if ($result_s) {
+                            $this->success();
+                        } else {
+                            $this->error('更新状态失败');
+                        }
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+        return $this->view->fetch('newadd');
+    }
+
+    //显示方案列表
+    public function planacar()
+    {
+        if ($this->request->isAjax()) {
+
+        
+            $category_id = input("category_id");
+            $category_id = json_decode($category_id, true);
+
+            $result = DB::name('plan_acar')->alias('a')
+                    ->join('models b', 'b.id=a.models_id')
+
+                    ->where('a.category_id', $category_id)
+                   
+                    ->where('sales_id', NULL)
+
+                    ->whereOr('sales_id', $this->auth->id)
+
+                    ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,b.name as models_name,b.id as models_id')
+
+                    ->select();
+            foreach ($result as $k =>$v) {
+
+                $result[$k]['downpayment'] = $v['payment'] + $v['monthly'] + $v['margin'] + $v['gps'];
+
+            }
+
+            $result = json_encode($result);
+           
+            return $result;
+        }
+    }
+
+     //方案组装
+     public function planname()
+     {
+         if ($this->request->isAjax()) {
+ 
+         
+             $plan_id = input("id");
+             $plan_id = json_decode($plan_id, true);
+             $sql = Db::name('models')->alias('a')
+                 ->join('plan_acar b', 'b.models_id=a.id')
+                 ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id,b.models_id')
+                 ->where(['b.ismenu' => 1, 'b.id' => $plan_id])
+                 ->find();
+             $plan_name = $sql['models_name'].'【首付'.$sql['payment'].'，'.'月供'.$sql['monthly'].'，'.'GPS '.$sql['gps'].'，'.'尾款 '.$sql['tail_section'].'，'.'保证金'.$sql['margin'].'】';
+ 
+             Session::set('plan_id',$plan_id);
+             Session::set('plan_name',$plan_name);
+             Session::set('models_id',$sql['models_id']);
+         }
+     }
+
 
 
 }
