@@ -2,8 +2,8 @@
     <center>
         <span style="float: left;font-size: medium"><strong>{:__('订单编号')}：</strong> {$row.order_no|default="<span class='text-info'>无</span>"}</span>
         <h2><span style="margin-left: -20%">基本资料</span></h2> <span
-            style="float: right;margin-top: -35px;font-size: medium"><strong>{:__('提车日期')}：</strong> {$row.delivery_datetime|date="Y-m-d",###}</span>
-        <span style="float: right;margin-top: -35px;margin-right: 15%;font-size: medium"><strong>{:__('订车日期')}：</strong> {$row.createtime|date="Y-m-d",###}</span>
+            style="float: right;margin-top: -35px;font-size: medium"><strong>{:__('提车日期')}：</strong> {empty name="$row.delivery_datetime"} <span class="text-info">暂无</span>{else /}{$row.delivery_datetime|date="Y-m-d",###}{/empty}</span>
+        <span style="float: right;margin-top: -35px;margin-right: 15%;font-size: medium"><strong>{:__('订车日期')}：</strong> {empty name="$row.createtime"} <span class="text-info">暂无</span>{else /}{$row.createtime|date="Y-m-d",###}{/empty}</span>
     </center>
 </h3>
 <br>
@@ -33,10 +33,10 @@
     <div class="form-group">
         <div class="col-xs-12 col-sm-8 col-md-3"></div>
         <div class="col-xs-12 col-sm-8 col-md-6">
-            <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name|default="<span class='text-info'>无</span>"}
+            <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('销售员')}：</strong>{$row.nickname|default="<span class='text-info'>无</span>"}
+            <strong>{:__('销售员')}：</strong>{$row.nickname|default="<span class='text-info'>暂无</span>"}
         </div>
     </div>
     <br>
@@ -45,19 +45,19 @@
 
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('姓名')}：</strong> {$row.username|default="<span class='text-info'>无</span>"} {eq name="$row.genderdata" value="male"} <span
+            <strong>{:__('姓名')}：</strong> {$row.username|default="<span class='text-info'>暂无</span>"} {eq name="$row.genderdata" value="male"} <span
                 class="fa fa-male text-info"></span>{else /} <span class="fa fa-female"
                                                                    style="color:palevioletred"></span>{/eq}
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('联系电话')}：</strong> {$row.phone|default="<span class='text-info'>无</span>"}
+            <strong>{:__('联系电话')}：</strong> {$row.phone|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('身份证号')}：</strong> {$row.id_card|default="<span class='text-info'>无</span>"}
+            <strong>{:__('身份证号')}：</strong> {$row.id_card|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('金融平台')}：</strong> {$row.financial_name|default="<span class='text-info'>无</span>"}
+            <strong>{:__('金融平台')}：</strong> {$row.financial_name|default="<span class='text-info'>暂无</span>"}
         </div>
 
     </div>
@@ -67,22 +67,22 @@
 
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('档案编码')}：</strong> {$row.archival_coding|default="<span class='text-info'>无</span>"}
+            <strong>{:__('档案编码')}：</strong> {$row.archival_coding|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-2">
             <strong>{:__('合同总价(元)')}：</strong> {empty name="$row.contract_total"} <span class="text-info">暂无</span>{else
-            /}{$row.contract_total|default="<span class='text-info'>无</span>"}{/empty}
+            /}{$row.contract_total|default="<span class='text-info'>暂无</span>"}{/empty}
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('实收订车金额(元)')}：</strong>{$row.amount_collected|default="<span class='text-info'>无</span>"}
+            <strong>{:__('实收订车金额(元)')}：</strong>{$row.amount_collected|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('装饰')}：</strong> {empty name="$row.decorate"} <span class="text-info">无</span>{else
+            <strong>{:__('装饰')}：</strong> {empty name="$row.decorate"} <span class="text-info">暂无</span>{else
             /}{$row.decorate|default="<span class='text-info'>无</span>"}{/empty}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-2">
-            <strong>{:__('抵押人')}：</strong> {empty name="$row.mortgage_people"} <span class="text-info">无</span>{else
+            <strong>{:__('抵押人')}：</strong> {empty name="$row.mortgage_people"} <span class="text-info">暂无</span>{else
             /}{$row.mortgage_people|default="<span class='text-info'>无</span>"}{/empty}
         </div>
     </div>
@@ -93,17 +93,17 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('车牌号')}：</strong>{$row.licensenumber|default="<span class='text-info'>无</span>"}
+            <strong>{:__('车牌号')}：</strong>{$row.licensenumber|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('发动机号')}：</strong> {$row.engine_number|default="<span class='text-info'>无</span>"}
+            <strong>{:__('发动机号')}：</strong> {$row.engine_number|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('车架号')}：</strong> {$row.frame_number|default="<span class='text-info'>无</span>"}
+            <strong>{:__('车架号')}：</strong> {$row.frame_number|default="<span class='text-info'>暂无</span>"}
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('所属公司')}：</strong> {$row.household|default="<span class='text-info'>无</span>"}
+            <strong>{:__('所属公司')}：</strong> {$row.household|default="<span class='text-info'>暂无</span>"}
         </div>
 
 
@@ -131,18 +131,18 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('上次年检日期')}：</strong>{$row.yearly_inspection|default="<span class='text-info'>无</span>"}
+            <strong>{:__('上次年检日期')}：</strong>{$row.yearly_inspection|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('下次年检日期')}：</strong>{$row.next_inspection|default="<span class='text-info'>无</span>"}
+            <strong>{:__('下次年检日期')}：</strong>{$row.next_inspection|default="<span class='text-info'>暂无</span>"}
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-3">
             <strong>{:__('过户日期')}：</strong> {empty name="$row.transferdate"} <span class="text-info">未过户</span>{else
-            /}{$row.transferdate|default="<span class='text-info'>无</span>"}{/empty}
+            /}{$row.transferdate|default="<span class='text-info'>暂无</span>"}{/empty}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('上户日期')}：</strong> {$row.hostdate|default="<span class='text-info'>无</span>"}
+            <strong>{:__('上户日期')}：</strong> {$row.hostdate|default="<span class='text-info'>暂无</span>"}
         </div>
 
 
@@ -172,16 +172,16 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('开票日期')}：</strong>{$row.ticketdate|default="<span class='text-info'>无</span>"}
+            <strong>{:__('开票日期')}：</strong>{$row.ticketdate|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('供货商')}：</strong>{$row.supplier|default="<span class='text-info'>无</span>"}
+            <strong>{:__('供货商')}：</strong>{$row.supplier|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('含税金额(元)')}：</strong>{$row.tax_amount|default="<span class='text-info'>无</span>"}
+            <strong>{:__('含税金额(元)')}：</strong>{$row.tax_amount|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('不含税金额(元)')}：</strong>{$row.no_tax_amount|default="<span class='text-info'>无</span>"}
+            <strong>{:__('不含税金额(元)')}：</strong>{$row.no_tax_amount|default="<span class='text-info'>暂无</span>"}
         </div>
     </div>
     <br>
@@ -206,16 +206,16 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('缴税日期')}：</strong>{$row.pay_taxesdate|default="<span class='text-info'>无</span>"}
+            <strong>{:__('缴税日期')}：</strong>{$row.pay_taxesdate|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('购置税费(元)')}：</strong>{$row.tax|default="<span class='text-info'>无</span>"}
+            <strong>{:__('购置税费(元)')}：</strong>{$row.tax|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('上户费(元)')}：</strong>{$row.house_fee|default="<span class='text-info'>无</span>"}
+            <strong>{:__('上户费(元)')}：</strong>{$row.house_fee|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('路桥费(元)')}：</strong>{$row.luqiao_fee|default="<span class='text-info'>无</span>"}
+            <strong>{:__('路桥费(元)')}：</strong>{$row.luqiao_fee|default="<span class='text-info'>暂无</span>"}
         </div>
 
     </div>
@@ -242,10 +242,10 @@
         <div class="col-xs-12 col-sm-8 col-md-3">
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('购买日期')}：</strong>{$row.insurance_buydate|default="<span class='text-info'>无</span>"}
+            <strong>{:__('购买日期')}：</strong>{$row.insurance_buydate|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('车船税金额(元)')}：</strong>{$row.car_boat_tax|default="<span class='text-info'>无</span>"}
+            <strong>{:__('车船税金额(元)')}：</strong>{$row.car_boat_tax|default="<span class='text-info'>暂无</span>"}
         </div>
 
 
@@ -255,16 +255,16 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('交强险保单号')}：</strong>{$row.insurance_policy|default="<span class='text-info'>无</span>"}
+            <strong>{:__('交强险保单号')}：</strong>{$row.insurance_policy|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('交强险金额(元)')}：</strong>{$row.insurance|default="<span class='text-info'>无</span>"}
+            <strong>{:__('交强险金额(元)')}：</strong>{$row.insurance|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('商业险保单号')}：</strong>{$row.commercial_insurance_policy|default="<span class='text-info'>无</span>"}
+            <strong>{:__('商业险保单号')}：</strong>{$row.commercial_insurance_policy|default="<span class='text-info'>暂无</span>"}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('商业险金额(元)')}：</strong>{$row.business_risks|default="<span class='text-info'>无</span>"}
+            <strong>{:__('商业险金额(元)')}：</strong>{$row.business_risks|default="<span class='text-info'>暂无</span>"}
         </div>
     </div>
     <br>
@@ -303,15 +303,15 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('介绍人姓名')}：</strong> {empty name="$row.turn_to_introduce_name"} <span class="text-info">无</span>{else
+            <strong>{:__('介绍人姓名')}：</strong> {empty name="$row.turn_to_introduce_name"} <span class="text-info">暂无</span>{else
             /}{$row.turn_to_introduce_name|default="<span class='text-info'>无</span>"}{/empty}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('介绍人电话')}：</strong>{empty name="$row.turn_to_introduce_phone"} <span class="text-info">无</span>{else
+            <strong>{:__('介绍人电话')}：</strong>{empty name="$row.turn_to_introduce_phone"} <span class="text-info">暂无</span>{else
             /}{$row.turn_to_introduce_phone|default="<span class='text-info'>无</span>"}{/empty}
         </div>
         <div class="col-xs-12 col-sm-8 col-md-4">
-            <strong>{:__('介绍人身份证')}：</strong>{empty name="$row.turn_to_introduce_card"} <span class="text-info">无</span>{else
+            <strong>{:__('介绍人身份证')}：</strong>{empty name="$row.turn_to_introduce_card"} <span class="text-info">暂无</span>{else
             /}{$row.turn_to_introduce_card|default="<span class='text-info'>无</span>"}{/empty}
         </div>
     </div>
@@ -466,7 +466,7 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-12">
-            <strong>{:__('新车车资料备注')}：</strong>{empty name="$row.registry_remark"} <span class="text-info">无</span>{else /}{$row.registry_remark}{/empty}
+            <strong>{:__('新车车资料备注')}：</strong>{empty name="$row.registry_remark"} <span class="text-info">暂无</span>{else /}{$row.registry_remark}{/empty}
         </div>
 
 
@@ -477,7 +477,7 @@
     <div class="form-group">
 
         <div class="col-xs-12 col-sm-8 col-md-12">
-            <strong>{:__('全款车管理车辆信息备注')}：</strong> {empty name="$row.note"} <span class="text-info">无</span>{else /}{$row.note}{/empty}
+            <strong>{:__('全款车管理车辆信息备注')}：</strong> {empty name="$row.note"} <span class="text-info">暂无</span>{else /}{$row.note}{/empty}
 
         </div>
 

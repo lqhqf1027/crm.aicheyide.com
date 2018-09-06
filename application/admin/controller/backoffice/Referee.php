@@ -18,7 +18,7 @@ class Referee extends Backend
      * @var \app\admin\model\Referee
      */
     protected $model = null;
-
+    protected $noNeedRight = ['index','edit','satisfy_id','getCanUse','del'];
     public function _initialize()
     {
         parent::_initialize();
