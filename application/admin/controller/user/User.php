@@ -3,7 +3,7 @@
 namespace app\admin\controller\user;
 
 use app\common\controller\Backend;
-
+use think\Db;
 /**
  * 会员管理
  *
@@ -73,6 +73,20 @@ class User extends Backend
             $this->error(__('No Results were found'));
         $this->view->assign('groupList', build_select('row[group_id]', \app\admin\model\UserGroup::column('id,name'), $row['group_id'], ['class' => 'form-control selectpicker']));
         return parent::edit($ids);
+    }
+    public  function  register(){
+        if($this->request->isAjax()){
+            $params = input('post.');
+            //判断email是否被注册
+            $email = model('Adminaccount')::where(['email'=>$params['postdata']['email']])->column('email');
+            if(empty($email)&&$params){
+
+                $params['postdata']['createtime'] = time();
+                return model('Adminaccount')->allowField(true)->save($params['postdata'])?json(array('errorcode'=>'00001',msg=>'注册成功',result=>'')):json(array('errorcode'=>'00002',msg=>'注册失败',result=>''));
+            }
+            return json(array('errorcode'=>'00000',msg=>'此邮箱已被注册',result=>''));
+        }
+
     }
 
 }
