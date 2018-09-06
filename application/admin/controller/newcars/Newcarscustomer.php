@@ -296,7 +296,7 @@ class Newcarscustomer extends Backend
             $newtwotake = Db::name('sales_order')
                     ->where('review_the_data', 'the_car')
                     ->where('admin_id', 'in', $two_admin)
-                    ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                     ->count();
 
             //销售一部
