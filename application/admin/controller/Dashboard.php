@@ -55,7 +55,7 @@ class Dashboard extends Backend
         //新车本月订车数
         $todayneworder = DB::name('sales_order')
                 ->where('review_the_data', 'NEQ', "the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
 
         //租车历史出租数
@@ -68,25 +68,25 @@ class Dashboard extends Backend
                 ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
 
-        // //直客成交数
-        // $rental_direct_the_guest = DB::name('rental_order')
-        //         ->where('review_the_data', "the_car")
-        //         ->where('customer_source', 'direct_the_guest')
-        //         ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-        //         ->count();
-        // //转介绍成交数
-        // $rental_turn_to_introduce = DB::name('rental_order')
-        //         ->where('review_the_data', "the_car")
-        //         ->where('customer_source', 'turn_to_introduce')
-        //         ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-        //         ->count();
-        // $rentalguest = round(($rental_direct_the_guest / $todayrentaltake) * 10000)  / 10000 * 100 . '%';
-        // $rentalintroduce = round(($rental_turn_to_introduce / $todayrentaltake) * 10000) / 10000 * 100 . '%';
+        //直客成交数
+        $rental_direct_the_guest = DB::name('rental_order')
+                ->where('review_the_data', "for_the_car")
+                ->where('customer_source', 'direct_the_guest')
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->count();
+        //转介绍成交数
+        $rental_turn_to_introduce = DB::name('rental_order')
+                ->where('review_the_data', "for_the_car")
+                ->where('customer_source', 'turn_to_introduce')
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->count();
+        $rentalguest = round(($rental_direct_the_guest / $todayrentaltake) * 10000)  / 10000 * 100 . '%';
+        $rentalintroduce = round(($rental_turn_to_introduce / $todayrentaltake) * 10000) / 10000 * 100 . '%';
 
         //租车本月订车数
         $todayrentalorder = DB::name('rental_order')
                 ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
 
         //二手车历史成交数
@@ -99,26 +99,26 @@ class Dashboard extends Backend
                 ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
         
-        // //直客成交数
-        // $second_direct_the_guest = DB::name('second_sales_order')
-        //         ->where('review_the_data', "the_car")
-        //         ->where('customer_source', 'direct_the_guest')
-        //         ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-        //         ->count();
-        // //转介绍成交数
-        // $second_turn_to_introduce = DB::name('second_sales_order')
-        //         ->where('review_the_data', "the_car")
-        //         ->where('customer_source', 'turn_to_introduce')
-        //         ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-        //         ->count();
-        // $secondguest = round(($second_direct_the_guest / $todaysecondtake) * 10000)  / 10000 * 100 . '%';
-        // $secondintroduce = round(($second_turn_to_introduce / $todaysecondtake) * 10000) / 10000 * 100 . '%';
+        //直客成交数
+        $second_direct_the_guest = DB::name('second_sales_order')
+                ->where('review_the_data', "for_the_car")
+                ->where('customer_source', 'direct_the_guest')
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->count();
+        //转介绍成交数
+        $second_turn_to_introduce = DB::name('second_sales_order')
+                ->where('review_the_data', "for_the_car")
+                ->where('customer_source', 'turn_to_introduce')
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->count();
+        $secondguest = round(($second_direct_the_guest / $todaysecondtake) * 10000)  / 10000 * 100 . '%';
+        $secondintroduce = round(($second_turn_to_introduce / $todaysecondtake) * 10000) / 10000 * 100 . '%';
 
 
         //二手车本月订车数
         $todaysecondorder = DB::name('second_sales_order')
                 ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
 
         //全款历史成交数
@@ -131,25 +131,25 @@ class Dashboard extends Backend
                 ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
         
-        // //直客成交数
-        // $full_direct_the_guest = DB::name('full_parment_order')
-        //         ->where('review_the_data', "the_car")
-        //         ->where('customer_source', 'direct_the_guest')
-        //         ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-        //         ->count();
-        // //转介绍成交数
-        // $full_turn_to_introduce = DB::name('full_parment_order')
-        //         ->where('review_the_data', "the_car")
-        //         ->where('customer_source', 'turn_to_introduce')
-        //         ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-        //         ->count();
-        // $fullguest = round(($full_direct_the_guest / $todayfulltake) * 10000)  / 10000 * 100 . '%';
-        // $fullintroduce = round(($full_turn_to_introduce / $todayfulltake) * 10000) / 10000 * 100 . '%';
+        //直客成交数
+        $full_direct_the_guest = DB::name('full_parment_order')
+                ->where('review_the_data', "for_the_car")
+                ->where('customer_source', 'straight')
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->count();
+        //转介绍成交数
+        $full_turn_to_introduce = DB::name('full_parment_order')
+                ->where('review_the_data', "for_the_car")
+                ->where('customer_source', 'introduce')
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->count();
+        $fullguest = round(($full_direct_the_guest / $todayfulltake) * 10000)  / 10000 * 100 . '%';
+        $fullintroduce = round(($full_turn_to_introduce / $todayfulltake) * 10000) / 10000 * 100 . '%';
 
         //全款车本月订车数
         $todayfullorder = DB::name('full_parment_order')
                 ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
 
         //总数
@@ -251,7 +251,7 @@ class Dashboard extends Backend
                 $newtwotake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
 
                 ////销售一部
@@ -291,7 +291,7 @@ class Dashboard extends Backend
                 $rentaltwotake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
                 
                 //销售一部
@@ -330,7 +330,7 @@ class Dashboard extends Backend
                 $secondtwotake = Db::name('second_sales_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
         
                 //销售一部
@@ -368,7 +368,7 @@ class Dashboard extends Backend
                 $fulltwotake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('createtime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
 
                 //全款车提车
@@ -416,14 +416,10 @@ class Dashboard extends Backend
             'todayfullorder'      => $todayfullorder,
             'fullguest'           => $fullguest,
             'fullintroduce'       => $fullintroduce,
-            
-            'unsettleorder'    => 132,
-            'sevendnu'         => '80%',
-            'sevendau'         => '32%',
 
             //58同城
             'num'                   => $num,
-            'newpeoplecity'             => $newpeoplecity,
+            'newpeoplecity'         => $newpeoplecity,
             'relationcity'          => $relationcity,
             'intentioncity'         => $intentioncity,
             'nointentioncity'       => $nointentioncity,
@@ -437,7 +433,8 @@ class Dashboard extends Backend
             'nointentiontoday'       => $nointentiontoday,
             'giveuptoday'            => $giveuptoday,
             'overduetoday'           => $overduetoday,
- 
+            
+            //销售情况 --- 一部与二部
             'newonesales'           => $newonesales,
             'newtwosales'           => $newtwosales,
             'rentalonesales'        => $rentalonesales,
@@ -445,10 +442,8 @@ class Dashboard extends Backend
             'secondonesales'        => $secondonesales,
             'secondtwosales'        => $secondtwosales,
             'fullonesales'          => $fullonesales,
-            'fulltwosales'          => $fulltwosales,
+            'fulltwosales'          => $fulltwosales
 
-            'addonversion'       => $addonVersion,
-            'uploadmode'       => $uploadmode
         ]);
 
         return $this->view->fetch();
