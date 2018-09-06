@@ -30,7 +30,7 @@ class Monthlytabs extends Backend
      */
     public function index()
     {
-//        $this->loadlang('monthly/newcarmonthly');
+        $this->loadlang('monthly/newcarmonthly');
         return $this->view->fetch();
     }
 
