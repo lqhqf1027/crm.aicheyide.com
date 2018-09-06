@@ -71,7 +71,12 @@ class Fullparmentorder extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
 
-//            pr($params);die();
+            if($params['customer_source']=="straight"){
+                  $params['introduce_name'] = null;
+                  $params['introduce_phone'] = null;
+                  $params['introduce_card'] = null;
+            }
+
             $ex = explode(',', $params['plan_plan_full_name']);
 
             $result = DB::name('plan_full')->where('id', $params['plan_plan_full_name'])->field('models_id')->find();
@@ -187,6 +192,11 @@ class Fullparmentorder extends Backend
             $params = $this->request->post("row/a");
             $ex = explode(',', $params['plan_plan_full_name']);
 
+            if($params['customer_source']=="straight"){
+                $params['introduce_name'] = null;
+                $params['introduce_phone'] = null;
+                $params['introduce_card'] = null;
+            }
             $result = DB::name('plan_full')->where('id', $params['plan_plan_full_name'])->field('models_id')->find();
 
             $params['plan_plan_full_name'] = reset($ex); //截取id

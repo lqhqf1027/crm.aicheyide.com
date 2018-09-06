@@ -21,7 +21,7 @@
                 {/foreach}
                 {else /}
                 {foreach name="costomlevelList" item="vo"}
-                <option value="{$key},{$vo}" {in name="key" value="$row.customerlevel"}selected{/in}>{$vo}</option>
+               {notin name="$key" value="$row.customerlevel"} <option value="{$key},{$vo}">{$vo}</option> {/notin}
                 {/foreach}
                 {/empty}
 
