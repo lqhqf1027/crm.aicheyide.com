@@ -19,6 +19,7 @@ class Carreservation extends Backend
      * @var \app\admin\model\Sms
      */
     protected $model = null;
+    protected $noNeedRight = ['index','secondcarWaitconfirm','secondcarConfirm','setAudit'];
 
     public function _initialize()
     {

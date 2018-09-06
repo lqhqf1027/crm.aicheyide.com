@@ -18,7 +18,7 @@ class Exchangeplatformtabs extends Backend
     protected $model = null;
     protected $dataLimit = false; //表示不启用，显示所有数据
     protected $searchFields = 'username,licensenumber,frame_number';
-
+    protected $noNeedRight = ['index','new_car','yue_da_car','other_car','nanchong_driver','edit','change_platform','batch_change_platform','details','loan'];
 
 //    protected $multiFields = 'batch';
     public function _initialize()

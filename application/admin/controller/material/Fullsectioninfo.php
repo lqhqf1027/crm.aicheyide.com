@@ -16,7 +16,7 @@ use think\Config;
 class Fullsectioninfo extends Backend
 {
     protected $model = null;
-
+    protected $noNeedRight = ['index','full_register','edit','detail','data_warehousing','edit_dataware'];
     public function _initialize()
     {
         parent::_initialize();
@@ -207,15 +207,6 @@ class Fullsectioninfo extends Backend
 
         $row = $row[0];
 
-
-
-//        if ($row['createtime']) {
-//            $row['createtime'] = date("Y-m-d", $row['createtime']);
-//        }
-//
-//        if ($row['delivery_datetime']) {
-//            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
-//        }
 
         //身份证正反面（多图）
         $id_cardimages = $row['id_cardimages'];

@@ -20,6 +20,8 @@ class Carreservation extends Backend
      */
     protected $model = null;
 
+    protected $noNeedRight = ['index','newcarEntry','secondcarEntry','fullcarEntry','newactual_amount','secondactual_amount','fullactual_amount'];
+
 
     public function _initialize()
     {
