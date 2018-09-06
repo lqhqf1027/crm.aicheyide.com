@@ -24,6 +24,7 @@ class Orderlisttabs extends Backend
      * @var \app\admin\model\Ordertabs
      */
     protected $model = null;
+    protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull','sedAudit','details','rentaldetails','seconddetails','fulldetails'];
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
     // protected  $dataLimit = 'false'; //表示显示当前自己和所有子级管理员的所有数据
