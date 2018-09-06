@@ -487,13 +487,13 @@ class Customerlisttabs extends Backend
 
             if ($params) {
                 unset($params['level']);
-
+//pr($params);die();
                 $sql1 = $this->model->where('id', $ids)->update([
                     'feedbacktime' => time(),
                     'followuptimestamp' => strtotime($params['followupdate']),
                     'customerlevel' => $params['customerlevel'],
                     'followupdate' => $params['followupdate'],
-                    'feedback' => $params['followupdate']
+                    'feedback' => $params['feedback']
                 ]);
 
                 $cnlevel = "";
