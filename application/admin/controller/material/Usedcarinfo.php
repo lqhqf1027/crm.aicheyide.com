@@ -20,6 +20,7 @@ class Usedcarinfo extends Backend
      * @var \app\admin\model\DriverInfo
      */
     protected $model = null;
+    protected $noNeedRight = ['index','car_information','edit','details','data_warehousing','edit_dataware'];
 
     public function _initialize()
     {

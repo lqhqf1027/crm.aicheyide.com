@@ -25,7 +25,7 @@ class Newcarscustomer extends Backend
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
-
+    protected $noNeedRight = ['index','prepare_lift_car','already_lift_car','choose_stock','show_order','show_order_and_stock'];
     public function _initialize()
     {
         parent::_initialize();

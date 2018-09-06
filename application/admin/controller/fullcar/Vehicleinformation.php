@@ -21,7 +21,7 @@ class Vehicleinformation extends Backend
      * @var \app\admin\model\Fullpeople
      */
     protected $model = null;
-
+    protected $noNeedRight = ['index','prepare_lift_car','already_lift_car','choose_stock','show_order','show_order_and_stock'];
     public function _initialize()
     {
         parent::_initialize();

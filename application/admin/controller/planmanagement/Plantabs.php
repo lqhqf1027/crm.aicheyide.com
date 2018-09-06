@@ -14,7 +14,7 @@ class Plantabs extends Backend
 {
 
     protected $model = null;
-
+    protected $noNeedRight = ['index','table1','table2','table3'];
     public function _initialize()   
     {
         parent::_initialize();
