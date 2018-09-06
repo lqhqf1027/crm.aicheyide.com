@@ -12,7 +12,7 @@ use app\common\controller\Backend;
  */
 class Imagedownload extends Backend
 {
-    
+
     /**
      * Test模型对象
      * @var \app\admin\model\Test
@@ -38,6 +38,7 @@ class Imagedownload extends Backend
     public function pack()
     {
 
+
         $dfile = tempnam('/tmp', 'tmp');//产生一个临时文件，用于缓存下载文件
         $zip = new Zipfile();
 
@@ -48,28 +49,25 @@ class Imagedownload extends Backend
         $username = input("post.username");
 
 
+        $all_font = explode(",", $all_font);
 
-        $all_font = explode(",",$all_font);
-
-        $all_img = explode(",",$all_img);
+        $all_img = explode(",", $all_img);
 
         $image = array();
 
 
-
-
-        foreach ($all_img as $k=>$v){
-            array_push($image,['image_src'=>$v,'image_name'=>trim($all_font[$k]).".jpg"]);
+        foreach ($all_img as $k => $v) {
+            array_push($image, ['image_src' => $v, 'image_name' => trim($all_font[$k]) . ".jpg"]);
         }
 
 
 //----------------------
-        $filename = $username.'的电子档资料.zip'; //下载的默认文件名
+        $filename = $username . '的电子档资料.zip'; //下载的默认文件名
         $filename = $filename;
         $host = 'http://test.love11.com';
 
 
-        foreach($image as $v){
+        foreach ($image as $v) {
             $zip->add_file(file_get_contents($v['image_src']), $v['image_name']);
             // 添加打包的图片，第一个参数是图片内容，第二个参数是压缩包里面的显示的名称, 可包含路径
             // 或是想打包整个目录 用 $zip->add_path($image_path);
@@ -79,16 +77,16 @@ class Imagedownload extends Backend
 // 下载文件
         ob_clean();
         header('Pragma: public');
-        header('Last-Modified:'.gmdate('D, d M Y H:i:s') . 'GMT');
+        header('Last-Modified:' . gmdate('D, d M Y H:i:s') . 'GMT');
         header('Cache-Control:no-store, no-cache, must-revalidate');
         header('Cache-Control:pre-check=0, post-check=0, max-age=0');
         header('Content-Transfer-Encoding:binary');
         header('Content-Encoding:none');
         header('Content-type:multipart/form-data');
-        header('Content-Disposition:attachment; filename="'.$filename.'"'); //设置下载的默认文件名
-        header('Content-length:'. filesize($dfile));
+        header('Content-Disposition:attachment; filename="' . $filename . '"'); //设置下载的默认文件名
+        header('Content-length:' . filesize($dfile));
         $fp = fopen($dfile, 'r');
-        while(connection_status() == 0 && $buf = @fread($fp, 8192)){
+        while (connection_status() == 0 && $buf = @fread($fp, 8192)) {
             echo $buf;
         }
         fclose($fp);
@@ -96,6 +94,17 @@ class Imagedownload extends Backend
         @flush();
         @ob_flush();
         exit();
+    }
+
+    public function getRepeat($arr)
+    {
+
+        // 获取去掉重复数据的数组
+        $unique_arr = array_unique($arr);
+        // 获取重复数据的数组
+        $repeat_arr = array_diff_assoc($arr, $unique_arr);
+
+        return $repeat_arr;
     }
 
 }
