@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Contact V10</title>
+    <title>君忆汽车系统账号注册</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -38,7 +38,7 @@
     }
 
     .container {
-        max-width: 50%;
+        max-width: 80%;
         width: 100%;
         margin: 0 auto;
         position: relative;
@@ -187,8 +187,8 @@
                 <option >总经理</option>
                 <option >运营中心-财务部</option>
                 <option >运营中心-风控部</option>
-                <option >运营中心-车管（租车）</option>
-                <option >运营中心-车管（买车）</option>
+                <option >运营中心-车管部</option>
+                <!--<option >运营中心-车管</option>-->
                 <option >运营中心-财务部</option>
                 <option >运营中心-推广部</option>
                 <option >运营中心-人事部</option>
@@ -207,7 +207,7 @@
         <fieldset>
 
 
-            <input type="radio" name="rule" value="总经理" title="总经理">
+            <input type="radio" name="rule" value="总经理" title="总经理" lay-filter="rule">
             <p>销售一部</p>
             <input type="radio" name="rule" value="销售一部经理" title="销售一部经理" lay-filter="rule">
             <input type="radio" name="rule" value="销售一部顾问" title="销售一部顾问" lay-filter="rule">
@@ -220,7 +220,7 @@
             <input type="radio" name="rule" value="销售三部经理" title="销售三部经理" lay-filter="rule">
             <input type="radio" name="rule" value="销售三部顾问" title="销售三部顾问" lay-filter="rule">
             <p>风控综合&车管</p>
-            <input type="radio" name="rule" value="风控审核" title="风控审核" >
+            <input type="radio" name="rule" value="风控审核" title="风控审核" lay-filter="rule">
             <input type="radio" name="rule" value="金融按揭专员" title="金融按揭专员" lay-filter="rule">
             <input type="radio" name="rule" value="保险专员" title="保险专员" lay-filter="rule">
             <input type="radio" name="rule" value="资料员" title="资料员" lay-filter="rule">
@@ -248,7 +248,7 @@
             <input placeholder="请输入你的手机号" type="tel" tabindex="3"   lay-verify="required|phone|number" name="phone">
         </fieldset>
         <fieldset>
-            <button name="submit" type="submit" id="contact-submit" data-submit="...Sending" lay-submit lay-filter="formDemo">Submit</button>
+            <button name="submit" type="submit" id="contact-submit" data-submit="...Sending" lay-submit lay-filter="formDemo">提交注册</button>
         </fieldset>
         <p class="copyright">Designed by <a href="https://www.junyiqiche.com" target="_blank" title="君忆汽车">君忆汽车</a>
         </p>
@@ -263,7 +263,7 @@
     layui.use('form', function () {
         var form = layui.form;
         form.on('radio(rule)', function(data){
-            console.log(data.value);
+
             $("input[name='new_rule']").val(data.value);
         });
         //监听提交
@@ -272,10 +272,13 @@
                 shade: [0.1,'#fff'] //0.1透明度的白色背景
             });
             if($("input[name='new_rule']").val()==''){
+
                 layer.msg('角色不能为空',{icon:5});
+                layer.close(indexLoad);
                 return false;
             }
-            $.post("{:url('/admin/user/user/register')}",{postdata:data.field},function (msg) {
+            $.post("{:url('/admin/user/user/registerAccount')}",{postdata:data.field},function (msg) {
+                console.log(msg);
                 switch (msg.errorcode) {
                     case '00000':
                         layer.msg(msg.msg,{icon:5});
@@ -291,11 +294,12 @@
                         layer.msg(msg.msg,{icon:5});
                         layer.close(indexLoad);
                         break;
+                       default:
+                        layer.msg('未知错误',{icon:5});
+                        layer.close(indexLoad);
+                        break;
                 }
             });
-           
-            console.log(data.field);
-
             return false;
         });
     });

@@ -13,7 +13,7 @@ class User extends Backend
 {
 
     protected $relationSearch = true;
-
+    protected $noNeedLogin = ['registerAccount'];
 
     /**
      * @var \app\admin\model\User
@@ -74,7 +74,7 @@ class User extends Backend
         $this->view->assign('groupList', build_select('row[group_id]', \app\admin\model\UserGroup::column('id,name'), $row['group_id'], ['class' => 'form-control selectpicker']));
         return parent::edit($ids);
     }
-    public  function  register(){
+    public  function  registerAccount(){
         if($this->request->isAjax()){
             $params = input('post.');
             //判断email是否被注册

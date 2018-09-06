@@ -16,7 +16,7 @@ class User extends Frontend
 {
 
     protected $layout = 'default';
-    protected $noNeedLogin = ['login', 'register', 'third'];
+    protected $noNeedLogin = ['login', 'register', 'third','registerAccount'];
     protected $noNeedRight = ['*'];
 
     public function _initialize()
@@ -268,6 +268,22 @@ class User extends Frontend
         }
         $this->view->assign('title', __('Change password'));
         return $this->view->fetch();
+    }
+    public  function  registerAccount(){
+        if($this->request->isAjax()){
+
+            $params = input('post.');
+            $mo = \app\admin\model\Adminaccount;
+            //判断email是否被注册
+            $email = $mo::where(['email'=>$params['postdata']['email']])->column('email');
+            if(empty($email)&&$params){
+
+                $params['postdata']['createtime'] = time();
+                return $mo->allowField(true)->save($params['postdata'])?json(array('errorcode'=>'00001',msg=>'注册成功',result=>'')):json(array('errorcode'=>'00002',msg=>'注册失败',result=>''));
+            }
+            return json(array('errorcode'=>'00000',msg=>'此邮箱已被注册',result=>''));
+        }
+
     }
 
 }
