@@ -1253,4 +1253,5 @@ if (!function_exists('fullautomobile_inform')) {
                 ];
                 return $arr;
         }
+    }
 }
