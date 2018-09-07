@@ -599,6 +599,13 @@ class Orderlisttabs extends Backend
             }
         }
 
+        if ($row['admin_id']) {
+            $row['sales_name'] = Db::name("admin")
+                ->where("id", $row['admin_id'])
+                ->value("nickname");
+
+        }
+
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {
@@ -700,7 +707,12 @@ class Orderlisttabs extends Backend
                 $this->error(__('You have no permission'));
             }
         }
+        if ($row['admin_id']) {
+            $row['sales_name'] = Db::name("admin")
+                ->where("id", $row['admin_id'])
+                ->value("nickname");
 
+        }
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
