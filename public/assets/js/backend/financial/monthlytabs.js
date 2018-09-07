@@ -80,17 +80,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
                             {field: 'monthly_models', title: __('Monthly_models')},
                             {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
-                            {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: Table.api.formatter.normal},
+                            {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: function (v,r,i) {
+                                    return v=='failure'?'<span class="text-danger">失败</span>':'<span class="text-success">成功</span>';
+                                }},
                             {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
                             {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
                             {field: 'monthly_company', title: __('Monthly_company')},
                             {field: 'monthly_car_number', title: __('Monthly_car_number')},
-                            {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
+                            // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
                             {field: 'monthly_note', title: __('Monthly_note')},
                             {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
 
 
-                                    return value=='did_not_send'?"<span class='text-danger'><i class='fa fa-circle'></i> 待发送</span>":'未知状态'
+                                    return row.monthly_data=='failure'?"<span class='text-danger'><i class='fa fa-circle'></i> 待发送</span>":'未知状态'
 
                                 }},
                             {
@@ -220,10 +222,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'monthly_models', title: __('Monthly_models')},
                             {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
                             {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: function (v,r,i) {
-                                    if(v=='failure'){
+                                    if(v=='failure'&& r.monthly_supplementary !=null){
                                         v = '<span class="text-danger">失败</span>';
                                         return v+' <span class="label label-success">'+r.monthly_supplementary+'</span>'
 
+                                    }else {
+                                        return '<span class="text-danger">失败</span>';
                                     }
                                 }},
                             {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
