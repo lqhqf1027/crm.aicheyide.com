@@ -690,7 +690,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 取消预定
                              */
                             { 
-                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'取消预定', title: __('取消预定'),classname: 'btn btn-xs btn-danger btn-rentaldelone',
+                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'取消预定', title: __('取消预定'),classname: 'btn btn-xs btn-danger btn-rentaldelone',
                                 // url:'order/rentalorder/del',/** */
                                 hidden:function(row){
                                     if(row.review_the_data == 'is_reviewing_argee'){ 
@@ -724,7 +724,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 删除
                              */
                             { 
-                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-rentaldelone',
+                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-rentaldelone',
                                 // url:'order/rentalorder/del',/** */
                                 hidden:function(row){
                                     if(row.review_the_data == 'is_reviewing_false'){ 
@@ -758,7 +758,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 修改订单
                              */
                             { 
-                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'修改订单', title: __('修改订单'),classname: 'btn btn-xs btn-success btn-rentaleditone', 
+                                name: 'rentaledit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'修改订单', title: __('修改订单'),classname: 'btn btn-xs btn-success btn-rentaleditone', 
                                 // url:'order/rentalorder/edit',/**修改订单 */
                                 hidden:function(row,value,index){ 
                                     if(row.review_the_data == 'is_reviewing_false'){ 
@@ -1168,7 +1168,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
                                     {
                                         icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        url: 'order/secondsalesorder/del',/**删除 */
+                                        // url: 'order/secondsalesorder/del',/**删除 */
                                         hidden: function (row) {
                                             if (row.review_the_data == 'is_reviewing') {
                                                 return false;
@@ -1202,8 +1202,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     },
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-secondeditone',
-                                        url: 'order/secondsalesorder/edit',/**编辑 */
+                                        name: 'secondedit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-secondeditone',
+                                        // url: 'order/secondsalesorder/edit',/**编辑 */
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'is_reviewing') {
                                                 return false;
@@ -1686,8 +1686,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     },
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-fulleditone',
-                                        url: 'order/fullparmentorder/edit',/**编辑 */
+                                        name: 'fulledit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-fulleditone',
+                                        // url: 'order/fullparmentorder/edit',/**编辑 */
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
