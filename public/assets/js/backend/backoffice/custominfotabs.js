@@ -31,8 +31,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         admeasure: function () {
 
             // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({});
+            // Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
+
                 var pre = parseInt($('#assigned-customer').text());
 
                 $('#assigned-customer').text(pre+1);
@@ -60,7 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-
+                console.log(data);
 
                 var datas = parseInt(data);
 
@@ -139,18 +140,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         text: '分配',
                                         title: __('Allocation'),
                                         icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
-                                        url: 'backoffice/custominfotabs/admeasure',
-                                        success: function (data, ret) {
-                                            console.log(data);
-                                        },
-                                        error: function (data, ret) {
+                                        classname: 'btn btn-xs btn-info btn-newCustomer',
+                                        // url: 'backoffice/custominfotabs/admeasure'
 
-                                        }
                                     },
 
                                 ],
-                                events: Table.api.events.operate,
+                                events: Controller.api.operate,
                                 formatter: Controller.api.formatter.operate
                             }
                         ]
@@ -275,6 +271,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+            },
+            operate:{
+                'click .btn-newCustomer': function (e, value, row, index) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var table = $(this).closest('table');
+                    var options = table.bootstrapTable('getOptions');
+                    var ids = row[options.pk];
+                    row = $.extend({}, row ? row : {}, {ids: ids});
+                    var url = 'backoffice/custominfotabs/admeasure';
+                    Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                },
             },
             formatter: {
                 operate: function (value, row, index) {

@@ -361,12 +361,11 @@ class Custominfotabs extends Backend
                     ->message($data['message'])
                     ->send();
                 if($result_s){
-                    $this->success();
+                    $this->success('','',3);
                 }
                 else {
                     $this->error('邮箱发送失败');
                 }
-
 
             } else {
                 $this->error();
@@ -481,7 +480,7 @@ class Custominfotabs extends Backend
 
             } else {
 
-                $this->error();
+                $this->error(__('Parameter %s can not be empty', ''));
             }
         }
         return $this->view->fetch();
