@@ -82,7 +82,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
                             {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
@@ -217,7 +217,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
                             {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
@@ -345,7 +345,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
                             {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
@@ -467,7 +467,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
                             {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
@@ -591,7 +591,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
                             {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
@@ -650,7 +650,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
                             {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},

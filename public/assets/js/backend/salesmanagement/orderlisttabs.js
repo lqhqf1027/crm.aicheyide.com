@@ -36,6 +36,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 $(".btn-add").data("area", ["95%", "95%"]);
                 $(".btn-edit").data("area", ["95%", "95%"]);
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
 
                 // 初始化表格
                 orderAcar.bootstrapTable({
@@ -55,7 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             { checkbox: true },
-                            { field: 'id', title: __('Id') },
+                            { field: 'id', title: __('Id') ,operate:false},
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
 
@@ -79,8 +80,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
-                            { field: 'planacar.payment', title: __('首付（元）') },
-                            { field: 'planacar.monthly', title: __('月供（元）') },
+                            { field: 'planacar.payment', title: __('首付（元）') ,operate:false },
+                            { field: 'planacar.monthly', title: __('月供（元）')  ,operate:false},
                             { field: 'planacar.nperlist', title: __('期数') ,operate:false},
                             { field: 'planacar.margin', title: __('保证金（元）'),operate:false },
                             { field: 'planacar.tail_section', title: __('尾款（元）'),operate:false },
@@ -559,9 +560,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var orderRental = $("#orderRental"); 
                  
                 $(".btn-add").data("area", ["95%","95%"]); 
-                $(".btn-edit").data("area", ["95%","95%"]); 
-                
-                 // 初始化表格
+                $(".btn-edit").data("area", ["95%","95%"]);
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
+
+                // 初始化表格
                  orderRental.bootstrapTable({
                 url: 'salesmanagement/Orderlisttabs/orderRental',
                 extend: {
@@ -580,7 +582,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate:false},
                         // {field: 'plan_car_rental_name', title: __('Plan_car_rental_name')},
                         // {field: 'sales_id', title: __('Sales_id')},
                         // {field: 'admin_id', title: __('Admin_id')},
@@ -1095,7 +1097,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             { checkbox: true },
-                            { field: 'id', title: __('Id') },
+                            { field: 'id', title: __('Id') ,operate:false},
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime ,datetimeFormat:"YYYY-MM-DD" },
 
@@ -1118,8 +1120,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             { field: 'id_card', title: __('Id_card') },
                             
-                            { field: 'plansecond.newpayment', title: __('新首付（元）') },
-                            { field: 'plansecond.monthlypaymen', title: __('月供（元）') },
+                            { field: 'plansecond.newpayment', title: __('新首付（元）'),operate:false },
+                            { field: 'plansecond.monthlypaymen', title: __('月供（元）'),operate:false },
                             { field: 'plansecond.periods', title: __('期数') , operate: false},
                             { field: 'plansecond.totalprices', title: __('总价（元）'), operate: false },
                             { field: 'plansecond.bond', title: __('保证金（元）') , operate: false},
@@ -1606,7 +1608,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             { checkbox: true },
-                            { field: 'id', title: __('Id') },
+                            { field: 'id', title: __('Id') ,operate:false},
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime, datetimeFormat:"YYYY-MM-DD" },
                             { field: 'models.name', title: __('销售车型') },

@@ -543,7 +543,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
 
-                if (hash.indexOf(arr[i]['mortgage']['lending_date']) == -1) {
+                if (hash.indexOf(arr[i]['mortgage']['lending_date']) == -1 &&arr[i]['mortgage']['lending_date']!=null) {
 
                     hash.push(arr[i]['mortgage']['lending_date']);
 
@@ -600,11 +600,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
                 Loan: function (value, row, index) {
 
-
                     if (row.mortgage.firm_stage && value) {
                         return value + "" + row.mortgage.firm_stage;
                     } else {
-                        return value
+                       return value;
                     }
 
 
