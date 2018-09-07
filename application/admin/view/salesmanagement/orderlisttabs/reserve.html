@@ -9,7 +9,7 @@
                 <label class="control-label col-xs-12 col-sm-2">{:__('预定车型/方案')}:</label>
                 <div class="col-xs-12 col-sm-8">
         
-                    <table class="plan_acar table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
+                    <table class="table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
                         <tr>
                             <th class="col-xs-12 col-sm-1 ">车牌号</th>
                             <th class="col-xs-12 col-sm-1 ">车型</th>
@@ -120,7 +120,7 @@
                     // console.log($(this).attr("name"));
 
                     $.ajax({
-                        url: 'order/rentalorder/planname',
+                        url: 'salesmanagement/Orderlisttabs/planname',
 
                         data: { id: JSON.stringify($(this).attr("name")) },
                     })

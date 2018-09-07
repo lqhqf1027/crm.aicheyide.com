@@ -23,25 +23,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
 
-        //单个分配
-        dstribution: function () {
 
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({});
-            Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-
-                Fast.api.close(data);//这里是重点
-                // console.log(data);
-                // Toastr.success("成功");//这个可有可无
-            }, function (data, ret) {
-                // console.log(data); 
-                Toastr.success("失败");
-            });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-
-        },
         //批量分配 
         distribution: function () {
 
@@ -155,24 +137,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate',
                                 title: __('Operate'),
                                 table: newCustomer,
-                                events: Table.api.events.operate,
+
                                 buttons: [
                                     {
                                         name: 'detail',
                                         text: '分配',
                                         title: '分配',
                                         icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-info btn-newCustomer btn-dialog',
-                                        url: 'promote/customertabs/dstribution',
-                                        success: function (data, ret) {
-
-                                        },
-                                        error: function () {
-                                        }
+                                        classname: 'btn btn-xs btn-info btn-newCustomer',
                                     }
                                 ],
-
-                                events: Table.api.events.operate,
+                                events: Controller.api.events.operate,
                                 formatter: Table.api.formatter.operate
                             }
                         ]
@@ -533,10 +508,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
 
         },
-        edit: function () {
-            console.log($('#c-customlevel').val());
-            return;
+        // edit: function () {
+        //     Form.api.bindevent($("form[role=form]"), function (data, ret) {
+        //
+        //
+        //         Controller.api.bindevent();
+        //
+        //     }, function (data, ret) {
+        //         Toastr.error("失败");
+        //
+        //     });
+        // },
+        //单个分配
+        dstribution: function () {
+
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+                Toastr.success("失败");
+            });
             Controller.api.bindevent();
+            // console.log(Config.id);
+
         },
         api: {
             bindevent: function () {
@@ -546,6 +546,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+
+            },
+            events:{
+                operate:{
+                    'click .btn-newCustomer': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'promote/customertabs/dstribution';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                }
             }
         }
 

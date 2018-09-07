@@ -21,7 +21,8 @@ class Customerlisttabs extends Backend
      */
     protected $model = null;
 //    protected $searchFields = 'id,username';
-    protected $noNeedRight = ['newCustomer', 'relation', 'intention', 'nointention', 'giveup', 'index', 'overdue', 'add', 'edits', 'showFeedback'];
+    protected $noNeedRight = ['newCustomer', 'relation', 'intention', 'nointention', 'giveup', 'index', 'overdue', 'add', 'edits', 'showFeedback'
+    ,'ajaxGiveup','ajaxBatchGiveup','get_total','encapsulationSelect','edit','batchfeedback','showFeedback'];
 
     public function _initialize()
     {
@@ -487,7 +488,6 @@ class Customerlisttabs extends Backend
 
             if ($params) {
                 unset($params['level']);
-//pr($params);die();
                 $sql1 = $this->model->where('id', $ids)->update([
                     'feedbacktime' => time(),
                     'followuptimestamp' => strtotime($params['followupdate']),

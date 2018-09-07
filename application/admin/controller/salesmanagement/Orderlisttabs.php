@@ -25,9 +25,12 @@ class Orderlisttabs extends Backend
      * @var \app\admin\model\Ordertabs
      */
     protected $model = null;
+    // protected $multiFields = 'fulldel';
     protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull','sedAudit','details','rentaldetails','seconddetails','fulldetails',
                     'add','edit','planacar','planname','reserve','rentalplanname','rentaladd','rentaledit','rentaldel','control','setAudit','secondadd',
-                    'secondedit','fulladd','fulledit'];
+
+                    'secondedit','fulladd','fulledit','submitCar','del','fulldel','seconddel'];
+
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
@@ -162,7 +165,7 @@ class Orderlisttabs extends Backend
                 ->count();
 
             $list = $this->model
-                ->with(['sales' => function ($query) {
+                ->with(['admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
                     $query->withField('name');
@@ -176,8 +179,8 @@ class Orderlisttabs extends Backend
 
             foreach ($list as $k => $v) {
                 $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
-                $v->visible(['sales']);
-                $v->getRelation('sales')->visible(['nickname']);
+                $v->visible(['admin']);
+                $v->getRelation('admin')->visible(['nickname']);
                 $v->visible(['models']);
                 $v->getRelation('models')->visible(['name']);
                 $v->visible(['carrentalmodelsinfo']);
@@ -599,6 +602,13 @@ class Orderlisttabs extends Backend
             }
         }
 
+        if ($row['admin_id']) {
+            $row['sales_name'] = Db::name("admin")
+                ->where("id", $row['admin_id'])
+                ->value("nickname");
+
+        }
+
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {
@@ -700,7 +710,12 @@ class Orderlisttabs extends Backend
                 $this->error(__('You have no permission'));
             }
         }
+        if ($row['admin_id']) {
+            $row['sales_name'] = Db::name("admin")
+                ->where("id", $row['admin_id'])
+                ->value("nickname");
 
+        }
 
         //身份证正反面（多图）
         $id_cardimages = explode(',', $row['id_cardimages']);
@@ -1037,6 +1052,7 @@ class Orderlisttabs extends Backend
     //租车预定
     public function reserve()
     {
+        $this->model = new \app\admin\model\RentalOrder;
 
         $result = DB::name('car_rental_models_info')->alias('a')
             ->join('models b', 'b.id=a.models_id')
@@ -1054,10 +1070,12 @@ class Orderlisttabs extends Backend
             // $ex = explode(',', $params['plan_acar_name']);
 
             $params['plan_car_rental_name'] = Session::get('plan_id'); 
+
+            $params['car_rental_models_info_id'] = $params['plan_car_rental_name'];
             
             $params['plan_name'] = Session::get('plan_name'); 
 
-            $models_id = DB::name('car_rental_models_info')->where('id', Session::get('plan_id'))->value('models_id');
+            $models_id = DB::name('car_rental_models_info')->where('id', $params['plan_car_rental_name'])->value('models_id');
 
             $params['models_id'] = $models_id;
             
@@ -1193,27 +1211,24 @@ class Orderlisttabs extends Backend
             $params['down_payment'] = $result['down_payment'];
         
             if ($params) {
-                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
-                    $params[$this->dataLimitField] = $this->auth->id;
-                }
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
                         $name = basename(str_replace('\\', '/', get_class($this->model)));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.add' : true) : $this->modelValidate;
-                        $this->model->validate($validate);
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
                     }
-                    $result = $this->model->allowField(true)->save($params);
+                    $result = $row->allowField(true)->save($params);
                     if ($result !== false) {
                         //如果添加成功,将状态改为暂不提交风控审核
-                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing_false']);
+                        $result_s = $row->isUpdate(true)->save(['id' => $row['id'], 'review_the_data' => 'is_reviewing_false']);
                         if ($result_s) {
                             $this->success();
                         } else {
                             $this->error('更新状态失败');
                         }
                     } else {
-                        $this->error($this->model->getError());
+                        $this->error($row->getError());
                     }
                 } catch (\think\exception\PDOException $e) {
                     $this->error($e->getMessage());
@@ -1274,7 +1289,7 @@ class Orderlisttabs extends Backend
     }
  
     /**
-     * 删除
+     * 租车删除
      */
     public function rentaldel($ids = "")
     {
@@ -1292,7 +1307,7 @@ class Orderlisttabs extends Backend
                 $count += $v->delete();
             }
             if ($count) {
-                DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('review_the_data', '');
+                DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('status_data', '');
                 $this->success();
             } else {
                 $this->error(__('No rows were deleted'));
@@ -1334,7 +1349,7 @@ class Orderlisttabs extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -1407,8 +1422,9 @@ class Orderlisttabs extends Backend
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
-                //销售员
-                $admin_id = $data['admin_id'];
+                //内勤
+                $backoffice_id = $data['backoffice_id'];
+                
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
                 $username= $data['username'];
@@ -1418,7 +1434,7 @@ class Orderlisttabs extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $receiver = DB::name('admin')->where('id', $backoffice_id)->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -1734,6 +1750,32 @@ class Orderlisttabs extends Backend
     }
 
     /**
+     * 二手车删除
+     */
+    public function seconddel($ids = "")
+    {
+        $this->model = new \app\admin\model\SecondSalesOrder;
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+
+    /**
     *  全款车.
     */
     /**
@@ -1953,7 +1995,7 @@ class Orderlisttabs extends Backend
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
-                $admin_id = $data['admin_id'];
+                $backoffice_id = $data['backoffice_id'];
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
                 $username= $data['username'];
@@ -1963,7 +2005,7 @@ class Orderlisttabs extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $receiver = DB::name('admin')->where('id', $backoffice_id)->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -1981,6 +2023,32 @@ class Orderlisttabs extends Backend
                 
             }
         }
+    }
+
+    /**
+     * 全款删除
+     */
+    public function fulldel($ids = "")
+    {
+        $this->model = new \app\admin\model\FullParmentOrder;
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
     }
 
 

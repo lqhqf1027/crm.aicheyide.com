@@ -922,6 +922,12 @@ class Creditreview extends Backend
             }
         }
 
+        if($row['admin_id']){
+             $row['sales_name'] = Db::name("admin")
+             ->where("id",$row['admin_id'])
+             ->value("nickname");
+        }
+
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
 
@@ -1011,7 +1017,11 @@ class Creditreview extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-
+        if($row['admin_id']){
+            $row['sales_name'] = Db::name("admin")
+                ->where("id",$row['admin_id'])
+                ->value("nickname");
+        }
         //身份证图片
         $id_cardimages = explode(',', $row['id_cardimages']);
         //驾照图片
@@ -1049,7 +1059,11 @@ class Creditreview extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-
+        if($row['admin_id']){
+            $row['sales_name'] = Db::name("admin")
+                ->where("id",$row['admin_id'])
+                ->value("nickname");
+        }
         //定金合同（多图）
         $deposit_contractimages = explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {

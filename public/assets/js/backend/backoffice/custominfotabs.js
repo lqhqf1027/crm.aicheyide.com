@@ -31,8 +31,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         admeasure: function () {
 
             // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({});
+            // Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
+
                 var pre = parseInt($('#assigned-customer').text());
 
                 $('#assigned-customer').text(pre+1);
@@ -42,7 +43,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // console.log(data);
                 Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
-
 
 
 
@@ -61,7 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-
+                console.log(data);
 
                 var datas = parseInt(data);
 
@@ -100,21 +100,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 初始化表格
                 newCustomer.bootstrapTable({
                     url: 'backoffice/Custominfotabs/newCustomer',
-                    // extend: {
-                    //     // index_url: 'customer/customerresource/index',
-                    //     add_url: 'customer/customerresource/add',
-                    //     edit_url: 'customer/customerresource/edit',
-                    //     del_url: 'customer/customerresource/del',
-                    //     multi_url: 'customer/customerresource/multi',
-                    //     table: 'customer_resource',
-                    // },
+
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
+
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -136,22 +131,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false,
                                 formatter: Table.api.formatter.datetime
                             },
-                            // {
-                            //     field: 'createtime',
-                            //     title: __('Createtime'),
-                            //     operate: 'RANGE',
-                            //     addclass: 'datetimerange',
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'updatetime',
-                            //     title: __('Updatetime'),
-                            //     operate: 'RANGE',
-                            //     addclass: 'datetimerange',
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {field: 'feedback', title: __('Feedback')},
-                            // {field: 'note', title: __('Note')},
+
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
@@ -160,18 +140,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         text: '分配',
                                         title: __('Allocation'),
                                         icon: 'fa fa-share',
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-newCustomer',
-                                        url: 'backoffice/custominfotabs/admeasure',
-                                        success: function (data, ret) {
-                                            console.log(data);
-                                        },
-                                        error: function (data, ret) {
+                                        classname: 'btn btn-xs btn-info btn-newCustomer',
+                                        // url: 'backoffice/custominfotabs/admeasure'
 
-                                        }
                                     },
 
                                 ],
-                                events: Table.api.events.operate,
+                                events: Controller.api.operate,
                                 formatter: Controller.api.formatter.operate
                             }
                         ]
@@ -233,10 +208,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -295,6 +271,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+            },
+            operate:{
+                'click .btn-newCustomer': function (e, value, row, index) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var table = $(this).closest('table');
+                    var options = table.bootstrapTable('getOptions');
+                    var ids = row[options.pk];
+                    row = $.extend({}, row ? row : {}, {ids: ids});
+                    var url = 'backoffice/custominfotabs/admeasure';
+                    Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                },
             },
             formatter: {
                 operate: function (value, row, index) {

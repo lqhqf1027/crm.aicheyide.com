@@ -36,6 +36,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 $(".btn-add").data("area", ["95%", "95%"]);
                 $(".btn-edit").data("area", ["95%", "95%"]);
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
 
                 // 初始化表格
                 orderAcar.bootstrapTable({
@@ -55,7 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             { checkbox: true },
-                            { field: 'id', title: __('Id') },
+                            { field: 'id', title: __('Id') ,operate:false},
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
 
@@ -79,8 +80,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
-                            { field: 'planacar.payment', title: __('首付（元）') },
-                            { field: 'planacar.monthly', title: __('月供（元）') },
+                            { field: 'planacar.payment', title: __('首付（元）') ,operate:false },
+                            { field: 'planacar.monthly', title: __('月供（元）')  ,operate:false},
                             { field: 'planacar.nperlist', title: __('期数') ,operate:false},
                             { field: 'planacar.margin', title: __('保证金（元）'),operate:false },
                             { field: 'planacar.tail_section', title: __('尾款（元）'),operate:false },
@@ -559,17 +560,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var orderRental = $("#orderRental"); 
                  
                 $(".btn-add").data("area", ["95%","95%"]); 
-                $(".btn-edit").data("area", ["95%","95%"]); 
-                
-                 // 初始化表格
+                $(".btn-edit").data("area", ["95%","95%"]);
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
+
+                // 初始化表格
                  orderRental.bootstrapTable({
                 url: 'salesmanagement/Orderlisttabs/orderRental',
                 extend: {
                     // index_url: 'order/salesorder/index',
                     rentaladd_url: 'salesmanagement/Orderlisttabs/rentaladd',
                     rentaledit_url: 'salesmanagement/Orderlisttabs/rentaledit',
-                    rentaldel_url: 'salesmanagement/Orderlisttabs/rentaldel',
-                    multi_url: 'order/rentalorder/multi',
+                    del_url: 'salesmanagement/Orderlisttabs/rentaldel',
+                    rentalmulti_url: 'order/rentalorder/multi',
                     reserve_url: 'salesmanagement/Orderlisttabs/reserve',
                     table: 'rental_order',
                 },
@@ -580,7 +582,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate:false},
                         // {field: 'plan_car_rental_name', title: __('Plan_car_rental_name')},
                         // {field: 'sales_id', title: __('Sales_id')},
                         // {field: 'admin_id', title: __('Admin_id')},
@@ -591,7 +593,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'order_no', title: __('Order_no')},
 
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
-                        {field: 'sales.nickname', title: __('销售员')},
+                        {field: 'admin.nickname', title: __('销售员')},
                         {field: 'models.name', title: __('车型')},
                         {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
                         {field: 'carrentalmodelsinfo.vin', title: __('车架号')},
@@ -629,7 +631,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              */
                             {
                                 name:'customerInformation',text:'开始提车', title:'补全客户信息，开始提车', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-customerInformation',
-                                url: 'order/rentalorder/add',
+                                // url: 'order/rentalorder/add',
                                 hidden:function(row){
                                     if(row.review_the_data == 'is_reviewing_argee'){ 
                                         return false; 
@@ -659,7 +661,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              */
                             {
                                 name:'control',text:'提交风控审核', title:'提交风控审核', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-control',
-                                url: 'order/rentalorder/control',  
+                                // url: 'order/rentalorder/control',  
                                 hidden:function(row){ /** */
                                     if(row.review_the_data == 'is_reviewing_false'){ 
                                         return false; 
@@ -688,8 +690,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 取消预定
                              */
                             { 
-                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'取消预定', title: __('取消预定'),classname: 'btn btn-xs btn-danger btn-delone',
-                                url:'order/rentalorder/del',/** */
+                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'取消预定', title: __('取消预定'),classname: 'btn btn-xs btn-danger btn-delone',
+                                // url:'order/rentalorder/del',/** */
                                 hidden:function(row){
                                     if(row.review_the_data == 'is_reviewing_argee'){ 
                                         return false; 
@@ -722,8 +724,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 删除
                              */
                             { 
-                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
-                                url:'order/rentalorder/del',/** */
+                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
+                                // url:'order/rentalorder/del',/** */
                                 hidden:function(row){
                                     if(row.review_the_data == 'is_reviewing_false'){ 
                                         return false; 
@@ -756,8 +758,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 修改订单
                              */
                             { 
-                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'修改订单', title: __('修改订单'),classname: 'btn btn-xs btn-success btn-editone', 
-                                url:'order/rentalorder/edit',/**修改订单 */
+                                name: 'rentaledit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'修改订单', title: __('修改订单'),classname: 'btn btn-xs btn-success btn-rentaleditone', 
+                                // url:'order/rentalorder/edit',/**修改订单 */
                                 hidden:function(row,value,index){ 
                                     if(row.review_the_data == 'is_reviewing_false'){ 
                                         return false; 
@@ -1084,7 +1086,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // index_url: 'order/secondsalesorder/index',
                         secondadd_url: 'salesmanagement/Orderlisttabs/secondadd',
                         secondedit_url: 'salesmanagement/Orderlisttabs/secondedit',
-                        del_url: 'salesmanagement/Orderlisttabs/del',
+                        del_url: 'salesmanagement/Orderlisttabs/seconddel',
                         multi_url: 'salesmanagement/Orderlisttabs/multi',
                         table: 'second_sales_order',
                     },
@@ -1095,7 +1097,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             { checkbox: true },
-                            { field: 'id', title: __('Id') },
+                            { field: 'id', title: __('Id') ,operate:false},
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime ,datetimeFormat:"YYYY-MM-DD" },
 
@@ -1118,8 +1120,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             { field: 'id_card', title: __('Id_card') },
                             
-                            { field: 'plansecond.newpayment', title: __('新首付（元）') },
-                            { field: 'plansecond.monthlypaymen', title: __('月供（元）') },
+                            { field: 'plansecond.newpayment', title: __('新首付（元）'),operate:false },
+                            { field: 'plansecond.monthlypaymen', title: __('月供（元）'),operate:false },
                             { field: 'plansecond.periods', title: __('期数') , operate: false},
                             { field: 'plansecond.totalprices', title: __('总价（元）'), operate: false },
                             { field: 'plansecond.bond', title: __('保证金（元）') , operate: false},
@@ -1165,8 +1167,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     },
                                     {
-                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        url: 'order/secondsalesorder/del',/**删除 */
+                                        icon: 'fa fa-trash', name: 'seconddel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        // url: 'order/secondsalesorder/del',/**删除 */
                                         hidden: function (row) {
                                             if (row.review_the_data == 'is_reviewing') {
                                                 return false;
@@ -1200,8 +1202,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     },
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-secondeditone',
-                                        url: 'order/secondsalesorder/edit',/**编辑 */
+                                        name: 'secondedit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-secondeditone',
+                                        // url: 'order/secondsalesorder/edit',/**编辑 */
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'is_reviewing') {
                                                 return false;
@@ -1595,7 +1597,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // index_url: 'order/fullparmentorder/index',
                         fulladd_url: 'salesmanagement/Orderlisttabs/fulladd',
                         fulledit_url: 'salesmanagement/Orderlisttabs/fulledit',
-                        del_url: 'salesmanagement/Orderlisttabs/del',
+                        del_url: 'salesmanagement/Orderlisttabs/fulldel',
                         multi_url: 'salesmanagement/Orderlisttabs/multi',
                         table: 'full_parment_order',
                     },
@@ -1606,7 +1608,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             { checkbox: true },
-                            { field: 'id', title: __('Id') },
+                            { field: 'id', title: __('Id') ,operate:false},
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime, datetimeFormat:"YYYY-MM-DD" },
                             { field: 'models.name', title: __('销售车型') },
@@ -1639,7 +1641,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 buttons: [
                                     {
                                         name: 'submitCar', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-info btn-submitCar',
-                                        url: 'order/fullparmentorder/submitCar',/**提交内勤 */
+                                        // url: 'order/fullparmentorder/submitCar',/**提交内勤 */
                                        
                                         hidden: function (row) { /**提交内勤 */
                                             if (row.review_the_data == 'send_to_internal') {
@@ -1661,8 +1663,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     },
                                     {
-                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        url: 'order/fullparmentorder/del',/**删除 */
+                                        icon: 'fa fa-trash', name: 'fulldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        // url: 'order/fullparmentorder/del',/**删除 */
                                         hidden: function (row) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -1684,8 +1686,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     },
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-fulleditone',
-                                        url: 'order/fullparmentorder/edit',/**编辑 */
+                                        name: 'fulledit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-fulleditone',
+                                        // url: 'order/fullparmentorder/edit',/**编辑 */
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -1863,7 +1865,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
-                // Toastr.success("成功");//这个可有可无
+                Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
                 
@@ -1890,7 +1892,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
-                // Toastr.success("成功");//这个可有可无
+                Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
                 
@@ -1917,7 +1919,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
-                // Toastr.success("成功");//这个可有可无
+                Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
                 
@@ -1944,7 +1946,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
-                // Toastr.success("成功");//这个可有可无
+                Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
                 
@@ -1971,7 +1973,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
-                // Toastr.success("成功");//这个可有可无
+                Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
                 
@@ -1998,7 +2000,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
-                // Toastr.success("成功");//这个可有可无
+                Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
                 
@@ -2025,7 +2027,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
-                // Toastr.success("成功");//这个可有可无
+                Toastr.success("成功");//这个可有可无
             }, function(data, ret){
                 // console.log(data);
                 
@@ -2080,7 +2082,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
  
                                 }, function (data, ret) {
 
-                                    Toastr.success(ret.msg);
+                                    Toastr.success('操作成功');
                                     Layer.close(index);
                                     table.bootstrapTable('refresh');
                                     return false;
@@ -2145,7 +2147,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
  
                                 }, function (data, ret) {
 
-                                    Toastr.success(ret.msg);
+                                    Toastr.success('操作成功');
                                     Layer.close(index);
                                     table.bootstrapTable('refresh');
                                     return false;
@@ -2191,7 +2193,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
  
                                 }, function (data, ret) {
 
-                                    Toastr.success(ret.msg);
+                                    Toastr.success('操作成功');
                                     Layer.close(index);
                                     table.bootstrapTable('refresh');
                                     return false;
@@ -2233,7 +2235,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 var options = table.bootstrapTable('getOptions');
                                 Fast.api.ajax({
 
-                                    url: 'order/fullparmentorder/submitCar',
+                                    url: 'salesmanagement/orderlisttabs/submitCar',
                                     data: {id: row[options.pk]}
  
                                 }, function (data, ret) {
@@ -2265,6 +2267,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, { ids: ids });
                         var url = options.extend.edit_url+'/posttype/edit';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    //租车编辑按钮
+                    'click .btn-rentaleditone': function (e, value, row, index) { /**二手车编辑按钮 */
+                        $(".btn-rentaleditone").data("area", ["95%", "95%"]);
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = options.extend.rentaledit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
                     //二手车编辑按钮
