@@ -3,7 +3,7 @@
 namespace app\admin\controller\secondhandcar;
 
 use app\common\controller\Backend;
-use think\DB;
+use think\Db;
 use app\common\library\Email;
 
 /**
