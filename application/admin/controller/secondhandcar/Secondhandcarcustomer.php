@@ -3,7 +3,7 @@
 namespace app\admin\controller\secondhandcar;
 
 use app\common\controller\Backend;
-use think\DB;
+use think\Db;
 use think\Config;
 
 /**
@@ -19,6 +19,7 @@ class Secondhandcarcustomer extends Backend
      * @var \app\admin\model\Secondpeople
      */
     protected $model = null;
+    protected $noNeedRight = ['index','seconddetails'];
 
     public function _initialize()
     {

@@ -19,7 +19,7 @@ class Rentcarscustomer extends Backend
      * @var \app\admin\model\Rentalpeople
      */
     protected $model = null;
-
+    protected $noNeedRight = ['index','rentaldetails'];
     public function _initialize()
     {
         parent::_initialize();

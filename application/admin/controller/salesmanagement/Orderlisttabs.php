@@ -25,10 +25,11 @@ class Orderlisttabs extends Backend
      * @var \app\admin\model\Ordertabs
      */
     protected $model = null;
+    // protected $multiFields = 'fulldel';
     protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull','sedAudit','details','rentaldetails','seconddetails','fulldetails',
                     'add','edit','planacar','planname','reserve','rentalplanname','rentaladd','rentaledit','rentaldel','control','setAudit','secondadd',
 
-                      'secondedit','fulladd','fulledit','submitCar','del'];
+                    'secondedit','fulladd','fulledit','submitCar','del','fulldel','seconddel'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -1290,7 +1291,7 @@ class Orderlisttabs extends Backend
     }
  
     /**
-     * 删除
+     * 租车删除
      */
     public function rentaldel($ids = "")
     {
@@ -1308,7 +1309,7 @@ class Orderlisttabs extends Backend
                 $count += $v->delete();
             }
             if ($count) {
-                DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('review_the_data', '');
+                DB::name('car_rental_models_info')->where('id', $plan_car_rental_name)->setField('status_data', '');
                 $this->success();
             } else {
                 $this->error(__('No rows were deleted'));
@@ -1750,6 +1751,32 @@ class Orderlisttabs extends Backend
     }
 
     /**
+     * 二手车删除
+     */
+    public function seconddel($ids = "")
+    {
+        $this->model = new \app\admin\model\SecondSalesOrder;
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+
+    /**
     *  全款车.
     */
     /**
@@ -1997,6 +2024,32 @@ class Orderlisttabs extends Backend
                 
             }
         }
+    }
+
+    /**
+     * 全款删除
+     */
+    public function fulldel($ids = "")
+    {
+        $this->model = new \app\admin\model\FullParmentOrder;
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
     }
 
 

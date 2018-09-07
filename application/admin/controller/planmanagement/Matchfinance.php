@@ -9,12 +9,13 @@
 namespace app\admin\controller\planmanagement;
 
 use app\common\controller\Backend;
-use think\DB;
+use think\Db;
 use app\common\library\Email;
 
 class Matchfinance extends Backend
 {
     protected $model = null;
+    protected $noNeedRight = ['index', 'newprepare_match', 'secondprepare_match', 'newedit', 'secondedit', 'newbatch','secondbatch','add_sales'];
 
     public function _initialize()
     {
