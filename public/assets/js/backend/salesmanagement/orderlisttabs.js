@@ -52,6 +52,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
+                    pageSize:25,
                     searchFormVisible: true,
                     columns: [
                         [

@@ -9,7 +9,7 @@
 namespace app\admin\controller\financial;
 
 use app\common\controller\Backend;
-
+use think\Db;
 class Monthlytabs extends Backend
 {
     /**
@@ -37,7 +37,7 @@ class Monthlytabs extends Backend
 //        pr();die;
         $this->loadlang('financial/monthlytabs');
         $this->view->assign([
-            'did_total' => $this->model->where('monthly_data', 'failure')->count(),
+            'did_total' => $this->model->where(['monthly_data'=>'failure','monthly_status'=>null])->count(),
             'has_total' => $this->model->where('monthly_status', 'has_been_sent')->count(),
             'dedu_total' => $this->model->where('monthly_data', 'success')->count()
 
@@ -123,7 +123,7 @@ class Monthlytabs extends Backend
             ->where(function ($query) use ($statusD) {
                 //如果等于扣款失败客户
                 if ($statusD === 'failure') {
-                    $query->where(['monthly_data' => 'failure']);
+                    $query->where(['monthly_data' =>['=','failure'],'monthly_status'=>null]);
                 } //如果等于已发送到风控
                 if ($statusD === 'has_been_sent') {
                     $query->where(['monthly_status' => 'has_been_sent']);
@@ -140,7 +140,7 @@ class Monthlytabs extends Backend
             ->where(function ($query) use ($statusD) {
                 //如果等于扣款失败客户
                 if ($statusD === 'failure') {
-                    $query->where(['monthly_data' => 'failure']);
+                    $query->where(['monthly_data' =>['=','failure'],'monthly_status'=>null]);
                 } //如果等于已发送到风控
                 if ($statusD ==='has_been_sent') {
                     $query->where(['monthly_status' => 'has_been_sent']);
