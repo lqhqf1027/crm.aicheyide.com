@@ -230,7 +230,7 @@ class Carreservation extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $receiver = DB::name('admin')->where('rule_message', "message11")->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
