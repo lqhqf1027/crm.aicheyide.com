@@ -20,8 +20,7 @@ class Newcarscustomer extends Backend
      * @var \app\admin\model\CarNewUserInfo
      */
     protected $model = null;
-    protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
-    protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
+
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
@@ -68,10 +67,12 @@ class Newcarscustomer extends Backend
     //待提车
     public function prepare_lift_car()
     {
+
         $this->model = model('SalesOrder');
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
@@ -110,6 +111,7 @@ class Newcarscustomer extends Backend
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
+
             foreach ($list as $k => $row) {
                 $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
                 $row->visible(['planacar']);

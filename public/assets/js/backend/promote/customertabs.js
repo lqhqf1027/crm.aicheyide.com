@@ -508,17 +508,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
 
         },
-        edit: function () {
-            Form.api.bindevent($("form[role=form]"), function (data, ret) {
-
-
-                Controller.api.bindevent();
-
-            }, function (data, ret) {
-                Toastr.error("失败");
-
-            });
-        },
+        // edit: function () {
+        //     Form.api.bindevent($("form[role=form]"), function (data, ret) {
+        //
+        //
+        //         Controller.api.bindevent();
+        //
+        //     }, function (data, ret) {
+        //         Toastr.error("失败");
+        //
+        //     });
+        // },
         //单个分配
         dstribution: function () {
 
@@ -534,7 +534,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // console.log(data);
                 Toastr.success("失败");
             });
-            // Controller.api.bindevent();
+            Controller.api.bindevent();
             // console.log(Config.id);
 
         },
