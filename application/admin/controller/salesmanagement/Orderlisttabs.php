@@ -1211,24 +1211,27 @@ class Orderlisttabs extends Backend
             $params['down_payment'] = $result['down_payment'];
         
             if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {
                         $name = basename(str_replace('\\', '/', get_class($this->model)));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.edit' : true) : $this->modelValidate;
-                        $row->validate($validate);
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
                     }
-                    $result = $row->allowField(true)->save($params);
+                    $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
                         //如果添加成功,将状态改为暂不提交风控审核
-                        $result_s = $row->isUpdate(true)->save(['id' => $row['id'], 'review_the_data' => 'is_reviewing_false']);
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing_false']);
                         if ($result_s) {
                             $this->success();
                         } else {
                             $this->error('更新状态失败');
                         }
                     } else {
-                        $this->error($row->getError());
+                        $this->error($this->model->getError());
                     }
                 } catch (\think\exception\PDOException $e) {
                     $this->error($e->getMessage());
