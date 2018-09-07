@@ -1066,10 +1066,12 @@ class Orderlisttabs extends Backend
             // $ex = explode(',', $params['plan_acar_name']);
 
             $params['plan_car_rental_name'] = Session::get('plan_id'); 
+
+            $params['car_rental_models_info_id'] = $params['plan_car_rental_name'];
             
             $params['plan_name'] = Session::get('plan_name'); 
 
-            $models_id = DB::name('car_rental_models_info')->where('id', Session::get('plan_id'))->value('models_id');
+            $models_id = DB::name('car_rental_models_info')->where('id', $params['plan_car_rental_name'])->value('models_id');
 
             $params['models_id'] = $models_id;
             
