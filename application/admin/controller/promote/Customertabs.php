@@ -114,83 +114,14 @@ class Customertabs extends Backend
     //分配客户资源给内勤
     //单个分配
     //内勤  message13=>内勤一部，message20=>内勤二部
-//    public function dstribution($ids = NULL)
-//    {
-//        $this->model = model('CustomerResource');
-//
-//        $id = $this->model->get(['id' => $ids]);
-//        $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-//            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13');
-//        })->select();
-//        $backofficeList = array();
-//        foreach ($backoffice as $k => $v) {
-//            switch ($v['rule_message']) {
-//                case 'message20':
-//                    $backofficeList['message20']['nickname'] = $v['nickname'];
-//                    $backofficeList['message20']['id'] = $v['id'];
-//                    break;
-//                case 'message13':
-//                    $backofficeList['message13']['nickname'] = $v['nickname'];
-//                    $backofficeList['message13']['id'] = $v['id'];
-//                    break;
-//            }
-//        }
-//
-//        $this->view->assign('backofficeList', $backofficeList);
-//        $this->assignconfig('id', $id->id);
-//
-//        if ($this->request->isPost()) {
-//
-//            $params = $this->request->post('row/a');
-//
-//            $time = time();
-//            $result = $this->model->save(['backoffice_id' => $params['id'], 'distributinternaltime' => $time], function ($query) use ($id) {
-//                $query->where('id', $id->id);
-//            });
-//            if ($result) {
-//
-//
-//                $channel = "demo-platform";
-//                $content = "你有推广平台给你分配的新客户，请登录后台进行处理";
-//                goeary_push($channel, $content);
-//
-//                $data = dstribution_inform();
-//                // var_dump($data);
-//                // die;
-//                $email = new Email;
-//                // $receiver = "haoqifei@cdjycra.club";
-//                $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
-//                $result_s = $email
-//                    ->to($receiver)
-//                    ->subject($data['subject'])
-//                    ->message($data['message'])
-//                    ->send();
-//                if ($result_s) {
-//                    $this->success();
-//                } else {
-//                    $this->error('邮箱发送失败');
-//                }
-//
-//            } else {
-//                $this->error();
-//            }
-//        }
-//
-//        return $this->view->fetch();
-//    }
-
-    /**
-     * 参考的函数
-     * @param null $ids
-     * @return string
-     */
-    public function edit($ids = NULL)
+    public function dstribution($ids = NULL)
     {
-        $backoffice = Db::name("admin")
-            ->where("rule_message", "in", ['message13', 'message20'])
-            ->field('id,nickname,rule_message')
-            ->select();
+        $this->model = model('CustomerResource');
 
+        $id = $this->model->get(['id' => $ids]);
+        $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
+            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13');
+        })->select();
         $backofficeList = array();
         foreach ($backoffice as $k => $v) {
             switch ($v['rule_message']) {
@@ -205,37 +136,106 @@ class Customertabs extends Backend
             }
         }
 
+        $this->view->assign('backofficeList', $backofficeList);
+        $this->assignconfig('id', $id->id);
 
         if ($this->request->isPost()) {
-            $params = $this->request->post("row/a");
+
+            $params = $this->request->post('row/a');
+
+            $time = time();
+            $result = $this->model->save(['backoffice_id' => $params['id'], 'distributinternaltime' => $time], function ($query) use ($id) {
+                $query->where('id', $id->id);
+            });
+            if ($result) {
 
 
-            if ($params) {
+                $channel = "demo-platform";
+                $content = "你有推广平台给你分配的新客户，请登录后台进行处理";
+                goeary_push($channel, $content);
 
-                $params['distributinternaltime'] = time();
-
-                $result = Db::name("customer_resource")
-                ->where("id",$ids)
-                ->update([
-                    'distributinternaltime'=>$params['distributinternaltime'],
-                    'backoffice_id'=>$params['id']
-                ]);
-
-                if ($result) {
-                    $this->success('操作成功', null, 'success');
+                $data = dstribution_inform();
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
                 } else {
-                    $this->error();
+                    $this->error('邮箱发送失败');
                 }
 
+            } else {
+                $this->error();
             }
         }
 
-
-        $this->view->assign('backofficeList', $backofficeList);
-
-
         return $this->view->fetch();
     }
+
+    /**
+     * 参考的函数
+     * @param null $ids
+     * @return string
+     */
+//    public function edit($ids = NULL)
+//    {
+//        $backoffice = Db::name("admin")
+//            ->where("rule_message", "in", ['message13', 'message20'])
+//            ->field('id,nickname,rule_message')
+//            ->select();
+//
+//        $backofficeList = array();
+//        foreach ($backoffice as $k => $v) {
+//            switch ($v['rule_message']) {
+//                case 'message20':
+//                    $backofficeList['message20']['nickname'] = $v['nickname'];
+//                    $backofficeList['message20']['id'] = $v['id'];
+//                    break;
+//                case 'message13':
+//                    $backofficeList['message13']['nickname'] = $v['nickname'];
+//                    $backofficeList['message13']['id'] = $v['id'];
+//                    break;
+//            }
+//        }
+//
+//
+//        if ($this->request->isPost()) {
+//            $params = $this->request->post("row/a");
+//
+//
+//            if ($params) {
+//
+//                $params['distributinternaltime'] = time();
+//
+//                $result = Db::name("customer_resource")
+//                ->where("id",$ids)
+//                ->update([
+//                    'distributinternaltime'=>$params['distributinternaltime'],
+//                    'backoffice_id'=>$params['id']
+//                ]);
+//
+//                if ($result) {
+//                    $this->success('操作成功', null, 'success');
+//                } else {
+//                    $this->error();
+//                }
+//
+//            }
+//        }
+//
+//
+//        $this->view->assign('backofficeList', $backofficeList);
+//
+//
+//        return $this->view->fetch();
+//    }
 
     //已分配
     public function newAllocation()
