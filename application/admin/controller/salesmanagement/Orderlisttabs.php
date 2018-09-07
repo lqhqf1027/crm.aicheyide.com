@@ -1052,6 +1052,7 @@ class Orderlisttabs extends Backend
     //租车预定
     public function reserve()
     {
+        $this->model = new \app\admin\model\RentalOrder;
 
         $result = DB::name('car_rental_models_info')->alias('a')
             ->join('models b', 'b.id=a.models_id')
@@ -1351,7 +1352,7 @@ class Orderlisttabs extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -1424,8 +1425,9 @@ class Orderlisttabs extends Backend
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
-                //销售员
-                $admin_id = $data['admin_id'];
+                //内勤
+                $backoffice_id = $data['backoffice_id'];
+                
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
                 $username= $data['username'];
@@ -1435,7 +1437,7 @@ class Orderlisttabs extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $receiver = DB::name('admin')->where('id', $backoffice_id)->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -1996,7 +1998,7 @@ class Orderlisttabs extends Backend
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
-                $admin_id = $data['admin_id'];
+                $backoffice_id = $data['backoffice_id'];
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
                 $username= $data['username'];
@@ -2006,7 +2008,7 @@ class Orderlisttabs extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $receiver = DB::name('admin')->where('id', $backoffice_id)->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
