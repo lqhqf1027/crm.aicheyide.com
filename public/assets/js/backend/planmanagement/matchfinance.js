@@ -294,7 +294,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                       Layer.prompt(
 
-                          { title: __('请匹配对应的金融平台'), shadeClose: true },
+                          { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
                           function (text, index) {
                               Fast.api.ajax({
                                   url:"planmanagement/matchfinance/secondbatch",
@@ -368,7 +368,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var table = $(this).closest('table');
                         Layer.prompt(
                             // __('请输入客户手机服务密码'),测试服务密码：202304
-                            { title: __('请匹配对应的金融平台'), shadeClose: true },
+                            { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
                             //text为输入的服务密码
                             function (text, index) {
                                 Fast.api.ajax({
@@ -398,7 +398,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var table = $(this).closest('table');
                         Layer.prompt(
                             // __('请输入客户手机服务密码'),测试服务密码：202304
-                            { title: __('请匹配对应的金融平台'), shadeClose: true },
+                            { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
                             //text为输入的服务密码
                             function (text, index) {
                                 Fast.api.ajax({

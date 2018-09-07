@@ -98,6 +98,7 @@ class Admin extends Backend
 
       
         $this->assignconfig("siteList", $siteList['message']['list']);
+
     //    dump($groupdata);
         $this->view->assign('groupdata', $groupdata);
         $this->assignconfig("admin", ['id' => $this->auth->id]);

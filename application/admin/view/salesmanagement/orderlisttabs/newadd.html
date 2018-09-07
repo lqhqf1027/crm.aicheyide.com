@@ -200,12 +200,12 @@
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('City')}:</label>
-        <div class="col-xs-12 col-sm-8 col-md-2">
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <div class='control-relative'>
                 <input id="c-city" data-rule="required" class="form-control" data-toggle="city-picker" name="row[city]" type="text" value="">
             </div>
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-2">
+        <div class="col-xs-12 col-sm-8 col-md-3">
             <input id="c-detailed_address" data-rule="required" class="form-control" name="row[detailed_address]" type="text" placeholder="详细地址">
 
         </div>
@@ -242,9 +242,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-deposit_contractimages" class="btn btn-primary fachoose" data-input-id="c-deposit_contractimages"
-                            data-mimetype="image/*" data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-deposit_contractimages"></span>
@@ -265,9 +263,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-deposit_receiptimages" class="btn btn-primary fachoose" data-input-id="c-deposit_receiptimages"
-                            data-mimetype="image/*" data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-deposit_receiptimages"></span>
@@ -348,9 +344,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-id_cardimages" class="btn btn-primary fachoose" data-input-id="c-id_cardimages" data-mimetype="image/*"
-                            data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-id_cardimages"></span>
@@ -371,9 +365,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-drivers_licenseimages" class="btn btn-primary fachoose" data-input-id="c-drivers_licenseimages"
-                            data-mimetype="image/*" data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-drivers_licenseimages"></span>
@@ -394,9 +386,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-residence_bookletimages" class="btn btn-primary fachoose" data-input-id="c-residence_bookletimages"
-                            data-mimetype="image/*" data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-residence_bookletimages"></span>
@@ -416,9 +406,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-housingimages" class="btn btn-primary fachoose" data-input-id="c-housingimages" data-mimetype="image/*"
-                            data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-housingimages"></span>
@@ -438,9 +426,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-bank_cardimages" class="btn btn-primary fachoose" data-input-id="c-bank_cardimages" data-mimetype="image/*"
-                            data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-bank_cardimages"></span>
@@ -461,9 +447,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-application_formimages" class="btn btn-primary fachoose" data-input-id="c-application_formimages"
-                            data-mimetype="image/*" data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-application_formimages"></span>
@@ -482,24 +466,33 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     &nbsp;&nbsp;&nbsp;
-                    <!-- <span>
+                      <span>
 
-                        <button type="button" id="fachoose-call_listfiles" class="btn btn-info get_call_listfiles" data-multiple="true">
-                            <i class="fa fa-download"></i> {:__('点击这里一键获取通话清单')}</button>
-                    </span> -->
+                        <!--<button type="button" id="view_call_qrcod" class="btn btn-info get_call_listfiles" data-multiple="true">-->
+                            <!--<i class="fa fa-eye"></i> {:__('点击这里获取通话清单的二维码')}</button>-->
+                    </span>
                 </div>
                 <span class="msg-box n-right" for="c-call_listfiles"></span>
             </div>
 
         </div>
     </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('征信报告')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-6">
+            <div class="input-group">
+                请通过线下方式发送给风控人员
+            </div>
 
+
+        </div>
+    </div>
     <h3>
         <center>审核资料上传（不必填）</center>
     </h3>
     <br>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('New_car_marginimages')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('保证金')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
                 <input id="c-new_car_marginimages" class="form-control" size="50" name="row[new_car_marginimages]" type="text" placeholder="待风控审核资料后确认是否需要交付保证金">
@@ -510,9 +503,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-                        <button type="button" id="fachoose-new_car_marginimages" class="btn btn-primary fachoose" data-input-id="c-new_car_marginimages"
-                            data-mimetype="image/*" data-multiple="true">
-                            <i class="fa fa-list"></i> {:__('Choose')}</button>
+
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-new_car_marginimages"></span>

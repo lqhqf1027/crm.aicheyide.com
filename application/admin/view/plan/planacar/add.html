@@ -5,7 +5,7 @@
         <div class="col-xs-12 col-sm-8">
 
             <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]"
-                    >
+            >
                 <option value="" style="display: none">未选择任何项</option>
                 {foreach name="$category" item="vo"}
                 <option value="{$vo.id}">{$vo.name}</option>
@@ -29,10 +29,20 @@
 
         </div>
     </div>
-    <span id="introduce-view">
+    <div id="introduce-view" style="display: none;">
 
-    </span>
 
+        <div class="form-group" id=""><label class="control-label col-xs-12 col-sm-2">选择指定的销售:</label>
+            <div class="col-xs-12 col-sm-8">
+                <select id="c-sales_id" class="form-control selectpicker" name=row[sales_id]>
+                <option value=" " style="display: none">请选择销售</option>
+                    {foreach $sales as $k=>$v}
+                    <option value="{$v.id}">{$v.nickname}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -61,6 +71,7 @@
             <select id="c-nperlist" data-rule="required" class="form-control selectpicker" name="row[nperlist]">
                 {foreach name="nperlistList" item="vo"}
                 <option value="{$key}" {in name="key" value="36" }selected{/in}>{$vo}</option>
+
 
                 {/foreach}
             </select>
@@ -100,46 +111,26 @@
 
             <div class="checkbox">
 
-                <label for="row[working_insurance]"><input id="row[working_insurance]" name="row[working_insurance]" type="checkbox" value="yes"></label>
+                <label for="row[working_insurance]"><input id="row[working_insurance]" name="row[working_insurance]"
+                                                           type="checkbox" value="yes"></label>
 
             </div>
 
         </div>
     </div>
-    {php}
-    pr($sales)
-    {/php}
 
     <script type="text/javascript">
 
         function changeFun(that) {
-            var jsonSales =  {$sales};
+            var jsonSales = {$sales};
 
             var introduce = document.getElementById('introduce-view');
 
 
             if (that.value == 'no') {
-                var ht = '<div class="form-group" id="" ><label class="control-label col-xs-12 col-sm-2">选择指定的销售:</label><div class="col-xs-12 col-sm-8"><select id="c-sales_id" class="form-control selectpicker" name=row[sales_id] ><option value=" " style="display: none">请选择销售</option></select></div></div>'
-                introduce.innerHTML = ht;
-                var salesBlock = document.getElementById('c-sales_id');
-
-                console.log(salesBlock);
-                for (var i in jsonSales){
-                    console.log(jsonSales[i]);
-                    var id = jsonSales[i]['id'];
-                    var nickname = jsonSales[i]['nickname'];
-                    salesBlock.innerHTML += "<option value="+id+">"+nickname+"</option>"
-                }
-                // salesBlock.removeAttribute('data-rule');
-
-                // introduce.style.setProperty('display', 'none', 'important');
-
-
+                introduce.style.setProperty('display', 'none', 'important');
             } else {
-                console.log(1);
-                // salesBlock.setAttribute('data-rule','required');
-
-                // introduce.style.setProperty('display', 'block', 'important');
+                introduce.style.setProperty('display', 'block', 'important');
             }
 
         }

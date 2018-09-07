@@ -59,24 +59,31 @@ class Plantabs extends Backend
              }
              list($where, $sort, $order, $offset, $limit) = $this->buildparams('models.name',true);
              $total = $this->model
-                     ->with(['models','financialplatform'])
+                     ->with(['models'=>function($query){
+                         $query->withField('name');
+                     },'admin'=>function($query){
+                         $query->withField('nickname');
+                     }])
                      ->where($where)
                      ->order($sort, $order)
                      ->count();
  
              $list = $this->model
-                     ->with(['models','financialplatform'])
-                     ->where($where)
+                 ->with(['models'=>function($query){
+                     $query->withField('name');
+                 },'admin'=>function($query){
+                     $query->withField('nickname');
+                 }])
+                 ->where($where)
                      ->order($sort, $order)
                      ->limit($offset, $limit)
                      ->select();
- 
              foreach ($list as $row) {
                  $row->visible(['id','payment','monthly','nperlist','margin','tail_section','gps','note','ismenu','createtime','updatetime','working_insurance']);
                  $row->visible(['models']);
                  $row->getRelation('models')->visible(['name']);
-                 $row->visible(['financialplatform']);
-                 $row->getRelation('financialplatform')->visible(['name']);
+                 $row->visible(['admin']);
+                 $row->getRelation('admin')->visible(['nickname']);
              }
              $list = collection($list)->toArray();
              $result = array("total" => $total, "rows" => $list);

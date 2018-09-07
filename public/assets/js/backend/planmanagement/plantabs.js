@@ -59,9 +59,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'margin', title: __('Margin'), operate:'BETWEEN',operate:false},
                         {field: 'tail_section', title: __('Tail_section'), operate:'BETWEEN',operate:false},
                         {field: 'gps', title: __('Gps'), operate:false},
-                        {field: 'gps', title: __('是否销售定制方案'), operate:false},
+                        {field: 'admin.nickname', title: __('销售定制方案')},
                         {field: 'working_insurance', title: __('是否营运险'), searchList:{"yes":'是',"no":"否"},formatter:function (v,r,i) {
-                                return v=='yes'?'是':'否';
+                            if(r.working_insurance=='yes'){
+                                  return '是'  ;
+                            }
+                            else{
+                                return '否';
+                            }
+
+
                             }},
 
                         {field: 'note', title: __('Note'),operate:false},

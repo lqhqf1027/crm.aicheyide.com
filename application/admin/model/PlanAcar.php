@@ -51,13 +51,23 @@ class PlanAcar extends Model
     }
 
 
-
-
+    /**
+     * 关联车型
+     * @return \think\model\relation\BelongsTo
+     */
     public function models()
     {
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * 关联销售
+     * @return \think\model\relation\BelongsTo
+     */
+    public function admin()
+    {
+        return $this->belongsTo('Admin', 'sales_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
 
 
 

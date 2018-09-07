@@ -49,7 +49,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
         table: {
             /**
-             * 新车月供（待发送）
+             * 新车月供（扣款失败）
              */
             newcar_monthly: function () {
                 var newcarMonthly = $("#newcarMonthly");
@@ -119,42 +119,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     ]
                 });
                 Table.api.bindevent(newcarMonthly);
-                // 批量删除按钮事件
-                $(toolbar).on('click', Table.config.delbtn, function () {
-                    var that = this;
-                    var ids = Table.api.selectedids(table);
-                    Layer.confirm(
-                        __('Are you sure you want to delete the %s selected item?', ids.length),
-                        {icon: 3, title: __('Warning'), offset: 0, shadeClose: true},
-                        function (index) {
-                            Table.api.multi("del", ids, table, that);
-                            Layer.close(index);
-                        }
-                    );
-                });
                 newcarMonthly.on('load-success.bs.table', function (e, data) {
-
+                    $('#newcar_monthly_badge').text(data.total);
                 })
                 /**
                  * 批量发送给风控
                  */
-                var submitForm = function (ids, layero) {
-                    var options = newcarMonthly.bootstrapTable('getOptions');
-                    console.log(options);
-                    var columns = [];
-                    $.each(options.columns[0], function (i, j) {
-                        if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
-                            columns.push(j.field);
-                        }
-                    });
-                    var search = options.queryParams({});
-                    $("input[name=search]", layero).val(options.searchText);
-                    $("input[name=ids]", layero).val(ids);
-                    $("input[name=filter]", layero).val(search.filter);
-                    $("input[name=op]", layero).val(search.op);
-                    $("input[name=columns]", layero).val(columns.join(','));
-                    $("form", layero).submit();
-                };
                 $(document).on("click", ".btn-sed-risk", function () {
                     var ids = Table.api.selectedids(newcarMonthly);
                     var page = newcarMonthly.bootstrapTable('getData');
@@ -219,51 +189,138 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
             },
             /**
-             * 租车
+             * 新车月供已发送
              */
-            rentalcar_monthly: function () {
-                var rentalcarMonthly = $("#rentalcarMonthly");
-                rentalcarMonthly.bootstrapTable({
-                    url: 'financial/monthlytabs/rentalcarMonthly',
+            hasbeen_sent: function () {
+                var hasBeenSent = $("#hasBeenSent");
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+                hasBeenSent.bootstrapTable({
+                    url: 'financial/monthlytabs/hasBeenSent',
                     extend: {
-                        add_url: 'monthly/rentalcarmonthly/add',
-                        edit_url: 'monthly/rentalcarmonthly/edit',
-                        del_url: 'monthly/rentalcarmonthly/del',
-                        multi_url: 'monthly/rentalcarmonthly/multi',
-                        table: 'rentalcar_monthly',
-                        import_url: 'monthly/rentalcarmonthly/import',
+                        edit_url: 'monthly/newcarmonthly/edit',
+                        del_url: 'monthly/newcarmonthly/del',
+                        import_url: 'monthly/newcarmonthly/import',
+                        multi_url: 'monthly/newcarmonthly/multi',
+                        table: 'newcar_monthly',
+
                     },
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
-                    search:false,
                     searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
                             {field: 'id', title: __('Id')},
-                            {field: 'monthly_company', title: __('公司')},
-                            {field: 'monthly_username', title: __('客户姓名')},
+                            {field: 'monthly_card_number', title: __('Monthly_card_number')},
+                            {field: 'monthly_name', title: __('Monthly_name')},
                             {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
-                            {field: 'monthly_car_from', title: __('车辆来源')},
-                            {field: 'monthly_models', title: __('车型')},
-                            {field: 'monthly_car_number', title: __('Monthly_car_number')},
-                            {field: 'monthly_batches', title: __('欠租期间')},
-                            {field: 'monthly_note', title: __('Monthly_note')},
-                            {field: 'monthly_status', title: __('发送给风控状态'), searchList: {"has_been_sent":__('已发送'),"did_not_send":__('未发送')},formatter: Controller.api.formatter.status},
+                            {field: 'monthly_models', title: __('Monthly_models')},
+                            {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
+                            {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: function (v,r,i) {
+                                    if(v=='failure'){
+                                        v = '<span class="text-danger">失败</span>';
+                                        return v+' <span class="label label-success">'+r.monthly_supplementary+'</span>'
 
+                                    }
+                                }},
+                            {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
+                            {field: 'monthly_company', title: __('Monthly_company')},
+                            {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
+                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
+
+
+                                    return value=='has_been_sent'?"<span class='text-success'><i class='fa fa-circle'></i> 已发送</span>":'未知状态'
+
+                                }},
                             {
-                                field: 'operate', title: __('Operate'), table: rentalcarMonthly,
+                                field: 'operate', title: __('Operate'), table: hasBeenSent,
                                 buttons: [
                                     {
                                         icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        url: 'monthly/rentalcarmonthly/del',/**删除 */
+                                        url: 'monthly/newcarmonthly/del',/**删除 */
 
 
                                     },
                                     {
                                         name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
-                                        url: 'monthly/rentalcarmonthly/edit',/**编辑 */
+                                        url: 'monthly/newcarmonthly/edit',/**编辑 */
+
+                                    },
+
+
+                                ],
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+
+                        ]
+                    ]
+                });
+                Table.api.bindevent(hasBeenSent);
+                hasBeenSent.on('load-success.bs.table', function (e, data) {
+                    $('#hasbeen_sent_badge').text(data.total);
+                })
+
+            },
+            /**
+             * 扣款成功客户
+             */
+            deductions_succ:function () {
+                var deductionsSucc = $("#deductionsSucc");
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+                deductionsSucc.bootstrapTable({
+                    url: 'financial/monthlytabs/deductionsSucc',
+                    extend: {
+                        add_url: 'monthly/newcarmonthly/add',
+                        edit_url: 'monthly/newcarmonthly/edit',
+                        del_url: 'monthly/newcarmonthly/del',
+                        import_url: 'monthly/newcarmonthly/import',
+                        multi_url: 'monthly/newcarmonthly/multi',
+                        table: 'newcar_monthly',
+                    },
+                    toolbar: '#toolbar3',
+                    pk: 'id',
+                    sortName: 'id',
+                    // search:false,
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id')},
+                            {field: 'monthly_card_number', title: __('Monthly_card_number')},
+                            {field: 'monthly_name', title: __('Monthly_name')},
+                            // {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
+                            // {field: 'monthly_models', title: __('Monthly_models')},
+                            {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
+                            {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: Table.api.formatter.normal},
+                            // {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
+                            // {field: 'monthly_company', title: __('Monthly_company')},
+                            // {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
+                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {
+                                field: 'operate', title: __('Operate'), table: deductionsSucc,
+                                buttons: [
+                                    {
+                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        url: 'monthly/newcarmonthly/del',/**删除 */
+
+
+                                    },
+                                    {
+                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'monthly/newcarmonthly/edit',/**编辑 */
 
                                     },
 
@@ -277,29 +334,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         ]
                     ]
                 });
-                Table.api.bindevent(rentalcarMonthly);
-                /**
-                 * 租车批量导入
-                 */
-                // $(document).on('click','.btn-import-rentalcar',function () {
-                //     console.log(options.extend.import_url);
-                //     require(['upload'], function (Upload) {
-                //         Upload.api.plupload($('.btn-import-rentalcar', toolbar), function (data, ret) {
-                //             Fast.api.ajax({
-                //                 url: options.extend.import_url,
-                //                 data: {file: data.url},
-                //             }, function (data, ret) {
-                //                 table.bootstrapTable('refresh');
-                //             });
-                //         });
-                //     });
-                // })
-
-                rentalcarMonthly.on('load-success.bs.table', function (e, data) {
-
+                Table.api.bindevent(deductionsSucc);
+                deductionsSucc.on('load-success.bs.table', function (e, data) {
+                    $('#deductions_succ_badge').text(data.total);
                 })
-
-            },
+            }
         },
 
         add: function () {

@@ -88,7 +88,7 @@ class Planacar extends Backend
     public function add()
     {
         $this->view->assign([
-            "sales"=>json_encode( $this->getSales()) ,
+            "sales"=> $this->getSales(),
             'category'=>$this->getCategory()
         ]);
 
@@ -103,7 +103,7 @@ class Planacar extends Backend
 
             if ($params) {
 
-
+//            pr($params);die;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
@@ -137,6 +137,7 @@ class Planacar extends Backend
     public function edit($ids = NULL)
     {
         $row = $this->model->get($ids);
+
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -178,6 +179,7 @@ class Planacar extends Backend
             'sales'=>$this->getSales(),
             'category'=>$this->getCategory()
         ]);
+
         return $this->view->fetch();
     }
 
