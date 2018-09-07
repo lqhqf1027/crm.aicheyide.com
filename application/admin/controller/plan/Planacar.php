@@ -88,17 +88,15 @@ class Planacar extends Backend
     public function add()
     {
         $this->view->assign([
-            "sales"=> $this->getSales(),
+            "sales"=>json_encode( $this->getSales()) ,
             'category'=>$this->getCategory()
         ]);
+
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if(empty($params['working_insurance'])){
                 $params['working_insurance'] = "no";
             }
-
-//            pr($params);die();
-
             if($params['sales_id']==" "){
                 $params['sales_id'] = null;
             }
