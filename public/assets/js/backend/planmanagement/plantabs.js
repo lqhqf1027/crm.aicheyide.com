@@ -25,8 +25,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         table: {
             first: function () {
-                // 表格1
-                var table1 = $("#table1"); 
+
+                var table1 = $("#table1");
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索车型";
+                };
+                $(".btn-add").data("area", ["80%", "80%"]);
                  // 初始化表格
             table1.bootstrapTable({
                 url: 'planmanagement/plantabs/table1',
@@ -41,24 +45,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 toolbar: '#toolbar1',
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
-                        {field: 'models.name', title: '销售车型'},
-                        {field: 'financialplatform.name', title: '所属金融平台'},
-                        {field: 'payment', title: __('Payment'), operate:'BETWEEN'},
-                        {field: 'monthly', title: __('NewcarMonthly'), operate:'BETWEEN'},
+                        {field: 'id', title: __('Id'),operate:false},
+                        {field: 'models.name', title: '销售车型',operate:false},
+                        // {field: 'financialplatform.name', title: '所属金融平台'},
+                        {field: 'payment', title: __('Payment'), operate:'BETWEEN',operate:false},
+                        {field: 'monthly', title: __('NewcarMonthly'), operate:'BETWEEN',operate:false},
                         {field: 'nperlist', title: __('Nperlist'), visible:false, searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}},
                         {field: 'nperlist_text', title: __('Nperlist'), operate:false},
-                        {field: 'margin', title: __('Margin'), operate:'BETWEEN'},
-                        {field: 'tail_section', title: __('Tail_section'), operate:'BETWEEN'},
-                        {field: 'gps', title: __('Gps'), operate:'BETWEEN'},
-                        {field: 'note', title: __('Note')},
+                        {field: 'margin', title: __('Margin'), operate:'BETWEEN',operate:false},
+                        {field: 'tail_section', title: __('Tail_section'), operate:'BETWEEN',operate:false},
+                        {field: 'gps', title: __('Gps'), operate:false},
+                        {field: 'gps', title: __('是否销售定制方案'), operate:false},
+                        {field: 'working_insurance', title: __('是否营运险'), searchList:{"yes":'是',"no":"否"},formatter:function (v,r,i) {
+                                return v=='yes'?'是':'否';
+                            }},
+
+                        {field: 'note', title: __('Note'),operate:false},
                       
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'ismenu', title: __('Ismenu'), formatter: Table.api.formatter.toggle},
+                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
+                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
+                        {field: 'ismenu', title: __('Ismenu'), formatter: Table.api.formatter.toggle,operate:false},
                       
                         {field: 'operate', title: __('Operate'), table: table1, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
@@ -154,9 +164,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             }
         },
         add: function () {
+
             Controller.api.bindevent();
         },
         edit: function () {
+            alert(1);
             Controller.api.bindevent();
         },
         api: {

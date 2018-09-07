@@ -76,7 +76,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: '编号'},
-                            {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
+                            {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD"},
                             {field: 'newinventory.household', title: __('公司')},
                             {field: 'financial_name', title: __('金融平台')},
                             {field: 'admin.nickname', title: __('销售员')},
@@ -161,7 +161,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                       Layer.prompt(
 
-                          { title: __('请匹配对应的金融平台'), shadeClose: true },
+                          { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
                           function (text, index) {
                               Fast.api.ajax({
                                   url:"planmanagement/matchfinance/newbatch",

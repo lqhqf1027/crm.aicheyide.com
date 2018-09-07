@@ -5,12 +5,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'adminaccount/index',
-                    add_url: 'adminaccount/add',
-                    edit_url: 'adminaccount/edit',
-                    del_url: 'adminaccount/del',
-                    multi_url: 'adminaccount/multi',
-                    table: 'admin_account',
+                    index_url: 'planmanagement/schemecategory/index',
+                    add_url: 'planmanagement/schemecategory/add',
+                    edit_url: 'planmanagement/schemecategory/edit',
+                    del_url: 'planmanagement/schemecategory/del',
+                    multi_url: 'planmanagement/schemecategory/multi',
+                    table: 'scheme_category',
                 }
             });
 
@@ -25,12 +25,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'city', title: __('City')},
-                        {field: 'department', title: __('Department')},
                         {field: 'name', title: __('Name')},
-                        {field: 'rule', title: __('角色')},
-                        {field: 'phone', title: __('Phone')},
-                        {field: 'email', title: __('Email')},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}

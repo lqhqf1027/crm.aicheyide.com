@@ -33,13 +33,21 @@ class Plantabs extends Backend
         return $this->view->fetch();
     }
 
+    /**
+     * Notes:新车方案
+     * User: glen9
+     * Date: 2018/9/6
+     * Time: 21:47
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function table1()
     {
         $this->model = model('PlanAcar');
         $this->view->assign("nperlistList", $this->model->getNperlistList());
         $this->view->assign("ismenuList", $this->model->getIsmenuList());
          //当前是否为关联查询
-         $this->relationSearch = true;
+//         $this->relationSearch = true;
          //设置过滤方法
          $this->request->filter(['strip_tags']);
          if ($this->request->isAjax())
@@ -49,7 +57,7 @@ class Plantabs extends Backend
              {
                  return $this->selectpage();
              }
-             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+             list($where, $sort, $order, $offset, $limit) = $this->buildparams('models.name',true);
              $total = $this->model
                      ->with(['models','financialplatform'])
                      ->where($where)
@@ -64,7 +72,7 @@ class Plantabs extends Backend
                      ->select();
  
              foreach ($list as $row) {
-                 $row->visible(['id','payment','monthly','nperlist','margin','tail_section','gps','note','ismenu','createtime','updatetime']);
+                 $row->visible(['id','payment','monthly','nperlist','margin','tail_section','gps','note','ismenu','createtime','updatetime','working_insurance']);
                  $row->visible(['models']);
                  $row->getRelation('models')->visible(['name']);
                  $row->visible(['financialplatform']);
@@ -79,6 +87,7 @@ class Plantabs extends Backend
         return $this->view->fetch('index');
     }
 
+    //已废弃
     public function table2()
     {
         
@@ -126,6 +135,14 @@ class Plantabs extends Backend
       }
         return $this->view->fetch('index');
     }
+    /**
+     * Notes:全款
+     * User: glen9
+     * Date: 2018/9/6
+     * Time: 22:00
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function table3()
     {
         $this->model = model('PlanFull');
