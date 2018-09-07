@@ -29,7 +29,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('销售二手车型/方案')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-plan_car_second_name" data-rule="required" class="form-control selectpicker" name="row[plan_car_second_name]" disabled>
+            <!-- <select id="c-plan_car_second_name" data-rule="required" class="form-control selectpicker" name="row[plan_car_second_name]" disabled>
                 <option value=" " style='display: none'>未选中任何项</option>
                 {volist name="newRes" id="vo"}
 
@@ -40,7 +40,10 @@
                 <option value="{$vo_s['id']}">{$vo_s['models_name']}</option>
 
                 {/if} {/volist} {/volist}
-            </select>
+            </select> -->
+
+            <input id="c-plan_car_second_name" data-rule="required" class="form-control" name="row[plan_car_second_name]" type="text" value="{$row.plan_name}"
+                disabled>
 
         </div>
     </div>
