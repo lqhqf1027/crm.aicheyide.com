@@ -144,12 +144,10 @@ class Customertabs extends Backend
             $params = $this->request->post('row/a');
 
             $time = time();
-            $result = $this->model->save(['backoffice_id' => $params['id'], 'distributinternaltime' => $time], function ($query) use ($id) {
+            $result = $this->model->save(['backoffice_id' => $params['backoffice_id'], 'distributinternaltime' => $time], function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
             if ($result) {
-
-
                 $channel = "demo-platform";
                 $content = "你有推广平台给你分配的新客户，请登录后台进行处理";
                 goeary_push($channel, $content);
@@ -159,7 +157,7 @@ class Customertabs extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
+                $receiver = DB::name('admin')->where('id', $params['backoffice_id'])->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -179,63 +177,7 @@ class Customertabs extends Backend
         return $this->view->fetch();
     }
 
-    /**
-     * 参考的函数
-     * @param null $ids
-     * @return string
-     */
-//    public function edit($ids = NULL)
-//    {
-//        $backoffice = Db::name("admin")
-//            ->where("rule_message", "in", ['message13', 'message20'])
-//            ->field('id,nickname,rule_message')
-//            ->select();
-//
-//        $backofficeList = array();
-//        foreach ($backoffice as $k => $v) {
-//            switch ($v['rule_message']) {
-//                case 'message20':
-//                    $backofficeList['message20']['nickname'] = $v['nickname'];
-//                    $backofficeList['message20']['id'] = $v['id'];
-//                    break;
-//                case 'message13':
-//                    $backofficeList['message13']['nickname'] = $v['nickname'];
-//                    $backofficeList['message13']['id'] = $v['id'];
-//                    break;
-//            }
-//        }
-//
-//
-//        if ($this->request->isPost()) {
-//            $params = $this->request->post("row/a");
-//
-//
-//            if ($params) {
-//
-//                $params['distributinternaltime'] = time();
-//
-//                $result = Db::name("customer_resource")
-//                ->where("id",$ids)
-//                ->update([
-//                    'distributinternaltime'=>$params['distributinternaltime'],
-//                    'backoffice_id'=>$params['id']
-//                ]);
-//
-//                if ($result) {
-//                    $this->success('操作成功', null, 'success');
-//                } else {
-//                    $this->error();
-//                }
-//
-//            }
-//        }
-//
-//
-//        $this->view->assign('backofficeList', $backofficeList);
-//
-//
-//        return $this->view->fetch();
-//    }
+
 
     //已分配
     public function newAllocation()
@@ -361,7 +303,7 @@ class Customertabs extends Backend
 
             $params = $this->request->post('row/a');
             $time = time();
-            $result = $this->model->save(['backoffice_id' => $params['id'], 'distributinternaltime' => $time], function ($query) use ($ids) {
+            $result = $this->model->save(['backoffice_id' => $params['backoffice_id'], 'distributinternaltime' => $time], function ($query) use ($ids) {
                 $query->where('id', 'in', $ids);
             });
             if ($result) {
@@ -391,7 +333,7 @@ class Customertabs extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
+                $receiver = DB::name('admin')->where('id', $params['backoffice_id'])->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
