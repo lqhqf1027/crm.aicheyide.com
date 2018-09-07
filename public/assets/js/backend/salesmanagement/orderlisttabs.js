@@ -570,7 +570,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // index_url: 'order/salesorder/index',
                     rentaladd_url: 'salesmanagement/Orderlisttabs/rentaladd',
                     rentaledit_url: 'salesmanagement/Orderlisttabs/rentaledit',
-                    rentaldel_url: 'salesmanagement/Orderlisttabs/rentaldel',
+                    del_url: 'salesmanagement/Orderlisttabs/rentaldel',
                     rentalmulti_url: 'order/rentalorder/multi',
                     reserve_url: 'salesmanagement/Orderlisttabs/reserve',
                     table: 'rental_order',
@@ -690,7 +690,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 取消预定
                              */
                             { 
-                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'取消预定', title: __('取消预定'),classname: 'btn btn-xs btn-danger btn-rentaldelone',
+                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'取消预定', title: __('取消预定'),classname: 'btn btn-xs btn-danger btn-delone',
                                 // url:'order/rentalorder/del',/** */
                                 hidden:function(row){
                                     if(row.review_the_data == 'is_reviewing_argee'){ 
@@ -724,7 +724,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 删除
                              */
                             { 
-                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-rentaldelone',
+                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
                                 // url:'order/rentalorder/del',/** */
                                 hidden:function(row){
                                     if(row.review_the_data == 'is_reviewing_false'){ 
@@ -1086,7 +1086,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // index_url: 'order/secondsalesorder/index',
                         secondadd_url: 'salesmanagement/Orderlisttabs/secondadd',
                         secondedit_url: 'salesmanagement/Orderlisttabs/secondedit',
-                        del_url: 'salesmanagement/Orderlisttabs/del',
+                        del_url: 'salesmanagement/Orderlisttabs/seconddel',
                         multi_url: 'salesmanagement/Orderlisttabs/multi',
                         table: 'second_sales_order',
                     },
@@ -1167,7 +1167,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     },
                                     {
-                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        icon: 'fa fa-trash', name: 'seconddel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
                                         // url: 'order/secondsalesorder/del',/**删除 */
                                         hidden: function (row) {
                                             if (row.review_the_data == 'is_reviewing') {
@@ -1597,7 +1597,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // index_url: 'order/fullparmentorder/index',
                         fulladd_url: 'salesmanagement/Orderlisttabs/fulladd',
                         fulledit_url: 'salesmanagement/Orderlisttabs/fulledit',
-                        del_url: 'salesmanagement/Orderlisttabs/del',
+                        del_url: 'salesmanagement/Orderlisttabs/fulldel',
                         multi_url: 'salesmanagement/Orderlisttabs/multi',
                         table: 'full_parment_order',
                     },
@@ -1641,7 +1641,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 buttons: [
                                     {
                                         name: 'submitCar', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-info btn-submitCar',
-                                        url: 'order/fullparmentorder/submitCar',/**提交内勤 */
+                                        // url: 'order/fullparmentorder/submitCar',/**提交内勤 */
                                        
                                         hidden: function (row) { /**提交内勤 */
                                             if (row.review_the_data == 'send_to_internal') {
@@ -1663,7 +1663,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     },
                                     {
-                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        icon: 'fa fa-trash', name: 'fulldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
                                         // url: 'order/fullparmentorder/del',/**删除 */
                                         hidden: function (row) {
                                             if (row.review_the_data == 'send_to_internal') {
@@ -2310,31 +2310,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     //删除按钮
                     'click .btn-delone': function (e, value, row, index) {  /**删除按钮 */
-
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var that = this;
-                        var top = $(that).offset().top - $(window).scrollTop();
-                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                        if (top + 154 > $(window).height()) {
-                            top = top - 154;
-                        }
-                        if ($(window).width() < 480) {
-                            top = left = undefined;
-                        }
-                        Layer.confirm(
-                            __('Are you sure you want to delete this item?'),
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
-                            function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
-                                Table.api.multi("del", row[options.pk], table, that);
-                                Layer.close(index);
-                            }
-                        );
-                    },
-                    //租车删除按钮
-                    'click .btn-rentaldelone': function (e, value, row, index) {  /**删除按钮 */
 
                         e.stopPropagation();
                         e.preventDefault();
