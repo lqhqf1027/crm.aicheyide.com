@@ -351,8 +351,7 @@ class Custominfotabs extends Backend
                 goeary_push($channel, $content);
 
                 $data = sales_inform();
-                // var_dump($data);
-                // die;
+
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
