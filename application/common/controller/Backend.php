@@ -226,7 +226,14 @@ class Backend extends Controller
         $this->assign('auth', $this->auth);
         //渲染管理员对象
         $this->assign('admin', Session::get('admin'));
+        //渲染角色
+        $this->assign('rule_message',$site['pushMessage']);
+//        foreach($site['pushMessage'] as $k=>$value){
+//            echo $k;
+//        }
+//        pr($site);die;
     }
+
 
     /**
      * 加载语言文件.

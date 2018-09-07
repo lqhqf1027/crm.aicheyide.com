@@ -1242,10 +1242,10 @@ if (!function_exists('fullautomobile_inform')) {
     }
 }
     /**
-     * 新车月供扣款不成功通知
+     * 新车月供扣款不成功通知 ，财务出纳发送给风控
      */
     if (!function_exists('send_monthly_to_risk')) {
-        function send_monthly_to_risk($month)
+        function send_monthly_to_risk( )
         {
             $arr = [
                 'subject' => "客户月供扣款不成功通知：",

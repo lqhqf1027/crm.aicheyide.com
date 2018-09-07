@@ -24,7 +24,7 @@ class Newcarmonthly extends Backend
         $this->model = new \app\admin\model\NewcarMonthly;
         $this->view->assign("monthlyDataList", $this->model->getMonthlyDataList());
     }
-    //导入客户信息
+    //导入月供客户信息
     public function import () {
         $file = $this->request->request('file');
         if (!$file) {
@@ -89,7 +89,7 @@ class Newcarmonthly extends Backend
                 $insert[] = $row;
                 foreach ($insert as $key=>$value){
                     $insert[$key]['monthly_in_arrears_time'] = str_replace('.','-',$value['monthly_in_arrears_time']);
-                    $insert[$key]['monthly_status']  = 'did_not_send';
+//                    $insert[$key]['monthly_status']  = 'did_not_send';
                 }
             }
         }
