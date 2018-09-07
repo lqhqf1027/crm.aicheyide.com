@@ -426,7 +426,7 @@ class Customertabs extends Backend
         $this->model = model('CustomerResource');
 
         if ($this->request->isPost()) {
-            return 11;
+
             set_time_limit(0);
             $search = $this->request->post('search');
             $ids = $this->request->post('ids');

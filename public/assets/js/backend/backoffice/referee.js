@@ -25,10 +25,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate:false},
                         {field: 'models.name', title: __('车型')},
                         {field: 'admin.nickname', title: __('销售员')},
                         {field: 'referee_name', title: __('Referee_name')},
@@ -39,8 +40,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'referee_bonus', title: __('Referee_bonus'), operate:'BETWEEN'},
                         {field: 'bank_account', title: __('Bank_account')},
                         {field: 'make_moneytime', title: __('Make_moneytime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat: "YYYY-MM-DD"},
-                        {field: 'request_fundstime', title: __('Request_fundstime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat: "YYYY-MM-DD"},
-                        {field: 'introduction_note', title: __('Introduction_note')},
+                        {field: 'request_fundstime', title: __('Request_fundstime'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat: "YYYY-MM-DD"},
+                        {field: 'introduction_note', title: __('Introduction_note'),operate:false},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

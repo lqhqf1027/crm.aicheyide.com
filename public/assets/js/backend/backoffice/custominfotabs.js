@@ -100,21 +100,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 初始化表格
                 newCustomer.bootstrapTable({
                     url: 'backoffice/Custominfotabs/newCustomer',
-                    // extend: {
-                    //     // index_url: 'customer/customerresource/index',
-                    //     add_url: 'customer/customerresource/add',
-                    //     edit_url: 'customer/customerresource/edit',
-                    //     del_url: 'customer/customerresource/del',
-                    //     multi_url: 'customer/customerresource/multi',
-                    //     table: 'customer_resource',
-                    // },
+
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
+
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id')},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -136,22 +131,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false,
                                 formatter: Table.api.formatter.datetime
                             },
-                            // {
-                            //     field: 'createtime',
-                            //     title: __('Createtime'),
-                            //     operate: 'RANGE',
-                            //     addclass: 'datetimerange',
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {
-                            //     field: 'updatetime',
-                            //     title: __('Updatetime'),
-                            //     operate: 'RANGE',
-                            //     addclass: 'datetimerange',
-                            //     formatter: Table.api.formatter.datetime
-                            // },
-                            // {field: 'feedback', title: __('Feedback')},
-                            // {field: 'note', title: __('Note')},
+
                             {
                                 field: 'operate', title: __('Operate'), table: newCustomer,
                                 buttons: [
@@ -233,10 +213,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
