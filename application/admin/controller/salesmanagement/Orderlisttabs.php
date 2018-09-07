@@ -27,7 +27,7 @@ class Orderlisttabs extends Backend
     protected $model = null;
     protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull','sedAudit','details','rentaldetails','seconddetails','fulldetails',
                     'add','edit','planacar','planname','reserve','rentalplanname','rentaladd','rentaledit','rentaldel','control','setAudit','secondadd',
-                    'secondedit','fulladd','fulledit'];
+                    'secondedit','fulladd','fulledit','submitCar'];
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
@@ -162,7 +162,7 @@ class Orderlisttabs extends Backend
                 ->count();
 
             $list = $this->model
-                ->with(['sales' => function ($query) {
+                ->with(['admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
                     $query->withField('name');
@@ -176,8 +176,8 @@ class Orderlisttabs extends Backend
 
             foreach ($list as $k => $v) {
                 $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
-                $v->visible(['sales']);
-                $v->getRelation('sales')->visible(['nickname']);
+                $v->visible(['admin']);
+                $v->getRelation('admin')->visible(['nickname']);
                 $v->visible(['models']);
                 $v->getRelation('models')->visible(['name']);
                 $v->visible(['carrentalmodelsinfo']);
