@@ -864,7 +864,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     url: 'riskcontrol/creditreview/rentalpass',
                     data: {id: JSON.stringify(id)}
                 }, function (data, ret) {
-                    console.log(data);
+                    // console.log(data);
                     Toastr.success("成功");
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引

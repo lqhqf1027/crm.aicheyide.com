@@ -17,7 +17,7 @@ class Monthlytabs extends Backend
      * @var null
      */
     protected $model = null;
-    protected $noNeedRight = ['index', 'newcarMonthly', 'deductionsSucc', 'commontMethod', 'sedRisk'];
+    protected $noNeedRight = ['index', 'newcarMonthly', 'deductionsSucc', 'commontMethod', 'sedRisk','edit','del'];
 
     /**
      *

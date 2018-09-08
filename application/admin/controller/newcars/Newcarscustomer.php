@@ -184,7 +184,7 @@ class Newcarscustomer extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data','delivery_datetime']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
@@ -317,6 +317,7 @@ class Newcarscustomer extends Backend
     public function show_order($ids = null)
     {
         $row = $this->model->get($ids);
+
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -330,6 +331,13 @@ class Newcarscustomer extends Backend
             ->join('models c', 'b.models_id=c.id');
 
 //        $row['createtime'] = date("Y-m-d", $row['createtime']);
+
+
+        if($row['admin_id']){
+            $row['sales_name'] = Db::name("admin")
+            ->where("id",$row['admin_id'])
+            ->value("nickname");
+        }
 
 
         //定金合同（多图）
@@ -492,6 +500,11 @@ class Newcarscustomer extends Backend
             ->join('plan_acar b', 'a.plan_acar_name = b.id')
             ->join('models c', 'b.models_id=c.id');
 
+        if($row['admin_id']){
+            $row['sales_name'] = Db::name("admin")
+                ->where("id",$row['admin_id'])
+                ->value("nickname");
+        }
 
         //定金合同（多图）
         $deposit_contractimages = $row['deposit_contractimages'];
