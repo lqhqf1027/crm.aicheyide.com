@@ -62,38 +62,59 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'monthly_name', title: __('Monthly_name')},
                             {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
                             {field: 'monthly_models', title: __('Monthly_models')},
-                            {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
-                            {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: function (v,r,i) {
-                                    return v=='failure'?'<span class="text-danger">失败</span>':'<span class="text-success">成功</span>';
-                                }},
+                            {field: 'monthly_monney', title: __('Monthly_monney'), operate: false},
+                            {
+                                field: 'monthly_data',
+                                title: __('Monthly_data'),
+                                searchList: {
+                                    "failure": __('Monthly_data failure'),
+                                    "success": __('Monthly_data success')
+                                },
+                                formatter: function (v, r, i) {
+                                    if(v=='failure'&& r.monthly_supplementary !=null){
+                                        v = '<span class="text-danger">失败</span>';
+                                        return v+' <span class="label label-success">'+r.monthly_supplementary+'</span>'
+
+                                    }else {
+                                        return '<span class="text-danger">失败</span>';
+                                    }
+                                }
+                            },
                             {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
-                            {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
+                            {
+                                field: 'monthly_in_arrears_time',
+                                title: __('Monthly_in_arrears_time'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange'
+                            },
                             {field: 'monthly_company', title: __('Monthly_company')},
                             {field: 'monthly_car_number', title: __('Monthly_car_number')},
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
                             {field: 'monthly_note', title: __('Monthly_note')},
-                            // {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
-                            //
-                            //
-                            //         return row.monthly_data=='failure'?"<span class='text-danger'><i class='fa fa-circle'></i> 待发送</span>":'未知状态'
-                            //
-                            //     }},
                             {
                                 field: 'operate', title: __('Operate'), table: newcarMonthly,
                                 buttons: [
                                     {
-                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        url: 'monthly/newcarmonthly/del',/**删除 */
+                                        icon: 'fa fa-trash',
+                                        name: 'del',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-delone',
+                                        url: 'monthly/newcarmonthly/del', /**删除 */
 
 
                                     },
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
-                                        url: 'monthly/newcarmonthly/edit',/**编辑 */
+                                        name: 'edit',
+                                        text: '',
+                                        icon: 'fa fa-pencil',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Edit'),
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'monthly/newcarmonthly/edit', /**编辑 */
 
                                     },
-
-
                                 ],
                                 events: Controller.api.events.operate,
 
@@ -107,15 +128,79 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newcarMonthly.on('load-success.bs.table', function (e, data) {
                     $('#newcar_monthly_badge').text(data.total);
                 })
+                //导出新客户的信息
+                var submitForm = function (ids, layero) {
+                    var options = newcarMonthly.bootstrapTable('getOptions');
+                    var columns = [];
+                    $.each(options.columns[0], function (i, j) {
+                        if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
+                            columns.push(j.field);
+                        }
+                    });
+                    var search = options.queryParams({});
+                    $("input[name=search]", layero).val(options.searchText);
+                    $("input[name=ids]", layero).val(ids);
+                    $("input[name=filter]", layero).val(search.filter);
+                    $("input[name=op]", layero).val(search.op);
+                    $("input[name=columns]", layero).val(columns.join(','));
+                    $("form", layero).submit();
+                };
                 /**
-                 * 批量发送给风控
+                 * 批量导出客户信息
+                 * @param ids
+                 * @param layero
                  */
-                $(document).on("click", ".btn-sed-risk", function () {
+                $(document).on("click", ".btn-export", function () {
                     var ids = Table.api.selectedids(newcarMonthly);
+                    var page = newcarMonthly.bootstrapTable('getData');
+                    var all = newcarMonthly.bootstrapTable('getOptions').totalRows;
+                    console.log(ids, page, all);
+                    Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("riskcontrol/monthly/export") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
+                        title: '导出数据',
+                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)",  "<span class='text-danger'>全部(" + all + "条)</span>"],
+                        success: function (layero, index) {
+                            $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                        }
+                        ,
+                        yes: function (index, layero) {
+                            if (ids.length < 1) {
+                                Layer.alert('请先选择要导出的数据!', {icon: 5})
+                                return false;
+                            }
+                            submitForm(ids.join(","), layero);
+                            // return false;
+                        }
+                        ,
+                        btn2: function (index, layero) {
+                            var ids = [];
+                            $.each(page, function (i, j) {
+                                ids.push(j.id);
+                            });
+                            submitForm(ids.join(","), layero);
+                            // return false;
+                        }
+                        ,
+                        btn3: function (index, layero) {
+                            submitForm("all", layero);
+                            // return false;
+                        }
+                    })
+                });
+                /**
+                 * 批量发送短信
+                 */
+                $(document).on("click", ".btn-selected", function () {
+                    var ids = [], phone = [];
+                    var tableRow = Controller.api.selectIdsRow(newcarMonthly);//获取选中的行数据
+                    for (var i in tableRow) {
+                        ids.push(tableRow[i]['id']);
+                        phone.push(tableRow[i]['monthly_phone_number']);
+                    }
+                    // var ids = Table.api.selectedids(newcarMonthly);
                     var page = newcarMonthly.bootstrapTable('getData');
                     var all = newcarMonthly.bootstrapTable('getOptions').data;
                     var allLen = newcarMonthly.bootstrapTable('getOptions').totalRows;
-                    var closeLay =  Layer.confirm("请选择要发送的客户数据", {
+                    var closeLay = Layer.confirm("请选择要发送的客户数据", {
                         title: '发送数据',
                         btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "<span class='text-danger'>全部(" + allLen + "条)</span>"],
                         success: function (layero, index) {
@@ -124,30 +209,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ,
                         //选中项
                         yes: function (index, layero) {
-                            if(ids.length<1){
-                                Layer.alert('数据不能为空!',{icon:5})
-                                return false
+                            if (ids.length < 1) {
+                                Layer.alert('数据不能为空!', {icon: 5})
+                                return false;
                             }
-                            Fast.api.ajax({
-                                url:'financial/monthlytabs/sedRisk',
-                                data:{ids:ids}
-                            },function (data,ret) {
-                                Layer.close(closeLay);
 
+                            Fast.api.ajax({
+                                url: 'riskcontrol/monthly/sedMessage',
+                                data: {ids: ids, phone: phone}
+
+                            }, function (data, ret) {
+                                Layer.close(closeLay);
                                 newcarMonthly.bootstrapTable('refresh');
                             })
                         }
                         ,
                         //本页
                         btn2: function (index, layero) {
-                            var ids = [];
-                            for (var i in page){
-                                ids.push(page[i]['id'])
+                            var ids = [], phone = [];
+
+                            for (var i in page) {
+                                ids.push(page[i]['id']);
+                                phone.push(page[i]['monthly_phone_number']);
+
                             }
                             Fast.api.ajax({
-                                url:'financial/monthlytabs/sedRisk',
-                                data:{ids:ids}
-                            },function (data,ret) {
+                                url: 'riskcontrol/monthly/sedMessage',
+                                data: {ids: ids, phone: phone}
+                            }, function (data, ret) {
                                 Layer.close(closeLay);
 
                                 newcarMonthly.bootstrapTable('refresh');
@@ -156,14 +245,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ,
                         //全部
                         btn3: function (index, layero) {
-                            var ids = [];
-                            for (var i in all){
-                                ids.push(all[i]['id'])
+                            var ids = [], phone = [];
+                            for (var i in all) {
+                                ids.push(all[i]['id']);
+                                phone.push(all[i]['monthly_phone_number']);
                             }
                             Fast.api.ajax({
-                                url:'financial/monthlytabs/sedRisk',
-                                data:{ids:ids}
-                            },function (data,ret) {
+                                url: 'riskcontrol/monthly/sedMessage',
+                                data: {ids: ids,phone:phone}
+                            }, function (data, ret) {
                                 Layer.close(closeLay);
 
                                 newcarMonthly.bootstrapTable('refresh');
@@ -171,12 +261,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
                     })
                 });
-
             },
             /**
              * 扣款成功客户
              */
-            deductions_succ:function () {
+            deductions_succ: function () {
                 var deductionsSucc = $("#deductionsSucc");
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
@@ -204,10 +293,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'monthly_name', title: __('Monthly_name')},
                             // {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
                             // {field: 'monthly_models', title: __('Monthly_models')},
-                            {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
-                            {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: Table.api.formatter.normal},
+                            {field: 'monthly_monney', title: __('Monthly_monney'), operate: false},
+                            {
+                                field: 'monthly_data',
+                                title: __('Monthly_data'),
+                                searchList: {
+                                    "failure": __('Monthly_data failure'),
+                                    "success": __('Monthly_data success')
+                                },
+                                formatter: Table.api.formatter.normal
+                            },
                             // {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
-                            {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
+                            {
+                                field: 'monthly_in_arrears_time',
+                                title: __('Monthly_in_arrears_time'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange'
+                            },
                             // {field: 'monthly_company', title: __('Monthly_company')},
                             // {field: 'monthly_car_number', title: __('Monthly_car_number')},
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
@@ -216,14 +318,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate', title: __('Operate'), table: deductionsSucc,
                                 buttons: [
                                     {
-                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        url: 'monthly/newcarmonthly/del',/**删除 */
+                                        icon: 'fa fa-trash',
+                                        name: 'del',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Del'),
+                                        classname: 'btn btn-xs btn-danger btn-delone',
+                                        url: 'monthly/newcarmonthly/del', /**删除 */
 
 
                                     },
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
-                                        url: 'monthly/newcarmonthly/edit',/**编辑 */
+                                        name: 'edit',
+                                        text: '',
+                                        icon: 'fa fa-pencil',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('Edit'),
+                                        classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'monthly/newcarmonthly/edit', /**编辑 */
 
                                     },
 
@@ -264,22 +376,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             events: {
                 operate: {
                     //编辑按钮
-                    'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */
-                    $(".btn-editone").data("area", ["95%", "95%"]);
+                    'click .btn-editone': function (e, value, row, index) {
+                        /**编辑按钮 */
+                        $(".btn-editone").data("area", ["95%", "95%"]);
 
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
                     //删除按钮
-                    'click .btn-delone': function (e, value, row, index) {  /**删除按钮 */
+                    'click .btn-delone': function (e, value, row, index) {
+                        /**删除按钮 */
 
-                    e.stopPropagation();
+                        e.stopPropagation();
                         e.preventDefault();
                         var that = this;
                         var top = $(that).offset().top - $(window).scrollTop();
@@ -292,7 +406,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
                         Layer.confirm(
                             __('Are you sure you want to delete this item?'),
-                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
                             function (index) {
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
@@ -316,7 +430,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
                 status: function (value, row, index) {
 
-                    var colorArr = { has_been_sent: 'success', did_not_send: 'danger'};
+                    var colorArr = {has_been_sent: 'success', did_not_send: 'danger'};
                     //如果字段列有定义custom
                     if (typeof this.custom !== 'undefined') {
                         colorArr = $.extend(colorArr, this.custom);
@@ -334,12 +448,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return html;
                 },
 
+            },
+            selectIdsRow: function (table) {
+                var options = table.bootstrapTable('getOptions');
+                if (options.templateView) {
+                    return $.map($("input[data-id][name='checkbox']:checked"), function (dom) {
+                        return $(dom)
+                    });
+                } else {
+                    return $.map(table.bootstrapTable('getSelections'), function (row) {
+                        return row;
+                    });
+                }
             }
 
         }
 
     };
-
 
 
     return Controller;
