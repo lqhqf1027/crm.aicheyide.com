@@ -411,7 +411,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     layer.close(index);
                                     table.bootstrapTable('refresh');
                                 },function (data,ret) {
-                                    alert(ret);
+                                    console.log(ret);
                                 })
                             })
 

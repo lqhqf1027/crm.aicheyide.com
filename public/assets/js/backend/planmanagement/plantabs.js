@@ -37,9 +37,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 extend: {
                     index_url: 'plan/planacar/index',
                     add_url: 'plan/planacar/add',
-                    edit_url: 'plan/planacar/edit',
-                    del_url: 'plan/planacar/del',
-                    multi_url: 'plan/planacar/multi',
+                    edit_url: 'planmanagement/plantabs/firstedit',
+                    del_url: 'planmanagement/plantabs/firstdel',
+                    multi_url: 'planmanagement/plantabs/firstmulti',
                     table: 'plan_acar',
                 },
                 toolbar: '#toolbar1',
@@ -75,7 +75,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                       
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
-                        {field: 'ismenu', title: __('Ismenu'), formatter: Table.api.formatter.toggle,operate:false},
+                        {field: 'ismenu', title: __('Ismenu'), formatter: Controller.api.formatter.toggle,operate:false},
                       
                         {field: 'operate', title: __('Operate'), table: table1, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
@@ -142,9 +142,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'plan/planfull/index',
                         add_url: 'plan/planfull/add',
-                        edit_url: 'plan/planfull/edit',
-                        del_url: 'plan/planfull/del',
-                        multi_url: 'plan/planfull/multi',
+                        edit_url: 'planmanagement/plantabs/fulledit',
+                        del_url: 'planmanagement/plantabs/fulldel',
+                        multi_url: 'planmanagement/plantabs/fullmulti',
                         table: 'plan_full',
                     },
                     toolbar: '#toolbar3',
@@ -160,7 +160,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         
                             {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'ismenu', title: __('Ismenu'), formatter: Table.api.formatter.toggle},
+                            {field: 'ismenu', title: __('Ismenu'), formatter: Controller.api.formatter.toggle},
                             
                             {field: 'operate', title: __('Operate'), table: table3, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                         ]
@@ -178,6 +178,38 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             alert(1);
             Controller.api.bindevent();
         },
+        firstedit: function () {
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+                Toastr.success("失败");
+            });
+            
+            Controller.api.bindevent();
+        },
+        fulledit: function () {
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                // Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+                // console.log(data);
+                Toastr.success("失败");
+            });
+            
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
@@ -186,6 +218,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+            },
+            formatter: {
+                operate: function (value, row, index) {
+
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
+                toggle: function (value, row, index) {
+                    
+                    var color = typeof this.color !== 'undefined' ? this.color : 'success';
+                    var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
+                    var no = typeof this.no !== 'undefined' ? this.no : 0;
+                    return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+                    
+                    
+                }
+               
             }
         }
          

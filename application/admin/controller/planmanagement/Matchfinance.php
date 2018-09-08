@@ -261,7 +261,7 @@ class Matchfinance extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('rule_message', "message2")->value('email');
+                $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -319,7 +319,7 @@ class Matchfinance extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('rule_message', "message2")->value('email');
+                $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -377,7 +377,7 @@ class Matchfinance extends Backend
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('rule_message', "message2")->value('email');
+                $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])

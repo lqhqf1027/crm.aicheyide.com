@@ -44,7 +44,7 @@ return array (
     'message3' => '销售经理（一部）',
     'message4' => '销售经理（二部）',
     'message5' => '人事经理',
-    'message6' => '推广主管（资源导入）',
+    'message6' => '推广',
     'message7' => '风控主管（征信审核）',
     'message8' => '销售顾问（一部）',
     'message9' => '销售顾问（二部）',
@@ -60,6 +60,12 @@ return array (
     'message19' => '行政',
     'message20' => '内勤（二部）',
     'message21' => '超级管理员',
+    'message22' => '销售经理（三部）',
+    'message23' => '销售顾问（三部）',
+    'message24' => '内勤（三部）',
+    'message25' => '客服',
+    'message26' => '财务（出纳）',
+    'message27' => '金融按揭专员',
   ),
   'push' => 
   array (
