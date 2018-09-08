@@ -17,6 +17,7 @@ class Newcarmonthly extends Backend
      * @var \app\admin\model\NewcarMonthly
      */
     protected $model = null;
+    protected $noNeedRight = ['edit','del'];
 
     public function _initialize()
     {

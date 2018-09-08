@@ -63,7 +63,7 @@ class Referee extends Backend
      */
     public function index()
     {
-        $login =24;
+        $login =$this->auth->id;
 
         $canUseId = $this->getUserId();
 
