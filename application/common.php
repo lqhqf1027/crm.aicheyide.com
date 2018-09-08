@@ -944,7 +944,7 @@ if (!function_exists('rentalsales_inform')) {
 
     function rentalsales_inform($models_name=NULL,$username=NULL)
     {
-        if ($models_name && $admin_name && $username) {
+        if ($models_name && $username) {
             $arr = [
                 'subject' => "车管租车预定成功通知：",
                 'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .你发起的客户：. $username . 对车型： . $models_name . 的租车预定，车管已经同意，请及时登录后台进行客户信息的补全 . '</div>'

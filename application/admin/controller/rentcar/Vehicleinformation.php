@@ -24,6 +24,7 @@ class Vehicleinformation extends Backend
      */
     protected $model = null;
     protected $multiFields = 'shelfismenu';
+    protected $noNeedRight = ['index', 'rentalrequest', 'carsingle', 'takecar'];
 
     public function _initialize()
     {
@@ -234,9 +235,9 @@ class Vehicleinformation extends Backend
                 ->where("id", $id)
                 ->setField("status_data", "is_reviewing_true");
 
-            $rental_id = Session::get('rental_id');
-
-            DB::name('rental_order')->where("id", $rental_id)->setField("review_the_data", "is_reviewing_argee");
+            $rental_id =  Db::name('rental_order')->where('plan_car_rental_name', $id)->where('order_no', null)->value('id');
+    
+            Db::name('rental_order')->where("id", $rental_id)->setField("review_the_data", "is_reviewing_argee");
 
             if ($result) {
 
@@ -245,20 +246,21 @@ class Vehicleinformation extends Backend
                 goeary_push($channel, $content);
 
                 $data = Db::name("rental_order")->where('id', $rental_id)->find();
+        
                 //车型
-                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
                 $admin_id = $data['admin_id'];
                 
                 //客户姓名
                 $username= $data['username'];
 
-                $data = rentalcar_inform($models_name,$username);
+                $data = rentalsales_inform($models_name,$username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                $receiver = Db::name('admin')->where('id', $admin_id)->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
@@ -297,7 +299,7 @@ class Vehicleinformation extends Backend
                 ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
                 ->join('models c', 'c.id=b.models_id')
                 ->where('a.id', $rental_order_id)
-                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,b.status ,a.order_no,
+                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,b.status_data ,a.order_no,
 
                     c.name as models_name,b.licenseplatenumber as licenseplatenumber')
             ->find();
