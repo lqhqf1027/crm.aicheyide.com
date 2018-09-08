@@ -18,7 +18,7 @@ class Exchangeplatformtabs extends Backend
     protected $model = null;
     protected $dataLimit = false; //表示不启用，显示所有数据
     protected $searchFields = 'username,licensenumber,frame_number';
-    protected $noNeedRight = ['index','new_car','yue_da_car','other_car','nanchong_driver','edit','change_platform','batch_change_platform','details','loan'];
+    protected $noNeedRight = ['index', 'new_car', 'yue_da_car', 'other_car', 'nanchong_driver', 'edit', 'change_platform', 'batch_change_platform', 'details', 'loan'];
 
 //    protected $multiFields = 'batch';
     public function _initialize()
@@ -399,28 +399,38 @@ class Exchangeplatformtabs extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
-
+//              pr($params);die();
 
                 try {
 
                     $mortgage_id = Db::name("sales_order")
-                        ->field("mortgage_id")
+                        ->field("id,mortgage_id")
                         ->where("id", "in", $ids)
                         ->select();
 
 
-                    $id_arr = array();
                     foreach ($mortgage_id as $k => $v) {
-                        array_push($id_arr, $v['mortgage_id']);
+
+                        if ($v['mortgage_id']) {
+                            Db::name("mortgage")
+                                ->where("id", $v['mortgage_id'])
+                                ->update([
+                                    "lending_date" => $params['lending_date'],
+                                    'firm_stage' => $params['firm_stage']
+                                ]);
+                        } else {
+                            Db::name("mortgage")->insert($params);
+
+                            $last_id = Db::name("mortgage")->getLastInsID();
+
+                            Db::name("sales_order")
+                            ->where("id",$v['id'])
+                            ->setField("mortgage_id",$last_id);
+                        }
+
                     }
 
-                    $result = Db::name("mortgage")
-                        ->where("id", "in", $id_arr)
-                        ->update([
-                            "lending_date" => $params['lending_date'],
-                            'firm_stage' => $params['firm_stage']
-                        ]);
-
+                    $result = 1;
 
                     if ($result !== false) {
                         $this->success();

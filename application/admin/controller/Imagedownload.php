@@ -18,6 +18,7 @@ class Imagedownload extends Backend
      * @var \app\admin\model\Test
      */
     protected $model = null;
+    protected $noNeedRight = ['pack'];
 
     public function _initialize()
     {
