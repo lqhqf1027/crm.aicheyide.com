@@ -3,6 +3,7 @@
 namespace app\admin\controller\planmanagement;
 
 use app\common\controller\Backend;
+use think\Db;
 
 /**
  * 多表格示例
@@ -14,7 +15,9 @@ class Plantabs extends Backend
 {
 
     protected $model = null;
-    protected $noNeedRight = ['index','table1','table2','table3'];
+    protected $multiFields = 'ismenu';
+
+    protected $noNeedRight = ['index','table1','table2','table3','firstedit','firstdel','fulledit','fulldel','working_insurance','getSales','getCategory','firstmulti','fullmulti'];
     public function _initialize()   
     {
         parent::_initialize();
@@ -47,7 +50,7 @@ class Plantabs extends Backend
         $this->view->assign("nperlistList", $this->model->getNperlistList());
         $this->view->assign("ismenuList", $this->model->getIsmenuList());
          //当前是否为关联查询
-//         $this->relationSearch = true;
+            // $this->relationSearch = true;
          //设置过滤方法
          $this->request->filter(['strip_tags']);
          if ($this->request->isAjax())
@@ -191,6 +194,250 @@ class Plantabs extends Backend
         }
         return $this->view->fetch('index');
     }
+
+
+    /**
+     * 新车编辑
+     */
+    public function firstedit($ids = NULL)
+    {
+        $this->model = model('PlanAcar');
+        $row = $this->model->get($ids);
+
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if($params['sales_id']==" "){
+                $params['sales_id'] = null;
+            }
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign([
+            "row"=>$row,
+            'working_insurance_list'=>$this->working_insurance(),
+            'sales'=>$this->getSales(),
+            'category'=>$this->getCategory()
+        ]);
+
+        return $this->view->fetch();
+    }
+    public function working_insurance()
+    {
+        return ['yes'=>'有','no'=>'无'];
+    }
+    //得到销售员信息
+    public function getSales()
+    {
+        $sales = Db::name("admin")
+            ->where("rule_message", "in", ['message8', 'message9'])
+            ->field("id,nickname")
+            ->select();
+
+        return $sales;
+
+    }
+
+    //得到销售方案类别信息
+    public function getCategory()
+    {
+       $res = Db::name("scheme_category")->select();
+
+       return $res;
+    }
+
+    /**
+     * 新车删除
+     */
+    public function firstdel($ids = "")
+    {
+        $this->model = model('PlanAcar');
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+    /**
+     * 批量更新
+     */
+    public function firstmulti($ids = "")
+    {
+        $this->model = model('PlanAcar');
+        $ids = $ids ? $ids : $this->request->param("ids");
+        if ($ids) {
+            if ($this->request->has('params')) {
+                parse_str($this->request->post("params"), $values);
+                $values = array_intersect_key($values, array_flip(is_array($this->multiFields) ? $this->multiFields : explode(',', $this->multiFields)));
+                if ($values) {
+                    $adminIds = $this->getDataLimitAdminIds();
+                    if (is_array($adminIds)) {
+                        $this->model->where($this->dataLimitField, 'in', $adminIds);
+                    }
+                    $count = 0;
+                    $list = $this->model->where($this->model->getPk(), 'in', $ids)->select();
+                    foreach ($list as $index => $item) {
+                        $count += $item->allowField(true)->isUpdate(true)->save($values);
+                    }
+                    if ($count) {
+                        $this->success();
+                    } else {
+                        $this->error(__('No rows were updated'));
+                    }
+                } else {
+                    $this->error(__('You have no permission'));
+                }
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+
+
+
+    /**
+     * 全款编辑
+     */
+    public function fulledit($ids = NULL)
+    {
+        $this->model = model('PlanFull');
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 全款车删除
+     */
+    public function fulldel($ids = "")
+    {
+        $this->model = model('PlanFull');
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+    /**
+     * 批量更新
+     */
+    public function fullmulti($ids = "")
+    {
+        $this->model = model('PlanFull');
+        $ids = $ids ? $ids : $this->request->param("ids");
+        if ($ids) {
+            if ($this->request->has('params')) {
+                parse_str($this->request->post("params"), $values);
+                $values = array_intersect_key($values, array_flip(is_array($this->multiFields) ? $this->multiFields : explode(',', $this->multiFields)));
+                if ($values) {
+                    $adminIds = $this->getDataLimitAdminIds();
+                    if (is_array($adminIds)) {
+                        $this->model->where($this->dataLimitField, 'in', $adminIds);
+                    }
+                    $count = 0;
+                    $list = $this->model->where($this->model->getPk(), 'in', $ids)->select();
+                    foreach ($list as $index => $item) {
+                        $count += $item->allowField(true)->isUpdate(true)->save($values);
+                    }
+                    if ($count) {
+                        $this->success();
+                    } else {
+                        $this->error(__('No rows were updated'));
+                    }
+                } else {
+                    $this->error(__('You have no permission'));
+                }
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+
+
+    
+
 
 
 

@@ -23,6 +23,7 @@ class Secondvehicleinformation extends Backend
      */
     protected $model = null;
     protected $multiFields = 'shelfismenu';
+    protected $noNeedRight = ['index','takecar'];
 
     public function _initialize()
     {
@@ -161,7 +162,7 @@ class Secondvehicleinformation extends Backend
                         'referee_phone' => $order_info['turn_to_introduce_phone'],
                         'referee_idcard' => $order_info['turn_to_introduce_card'],
                         'customer_name' => $order_info['username'],
-                        'customer_phone' => $order_info['customer_phone'],
+                        'customer_phone' => $order_info['phone'],
                         'buy_way' => '二手车'
                     ];
 

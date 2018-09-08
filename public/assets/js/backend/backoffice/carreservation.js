@@ -306,6 +306,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                    
                 })
 
+                //销售推送
+                goeasy.subscribe({
+                    channel: 'demo-full_backoffice',
+                    onMessage: function (message) {
+                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+
+                    }
+                });
+
 
             },
 
