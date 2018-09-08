@@ -701,6 +701,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         row = $.extend({}, row ? row : {}, { ids: ids });
                         var bigdatatype = row.plan_acar_name?'sales_order':row.plan_car_rental_name?'rental_order':row.plan_car_second_name?'second_sales_order':0;
                         var url = 'riskcontrol/creditreview/bigdata'+'/bigdatatype/'+bigdatatype;
+                        // console.log(row);return;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
                             callback: function (value) {
                             },success:function(ret){
@@ -863,7 +864,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     url: 'riskcontrol/creditreview/rentalpass',
                     data: {id: JSON.stringify(id)}
                 }, function (data, ret) {
-
+                    console.log(data);
                     Toastr.success("成功");
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
@@ -877,7 +878,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     return false;
                 }, function (data, ret) {
                     //失败的回调
-
+console.log(ret);
                     return false;
                 });
 
