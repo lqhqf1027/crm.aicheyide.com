@@ -11,6 +11,7 @@ use think\Db;
 use think\Config;
 use app\common\library\Email;
 use think\Session;
+use think\Cache;
 
 /**
  * 订单列管理
@@ -1097,7 +1098,7 @@ class Orderlisttabs extends Backend
 
                         $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $this->model->id)->value('a.nickname');
 
-                        Session::set('rental_id',$this->model->id);
+                        Session::set('rental_id', $this->model->id);
 
                         $this->model = model('car_rental_models_info');
 
@@ -1110,10 +1111,11 @@ class Orderlisttabs extends Backend
                             goeary_push($channel, $content);
                                         
                             $data = Db::name("rental_order")->where('id', Session::get('rental_id'))->find();
+
                             //车型
                             $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                             //销售员
-                            $admin_id = $data['admin_id'];
+                            
                             $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                             //客户姓名
                             $username= $data['username'];
@@ -1123,7 +1125,8 @@ class Orderlisttabs extends Backend
                             // die;
                             $email = new Email;
                             // $receiver = "haoqifei@cdjycra.club";
-                            $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
+                            $receiver = DB::name('admin')->where('rule_message', 'message15')->value('email');
+                            
                             $result_ss = $email
                                 ->to($receiver)
                                 ->subject($data['subject'])
@@ -1218,20 +1221,20 @@ class Orderlisttabs extends Backend
                     //是否采用模型验证
                     if ($this->modelValidate) {
                         $name = basename(str_replace('\\', '/', get_class($this->model)));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.add' : true) : $this->modelValidate;
-                        $this->model->validate($validate);
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
                     }
-                    $result = $this->model->allowField(true)->save($params);
+                    $result = $row->allowField(true)->save($params);
                     if ($result !== false) {
                         //如果添加成功,将状态改为暂不提交风控审核
-                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing_false']);
+                        $result_s = $row->isUpdate(true)->save(['id' => $row['id'], 'review_the_data' => 'is_reviewing_false']);
                         if ($result_s) {
                             $this->success();
                         } else {
                             $this->error('更新状态失败');
                         }
                     } else {
-                        $this->error($this->model->getError());
+                        $this->error($row->getError());
                     }
                 } catch (\think\exception\PDOException $e) {
                     $this->error($e->getMessage());
