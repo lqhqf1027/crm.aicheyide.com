@@ -31,12 +31,12 @@ return array (
     'pushtemplate' => 'Pushtemplate',
   ),
   'mail_type' => '1',
-  'mail_smtp_host' => 'smtp.163.com',
+  'mail_smtp_host' => 'smtp.mxhichina.com',
   'mail_smtp_port' => '465',
-  'mail_smtp_user' => 'aicheyide@163.com',
-  'mail_smtp_pass' => 'acyd666',
+  'mail_smtp_user' => 'operate@aicheyide.com',
+  'mail_smtp_pass' => 'Xrzl2018',
   'mail_verify_type' => '2',
-  'mail_from' => 'aicheyide@163.com',
+  'mail_from' => 'operate@aicheyide.com',
   'pushMessage' => 
   array (
     'message1' => '总经理',

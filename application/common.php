@@ -1248,8 +1248,8 @@ if (!function_exists('fullautomobile_inform')) {
         function send_monthly_to_risk( )
         {
             $arr = [
-                'subject' => "客户月供扣款不成功通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你有客户月供扣款不成功数据，请登陆系统查看哈，欠款月份： . $month . '</div>'
+                'subject' => "月供代扣失败通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你有客户月供扣款不成功数据，请登陆系统查看. '</div>'
             ];
             return $arr;
         }

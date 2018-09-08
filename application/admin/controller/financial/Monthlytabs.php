@@ -10,6 +10,7 @@ namespace app\admin\controller\financial;
 
 use app\common\controller\Backend;
 use think\Db;
+use app\common\library\Email;
 class Monthlytabs extends Backend
 {
     /**
@@ -172,18 +173,23 @@ class Monthlytabs extends Backend
                 $new_params[] = ['id' => $value, 'monthly_status' => 'has_been_sent'];
             }
             if ($this->model->saveAll($new_params)) {
-//                //发送邮箱
-//                $data = send_monthly_to_risk();
-//                //接收人
-//                $receiver = DB::name('admin')->where('rule_message', '')->value('email');
-//
-//                $email = new Email;
-//                $result_ss = $email
-//                    ->to($receiver)
-//                    ->subject($data['subject'])
-//                    ->message($data['message'])
-//                    ->send();
-                $this->success();
+                //发送邮箱
+                $data = send_monthly_to_risk();
+                //接收人  风控审核  message7
+                $receiver = DB::name('admin')->where('rule_message', 'message7')->value('email');
+
+                $email = new Email;
+                $result = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                    if($result){
+                        $this->success();
+                    }
+                    else{
+                        $this->error('邮箱通知失败');
+                    }
             } else {
                 $this->error();
             }
