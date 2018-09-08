@@ -31,74 +31,217 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 新车月供（扣款失败）
+             */
             newcar_monthly: function () {
-                // 表格1
                 var newcarMonthly = $("#newcarMonthly");
-
-                // 初始化表格
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
                 newcarMonthly.bootstrapTable({
-                    url: "secondhandcar/carreservation/secondcarWaitconfirm",
+                    url: 'riskcontrol/monthly/newcarMonthly',
                     extend: {
-                        index_url: 'order/salesorder/index',
-                        add_url: 'order/salesorder/add',
-                        // edit_url: 'order/salesorder/edit',
-                        // del_url: 'order/salesorder/del',
-                        multi_url: 'order/salesorder/multi',
-                        table: 'second_sales_order',
+                        add_url: 'monthly/newcarmonthly/add',
+                        edit_url: 'monthly/newcarmonthly/edit',
+                        del_url: 'monthly/newcarmonthly/del',
+                        import_url: 'monthly/newcarmonthly/import',
+                        multi_url: 'monthly/newcarmonthly/multi',
+                        table: 'newcar_monthly',
                     },
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
+                    // search:false,
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: '编号'},
-                            {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'plansecond.licenseplatenumber', title: __('车牌号')},
-                            {field: 'plansecond.companyaccount', title: __('所属公司户')},
-                            {field: 'admin.nickname', title: __('销售员')},
-                            {field: 'username', title: __('客户姓名')},
-                            {field: 'id_card', title: __('身份证号')},
-                            {field: 'city', title: __('居住地址')},
-                            {field: 'detailed_address', title: __('详细地址')},
-                            {field: 'phone', title: __('联系电话')},
-                            {field: 'models.name', title: __('订车车型')},
-                            {field: 'plansecond.newpayment', title: __('首付(元)')},
-                            {field: 'plansecond.monthlypaymen', title: __('月供(元)')},
-                            {field: 'plansecond.periods', title: __('期数')},
-                            {field: 'plansecond.bond', title: __('保证金(元)')},
-                            {field: 'plansecond.tailmoney', title: __('尾款(元)')},
-                            {field: 'plansecond.totalprices', title: __('车款总价(元)')},
-                            {field: 'downpayment', title: __('首期款(元)')},
-
-
+                            {field: 'id', title: __('Id')},
+                            {field: 'monthly_card_number', title: __('Monthly_card_number')},
+                            {field: 'monthly_name', title: __('Monthly_name')},
+                            {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
+                            {field: 'monthly_models', title: __('Monthly_models')},
+                            {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
+                            {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: function (v,r,i) {
+                                    return v=='failure'?'<span class="text-danger">失败</span>':'<span class="text-success">成功</span>';
+                                }},
+                            {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
+                            {field: 'monthly_company', title: __('Monthly_company')},
+                            {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
+                            {field: 'monthly_note', title: __('Monthly_note')},
+                            // {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
+                            //
+                            //
+                            //         return row.monthly_data=='failure'?"<span class='text-danger'><i class='fa fa-circle'></i> 待发送</span>":'未知状态'
+                            //
+                            //     }},
                             {
-                                field: 'operate', title: __('Operate'), table: secondcarWaitconfirm,
+                                field: 'operate', title: __('Operate'), table: newcarMonthly,
                                 buttons: [
                                     {
-                                        name: 'secondcarWaitconfirm',
-                                        text: '提交金融匹配',
-                                        icon: 'fa fa-pencil',
-                                        title: __('提交金融匹配'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-danger btn-secondcarWaitconfirm',
+                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        url: 'monthly/newcarmonthly/del',/**删除 */
 
-                                    }
+
+                                    },
+                                    {
+                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'monthly/newcarmonthly/edit',/**编辑 */
+
+                                    },
+
+
                                 ],
-
                                 events: Controller.api.events.operate,
+
                                 formatter: Controller.api.formatter.operate
+
                             }
                         ]
                     ]
                 });
-                // 为表格1绑定事件
                 Table.api.bindevent(newcarMonthly);
-
-                //数据实时统计
-                secondcarWaitconfirm.on('load-success.bs.table',function(e,data){
+                newcarMonthly.on('load-success.bs.table', function (e, data) {
+                    $('#newcar_monthly_badge').text(data.total);
                 })
+                /**
+                 * 批量发送给风控
+                 */
+                $(document).on("click", ".btn-sed-risk", function () {
+                    var ids = Table.api.selectedids(newcarMonthly);
+                    var page = newcarMonthly.bootstrapTable('getData');
+                    var all = newcarMonthly.bootstrapTable('getOptions').data;
+                    var allLen = newcarMonthly.bootstrapTable('getOptions').totalRows;
+                    var closeLay =  Layer.confirm("请选择要发送的客户数据", {
+                        title: '发送数据',
+                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "<span class='text-danger'>全部(" + allLen + "条)</span>"],
+                        success: function (layero, index) {
+                            $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                        }
+                        ,
+                        //选中项
+                        yes: function (index, layero) {
+                            if(ids.length<1){
+                                Layer.alert('数据不能为空!',{icon:5})
+                                return false
+                            }
+                            Fast.api.ajax({
+                                url:'financial/monthlytabs/sedRisk',
+                                data:{ids:ids}
+                            },function (data,ret) {
+                                Layer.close(closeLay);
+
+                                newcarMonthly.bootstrapTable('refresh');
+                            })
+                        }
+                        ,
+                        //本页
+                        btn2: function (index, layero) {
+                            var ids = [];
+                            for (var i in page){
+                                ids.push(page[i]['id'])
+                            }
+                            Fast.api.ajax({
+                                url:'financial/monthlytabs/sedRisk',
+                                data:{ids:ids}
+                            },function (data,ret) {
+                                Layer.close(closeLay);
+
+                                newcarMonthly.bootstrapTable('refresh');
+                            })
+                        }
+                        ,
+                        //全部
+                        btn3: function (index, layero) {
+                            var ids = [];
+                            for (var i in all){
+                                ids.push(all[i]['id'])
+                            }
+                            Fast.api.ajax({
+                                url:'financial/monthlytabs/sedRisk',
+                                data:{ids:ids}
+                            },function (data,ret) {
+                                Layer.close(closeLay);
+
+                                newcarMonthly.bootstrapTable('refresh');
+                            })
+                        }
+                    })
+                });
+
             },
+            /**
+             * 扣款成功客户
+             */
+            deductions_succ:function () {
+                var deductionsSucc = $("#deductionsSucc");
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                    return "快速搜索客户姓名";
+                };
+                deductionsSucc.bootstrapTable({
+                    url: 'riskcontrol/monthly/deductionsSucc',
+                    extend: {
+                        add_url: 'monthly/newcarmonthly/add',
+                        edit_url: 'monthly/newcarmonthly/edit',
+                        del_url: 'monthly/newcarmonthly/del',
+                        import_url: 'monthly/newcarmonthly/import',
+                        multi_url: 'monthly/newcarmonthly/multi',
+                        table: 'newcar_monthly',
+                    },
+                    toolbar: '#toolbar2',
+                    pk: 'id',
+                    sortName: 'id',
+                    // search:false,
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id')},
+                            {field: 'monthly_card_number', title: __('Monthly_card_number')},
+                            {field: 'monthly_name', title: __('Monthly_name')},
+                            // {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
+                            // {field: 'monthly_models', title: __('Monthly_models')},
+                            {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
+                            {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: Table.api.formatter.normal},
+                            // {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
+                            // {field: 'monthly_company', title: __('Monthly_company')},
+                            // {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
+                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {
+                                field: 'operate', title: __('Operate'), table: deductionsSucc,
+                                buttons: [
+                                    {
+                                        icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        url: 'monthly/newcarmonthly/del',/**删除 */
+
+
+                                    },
+                                    {
+                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
+                                        url: 'monthly/newcarmonthly/edit',/**编辑 */
+
+                                    },
+
+
+                                ],
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+                        ]
+                    ]
+                });
+                Table.api.bindevent(deductionsSucc);
+                deductionsSucc.on('load-success.bs.table', function (e, data) {
+                    $('#deductions_succ_badge').text(data.total);
+                })
+            }
 
 
         },
@@ -118,7 +261,80 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
             },
+            events: {
+                operate: {
+                    //编辑按钮
+                    'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */
+                    $(".btn-editone").data("area", ["95%", "95%"]);
 
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    //删除按钮
+                    'click .btn-delone': function (e, value, row, index) {  /**删除按钮 */
+
+                    e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('Are you sure you want to delete this item?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Table.api.multi("del", row[options.pk], table, that);
+                                Layer.close(index);
+                            }
+                        );
+                    },
+                }
+            },
+            formatter: {
+                operate: function (value, row, index) {
+
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
+                status: function (value, row, index) {
+
+                    var colorArr = { has_been_sent: 'success', did_not_send: 'danger'};
+                    //如果字段列有定义custom
+                    if (typeof this.custom !== 'undefined') {
+                        colorArr = $.extend(colorArr, this.custom);
+                    }
+                    value = value === null ? '' : value.toString();
+
+                    var color = value && typeof colorArr[value] !== 'undefined' ? colorArr[value] : 'primary';
+                    console.log(value);
+                    var newValue = value.charAt(0).toUpperCase() + value.slice(1);
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"><i class="fa fa-circle"></i> ' + __(newValue) + '</span>';
+                    // if (this.operate != false) {
+                    //     html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
+                    // }
+                    return html;
+                },
+
+            }
 
         }
 
