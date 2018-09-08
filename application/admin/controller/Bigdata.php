@@ -16,7 +16,8 @@ class Bigdata extends Backend
     protected $model = null;
     protected $userid = 'junyi_testusr'; //用户id
     protected $Rc4 = '12b39127a265ce21'; //apikey
-    protected $sign = null; //sign  md5加密 
+    protected $sign = null; //sign  md5加密
+    protected $noNeedRight =['toViewBigData','getBigData'];
     // protected $bigData = array();
     // protected $table,$ids,$username,$id_card,$phone;
     public function _initialize()

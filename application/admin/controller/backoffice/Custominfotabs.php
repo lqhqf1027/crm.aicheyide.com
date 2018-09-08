@@ -347,7 +347,7 @@ class Custominfotabs extends Backend
                 // }
 
                 $channel = "demo-internal";
-                $content =  "你有内勤给你分配的新客户，请登录后台进行处理";
+                $content =  "你有内勤给你分配的新客户，请注意查看";
                 goeary_push($channel, $content);
 
                 $data = sales_inform();
@@ -455,7 +455,7 @@ class Custominfotabs extends Backend
                 // }
                 
                 $channel = "demo-internal";
-                $content =  "你有内勤给你分配的新客户，请登录后台进行处理";
+                $content =  "你有内勤给你分配的新客户，请注意查看";
                 goeary_push($channel, $content);
 
                 $data = sales_inform();
