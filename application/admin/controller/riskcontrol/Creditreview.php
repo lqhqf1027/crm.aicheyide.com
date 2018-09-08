@@ -744,7 +744,7 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
-            $admin_nickname = DB::name('admin')->alias('a')->join('second_rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+            $admin_nickname = DB::name('admin')->alias('a')->join('second_sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
                 $query->where('id', $id);
@@ -761,7 +761,7 @@ class Creditreview extends Backend
                 $content = "销售员" . $admin_nickname . "提交的二手车单通过风控审核";
                 goeary_push($channel, $content);
 
-                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
@@ -806,7 +806,7 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
-            $admin_nickname = DB::name('admin')->alias('a')->join('second_rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+            $admin_nickname = DB::name('admin')->alias('a')->join('second_sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'the_guarantor'], function ($query) use ($id) {
                 $query->where('id', $id);
@@ -818,7 +818,7 @@ class Creditreview extends Backend
                 $content = "销售员" . $admin_nickname . "提交的二手车单需要提交保证金";
                 goeary_push($channel, $content);
 
-                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
@@ -863,7 +863,7 @@ class Creditreview extends Backend
 
             $id = json_decode($id, true);
 
-            $admin_nickname = DB::name('admin')->alias('a')->join('second_rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+            $admin_nickname = DB::name('admin')->alias('a')->join('second_sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
             $result = $this->model->save(['review_the_data' => 'not_through'], function ($query) use ($id) {
                 $query->where('id', $id);
@@ -875,7 +875,7 @@ class Creditreview extends Backend
                 $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核";
                 goeary_push($channel, $content);
 
-                $data = Db::name("second_rental_order")->where('id', $id)->find();
+                $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
