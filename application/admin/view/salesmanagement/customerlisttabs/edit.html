@@ -13,17 +13,14 @@
         <div class="col-xs-12 col-sm-8">
 
             <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[level]" >
-              {empty name="$row.customerlevel"}
-                <option value="" selected style="display: none">未选择任何项</option>
+                {foreach name="costomlevelList" item="vo"}
+                {if condition="$row.customerlevel eq null"}
+                <option value="" style="display: none"></option>
 
-                {foreach name="costomlevelList" item="vo"}
-                <option value="{$key}">{$vo}</option>
+                {/if}
+                <option value="{$key}" {in name="key" value="$row.customerlevel"}selected{/in}>{$vo}</option>
                 {/foreach}
-                {else /}
-                {foreach name="costomlevelList" item="vo"}
-               {notin name="$key" value="$row.customerlevel"} <option value="{$key},{$vo}">{$vo}</option> {/notin}
-                {/foreach}
-                {/empty}
+
 
             </select>
 
@@ -42,7 +39,7 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Feedback')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('反馈内容')}:</label>
         <div class="col-xs-12 col-sm-8">
             <textarea id="c-feedback" data-rule="required" class="form-control editor" rows="5" name="row[feedback]" cols="50">{$row.feedback}</textarea>
         </div>
