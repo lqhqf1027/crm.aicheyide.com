@@ -31,25 +31,11 @@ class CustomerResource extends Model
     }
 
 
-    public function getNewCustomerlevelList()
+    public function getCustomerlevelList()
     {
         return ['relation' => __('Relation'),'intention' => __('Intention'),'nointention' => __('Nointention')];
     }
 
-    public function getRelationCustomerlevelList()
-    {
-        return ['intention' => __('Intention'),'nointention' => __('Nointention'),'giveup' => __('Giveups')];
-    }
-
-    public function getIntentionCustomerlevelList()
-    {
-        return ['relation' => __('Relation'),'nointention' => __('Nointention'),'giveup' => __('Giveups')];
-    }
-
-    public function getNointentionCustomerlevelList()
-    {
-        return ['relation' => __('Relation'),'intention' => __('Intention'),'giveup' => __('Giveups')];
-    }
 
 
     public function getGenderdataTextAttr($value, $data)
@@ -58,12 +44,34 @@ class CustomerResource extends Model
         $list = $this->getGenderdataList();
         return isset($list[$value]) ? $list[$value] : '';
     }
+    public function getCustomerlevelTextAttr($value, $data)
+    {
+        $value = $value ? $value : $data['customerlevel'];
+        $list = $this->getCustomerlevelList();
+        return isset($list[$value]) ? $list[$value] : '';
+    }
 
-
-
-
+    /**
+     * Notes:关联推广平台
+     * User: glen9
+     * Date: 2018/9/9
+     * Time: 9:57
+     * @return \think\model\relation\BelongsTo
+     */
     public function platform()
     {
         return $this->belongsTo('Platform', 'platform_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    /**
+     * Notes:关联销售
+     * User: glen9
+     * Date: 2018/9/9
+     * Time: 10:05
+     * @return \think\model\relation\BelongsTo
+     */
+    public function admin()
+    {
+        return $this->belongsTo('Admin', 'sales_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 }

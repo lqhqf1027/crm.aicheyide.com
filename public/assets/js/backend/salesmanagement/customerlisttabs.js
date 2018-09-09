@@ -30,17 +30,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         //批量反馈回调方法
-        batchfeedback:function(){
-            Table.api.init({
-
-            });
-            Form.api.bindevent($("form[role=form]"), function(data, ret){
+        batchfeedback: function () {
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
 
                 Fast.api.close(data);//这里是重点
                 // console.log(data);
                 // Toastr.success("成功");//这个可有可无
-            }, function(data, ret){
+            }, function (data, ret) {
                 // console.log(data);
                 Toastr.success("失败");
             });
@@ -82,10 +80,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id'),operate:false},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
                             {field: 'platform.name', title: __('客户来源')},
-
-                            // {field: 'sales_id', title: __('Sales_id')},
+                            {
+                                field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+                                }
+                            },
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'age', title: __('Age')},
@@ -96,12 +97,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-
                             {
                                 field: 'distributsaletime',
                                 title: __('Distributsaletime'),
                                 operate: false,
-                                formatter: Table.api.formatter.datetime
+                                formatter: function (v, r, i) {
+                                    if (v != null) {
+                                        return Controller.getDateDiff(v) + '<br>' + '(' + Controller.getLocalTime(v) + ')';
+                                    }
+
+                                },
+                                // datetimeFormat:'YYY-MM-DD'
                             },
 
                             {
@@ -145,12 +151,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 Table.api.bindevent(newCustomer);
 
-                batch_giveup(".btn-selected1",newCustomer,'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
+                batch_giveup(".btn-selected1", newCustomer, 'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
 
                 /**
                  * 批量反馈
                  */
-                batch_feedback(".btn-batch-feedback-1",newCustomer);
+                batch_feedback(".btn-batch-feedback-1", newCustomer);
                 // $(document).on("click", ".btn-batch-feedback-1", function (e, value, row, index) {
                 //     //获取ids对象
                 //     var ids = Table.api.selectedids(newCustomer);
@@ -175,12 +181,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //内勤分配给销售
                 goeasy.subscribe({
                     channel: 'demo-internal',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                    onMessage: function (message) {
+                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
                             Layer.close(index);
                             $(".btn-refresh").trigger("click");
                         });
-                        
+
                     }
                 });
 
@@ -199,6 +205,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
+                console.log($(relations).find('tr td').eq(1).text());
                 // 初始化表格
                 relations.bootstrapTable({
                     url: 'salesmanagement/Customerlisttabs/relation',
@@ -217,10 +224,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id'),operate:false},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
                             {field: 'platform.name', title: __('客户来源')},
-
-                            // {field: 'sales_id', title: __('Sales_id')},
+                            {
+                                field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+                                }
+                            },
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'age', title: __('Age')},
@@ -231,14 +241,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+
                             {
                                 field: 'customerlevel',
                                 title: '客户等级',
                                 operate: false,
                                 formatter: Controller.api.formatter.status
                             },
-
+                            {
+                                field: 'feedbackContent',
+                                title: __('历史反馈记录'),
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {field: 'followupdate', title: '计划下次跟进时间', operate: false,formatter:function (v,r,i) {
+                                    return Controller.followupdateFun(v);
+                                }},
                             {
                                 field: 'operate', title: __('Operate'), table: relations,
                                 buttons: [
@@ -294,11 +314,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 批量反馈
                  */
-                batch_feedback(".btn-batch-feedback-2",relations);
+                batch_feedback(".btn-batch-feedback-2", relations);
                 /**
                  * 批量放弃
                  */
-                batch_giveup(".btn-selected2",relations,'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
+                batch_giveup(".btn-selected2", relations, 'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
 
 
                 relations.on('load-success.bs.table', function (e, data) {
@@ -306,8 +326,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $('#badge_relation').text(data.total);
 
                     // f(['new_customer','intention','nointention','overdue']);
-
-
 
 
                 })
@@ -345,10 +363,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id'),operate:false},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
                             {field: 'platform.name', title: __('客户来源')},
-
-                            // {field: 'sales_id', title: __('Sales_id')},
+                            {
+                                field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+                                }
+                            },
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'age', title: __('Age')},
@@ -359,14 +380,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {field: 'followupdate', title: '下次跟进时间', operate: false},
                             {
                                 field: 'customerlevel',
                                 title: '客户等级',
                                 operate: false,
                                 formatter: Controller.api.formatter.status
                             },
-
+                            {
+                                field: 'feedbackContent',
+                                title: __('历史反馈记录'),
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {field: 'followupdate', title: '计划下次跟进时间', operate: false,formatter:function (v,r,i) {
+                                    return Controller.followupdateFun(v);
+                                }},
 
                             {
                                 field: 'operate', title: __('Operate'), table: intentions,
@@ -422,13 +452,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 批量放弃
                  */
-                batch_giveup(".btn-selected3",intentions,'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
+                batch_giveup(".btn-selected3", intentions, 'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
 
 
                 /**
                  * 批量反馈
                  */
-                batch_feedback(".btn-batch-feedback-3",intentions);
+                batch_feedback(".btn-batch-feedback-3", intentions);
 
                 intentions.on('load-success.bs.table', function (e, data) {
                     $('#badge_intention').text(data.total);
@@ -467,10 +497,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id'),operate:false},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
                             {field: 'platform.name', title: __('客户来源')},
-
-                            // {field: 'sales_id', title: __('Sales_id')},
+                            {
+                                field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+                                }
+                            },
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'age', title: __('Age')},
@@ -481,15 +514,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {field: 'followupdate', title: '下次跟进时间', operate: false},
                             {
                                 field: 'customerlevel',
                                 title: '客户等级',
                                 operate: false,
                                 formatter: Controller.api.formatter.status
                             },
-
-
+                            {
+                                field: 'feedbackContent',
+                                title: __('历史反馈记录'),
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {
+                                field: 'followupdate',
+                                title: '计划下次跟进时间',
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                   return Controller.followupdateFun(v);
+                                }
+                            },
                             {
                                 field: 'operate', title: __('Operate'), table: nointentions,
                                 buttons: [
@@ -545,12 +591,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * 批量放弃
                  *
                  */
-                batch_giveup(".btn-selected4",nointentions,'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
+                batch_giveup(".btn-selected4", nointentions, 'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
 
                 /**
                  * 批量反馈
                  */
-                batch_feedback(".btn-batch-feedback-4",nointentions);
+                batch_feedback(".btn-batch-feedback-4", nointentions);
 
 
                 nointentions.on('load-success.bs.table', function (e, data) {
@@ -591,7 +637,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id'),operate:false},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
                             {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
@@ -650,7 +696,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: Fast.lang('Id'),operate:false},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
                             {field: 'platform.name', title: __('客户来源')},
 
                             // {field: 'sales_id', title: __('Sales_id')},
@@ -725,12 +771,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 批量放弃
                  */
-                batch_giveup(".btn-selected5",overdues,'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
+                batch_giveup(".btn-selected5", overdues, 'salesmanagement/Customerlisttabs/ajaxBatchGiveup');
 
                 /**
                  * 批量反馈
                  */
-                batch_feedback(".btn-batch-feedback-5",overdues);
+                batch_feedback(".btn-batch-feedback-5", overdues);
 
                 overdues.on('load-success.bs.table', function (e, data) {
                     $('#badge_overdue').text(data.total);
@@ -753,9 +799,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 tablsToger.each(function () {
                     var liHtml = $(this).find('.tabs-text');
 
-                    if(liHtml.text()===ret.data){
-                       // $(window.parent.document).find('.nav-tabs').on('click',$(window.parent.document).find($(this)),function () {
-                       //
+                    if (liHtml.text() === ret.data) {
+                        // $(window.parent.document).find('.nav-tabs').on('click',$(window.parent.document).find($(this)),function () {
+                        //
                         //绑定事件
 
                         //  })
@@ -787,6 +833,56 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             });
         },
+        /**
+         * 格式化时间 几天前 时 分 秒
+         * @param dateTimeStamp
+         * @returns {*|string}
+         */
+        getDateDiff: function (timestamp) {
+            var mistiming = Math.round(new Date() / 1000) - timestamp;
+            var postfix = mistiming > 0 ? '前' : '后'
+            mistiming = Math.abs(mistiming)
+            var arrr = ['年', '个月', '星期', '天', '小时', '分钟', '秒'];
+            var arrn = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+
+            for (var i = 0; i < 7; i++) {
+                var inm = Math.floor(mistiming / arrn[i])
+                if (inm != 0) {
+                    return inm + arrr[i] + postfix
+                }
+            }
+        },
+        /**
+         * 时间戳格式化日期
+         * @param Ns
+         * @returns {string}
+         */
+        getLocalTime: function (nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+
+        },
+        /**
+         * 计划下次跟进时间
+         * @param v 格式化的时间
+         * @returns {string}
+         */
+        followupdateFun:function(v){
+            return v != null ? '（' + Controller.getDateDiff(Date.parse(new Date(v)) / 1000) + '）' + v : '-';
+        },
+        /**
+         * 记录反馈内容
+         * @param v 时间戳
+         * @returns {string}
+         */
+        feedFun:function(v){
+            var feedHtml = '';
+            if (v != null) {
+                for (var i in v) {
+                    feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(v[i]["feedbacktime"]) + '（' + Controller.getLocalTime(v[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + v[i]['feedbackcontent'] + "（等级：" + v[i]['customerlevel'] + "）" + '<br>';
+                }
+            }
+            return feedHtml ? feedHtml : '-';
+        },
         api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
@@ -814,7 +910,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 console.log(value)
                                 //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
                             },
-                            success:function (data) {
+                            success: function (data) {
 
                             }
 
@@ -960,7 +1056,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     };
 
     //批量放弃
-    function batch_giveup(clickobj,table,url) {
+    function batch_giveup(clickobj, table, url) {
         $(document).on("click", clickobj, function (e, value, row, index) {
             var ids = Table.api.selectedids(table);
             e.stopPropagation();
@@ -1010,7 +1106,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     }
 
     //批量反馈
-    function batch_feedback(clickobj,table) {
+    function batch_feedback(clickobj, table) {
         $(document).on("click", clickobj, function (e, value, row, index) {
             //获取ids对象
             var ids = Table.api.selectedids(table);
@@ -1026,5 +1122,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Fast.api.open(url, '批量反馈', options)
         })
     }
+
     return Controller;
 });

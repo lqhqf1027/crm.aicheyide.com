@@ -6,6 +6,7 @@ use app\admin\model\CustomerResource;
 use app\common\controller\Backend;
 use think\Db;
 use think\Model;
+use think\Config;
 
 /**
  * 客户列管理
@@ -22,7 +23,7 @@ class Customerlisttabs extends Backend
     protected $model = null;
 //    protected $searchFields = 'id,username';
     protected $noNeedRight = ['newCustomer', 'relation', 'intention', 'nointention', 'giveup', 'index', 'overdue', 'add', 'edits', 'showFeedback'
-    ,'ajaxGiveup','ajaxBatchGiveup','get_total','encapsulationSelect','edit','batchfeedback','showFeedback'];
+        , 'ajaxGiveup', 'ajaxBatchGiveup', 'get_total', 'encapsulationSelect', 'edit', 'batchfeedback', 'showFeedback'];
 
     public function _initialize()
     {
@@ -81,12 +82,12 @@ class Customerlisttabs extends Backend
     public function index()
     {
         $this->view->assign([
-            'newCustomTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),null),
-            'relationTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'relation'),
-            'intentionTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'intention'),
-            'nointentionTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'nointention'),
-            'giveupTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'giveup'),
-            'overdueTotal'=>$this->get_total($this->noPhone(),$this->getUserId(),'overdue'),
+            'newCustomTotal' => $this->get_total($this->noPhone(), $this->getUserId(), null),
+            'relationTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'relation'),
+            'intentionTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'intention'),
+            'nointentionTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'nointention'),
+            'giveupTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'giveup'),
+            'overdueTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'overdue'),
 
         ]);
 
@@ -203,6 +204,8 @@ class Customerlisttabs extends Backend
             ->where($where)
             ->with(['platform' => function ($query) {
                 $query->withField('name');
+            }, 'admin' => function ($query) {
+                $query->withField(['nickname', 'avatar']);
             }])
             ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel) {
 
@@ -251,6 +254,8 @@ class Customerlisttabs extends Backend
             ->where($where)
             ->with(['platform' => function ($query) {
                 $query->withField('name');
+            }, 'admin' => function ($query) {
+                $query->withField(['nickname', 'avatar']);
             }])
             ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel) {
 
@@ -291,16 +296,20 @@ class Customerlisttabs extends Backend
                         $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'sales_id' => $authId, 'followuptimestamp' => ['>', time()]]);
                     }
                 }
-
-
             })
             ->order($sort, $order)
             ->limit($offset, $limit)
             ->select();
         foreach ($list as $k => $row) {
-            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel']);
+
+            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime']);
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
+            $row->visible(['admin']);
+            $row->getRelation('admin')->visible(['nickname', 'avatar']);
+            //转化头像
+            $list[$k]['admin']['avatar'] = Config::get('upload')['cdnurl'] . $row['admin']['avatar'];
+
         }
         $list = collection($list)->toArray();
 
@@ -316,8 +325,10 @@ class Customerlisttabs extends Backend
         if ($this->request->isAjax()) {
 
             $result = $this->encapsulationSelect('relation');
-
-
+            //关联反馈表内容
+            foreach ($result['rows'] as $key => $value) {
+                $result['rows'][$key]['feedbackContent'] = $this->tableShowF_d($value['id']);
+            }
             return json($result);
         }
 
@@ -335,7 +346,10 @@ class Customerlisttabs extends Backend
         if ($this->request->isAjax()) {
 
             $result = $this->encapsulationSelect('intention');
-
+            //关联反馈表内容
+            foreach ($result['rows'] as $key => $value) {
+                $result['rows'][$key]['feedbackContent'] = $this->tableShowF_d($value['id']);
+            }
 
             return json($result);
         }
@@ -354,7 +368,10 @@ class Customerlisttabs extends Backend
         if ($this->request->isAjax()) {
 
             $result = $this->encapsulationSelect('nointention');
-
+            //关联反馈表内容
+            foreach ($result['rows'] as $key => $value) {
+                $result['rows'][$key]['feedbackContent'] = $this->tableShowF_d($value['id']);
+            }
 
             return json($result);
         }
@@ -463,12 +480,10 @@ class Customerlisttabs extends Backend
     {
         $this->model = model('CustomerResource');
         $row = $this->model->get($ids);
-
         if (empty($row['followupdate'])) {
             $this->view->assign("default_date", date("Y-m-d", time()));
         }
-
-        $this->view->assign("costomlevelList", $this->model->getNewCustomerlevelList());
+        $this->view->assign("costomlevelList", $this->model->getCustomerlevelList());
 
         if (!$row)
             $this->error(__('No Results were found'));
@@ -637,7 +652,18 @@ class Customerlisttabs extends Backend
     }
 
 
-    //查看跟进结果
+    /**
+     * Notes:查看跟进结果
+     * User: glen9
+     * Date: 2018/9/9
+     * Time: 12:16
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function showFeedback($ids = NULL)
     {
 
@@ -647,18 +673,29 @@ class Customerlisttabs extends Backend
             ->select();
 
         foreach ($data as $key => $value) {
-
-
             $data[$key]['feedbacktime'] = date("Y-m-d H:i:s", intval($value['feedbacktime']));
             $data[$key]['count'] = count($data);
-
         }
-
         $this->view->assign([
             'feedback_data' => $data
         ]);
         return $this->view->fetch();
     }
 
+    /**
+     * Notes:表格列的反馈展示
+     * User: glen9
+     * Date: 2018/9/9
+     * Time: 12:32
+     * @param $cusId  客户池表的主键id
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function tableShowF_d($cusId)
+    {
+        return Db::name('feedback_info')->where("customer_id", $cusId)->field(['feedbackcontent', 'feedbacktime', 'customerlevel'])->select();
+    }
 
 }
