@@ -74,7 +74,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             {field: 'monthly_card_number', title: __('Monthly_card_number')},
                             {field: 'monthly_name', title: __('Monthly_name')},
                             {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
@@ -83,12 +83,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: function (v,r,i) {
                                     return v=='failure'?'<span class="text-danger">失败</span>':'<span class="text-success">成功</span>';
                                 }},
-                            {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_failure_why', title: __('Monthly_failure_why'),operate:false},
                             {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
                             {field: 'monthly_company', title: __('Monthly_company')},
                             {field: 'monthly_car_number', title: __('Monthly_car_number')},
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
-                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {field: 'monthly_note', title: __('Monthly_note'),operate:false},
                             {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
 
 
@@ -215,7 +215,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             {field: 'monthly_card_number', title: __('Monthly_card_number')},
                             {field: 'monthly_name', title: __('Monthly_name')},
                             {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
@@ -230,12 +230,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         return '<span class="text-danger">失败</span>';
                                     }
                                 }},
-                            {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_failure_why', title: __('Monthly_failure_why'),operate:false},
                             {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
                             {field: 'monthly_company', title: __('Monthly_company')},
                             {field: 'monthly_car_number', title: __('Monthly_car_number')},
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
-                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {field: 'monthly_note', title: __('Monthly_note'),operate:false},
                             {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
 
 
@@ -300,7 +300,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             {field: 'monthly_card_number', title: __('Monthly_card_number')},
                             {field: 'monthly_name', title: __('Monthly_name')},
                             // {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
@@ -312,7 +312,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             // {field: 'monthly_company', title: __('Monthly_company')},
                             // {field: 'monthly_car_number', title: __('Monthly_car_number')},
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
-                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {field: 'monthly_note', title: __('Monthly_note'),operate:false},
                             {
                                 field: 'operate', title: __('Operate'), table: deductionsSucc,
                                 buttons: [

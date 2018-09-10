@@ -21,7 +21,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate:false},
                         {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
                         {field: 'order_no', title: __('订单编号')}, 
                         {field: 'createtime', title: __('订车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
@@ -34,9 +34,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id_card', title: __('身份证号')},
                         
                         {field: 'genderdata', title: __('性别'), searchList: {"male":__('男'),"female":__('女')}, formatter: Table.api.formatter.normal},
-                        {field: 'cash_pledge', title: __('押金（元）')},
-                        {field: 'rental_price', title: __('租金（元）')},
-                        {field: 'tenancy_term', title: __('租期（月）')},
+                        {field: 'cash_pledge', title: __('押金（元）'),operate:false},
+                        {field: 'rental_price', title: __('租金（元）'),operate:false},
+                        {field: 'tenancy_term', title: __('租期（月）'),operate:false},
 
                         {field: 'operate', title: __('Operate'), table: table, buttons: [
                             {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 

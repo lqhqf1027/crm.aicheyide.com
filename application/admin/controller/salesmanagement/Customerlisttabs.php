@@ -302,7 +302,7 @@ class Customerlisttabs extends Backend
             ->select();
         foreach ($list as $k => $row) {
 
-            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime']);
+            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime','reason']);
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
             $row->visible(['admin']);
@@ -408,7 +408,10 @@ class Customerlisttabs extends Backend
         if ($this->request->isAjax()) {
 
             $result = $this->encapsulationSelect('overdue');
-
+            //关联反馈表内容
+            foreach ($result['rows'] as $key => $value) {
+                $result['rows'][$key]['feedbackContent'] = $this->tableShowF_d($value['id']);
+            }
 
             return json($result);
         }
@@ -561,12 +564,17 @@ class Customerlisttabs extends Backend
     {
         if ($this->request->isAjax()) {
             $id = input("id");
+            $text = input("text");
+
             $this->model = model('CustomerResource');
 
 
             $result = $this->model
                 ->where("id", $id)
-                ->setField("customerlevel", "giveup");
+                ->update([
+                    "customerlevel"=> "giveup",
+                    'reason'=>$text
+                ]);
             if ($result) {
                 $this->success();
             }
@@ -633,13 +641,16 @@ class Customerlisttabs extends Backend
         if ($this->request->isAjax()) {
             $this->model = model('CustomerResource');
             $id = input("id");
-
+            $text = input("text");
             $id = json_decode($id, true);
 
 
             $result = $this->model
                 ->where('id', 'in', $id)
-                ->setField('customerlevel', 'giveup');
+                ->update([
+                    'customerlevel'=> 'giveup',
+                    'reason'=>$text
+                ]);
 
             if ($result) {
                 $this->success('', '', $result);

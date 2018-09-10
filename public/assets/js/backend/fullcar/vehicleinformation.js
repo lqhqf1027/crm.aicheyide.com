@@ -76,17 +76,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             {field: 'order_no', title: __('订单编号')},
                             {field: 'models.name', title: __('销售车型')},
                             {field: 'admin.nickname', title: __('销售员')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
                             {field: 'id_card', title: __('身份证号')},
-                            {field: 'planfull.full_total_price', title: __('车款总价（元）')},
+                            {field: 'planfull.full_total_price', title: __('车款总价（元）'),operate:false},
                             
                             {
                                 field: 'createtime',
@@ -177,16 +178,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     toolbar: '#toolbar2',
                     pk: 'id',
                     sortName: 'id',
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             {field: 'order_no', title: __('订单编号')},
                             {field: 'models.name', title: __('销售车型')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
                             {field: 'id_card', title: __('身份证号')},
-                            {field: 'planfull.full_total_price', title: __('车款总价（元）')},
+                            {field: 'planfull.full_total_price', title: __('车款总价（元）'),operate:false},
                             {field: 'carnewinventory.licensenumber', title: __('车牌号')},
                             {field: 'carnewinventory.frame_number', title: __('车架号')},
                             {field: 'carnewinventory.engine_number', title: __('发动机号')},

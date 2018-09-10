@@ -97,11 +97,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     pk: 'id',
                     sortName: 'id',
                     search:false,
-                    // searchFormVisible: true,
+                    searchFormVisible: true,
                     columns: [
                         [
                             { checkbox: true },
-                            { field: 'id', title: __('Id') },
+                            { field: 'id', title: __('Id'),operate:false},
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
 
@@ -126,12 +126,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
 
-                            { field: 'planacar.payment', title: __('首付（元）') },
-                            { field: 'planacar.monthly', title: __('月供（元）') },
-                            { field: 'planacar.nperlist', title: __('期数') },
-                            { field: 'planacar.margin', title: __('保证金（元）') },
-                            { field: 'planacar.tail_section', title: __('尾款（元）') },
-                            { field: 'planacar.gps', title: __('GPS（元）') },  
+                            { field: 'planacar.payment', title: __('首付（元）'),operate:false },
+                            { field: 'planacar.monthly', title: __('月供（元）'),operate:false },
+                            { field: 'planacar.nperlist', title: __('期数'),operate:false },
+                            { field: 'planacar.margin', title: __('保证金（元）'),operate:false },
+                            { field: 'planacar.tail_section', title: __('尾款（元）'),operate:false },
+                            { field: 'planacar.gps', title: __('GPS（元）'),operate:false },
                             {
                                 field: 'operate', title: __('Operate'), table: newcarAudit,
                                 buttons: [
@@ -323,7 +323,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')}, 
+                            {field: 'id', title: __('Id'),operate:false},
                             {field: 'order_no', title: __('Order_no')}, 
                             {field: 'createtime', title: __('提交时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'models.name', title: __('租车车型') },
@@ -332,9 +332,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
-                            {field: 'cash_pledge', title: __('押金（元）')},
-                            {field: 'rental_price', title: __('租金（元）')},
-                            {field: 'tenancy_term', title: __('租期（月）')},
+                            {field: 'cash_pledge', title: __('押金（元）'),operate:false},
+                            {field: 'rental_price', title: __('租金（元）'),operate:false},
+                            {field: 'tenancy_term', title: __('租期（月）'),operate:false},
                             {
                                 field: 'id', title: __('查看详细资料'), table: rentalcarAudit, buttons: [
                                     {
@@ -483,7 +483,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     columns: [
                         [
                             { checkbox: true },
-                            { field: 'id', title: __('Id') },
+                            { field: 'id', title: __('Id'),operate:false },
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
 
@@ -507,12 +507,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
 
-                            { field: 'plansecond.newpayment', title: __('新首付（元）') },
-                            { field: 'plansecond.monthlypaymen', title: __('月供（元）') },
-                            { field: 'plansecond.periods', title: __('期数（月）') },
-                            { field: 'plansecond.totalprices', title: __('总价（元）') }, 
-                            { field: 'plansecond.bond', title: __('保证金（元）') }, 
-                            { field: 'plansecond.tailmoney', title: __('尾款（元）') }, 
+                            { field: 'plansecond.newpayment', title: __('新首付（元）'),operate:false },
+                            { field: 'plansecond.monthlypaymen', title: __('月供（元）'),operate:false },
+                            { field: 'plansecond.periods', title: __('期数（月）'),operate:false },
+                            { field: 'plansecond.totalprices', title: __('总价（元）'),operate:false },
+                            { field: 'plansecond.bond', title: __('保证金（元）'),operate:false },
+                            { field: 'plansecond.tailmoney', title: __('尾款（元）'),operate:false },
                             {
                                 field: 'operate', title: __('Operate'), table: secondhandcarAudit,
                                 buttons: [

@@ -601,7 +601,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Loan: function (value, row, index) {
 
                     if (row.mortgage.firm_stage && value) {
-                        return value + "" + row.mortgage.firm_stage;
+                        return value + " " + row.mortgage.firm_stage;
                     } else {
                        return value;
                     }
