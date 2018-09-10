@@ -57,7 +57,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             {field: 'monthly_card_number', title: __('Monthly_card_number')},
                             {field: 'monthly_name', title: __('Monthly_name')},
                             {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
@@ -80,7 +80,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }
                                 }
                             },
-                            {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_failure_why', title: __('Monthly_failure_why'),operate:false},
                             {
                                 field: 'monthly_in_arrears_time',
                                 title: __('Monthly_in_arrears_time'),
@@ -92,7 +92,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'monthly_family_unit', title: __('上户单位')},
 
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
-                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {field: 'monthly_note', title: __('Monthly_note'),operate:false},
                             {
                                 field: 'operate', title: __('Operate'), table: newcarMonthly,
                                 buttons: [
@@ -283,7 +283,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             {field: 'monthly_card_number', title: __('Monthly_card_number')},
                             {field: 'monthly_name', title: __('Monthly_name')},
                             {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
@@ -310,7 +310,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'monthly_family_unit', title: __('上户单位')},
 
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
-                            {field: 'monthly_note', title: __('Monthly_note')},
+                            {field: 'monthly_note', title: __('Monthly_note'),operate:false},
                             {
                                 field: 'operate', title: __('Operate'), table: deductionsSucc,
                                 buttons: [

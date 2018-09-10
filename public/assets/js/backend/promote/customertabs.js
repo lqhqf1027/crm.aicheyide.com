@@ -86,10 +86,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         index_url: 'customer/customerresource/index',
                         add_url: 'customer/customerresource/add',
                         // edit_url: 'customer/customerresource/edit',
-                        del_url: 'customer/customerresource/del',
-                        // multi_url: 'customer/customerresource/multi',
+                        del_url: 'promote/customertabs/del',
+                        multi_url: 'promote/customertabs/multi',
                         distribution_url: 'promote/customertabs/distribution',
-                        import_url: 'customer/customerresource/import',
+                        import_url: 'promote/customertabs/import',
                         table: 'customer_resource',
                     },
                     toolbar: '#toolbar1',
@@ -99,7 +99,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -118,16 +118,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'createtime',
                                 title: __('Createtime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'updatetime',
                                 title: __('Updatetime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
+                                formatter: Table.api.formatter.datetime,
+
                             },
                             // {field: 'allocationtime', title: __('Allocationtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             // {field: 'feedbacktime', title: __('Feedbacktime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
@@ -260,7 +261,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -279,23 +280,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'distributinternaltime',
                                 title: __('Distributinternaltime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'createtime',
                                 title: __('Createtime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'updatetime',
                                 title: __('Updatetime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
+                                formatter: Table.api.formatter.datetime,
+
                             },
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
@@ -390,7 +392,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -409,25 +411,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'feedbacktime',
                                 title: __('Feedbacktime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'createtime',
                                 title: __('Createtime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'updatetime',
                                 title: __('Updatetime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
-                            {field: 'feedback', title: __('Feedback')},
+                            {field: 'feedback', title: __('Feedback'),operate:false},
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
                             // {field: 'operate', title: __('Operate'), table: newFeedback, events: Table.api.events.operate,formatter: Table.api.formatter.operate}
@@ -559,6 +561,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'promote/customertabs/dstribution';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    //删除按钮
+                    'click .btn-delone': function (e, value, row, index) {  /**删除按钮 */
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('Are you sure you want to delete this item?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Table.api.multi("del", row[options.pk], table, that);
+                                Layer.close(index);
+                            }
+                        );
                     },
                 }
             }

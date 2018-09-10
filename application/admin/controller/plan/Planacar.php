@@ -87,11 +87,13 @@ class Planacar extends Backend
      */
     public function add()
     {
+        $financial = Db::name("financial_platform")->where('status','normal')->select();
         $this->view->assign([
             "sales"=> $this->getSales(),
-            'category'=>$this->getCategory()
+            'category'=>$this->getCategory(),
+            'financial'=>$financial,
+            "car_models"=> $this->getInfo()
         ]);
-
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if(empty($params['working_insurance'])){
@@ -206,6 +208,36 @@ class Planacar extends Backend
        $res = Db::name("scheme_category")->select();
 
        return $res;
+    }
+
+
+    public function getInfo()
+    {
+
+        $brand = Db::name("brand")
+            ->field("id,name")
+            ->select();
+
+
+        $models = Db::name("models")
+            ->field("id as models_id,name as models_name,brand_id")
+            ->select();
+
+
+        foreach ($brand as $k => $v) {
+            $brand[$k]['models'] = array();
+            foreach ($models as $key => $value) {
+
+                if ($v['id'] == $value['brand_id']) {
+
+                    array_push($brand[$k]['models'], $value);
+                }
+            }
+
+        }
+
+        return $brand;
+
     }
 
 }

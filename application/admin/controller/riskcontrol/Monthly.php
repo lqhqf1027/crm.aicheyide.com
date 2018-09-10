@@ -24,6 +24,8 @@ class Monthly extends Backend
      * @var null
      */
     protected $model = null;
+    protected $noNeedRight = ['index', 'newcarMonthly', 'export', 'sedMessage', 'deductionsSucc', 'commontMethod'];
+
 
     /**
      *

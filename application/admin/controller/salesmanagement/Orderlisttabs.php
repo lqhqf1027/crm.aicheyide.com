@@ -788,14 +788,18 @@ class Orderlisttabs extends Backend
 
             //message8=>销售一部顾问，message13=>内勤一部
              //message9=>销售二部顾问，message20=>内勤二部
-            // $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
-            $adminRule = 'message8'; //测试数据
+            $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
+            // $adminRule = 'message8'; //测试数据
             if ($adminRule == 'message8') {
                 $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
                 // return true;
             }
             if ($adminRule == 'message9') {
-                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message23') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
                 // return true;
             }
             if ($params) {
@@ -1712,14 +1716,18 @@ class Orderlisttabs extends Backend
 
             //message8=>销售一部顾问，message13=>内勤一部
              //message9=>销售二部顾问，message20=>内勤二部
-            // $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
-            $adminRule = 'message8'; //测试数据
+            $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
+            // $adminRule = 'message8'; //测试数据
             if ($adminRule == 'message8') {
                 $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
                 // return true;
             }
             if ($adminRule == 'message9') {
-                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message23') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
                 // return true;
             }
             if ($params) {
@@ -1840,14 +1848,18 @@ class Orderlisttabs extends Backend
 
             //message8=>销售一部顾问，message13=>内勤一部
              //message9=>销售二部顾问，message20=>内勤二部
-            // $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
-            $adminRule = 'message8'; //测试数据
+            $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
+            // $adminRule = 'message8'; //测试数据
             if ($adminRule == 'message8') {
                 $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
                 // return true;
             }
             if ($adminRule == 'message9') {
-                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message23') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
                 // return true;
             }
             if ($params) {

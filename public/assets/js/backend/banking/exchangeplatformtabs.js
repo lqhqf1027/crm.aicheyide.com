@@ -68,20 +68,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newCar.on('load-success.bs.table', function (e, data) {
                     var arr = data.rows;
 
-                    console.log(arr);
                     Controller.merge(arr, $("#newCar"), $('#new_car'));
-                    $('#badge_new_car').text(data.total);
 
+
+                    $('#badge_new_car').text(data.total);
                 });
 
                 newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
+
                     $(".btn-btn-editone").data("area", ["80%", "80%"]);
                     $(".btn-edit").data("area", ["80%", "80%"]);
                     $(".btn-loan").data("area", ["40%", "40%"]);
-
-
-                });
+                    });
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:车牌号";};
 
                 // 初始化表格
@@ -543,7 +542,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
 
-                if (hash.indexOf(arr[i]['mortgage']['lending_date']) == -1 &&arr[i]['mortgage']['lending_date']!=null) {
+                if (hash.indexOf(arr[i]['mortgage']['lending_date']) == -1 ) {
 
                     hash.push(arr[i]['mortgage']['lending_date']);
 
@@ -573,7 +572,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var td = $(obj).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
 
-                i % 2 == 0 ? td.eq(2).css({"background-color": "#fcbd20"}) : td.eq(2).css({"background-color": "skyblue"});
+                if(data_arr[i][1]!=null){
+                    i % 2 == 0 ? td.eq(2).css({"background-color": "#fcbd20"}) : td.eq(2).css({"background-color": "skyblue"});
+                }
+
+
             }
         },
 
@@ -601,9 +604,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Loan: function (value, row, index) {
 
                     if (row.mortgage.firm_stage && value) {
-                        return value + "" + row.mortgage.firm_stage;
+                        return value + " " + row.mortgage.firm_stage;
                     } else {
-                       return value;
+
+                       // return "<span class='text-info'>实打实</span>";
+                       return value? value:" - ";
                     }
 
 

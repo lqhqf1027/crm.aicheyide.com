@@ -21,10 +21,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate:false},
                         {field: 'models.name', title: __('车型名称')},
                         // {field: 'carnumber', title: __('Carnumber')},
                         // {field: 'reservecar', title: __('Reservecar')},
@@ -33,9 +34,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'engine_number', title: __('发动机号')},
                         {field: 'household', title: __('所属户')},
                         {field: '4s_shop', title: __('4S店')},
-                        {field: 'note', title: __('备注')},
-                        {field: 'createtime', title: __('创建时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('更新时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'note', title: __('备注'),operate:false},
+                        {field: 'createtime', title: __('创建时间'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'updatetime', title: __('更新时间'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

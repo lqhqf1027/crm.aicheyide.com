@@ -99,7 +99,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     toolbar: '#toolbar2',
                     sortName: 'id,statusdata',
-                    
+                    searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},

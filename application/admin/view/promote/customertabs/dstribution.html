@@ -1,11 +1,15 @@
 <form id="sd-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('请选择内勤')}:</label>
+        <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[backoffice_id]" >
+            <option value="" style="display: none">未选择任何项</option>
+            {foreach name="backofficeList" item="vo"}
+            <option value="{$vo.id}">{$vo.nickname}</option>
+            {/foreach}
 
-    <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[backoffice_id]" >
-        {foreach name="backofficeList" item="vo"}
-        <option value="{$vo.id}">{$vo.nickname}</option>
-        {/foreach}
+        </select>
+    </div>
 
-    </select>
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
@@ -14,6 +18,10 @@
         </div>
     </div>
 </form>
-{php}
-//dump($backofficeList);
-{/php}
+<script>
+    $(function () {
+        // if($("#c-customlevel").val()==null){
+        //     hasClass($("button[type=submit]"))?
+        // }
+    })
+</script>
