@@ -139,14 +139,14 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '新车销售情况',
+                    text: '新车销售情况（单位：月）',
                     subtext: ''
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["销售一部","销售二部"]
+                    data: ["销售一部","销售二部","销售三部"]
                 },
                 toolbox: {
                     show: false,
@@ -194,7 +194,24 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             }
                         },
                         data: Ordernewdata.newtwosales
-                    }]
+                    },
+                    {
+                        name: "销售三部",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                color: 'pink'
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Ordernewdata.newthreesales
+                    }
+                ]
             };
 
             // 使用刚指定的配置项和数据显示图表。
@@ -208,14 +225,14 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '租车出租情况',
+                    text: '租车出租情况（单位：月）',
                     subtext: ''
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["销售一部","销售二部"]
+                    data: ["销售一部","销售二部","销售三部"]
                 },
                 toolbox: {
                     show: false,
@@ -267,7 +284,24 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             }
                         },
                         data: Orderrentaldata.rentaltwosales
-                    }]
+                    },
+                    {
+                        name: "销售三部",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                color: 'cyan'
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Orderrentaldata.rentalthreesales
+                    }
+                ]
             };
 
             // 使用刚指定的配置项和数据显示图表。
@@ -281,14 +315,14 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '二手车销售情况',
+                    text: '二手车销售情况（单位：月）',
                     subtext: ''
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["销售一部","销售二部"]
+                    data: ["销售一部","销售二部","销售三部"]
                 },
                 toolbox: {
                     show: false,
@@ -340,7 +374,24 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             }
                         },
                         data: Orderseconddata.secondtwosales
-                    }]
+                    },
+                    {
+                        name: "销售三部",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                color: 'orange'
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Orderseconddata.secondthreesales
+                    }
+                ]
             };
 
             // 使用刚指定的配置项和数据显示图表。
@@ -354,14 +405,14 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '全款车销售情况',
+                    text: '全款车销售情况（单位：月）',
                     subtext: ''
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["销售一部","销售二部"]
+                    data: ["销售一部","销售二部","销售三部"]
                 },
                 toolbox: {
                     show: false,
@@ -413,7 +464,24 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             }
                         },
                         data: Orderfulldata.fulltwosales
-                    }]
+                    },
+                    {
+                        name: "销售三部",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                color: 'blue'
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Orderfulldata.fullthreesales
+                    }
+                ]
             };
 
             // 使用刚指定的配置项和数据显示图表。
