@@ -239,11 +239,15 @@ class Plantabs extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
+        $financial = Db::name("financial_platform")->where('status','normal')->select();
         $this->view->assign([
             "row"=>$row,
             'working_insurance_list'=>$this->working_insurance(),
             'sales'=>$this->getSales(),
-            'category'=>$this->getCategory()
+            'category'=>$this->getCategory(),
+            "car_models"=> $this->getInfo(),
+            'financial'=>$financial,
+            "nperlistList"=> $this->model->getNperlistList()
         ]);
 
         return $this->view->fetch();
@@ -436,8 +440,35 @@ class Plantabs extends Backend
     }
 
 
-    
 
+    public function getInfo()
+    {
+
+        $brand = Db::name("brand")
+            ->field("id,name")
+            ->select();
+
+
+        $models = Db::name("models")
+            ->field("id as models_id,name as models_name,brand_id")
+            ->select();
+
+
+        foreach ($brand as $k => $v) {
+            $brand[$k]['models'] = array();
+            foreach ($models as $key => $value) {
+
+                if ($v['id'] == $value['brand_id']) {
+
+                    array_push($brand[$k]['models'], $value);
+                }
+            }
+
+        }
+
+        return $brand;
+
+    }
 
 
 
