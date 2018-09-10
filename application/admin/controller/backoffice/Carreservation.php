@@ -19,6 +19,8 @@ class Carreservation extends Backend
      * @var null
      */
     protected $model = null;
+    protected $dataLimitField = 'backoffice_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
+    protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
 
     protected $noNeedRight = ['index','newcarEntry','secondcarEntry','fullcarEntry','newactual_amount','secondactual_amount','fullactual_amount'];
 
@@ -395,7 +397,7 @@ class Carreservation extends Backend
         $arr['admin'] = array();
         $arr['backoffice'] = array();
         $admin = Db::name("admin")
-            ->where("rule_message", "message21")
+            ->where("rule_message", "in", ["message1", "message21", "message3", "message4","message22"])
             ->field("id")
             ->select();
 
@@ -406,7 +408,7 @@ class Carreservation extends Backend
 
 
         $sale = Db::name("admin")
-            ->where("rule_message", "in", ["message13", "message20"])
+            ->where("rule_message", "in", ["message13", "message20", "message24"])
             ->field("id")
             ->select();
         foreach ($sale as $v) {
