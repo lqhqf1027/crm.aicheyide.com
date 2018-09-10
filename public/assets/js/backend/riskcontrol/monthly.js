@@ -89,6 +89,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'monthly_company', title: __('Monthly_company')},
                             {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            {field: 'monthly_family_unit', title: __('上户单位')},
+
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
                             {field: 'monthly_note', title: __('Monthly_note')},
                             {
@@ -154,7 +156,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var ids = Table.api.selectedids(newcarMonthly);
                     var page = newcarMonthly.bootstrapTable('getData');
                     var all = newcarMonthly.bootstrapTable('getOptions').totalRows;
-                    console.log(ids, page, all);
                     Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("riskcontrol/monthly/export") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
                         title: '导出数据',
                         btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)",  "<span class='text-danger'>全部(" + all + "条)</span>"],
@@ -190,19 +191,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * 批量发送短信
                  */
                 $(document).on("click", ".btn-selected", function () {
-                    var ids = [], phone = [];
+                    var ids = [];
                     var tableRow = Controller.api.selectIdsRow(newcarMonthly);//获取选中的行数据
-                    for (var i in tableRow) {
-                        ids.push(tableRow[i]['id']);
-                        phone.push(tableRow[i]['monthly_phone_number']);
-                    }
-                    // var ids = Table.api.selectedids(newcarMonthly);
+
                     var page = newcarMonthly.bootstrapTable('getData');
-                    var all = newcarMonthly.bootstrapTable('getOptions').data;
-                    var allLen = newcarMonthly.bootstrapTable('getOptions').totalRows;
+
+                    //选中项
+                    if(tableRow!=''){
+                        for (var i in tableRow) {
+                            ids.push({
+                                'id':tableRow[i]['id'],
+                                'monthly_phone_number':tableRow[i]['monthly_phone_number'].slice('1,10'),
+                                'monthly_card_number':tableRow[i]['monthly_card_number'].match(/.*(.{4})/)[1],
+                                'monthly_monney':tableRow[i]['monthly_monney']
+                            });
+                        }
+                    }
                     var closeLay = Layer.confirm("请选择要发送的客户数据", {
                         title: '发送数据',
-                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "<span class='text-danger'>全部(" + allLen + "条)</span>"],
+                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)"],
                         success: function (layero, index) {
                             $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
                         }
@@ -213,10 +220,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Layer.alert('数据不能为空!', {icon: 5})
                                 return false;
                             }
-
                             Fast.api.ajax({
                                 url: 'riskcontrol/monthly/sedMessage',
-                                data: {ids: ids, phone: phone}
+                                data: {ids}
 
                             }, function (data, ret) {
                                 Layer.close(closeLay);
@@ -226,16 +232,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ,
                         //本页
                         btn2: function (index, layero) {
-                            var ids = [], phone = [];
-
+                             ids = [];
                             for (var i in page) {
-                                ids.push(page[i]['id']);
-                                phone.push(page[i]['monthly_phone_number']);
-
+                                ids.push({
+                                    // deleteRepetion
+                                    'id':page[i]['id'],
+                                    'monthly_phone_number':page[i]['monthly_phone_number'].slice(0,11),
+                                    'monthly_card_number':page[i]['monthly_card_number'].match(/.*(.{4})/)[1],
+                                    'monthly_monney':page[i]['monthly_monney']
+                                });
                             }
+
+                            // return;false;
                             Fast.api.ajax({
                                 url: 'riskcontrol/monthly/sedMessage',
-                                data: {ids: ids, phone: phone}
+                                data: {ids}
                             }, function (data, ret) {
                                 Layer.close(closeLay);
 
@@ -243,22 +254,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             })
                         }
                         ,
-                        //全部
-                        btn3: function (index, layero) {
-                            var ids = [], phone = [];
-                            for (var i in all) {
-                                ids.push(all[i]['id']);
-                                phone.push(all[i]['monthly_phone_number']);
-                            }
-                            Fast.api.ajax({
-                                url: 'riskcontrol/monthly/sedMessage',
-                                data: {ids: ids,phone:phone}
-                            }, function (data, ret) {
-                                Layer.close(closeLay);
-
-                                newcarMonthly.bootstrapTable('refresh');
-                            })
-                        }
                     })
                 });
             },
@@ -291,8 +286,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: __('Id')},
                             {field: 'monthly_card_number', title: __('Monthly_card_number')},
                             {field: 'monthly_name', title: __('Monthly_name')},
-                            // {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
-                            // {field: 'monthly_models', title: __('Monthly_models')},
+                            {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
+                            {field: 'monthly_models', title: __('Monthly_models')},
                             {field: 'monthly_monney', title: __('Monthly_monney'), operate: false},
                             {
                                 field: 'monthly_data',
@@ -303,15 +298,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 },
                                 formatter: Table.api.formatter.normal
                             },
-                            // {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
                             {
                                 field: 'monthly_in_arrears_time',
                                 title: __('Monthly_in_arrears_time'),
                                 operate: 'RANGE',
                                 addclass: 'datetimerange'
                             },
-                            // {field: 'monthly_company', title: __('Monthly_company')},
-                            // {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            {field: 'monthly_company', title: __('Monthly_company')},
+                            {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            {field: 'monthly_family_unit', title: __('上户单位')},
+
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
                             {field: 'monthly_note', title: __('Monthly_note')},
                             {
@@ -363,6 +360,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         edit: function () {
             Controller.api.bindevent();
+        },
+        /**
+         * 数组去重
+         * @param arr
+         * @returns {Array}
+         */
+        deleteRepetion:function(arr){
+            var arrTable = {},arrData = [];
+            for (var i = 0; i < arr.length; i++) {
+                if( !arrTable[ arr[i] ]){
+                    arrTable[ arr[i] ] = true;
+                    arrData.push(arr[i])
+                }
+            }
+            return arrData;
         },
         api: {
             bindevent: function () {

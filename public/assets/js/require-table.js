@@ -16,7 +16,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             showExport: true,
             exportDataType: "all",
             exportTypes: ['json', 'xml', 'csv', 'txt', 'doc', 'excel'],
-            pageSize: 10,
+            pageSize: 25,
             pageList: [10, 25, 50, 'All'],
             pagination: true,
             clickToSelect: true, //是否启用点击选中

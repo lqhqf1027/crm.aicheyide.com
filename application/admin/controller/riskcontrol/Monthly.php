@@ -49,7 +49,6 @@ class Monthly extends Backend
         ]);
         return $this->view->fetch();
     }
-
     /**
      * 新车月供管理 （扣款失败 并且已发送到风控）has_been_sent
      * @return string
@@ -143,7 +142,7 @@ class Monthly extends Backend
                     $list = $items = collection($items)->toArray();
                     foreach ($items as $index => $item){
                         $item['monthly_card_number'] =   ' '.$item['monthly_card_number'];
-                        $item['monthly_phone_number'] =   ' '.(int)$item['monthly_phone_number'];
+                        $item['monthly_phone_number'] =   ' '.$item['monthly_phone_number'];
                         $item['monthly_data'] = '失败';
                         unset($item['monthly_data_text']);
                         $line++;
@@ -161,7 +160,9 @@ class Monthly extends Backend
 
                         }
                     }
+
                 });
+
             $first = array_keys($list[0]);
             foreach ($first as $index => $item) {
                 $worksheet->setCellValueByColumnAndRow($index, 1, __($item));
@@ -189,21 +190,52 @@ class Monthly extends Backend
     }
 
     /**
-     *
+     * 批量发送信给客户
+     * @return mixed
      */
     public  function  sedMessage(){
         $this->model = new \app\admin\model\NewcarMonthly;
         if ($this->request->isAjax()) {
+//            pr(input(('post.')));die;
+            $mobile = '';
+            $params = input('post.')['ids'];
+            $params = $this->assoc_unique($params,'monthly_phone_number'); //去重电话号码
+            foreach ($params as $k=>$v){
+                $mobile .=','.$v['monthly_phone_number'];
+            }
+//            pr(explode(',',substr($mobile,1)));die;
+            pr(array_slice(explode(',',substr($mobile,1)),100));die;
             //短信群发
             $url = 'https://open.ucpaas.com/ol/sms/sendsms_batch';
-            $appid = 'ffc7d537e8eb86b6ffa3fab06c77fc02';
-            $token= '894cfaaf869767dce526a6eba54ffe52';
-            $templateid = 'templateid';
-            $id = input('post.')['ids'];
-            $phone = input('post.')['phone'];
+            $data = json_encode(array(
+                'sid'=> 'ffc7d537e8eb86b6ffa3fab06c77fc02',
+                'token'=>'894cfaaf869767dce526a6eba54ffe52',
+                'appid'=>'33553da944fb487089dadb16a37c53cc',
+                'templateid'=>'',
+                'mobile' =>substr($mobile,1)
+            ));
+            pr($data);die;
+
+//            $result = posts($url);
             return $id;
 
         }
+    }
+    public function assoc_unique($arr, $key)
+    {
+        $tmp_arr = array();
+        foreach($arr as $k => $v)
+        {
+            if(in_array($v[$key], $tmp_arr))//搜索$v[$key]是否在$tmp_arr数组中存在，若存在返回true
+            {
+                unset($arr[$k]);
+            }
+            else {
+                $tmp_arr[] = $v[$key];
+            }
+        }
+        sort($arr); //sort函数对数组进行排序
+        return $arr;
     }
     /**
      * 扣款成功  deductions_succ
