@@ -611,10 +611,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'id_card', title: __('Id_card')},
                         {field: 'id', title: __('查看详细资料'), table: orderRental, buttons: [
                             {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 
-                                url: 'salesmanagement/Orderlisttabs/rentaldetails', callback:function(data){
-                                    console.log(data)
+                                url: 'salesmanagement/Orderlisttabs/rentaldetails', 
+                                hidden:function(row){
+                                    if(row.order_no !== null){ 
+                                        return false; 
+                                    }  
+                                    else if(row.order_no == null){
+                                        return true;
+                                    }
                                 }
-                            } 
+                            },
+                            {
+                                name: 'null',text: '暂无详细资料',title:'暂无详细资料',icon: 'fa fa-eye-slash',classname: 'btn btn-xs btn-danger btn-primary',
+                                hidden:function(row){  /**暂无详细资料 */
+                                    if(row.order_no == null){ 
+                                        return false; 
+                                    }
+                                    else if(row.order_no !== null){
+                                        return true;
+                                    }
+                                }
+                            },
                             ],
                             
                             operate:false, formatter: Table.api.formatter.buttons

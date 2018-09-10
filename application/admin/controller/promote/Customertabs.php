@@ -20,7 +20,7 @@ class Customertabs extends Backend
 {
 
     protected $model = null;
-    protected $noNeedRight = ['newCustomer', 'dstribution', 'newAllocation', 'newFeedback', 'distribution', 'download', 'export', 'allocationexport', 'feedbackexport', 'index'];
+    protected $noNeedRight = ['newCustomer', 'dstribution', 'newAllocation', 'newFeedback', 'distribution', 'download', 'import', 'export', 'allocationexport', 'feedbackexport', 'index', 'del'];
 
     // static public $token = null;
 
@@ -369,7 +369,7 @@ class Customertabs extends Backend
         $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);/*设置行高*/
         $objPHPExcel->setActiveSheetIndex(0)//设置一张sheet为活动表 添加表头信息
         // ->setCellValue('A' . $myrow, 'id')
-        ->setCellValue('A' . $myrow, '所属平台(填写数字[2代表今日头条，3代表百度，4代表58同城])')
+        ->setCellValue('A' . $myrow, '所属平台(填写数字[2代表今日头条，3代表百度，4代表58同城，8代表抖音])')
             ->setCellValue('B' . $myrow, '姓名')
             ->setCellValue('C' . $myrow, '联系电话');
         // ->setCellValue('E' . $myrow, '年龄')
@@ -390,6 +390,95 @@ class Customertabs extends Backend
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
         exit;
+    }
+
+    //导入新客户信息
+    public function import()
+    {
+        $this->model = model('CustomerResource');
+        $file = $this->request->request('file');
+        if (!$file) {
+            $this->error(__('Parameter %s can not be empty', 'file'));
+        }
+        $filePath = ROOT_PATH . DS . 'public' . DS . $file;
+        if (!is_file($filePath)) {
+            $this->error(__('No results were found'));
+        }
+        $PHPReader = new \PHPExcel_Reader_Excel2007();
+        if (!$PHPReader->canRead($filePath)) {
+            $PHPReader = new \PHPExcel_Reader_Excel5();
+            if (!$PHPReader->canRead($filePath)) {
+                $PHPReader = new \PHPExcel_Reader_CSV();
+                if (!$PHPReader->canRead($filePath)) {
+                    $this->error(__('Unknown data format'));
+                }
+            }
+        }
+
+        //导入文件首行类型,默认是注释,如果需要使用字段名称请使用name
+        $importHeadType = isset($this->importHeadType) ? $this->importHeadType : 'comment';
+
+        $table = $this->model->getQuery()->getTable();
+        $database = \think\Config::get('database.database');
+        $fieldArr = [];
+        $list = db()->query("SELECT COLUMN_NAME,COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?", [$table, $database]);
+        // pr($list);
+        // die;
+        foreach ($list as $k => $v) {
+            if ($importHeadType == 'comment') {
+                $fieldArr[$v['COLUMN_COMMENT']] = $v['COLUMN_NAME'];
+            } else {
+                $fieldArr[$v['COLUMN_NAME']] = $v['COLUMN_NAME'];
+            }
+        }
+        // pr($fieldArr);
+        // die;
+        $PHPExcel = $PHPReader->load($filePath); //加载文件
+        $currentSheet = $PHPExcel->getSheet(0);  //读取文件中的第一个工作表
+        $allColumn = $currentSheet->getHighestDataColumn(); //取得最大的列号
+        $allRow = $currentSheet->getHighestRow(); //取得一共有多少行
+        $maxColumnNumber = \PHPExcel_Cell::columnIndexFromString($allColumn);
+        for ($currentRow = 1; $currentRow <= 1; $currentRow++) {
+            for ($currentColumn = 0; $currentColumn < $maxColumnNumber; $currentColumn++) {
+                $val = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
+                $fields[] = $val;
+            }
+        }
+        $insert = [];
+        for ($currentRow = 2; $currentRow <= $allRow; $currentRow++) {
+            $values = [];
+            for ($currentColumn = 0; $currentColumn < $maxColumnNumber; $currentColumn++) {
+                $val = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
+                $values[] = is_null($val) ? '' : $val;
+            }
+            $row = [];
+            $temp = array_combine($fields, $values);
+            // pr($temp);
+            // die;
+            foreach ($temp as $k => $v) {
+                if (isset($fieldArr[$k]) && $k !== '') {
+                    $row[$fieldArr[$k]] = $v;
+                }
+            }
+            // pr($row);
+            // die;
+            if ($row) {
+                $insert[] = $row;
+            }
+        }
+        if (!$insert) {
+            $this->error(__('No rows were updated'));
+        }
+        try {
+            $this->model->saveAll($insert);
+
+        } catch (\think\exception\PDOException $exception) {
+            $this->error($exception->getMessage());
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+        }
+
+        $this->success();
     }
 
     //导出新客户信息
@@ -779,6 +868,32 @@ class Customertabs extends Backend
             exit;
 
         }
+    }
+
+    /**
+     * 删除
+     */
+    public function del($ids = "")
+    {
+        $this->model = model('CustomerResource');
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
     }
 
 
