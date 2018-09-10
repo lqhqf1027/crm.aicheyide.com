@@ -99,7 +99,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -118,16 +118,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'createtime',
                                 title: __('Createtime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'updatetime',
                                 title: __('Updatetime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
+                                formatter: Table.api.formatter.datetime,
+
                             },
                             // {field: 'allocationtime', title: __('Allocationtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             // {field: 'feedbacktime', title: __('Feedbacktime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
@@ -260,7 +261,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -279,23 +280,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'distributinternaltime',
                                 title: __('Distributinternaltime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'createtime',
                                 title: __('Createtime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'updatetime',
                                 title: __('Updatetime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
+                                formatter: Table.api.formatter.datetime,
+
                             },
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
@@ -390,7 +392,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id')},
+                            {field: 'id', title: __('Id'),operate:false},
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
@@ -409,25 +411,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'feedbacktime',
                                 title: __('Feedbacktime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'createtime',
                                 title: __('Createtime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
                             {
                                 field: 'updatetime',
                                 title: __('Updatetime'),
-                                operate: 'RANGE',
+                                operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
-                            {field: 'feedback', title: __('Feedback')},
+                            {field: 'feedback', title: __('Feedback'),operate:false},
                             // {field: 'feedback', title: __('Feedback')},
                             // {field: 'note', title: __('Note')},
                             // {field: 'operate', title: __('Operate'), table: newFeedback, events: Table.api.events.operate,formatter: Table.api.formatter.operate}

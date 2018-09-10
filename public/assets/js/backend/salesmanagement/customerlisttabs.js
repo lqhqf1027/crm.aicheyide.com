@@ -651,6 +651,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
                             {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            {field: 'reason', title: __('放弃原因'), operate: false,formatter:function (value, row, index) {
+
+                                var html = "";
+                                html+="<span class='text-danger'>"+value+"</span>";
+                                    return value? html:" - ";
+                                }},
+
 
                         ]
                     ]
@@ -698,7 +705,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: Fast.lang('Id'), operate: false},
                             {field: 'platform.name', title: __('客户来源')},
-
+                            {
+                                field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+                                }
+                            },
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
@@ -718,8 +729,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.status
                             },
                             {
+                                field: 'feedbackContent',
+                                title: __('历史反馈记录'),
+                                operate: false,
+                                formatter: function (v, r, i) {
+                                    console.log(v);
+                                    return Controller.feedFun(v);
+                                }
+                            },
+                            {field: 'followupdate', title: '计划下次跟进时间', operate: false,formatter:function (v,r,i) {
+                                    return Controller.followupdateFun(v);
+                                }},
+                            {
                                 field: 'operate', title: __('Operate'), table: overdues,
                                 buttons: [
+                                    {
+                                        name: 'overdue',
+                                        text: '跟进时间已过期',
+                                        title: '跟进过期',
+                                        icon: 'fa fa-times',
+                                        classname: 'text-danger'
+                                    },
                                     {
                                         name: 'detail',
                                         text: '新增销售单',
@@ -781,7 +811,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 overdues.on('load-success.bs.table', function (e, data) {
                     $('#badge_overdue').text(data.total);
 
-                    // f(['relation','intention','nointention','new_customer']);
                 })
 
             },
@@ -875,11 +904,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
          * @returns {string}
          */
         feedFun:function(v){
+           v =  v.sort(compare('feedbacktime'));
             var feedHtml = '';
             if (v != null) {
-                for (var i in v) {
-                    feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(v[i]["feedbacktime"]) + '（' + Controller.getLocalTime(v[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + v[i]['feedbackcontent'] + "（等级：" + v[i]['customerlevel'] + "）" + '<br>';
+                if(v.length>4){
+                    var arr = [];
+
+                    for (var i in v){
+                        if(i>3){
+                            break;
+                        }
+
+                        arr.push(v[i]);
+                    }
+
+                    for (var i in arr) {
+                        feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(arr[i]["feedbacktime"]) + '（' + Controller.getLocalTime(arr[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + arr[i]['feedbackcontent'] + "（等级：" + arr[i]['customerlevel'] + "）" + '<br>';
+                    }
+
+                }else{
+                    for (var i in v) {
+                        feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(v[i]["feedbacktime"]) + '（' + Controller.getLocalTime(v[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + v[i]['feedbackcontent'] + "（等级：" + v[i]['customerlevel'] + "）" + '<br>';
+                    }
                 }
+
             }
             return feedHtml ? feedHtml : '-';
         },
@@ -954,22 +1002,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             function (index) {
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
-                                Fast.api.ajax({
-                                    url: 'salesmanagement/Customerlisttabs/ajaxGiveup',
-                                    data: {id: row[options.pk]}
-                                }, function (data, ret) {
-                                    var pre = $('#badge_give_up').text();
-                                    pre = parseInt(pre);
-                                    $('#badge_give_up').text(pre + 1);
-                                    Toastr.success("成功");
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
+                                Layer.close(index);
+                                Layer.prompt(
 
-                                    return false;
-                                });
+                                    { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
+                                    function (text, index) {
+                                        Fast.api.ajax({
+                                            url:"salesmanagement/Customerlisttabs/ajaxGiveup",
+                                            data:{
+                                                text:text,
+                                                id:row[options.pk]
+                                            }
+                                        },function (data,ret) {
+                                            // console.log(data);
+                                            var pre = $('#badge_give_up').text();
+                                                pre = parseInt(pre);
+                                                $('#badge_give_up').text(pre + 1);
+                                                Layer.close(index);
+                                                table.bootstrapTable('refresh');
+                                        },function (data,ret) {
+                                            console.log(ret);
+                                        })
+                                    })
+
 
 
                             }
@@ -1078,26 +1133,48 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 function (index) {
 
-                    Fast.api.ajax({
-                        url: url,
-                        data: {id: JSON.stringify(ids)}
-                    }, function (data, rets) {
+                    Layer.close(index);
+                    Layer.prompt(
 
-                        var addData = parseInt(data);
-                        var pre = $('#badge_give_up').text();
-
-                        pre = parseInt(pre);
-
-                        $('#badge_give_up').text(pre + addData);
-                        Toastr.success("成功");
-                        Layer.close(index);
-                        table.bootstrapTable('refresh');
-                        return false;
-                    }, function (data, ret) {
-                        //失败的回调
-                        table.bootstrapTable('refresh');
-                        return false;
-                    });
+                        { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
+                        function (text, index) {
+                            Fast.api.ajax({
+                                url:url,
+                                data:{
+                                    text:text,
+                                    id:JSON.stringify(ids)
+                                }
+                            },function (data,ret) {
+                                // console.log(data);
+                                var pre = $('#badge_give_up').text();
+                                pre = parseInt(pre);
+                                $('#badge_give_up').text(pre + 1);
+                                Layer.close(index);
+                                table.bootstrapTable('refresh');
+                            },function (data,ret) {
+                                console.log(ret);
+                            })
+                        })
+                    // Fast.api.ajax({
+                    //     url: url,
+                    //     data: {id: JSON.stringify(ids)}
+                    // }, function (data, rets) {
+                    //
+                    //     var addData = parseInt(data);
+                    //     var pre = $('#badge_give_up').text();
+                    //
+                    //     pre = parseInt(pre);
+                    //
+                    //     $('#badge_give_up').text(pre + addData);
+                    //     Toastr.success("成功");
+                    //     Layer.close(index);
+                    //     table.bootstrapTable('refresh');
+                    //     return false;
+                    // }, function (data, ret) {
+                    //     //失败的回调
+                    //     table.bootstrapTable('refresh');
+                    //     return false;
+                    // });
 
 
                 }
@@ -1121,6 +1198,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             }
             Fast.api.open(url, '批量反馈', options)
         })
+    }
+
+    //跟进跟进时间排序
+    function compare(property){
+        return function(a,b){
+            var value1 = a[property];
+            var value2 = b[property];
+            return  value2-value1;
+        }
     }
 
     return Controller;

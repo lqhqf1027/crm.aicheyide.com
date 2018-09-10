@@ -53,7 +53,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate:false},
                         // {field: 'sales_id', title: __('Sales_id')},
                         {field: 'licenseplatenumber', title: __('Licenseplatenumber'), formatter:function(value,row,index){
                             if(row.status_data !=  ""){
@@ -66,27 +66,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }},
                         // {field: 'models_id', title: __('Models_id')},
                         {field: 'models.name', title: __('Models.name')},
-                        {field: 'kilometres', title: __('Kilometres'), operate:'BETWEEN'},
+                        {field: 'kilometres', title: __('Kilometres'), operate:false},
                         {field: 'companyaccount', title: __('Companyaccount')},
-                        {field: 'cashpledge', title: __('Cashpledge')},
-                        {field: 'threemonths', title: __('Threemonths')},
-                        {field: 'sixmonths', title: __('Sixmonths')},
-                        {field: 'manysixmonths', title: __('Manysixmonths')},
+                        {field: 'cashpledge', title: __('Cashpledge'),operate:false},
+                        {field: 'threemonths', title: __('Threemonths'),operate:false},
+                        {field: 'sixmonths', title: __('Sixmonths'),operate:false},
+                        {field: 'manysixmonths', title: __('Manysixmonths'),operate:false},
                         {field: 'drivinglicenseimages', title: __('Drivinglicenseimages'), formatter: Table.api.formatter.images},
                         {field: 'vin', title: __('Vin')},
                         {field: 'expirydate', title: __('Expirydate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'annualverificationdate', title: __('Annualverificationdate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'carcolor', title: __('Carcolor')},
                         {field: 'aeratedcard', title: __('Aeratedcard')},
-                        {field: 'volumekeys', title: __('Volumekeys')},
-                        {field: 'Parkingposition', title: __('Parkingposition')},
+                        {field: 'volumekeys', title: __('Volumekeys'),operate:false},
+                        {field: 'Parkingposition', title: __('Parkingposition'),operate:false},
                         {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Controller.api.formatter.toggle},
-                        {field: 'vehiclestate', title: __('Vehiclestate')},
+                        {field: 'vehiclestate', title: __('Vehiclestate'),operate:false},
 
 
                         // {field: 'models.name', title: __('Models.name')},
                         {field: 'sales.nickname', title: __('预定销售人员')},
-                        {field: 'note', title: __('Note')},
+                        {field: 'note', title: __('Note'),operate:false},
                         {field: 'operate', title: __('Operate'), table: table, 
                         buttons: [
                             { 

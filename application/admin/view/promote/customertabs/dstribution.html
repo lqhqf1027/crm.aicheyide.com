@@ -1,6 +1,7 @@
 <form id="sd-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
     <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[backoffice_id]" >
+        <option value="" style="display: none">未选择任何项</option>
         {foreach name="backofficeList" item="vo"}
         <option value="{$vo.id}">{$vo.nickname}</option>
         {/foreach}
@@ -14,6 +15,3 @@
         </div>
     </div>
 </form>
-{php}
-//dump($backofficeList);
-{/php}
