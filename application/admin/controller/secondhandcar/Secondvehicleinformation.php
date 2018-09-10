@@ -91,7 +91,7 @@ class Secondvehicleinformation extends Backend
             $result_s = DB::name('rental_order')->where('id', $rental_order_id)->setField('review_the_data', 'for_the_car');
 
             $seventtime = \fast\Date::unixtime('day', -14);
-            $secondonesales = $secondtwosales = $secondthreesales = [];
+            $secondonesales = $secondtwosales = [];
             for ($i = 0; $i < 8; $i++)
             {
                 $month = date("Y-m", $seventtime + ($i * 86400 * 30));
@@ -115,26 +115,15 @@ class Secondvehicleinformation extends Backend
                         ->where('admin_id', 'in', $two_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-                //销售三部
-                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                foreach($three_sales as $k => $v){
-                    $three_admin[] = $v['uid'];
-                }
-                $secondthreetake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
+        
                 //销售一部
                 $secondonesales[$month] = $secondonetake;
                 //销售二部
                 $secondtwosales[$month] = $secondtwotake;
-                //销售三部
-                $secondthreesales[$month] = $secondthreetake;
             }
             Cache::set('secondonesales', $secondonesales);
             Cache::set('secondtwosales', $secondtwosales);
-            Cache::set('secondthreesales', $secondthreesales);
+
 
             if ($result !== false) {
                 // //推送模板消息给风控
