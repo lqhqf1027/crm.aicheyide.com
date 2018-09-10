@@ -36,8 +36,7 @@ class Customerlisttabs extends Backend
     public function getUserId()
     {
         $this->model = model("Admin");
-        $back = $this->model->where("rule_message", "message8")
-            ->whereOr("rule_message", "message9")
+        $back = $this->model->where("rule_message", 'in',["message8",'message9','message23'])
             ->field("id")
             ->select();
 
