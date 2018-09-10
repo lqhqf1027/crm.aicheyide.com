@@ -276,7 +276,7 @@ class Newcarscustomer extends Backend
         ]);
         
         $seventtime = \fast\Date::unixtime('month', -6);
-        $newonesales = $newtwosales = $newthreesales = [];
+        $newonesales = $newtwosales = [];
         for ($i = 0; $i < 8; $i++)
         {
             $month = date("Y-m", $seventtime + ($i * 86400 * 30));
@@ -300,27 +300,15 @@ class Newcarscustomer extends Backend
                     ->where('admin_id', 'in', $two_admin)
                     ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                     ->count();
-            //销售三部
-            $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-            foreach($three_sales as $k => $v){
-                $three_admin[] = $v['uid'];
-            }
-            $newthreetake = Db::name('sales_order')
-                    ->where('review_the_data', 'the_car')
-                    ->where('admin_id', 'in', $three_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
+
             //销售一部
             $newonesales[$month] = $newonetake;
             //销售二部
             $newtwosales[$month] = $newtwotake;
-            //销售三部
-            $newthreesales[$month] = $newthreetake;
         }
         // pr($newtake);die;
         Cache::set('newonesales', $newonesales);
         Cache::set('newtwosales', $newtwosales);
-        Cache::set('newthreesales', $newthreesales);
 
         return $this->view->fetch();
     }

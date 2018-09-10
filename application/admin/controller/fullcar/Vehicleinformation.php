@@ -267,7 +267,7 @@ class Vehicleinformation extends Backend
         ]);
 
         $seventtime = \fast\Date::unixtime('month', -6);
-        $fullonesales = $fulltwosales = $fullthreesales= [];
+        $fullonesales = $fulltwosales = [];
 
         for ($i = 0; $i < 8; $i++)
             {
@@ -292,27 +292,15 @@ class Vehicleinformation extends Backend
                         ->where('admin_id', 'in', $two_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-                //销售三部
-                $three_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                foreach($three_sales as $k => $v){
-                    $three_admin[] = $v['uid'];
-                }
-                $fullthreetake = Db::name('full_parment_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-                //销售一部
+
+                //全款车提车
                 $fullonesales[$month] = $fullonetake;
-                //销售二部
+                //全款车订车
                 $fulltwosales[$month] = $fulltwotake;
-                //销售三部
-                $fullthreesales[$month] = $fullthreetake;
 
             }
         Cache::set('fullonesales', $fullonesales);
         Cache::set('fulltwosales', $fulltwosales);
-        Cache::set('fullthreesales', $fullthreesales);
 
 
         return $this->view->fetch();
