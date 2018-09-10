@@ -70,6 +70,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     pk: 'id',
                     sortName: 'id',
                     // search:false,
+                    pageSize: 50,
                     searchFormVisible: true,
                     columns: [
                         [
@@ -87,8 +88,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
                             {field: 'monthly_company', title: __('Monthly_company')},
                             {field: 'monthly_car_number', title: __('Monthly_car_number')},
+
+                            {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
+                            {field: 'monthly_family_unit', title: __('上户单位')},
+
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
                             {field: 'monthly_note', title: __('Monthly_note'),operate:false},
+
                             {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
 
 
@@ -123,6 +129,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 Table.api.bindevent(newcarMonthly);
                 newcarMonthly.on('load-success.bs.table', function (e, data) {
                     $('#newcar_monthly_badge').text(data.total);
+                    // console.log(data);
                 })
                 /**
                  * 批量发送给风控
@@ -130,11 +137,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 $(document).on("click", ".btn-sed-risk", function () {
                     var ids = Table.api.selectedids(newcarMonthly);
                     var page = newcarMonthly.bootstrapTable('getData');
-                    var all = newcarMonthly.bootstrapTable('getOptions').data;
-                    var allLen = newcarMonthly.bootstrapTable('getOptions').totalRows;
-                   var closeLay =  Layer.confirm("请选择要发送的客户数据", {
+                   var closeLay =  Layer.confirm("请选择要发送到风控的客户数据", {
                         title: '发送数据',
-                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "<span class='text-danger'>全部(" + allLen + "条)</span>"],
+                        btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)"],
                         success: function (layero, index) {
                             $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
                         }
@@ -161,6 +166,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             for (var i in page){
                                 ids.push(page[i]['id'])
                             }
+
                             Fast.api.ajax({
                                 url:'financial/monthlytabs/sedRisk',
                                 data:{ids:ids}
@@ -171,21 +177,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             })
                         }
                         ,
-                       //全部
-                        btn3: function (index, layero) {
-                            var ids = [];
-                            for (var i in all){
-                                ids.push(all[i]['id'])
-                            }
-                            Fast.api.ajax({
-                                url:'financial/monthlytabs/sedRisk',
-                                data:{ids:ids}
-                            },function (data,ret) {
-                                Layer.close(closeLay);
-
-                                newcarMonthly.bootstrapTable('refresh');
-                            })
-                        }
+                       // //全部
+                       //  btn3: function (index, layero) {
+                       //      var ids = [];
+                       //      for (var i in all){
+                       //          ids.push(all[i]['id'])
+                       //      }
+                       //      var options = newcarMonthly.bootstrapTable('getOptions');
+                       //      // var columns = [];
+                       //      // $.each(options.columns[0], function (i, j) {
+                       //      //     if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
+                       //      //         columns.push(j.field);
+                       //      //     }
+                       //      // });
+                       //      console.log(options);
+                       //
+                       //      return;
+                       //      Fast.api.ajax({
+                       //          url:'financial/monthlytabs/sedRisk',
+                       //          data:{ids:ids}
+                       //      },function (data,ret) {
+                       //          Layer.close(closeLay);
+                       //
+                       //          newcarMonthly.bootstrapTable('refresh');
+                       //      })
+                       //  }
                     })
                 });
 
@@ -234,6 +250,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
                             {field: 'monthly_company', title: __('Monthly_company')},
                             {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            {field: 'monthly_family_unit', title: __('上户单位')},
+
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
                             {field: 'monthly_note', title: __('Monthly_note'),operate:false},
                             {field: 'monthly_status', title: __('发送给风控状态'), operate: false,formatter: function (value,row,index) {
@@ -303,14 +321,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'id', title: __('Id'),operate:false},
                             {field: 'monthly_card_number', title: __('Monthly_card_number')},
                             {field: 'monthly_name', title: __('Monthly_name')},
-                            // {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
-                            // {field: 'monthly_models', title: __('Monthly_models')},
+                            {field: 'monthly_phone_number', title: __('Monthly_phone_number')},
+                            {field: 'monthly_models', title: __('Monthly_models')},
                             {field: 'monthly_monney', title: __('Monthly_monney'), operate:false},
                             {field: 'monthly_data', title: __('Monthly_data'), searchList: {"failure":__('Monthly_data failure'),"success":__('Monthly_data success')}, formatter: Table.api.formatter.normal},
-                            // {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
+                            {field: 'monthly_failure_why', title: __('Monthly_failure_why')},
                             {field: 'monthly_in_arrears_time', title: __('Monthly_in_arrears_time'), operate:'RANGE', addclass:'datetimerange'},
-                            // {field: 'monthly_company', title: __('Monthly_company')},
-                            // {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            {field: 'monthly_company', title: __('Monthly_company')},
+                            {field: 'monthly_car_number', title: __('Monthly_car_number')},
+                            {field: 'monthly_family_unit', title: __('上户单位')},
                             // {field: 'monthly_arrears_months', title: __('Monthly_arrears_months')},
                             {field: 'monthly_note', title: __('Monthly_note'),operate:false},
                             {

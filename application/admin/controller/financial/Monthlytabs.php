@@ -229,8 +229,9 @@ class Monthlytabs extends Backend
             ->setCellValue('H' . $myrow, '欠款月份')
             ->setCellValue('I' . $myrow, '公司')
             ->setCellValue('J' . $myrow, '车牌')
-            ->setCellValue('K' . $myrow, '欠款月数')
-            ->setCellValue('L' . $myrow, '备注');
+            ->setCellValue('K' . $myrow, '上户单位')
+            ->setCellValue('L' . $myrow, '欠款月数')
+            ->setCellValue('M' . $myrow, '备注');
         //浏览器交互 导出
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="月供信息导入模板表.xlsx"');
