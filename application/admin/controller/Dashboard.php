@@ -46,11 +46,18 @@ class Dashboard extends Backend
                 ->where('customer_source', 'turn_to_introduce')
                 ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
-        $newguest = round(($new_direct_the_guest / $todaynewtake) * 10000)  / 10000 * 100 . '%';
-        $newintroduce = round(($new_turn_to_introduce / $todaynewtake) * 10000) / 10000 * 100 . '%';
-        // pr($guest);
-        // pr($introduce);
-        // die;
+        if($todaynewtake !== 0){
+                $newguest = round(($new_direct_the_guest / $todaynewtake) * 10000)  / 10000 * 100 . '%';
+        }
+        else{
+                $newguest = 0 . '%';
+        }
+        if($todaynewtake !== 0){
+                $newintroduce = round(($new_turn_to_introduce / $todaynewtake) * 10000) / 10000 * 100 . '%';
+        }
+        else{
+                $newintroduce = 0 . '%';
+        }
 
         //新车本月订车数
         $todayneworder = DB::name('sales_order')
@@ -80,8 +87,20 @@ class Dashboard extends Backend
                 ->where('customer_source', 'turn_to_introduce')
                 ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
-        $rentalguest = round(($rental_direct_the_guest / $todayrentaltake) * 10000)  / 10000 * 100 . '%';
-        $rentalintroduce = round(($rental_turn_to_introduce / $todayrentaltake) * 10000) / 10000 * 100 . '%';
+        if($todayrentaltake !== 0){
+                $rentalguest = round(($rental_direct_the_guest / $todayrentaltake) * 10000)  / 10000 * 100 . '%';
+        }
+        else{
+                $rentalguest = 0 . '%';
+        }
+        if($todayrentaltake !== 0){
+                $rentalintroduce = round(($rental_turn_to_introduce / $todayrentaltake) * 10000) / 10000 * 100 . '%';
+        }
+        else{
+                $rentalintroduce = 0 . '%';
+        }
+        
+        
 
         //租车本月订车数
         $todayrentalorder = DB::name('rental_order')
@@ -111,8 +130,20 @@ class Dashboard extends Backend
                 ->where('customer_source', 'turn_to_introduce')
                 ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
-        $secondguest = round(($second_direct_the_guest / $todaysecondtake) * 10000)  / 10000 * 100 . '%';
-        $secondintroduce = round(($second_turn_to_introduce / $todaysecondtake) * 10000) / 10000 * 100 . '%';
+        if($todaysecondtake !== 0){
+                $secondguest = round(($second_direct_the_guest / $todaysecondtake) * 10000)  / 10000 * 100 . '%';
+        }
+        else{
+                $secondguest = 0 . '%';
+        }
+        if($todaysecondtake !== 0){
+                $secondintroduce = round(($second_turn_to_introduce / $todaysecondtake) * 10000) / 10000 * 100 . '%';
+        }
+        else{
+                $secondintroduce = 0 . '%';
+        }
+        
+        
 
 
         //二手车本月订车数
@@ -143,8 +174,19 @@ class Dashboard extends Backend
                 ->where('customer_source', 'introduce')
                 ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
-        $fullguest = round(($full_direct_the_guest / $todayfulltake) * 10000)  / 10000 * 100 . '%';
-        $fullintroduce = round(($full_turn_to_introduce / $todayfulltake) * 10000) / 10000 * 100 . '%';
+        if($todayfulltake !== 0){
+                $fullguest = round(($full_direct_the_guest / $todayfulltake) * 10000)  / 10000 * 100 . '%';
+        }
+        else{
+                $fullguest = 0 . '%';
+        }
+        if($todayfulltake !== 0){
+                $fullintroduce = round(($full_turn_to_introduce / $todayfulltake) * 10000) / 10000 * 100 . '%';
+        }
+        else{
+                $fullintroduce = 0 . '%';
+        }
+        
 
         //全款车本月订车数
         $todayfullorder = DB::name('full_parment_order')
@@ -224,11 +266,12 @@ class Dashboard extends Backend
         $seventtime = \fast\Date::unixtime('month', -6);
         // pr($seventtime);
         // die;
-        $newonesales = $newtwosales = $rentalonesales = $rentaltwosales = $secondonesales = $secondtwosales = $fullonesales = $fulltwosales = [];
+        $newonesales = $newtwosales = $newthreesales = $rentalonesales = $rentaltwosales = $rentalthreesales = $secondonesales = $secondtwosales = $secondthreesales = $fullonesales = $fulltwosales = $fullthreesales = [];
         //新车销售情况
         $newonesales = Cache::get('newonesales');
         $newtwosales = Cache::get('newtwosales');
-        if(!$newonesales && !$newtwosales){
+        $newthreesales = Cache::get('newthreesales');
+        if(!$newonesales && !$newtwosales && !$newthreesales){
            
             for ($i = 0; $i < 8; $i++)
             {
@@ -253,22 +296,36 @@ class Dashboard extends Backend
                         ->where('admin_id', 'in', $two_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
+                //销售三部
+                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
+                foreach($three_sales as $k => $v){
+                    $three_admin[] = $v['uid'];
+                }
+                $newthreetake = Db::name('sales_order')
+                        ->where('review_the_data', 'the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
 
-                ////销售一部
-                $newonesales[$month] = $newonetake;
+                //销售一部
+                $newonesales[$month . '(月)'] = $newonetake;
                 //销售二部
-                $newtwosales[$month] = $newtwotake;
+                $newtwosales[$month . '(月)'] = $newtwotake;
+                //销售三部
+                $newthreesales[$month . '(月)'] = $newthreetake;
             }
             // pr($newtake);die;
             Cache::set('newonesales', $newonesales);
             Cache::set('newtwosales', $newtwosales);
+            Cache::set('newthreesales', $newthreesales);
             
 
         }
         //租车出租情况
         $rentalonesales = Cache::get('rentalonesales');
         $rentaltwosales = Cache::get('rentaltwosales');
-        if(!$rentalonesales && !$rentaltwosales){
+        $rentalthreesales = Cache::get('rentalthreesales');
+        if(!$rentalonesales && !$rentaltwosales && !$rentalthreesales){
             
             for ($i = 0; $i < 8; $i++)
             {
@@ -293,21 +350,34 @@ class Dashboard extends Backend
                         ->where('admin_id', 'in', $two_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-                
+                //销售三部
+                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
+                foreach($three_sales as $k => $v){
+                    $three_admin[] = $v['uid'];
+                }
+                $rentalthreetake = Db::name('rental_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
                 //销售一部
-                $rentalonesales[$month] = $rentalonetake;
+                $rentalonesales[$month . '(月)'] = $rentalonetake;
                 //销售二部
-                $rentaltwosales[$month] = $rentaltwotake;
+                $rentaltwosales[$month . '(月)'] = $rentaltwotake;
+                //销售三部
+                $rentalthreesales[$month . '(月)'] = $rentalthreetake;
             
             } 
             Cache::set('rentalonesales', $rentalonesales);
             Cache::set('rentaltwosales', $rentaltwosales);
+            Cache::set('rentalthreesales', $rentalthreesales);
 
         }
         //二手车销售情况
         $secondonesales = Cache::get('secondonesales');
         $secondtwosales = Cache::get('secondtwosales');
-        if(!$secondonesales && !$secondtwosales){
+        $secondthreesales = Cache::get('secondthreesales');
+        if(!$secondonesales && !$secondtwosales && !$secondthreesales){
            
             for ($i = 0; $i < 8; $i++)
             {
@@ -332,20 +402,33 @@ class Dashboard extends Backend
                         ->where('admin_id', 'in', $two_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-        
-                //销售一部
-                $secondonesales[$month] = $secondonetake;
                 //销售二部
-                $secondtwosales[$month] = $secondtwotake;
+                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
+                foreach($three_sales as $k => $v){
+                    $three_admin[] = $v['uid'];
+                }
+                $secondthreetake = Db::name('second_sales_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //销售一部
+                $secondonesales[$month . '(月)'] = $secondonetake;
+                //销售二部
+                $secondtwosales[$month . '(月)'] = $secondtwotake;
+                //销售三部
+                $secondthreesales[$month . '(月)'] = $secondthreetake;
             }
             Cache::set('secondonesales', $secondonesales);
             Cache::set('secondtwosales', $secondtwosales);
+            Cache::set('secondthreesales', $secondthreesales);
 
         }
         //全款车销售情况
         $fullonesales = Cache::get('fullonesales');
         $fulltwosales = Cache::get('fulltwosales');
-        if(!$fullonesales && !$fulltwosales){
+        $fullthreesales = Cache::get('fullthreesales');
+        if(!$fullonesales && !$fulltwosales && !$fullthreesales){
            
             for ($i = 0; $i < 8; $i++)
             {
@@ -370,15 +453,26 @@ class Dashboard extends Backend
                         ->where('admin_id', 'in', $two_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-
-                //全款车提车
-                $fullonesales[$month] = $fullonetake;
-                //全款车订车
-                $fulltwosales[$month] = $fulltwotake;
+                //销售三部
+                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
+                foreach($three_sales as $k => $v){
+                    $three_admin[] = $v['uid'];
+                }
+                $fullthreetake = Db::name('full_parment_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //销售一部
+                $fullonesales[$month . '(月)'] = $fullonetake;
+                //销售二部
+                $fulltwosales[$month . '(月)'] = $fulltwotake;
+                //销售三部
+                $fullthreesales[$month . '(月)'] = $fullthreetake;
             }
             Cache::set('fullonesales', $fullonesales);
             Cache::set('fulltwosales', $fulltwosales);
-
+            Cache::set('fullthreesales', $fullthreesales);
 
         }        
 
@@ -434,15 +528,19 @@ class Dashboard extends Backend
             'giveuptoday'            => $giveuptoday,
             'overduetoday'           => $overduetoday,
             
-            //销售情况 --- 一部与二部
+            //销售情况 --- 一部与二部和三部
             'newonesales'           => $newonesales,
             'newtwosales'           => $newtwosales,
+            'newthreesales'         => $newthreesales,
             'rentalonesales'        => $rentalonesales,
             'rentaltwosales'        => $rentaltwosales,
+            'rentalthreesales'      => $rentalthreesales,
             'secondonesales'        => $secondonesales,
             'secondtwosales'        => $secondtwosales,
+            'secondthreesales'      => $secondthreesales,
             'fullonesales'          => $fullonesales,
-            'fulltwosales'          => $fulltwosales
+            'fulltwosales'          => $fulltwosales,
+            'fullthreesales'        => $fullthreesales
 
         ]);
 
