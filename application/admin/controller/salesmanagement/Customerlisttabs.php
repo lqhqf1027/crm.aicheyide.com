@@ -469,7 +469,6 @@ class Customerlisttabs extends Backend
         foreach ($platform as $value) {
             $arr[$value['id']] = $value['name'];
         }
-
         $this->assign('platform', $arr);
         return $this->view->fetch();
     }

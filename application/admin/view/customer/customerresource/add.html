@@ -46,10 +46,10 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
         <div class="col-xs-12 col-sm-8">
-            
+
             <div class="radio">
             {foreach name="genderdataList" item="vo"}
-            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="male"}checked{/in} placeholder="选填"/> {$vo}</label> 
+            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="male"}checked{/in} placeholder="选填"/> {$vo}</label>
             {/foreach}
             </div>
 
