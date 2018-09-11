@@ -123,17 +123,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                //风控推送---车管
-                goeasy.subscribe({
-                    channel: 'demo-newcar_control',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
 
                 // 批量提交金融事件
                 $(".btn-mass-finance").on('click',  function () {

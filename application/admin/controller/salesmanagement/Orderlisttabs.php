@@ -1073,6 +1073,7 @@ class Orderlisttabs extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
             // $ex = explode(',', $params['plan_acar_name']);
+            
 
             $params['plan_car_rental_name'] = Session::get('plan_id'); 
 
@@ -1080,10 +1081,11 @@ class Orderlisttabs extends Backend
             
             $params['plan_name'] = Session::get('plan_name'); 
 
+
             $models_id = DB::name('car_rental_models_info')->where('id', $params['plan_car_rental_name'])->value('models_id');
 
             $params['models_id'] = $models_id;
-            
+            // pr($params);die;
             if ($params) {
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -1106,7 +1108,7 @@ class Orderlisttabs extends Backend
 
                         $this->model = model('car_rental_models_info');
 
-                        $this->model->isUpdate(true)->save(['id'=>$params['plan_car_rental_name'],'status_data'=>'is_reviewing']);
+                        $this->model->isUpdate(true)->save(['id'=>Session::get('plan_id'),'status_data'=>'is_reviewing']);
                         
                         if ($result_s) {
                             

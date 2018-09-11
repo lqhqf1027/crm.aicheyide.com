@@ -24,7 +24,7 @@ class Vehicleinformation extends Backend
      */
     protected $model = null;
     protected $multiFields = 'shelfismenu';
-    protected $noNeedRight = ['index', 'rentalrequest', 'carsingle', 'takecar'];
+    protected $noNeedRight = ['index', 'rentalrequest', 'carsingle', 'takecar','add','getInfo','edit'];
 
     public function _initialize()
     {
@@ -284,15 +284,16 @@ class Vehicleinformation extends Backend
     // 打印提车单
     public function carsingle($ids = NULL)
     {
-        $this->model = new \app\admin\model\RentalOrder;
+       
         $row = $this->model->get($ids);
         $id = $row['id'];
         // var_dump($id);
-        // die;
-        $rental_order_id = $this->model->where('plan_car_rental_name', $id)->value('id');
+        // die; 
+        
+        $rental_order_id = Db::name('rental_order')->where('plan_car_rental_name', $id)->value('id');
         // var_dump($rental_order_id);
         // die;
-        $result = DB::name('rental_order')->alias('a')
+        $result = Db::name('rental_order')->alias('a')
 
             
 
@@ -415,6 +416,114 @@ class Vehicleinformation extends Backend
 
             }
         }
+    }
+
+    /**
+     * 添加
+     */
+    public function add()
+    {
+        $this->view->assign("car_models", $this->getInfo());
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
+
+    public function getInfo()
+    {
+
+        $brand = Db::name("brand")
+            ->field("id,name")
+            ->select();
+
+
+        $models = Db::name("models")
+            ->field("id as models_id,name as models_name,brand_id")
+            ->select();
+
+
+        foreach ($brand as $k => $v) {
+            $brand[$k]['models'] = array();
+            foreach ($models as $key => $value) {
+
+                if ($v['id'] == $value['brand_id']) {
+
+                    array_push($brand[$k]['models'], $value);
+                }
+            }
+
+        }
+
+        return $brand;
+
+    }
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL)
+    {   
+        $this->view->assign("car_models", $this->getInfo());
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
     }
 
 

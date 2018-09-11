@@ -542,7 +542,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
  
                                 }, function (data, ret) {
 
-                                    Toastr.success(ret.msg);
+                                    Toastr.success('操作成功');
                                     Layer.close(index);
                                     table.bootstrapTable('refresh');
 
