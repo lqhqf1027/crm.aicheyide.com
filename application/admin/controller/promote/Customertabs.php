@@ -120,7 +120,7 @@ class Customertabs extends Backend
 
         $id = $this->model->get(['id' => $ids]);
         $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13');
+            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24');
         })->select();
         $backofficeList = array();
         foreach ($backoffice as $k => $v) {
@@ -132,6 +132,10 @@ class Customertabs extends Backend
                 case 'message13':
                     $backofficeList['message13']['nickname'] = $v['nickname'];
                     $backofficeList['message13']['id'] = $v['id'];
+                    break;
+                case 'message24':
+                    $backofficeList['message24']['nickname'] = $v['nickname'];
+                    $backofficeList['message24']['id'] = $v['id'];
                     break;
             }
         }
@@ -281,7 +285,7 @@ class Customertabs extends Backend
         // $id = $this->model->get(['id' => $ids]);
 
         $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13');
+            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24');
         })->select();
         $backofficeList = array();
         foreach ($backoffice as $k => $v) {
@@ -293,6 +297,10 @@ class Customertabs extends Backend
                 case 'message13':
                     $backofficeList['message13']['nickname'] = $v['nickname'];
                     $backofficeList['message13']['id'] = $v['id'];
+                    break;
+                case 'message24':
+                    $backofficeList['message24']['nickname'] = $v['nickname'];
+                    $backofficeList['message24']['id'] = $v['id'];
                     break;
             }
         }
