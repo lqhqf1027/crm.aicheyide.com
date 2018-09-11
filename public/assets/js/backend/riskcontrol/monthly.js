@@ -201,6 +201,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         for (var i in tableRow) {
                             ids.push({
                                 'id':tableRow[i]['id'],
+                                'monthly_name':tableRow[i]['monthly_name'],
                                 'monthly_phone_number':tableRow[i]['monthly_phone_number'].slice('1,10'),
                                 'monthly_card_number':tableRow[i]['monthly_card_number'].match(/.*(.{4})/)[1],
                                 'monthly_monney':tableRow[i]['monthly_monney']
@@ -235,8 +236,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              ids = [];
                             for (var i in page) {
                                 ids.push({
-                                    // deleteRepetion
                                     'id':page[i]['id'],
+                                    'monthly_name':page[i]['monthly_name'],
                                     'monthly_phone_number':page[i]['monthly_phone_number'].slice(0,11),
                                     'monthly_card_number':page[i]['monthly_card_number'].match(/.*(.{4})/)[1],
                                     'monthly_monney':page[i]['monthly_monney']

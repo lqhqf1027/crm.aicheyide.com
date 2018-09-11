@@ -198,47 +198,17 @@ class Monthly extends Backend
     public  function  sedMessage(){
         $this->model = new \app\admin\model\NewcarMonthly;
         if ($this->request->isAjax()) {
-//            pr(input(('post.')));die;
-            $mobile = '';
             $params = input('post.')['ids'];
-            $params = $this->assoc_unique($params,'monthly_phone_number'); //去重电话号码
-            foreach ($params as $k=>$v){
-                $mobile .=','.$v['monthly_phone_number'];
+            $phone = assoc_unique($params,'monthly_phone_number'); //去重电话号码
+            foreach ($phone as $k=>$v){
+                //循环调用短接接口
+                $result = gets("http://v.juhe.cn/sms/send?mobile={$v['monthly_phone_number']}&tpl_id=100433&tpl_value=".urlencode("#name#={$v['name']}&#code#={$v['monthly_card_number']}&#money#={$v['monthly_monney']}")."&key=9ee7861bdcf01ecb60eb4961b86711cf");
             }
-//            pr(explode(',',substr($mobile,1)));die;
-            pr(array_slice(explode(',',substr($mobile,1)),100));die;
-            //短信群发
-            $url = 'https://open.ucpaas.com/ol/sms/sendsms_batch';
-            $data = json_encode(array(
-                'sid'=> 'ffc7d537e8eb86b6ffa3fab06c77fc02',
-                'token'=>'894cfaaf869767dce526a6eba54ffe52',
-                'appid'=>'33553da944fb487089dadb16a37c53cc',
-                'templateid'=>'',
-                'mobile' =>substr($mobile,1)
-            ));
-            pr($data);die;
-
-//            $result = posts($url);
-            return $id;
-
+             return  $result['error_code']==0?$this->success($result['reason'],null,$result):$this->error($result['reason']);
         }
     }
-    public function assoc_unique($arr, $key)
-    {
-        $tmp_arr = array();
-        foreach($arr as $k => $v)
-        {
-            if(in_array($v[$key], $tmp_arr))//搜索$v[$key]是否在$tmp_arr数组中存在，若存在返回true
-            {
-                unset($arr[$k]);
-            }
-            else {
-                $tmp_arr[] = $v[$key];
-            }
-        }
-        sort($arr); //sort函数对数组进行排序
-        return $arr;
-    }
+
+
     /**
      * 扣款成功  deductions_succ
      * @return string|\think\response\Json
