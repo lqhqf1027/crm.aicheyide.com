@@ -590,8 +590,9 @@ class Customerlisttabs extends Backend
     public function batchfeedback($ids = NULL)
     {
         $this->model = model('CustomerResource');
-        $this->view->assign("costomlevelList", $this->model->getNewCustomerlevelList());
+        $this->view->assign("costomlevelList", $this->model->getCustomerlevelList());
         $row = $this->model->get($ids);
+        $this->view->assign("row",$row);
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();

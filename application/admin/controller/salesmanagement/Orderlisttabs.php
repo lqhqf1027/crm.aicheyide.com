@@ -846,6 +846,7 @@ class Orderlisttabs extends Backend
 
             $result = DB::name('plan_acar')->alias('a')
                     ->join('models b', 'b.id=a.models_id')
+                ->join('scheme_category s','a.category_id = s.id')
 
                     ->where('a.category_id', $category_id)
                    
@@ -853,7 +854,7 @@ class Orderlisttabs extends Backend
 
                     ->whereOr('sales_id', $this->auth->id)
 
-                    ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,b.name as models_name,b.id as models_id')
+                    ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,b.name as models_name,b.id as models_id,s.category_note')
 
                     ->select();
             foreach ($result as $k =>$v) {

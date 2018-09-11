@@ -15,9 +15,21 @@
             <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[customerlevel]" >
 
                 <option value=""  style="display: none" >未选择任何项</option>
-                {volist name="costomlevelList" item="vo"}
-                <option value="{$key}" {in name="key" value="$row.customerlevel"} selected{/in}>{$vo}</option>
-                {/volist}
+                {empty name="$row.customerlevel"}
+                {foreach name="costomlevelList" item="vo"}
+                <option value="{$key}">{$vo}</option>
+                {/foreach}
+                {else /}
+                {foreach name="costomlevelList" item="vo"}
+                {notin name="$key" value="$row.customerlevel"}
+                <option value="{$key}">{$vo}</option>
+                {/notin}
+
+                {/foreach}
+
+
+                {/empty}
+
             </select>
 
         </div>
@@ -93,5 +105,4 @@
         return currentdate;
     }
 </script>
-
 

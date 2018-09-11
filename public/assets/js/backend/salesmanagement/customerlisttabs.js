@@ -1005,7 +1005,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Layer.close(index);
                                 Layer.prompt(
 
-                                    { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
+                                    { title: __('请填写放弃原因'), shadeClose: true },
                                     function (text, index) {
                                         Fast.api.ajax({
                                             url:"salesmanagement/Customerlisttabs/ajaxGiveup",
@@ -1136,7 +1136,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     Layer.close(index);
                     Layer.prompt(
 
-                        { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
+                        { title: __('请填写放弃原因'), shadeClose: true },
                         function (text, index) {
                             Fast.api.ajax({
                                 url:url,
