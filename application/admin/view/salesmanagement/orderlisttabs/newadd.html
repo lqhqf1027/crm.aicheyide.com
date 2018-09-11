@@ -28,6 +28,13 @@
 
         </div>
     </div>
+    <div class="form-group" id="note" style="display: none">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+          <p>123</p>
+
+        </div>
+    </div>
     <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
             <div class="col-xs-12 col-sm-8">
@@ -66,7 +73,6 @@
 
                 success: function (data) {
                     var data = JSON.parse(data);
-                    // console.log(data);
 
                     var html = '<tr>';
 
@@ -134,7 +140,22 @@
                              
                         })
                            
-                    }); 
+                    });
+                    var note = $("#note");
+
+                        if(data[0]){
+                            if(data[0].category_note!='undefined' ||data[0].category_note!=null){
+
+
+                                note.css('display','block');
+
+                                note.find('p').html('<span class="text-danger">'+data[0].category_note+'</span>');
+                            }
+                        }else{
+                            note.css('display','none');
+                        }
+
+
 
                 }
 
@@ -549,3 +570,6 @@
         </div>
     </div>
 </form>
+{php}
+dump($category);
+{/php}

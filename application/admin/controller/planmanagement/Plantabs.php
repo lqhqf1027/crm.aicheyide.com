@@ -17,11 +17,13 @@ class Plantabs extends Backend
     protected $model = null;
     protected $multiFields = 'ismenu';
 
-    protected $noNeedRight = ['index','table1','table2','table3','firstedit','firstdel','fulledit','fulldel','working_insurance','getSales','getCategory','firstmulti','fullmulti'];
-    public function _initialize()   
+    protected $noNeedRight = ['index', 'table1', 'table2', 'table3', 'firstedit', 'firstdel', 'fulledit', 'fulldel', 'working_insurance', 'getSales', 'getCategory', 'firstmulti', 'fullmulti'
+        , 'firstadd', 'fulladd'];
+
+    public function _initialize()
     {
         parent::_initialize();
-       
+
     }
 
     /**
@@ -29,7 +31,7 @@ class Plantabs extends Backend
      */
     public function index()
     {
-       
+
         $this->loadlang('plan/planacar');
         $this->loadlang('plan/planusedcar');
         $this->loadlang('plan/planfull');
@@ -49,102 +51,88 @@ class Plantabs extends Backend
         $this->model = model('PlanAcar');
         $this->view->assign("nperlistList", $this->model->getNperlistList());
         $this->view->assign("ismenuList", $this->model->getIsmenuList());
-         //当前是否为关联查询
-            // $this->relationSearch = true;
-         //设置过滤方法
-         $this->request->filter(['strip_tags']);
-         if ($this->request->isAjax())
-         {
-             //如果发送的来源是Selectpage，则转发到Selectpage
-             if ($this->request->request('keyField'))
-             {
-                 return $this->selectpage();
-             }
-             list($where, $sort, $order, $offset, $limit) = $this->buildparams('models.name',true);
-             $total = $this->model
-                     ->with(['models'=>function($query){
-                         $query->withField('name');
-                     },'admin'=>function($query){
-                         $query->withField('nickname');
-                     }])
-                     ->where($where)
-                     ->order($sort, $order)
-                     ->count();
- 
-             $list = $this->model
-                 ->with(['models'=>function($query){
-                     $query->withField('name');
-                 },'admin'=>function($query){
-                     $query->withField('nickname');
-                 }])
-                 ->where($where)
-                     ->order($sort, $order)
-                     ->limit($offset, $limit)
-                     ->select();
-             foreach ($list as $row) {
-                 $row->visible(['id','payment','monthly','nperlist','margin','tail_section','gps','note','ismenu','createtime','updatetime','working_insurance']);
-                 $row->visible(['models']);
-                 $row->getRelation('models')->visible(['name']);
-                 $row->visible(['admin']);
-                 $row->getRelation('admin')->visible(['nickname']);
-             }
-             $list = collection($list)->toArray();
-             $result = array("total" => $total, "rows" => $list);
- 
-             return json($result);
-         }
-       
+        //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('models.name', true);
+            $total = $this->model
+                ->with(['models' => function ($query) {
+                    $query->withField('name');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->order('payment')
+                ->count();
+
+            $list = $this->model
+                ->with(['models' => function ($query) {
+                    $query->withField('name');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                },'schemecategory'=>function ($query){
+                    $query->withField('name,category_note');
+                }])
+                ->order('category_id')
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+
+                ->select();
+
+            foreach ($list as $key=>$row) {
+
+                $row->visible(['id', 'payment', 'monthly', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance','category_id']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['schemecategory']);
+                $row->getRelation('schemecategory')->visible(['name','category_note']);
+            }
+            $list = collection($list)->toArray();
+//            pr($list);
+            foreach ((array) $list as $key=>$value){
+                $list[$key]['brand_name'] =$this->getBrandName($value['id']);
+            }
+            $result = array("total" => $total, "rows" => $list);
+            return json($result);
+        }
+
         return $this->view->fetch('index');
     }
 
-    //已废弃
-    public function table2()
+    /**
+     * 关联品牌名称
+     * @param $plan_id 方案id
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function getBrandName($plan_id)
     {
-        
-        $this->model = model('PlanUsedCar');
-        // $this->view->assign("statusdataList", $this->model->getStatusdataList());
-        $this->view->assign("nperlistList", $this->model->getNperlistList());
-        $this->view->assign("contrarytodataList", $this->model->getContrarytodataList());
-       
-      //当前是否为关联查询
-      $this->relationSearch = true;
-      //设置过滤方法
-      $this->request->filter(['strip_tags']);
-      if ($this->request->isAjax())
-      {
-          //如果发送的来源是Selectpage，则转发到Selectpage
-          if ($this->request->request('keyField'))
-          {
-              return $this->selectpage();
-          }
-          list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-          $total = $this->model
-                  ->with(['models','financialplatform'])
-                  ->where($where)
-                  ->order($sort, $order)
-                  ->count();
-
-          $list = $this->model
-                  ->with(['models','financialplatform'])
-                  ->where($where)
-                  ->order($sort, $order)
-                  ->limit($offset, $limit)
-                  ->select();
-
-          foreach ($list as $row) {
-              $row->visible(['id','statusdata','the_door','new_payment','new_monthly','nperlist','new_total_price','mileage','contrarytodata','createtime','updatetime']);
-              $row->visible(['models']);
-              $row->getRelation('models')->visible(['name']);
-              $row->visible(['financialplatform']);
-              $row->getRelation('financialplatform')->visible(['name']);
-          }
-          $list = collection($list)->toArray();
-          $result = array("total" => $total, "rows" => $list);
-
-          return json($result);
-      }
-        return $this->view->fetch('index');
+        return Db::name('plan_acar')->alias('a')
+            ->join('models b', 'a.models_id = b.id')
+            ->join('brand c', 'b.brand_id=c.id')
+            ->where('a.id', $plan_id)
+            ->value('c.name');
     }
+
+
+    public function getFullBrandName($plan_id)
+    {
+        return Db::name('plan_full')->alias('a')
+            ->join('models b', 'a.models_id = b.id')
+            ->join('brand c', 'b.brand_id=c.id')
+            ->where('a.id', $plan_id)
+            ->value('c.name');
+    }
+
     /**
      * Notes:全款
      * User: glen9
@@ -161,33 +149,34 @@ class Plantabs extends Backend
         $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
+        if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
+            if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                    ->with(['models'])
-                    ->where($where)
-                    ->order($sort, $order)
-                    ->count();
+                ->with(['models'])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
 
             $list = $this->model
-                    ->with(['models'])
-                    ->where($where)
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
+                ->with(['models'])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id','models_id','full_total_price','ismenu','createtime','updatetime']);
+                $row->visible(['id', 'models_id', 'full_total_price', 'ismenu', 'createtime', 'updatetime']);
                 $row->visible(['models']);
-				$row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name']);
             }
             $list = collection($list)->toArray();
+            foreach ((array) $list as $key=>$value){
+                $list[$key]['brand_name'] =$this->getFullBrandName($value['id']);
+            }
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -214,7 +203,7 @@ class Plantabs extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-            if($params['sales_id']==" "){
+            if ($params['sales_id'] == " ") {
                 $params['sales_id'] = null;
             }
             if ($params) {
@@ -239,23 +228,25 @@ class Plantabs extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $financial = Db::name("financial_platform")->where('status','normal')->select();
+        $financial = Db::name("financial_platform")->where('status', 'normal')->select();
         $this->view->assign([
-            "row"=>$row,
-            'working_insurance_list'=>$this->working_insurance(),
-            'sales'=>$this->getSales(),
-            'category'=>$this->getCategory(),
-            "car_models"=> $this->getInfo(),
-            'financial'=>$financial,
-            "nperlistList"=> $this->model->getNperlistList()
+            "row" => $row,
+            'working_insurance_list' => $this->working_insurance(),
+            'sales' => $this->getSales(),
+            'category' => $this->getCategory(),
+            "car_models" => $this->getInfo(),
+            'financial' => $financial,
+            "nperlistList" => $this->model->getNperlistList()
         ]);
 
         return $this->view->fetch();
     }
+
     public function working_insurance()
     {
-        return ['yes'=>'有','no'=>'无'];
+        return ['yes' => '有', 'no' => '无'];
     }
+
     //得到销售员信息
     public function getSales()
     {
@@ -271,9 +262,9 @@ class Plantabs extends Backend
     //得到销售方案类别信息
     public function getCategory()
     {
-       $res = Db::name("scheme_category")->select();
+        $res = Db::name("scheme_category")->select();
 
-       return $res;
+        return $res;
     }
 
     /**
@@ -301,6 +292,7 @@ class Plantabs extends Backend
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
+
     /**
      * 批量更新
      */
@@ -334,7 +326,6 @@ class Plantabs extends Backend
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
-
 
 
     /**
@@ -405,6 +396,7 @@ class Plantabs extends Backend
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
+
     /**
      * 批量更新
      */
@@ -440,7 +432,6 @@ class Plantabs extends Backend
     }
 
 
-
     public function getInfo()
     {
 
@@ -470,6 +461,95 @@ class Plantabs extends Backend
 
     }
 
+    /**
+     * 新车添加
+     */
+    public function firstadd()
+    {
+
+        $this->model = model("PlanAcar");
+        $financial = Db::name("financial_platform")->where('status', 'normal')->select();
+//        pr($this->getSales());
+//        pr($this->getInfo());
+//        die();
+        $this->view->assign([
+            'sales' => $this->getSales(),
+            'category' => $this->getCategory(),
+            'financial' => $financial,
+            'car_models' => $this->getInfo(),
+            'nperlistList' => $this->model->getNperlistList()
+        ]);
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if (empty($params['working_insurance'])) {
+                $params['working_insurance'] = "no";
+            }
+            if ($params['sales_id'] == " ") {
+                $params['sales_id'] = null;
+            }
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
+
+    /**
+     * 全款车添加
+     */
+    public function fulladd()
+    {
+        $this->model = model("PlanFull");
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
 
 
 }

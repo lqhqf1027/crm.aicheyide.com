@@ -77,5 +77,11 @@ class PlanAcar extends Model
     }
 
 
+    public function schemecategory()
+    {
+        return $this->belongsTo('Schemecategory','category_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+
 
 }

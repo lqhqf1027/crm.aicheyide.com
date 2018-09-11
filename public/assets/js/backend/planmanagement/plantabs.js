@@ -27,6 +27,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             first: function () {
 
                 var table1 = $("#table1");
+
+                table1.on('load-success.bs.table', function (e, data) {
+                    var arr = data.rows;
+                   // console.log(arr);
+                    Controller.merge(arr, table1);
+
+                });
+
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索车型";
                 };
@@ -36,7 +44,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: 'planmanagement/plantabs/table1',
                 extend: {
                     index_url: 'plan/planacar/index',
-                    add_url: 'plan/planacar/add',
+                    add_url: 'planmanagement/plantabs/firstadd',
                     edit_url: 'planmanagement/plantabs/firstedit',
                     del_url: 'planmanagement/plantabs/firstdel',
                     multi_url: 'planmanagement/plantabs/firstmulti',
@@ -50,7 +58,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
-                        {field: 'models.name', title: '销售车型',operate:false},
+                        {field: 'schemecategory.name', title: __('方案类型'),formatter:function (v,r,i) {
+
+                                return r.schemecategory.category_note!=null?v+"<br />"+'<u>'+r.schemecategory.category_note+'</u>':v;
+
+                            }},
+                        // {field: 'schemecategory.category_note', title: __('方案类型备注'),operate:false},
+                        {field: 'models.name', title: '销售车型',operate:false,formatter:function (v,r,i) {
+
+                                return v!=null?r.brand_name +'-'+v:v;
+                            }},
                         // {field: 'financialplatform.name', title: '所属金融平台'},
                         {field: 'payment', title: __('Payment'), operate:'BETWEEN',operate:false},
                         {field: 'monthly', title: __('NewcarMonthly'), operate:'BETWEEN',operate:false},
@@ -84,56 +101,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(table1);
             },
-            second: function () {
-                // 表格2
-                var table2 = $("#table2");
-                table2.bootstrapTable({
-                    url: 'planmanagement/plantabs/table2',
-                    extend: {
-                        index_url: 'plan/planusedcar/index',
-                        add_url: 'plan/planusedcar/add',
-                        edit_url: 'plan/planusedcar/edit',
-                        del_url: 'plan/planusedcar/del',
-                        multi_url: 'plan/planusedcar/multi',
-                        table: 'plan_used_car',
-                    },
-                    toolbar: '#toolbar2',
-                    sortName: 'id,statusdata',
-                    searchFormVisible: true,
-                    columns: [
-                        [
-                            {checkbox: true},
-                            {field: 'id', title: __('Id')},
-                            {field: 'models.name', title: '销售车型'},
-                            {field: 'financialplatform.name', title: '所属金融平台'},
-                            
-                            {field: 'the_door', title: __('The_door')},
-                            {field: 'new_payment', title: __('New_payment'), operate:'BETWEEN'},
-                            {field: 'new_monthly', title: __('New_monthly'), operate:'BETWEEN'},
-                            {field: 'nperlist', title: __('Nperlist'), visible:false, searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}},
-                            {field: 'nperlist_text', title: __('Nperlist'), operate:false},
-                            {field: 'new_total_price', title: __('New_total_price'), operate:'BETWEEN'},
-                            {field: 'mileage', title: __('Mileage')},
-                            {field: 'contrarytodata', title: __('Contrarytodata'),   searchList: {"1":__('Contrarytodata 1'),"2":__('Contrarytodata 2')},formatter:function(value, row, index){
 
-                               
-                              return value==1?'对公':'非对公';
-                            }},
-                             
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'statusdata', title: __('Statusdata'),  formatter: Table.api.formatter.statusdata,sortable: true},
-                       
-                            {field: 'operate', title: __('Operate'), table: table2, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
-                        ]
-                    ]
 
- 
-                });
-
-                // 为表格2绑定事件
-                Table.api.bindevent(table2);
-            },
             planfull: function () {
                 // 表格3
                 var table3 = $("#table3");
@@ -141,7 +110,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     url: 'planmanagement/plantabs/table3',
                     extend: {
                         index_url: 'plan/planfull/index',
-                        add_url: 'plan/planfull/add',
+                        add_url: 'planmanagement/plantabs/fulladd',
                         edit_url: 'planmanagement/plantabs/fulledit',
                         del_url: 'planmanagement/plantabs/fulldel',
                         multi_url: 'planmanagement/plantabs/fullmulti',
@@ -154,7 +123,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('Id')},
-                            {field: 'models.name', title: '销售车型'},
+                            {field: 'models.name', title: '销售车型',formatter:function (v,r,i) {
+
+                                    return v!=null?r.brand_name +'-'+v:v;
+                                }},
                             
                             {field: 'full_total_price', title: __('Full_total_price'), operate:'BETWEEN'},
                         
@@ -178,6 +150,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             alert(1);
             Controller.api.bindevent();
         },
+        merge: function (arr, obj) {
+            var hash = [];
+            var data_arr = [];
+            for (var i in arr) {
+
+
+
+                if (hash.indexOf(arr[i]['schemecategory']['name']) == -1 ) {
+
+                    hash.push(arr[i]['schemecategory']['name']);
+
+                    data_arr.push([i, arr[i]['schemecategory']['name'], 0]);
+                }
+
+
+            }
+
+
+            for (var i in arr) {
+                for (var j in data_arr) {
+                    if (arr[i]['schemecategory']['name'] == data_arr[j][1]) {
+                        data_arr[j][2]++;
+                    }
+                }
+            }
+
+
+            for (var i in data_arr) {
+
+                obj.bootstrapTable("mergeCells", {
+                    index: data_arr[i][0],
+                    field: 'schemecategory.name',
+                    rowspan: data_arr[i][2]
+                });
+
+                var td = $(obj).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
+
+                if(data_arr[i][1]!=null){
+                    i % 2 == 0 ? td.eq(2).css({"background-color": "#fff"}) : td.eq(2).css({"background-color": "#ddd"});
+                }
+
+
+            }
+        },
+
         firstedit: function () {
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
@@ -208,6 +225,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
             });
             
+            Controller.api.bindevent();
+        },
+        firstadd:function(){
+            Controller.api.bindevent();
+        },
+        fulladd:function(){
             Controller.api.bindevent();
         },
         api: {
