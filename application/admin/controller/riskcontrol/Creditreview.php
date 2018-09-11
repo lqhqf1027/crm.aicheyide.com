@@ -44,16 +44,14 @@ class Creditreview extends Backend
 
         $this->view->assign([
             'total' => $this->model
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], ['=', 'the_car'], 'or')
                 ->count(),
 
             'total1' => DB::name('rental_order')
-                ->where('review_the_data', 'is_reviewing_pass')
-                ->whereOr('review_the_data', 'is_reviewing_nopass')
-                ->whereOr('review_the_data', 'is_reviewing_control')
+                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], 'or')
                 ->count(),
             'total2' => DB::name('second_sales_order')
-                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'for_the_car'], ['=', 'the_car'], 'or')
                 ->count(),
 
         ]);
@@ -91,7 +89,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], ['=', 'the_car'], 'or')
                 ->order($sort, $order)
                 ->count();
 
@@ -105,7 +103,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], ['=', 'the_car'], 'or')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -209,7 +207,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
+                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], 'or')
                 ->order($sort, $order)
                 ->count();
 
@@ -223,7 +221,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'through'], 'or')
+                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], 'or')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();

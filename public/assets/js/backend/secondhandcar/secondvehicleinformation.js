@@ -132,7 +132,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              */
                             { 
                                 icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
-                                url:'rentcar/vehicleinformation/del',/** */
+                                // url:'rentcar/vehicleinformation/del',/** */
                                 hidden:function(row){
                                     if(row.status_data == ''){
                                         return false; 
@@ -158,7 +158,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              */
                             { 
                                 name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'编辑信息', title: __('编辑信息'),classname: 'btn btn-xs btn-success btn-editone', 
-                                url:'rencar/vehicleinformation/edit',/**编辑信息 */
+                                // url:'rencar/vehicleinformation/edit',/**编辑信息 */
                                 hidden:function(row,value,index){ 
                                     if(row.status_data == ''){
                                         return false; 

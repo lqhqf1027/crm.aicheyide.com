@@ -138,7 +138,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("review_the_data", "is_reviewing_control")
+                    ->where("review_the_data", "is_reviewing_finance")
                     ->where("amount_collected", "not null")
                     ->order($sort, $order)
                     ->count();
@@ -153,7 +153,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("review_the_data", "is_reviewing_control")
+                    ->where("review_the_data", "is_reviewing_finance")
                     ->where("amount_collected", "not null")
                     ->order($sort, $order)
                     ->limit($offset, $limit)

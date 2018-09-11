@@ -15,7 +15,22 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-models_id" data-rule="required" data-source="planmanagement/models/index" class="form-control selectpage" name="row[models_id]" type="text" value="{$row.models_id}">
+
+            <select id="c-models_id" data-rule="required" class="form-control selectpicker" name="row[models_id]">
+                <option value=" " style='display: none'>未选中任何项</option>
+                {volist name="car_models" id="vo"}
+                <option disabled>{$vo.name}</option>
+                {volist name="vo.models" id="model_vo"}
+                {if condition="$row['models_id'] eq $model_vo['models_id']"}
+                <option value="{$model_vo.models_id}" selected>{$model_vo.models_name}</option>
+                {else /}
+                <option value="{$model_vo.models_id}">{$model_vo.models_name}</option>
+                {/if}
+                {/volist}
+                {/volist}
+
+            </select>
+
         </div>
     </div>
     <div class="form-group">
