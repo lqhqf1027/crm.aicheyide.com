@@ -122,7 +122,9 @@ class Customertabs extends Backend
         $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
             $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13');
         })->select();
+
         $backofficeList = array();
+        $realList = array();
         foreach ($backoffice as $k => $v) {
             switch ($v['rule_message']) {
                 case 'message20':
@@ -134,9 +136,12 @@ class Customertabs extends Backend
                     $backofficeList['message13']['id'] = $v['id'];
                     break;
             }
+            $realList[$v['id']] = $v['nickname'];
+
         }
 
         $this->view->assign('backofficeList', $backofficeList);
+        $this->view->assign('realList', $realList);
         $this->assignconfig('id', $id->id);
 
         if ($this->request->isPost()) {
