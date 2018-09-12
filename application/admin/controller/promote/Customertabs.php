@@ -28,7 +28,9 @@ class Customertabs extends Backend
     {
         parent::_initialize();
         // self::$token= $this->getAccessToken();
+        $this->model = model('CustomerResource');
 
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
     }
 
     /**
@@ -37,7 +39,7 @@ class Customertabs extends Backend
     public function index()
     {
         $this->loadlang('customer/customerresource');
-        $this->model = model('CustomerResource');
+
         $total = $this->model
             ->with(['platform'])
             ->where($where)
@@ -110,83 +112,6 @@ class Customertabs extends Backend
 
         return $this->view->fetch('index');
     }
-
-    //分配客户资源给内勤
-    //单个分配
-    //内勤  message13=>内勤一部，message20=>内勤二部
-    public function dstribution($ids = NULL)
-    {
-        $this->model = model('CustomerResource');
-
-        $id = $this->model->get(['id' => $ids]);
-        $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24');
-        })->select();
-
-        $backofficeList = array();
-        $realList = array();
-        foreach ($backoffice as $k => $v) {
-            switch ($v['rule_message']) {
-                case 'message20':
-                    $backofficeList['message20']['nickname'] = $v['nickname'];
-                    $backofficeList['message20']['id'] = $v['id'];
-                    break;
-                case 'message13':
-                    $backofficeList['message13']['nickname'] = $v['nickname'];
-                    $backofficeList['message13']['id'] = $v['id'];
-                    break;
-                case 'message24':
-                    $backofficeList['message24']['nickname'] = $v['nickname'];
-                    $backofficeList['message24']['id'] = $v['id'];
-                    break;
-            }
-            $realList[$v['id']] = $v['nickname'];
-
-        }
-
-        $this->view->assign('backofficeList', $backofficeList);
-        $this->view->assign('realList', $realList);
-        $this->assignconfig('id', $id->id);
-
-        if ($this->request->isPost()) {
-
-            $params = $this->request->post('row/a');
-
-            $time = time();
-            $result = $this->model->save(['backoffice_id' => $params['backoffice_id'], 'distributinternaltime' => $time], function ($query) use ($id) {
-                $query->where('id', $id->id);
-            });
-            if ($result) {
-                $channel = "demo-platform";
-                $content = "你有推广平台给你分配的新客户，请登录后台进行处理";
-                goeary_push($channel, $content);
-
-                $data = dstribution_inform();
-                // var_dump($data);
-                // die;
-                $email = new Email;
-                // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $params['backoffice_id'])->value('email');
-                $result_s = $email
-                    ->to($receiver)
-                    ->subject($data['subject'])
-                    ->message($data['message'])
-                    ->send();
-                if ($result_s) {
-                    $this->success();
-                } else {
-                    $this->error('邮箱发送失败');
-                }
-
-            } else {
-                $this->error();
-            }
-        }
-
-        return $this->view->fetch();
-    }
-
-
 
     //已分配
     public function newAllocation()
@@ -280,6 +205,342 @@ class Customertabs extends Backend
         return $this->view->fetch('index');
     }
 
+    //今日头条
+    public function headline()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $use_id = Db::name('platform')
+            ->where('name','今日头条')
+            ->value('id');
+
+            $result = $this->getInformation($use_id);
+
+            return json($result);
+        }
+        return $this->view->fetch();
+    }
+
+    //百度
+    public function baidu()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $use_id = Db::name('platform')
+                ->where('name','百度')
+                ->value('id');
+
+            $result = $this->getInformation($use_id);
+
+            return json($result);
+        }
+        return $this->view->fetch();
+    }
+
+    //58同城
+    public function same_city()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $use_id = Db::name('platform')
+                ->where('name','58同城')
+                ->value('id');
+
+            $result = $this->getInformation($use_id);
+
+            return json($result);
+        }
+        return $this->view->fetch();
+    }
+
+    //抖音
+    public function music()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $use_id = Db::name('platform')
+                ->where('name','抖音')
+                ->value('id');
+
+            $result = $this->getInformation($use_id);
+
+            return json($result);
+        }
+        return $this->view->fetch();
+    }
+
+    //得到Ajax渲染信息
+    public function getInformation($platform_id)
+    {
+
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username',true);
+            $total = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->where([
+                    'platform_id'=>$platform_id,
+//                    'backoffice_id'=>null
+                ])
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->with(['platform'])
+                ->where($where)
+                ->where([
+                    'platform_id'=>$platform_id,
+//                    'backoffice_id'=>null
+                ])
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return $result;
+
+    }
+
+
+    //今日头条添加
+    public function add_headline()
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+
+                $use_id = Db::name('platform')
+                    ->where('name','今日头条')
+                    ->value('id');
+                $params['platform_id'] = $use_id;
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
+
+    //百度添加
+    public function add_baidu()
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+
+                $use_id = Db::name('platform')
+                    ->where('name','百度')
+                    ->value('id');
+                $params['platform_id'] = $use_id;
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
+
+    //58同城添加
+    public function add_same_city()
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+
+                $use_id = Db::name('platform')
+                    ->where('name','58同城')
+                    ->value('id');
+                $params['platform_id'] = $use_id;
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
+
+    //抖音添加
+    public function add_music()
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+
+                $use_id = Db::name('platform')
+                    ->where('name','抖音')
+                    ->value('id');
+                $params['platform_id'] = $use_id;
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
+    //分配客户资源给内勤
+    //单个分配
+    //内勤  message13=>内勤一部，message20=>内勤二部
+    public function dstribution($ids = NULL)
+    {
+        $this->model = model('CustomerResource');
+
+        $id = $this->model->get(['id' => $ids]);
+        $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
+            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24');
+        })->select();
+
+        $backofficeList = array();
+        $realList = array();
+        foreach ($backoffice as $k => $v) {
+            switch ($v['rule_message']) {
+                case 'message20':
+                    $backofficeList['message20']['nickname'] = $v['nickname'];
+                    $backofficeList['message20']['id'] = $v['id'];
+                    break;
+                case 'message13':
+                    $backofficeList['message13']['nickname'] = $v['nickname'];
+                    $backofficeList['message13']['id'] = $v['id'];
+                    break;
+                case 'message24':
+                    $backofficeList['message24']['nickname'] = $v['nickname'];
+                    $backofficeList['message24']['id'] = $v['id'];
+                    break;
+            }
+            $realList[$v['id']] = $v['nickname'];
+
+        }
+
+        $this->view->assign('backofficeList', $backofficeList);
+        $this->view->assign('realList', $realList);
+        $this->assignconfig('id', $id->id);
+
+        if ($this->request->isPost()) {
+
+            $params = $this->request->post('row/a');
+
+            $time = time();
+            $result = $this->model->save(['backoffice_id' => $params['backoffice_id'], 'distributinternaltime' => $time], function ($query) use ($id) {
+                $query->where('id', $id->id);
+            });
+            if ($result) {
+                $channel = "demo-platform";
+                $content = "你有推广平台给你分配的新客户，请登录后台进行处理";
+                goeary_push($channel, $content);
+
+                $data = dstribution_inform();
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('id', $params['backoffice_id'])->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+            } else {
+                $this->error();
+            }
+        }
+
+        return $this->view->fetch();
+    }
+
     //分配客户资源给内勤
     //批量分配
     //内勤  message13=>内勤一部，message20=>内勤二部
@@ -320,22 +581,6 @@ class Customertabs extends Backend
                 $query->where('id', 'in', $ids);
             });
             if ($result) {
-                //这里开始调用微信推送
-                //1、use  wechat/WechatMessage  这个类
-                //2、实例化并传参
-                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
-                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化    
-                //dump($sendmessage->sendMsgToAll());exit; 
-                // $token = self::$token;
-                // $getAdminOpenid = adminModel::get(['id'=>$params['id']])->toArray();
-                // $openid = $getAdminOpenid['openid'];
-                // // var_dump($openid);
-                // // die;
-                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,$openid,'温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
-
-                // $msg = $sendmessage->sendMsgToAll();
-                // // dump($msg);
-                // // die;
 
                 $channel = "demo-platform";
                 $content = "你有推广平台给你分配的新客户，请注意查看";
@@ -635,10 +880,8 @@ class Customertabs extends Backend
             $ids = $this->request->post('ids');
             $filter = $this->request->post('filter');
             $op = $this->request->post('op');
-            // $columns = $this->request->post('columns');
 
-            // var_dump($columns);
-            // die;
+//            dump($search." -".$ids." -".$filter." -".$op);die();
 
             $excel = new \PHPExcel();
 
@@ -910,93 +1153,5 @@ class Customertabs extends Backend
     }
 
 
-    // public function table2()
-    // {
-
-    //     $this->model = model('PlanUsedCar');
-    //     // $this->view->assign("statusdataList", $this->model->getStatusdataList());
-    //     $this->view->assign("nperlistList", $this->model->getNperlistList());
-    //     $this->view->assign("contrarytodataList", $this->model->getContrarytodataList());
-
-    //   //当前是否为关联查询
-    //   $this->relationSearch = true;
-    //   //设置过滤方法
-    //   $this->request->filter(['strip_tags']);
-    //   if ($this->request->isAjax())
-    //   {
-    //       //如果发送的来源是Selectpage，则转发到Selectpage
-    //       if ($this->request->request('keyField'))
-    //       {
-    //           return $this->selectpage();
-    //       }
-    //       list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-    //       $total = $this->model
-    //               ->with(['models','financialplatform'])
-    //               ->where($where)
-    //               ->order($sort, $order)
-    //               ->count();
-
-    //       $list = $this->model
-    //               ->with(['models','financialplatform'])
-    //               ->where($where)
-    //               ->order($sort, $order)
-    //               ->limit($offset, $limit)
-    //               ->select();
-
-    //       foreach ($list as $row) {
-    //           $row->visible(['id','statusdata','the_door','new_payment','new_monthly','nperlist','new_total_price','mileage','contrarytodata','createtime','updatetime']);
-    //           $row->visible(['models']);
-    //           $row->getRelation('models')->visible(['name']);
-    //           $row->visible(['financialplatform']);
-    //           $row->getRelation('financialplatform')->visible(['name']);
-    //       }
-    //       $list = collection($list)->toArray();
-    //       $result = array("total" => $total, "rows" => $list);
-
-    //       return json($result);
-    //   }
-    //     return $this->view->fetch('index');
-    // }
-    // public function table3()
-    // {
-    //     $this->model = model('PlanFull');
-    //     $this->view->assign("ismenuList", $this->model->getIsmenuList());
-    //     //当前是否为关联查询
-    //     $this->relationSearch = true;
-    //     //设置过滤方法
-    //     $this->request->filter(['strip_tags']);
-    //     if ($this->request->isAjax())
-    //     {
-    //         //如果发送的来源是Selectpage，则转发到Selectpage
-    //         if ($this->request->request('keyField'))
-    //         {
-    //             return $this->selectpage();
-    //         }
-    //         list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-    //         $total = $this->model
-    //                 ->with(['models'])
-    //                 ->where($where)
-    //                 ->order($sort, $order)
-    //                 ->count();
-
-    //         $list = $this->model
-    //                 ->with(['models'])
-    //                 ->where($where)
-    //                 ->order($sort, $order)
-    //                 ->limit($offset, $limit)
-    //                 ->select();
-
-    //         foreach ($list as $row) {
-    //             $row->visible(['id','models_id','full_total_price','ismenu','createtime','updatetime']);
-    //             $row->visible(['models']);
-    // 			$row->getRelation('models')->visible(['name']);
-    //         }
-    //         $list = collection($list)->toArray();
-    //         $result = array("total" => $total, "rows" => $list);
-
-    //         return json($result);
-    //     }
-    //     return $this->view->fetch('index');
-    // }
 
 }
