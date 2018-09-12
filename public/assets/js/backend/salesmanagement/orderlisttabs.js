@@ -551,6 +551,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
+                //销售预定新车
+                $(document).on("click", ".btn-newreserve", function () {   
+                        
+                    var url = 'salesmanagement/Orderlisttabs/newreserve';
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area:['95%','95%'],
+                        // closeBtn: 0, //不显示关闭按钮
+                        callback:function(value){
+                            console.log(123);
+
+                            // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            // parent.layer.close(index);  
+                            // $(".btn-refresh").trigger("click");   
+
+                        }
+                    }
+                    Fast.api.open(url,'新车预定',options)
+                })
+
 
                 // alert(Table.api.getrowdata(table, index));
             },
@@ -1890,7 +1911,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            // Controller.api.bindevent();
+            Controller.api.bindevent();
             // console.log(Config.id);
             
  
@@ -2053,6 +2074,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 
             });
             // Controller.api.bindevent();
+            // console.log(Config.id);
+            
+ 
+        },
+        newreserve:function(){
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
             // console.log(Config.id);
             
  

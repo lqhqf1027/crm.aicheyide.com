@@ -30,7 +30,7 @@ class Orderlisttabs extends Backend
     protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull','sedAudit','details','rentaldetails','seconddetails','fulldetails',
                     'add','edit','planacar','planname','reserve','rentalplanname','rentaladd','rentaledit','rentaldel','control','setAudit','secondadd',
 
-                    'secondedit','fulladd','fulledit','submitCar','del','fulldel','seconddel'];
+                    'secondedit','fulladd','fulledit','submitCar','del','fulldel','seconddel','newreserve'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -755,6 +755,81 @@ class Orderlisttabs extends Backend
                 'call_listfiles_arr' => $call_listfiles,
             ]
         );
+        return $this->view->fetch();
+    }
+
+    /**
+     * 以租代购（新车）订车
+     */
+    public function newreserve()
+    {
+        $this->model = model('SalesOrder');
+        //销售方案类别
+        $category = DB::name('scheme_category')->field('id,name')->select();
+        // pr($category);
+        // die;
+        
+        $this->view->assign('category', $category);
+
+        if ($this->request->isPost()) {
+             $params = $this->request->post('row/a');
+            //方案id
+            $params['plan_acar_name'] = Session::get('plan_id');
+            //方案重组名字
+            $params['plan_name'] = Session::get('plan_name');
+            //models_id
+            $params['models_id'] = Session::get('models_id');
+            //生成订单编号
+            $params['order_no'] = date('Ymdhis');
+
+            //把当前销售员所在的部门的内勤id 入库
+
+            //message8=>销售一部顾问，message13=>内勤一部
+             //message9=>销售二部顾问，message20=>内勤二部
+            $adminRule =Session::get('admin')['rule_message'];  //测试完后需要把注释放开
+            // $adminRule = 'message8'; //测试数据
+            if ($adminRule == 'message8') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message9') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message23') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
+                // return true;
+            }
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        //如果添加成功,将状态改为提交审核
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_review_reserve']);
+                        if ($result_s) {
+                            $this->success();
+                        } else {
+                            $this->error('更新状态失败');
+                        }
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
         return $this->view->fetch();
     }
 
