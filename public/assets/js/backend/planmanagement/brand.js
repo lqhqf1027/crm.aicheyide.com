@@ -32,7 +32,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'status', title: __('Status'), formatter: Table.api.formatter.status},
 
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: function (value,row,index) {
+                                if(row.name==='二手车专用车型'){
+                                     return '';
+                                }
+                                else {
+                                    return Table.api.formatter.operate.call(this, value, row, index);
+                                }
+                            }}
                     ]
                 ]
             });

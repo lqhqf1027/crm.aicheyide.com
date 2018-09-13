@@ -19,7 +19,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             var table = $("#table");
-
+            $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                return "快速搜索车牌号";
+            };
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
@@ -50,18 +52,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'totalprices', title: __('Totalprices'),operate:false},
                         {field: 'drivinglicenseimages', title: __('Drivinglicenseimages'), formatter: Table.api.formatter.images,operate:false},
                         {field: 'vin', title: __('Vin')},
-                        {field: 'expirydate', title: __('Expirydate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'annualverificationdate', title: __('Annualverificationdate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'engine_number', title: __('发动机号')},
+
+                        {field: 'expirydate', title: __('Expirydate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
+                        {field: 'annualverificationdate', title: __('Annualverificationdate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
                         {field: 'carcolor', title: __('Carcolor')},
                         {field: 'aeratedcard', title: __('Aeratedcard')},
                         {field: 'volumekeys', title: __('Volumekeys'),operate:false},
                         {field: 'Parkingposition', title: __('Parkingposition'),operate:false},
-                        {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Controller.api.formatter.toggle},
+                        {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Controller.api.formatter.toggle,searchList:{"1":"是","0":"否"}},
                         // {field: 'shelf_text', title: __('Shelf'), operate:false},
-                        {field: 'vehiclestate', title: __('Vehiclestate')},
+                        {field: 'vehiclestate', title: __('Vehiclestate'),operate:false},
                         {field: 'note', title: __('Note'),operate:false},
-                        {field: 'createtime', title: __('Createtime'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('Updatetime'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'createtime', title: __('Createtime'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
+                        {field: 'updatetime', title: __('Updatetime'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
                         // {field: 'models.name', title: __('Models.name')},
                         {field: 'operate', title: __('Operate'), table: table, 
                         buttons: [
@@ -131,7 +135,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 删除
                              */
                             { 
-                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
+                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除', title: __('删除'),classname: 'btn btn-xs btn-danger btn-delone',
                                 // url:'rentcar/vehicleinformation/del',/** */
                                 hidden:function(row){
                                     if(row.status_data == ''){
@@ -157,7 +161,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 编辑
                              */
                             { 
-                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'编辑信息', title: __('编辑信息'),classname: 'btn btn-xs btn-success btn-editone', 
+                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'编辑', title: __('编辑'),classname: 'btn btn-xs btn-success btn-editone',
                                 // url:'rencar/vehicleinformation/edit',/**编辑信息 */
                                 hidden:function(row,value,index){ 
                                     if(row.status_data == ''){

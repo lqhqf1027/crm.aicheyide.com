@@ -53,7 +53,7 @@ class Secondvehicleinformation extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('licenseplatenumber',true);
             $total = $this->model
                 ->with(['models'])
                 ->where($where)
@@ -237,6 +237,7 @@ class Secondvehicleinformation extends Backend
     {
 
         $brand = Db::name("brand")
+            ->where('name','二手车专用车型')
             ->field("id,name")
             ->select();
 

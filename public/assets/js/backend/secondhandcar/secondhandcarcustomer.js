@@ -24,8 +24,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id'),operate:false},
                         {field: 'plansecond.licenseplatenumber', title: __('车牌号')},
                         {field: 'order_no', title: __('订单编号')}, 
-                        {field: 'createtime', title: __('订车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
-                        {field: 'delivery_datetime', title: __('提车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
+                        {field: 'createtime', title: __('订车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
+                        {field: 'delivery_datetime', title: __('提车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
                         {field: 'models.name', title: __('二手车型号')},
                         {field: 'admin.nickname', title: __('销售员')},
 
