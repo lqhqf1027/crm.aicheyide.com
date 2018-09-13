@@ -56,15 +56,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id'),operate:false},
                         // {field: 'sales_id', title: __('Sales_id')},
                         {field: 'licenseplatenumber', title: __('Licenseplatenumber'), formatter:function(value,row,index){
-                            if(row.status_data !=  ""){
-                                return row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中</span>';
+                            console.log(value);
+                            return row.status_data==null?row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中</span>':row.licenseplatenumber;
 
-                            }
-                            else{
-                                return row.licenseplatenumber
-                            }
                         }},
-                        // {field: 'models_id', title: __('Models_id')},
                         {field: 'models.name', title: __('Models.name')},
                         {field: 'kilometres', title: __('Kilometres'), operate:false},
                         {field: 'companyaccount', title: __('Companyaccount')},
@@ -75,17 +70,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'drivinglicenseimages', title: __('Drivinglicenseimages'), formatter: Table.api.formatter.images},
                         {field: 'vin', title: __('Vin')},
                         {field: 'engine_no', title: __('发动机号')},
-                        {field: 'expirydate', title: __('Expirydate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,dateFormat: 'YYYY-MM-DD'},
-                        {field: 'annualverificationdate', title: __('Annualverificationdate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,dateFormat: 'YYYY-MM-DD'},
-                        {field: 'carcolor', title: __('Carcolor')},
-                        {field: 'aeratedcard', title: __('Aeratedcard')},
+                        {field: 'expirydate', title: __('Expirydate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,dateteimeFormat: 'YYYY-MM-DD'},
+                        {field: 'annualverificationdate', title: __('Annualverificationdate'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,dateteimeFormat: 'YYYY-MM-DD'},
+                        {field: 'carcolor', title: __('Carcolor'),operate:false},
+                        {field: 'aeratedcard', title: __('Aeratedcard'),operate:false},
                         {field: 'volumekeys', title: __('Volumekeys'),operate:false},
                         {field: 'Parkingposition', title: __('Parkingposition'),operate:false},
-                        {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Controller.api.formatter.toggle},
+                        {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Controller.api.formatter.toggle,searchList:{"1":"是","0":"否"}},
                         {field: 'vehiclestate', title: __('Vehiclestate'),operate:false},
 
 
-                        // {field: 'models.name', title: __('Models.name')},
+                        {field: 'vehiclestate', title: __('车辆状态')},
                         {field: 'sales.nickname', title: __('预定销售人员')},
                         {field: 'note', title: __('Note'),operate:false},
                         {field: 'operate', title: __('Operate'), table: table, 
@@ -240,7 +235,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 删除
                              */
                             { 
-                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
+                                icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除', title: __('删除'),classname: 'btn btn-xs btn-danger btn-delone',
                                 url:'rentcar/vehicleinformation/del',/** */
                                 hidden:function(row){
                                     if(row.status_data == ''){
@@ -274,7 +269,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                              * 编辑
                              */
                             { 
-                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'编辑信息', title: __('编辑信息'),classname: 'btn btn-xs btn-success btn-editone', 
+                                name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'编辑', title: __('编辑'),classname: 'btn btn-xs btn-success btn-editone',
                                 url:'rencar/vehicleinformation/edit',/**编辑信息 */
                                 hidden:function(row,value,index){ 
                                     if(row.status_data == ''){

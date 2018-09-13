@@ -424,6 +424,7 @@ class Vehicleinformation extends Backend
     public function add()
     {
         $this->view->assign("car_models", $this->getInfo());
+
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
@@ -459,6 +460,7 @@ class Vehicleinformation extends Backend
     {
 
         $brand = Db::name("brand")
+            ->where('name','二手车专用车型')
             ->field("id,name")
             ->select();
 
