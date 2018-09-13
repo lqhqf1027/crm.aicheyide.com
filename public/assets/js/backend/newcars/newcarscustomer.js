@@ -103,16 +103,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate',
                                 title: __('Operate'),
                                 table: prepareLiftCar,
-                                events: Table.api.events.operate,
-                                formatter: Table.api.formatter.operate,
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate,
                                 buttons: [
                                     {
-                                        name: 'detail',
-                                        text: '选择库存车',
-                                        title: '选择库存车',
-                                        icon: 'fa fa-arrows',
-                                        classname: 'btn btn-xs btn-danger btn-dialog btn-chooseStock',
-                                        url: 'newcars/newcarscustomer/choose_stock',
+                                        name: 'take_the_car', text: '提交给销售，通知客户补全资料提车', title: '提交给销售，通知客户补全资料提车', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_newcustomer',
+                                        hidden: function (row) {  /**提交给销售，通知客户补全资料提车 */
+
+                                            if (row.review_the_data == 'take_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'take_the_data', icon: 'fa fa-check-circle', text: '销售正在录入客户资料', classname: ' text-info ',
+                                        hidden: function (row) {  /**销售正在录入客户资料 */
+                                            if (row.review_the_data == 'take_the_data') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'send_the_car', text: '确认提车', title: '确认提车', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-sendcar',
+                                        hidden: function (row) {  /**确认提车 */
+                                            if (row.review_the_data == 'send_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                        }
                                     },
                                     {
                                         name: 'look',
@@ -130,9 +165,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(prepareLiftCar);
 
-                //风控推送---车管
+                //风控选完库存推送---车管
                 goeasy.subscribe({
-                    channel: 'demo-newcar_pass',
+                    channel: 'demo-newchoose_stock',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -141,7 +176,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         
                     }
                 });
-
             },
             already_lift_car: function () {
 
@@ -249,6 +283,102 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+            },
+            events: {
+                operate: {
+                    //新车提交销售，让销售通知客户进行提车
+                    'click .btn-submit_newcustomer': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('是否提交销售，通知客户进行补全资料进行提车?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                                Fast.api.ajax({
+
+                                    url: 'newcars/newcarscustomer/newcustomer',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success('操作成功');
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
+                            }
+                        );
+
+                    },
+                    //确认提车
+                    'click .btn-sendcar': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('是否确认提车?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                                Fast.api.ajax({
+
+                                    url: 'newcars/newcarscustomer/sendcar',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success('操作成功');
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
+                            }
+                        );
+
+                    }
+                }
             },
             formatter: {
                 operate: function (value, row, index) {

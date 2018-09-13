@@ -64,7 +64,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
-                        edit_url: 'order/salesorder/edit',
+                        newedit_url: 'planmanagement/matchfinance/newedit',
+
                         // del_url: 'order/salesorder/del',
                         multi_url: 'order/salesorder/multi',
                         table: 'sales_order',
@@ -325,6 +326,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
 
         },
+        newedit: function () {
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
+        },
         edit: function () {
             Controller.api.bindevent();
         },
@@ -341,12 +365,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Form.api.bindevent($("form[role=form]"));
 
 
-                //Bootstrap-table的父元素,包含table,toolbar,pagnation
-                var parenttable = table.closest('.bootstrap-table');
-                //Bootstrap-table配置
-                var options = table.bootstrapTable('getOptions');
-                //Bootstrap操作区
-                var toolbar = $(options.toolbar, parenttable);
+                // //Bootstrap-table的父元素,包含table,toolbar,pagnation
+                // var parenttable = table.closest('.bootstrap-table');
+                // //Bootstrap-table配置
+                // var options = table.bootstrapTable('getOptions');
+                // //Bootstrap操作区
+                // var toolbar = $(options.toolbar, parenttable);
 
 
 
@@ -366,35 +390,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
+                    //新车匹配金融
                     'click .btn-neweditone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
                         var table = $(this).closest('table');
-                        Layer.prompt(
-                            // __('请输入客户手机服务密码'),测试服务密码：202304
-                            { title: __('请输入需要匹配的金融平台名称'), shadeClose: true },
-                            //text为输入的服务密码
-                            function (text, index) {
-                                Fast.api.ajax({
-                                    url:"planmanagement/matchfinance/newedit",
-                                    data:{
-                                        text:text,
-                                        id:row.id
-                                    }
-                                },function (data,ret) {
-                                    layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                },function (data,ret) {
-                                    console.log(ret);
-                                })
-                            })
-
-                        // e.stopPropagation();
-                        // e.preventDefault();
-                        // var table = $(this).closest('table');
-                        // var options = table.bootstrapTable('getOptions');
-                        // var ids = row[options.pk];
-                        // row = $.extend({}, row ? row : {}, {ids: ids});
-                        // var url = 'planmanagement/matchfinance/edit';
-                        // Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.newedit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('新车匹配金融'), $(this).data() || {});
                     },
                     'click .btn-secondeditone': function (e, value, row, index) {
                         var table = $(this).closest('table');

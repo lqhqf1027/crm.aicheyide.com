@@ -860,6 +860,106 @@ if (!function_exists('newpass_inform')) {
     }
 }
 /**
+ * 以租代购（新车）风控审核发送给销售，签订金融合同
+ */
+if (!function_exists('newpass_finance')) {
+
+
+    function newpass_finance($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车风控审核通过，可以签订金融合同通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，请及时通知客户进行签订金融合同 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给车管，进行录入库存
+ */
+if (!function_exists('newcontrol_tube')) {
+
+
+    function newcontrol_tube($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车金融合同已签订，可以进行录入库存通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经签订金融合同，可以进行录入库存，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核选择库存，发送给车管
+ */
+if (!function_exists('newchoose_stock')) {
+
+
+    function newchoose_stock($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车已经选择完库存通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经匹配完库存车，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）车管发送销售，补全提车资料
+ */
+if (!function_exists('newtake_car')) {
+
+
+    function newtake_car($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "客户提车资料待补全通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经可以进行提车，请补全提车资料，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）销售发送车管，资料补全，可以提车
+ */
+if (!function_exists('newsend_car')) {
+
+
+    function newsend_car($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "客户提车资料补全，可以进行提车通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，资料已经补全，可以进行提车，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
  * 以租代购（新车）风控审核发送给销售，审核需要保证金
  */
 if (!function_exists('newdata_inform')) {

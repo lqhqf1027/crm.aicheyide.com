@@ -6,6 +6,7 @@ use app\common\controller\Backend;
 use think\Db;
 use think\Config;
 use think\Cache;
+use app\common\library\Email;
 
 /**
  * 新车客户信息
@@ -24,7 +25,7 @@ class Newcarscustomer extends Backend
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
-    protected $noNeedRight = ['index','prepare_lift_car','already_lift_car','choose_stock','show_order','show_order_and_stock'];
+    protected $noNeedRight = ['index','prepare_lift_car','already_lift_car','choose_stock','show_order','show_order_and_stock','newcustomer'];
     public function _initialize()
     {
         parent::_initialize();
@@ -48,8 +49,8 @@ class Newcarscustomer extends Backend
         $this->loadlang('order/salesorder');
 
         $prepare_total = Db::name("sales_order")
-            ->where("review_the_data", "for_the_car")
-            ->where("car_new_inventory_id", null)
+            ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "send_the_car"], "or")
+            ->where("car_new_inventory_id", "not null")
             ->count();
 
         $already_total = Db::name("sales_order")
@@ -88,8 +89,8 @@ class Newcarscustomer extends Backend
                 }])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where("car_new_inventory_id", null)
-                        ->where("review_the_data", "for_the_car");
+                    $query->where("car_new_inventory_id", "not null")
+                    ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "send_the_car"], "or");
                 })
                 ->order($sort, $order)
                 ->count();
@@ -105,8 +106,8 @@ class Newcarscustomer extends Backend
                 }])
                 ->where($where)
                 ->where(function ($query) {
-                    $query->where("car_new_inventory_id", null)
-                        ->where("review_the_data", "for_the_car");
+                    $query->where("car_new_inventory_id", "not null")
+                    ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "send_the_car"], "or");
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -206,124 +207,55 @@ class Newcarscustomer extends Backend
 
     }
 
-    //选择库存车
-    public function choose_stock($ids = null)
+    //通知销售---补全客户信息进行提车
+    public function newcustomer()
     {
+        $this->model = model('SalesOrder');
+
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+
+            $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'take_the_data']);
+            //销售员
+            $admin_id = $this->model->where('id', $id)->value('admin_id');
+
+            $models_id = $this->model->where('id', $id)->value('models_id');
+            //车型
+            $models_name = DB::name('models')->where('id', $models_id)->value('name');
+            //客户姓名
+            $username = $this->model->where('id', $id)->value('username');
+
+            if ($result !== false) {
+
+                $channel = "demo-newtake_car";
+                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，已经可以进行提车，请补全提车资料，请及时登陆后台进行处理";
+                goeary_push($channel, $content);
+
+                $data = newtake_car($models_name, $username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('id', $admin_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
 
 
-        if ($this->request->isPost()) {
+            } else {
+                $this->error('提交失败', null, $result);
 
-            $id = input("post.id");
-
-            Db::name("sales_order")
-                ->where("id", $ids)
-                ->update([
-                    'car_new_inventory_id' => $id,
-                    'review_the_data' => "the_car",
-                    'delivery_datetime' => time()
-                ]);
-
-            Db::name("car_new_inventory")
-                ->where("id", $id)
-                ->setField("statuss", 0);
-
-
-
-
-            //介绍人
-
-            $order_info = Db::name("sales_order")
-                ->where("id", $ids)
-                ->field("customer_source,turn_to_introduce_name,turn_to_introduce_phone,turn_to_introduce_card,admin_id,models_id,username,phone")
-                ->find();
-
-            if ($order_info['customer_source'] == "turn_to_introduce") {
-
-                $insert_data = [
-                    'models_id' => $order_info['models_id'],
-                    'admin_id' => $order_info['admin_id'],
-                    'referee_name' => $order_info['turn_to_introduce_name'],
-                    'referee_phone' => $order_info['turn_to_introduce_phone'],
-                    'referee_idcard' => $order_info['turn_to_introduce_card'],
-                    'customer_name' => $order_info['username'],
-                    'customer_phone' => $order_info['phone'],
-                    'buy_way' => '新车'
-                ];
-
-                Db::name("referee")->insert($insert_data);
-
-                $last_id = Db::name("referee")->getLastInsID();
-
-                Db::name("sales_order")
-                    ->where("id", $ids)
-                    ->setField("referee_id", $last_id);
             }
-
-            $this->success('', '', $ids);
-
         }
-
-        //展示的信息
-        $stock = Db::name("car_new_inventory")
-            ->alias("i")
-            ->join("crm_models m", "i.models_id=m.id")
-            ->where("statuss", 1)
-            ->field("i.id,m.name,i.licensenumber,i.frame_number,i.engine_number,i.household,i.4s_shop,i.note")
-            ->select();
-
-        $this->view->assign([
-            'stock' => $stock
-        ]);
-        
-        $seventtime = \fast\Date::unixtime('month', -6);
-        $newonesales = $newtwosales = $newthreesales = [];
-        for ($i = 0; $i < 8; $i++)
-        {
-            $month = date("Y-m", $seventtime + ($i * 86400 * 30));
-            //销售一部
-            $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-            foreach($one_sales as $k => $v){
-                $one_admin[] = $v['uid'];
-            }
-            $newonetake = Db::name('sales_order')
-                    ->where('review_the_data', 'the_car')
-                    ->where('admin_id', 'in', $one_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
-            //销售二部
-            $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-            foreach($two_sales as $k => $v){
-                $two_admin[] = $v['uid'];
-            }
-            $newtwotake = Db::name('sales_order')
-                    ->where('review_the_data', 'the_car')
-                    ->where('admin_id', 'in', $two_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
-            //销售三部
-            $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-            foreach($three_sales as $k => $v){
-                $three_admin[] = $v['uid'];
-            }
-            $newthreetake = Db::name('sales_order')
-                    ->where('review_the_data', 'the_car')
-                    ->where('admin_id', 'in', $three_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
-            //销售一部
-            $newonesales[$month] = $newonetake;
-            //销售二部
-            $newtwosales[$month] = $newtwotake;
-            //销售三部
-            $newthreesales[$month] = $newthreetake;
-        }
-        // pr($newtake);die;
-        Cache::set('newonesales', $newonesales);
-        Cache::set('newtwosales', $newtwosales);
-        Cache::set('newthreesales', $newthreesales);
-
-        return $this->view->fetch();
     }
+
 
     /**查看详细资料 */
     public function show_order($ids = null)
@@ -341,8 +273,6 @@ class Newcarscustomer extends Backend
         $row['plan'] = Db::name('sales_order')->alias('a')
             ->join('plan_acar b', 'a.plan_acar_name = b.id')
             ->join('models c', 'b.models_id=c.id');
-
-//        $row['createtime'] = date("Y-m-d", $row['createtime']);
 
 
         if($row['admin_id']){
@@ -661,8 +591,8 @@ class Newcarscustomer extends Backend
             }
         }
 
-//        $row['createtime'] = date("Y-m-d", $row['createtime']);
-//        $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
+        // $row['createtime'] = date("Y-m-d", $row['createtime']);
+        // $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
 
         $this->view->assign($data);
         $this->view->assign("row", $row);

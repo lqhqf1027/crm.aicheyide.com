@@ -164,23 +164,26 @@ class Matchfinance extends Backend
     }
 
     /**
-     * 新车金融匹配
+     * 新车匹配金融
      */
     public function newedit($ids = NULL)
     {
+        $row = Db::name('financial_platform')->select();
+        // pr($row);
+        // die;
+        $this->view->assign('row', $row);
 
         if($this->request->isAjax()){
-            $id = input("id");
-            $v = input("text");
-
-           $res = Db::name("sales_order")
-            ->where("id",$id)
-            ->update([
-                "financial_name"=>$v,
-                "review_the_data"=>"is_reviewing_true"
-            ]);
-
-
+            $id = input("ids");
+            $params = $this->request->post('row/a');
+    
+            $financial_name = Db::name('financial_platform')->where('id', $params['financial_platform_id'])->value('name');
+            $res = Db::name("sales_order")
+                ->where("id",$id)
+                ->update([
+                    "financial_name"=> $financial_name,
+                    "review_the_data"=> "is_reviewing_true"
+                ]);
 
 
            if($res){
@@ -219,8 +222,9 @@ class Matchfinance extends Backend
                $this->error();
            }
 
-
         }
+        
+        return $this->view->fetch('newedit');
 
 
     }
