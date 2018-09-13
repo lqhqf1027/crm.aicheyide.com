@@ -384,7 +384,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             },
             //抖音
-            //58同城
             music: function () {
                 // 已分配的客户
                 var musics = $("#musics");
@@ -587,14 +586,55 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         arr.push(v[i]);
                     }
 
+
+
+
+
                     for (var i in arr) {
-                        feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(arr[i]["feedbacktime"]) + '（' + Controller.getLocalTime(arr[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + arr[i]['feedbackcontent'] + "（等级：" + arr[i]['customerlevel'] + "）" + '<br>';
+                        var level = "";
+                        switch (arr[i]['customerlevel']){
+                            case '有意向':
+                                level+="<span class='text-success'>"+arr[i]['customerlevel']+"</span>";
+                                break;
+                            case '暂无意向':
+                                level+="<span class='text-warning'>"+arr[i]['customerlevel']+"</span>";
+                                break;
+                            case '待联系':
+                                level+="<span class='text-info'>"+arr[i]['customerlevel']+"</span>";
+                                break;
+                            case '已放弃':
+                                level+="<span class='text-danger'>"+arr[i]['customerlevel']+"</span>";
+                                break;
+                        }
+                        feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(arr[i]["feedbacktime"]) + '（' + Controller.getLocalTime(arr[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + arr[i]['feedbackcontent'] + "（等级：" + level + "）" + '<br>';
                     }
 
                 } else {
-                    for (var i in v) {
-                        feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(v[i]["feedbacktime"]) + '（' + Controller.getLocalTime(v[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + v[i]['feedbackcontent'] + "（等级：" + v[i]['customerlevel'] + "）" + '<br>';
-                    }
+
+
+
+
+                        for (var i in v) {
+                            var level = "";
+                            switch (v[i]['customerlevel']){
+                                case '有意向':
+                                    level+="<span class='text-success'>"+v[i]['customerlevel']+"</span>";
+                                    break;
+                                case '暂无意向':
+                                    level+="<span class='text-warning'>"+v[i]['customerlevel']+"</span>";
+                                    break;
+                                case '待联系':
+                                    level+="<span class='text-info'>"+v[i]['customerlevel']+"</span>";
+                                    break;
+                                case '已放弃':
+                                    level+="<span class='text-danger'>"+v[i]['customerlevel']+"</span>";
+                                    break;
+                            }
+                            feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(v[i]["feedbacktime"]) + '（' + Controller.getLocalTime(v[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + v[i]['feedbackcontent'] + "（等级：" + level + "）" + '<br>';
+                        }
+
+
+
                 }
 
             }
@@ -666,16 +706,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 默认按钮组
                 var buttons = $.extend([], this.buttons || []);
 
-                // console.log(row);
-                // if (options.extend.del_url !== '') {
-                //     buttons.push({
-                //         name: 'del',
-                //         icon: 'fa fa-trash',
-                //         title: __('Del'),
-                //         extend: 'data-toggle="tooltip"',
-                //         classname: 'btn btn-xs btn-danger btn-delone'
-                //     });
-                // }
+
 
                 if (row.backoffice_id == null) {
                     buttons.push(

@@ -275,7 +275,7 @@ class Custominfotabs extends Backend
         $id = $this->model->get(['id' => $ids]);
 
         $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message8')->whereOr('rule_message', 'message9');
+            $query->where('rule_message','in',['message8','message9','message23']);
         })->select();
         $saleList = array();
 
@@ -283,7 +283,7 @@ class Custominfotabs extends Backend
 
             $firstCount = 0;
             $secondCount = 0;
-
+            $thirdCount = 0;
             foreach ($sale as $k => $v) {
                 switch ($v['rule_message']) {
                     case 'message8':
@@ -295,6 +295,11 @@ class Custominfotabs extends Backend
                         $saleList['message9'][$secondCount]['nickname'] = $v['nickname'];
                         $saleList['message9'][$secondCount]['id'] = $v['id'];
                         $secondCount++;
+                        break;
+                    case 'message23':
+                        $saleList['message23'][$thirdCount]['nickname'] = $v['nickname'];
+                        $saleList['message23'][$thirdCount]['id'] = $v['id'];
+                        $thirdCount++;
                         break;
                 }
             }
@@ -309,8 +314,15 @@ class Custominfotabs extends Backend
             $saleList['message9'] = null;
         }
 
-        $this->view->assign('firstSale', $saleList['message8']);
-        $this->view->assign('secondSale', $saleList['message9']);
+        if (empty($saleList['message23'])) {
+            $saleList['message23'] = null;
+        }
+
+        $this->view->assign([
+            'firstSale'=> $saleList['message8'],
+            'secondSale'=> $saleList['message9'],
+            'thirdSale'=> $saleList['message23']
+        ]);
 
 
         $this->assignconfig('id', $id->id);
@@ -320,31 +332,10 @@ class Custominfotabs extends Backend
 
             $params = $this->request->post('row/a');
 
-
             $result = $this->model->save(['sales_id' => $params['id'], 'distributsaletime' => time()], function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
             if ($result) {
-                //这里开始调用微信推送
-                //1、use  wechat/WechatMessage  这个类
-                //2、实例化并传参
-                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
-                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化
-                //dump($sendmessage->sendMsgToAll());exit;
-
-
-                // $getAdminOpenid = adminModel::get(['id' => $params['id']])->toArray();
-
-                // $openid = $getAdminOpenid['openid'];
-                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'], Config::get('wechat')['APPSECRET'], self::$token, $openid, '温馨提示：你有新客户导入，请登陆系统查看。');
-                // $msg = $sendmessage->sendMsgToAll();
-
-
-                // if ($msg['errcode'] == 0) {
-                    // $this->success();
-                // } else {
-                    // $this->error("消息推送失败");
-                // }
 
                 $channel = "demo-internal";
                 $content =  "你有内勤给你分配的新客户，请注意查看";
