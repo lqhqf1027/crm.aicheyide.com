@@ -45,6 +45,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // index_url: 'order/salesorder/index',
                         add_url: 'salesmanagement/Orderlisttabs/add',
                         edit_url: 'salesmanagement/Orderlisttabs/edit',
+                        newreserveedit_url: 'salesmanagement/Orderlisttabs/newreserveedit',
+                        newcontroladd_url: 'salesmanagement/Orderlisttabs/newcontroladd',
+                        newinformation_url: 'salesmanagement/Orderlisttabs/newinformation',
                         del_url: 'salesmanagement/Orderlisttabs/del',
                         multi_url: 'order/salesorder/multi',
                         //table: 'sales_order',
@@ -131,11 +134,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
                                         icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        url: 'order/salesorder/del',/**删除 */
+                                        // url: 'order/salesorder/del',/**删除 */
                                         hidden: function (row) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -168,12 +186,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         },
 
                                     },
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
-                                        url: 'order/salesorder/edit',/**编辑 */
+                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-newreserveeditone',
+                                        // url: 'order/salesorder/edit',/**编辑 */
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -203,6 +236,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
                                         },
@@ -240,7 +288,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
+                                    },
+                                    {
+                                        name: 'newcontroladd', text: '录入审核资料', icon: 'fa fa-plus', extend: 'data-toggle="tooltip"', title: __('录入审核资料'), classname: 'btn btn-xs btn-success btn-newcontroladd',
+                                        
+                                        hidden: function (row, value, index) {
+                                           
+                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages || !row.accreditimages || !row.faceimages  || !row.informationimages) {
+                                                return false;
+                                            }
+                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages && row.accreditimages && row.faceimages  && row.informationimages) {
+                                                return true;
+                                            }
+                                        },
                                     },
                                     {
                                         name: 'send_car_tube', text: '车管正在处理中',
@@ -273,6 +349,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
                                         }
@@ -310,6 +401,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -345,11 +451,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
-                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '征信已通过，车管正在备车中', classname: ' text-info ',
-                                        hidden: function (row) {  /**征信已通过，车管正在备车中 */
+                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
+                                        hidden: function (row) {  /**征信已通过 */
                                             if (row.review_the_data == 'for_the_car') {
                                                 return false;
                                             }
@@ -378,6 +499,272 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'conclude_the_contract', icon: 'fa fa-check-circle', text: '客户在签订金融合同', classname: ' text-info ',
+                                        hidden: function (row) {  /**客户在签订金融合同*/
+                                            if (row.review_the_data == 'conclude_the_contract') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'take_the_car', icon: 'fa fa-check-circle', text: '风控匹配车辆', classname: ' text-info ',
+                                        hidden: function (row) {  /**风控匹配车辆*/
+                                            if (row.review_the_data == 'take_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'take_the_data', text: '补全客户提车资料', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('补全客户提车资料'), classname: 'btn btn-xs btn-success btn-customer_information',
+                                        
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'take_the_data') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        },
+                                    },
+                                    {
+                                        name: 'send_the_car', icon: 'fa fa-check-circle', text: '等待提车', classname: ' text-info ',
+                                        hidden: function (row) {  /**等待提车*/
+                                            if (row.review_the_data == 'send_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'tube_into_stock', icon: 'fa fa-check-circle', text: '车管正在录入库存', classname: ' text-info ',
+                                        hidden: function (row) {  /**车管正在录入库存 */
+                                            if (row.review_the_data == 'tube_into_stock') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
                                         }
@@ -416,6 +803,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -452,6 +854,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -486,8 +903,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing') {
-
-
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
                                         }
@@ -516,9 +946,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Table.api.bindevent(orderAcar);
 
                 //实时消息
-                //通过
+                //通过---签订金融合同
                 goeasy.subscribe({
-                    channel: 'demo-newcar_pass',
+                    channel: 'demo-newpass_finance',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -550,6 +980,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         
                     }
                 });
+
+                 //补全提车资料
+                 goeasy.subscribe({
+                    channel: 'demo-newtake_car',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
 
                 //销售预定新车
                 $(document).on("click", ".btn-newreserve", function () {   
@@ -2105,6 +2548,87 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             
  
         },
+        newreserveedit:function(){
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
+            // console.log(Config.id);
+            
+ 
+        },
+        newcontroladd:function(){
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
+            // console.log(Config.id);
+            
+ 
+        },
+        newinformation:function(){
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
+            // console.log(Config.id);
+            
+ 
+        },
         add: function () {
 
             Controller.api.bindevent();
@@ -2321,6 +2845,45 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         );
 
+                    },
+                    //编辑预定按钮
+                    'click .btn-newreserveeditone': function (e, value, row, index) { /**编辑预定按钮 */
+                        $(".btn-newreserveeditone").data("area", ["95%", "95%"]);
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = options.extend.newreserveedit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('编辑预定'), $(this).data() || {});
+                    },
+                    //录入审核资料按钮
+                    'click .btn-newcontroladd': function (e, value, row, index) { /**录入审核资料按钮 */
+                        $(".btn-newcontroladd").data("area", ["95%", "95%"]);
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = options.extend.newcontroladd_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('录入审核资料'), $(this).data() || {});
+                    },
+                     //录入客户提车资料按钮
+                     'click .btn-customer_information': function (e, value, row, index) { /**录入客户提车资料按钮 */
+                        $(".btn-customer_information").data("area", ["95%", "95%"]);
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = options.extend.newinformation_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('补全提车客户资料'), $(this).data() || {});
                     },
                     //编辑按钮
                     'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */

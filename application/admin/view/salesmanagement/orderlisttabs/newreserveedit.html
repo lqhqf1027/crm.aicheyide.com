@@ -1,64 +1,76 @@
-<form id="newreserve-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+ 
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
     <h2>
         <center>当前购车方式：以租代购（新车）</center>
     </h2>
     <br>
-    <div class="form-group">
 
-        <label class="control-label col-xs-12 col-sm-2">
-            <strong> {:__('请仔细填写录入以下客户资料')}:</strong>
-        </label>
-    </div>
+
+    <center>
+        <strong class="text-info"> {:__('如需编辑资料，可选择对应的选项进行编辑操作')}</strong>
+
+    </center>
+
+
     <h3>
         <center>基本资料</center>
     </h3>
     <br>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('销售方案类别')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]" onchange="changePlan(this)">
+            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]" onchange="changePlan(this)" disabled>
                 <option value=" " style='display: none'>未选中任何项</option>
 
                 {foreach $category as $k => $v}
-
+                {if $result['category_id'] eq  $v['id']}
+                <option value="{$v['id']}" selected>{$v['name']}</option>
+                {else /}
                 <option value="{$v['id']}">{$v['name']}</option>
+                {/if}
                 {/foreach}
             </select>
 
         </div>
     </div>
-    <div class="form-group" id="note" style="display: none">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-          <p>123</p>
 
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <table class="plan_acar table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
+                <tr>
+                    <th class="col-xs-12 col-sm-1 ">车型</th>
+                    <th class="col-xs-12 col-sm-1 ">首付（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">月供（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">期数（月）</th>
+                    <th class="col-xs-12 col-sm-1 ">尾款（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">保证金（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">GPS(元)</th>
+                    <th class="col-xs-12 col-sm-1 ">首付总额（元）</th>
+                    <th class="col-xs-12 col-sm-1 ">操作</th>
+                </tr>
+                <tr>
+                    <td class="col-xs-12 col-sm-1 ">{$result.models_name}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.payment}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.monthly}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.nperlist}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.tail_section}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.margin}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.gps}</td>
+                    <td class="col-xs-12 col-sm-1 ">{$result.downpayment}</td>
+                    <td class="col-xs-12 col-sm-1 ">
+
+                        <input name="" type="button" class="btn btn-success" value="已选择此方案"></input>
+
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
-    <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
-            <div class="col-xs-12 col-sm-8">
-
-                <table class="plan_acar table table-striped table-bordered table-hover table-nowrap" border="1" width="100%" bgcolor="#ffffff" cellspacing="0">
-                    <tr>
-                        <th>请先选择销售方案类别</th>
-                    </tr>
-                    <!-- <tr>
-                        <th class="col-xs-12 col-sm-1 ">车型</th>
-                        <th class="col-xs-12 col-sm-1 ">首付（元）</th>
-                        <th class="col-xs-12 col-sm-1 ">首付（元）</th>
-                        <th class="col-xs-12 col-sm-1 ">期数（月）</th>
-                        <th class="col-xs-12 col-sm-1 ">尾款（元）</th>
-                        <th class="col-xs-12 col-sm-1 ">GPS(元)</th>
-                        <th class="col-xs-12 col-sm-1 ">首付总额（元）</th>
-                        <th class="col-xs-12 col-sm-1 ">操作</th>
-                    </tr> -->
-                </table>
-            </div>
-            
-        
-    </div>
-   
 
     <script type="text/javascript">
 
@@ -67,11 +79,12 @@
             // console.log(that.value);
 
             $.ajax({
-                url: 'salesmanagement/Orderlisttabs/planacar',
+                url: 'order/salesorder/planacar',
 
                 data: { category_id: JSON.stringify(that.value) },
 
                 success: function (data) {
+
                     var data = JSON.parse(data);
 
                     var html = '<tr>';
@@ -85,7 +98,6 @@
                     html += '<th class="col-xs-12 col-sm-1 ">' + 'GPS(元)' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '首付总额（元）' + '</th>'; 
                     html += '<th class="col-xs-12 col-sm-1 ">' + '操作' + '</th>';
-                    ;
 
                     html += '</tr>';
                     html += '<tr>';
@@ -103,9 +115,8 @@
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
                         html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id+ '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
-                        //models_id
-                        html+= '<input>';
+                        html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
+
                         html += '</tr>';
 
                     }
@@ -124,14 +135,13 @@
                             $(this).removeClass("btn-default").addClass("btn-success");
                             // var value = $(this).val();
                             // console.log(value);
-                            
                             if ($(this).prop("className") == 'btn btn-success') {
-                                $(this).val('已选择此方案');
+                                $(this).val("已选择此方案");
 
-                                // $("input[type='button']").append('<i calss="fa fa-check aria-hidden="true""></i>');
+                                // console.log($(this).attr("name"));
 
                                 $.ajax({
-                                    url: 'salesmanagement/Orderlisttabs/planname',
+                                    url: 'order/salesorder/planname',
 
                                     data: { id: JSON.stringify($(this).attr("name")) },
                                 })
@@ -140,22 +150,7 @@
                              
                         })
                            
-                    });
-                    var note = $("#note");
-
-                        if(data[0]){
-                            if(data[0].category_note!='undefined' ||data[0].category_note!=null){
-
-
-                                note.css('display','block');
-
-                                note.find('p').html('<span class="text-danger">'+data[0].category_note+'</span>');
-                            }
-                        }else{
-                            note.css('display','none');
-                        }
-
-
+                    }); 
 
                 }
 
@@ -164,67 +159,58 @@
           
  
     </script>
-    
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Decoration')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-decoration" placeholder="如：脚垫，全车膜，行车记录仪等" class="form-control" name="row[decoration]" type="text">
+            <input id="c-decoration" class="form-control" name="row[decoration]" type="text" value="{$row.decoration}" disabled>
+        </div>
+
+
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="{$row.username}" disabled>
         </div>
 
 
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+
+        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text">
+            <input id="c-phone" data-rule="required" class="form-control" name="row[phone]" type="text" value="{$row.phone}" disabled>
         </div>
-
-
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-id_card" data-rule="required;IDcard" class="form-control" name="row[id_card]" type="text">
+            <input id="c-id_card" data-rule="required" class="form-control" name="row[id_card]" type="text" value="{$row.id_card}" disabled>
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
-        <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-phone" data-rule="required;mobile" class="form-control" name="row[phone]" type="text" onkeyup="this.value=this.value.replace(/\D/g,'')"
-                onafterpaste="this.value=this.value.replace(/\D/g,'')">
-        </div>
-
-
-        <!-- <div class="col-xs-12 col-sm-8 col-md-3">
-                
-            <button class="btn btn-primary pull-right"> 点击获取通话清单</button>
-
-        </div> -->
-
-    </div>
-
-
-
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
-        <div class="col-xs-12 col-sm-8">
+        <div class="col-xs-12 col-sm-8 ">
 
             <div class="radio">
                 {foreach name="genderdataList" item="vo"}
                 <label for="row[genderdata]-{$key}">
-                    <input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="male" }checked{/in}
-                    /> {$vo}</label>
+                    <input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"
+                        }checked{/in} disabled/> {$vo}</label>
                 {/foreach}
             </div>
 
         </div>
     </div>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_contractimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-deposit_contractimages" data-rule="required" class="form-control" size="50" name="row[deposit_contractimages]"
-                    type="text">
+                <input id="c-deposit_contractimages" class="form-control" size="50" name="row[deposit_contractimages]" type="text" value="{$row.deposit_contractimages}" disabled>
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-deposit_contractimages" class="btn btn-danger plupload" data-input-id="c-deposit_contractimages"
@@ -232,7 +218,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-deposit_contractimages"></span>
@@ -244,8 +230,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_receiptimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-deposit_receiptimages" data-rule="required" class="form-control" size="50" name="row[deposit_receiptimages]"
-                    type="text">
+                <input id="c-deposit_receiptimages" class="form-control" size="50" name="row[deposit_receiptimages]" type="text" value="{$row.deposit_receiptimages}" disabled>
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-deposit_receiptimages" class="btn btn-danger plupload" data-input-id="c-deposit_receiptimages"
@@ -253,7 +238,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-deposit_receiptimages"></span>
@@ -265,13 +250,14 @@
         <center>客户来源</center>
     </h3>
     <br>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Customer_source')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)">
+            <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)" disabled>
                 {foreach name="customerSourceList" item="vo"}
-                <option value="{$key}" {in name="key" value="direct_the_guest" }selected{/in}>{$vo}</option>
+                <option value="{$key}" {in name="key" value="$row.customer_source" }selected{/in}>{$vo}</option>
                 {/foreach}
             </select>
 
@@ -295,28 +281,30 @@
         }
 
     </script>
-    <div id="introduce-view" style="display: none">
+    <div id="introduce-view" {if condition="$row.customer_source eq direct_the_guest" } style="display: none" {else /} style="display: block"
+        {/if}>
 
 
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_name')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]" type="text">
+                <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]" type="text" value="{$row.turn_to_introduce_name}">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_phone')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_phone" data-rule="mobile" class="form-control" name="row[turn_to_introduce_phone]" type="text">
+                <input id="c-turn_to_introduce_phone" class="form-control" name="row[turn_to_introduce_phone]" type="text" value="{$row.turn_to_introduce_phone}">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_card')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_card" data-rule="IDcard" class="form-control" name="row[turn_to_introduce_card]" type="text"
-                    placeholder="可后期再填写，不必填">
+                <input id="c-turn_to_introduce_card" class="form-control" name="row[turn_to_introduce_card]" type="text" value="{$row.turn_to_introduce_card}">
             </div>
         </div>
+
+
     </div>
     <h3>
         <center>审核资料上传（不必填）</center>
@@ -340,15 +328,15 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('配偶的身份证正反面（多图）')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-mate_id_cardimages" data-rule="required" class="form-control" size="50" name="row[mate_id_cardimages]" type="text">
+                <input id="c-mate_id_cardimages" data-rule="required" class="form-control" size="50" name="row[mate_id_cardimages]" type="text" value="{$row.mate_id_cardimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
-                        <button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload" data-input-id="c-mate_id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                        <button type="button" id="plupload-mate_id_cardimages" class="btn btn-danger plupload" data-input-id="c-mate_id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
                             data-multiple="true" data-preview-id="p-mate_id_cardimages">
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-mate_id_cardimages"></span>
@@ -377,7 +365,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-id_cardimages" data-rule="required" class="form-control" size="50" name="row[id_cardimages]" type="text">
+                <input id="c-id_cardimages" data-rule="required" class="form-control" size="50" name="row[id_cardimages]" type="text" value="{$row.id_cardimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload" data-input-id="c-id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -385,7 +373,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-id_cardimages"></span>
@@ -398,7 +386,7 @@
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
                 <input id="c-drivers_licenseimages" data-rule="required" class="form-control" size="50" name="row[drivers_licenseimages]"
-                    type="text">
+                    type="text" value="{$row.drivers_licenseimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-drivers_licenseimages" class="btn btn-danger plupload" data-input-id="c-drivers_licenseimages"
@@ -406,7 +394,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-drivers_licenseimages"></span>
@@ -418,7 +406,8 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Bank_cardimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-bank_cardimages" data-rule="required" class="form-control" size="50" name="row[bank_cardimages]" type="text">
+                <input id="c-bank_cardimages" data-rule="required" class="form-control" size="50" name="row[bank_cardimages]" type="text"
+                    value="{$row.bank_cardimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-bank_cardimages" class="btn btn-danger plupload" data-input-id="c-bank_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -426,7 +415,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-bank_cardimages"></span>
@@ -438,15 +427,16 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('承诺书')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-undertakingimages" data-rule="required" class="form-control" size="50" name="row[undertakingimages]" type="text">
+                <input id="c-undertakingimages" data-rule="required" class="form-control" size="50" name="row[undertakingimages]"
+                    type="text" value="{$row.undertakingimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
-                        <button type="button" id="plupload-undertakingimages" class="btn btn-danger plupload" data-input-id="c-undertakingimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
-                            data-multiple="true" data-preview-id="p-undertakingimages">
+                        <button type="button" id="plupload-undertakingimages" class="btn btn-danger plupload" data-input-id="c-undertakingimages"
+                            data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-undertakingimages">
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-undertakingimages"></span>
@@ -458,7 +448,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('授权书')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-accreditimages" data-rule="required" class="form-control" size="50" name="row[accreditimages]" type="text">
+                <input id="c-accreditimages" data-rule="required" class="form-control" size="50" name="row[accreditimages]" type="text" value="{$row.accreditimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-accreditimages" class="btn btn-danger plupload" data-input-id="c-accreditimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -466,7 +456,7 @@
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-accreditimages"></span>
@@ -474,19 +464,21 @@
             <ul class="row list-inline plupload-preview" id="p-accreditimages"></ul>
         </div>
     </div>
+    
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('信息表')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-informationimages" data-rule="required" class="form-control" size="50" name="row[informationimages]" type="text">
+                <input id="c-informationimages" data-rule="required" class="form-control" size="50" name="row[informationimages]"
+                    type="text" value="{$row.informationimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
-                        <button type="button" id="plupload-informationimages" class="btn btn-danger plupload" data-input-id="c-informationimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
-                            data-multiple="true" data-preview-id="p-informationimages">
+                        <button type="button" id="plupload-informationimages" class="btn btn-danger plupload" data-input-id="c-informationimages"
+                            data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-informationimages">
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-informationimages"></span>
@@ -498,30 +490,21 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('面签照')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-faceimages" data-rule="required" class="form-control" size="50" name="row[faceimages]" type="text">
+                <input id="c-faceimages" data-rule="required" class="form-control" size="50" name="row[faceimages]" type="text" value="{$row.faceimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
-                        <button type="button" id="plupload-faceimages" class="btn btn-danger plupload" data-input-id="c-faceimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
-                            data-multiple="true" data-preview-id="p-faceimages">
+                        <button type="button" id="plupload-faceimages" class="btn btn-danger plupload" data-input-id="c-faceimages" data-multiple="true">
                             <i class="fa fa-upload"></i> {:__('Upload')}</button>
                     </span>
                     <span>
-
+                        
                     </span>
                 </div>
                 <span class="msg-box n-right" for="c-faceimages"></span>
             </div>
-            <ul class="row list-inline plupload-preview" id="p-faceimages"></ul>
+
         </div>
     </div>
-    
-
-    <b style="color: #ddd">
-        <center>
-            <i>--我是有底线的--</i>
-        </center>
-    </b>
-    
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
