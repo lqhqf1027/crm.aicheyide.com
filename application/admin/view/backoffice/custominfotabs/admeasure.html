@@ -24,7 +24,12 @@
                 {/foreach}
                 {/neq}
 
-
+                {neq name="$thirdSale" value=""}
+                <h4><b style="margin: auto">销售3部:</b></h4>
+                {foreach $thirdSale as $k=>$v}
+                <label><input name="row[id]" type="radio" value="{$v.id}" checked/> {$v.nickname}</label>
+                {/foreach}
+                {/neq}
             </div>
 
         </div>
@@ -38,4 +43,6 @@
         </div>
     </div>
 </form>
-
+{php}
+//dump($thirdSale);
+{/php}

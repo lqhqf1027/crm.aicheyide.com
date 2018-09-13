@@ -24,7 +24,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),operate:false},
+                        {field: 'models.name', title: __('车型')},
+                        {field: 'admin.nickname', title: __('销售员')},
+                        {field: 'referee_name', title: __('介绍人姓名')},
+                        {field: 'referee_phone', title: __('介绍人电话')},
+                        {field: 'referee_idcard', title: __('介绍人身份证')},
+                        {field: 'customer_name', title: __('客户姓名')},
+                        {field: 'customer_phone', title: __('客户电话')},
+                        {field: 'referee_bonus', title: __('推荐人奖金额'), operate:'BETWEEN'},
+                        {field: 'bank_account', title: __('推荐人银行账户')},
+                        {field: 'make_moneytime', title: __('打款日期'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat: "YYYY-MM-DD"},
+                        {field: 'request_fundstime', title: __('请款日期'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat: "YYYY-MM-DD"},
+                        {field: 'introduction_note', title: __('介绍表备注'),operate:false},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
