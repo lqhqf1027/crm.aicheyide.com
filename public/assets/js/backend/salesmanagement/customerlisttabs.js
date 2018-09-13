@@ -391,6 +391,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('历史反馈记录'),
                                 operate: false,
                                 formatter: function (v, r, i) {
+                                    // console.log(v);
                                     return Controller.feedFun(v);
                                 }
                             },
@@ -525,6 +526,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('历史反馈记录'),
                                 operate: false,
                                 formatter: function (v, r, i) {
+
                                     return Controller.feedFun(v);
                                 }
                             },
@@ -829,30 +831,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var liHtml = $(this).find('.tabs-text');
 
                     if (liHtml.text() === ret.data) {
-                        // $(window.parent.document).find('.nav-tabs').on('click',$(window.parent.document).find($(this)),function () {
-                        //
-                        //绑定事件
 
-                        //  })
                     }
-                    //     // var liTx = $(window.parent.document).find($(this)).click();
-                    //     // console.log($(window.parent.document).find($(this)).find('.tabs-text').text());
-                    //     $(window.parent.document).find('#myTabContent .tab-pane').each(function () {
-                    //         if(liHtml.parent().attr('href').slice(1) ===$(this).attr('id')){
-                    //             console.log(2222)
-                    //             $(window.parent.document).find($(this)).addClass("active in").siblings('.tab-pane').removeClass('active in');
-                    //             var bulidTable = $(window.parent.document).find($(this)).find('table').attr('id');
-                    //             // console.log(bulidTable);
-                    //             bulidTable.bootstrapTable('refresh');
-                    //         }
-                    //     })
-                    //
-                    //     $(window.parent.document).find($(this)).addClass("active").siblings('li').removeClass('active');
-                    //     // console.log(liHtml);
-                    //     // console.log(liHtml.parent().parent('li'));
-                    //     // liHtml.parent().parent('li').trigger('click');
-                    //
-                    // }
+
                 })
 
                 Controller.api.bindevent();
@@ -1049,26 +1030,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             btn1: function () {
 
                                 window.top.location.href = "orderlisttabs?ref=addtabs";
-                                // var planid = $("input[name=plan]:checked").val();
-                                // window.location.href="Orderlisttabs/index"
-                                // window.location.href="../order/Salesorder/index";
-                                // window.location.href="../order/Salesorder/chooseAdd?userid="+row[options.pk]+"&planid="+planid;
-                                // row = $.extend({}, row ? row : {}, {ids: ids});
-                                // var url = "salesmanagement/customerlisttabs/addzu";
-                                // Fast.api.open(Table.api.replaceurl(url, row, table), __('查看跟进信息'), $(this).data() || {});
 
                             }
 
                         });
                         $(".layui-layer-btn0").css({"margin-right": "132px"});
                         $(".la").css({"margin-left": "10px"});
-
-
-                        //     "<h4 style='line-height: 50px'>请选择新增方案：</h4>" +
-                        // "<label><input name='plan' type=\"radio\" value='0' /> 以租代购(新车)</label>" +
-                        // "<label class='la'><input name='plan' type=\"radio\" value='1' /> 纯租</label>" +
-                        // "<label class='la'><input name='plan' type=\"radio\" value='2' checked/> 以租代购(二手车)</label>" +
-                        // "<label class='la'><input name='plan' type=\"radio\" value='3' /> 全款</label>",
 
 
                     }
@@ -1155,26 +1122,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 console.log(ret);
                             })
                         })
-                    // Fast.api.ajax({
-                    //     url: url,
-                    //     data: {id: JSON.stringify(ids)}
-                    // }, function (data, rets) {
-                    //
-                    //     var addData = parseInt(data);
-                    //     var pre = $('#badge_give_up').text();
-                    //
-                    //     pre = parseInt(pre);
-                    //
-                    //     $('#badge_give_up').text(pre + addData);
-                    //     Toastr.success("成功");
-                    //     Layer.close(index);
-                    //     table.bootstrapTable('refresh');
-                    //     return false;
-                    // }, function (data, ret) {
-                    //     //失败的回调
-                    //     table.bootstrapTable('refresh');
-                    //     return false;
-                    // });
 
 
                 }

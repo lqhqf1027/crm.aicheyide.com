@@ -9,10 +9,10 @@
             </ol>
         </div>
         <ul class="nav nav-tabs" >
-            <li class="active text-center"><a href="#new_customer" data-toggle="tab">新客户 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_customer">{$total}</small></span></a></li>
-            <li><a href="#new_allocation" data-toggle="tab" class="text-center" > 已分配 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_allocation">{$total1}</small></span></a></li>
-            <li><a href="#new_feedback" data-toggle="tab"  class="text-center" > 已反馈 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_feedback">{$total2}</small></span></a></li>
-            <li><a href="#headline" data-toggle="tab"  class="text-center" > 今日头条 <span class="pull-right-container"></span></a></li>
+            <li class="active text-center"><a href="#headline" data-toggle="tab">今日头条 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_customer">{$total}</small></span></a></li>
+            <!--<li><a href="#new_allocation" data-toggle="tab" class="text-center" > 已分配 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_allocation">{$total1}</small></span></a></li>-->
+            <!--<li><a href="#new_feedback" data-toggle="tab"  class="text-center" > 已反馈 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_feedback">{$total2}</small></span></a></li>-->
+            <!--<li><a href="#headline" data-toggle="tab"  class="active text-center" > 今日头条 <span class="pull-right-container"></span></a></li>-->
             <li><a href="#baidu" data-toggle="tab"  class="text-center" > 百度 <span class="pull-right-container"></span></a></li>
             <li><a href="#same_city" data-toggle="tab"  class="text-center" > 58同城 <span class="pull-right-container"></span></a></li>
             <li><a href="#music" data-toggle="tab"  class="text-center" > 抖音 <span class="pull-right-container"></span></a></li>
@@ -22,87 +22,10 @@
         <div id="myTabContent" class="tab-content">
 
 
-            <!--新客户-->
-            
-            <div class="tab-pane fade active in" id="new_customer">
+            <!--&lt;!&ndash;新客户&ndash;&gt;-->
+
+            <div class="tab-pane fade active in" id="headline">
                 <div id="toolbar1" class="toolbar">
-                   
-                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                    <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
-                    <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('promote/customertabs/edit')?'':'hide'}" title="{:__('Import')}" ><i class="fa fa-upload"></i> {:__('Import')}</a> -->
-                    <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('customer/customerresource/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
-                    <!-- <a href="javascript:;" class="btn btn-danger import" title="{:__('Import')}"><i class="fa fa-upload"></i> {:__('Import')}</a> -->
-                    <a href="customertabs/download" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
-                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
-                    <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
-                    <!-- 导出新客户信息 -->
-                    <a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-fileo"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>
-
-                </div>
-                <table id="newCustomer" class="table table-striped table-bordered table-hover table-nowrap"
-                        
-                        width="100%">
-                </table>
-            </div>
-
-
-            <!--已分配-->
-            
-            <div class="tab-pane fade" id="new_allocation">
-                <div id="toolbar2" class="toolbar">
-                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-                        <!--&lt;!&ndash; <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('plan/planusedcar/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>-->
-                        <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('plan/planusedcar/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
-                        <!--<a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('plan/planusedcar/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>-->
-                        <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('plan/planusedcar/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-filep" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>
-                        <!--<div class="dropdown btn-group {:$auth->check('plan/planusedcar/multi')?'':'hide'}">-->
-
-
-
-
-                            <!--<a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> {:__('More')}</a>-->
-                            <!--<ul class="dropdown-menu text-left" role="menu">-->
-                                <!--<li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="ismenu=1"><i class="fa fa-eye"></i> 批量上架</a></li>-->
-                            <!--<li><a class="btn btn-link btn-multi btn-disabled disabled" href="javascript:;" data-params="ismenu=0"><i class="fa fa-eye-slash"></i> 批量下架</a></li>-->
-                            <!--</ul>-->
-                        <!--</div> &ndash;&gt;-->
-                        
-                        <!-- 导出分配客户信息 -->
-                        <a href="javascript:;" class="btn btn-success btn-allocationexport" title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>
-
-                </div>
-                <table id="newAllocation" class="table table-striped table-bordered table-hover table-nowrap"
-                        
-                        width="100%">
-                </table>
-
-            </div>
-
-
-            <!--已反馈-->
-
-            <div class="tab-pane fade" id="new_feedback">
-                    <div id="toolbar3" class="toolbar">
-                            <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
-
-
-                            <!-- 导出分配客户信息 -->
-                            <a href="javascript:;" class="btn btn-success btn-feedbackexport" title="{:__('导出客户信息')}" id="btn-export-file"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>
-
-                    </div>
-                    <table id="newFeedback" class="table table-striped table-bordered table-hover table-nowrap"
-                        
-                       width="100%">
-                    </table>
-                    
-                </div>
-
-
-            <!--今日头条-->
-
-            <div class="tab-pane fade" id="headline">
-                <div id="toolbar4" class="toolbar">
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
                     <a href="javascript:;" class="btn btn-success add-headline {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
 
@@ -111,17 +34,16 @@
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
                     <a class="btn btn-info btn-disabled disabled btn-selected-headline" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
                     <!-- 导出新客户信息 -->
-                    <a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
 
                 </div>
                 <table id="headlines" class="table table-striped table-bordered table-hover table-nowrap"
 
-                       width="100%">
+                        width="100%">
                 </table>
-
             </div>
 
-            <!--百度-->
+
 
             <div class="tab-pane fade" id="baidu">
                 <div id="toolbar5" class="toolbar">
@@ -133,7 +55,7 @@
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-baidu" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
                     <a class="btn btn-info btn-disabled disabled btn-selected-baidu" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
                     <!-- 导出新客户信息 -->
-                    <a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-baidu"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-baidu"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
 
                 </div>
                 <table id="baidus" class="table table-striped table-bordered table-hover table-nowrap"
@@ -150,12 +72,12 @@
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
                     <a href="javascript:;" class="btn btn-success add-same_city {:$auth->check('customer/customerresource/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
 
-                    <a href="customertabs/download" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
+                    <a href="customertabs/download_same" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
                         <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-same_city" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
                     <a class="btn btn-info btn-disabled disabled btn-selected-same_city" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
                     <!-- 导出新客户信息 -->
-                    <a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-same_city"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-same_city"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
 
                 </div>
                 <table id="sameCity" class="table table-striped table-bordered table-hover table-nowrap"
@@ -177,7 +99,7 @@
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-music" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
                     <a class="btn btn-info btn-disabled disabled btn-selected-music" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
                     <!-- 导出新客户信息 -->
-                    <a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-music"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>
+                    <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-music"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
 
                 </div>
                 <table id="musics" class="table table-striped table-bordered table-hover table-nowrap"
