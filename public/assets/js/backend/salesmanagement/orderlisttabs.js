@@ -2305,10 +2305,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                //新增二手车单
-                $(document).on("click", ".btn-secondadd", function () {   
+
+                //销售预定二手车
+                $(document).on("click", ".btn-secondreserve", function () {   
                         
-                    var url = 'salesmanagement/Orderlisttabs/secondadd';
+                    var url = 'salesmanagement/Orderlisttabs/secondreserve';
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
@@ -2323,7 +2324,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         }
                     }
-                    Fast.api.open(url,'新增二手车单',options)
+                    Fast.api.open(url,'二手车预定',options)
                 })
 
 
@@ -2677,6 +2678,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 
             });
             // Controller.api.bindevent();
+            // console.log(Config.id);
+            
+ 
+        },
+        secondreserve:function(){
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
             // console.log(Config.id);
             
  
