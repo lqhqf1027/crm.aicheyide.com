@@ -24,7 +24,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
 
-        //批量分配 
+        //批量分配
         distribution: function () {
 
 
@@ -36,7 +36,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // console.log(data);
                 // newAllocationNum = parseInt($('#badge_new_allocation').text());
                 // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                // $('#badge_new_allocation').text(num+newAllocationNum);
                 Fast.api.close(data);//这里是重点
 
                 // Toastr.success("成功");//这个可有可无
@@ -67,13 +67,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             });
             Controller.api.bindevent();
-            // console.log(Config.id); 
+            // console.log(Config.id);
 
         },
         table: {
             //今日头条
             headline: function () {
-                // 已分配的客户
+
                 var headlines = $("#headlines");
                 headlines.bootstrapTable({
                     url: 'promote/Customertabs/headline',
@@ -89,12 +89,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     toolbar: '#toolbar1',
                     pk: 'id',
-                    sortName: 'id',
+                    // sortName: 'id',
                     searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id'), operate: false},
+                            {field: 'id', title: __('Id'), operate: false,sortable:true},
 
                             {field: 'platform.name', title: __('所属平台')},
 
@@ -114,6 +114,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'createtime',
@@ -122,6 +123,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'updatetime',
@@ -130,6 +132,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'feedback_content',
@@ -158,18 +161,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //数据实时统计
                 headlines.on('load-success.bs.table', function (e, data) {
-
-                    var newAllocationNum = $('#badge_new_allocation').text(data.total);
-                    // var newAllocationNum = parseInt($('#badge_new_allocation').text());
-                    // num = parseInt(num);
-                    // $('#badge_new_allocation').text(num+newAllocationNum);
-
+                        console.log(data.total)
+                        $('#badge_new_toutiao').text(data.total);
                 })
-
-                f(headlines);
-
                 add_data('.add-headline', headlines, 'promote/Customertabs/add_headline');
-
                 batch_share('.btn-selected-headline', headlines);
 
 
@@ -192,12 +187,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
                     toolbar: '#toolbar5',
                     pk: 'id',
-                    sortName: 'id',
+                    // sortName: 'id',
                     searchFormVisible: true,
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id'), operate: false},
+                            {field: 'id', title: __('Id'), operate: false,sortable:true},
 
                             {field: 'platform.name', title: __('所属平台')},
 
@@ -217,6 +212,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
 
                             },
                             {
@@ -226,6 +222,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'updatetime',
@@ -234,6 +231,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'feedback_content',
@@ -262,15 +260,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //数据实时统计
                 baidus.on('load-success.bs.table', function (e, data) {
-
-                    var newAllocationNum = $('#badge_new_allocation').text(data.total);
-                    // var newAllocationNum = parseInt($('#badge_new_allocation').text());
-                    // num = parseInt(num);
-                    // $('#badge_new_allocation').text(num+newAllocationNum);
-
+                    $('#badge_new_baidu').text(data.total);
                 })
 
-                f(baidus);
+
 
                 add_data('.add-baidu', baidus, 'promote/Customertabs/add_baidu');
 
@@ -301,7 +294,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id'), operate: false},
+                            {field: 'id', title: __('Id'), operate: false,sortable:true},
 
                             {field: 'platform.name', title: __('所属平台')},
 
@@ -321,6 +314,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'createtime',
@@ -329,6 +323,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'updatetime',
@@ -337,6 +332,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
 
                             },
                             {field: 'invalidtime', title: __('失效时间')},
@@ -368,15 +364,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //数据实时统计
                 sameCity.on('load-success.bs.table', function (e, data) {
 
-                    var newAllocationNum = $('#badge_new_allocation').text(data.total);
-                    // var newAllocationNum = parseInt($('#badge_new_allocation').text());
-                    // num = parseInt(num);
-                    // $('#badge_new_allocation').text(num+newAllocationNum);
-
+                  $('#badge_new_58').text(data.total);
                 })
-
-                f(sameCity);
-
                 add_data('.add-same_city', sameCity, 'promote/Customertabs/add_same_city');
 
                 batch_share('.btn-selected-baidu', sameCity);
@@ -406,7 +395,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     columns: [
                         [
                             {checkbox: true},
-                            {field: 'id', title: __('Id'), operate: false},
+                            {field: 'id', title: __('Id'), operate: false,sortable:true},
 
                             {field: 'platform.name', title: __('所属平台')},
 
@@ -426,6 +415,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'createtime',
@@ -434,6 +424,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'updatetime',
@@ -442,6 +433,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD"
+                                ,sortable:true
                             },
                             {
                                 field: 'feedback_content',
@@ -470,15 +462,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //数据实时统计
                 musics.on('load-success.bs.table', function (e, data) {
-
-                    var newAllocationNum = $('#badge_new_allocation').text(data.total);
-                    // var newAllocationNum = parseInt($('#badge_new_allocation').text());
-                    // num = parseInt(num);
-                    // $('#badge_new_allocation').text(num+newAllocationNum);
+                    $('#badge_new_douyin').text(data.total);
 
                 })
-
-                f(musics);
 
                 add_data('.add-music', musics, 'promote/Customertabs/add_music');
 
@@ -487,10 +473,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             },
         },
-        import: function () {
-            Controller.api.bindevent();
 
-        },
         add: function () {
             Controller.api.bindevent();
 
@@ -819,7 +802,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             var options = {
                 shadeClose: false,
                 shade: [0.3, '#393D49'],
-                area: ['30%', '30%'],
+                area: ['50%', '50%'],
                 callback: function (value) {
 
                 }

@@ -9,21 +9,21 @@
             </ol>
         </div>
         <ul class="nav nav-tabs" >
-            <li class="active text-center"><a href="#headline" data-toggle="tab">今日头条 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_customer">{$total}</small></span></a></li>
+            <li class="active text-center"><a href="#headline" data-toggle="tab">今日头条 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-green" id="badge_new_toutiao">{$toutiao_total}</small></span></a></li>
             <!--<li><a href="#new_allocation" data-toggle="tab" class="text-center" > 已分配 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_allocation">{$total1}</small></span></a></li>-->
             <!--<li><a href="#new_feedback" data-toggle="tab"  class="text-center" > 已反馈 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_new_feedback">{$total2}</small></span></a></li>-->
             <!--<li><a href="#headline" data-toggle="tab"  class="active text-center" > 今日头条 <span class="pull-right-container"></span></a></li>-->
-            <li><a href="#baidu" data-toggle="tab"  class="text-center" > 百度 <span class="pull-right-container"></span></a></li>
-            <li><a href="#same_city" data-toggle="tab"  class="text-center" > 58同城 <span class="pull-right-container"></span></a></li>
-            <li><a href="#music" data-toggle="tab"  class="text-center" > 抖音 <span class="pull-right-container"></span></a></li>
+            <li><a href="#baidu" data-toggle="tab"  class="text-center" > 百度&nbsp;<span class="pull-right-container"></span><small class="badge pull-right bg-green" id="badge_new_baidu">{$baidu_total}</small></span></a></li>
+            <li><a href="#same_city" data-toggle="tab"  class="text-center" > 58同城&nbsp; <span class="pull-right-container"><small class="badge pull-right bg-green" id="badge_new_58">{$total_58}</small></span></span></a></li>
+            <li><a href="#music" data-toggle="tab"  class="text-center" > 抖音&nbsp; <span class="pull-right-container"></span><small class="badge pull-right bg-green" id="badge_new_douyin">{$douyin_total}</small></span></a></li>
         </ul>
     </div>
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
 
 
-            <!--&lt;!&ndash;新客户&ndash;&gt;-->
 
+            <!--头条-->
             <div class="tab-pane fade active in" id="headline">
                 <div id="toolbar1" class="toolbar">
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
@@ -32,7 +32,9 @@
                     <a href="customertabs/download" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
                         <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected-headline" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
+                    <a class="btn btn-info btn-disabled disabled btn-selected-headline" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
+                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled " title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
+
                     <!-- 导出新客户信息 -->
                     <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
 
@@ -44,7 +46,7 @@
             </div>
 
 
-
+            <!--百度-->
             <div class="tab-pane fade" id="baidu">
                 <div id="toolbar5" class="toolbar">
                     <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
@@ -53,7 +55,9 @@
                     <a href="customertabs/download" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
                         <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-baidu" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected-baidu" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
+                    <a class="btn btn-info btn-disabled disabled btn-selected-baidu" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
+                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled " title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
+
                     <!-- 导出新客户信息 -->
                     <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-baidu"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
 
@@ -75,7 +79,9 @@
                     <a href="customertabs/download_same" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
                         <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-same_city" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected-same_city" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
+                    <a class="btn btn-info btn-disabled disabled btn-selected-same_city" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
+                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled " title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
+
                     <!-- 导出新客户信息 -->
                     <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-same_city"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
 
@@ -97,7 +103,9 @@
                     <a href="customertabs/download" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
                         <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('导入客户信息')}" id="btn-import-files-music" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入客户信息</a>
-                    <a class="btn btn-info btn-disabled disabled btn-selected-music" href="javascript:;" data-params="distribution"><i class="fa fa-eye"></i> 批量分配</a>
+                    <a class="btn btn-info btn-disabled disabled btn-selected-music" href="javascript:;" ><i class="fa fa-eye"></i> 批量分配</a>
+                    <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled " title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
+
                     <!-- 导出新客户信息 -->
                     <!--<a href="javascript:;" class="btn btn-success btn-export" title="{:__('导出客户信息')}" id="btn-export-files-music"><i class="fa fa-download"></i> {:__('导出客户信息')}</a>-->
 
