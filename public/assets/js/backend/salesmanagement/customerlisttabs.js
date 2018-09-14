@@ -14,7 +14,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
                 var panel = $($(this).attr("href"));
+                // console.log(panel);
                 if (panel.size() > 0) {
                     Controller.table[panel.attr("id")].call(this);
                     $(this).on('click', function (e) {

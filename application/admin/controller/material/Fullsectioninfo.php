@@ -54,6 +54,9 @@ class Fullsectioninfo extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }])
+                ->where(function ($query){
+                    $query->where('review_the_data','for_the_car');
+                })
                 ->where($where)
                 ->where('review_the_data', 'for_the_car')
                 ->order($sort, $order)
@@ -68,6 +71,9 @@ class Fullsectioninfo extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }])
+                ->where(function ($query){
+                    $query->where('review_the_data','for_the_car');
+                })
                 ->where($where)
                 ->where('review_the_data', 'for_the_car')
                 ->order($sort, $order)
@@ -371,6 +377,9 @@ class Fullsectioninfo extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'registryregistration'])
+                ->where(function ($query){
+                    $query->where('review_the_data','for_the_car');
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
@@ -383,6 +392,9 @@ class Fullsectioninfo extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'registryregistration'])
+                ->where(function ($query){
+                    $query->where('review_the_data','for_the_car');
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)

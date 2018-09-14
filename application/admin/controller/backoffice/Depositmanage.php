@@ -42,37 +42,60 @@ class Depositmanage extends Backend
      */
     public function index()
     {
-        //当前是否为关联查询
-        $this->relationSearch = false;
+
         //设置过滤方法
         $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
+        if ($this->request->isAjax()) {
             //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
+            if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username',true);
             $total = $this->model
-                    
-                    ->where($where)
-                    ->order($sort, $order)
-                    ->count();
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
 
-            $list = Db::name('customer_downpayment')->alias('a')
-            ->join('plan_acar b','b.id=a.plan_acar_id')
-            ->join('sales_order c','c.id=a.sales_order_id')
-            ->join('financial_platform d','d.id=b.financial_platform_id')
-            ->join('models e','e.id=b.models_id')
-            ->join('admin f','f.id=c.admin_id')
-            ->field('a.id,a.totalmoney,a.downpayment,a.moneyreceived,a.marginmoney,a.gatheringaccount,a.note,a.decorate,a.openingbank,a.bankcardnumber,b.payment,b.monthly,b.nperlist,b.margin,b.tail_section,
-                b.gps,c.username,c.phone,c.id_card,c.city,c.createtime,d.name as financial_platform_id,e.name as models_id,f.username as sales_id')
-            ->select() ;
+            $list = $this->model
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
-            $result = array("total" => $total,"rows" => $list);
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
             return json($result);
         }
         return $this->view->fetch();
+
+        //设置过滤方法
+//        $this->request->filter(['strip_tags']);
+//        if ($this->request->isAjax())
+//        {
+//            //如果发送的来源是Selectpage，则转发到Selectpage
+//            if ($this->request->request('keyField'))
+//            {
+//                return $this->selectpage();
+//            }
+//            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username',true);
+//            $total = $this->model
+//                    ->where($where)
+//                    ->order($sort, $order)
+//                    ->count();
+//
+//            $list = Db::name('customer_downpayment')->alias('a')
+//            ->join('plan_acar b','b.id=a.plan_acar_id')
+//            ->join('sales_order c','c.id=a.sales_order_id')
+//            ->join('financial_platform d','d.id=b.financial_platform_id')
+//            ->join('models e','e.id=b.models_id')
+//            ->join('admin f','f.id=c.admin_id')
+//            ->field('a.id,a.totalmoney,a.downpayment,a.moneyreceived,a.marginmoney,a.gatheringaccount,a.note,a.decorate,a.openingbank,a.bankcardnumber,b.payment,b.monthly,b.nperlist,b.margin,b.tail_section,
+//                b.gps,c.username,c.phone,c.id_card,c.city,c.createtime,d.name as financial_platform_id,e.name as models_id,f.username as sales_id')
+//            ->select() ;
+//            $result = array("total" => $total,"rows" => $list);
+//            return json($result);
+//        }
+//        return $this->view->fetch();
     }
 }

@@ -113,23 +113,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
+                            {field: 'backoffice.nickname', title: __('所属内勤'),operate:false,formatter:Controller.api.formatter.backoffice},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
+                            // {field: 'age', title: __('Age')},
                             {
                                 field: 'genderdata',
                                 title: __('Genderdata'),
                                 visible: false,
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            // {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {
                                 field: 'distributinternaltime',
                                 title: __('Distributinternaltime'),
                                 operate: false,
-                                formatter: Table.api.formatter.datetime
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat:"YYYY-MM-DD"
                             },
 
                             {
@@ -216,29 +218,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             // {field: 'platform_id', title: __('Platform_id')},
                             // {field: 'backoffice_id', title: __('Backoffice_id')},
                             {field: 'platform.name', title: __('所属平台')},
+                            {field: 'backoffice.nickname', title: __('所属内勤'),operate:false,formatter:Controller.api.formatter.backoffice},
+                            {field: 'admin.nickname', title: __('所属销售'),formatter:Controller.api.formatter.sales},
 
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
+                            // {field: 'age', title: __('Age')},
                             {
                                 field: 'genderdata',
                                 title: __('Genderdata'),
                                 visible: false,
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+                            // {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {
                                 field: 'distributinternaltime',
                                 title: __('Distributinternaltime'),
                                 operate: false,
-                                formatter: Table.api.formatter.datetime
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat:"YYYY-MM-DD"
                             },
                             {
                                 field: 'distributsaletime',
                                 title: __('Distributsaletime'),
                                 operate: false,
-                                formatter: Table.api.formatter.datetime
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat:"YYYY-MM-DD"
                             },
 
                         ]
@@ -296,6 +302,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+                backoffice: function (value, row, index) {
+                    if (value) {
+                        row.backoffice.avatar = "https://static.aicheyide.com" + row.backoffice.avatar;
+                    }
+
+                    return value != null ? "<img src=" + row.backoffice.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
+
+                },
+                sales: function (value, row, index) {
+                    if (value) {
+                        row.admin.avatar = "https://static.aicheyide.com" + row.admin.avatar;
+                    }
+                    return value != null ? "<img src=" + row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
+
+                }
             }
         }
 

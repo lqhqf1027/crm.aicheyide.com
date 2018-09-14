@@ -67,6 +67,12 @@ class Newcarinfo extends Backend
                 }, 'mortgageregistration' => function ($query) {
                     $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status');
                 }])
+                ->where(function ($query){
+                    $query->where([
+                        'review_the_data'=>'the_car',
+
+                    ]);
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
@@ -83,6 +89,12 @@ class Newcarinfo extends Backend
                 }, 'mortgageregistration' => function ($query) {
                     $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status');
                 }])
+                ->where(function ($query){
+                    $query->where([
+                        'review_the_data'=>'the_car',
+
+                    ]);
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -130,6 +142,12 @@ class Newcarinfo extends Backend
                 }, 'mortgageregistration' => function ($query) {
                     $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people');
                 }, 'registryregistration'])
+                ->where(function ($query){
+                    $query->where([
+                        'review_the_data'=>'the_car',
+
+                    ]);
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
@@ -144,6 +162,12 @@ class Newcarinfo extends Backend
                 }, 'mortgageregistration' => function ($query) {
                     $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people');
                 }, 'registryregistration'])
+                ->where(function ($query){
+                    $query->where([
+                        'review_the_data'=>'the_car',
+
+                    ]);
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
