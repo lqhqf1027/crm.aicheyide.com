@@ -4,6 +4,7 @@ namespace app\admin\controller\backoffice;
 
 use app\common\controller\Backend;
 use think\Db;
+use think\Config;
 
 /**
  * 推荐人管理

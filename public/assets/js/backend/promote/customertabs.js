@@ -116,24 +116,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD"
                                 ,sortable:true
                             },
-                            {
-                                field: 'createtime',
-                                title: __('导入时间'),
-                                operate: false,
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                                ,sortable:true
-                            },
-                            {
-                                field: 'updatetime',
-                                title: __('Updatetime'),
-                                operate: false,
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                                ,sortable:true
-                            },
+                            // {
+                            //     field: 'createtime',
+                            //     title: __('导入时间'),
+                            //     operate: false,
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime,
+                            //     datetimeFormat: "YYYY-MM-DD"
+                            //     ,sortable:true
+                            // },
+
+                            // {
+                            //     field: 'updatetime',
+                            //     title: __('Updatetime'),
+                            //     operate: false,
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime,
+                            //     datetimeFormat: "YYYY-MM-DD"
+                            //     ,sortable:true
+                            // },
+                            {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
                             {
                                 field: 'feedback_content',
                                 title: __('反馈结果'),
@@ -215,24 +217,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 ,sortable:true
 
                             },
-                            {
-                                field: 'createtime',
-                                title: __('导入时间'),
-                                operate: false,
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                                ,sortable:true
-                            },
-                            {
-                                field: 'updatetime',
-                                title: __('Updatetime'),
-                                operate: false,
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                                ,sortable:true
-                            },
+                            {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
                             {
                                 field: 'feedback_content',
                                 title: __('反馈结果'),
@@ -316,26 +301,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD"
                                 ,sortable:true
                             },
-                            {
-                                field: 'createtime',
-                                title: __('导入时间'),
-                                operate: false,
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                                ,sortable:true
-                            },
-                            {
-                                field: 'updatetime',
-                                title: __('Updatetime'),
-                                operate: false,
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                                ,sortable:true
 
-                            },
                             {field: 'invalidtime', title: __('失效时间')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
                             {
                                 field: 'feedback_content',
                                 title: __('反馈结果'),
@@ -417,24 +385,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD"
                                 ,sortable:true
                             },
-                            {
-                                field: 'createtime',
-                                title: __('导入时间'),
-                                operate: false,
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                                ,sortable:true
-                            },
-                            {
-                                field: 'updatetime',
-                                title: __('Updatetime'),
-                                operate: false,
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                                ,sortable:true
-                            },
+                            {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.saleAvatar},
                             {
                                 field: 'feedback_content',
                                 title: __('反馈结果'),
@@ -674,12 +625,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             },
             formatter: {
+                //内勤头像
                 backoffice: function (value, row, index) {
                     if (value) {
                         row.backoffice.avatar = "https://static.aicheyide.com" + row.backoffice.avatar;
                     }
                     return value != null ? "<img src=" + row.backoffice.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
 
+                },
+                //销售头像
+                saleAvatar:function (value,row,index) {
+
+                    switch (row.admin.rule_message){
+                        case 'message8':
+
+                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + '销售一部 - '+value;
+                            break;
+                        case 'message9':
+                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + '销售二部 - '+value;
+
+                            break;
+                        case 'message23':
+                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + '销售三部 - '+value;
+
+                            break;
+                        default:
+                            return '未知销售';
+                            break;
+                    }
                 }
             },
             operate: function (value, row, index) {
