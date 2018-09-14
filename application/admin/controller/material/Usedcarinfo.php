@@ -58,6 +58,12 @@ class Usedcarinfo extends Backend
                     }, 'models' => function ($query) {
                         $query->withField('name');
                     }])
+                ->where(function ($query){
+                    $query->where([
+                        'review_the_data'=>'the_car',
+
+                    ]);
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
@@ -71,6 +77,12 @@ class Usedcarinfo extends Backend
                     }, 'models' => function ($query) {
                         $query->withField('name');
                     }])
+                ->where(function ($query){
+                    $query->where([
+                        'review_the_data'=>'the_car',
+
+                    ]);
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -466,6 +478,12 @@ class Usedcarinfo extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'registryregistration'])
+                ->where(function ($query){
+                    $query->where([
+                        'review_the_data'=>'the_car',
+
+                    ]);
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->count();
@@ -478,6 +496,12 @@ class Usedcarinfo extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'registryregistration'])
+                ->where(function ($query){
+                    $query->where([
+                        'review_the_data'=>'the_car',
+
+                    ]);
+                })
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
