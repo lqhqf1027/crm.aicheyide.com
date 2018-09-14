@@ -48,6 +48,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         newreserveedit_url: 'salesmanagement/Orderlisttabs/newreserveedit',
                         newcontroladd_url: 'salesmanagement/Orderlisttabs/newcontroladd',
                         newinformation_url: 'salesmanagement/Orderlisttabs/newinformation',
+                        newinform_tube_url: 'salesmanagement/Orderlisttabs/newinformtube',
                         del_url: 'salesmanagement/Orderlisttabs/del',
                         multi_url: 'order/salesorder/multi',
                         //table: 'sales_order',
@@ -149,6 +150,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -201,12 +208,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         },
 
                                     },
                                     {
-                                        name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-newreserveeditone',
-                                        // url: 'order/salesorder/edit',/**编辑 */
+                                        name: 'send_to_internal', text: '预定编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('预定编辑'), classname: 'btn btn-xs btn-success btn-newreserveeditone',
+                                        // url: 'order/salesorder/edit',/**预定编辑 */
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -251,6 +264,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         },
@@ -301,6 +320,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -366,6 +391,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -414,6 +445,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -466,6 +503,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -514,6 +557,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -566,6 +615,68 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
+                                        hidden: function (row) {  /**征信已通过 */
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -614,6 +725,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -667,6 +784,126 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        },
+                                    },
+                                    {
+                                        name: 'inform_the_tube', text: '资料补全，提交车管提车', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('资料补全，提交车管提车'), classname: 'btn btn-xs btn-info btn-newinform_tube',
+                                        
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'inform_the_tube') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        },
+                                    },
+                                    {
+                                        name: 'edit', text: '提车资料编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('提车资料编辑'), classname: 'btn btn-xs btn-success btn-editone',
+                                        
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'inform_the_tube') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         },
                                     },
                                     {
@@ -717,6 +954,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'take_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -765,6 +1008,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -818,6 +1067,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -867,6 +1122,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -920,6 +1181,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     }
 
@@ -957,6 +1224,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         
                     }
                 });
+                
                 //提供保证金
                 goeasy.subscribe({
                     channel: 'demo-newcar_data',
@@ -2634,6 +2902,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
             Controller.api.bindevent();
         },
         api: {
@@ -2873,7 +3161,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('录入审核资料'), $(this).data() || {});
                     },
                      //录入客户提车资料按钮
-                     'click .btn-customer_information': function (e, value, row, index) { /**录入客户提车资料按钮 */
+                    'click .btn-customer_information': function (e, value, row, index) { /**录入客户提车资料按钮 */
                         $(".btn-customer_information").data("area", ["95%", "95%"]);
 
                         e.stopPropagation();
@@ -2884,6 +3172,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, { ids: ids });
                         var url = options.extend.newinformation_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('补全提车客户资料'), $(this).data() || {});
+                    },
+                     //资料补全，提交车管提车按钮
+                     'click .btn-newinform_tube': function (e, value, row, index) { /**资料补全，提交车管提车 */
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('请确认资料完整，是否开始提交给车管，进行提车?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                                Fast.api.ajax({
+
+                                    url: 'salesmanagement/orderlisttabs/newinformtube',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success('操作成功');
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+
+
+                            }
+                        );
+
                     },
                     //编辑按钮
                     'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */

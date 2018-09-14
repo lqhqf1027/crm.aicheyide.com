@@ -29,7 +29,7 @@ class Creditreview extends Backend
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
     protected $noNeedRight = ['index', 'newcarAudit', 'rentalcarAudit', 'secondhandcarAudit', 'newauditResult', 'newpass', 'newdata', 'newnopass', 'rentalauditResult', 'rentalpass', 'rentalnopass', 'secondhandcarResult', 'secondpass', 'seconddata'
-        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata','getPlanAcarData','getPlanSecondCarData','toViewBigData','getBigData','newsales','newtube','chooseStock'];
+        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata','getPlanAcarData','getPlanSecondCarData','toViewBigData','getBigData','newsales','newtube','chooseStock','newtubefinance'];
 
     public function _initialize()
     {
@@ -45,7 +45,7 @@ class Creditreview extends Backend
 
         $this->view->assign([
             'total' => $this->model
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'], 'or')
                 ->count(),
 
             'total1' => DB::name('rental_order')
@@ -90,7 +90,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'],'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'],'or')
                 ->order($sort, $order)
                 ->count();
 
@@ -104,7 +104,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'], 'or')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -372,7 +372,7 @@ class Creditreview extends Backend
 
                 $admin_nickname = DB::name('admin')->alias('a')->join('sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
-                $result = $this->model->save(['review_the_data' => 'conclude_the_contract'], function ($query) use ($id) {
+                $result = $this->model->save(['review_the_data' => 'is_reviewing_pass'], function ($query) use ($id) {
                     $query->where('id', $id);
                 });
 
@@ -487,6 +487,55 @@ class Creditreview extends Backend
         }
     }
 
+    //通知车管---录入库存---其他金融
+    public function newtubefinance()
+    {
+        $this->model = model('SalesOrder');
+
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+
+            $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'tube_into_stock']);
+            //销售员
+            $admin_id = $this->model->where('id', $id)->value('admin_id');
+
+            $models_id = $this->model->where('id', $id)->value('models_id');
+            //车型
+            $models_name = DB::name('models')->where('id', $models_id)->value('name');
+            //客户姓名
+            $username = $this->model->where('id', $id)->value('username');
+
+            if ($result !== false) {
+
+                $channel = "demo-newcontrol_tube_finance";
+                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，审核已通过，可以进行录入库存，请及时登后台进行处理";
+                goeary_push($channel, $content);
+
+                $data = newcontrol_tube_finance($models_name, $username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('rule_message', 'message14')->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+
+            } else {
+                $this->error('提交失败', null, $result);
+
+            }
+        }
+    }
+
     //选择库存车
     public function choosestock($ids = null)
     {
@@ -526,11 +575,45 @@ class Creditreview extends Backend
                 ->subject($data['subject'])
                 ->message($data['message'])
                 ->send();
-            if ($result_s) {
-                $this->success();
-            } else {
-                $this->error('邮箱发送失败');
-            }
+
+             //金融平台
+             $financial_name = $result['financial_name'];
+
+             if($financial_name == "一汽租赁"){
+
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+                
+             }
+             else{
+
+                $channel = "demo-newpass_finance";
+                $content = "你发起的客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核和车辆匹配，请及时通知客户进行签订金融合同";
+                goeary_push($channel, $content);
+
+                $data = newpass_finance($models_name, $result['username']);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('id', $result['admin_id'])->value('email');
+                $result_ss = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_ss) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+             }
+
+            
             
             //介绍人
 
