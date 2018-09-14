@@ -144,8 +144,14 @@ class SecondSalesOrder extends Model
     {
         return $this->belongsTo('RegistryRegistration','registry_registration_id','id',[],'LEFT')->setEagerlyType(0);
     }
- 
 
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
+    public function customerdownpayment()
+    {
+        return $this->belongsTo('CustomerDownpayment','customer_downpayment_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 
 
 }

@@ -1,27 +1,16 @@
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
-    <!-- <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Sales_order_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-sales_order_id" data-rule="required" data-source="sales/order/index" class="form-control selectpage" name="row[sales_order_id]" type="text" value="{$row.sales_order_id}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Plan_acar_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-plan_acar_id" data-rule="required" data-source="plan/acar/index" class="form-control selectpage" name="row[plan_acar_id]" type="text" value="{$row.plan_acar_id}">
-        </div>
-    </div> -->
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Openingbank')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-openingbank" class="form-control" name="row[openingbank]" type="text" value="{$row.openingbank}">
+            <input id="c-openingbank" class="form-control" name="row[openingbank]" type="text" value="{$row.openingbank}" placeholder="选填">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Bankcardnumber')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-bankcardnumber" class="form-control" name="row[bankcardnumber]" type="number" value="{$row.bankcardnumber}">
+            <input id="c-bankcardnumber" class="form-control" name="row[bankcardnumber]" type="number" value="{$row.bankcardnumber}" placeholder="选填">
         </div>
     </div>
     <div class="form-group">
@@ -45,7 +34,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Marginmoney')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-marginmoney" data-rule="required" class="form-control" name="row[marginmoney]" type="number" value="{$row.marginmoney}">
+            <input id="c-bond" data-rule="required" class="form-control" name="order[bond]" type="number" value="{$row.bond}">
         </div>
     </div>
     <div class="form-group">
@@ -57,13 +46,13 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-note" data-rule="required" class="form-control" name="row[note]" type="number" value="{$row.note}">
+            <input id="c-note" class="form-control" name="row[note]" type="number" value="{$row.note}" placeholder="选填">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Decorate')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-decorate" class="form-control" name="row[decorate]" type="text" value="{$row.decorate}">
+            <input id="c-decorate" class="form-control" name="row[decorate]" type="text" value="{$row.decorate}" placeholder="选填">
         </div>
     </div>
     <div class="form-group layer-footer">
