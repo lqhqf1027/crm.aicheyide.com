@@ -1,79 +1,226 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    var goeasy = new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
+
     var Controller = {
         index: function () {
+
             // 初始化表格参数配置
-            Table.api.init({
-                extend: {
-                    index_url: 'backoffice/depositmanage/index',
-                    // add_url: 'backoffice/depositmanage/add',
-                    edit_url: 'backoffice/depositmanage/edit',
-                    // del_url: 'backoffice/depositmanage/del',
-                    // multi_url: 'backoffice/depositmanage/multi',
-                    table: 'customer_downpayment',
+            Table.api.init({});
+
+            //绑定事件
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var panel = $($(this).attr("href"));
+                if (panel.size() > 0) {
+                    Controller.table[panel.attr("id")].call(this);
+                    $(this).on('click', function (e) {
+                        $($(this).attr("href")).find(".btn-refresh").trigger("click");
+                    });
                 }
+                //移除绑定的事件
+                $(this).unbind('shown.bs.tab');
             });
 
-            var table = $("#table");
+            //必须默认触发shown.bs.tab事件
+            $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+        },
 
-            // 初始化表格
-            table.bootstrapTable({
-                url: $.fn.bootstrapTable.defaults.extend.index_url,
-                pk: 'id',
-                sortName: 'id',
-                searchFormVisible: true,
-                columns: [
-                    [
-                        {checkbox: true},
-                        {field: 'id', title: __('Id'),operate:false},
-                        // {field: 'sales_order_id', title: __('Sales_order_id')},
-                        // {field: 'plan_acar_id', title: __('Plan_acar_id')},
-                        { field: 'financial_platform_id', title: __('Financial_platform_id') },
-                        // { field: 'plan_acar_name', title: __('Plan_acar_name') },
-                        { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
-                        // {field: 'sales_order_id', title: __('Sales_order_id')},
-                        { field: 'sales_id', title: __('Sales_id') },
-                        { field: 'username', title: __('Username') },
-                        { field: 'id_card', title: __('Id_card') },
-                        { field: 'city', title: __('City') ,operate:false},
-                        { field: 'phone', title: __('Phone') },
-                        { field: 'models_id', title: __('Models_id') },
 
-                        {field: 'payment', title: __('Payment'),operate:false},
-                        {field: 'monthly', title: __('NewcarMonthly'),operate:false},
-                        {field: 'nperlist', title: __('Nperlist'),operate:false},
-                        {field: 'margin', title: __('Margin'),operate:false},
-                        {field: 'tail_section', title: __('Tail_section'),operate:false},
-                        {field: 'gps', title: __('Gps'),operate:false},
 
-                        {field: 'openingbank', title: __('Openingbank')},
-                        {field: 'bankcardnumber', title: __('Bankcardnumber')},
-                        {field: 'totalmoney', title: __('Totalmoney'),operate:false},
-                        {field: 'downpayment', title: __('Downpayment'),operate:false},
-                        {field: 'moneyreceived', title: __('Moneyreceived'),operate:false},
-                        {field: 'marginmoney', title: __('Marginmoney'),operate:false},
-                        {field: 'gatheringaccount', title: __('Gatheringaccount')},
-                        {field: 'note', title: __('Note'),operate:false},
-                        {field: 'decorate', title: __('Decorate'),operate:false},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+        table: {
+
+            new_car: function () {
+                // 表格1
+                var newCar = $("#newCar");
+                newCar.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#new-customer').text(data.total);
+
+                })
+                newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                newCar.bootstrapTable({
+                    url: 'backoffice/Depositmanage/new_car',
+                    extend: {
+                        // index_url: 'plan/planacar/index',
+                        // add_url: 'planmanagement/plantabs/firstadd',
+                        edit_url: 'backoffice/Depositmanage/edit',
+                        // del_url: 'planmanagement/plantabs/firstdel',
+                        // multi_url: 'planmanagement/plantabs/firstmulti',
+                        // table: 'plan_acar',
+                    },
+
+                    toolbar: '#toolbar1',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id'),operate:false},
+                            {field: 'financial_name', title: __('所属平台')},
+                            {field: 'admin.nickname', title: __('所属销售'),formatter:Controller.api.formatter.sales},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'id_card', title: __('身份证号')},
+                            {field: 'city', title: __('身份证地址'),operate:false},
+                            {field: 'planacar.payment', title: __('首付(元)'),operate:false},
+                            {field: 'planacar.monthly', title: __('月供(元)'),operate:false},
+                            {field: 'planacar.nperlist', title: __('期数'),operate:false},
+                            {field: 'planacar.tail_section', title: __('尾款(元)'),operate:false},
+                            {field: 'planacar.gps', title: __('GPS(元)'),operate:false},
+                            {field: 'bond', title: __('保证金(元)'),operate:false},
+                            {field: 'customerdownpayment.openingbank', title: __('开户行')},
+                            {field: 'customerdownpayment.bankcardnumber', title: __('银行卡卡号'),operate:false},
+                            {field: 'customerdownpayment.totalmoney', title: __('车款总价(元)'),operate:false},
+                            {field: 'customerdownpayment.downpayment', title: __('首期款(元)'),operate:false},
+                            {field: 'customerdownpayment.moneyreceived', title: __('实收金额(元)'),operate:false},
+                            {field: 'customerdownpayment.marginmoney', title: __('差额(元)'),operate:false},
+                            {field: 'customerdownpayment.gatheringaccount', title: __('收款账户'),operate:false},
+                            {field: 'customerdownpayment.decorate', title: __('装饰'),operate:false},
+                            {field: 'customerdownpayment.note', title: __('票据号备注'),operate:false},
+
+                            {
+                                field: 'operate', title: __('Operate'), table: newCar,
+
+                                events: Controller.api.operate,
+                                formatter: Table.api.formatter.operate
+                            }
+                        ]
                     ]
-                ]
-            });
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(newCar);
 
-            // 为表格绑定事件
-            Table.api.bindevent(table);
+
+
+            },
+            used_car: function () {
+                // 表格1
+                var usedCar = $("#usedCar");
+                usedCar.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#new-customer').text(data.total);
+
+                })
+                usedCar.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                usedCar.bootstrapTable({
+                    url: 'backoffice/Depositmanage/used_car',
+                    extend: {
+                        // index_url: 'plan/planacar/index',
+                        // add_url: 'planmanagement/plantabs/firstadd',
+                        edit_url: 'backoffice/Depositmanage/edit',
+                        // del_url: 'planmanagement/plantabs/firstdel',
+                        // multi_url: 'planmanagement/plantabs/firstmulti',
+                        // table: 'plan_acar',
+                    },
+
+                    toolbar: '#toolbar2',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
+                            {field: 'financial_name', title: __('所属平台')},
+                            {field: 'admin.nickname', title: __('所属销售'), formatter: Controller.api.formatter.sales},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'id_card', title: __('身份证号')},
+                            {field: 'city', title: __('身份证地址'), operate: false},
+                            {field: 'plansecond.newpayment', title: __('首付(元)'), operate: false},
+                            {field: 'plansecond.monthlypaymen', title: __('月供(元)'), operate: false},
+                            {field: 'plansecond.periods', title: __('期数'), operate: false},
+                            {field: 'plansecond.totalprices', title: __('总价(元)'), operate: false},
+                            {field: 'plansecond.tailmoney', title: __('尾款(元)'), operate: false},
+                            {field: 'plansecond.kilometres', title: __('里程数(公里)'), operate: false},
+                            {field: 'bond', title: __('保证金(元)'), operate: false},
+                            {field: 'customerdownpayment.openingbank', title: __('开户行')},
+                            {field: 'customerdownpayment.bankcardnumber', title: __('银行卡卡号'), operate: false},
+                            {field: 'customerdownpayment.totalmoney', title: __('车款总价(元)'), operate: false},
+                            {field: 'customerdownpayment.downpayment', title: __('首期款(元)'), operate: false},
+                            {field: 'customerdownpayment.moneyreceived', title: __('实收金额(元)'), operate: false},
+                            {field: 'customerdownpayment.marginmoney', title: __('差额(元)'), operate: false},
+                            {field: 'customerdownpayment.gatheringaccount', title: __('收款账户'), operate: false},
+                            {field: 'customerdownpayment.decorate', title: __('装饰'), operate: false},
+                            {field: 'customerdownpayment.note', title: __('票据号备注'), operate: false},
+
+                            {
+                                field: 'operate', title: __('Operate'), table: usedCar,
+
+                                events: Controller.api.operate,
+                                formatter: Table.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(usedCar);
+            },
+
+
         },
         add: function () {
             Controller.api.bindevent();
+
         },
         edit: function () {
             Controller.api.bindevent();
         },
         api: {
             bindevent: function () {
+                $(document).on('click', "input[name='row[ismenu]']", function () {
+                    var name = $("input[name='row[name]']");
+                    name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
+                });
+                $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
+            },
+            operate:{
+                'click .btn-editone': function (e, value, row, index) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var table = $(this).closest('table');
+                    var options = table.bootstrapTable('getOptions');
+                    var ids = row[options.pk];
+                    row = $.extend({}, row ? row : {}, {ids: ids});
+                    var url = options.extend.edit_url;
+                    Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                },
+            },
+            formatter: {
+                operate: function (value, row, index) {
+
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+
+
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
+
+                sales: function (value, row, index) {
+                    if (value) {
+                        row.admin.avatar = "https://static.aicheyide.com" + row.admin.avatar;
+                    }
+                    return value != null ? "<img src=" + row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
+
+                }
             }
         }
+
     };
     return Controller;
 });
