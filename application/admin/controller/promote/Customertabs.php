@@ -30,6 +30,8 @@ class Customertabs extends Backend
         parent::_initialize();
         // self::$token= $this->getAccessToken();
         $this->model = model('CustomerResource');
+        //扔出角色信息 && cdn url
+
 
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
     }
@@ -53,6 +55,7 @@ class Customertabs extends Backend
     //今日头条
     public function headline()
     {
+
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -131,7 +134,11 @@ class Customertabs extends Backend
         return $this->view->fetch();
     }
 
-    //得到Ajax渲染信息
+    /**
+     * 封装的查询方法
+     * @param $platform_id 平台id
+     * @return array|\think\response\Json
+     */
     public function getInformation($platform_id)
     {
 
@@ -143,6 +150,8 @@ class Customertabs extends Backend
             $total = $this->model
                 ->with(['platform','backoffice'=>function ($query){
                     $query->withField(['nickname', 'avatar']);
+                },'admin'=>function($quyer){
+                    $quyer->withField(['nickname', 'avatar','rule_message']);
                 }])
                 ->where($where)
                 ->where([
@@ -154,6 +163,8 @@ class Customertabs extends Backend
             $list = $this->model
                 ->with(['platform','backoffice'=>function ($query){
                     $query->withField(['nickname', 'avatar']);
+                },'admin'=>function($quyer){
+                    $quyer->withField(['nickname', 'avatar','rule_message']);
                 }])
                 ->where($where)
                 ->where([
@@ -163,9 +174,10 @@ class Customertabs extends Backend
                 ->limit($offset, $limit)
                 ->select();
             $list = collection($list)->toArray();
-
-
-            $result = array("total" => $total, "rows" => $list);
+            foreach ($list as $key=>$value){
+                    $list[$key]['admin']['avatar_url'] = Config::get('upload')['cdnurl'];
+            }
+        $result = array("total" => $total, "rows" => $list);
 
             return $result;
 

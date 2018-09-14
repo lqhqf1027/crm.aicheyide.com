@@ -75,7 +75,10 @@ class CustomerResource extends Model
         return $this->belongsTo('Admin', 'sales_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
-
+    /**
+     * 关联内勤
+     * @return \think\model\relation\BelongsTo
+     */
     public function backoffice()
     {
         return $this->belongsTo('Admin','backoffice_id','id',[],'LEFT')->setEagerlyType(0);
