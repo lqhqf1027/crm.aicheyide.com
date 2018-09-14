@@ -62,6 +62,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             });
 
+            //实时消息----其他金融
+            //通过---录入库存通知
+            goeasy.subscribe({
+                channel: 'demo-newcontrol_tube_finance',
+                onMessage: function(message){
+                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                        Layer.close(index);
+                        $(".btn-refresh").trigger("click");
+                    });
+                        
+                }
+            });
+
 
         },
         add: function () {

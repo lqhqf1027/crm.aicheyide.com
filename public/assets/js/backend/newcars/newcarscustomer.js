@@ -119,6 +119,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -133,6 +136,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'inform_the_tube', icon: 'fa fa-check-circle', text: '销售已录入客户资料，准备提交', classname: ' text-info ',
+                                        hidden: function (row) {  /**销售已录入客户资料，准备提交 */
+                                            if (row.review_the_data == 'inform_the_tube') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -145,6 +168,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
                                                 return true;
                                             }
                                         }
@@ -168,6 +194,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //风控选完库存推送---车管
                 goeasy.subscribe({
                     channel: 'demo-newchoose_stock',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
+                //销售补全资料推送---车管----提车
+                goeasy.subscribe({
+                    channel: 'demo-newsend_car',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);

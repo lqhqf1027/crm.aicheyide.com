@@ -30,7 +30,7 @@ class Orderlisttabs extends Backend
     protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull','sedAudit','details','rentaldetails','seconddetails','fulldetails',
                     'add','edit','planacar','planname','reserve','rentalplanname','rentaladd','rentaledit','rentaldel','control','setAudit','secondadd',
 
-                    'secondedit','fulladd','fulledit','submitCar','del','fulldel','seconddel','newreserve','newreserveedit','newcontroladd','newinformation'];
+                    'secondedit','fulladd','fulledit','submitCar','del','fulldel','seconddel','newreserve','newreserveedit','newcontroladd','newinformation','newinformtube'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -1014,29 +1014,9 @@ class Orderlisttabs extends Backend
                     $result_ss = $row->allowField(true)->save($params);
                     if ($result_ss !== false) {
 
-                        $models_name = Db::name('models')->where('id', $result['models_id'])->value('name');
+                        $this->model->isUpdate(true)->save(['id' => $row['id'], 'review_the_data' => 'inform_the_tube']);
 
-                        $channel = "demo-newsend_car";  
-                        $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，资料已经补全，可以进行提车，请及时登陆后台进行处理 ";
-                        goeary_push($channel, $content);
-
-                        $data = newsend_car($models_name, $result['username']);
-                        // var_dump($data);
-                        // die;
-                        $email = new Email;
-                        // $receiver = "haoqifei@cdjycra.club";
-                        $receiver = Db::name('admin')->where('rule_message', 'message14')->value('email');
-                        $result_s = $email
-                            ->to($receiver)
-                            ->subject($data['subject'])
-                            ->message($data['message'])
-                            ->send();
-                        if ($result_s) {
-                            $this->success();
-                        } else {
-                            $this->error('邮箱发送失败');
-                        }
-
+                        $this->success();
                        
                     } else {
                         $this->error($row->getError());
@@ -1051,6 +1031,57 @@ class Orderlisttabs extends Backend
 
         return $this->view->fetch('newinformation');
         
+    }
+
+    //资料已补全，提交车管进行提车
+    public function newinformtube($ids = null)
+    {
+        $this->model = model('SalesOrder');
+
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+
+            $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'send_the_car']);
+            //销售员
+            $admin_name = DB::name('admin')->where('id', $this->auth->id)->value('nickname');
+
+            $models_id = $this->model->where('id', $id)->value('models_id');
+
+            $backoffice_id = $this->model->where('id', $id)->value('backoffice_id');
+            //车型
+            $models_name = DB::name('models')->where('id', $models_id)->value('name');
+            //客户姓名
+            $username = $this->model->where('id', $id)->value('username');
+
+            if ($result !== false) {
+
+                $channel = "demo-newsend_car";  
+                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，资料已经补全，可以进行提车，请及时登陆后台进行处理 ";
+                goeary_push($channel, $content);
+
+                $data = newsend_car($models_name, $username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('rule_message', 'message14')->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+
+            } else {
+                $this->error('提交失败', null, $result);
+
+            }
+        }
     }
 
     //显示方案列表
@@ -1109,7 +1140,7 @@ class Orderlisttabs extends Backend
      }
 
      /**
-     *  以租代购（新车）编辑.
+     *  以租代购（新车）提车资料编辑.
      */
     public function edit($ids = null, $posttype = null)
     {
@@ -1154,37 +1185,34 @@ class Orderlisttabs extends Backend
                             $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.edit' : true) : $this->modelValidate;
                             $row->validate($validate);
                         }
-                        $result = $row->allowField(true)->save($params);
-                        if ($result !== false) {
+                        $result_ss = $row->allowField(true)->save($params);
+                        if ($result_ss !== false) {
                             //如果添加成功,将状态改为提交审核
                             $result_s = $this->model->isUpdate(true)->save(['id' => $row['id'], 'review_the_data' => 'is_reviewing_true']);
 
-                            $admin_nickname = DB::name('admin')->alias('a')->join('sales_order b', 'b.admin_id=a.id')->where('b.id', $row['id'])->value('a.nickname');
+                            $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
+                            $channel = "demo-newdata_cash";  
+                            $content = "客户：" . $row['username'] . "对车型：" . $models_name . "的购买，保证金收据已上传，请及时登陆后台进行处理 ";
+                            goeary_push($channel, $content);
 
-                            //请求地址
-                            $uri = "https://goeasy.io/goeasy/publish";
-                            // 参数数组
-                            $data = [
-                                'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-                                'channel' => "demo-the_guarantor",
-                                'content' => "销售员" . $admin_nickname . "提交的销售单已经提供保证金，请及时处理"
-                            ];
-                            $ch = curl_init ();
-                            curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-                            curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-                            curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-                            curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-                            curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-                            $return = curl_exec ( $ch );
-                            curl_close ( $ch );
-                            // print_r($return);
-
-                            if ($result_s) {
+                            $data = newdata_cash($models_name, $row['username']);
+                            // var_dump($data);
+                            // die;
+                            $email = new Email;
+                            // $receiver = "haoqifei@cdjycra.club";
+                            $receiver = Db::name('admin')->where('rule_message', 'message7')->value('email');
+                            $result_sss = $email
+                                ->to($receiver)
+                                ->subject($data['subject'])
+                                ->message($data['message'])
+                                ->send();
+                            if ($result_sss) {
                                 $this->success();
                             } else {
-                                $this->error('更新状态失败');
+                                $this->error('邮箱发送失败');
                             }
+                            
                         } else {
                             $this->error($this->model->getError());
                         }
@@ -1198,7 +1226,7 @@ class Orderlisttabs extends Backend
 
             $this->view->assign('row', $row);
 
-            return $this->view->fetch('the_guarantor');
+            return $this->view->fetch('new_the_guarantor');
         }
         if ($posttype == 'edit') {
             /**点击的编辑按钮 */
@@ -1232,16 +1260,8 @@ class Orderlisttabs extends Backend
             }
             if ($this->request->isPost()) {
                 $params = $this->request->post('row/a');
-
-                $params['plan_acar_name'] = Session::get('plan_id'); 
-
-                $data = DB::name('plan_acar')->where('id', $params['plan_acar_name'])->field('payment,monthly,nperlist,gps,margin,tail_section')->find();
-           
-           
-                $params['car_total_price'] = $data['payment'] + $data['monthly'] * $data['nperlist'];
-                $params['downpayment'] = $data['payment'] + $data['monthly'] + $data['margin'] + $data['gps'];
-            
-                $params['plan_name'] = Session::get('plan_name');
+                // pr($params);
+                // die;
 
                 if ($params) {
                     try {

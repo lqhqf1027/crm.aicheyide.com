@@ -25,7 +25,7 @@ class Newcarscustomer extends Backend
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
-    protected $noNeedRight = ['index','prepare_lift_car','already_lift_car','choose_stock','show_order','show_order_and_stock','newcustomer'];
+    protected $noNeedRight = ['index','prepare_lift_car','already_lift_car','choose_stock','show_order','show_order_and_stock','newcustomer','sendcar'];
     public function _initialize()
     {
         parent::_initialize();
@@ -49,7 +49,7 @@ class Newcarscustomer extends Backend
         $this->loadlang('order/salesorder');
 
         $prepare_total = Db::name("sales_order")
-            ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "send_the_car"], "or")
+            ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or")
             ->where("car_new_inventory_id", "not null")
             ->count();
 
@@ -90,7 +90,7 @@ class Newcarscustomer extends Backend
                 ->where($where)
                 ->where(function ($query) {
                     $query->where("car_new_inventory_id", "not null")
-                    ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "send_the_car"], "or");
+                    ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or");
                 })
                 ->order($sort, $order)
                 ->count();
@@ -107,7 +107,7 @@ class Newcarscustomer extends Backend
                 ->where($where)
                 ->where(function ($query) {
                     $query->where("car_new_inventory_id", "not null")
-                    ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "send_the_car"], "or");
+                    ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or");
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -249,6 +249,27 @@ class Newcarscustomer extends Backend
                 }
 
 
+            } else {
+                $this->error('提交失败', null, $result);
+
+            }
+        }
+    }
+
+    //资料已补全，提交车管进行提车
+    public function sendcar()
+    {
+        $this->model = model('SalesOrder');
+
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+
+            $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'the_car']);
+
+            if ($result !== false) {
+
+                $this->success();
+               
             } else {
                 $this->error('提交失败', null, $result);
 

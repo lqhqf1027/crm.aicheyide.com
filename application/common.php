@@ -900,6 +900,26 @@ if (!function_exists('newcontrol_tube')) {
     }
 }
 /**
+ * 以租代购（新车）风控审核发送给车管，进行录入库存----其他金融
+ */
+if (!function_exists('newcontrol_tube_finance')) {
+
+
+    function newcontrol_tube_finance($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车审核已通过，可以进行录入库存通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，审核已通过，可以进行录入库存，请及时登陆后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
  * 以租代购（新车）风控审核选择库存，发送给车管
  */
 if (!function_exists('newchoose_stock')) {
@@ -971,6 +991,26 @@ if (!function_exists('newdata_inform')) {
             $arr = [
                 'subject' => "新车风控审核通知：",
                 'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，风控需要你提交保证金收据，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）销售发送给风控审核，保证金上传
+ */
+if (!function_exists('newdata_cash')) {
+
+
+    function newdata_cash($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "新车销售已上传保证金收据通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，保证金收据已经上传，请及时登录后台进行处理 . '</div>'
             ];
 
             return $arr;
