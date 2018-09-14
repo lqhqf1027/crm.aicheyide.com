@@ -7,7 +7,7 @@
 #/public/assets/libs/
 #/public/assets/addons/*
 /public/uploads/*
-/application/config.php
+#/application/config.php
 .idea
 composer.lock
 *.log
