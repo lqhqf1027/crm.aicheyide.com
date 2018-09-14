@@ -80,7 +80,8 @@ class Referee extends Backend
                 ->where("id", 'in', $referee)
                 ->column("customer_phone");
         }
-
+        //扔出头像cdn
+        $this->assignconfig('avatarCdn',Config::get('upload')['cdnurl']);
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -93,7 +94,7 @@ class Referee extends Backend
                 ->with(['models' => function ($query) {
                     $query->withField('name');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['nickname','avatar']);
                 }])
                 ->where($where)
                 ->where(function ($query) use ($login, $canUseId,$referee,$phone) {
@@ -108,7 +109,7 @@ class Referee extends Backend
                 ->with(['models' => function ($query) {
                     $query->withField('name');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['nickname','avatar']);
                 }])
                 ->where($where)
                 ->where(function ($query) use ($login, $canUseId,$referee,$phone) {

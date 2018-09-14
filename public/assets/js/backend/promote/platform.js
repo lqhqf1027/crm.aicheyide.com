@@ -7,9 +7,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 extend: {
                     index_url: 'promote/platform/index',
                     add_url: 'promote/platform/add',
-                    edit_url: 'promote/platform/edit',
+                    edit_url: '',
                     // del_url: 'promote/platform/del',
-                    multi_url: 'promote/platform/multi',
+                    multi_url: '',
                     table: 'platform',
                 }
             });
@@ -20,17 +20,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
-                sortName: 'id',
+                // sortName: 'id',
                 searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        {field: 'id', title: __('Id'),sortable:true},
                         {field: 'name', title: __('Name')},
                         {field: 'status', title: __('Status'), searchList: {"normal":__('normal'),"hidden":__('hidden')},formatter: Table.api.formatter.status},
                         // {field: 'status_text', title: __('Status'), operate:false},
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,sortable:true},
+                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,sortable:true},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

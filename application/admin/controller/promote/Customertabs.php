@@ -40,8 +40,14 @@ class Customertabs extends Backend
     public function index()
     {
         $this->loadlang('customer/customerresource');
-
+        $this->view->assign([
+            'toutiao_total'=>$this->model->with('platform')->where(['name'=>'今日头条'])->count(),
+            'total_58'=>$this->model->with('platform')->where(['name'=>'58同城'])->count(),
+            'baidu_total'=>$this->model->with('platform')->where(['name'=>'百度'])->count(),
+            'douyin_total'=>$this->model->with('platform')->where(['name'=>'抖音'])->count()
+        ]);
         return $this->view->fetch();
+
     }
 
     //今日头条
@@ -503,7 +509,7 @@ class Customertabs extends Backend
 
         //浏览器交互 导出
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="客户信息导入模板表.xlsx"');
+        header('Content-Disposition: attachment;filename="头条百度抖音通用模板.xlsx"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
@@ -543,7 +549,7 @@ class Customertabs extends Backend
 
         //浏览器交互 导出
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="客户信息导入模板表.xlsx"');
+        header('Content-Disposition: attachment;filename="58客户导入模板.xlsx"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
