@@ -15,5 +15,5 @@ composer.lock
 !.gitkeep
 .env
 /runtime
-/application/extra/addons.php
-/public/assets/js/addons.js
+#/application/extra/addons.php
+#/public/assets/js/addons.js
