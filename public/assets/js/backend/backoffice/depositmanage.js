@@ -84,6 +84,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'customerdownpayment.gatheringaccount', title: __('收款账户'),operate:false},
                             {field: 'customerdownpayment.decorate', title: __('装饰'),operate:false},
                             {field: 'customerdownpayment.note', title: __('票据号备注'),operate:false},
+                            {field: 'customerdownpayment.makemoney_status', title: __('是否打款'),formatter:Controller.api.formatter.status,searchList:{'1':'已打款','2':'未打款'}},
 
                             {
                                 field: 'operate', title: __('Operate'), table: newCar,
@@ -117,7 +118,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         // index_url: 'plan/planacar/index',
                         // add_url: 'planmanagement/plantabs/firstadd',
-                        edit_url: 'backoffice/Depositmanage/edit',
+                        edit_url: 'backoffice/Depositmanage/edit_used',
                         // del_url: 'planmanagement/plantabs/firstdel',
                         // multi_url: 'planmanagement/plantabs/firstmulti',
                         // table: 'plan_acar',
@@ -154,6 +155,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'customerdownpayment.gatheringaccount', title: __('收款账户'), operate: false},
                             {field: 'customerdownpayment.decorate', title: __('装饰'), operate: false},
                             {field: 'customerdownpayment.note', title: __('票据号备注'), operate: false},
+                            {field: 'customerdownpayment.makemoney_status', title: __('是否打款'),formatter:Controller.api.formatter.status,searchList:{'1':'已打款','2':'未打款'}},
+
 
                             {
                                 field: 'operate', title: __('Operate'), table: usedCar,
@@ -167,14 +170,149 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(usedCar);
             },
+            rent_car: function () {
+                // 表格1
+                var rentCar = $("#rentCar");
+                rentCar.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#new-customer').text(data.total);
 
+                })
+                rentCar.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                rentCar.bootstrapTable({
+                    url: 'backoffice/Depositmanage/rent_car',
+                    extend: {
+                        // index_url: 'plan/planacar/index',
+                        // add_url: 'planmanagement/plantabs/firstadd',
+                        edit_url: 'backoffice/Depositmanage/edit_rent',
+                        // del_url: 'planmanagement/plantabs/firstdel',
+                        // multi_url: 'planmanagement/plantabs/firstmulti',
+                        // table: 'plan_acar',
+                    },
 
+                    toolbar: '#toolbar3',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
+                            // {field: 'financial_name', title: __('所属平台')},
+                            {field: 'admin.nickname', title: __('所属销售'), formatter: Controller.api.formatter.sales},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'id_card', title: __('身份证号')},
+                            // {field: 'city', title: __('身份证地址'), operate: false},
+                            {field: 'cash_pledge', title: __('押金(元)'), operate: false},
+                            {field: 'rental_price', title: __('租金(元)'), operate: false},
+                            {field: 'tenancy_term', title: __('租期(月)'), operate: false},
+                            {field: 'bond', title: __('保证金(元)'), operate: false},
+                            {field: 'customerdownpayment.openingbank', title: __('开户行')},
+                            {field: 'customerdownpayment.bankcardnumber', title: __('银行卡卡号'), operate: false},
+                            {field: 'customerdownpayment.totalmoney', title: __('车款总价(元)'), operate: false},
+                            {field: 'customerdownpayment.downpayment', title: __('首期款(元)'), operate: false},
+                            {field: 'customerdownpayment.moneyreceived', title: __('实收金额(元)'), operate: false},
+                            {field: 'customerdownpayment.marginmoney', title: __('差额(元)'), operate: false},
+                            {field: 'customerdownpayment.gatheringaccount', title: __('收款账户'), operate: false},
+                            {field: 'customerdownpayment.decorate', title: __('装饰'), operate: false},
+                            {field: 'customerdownpayment.note', title: __('票据号备注'), operate: false},
+                            {field: 'customerdownpayment.makemoney_status', title: __('是否打款'),formatter:Controller.api.formatter.status,searchList:{'1':'已打款','2':'未打款'}},
+
+                            {
+                                field: 'operate', title: __('Operate'), table: rentCar,
+
+                                events: Controller.api.operate,
+                                formatter: Table.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(rentCar);
+            },
+            full_car: function () {
+                // 表格1
+                var fullCar = $("#fullCar");
+                fullCar.on('load-success.bs.table', function (e, data) {
+                    console.log(data.total);
+                    $('#new-customer').text(data.total);
+
+                })
+                fullCar.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                });
+                // 初始化表格
+                fullCar.bootstrapTable({
+                    url: 'backoffice/Depositmanage/full_car',
+                    extend: {
+                        // index_url: 'plan/planacar/index',
+                        // add_url: 'planmanagement/plantabs/firstadd',
+                        edit_url: 'backoffice/Depositmanage/edit_full',
+                        // del_url: 'planmanagement/plantabs/firstdel',
+                        // multi_url: 'planmanagement/plantabs/firstmulti',
+                        // table: 'plan_acar',
+                    },
+
+                    toolbar: '#toolbar4',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: Fast.lang('Id'), operate: false},
+                            {field: 'financial_name', title: __('所属平台')},
+                            {field: 'admin.nickname', title: __('所属销售'), formatter: Controller.api.formatter.sales},
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'id_card', title: __('身份证号')},
+                            {field: 'city', title: __('身份证地址'), operate: false},
+                            {field: 'planfull.full_total_price', title: __('全款总价(元)'), operate: false},
+                            {field: 'bond', title: __('保证金(元)'), operate: false},
+                            {field: 'customerdownpayment.openingbank', title: __('开户行')},
+                            {field: 'customerdownpayment.bankcardnumber', title: __('银行卡卡号'), operate: false},
+                            {field: 'customerdownpayment.totalmoney', title: __('车款总价(元)'), operate: false},
+                            {field: 'customerdownpayment.downpayment', title: __('首期款(元)'), operate: false},
+                            {field: 'customerdownpayment.moneyreceived', title: __('实收金额(元)'), operate: false},
+                            {field: 'customerdownpayment.marginmoney', title: __('差额(元)'), operate: false},
+                            {field: 'customerdownpayment.gatheringaccount', title: __('收款账户'), operate: false},
+                            {field: 'customerdownpayment.decorate', title: __('装饰'), operate: false},
+                            {field: 'customerdownpayment.note', title: __('票据号备注'), operate: false},
+                            {field: 'customerdownpayment.makemoney_status', title: __('是否打款'),formatter:Controller.api.formatter.status,searchList:{'1':'已打款','2':'未打款'}},
+
+                            {
+                                field: 'operate', title: __('Operate'), table: fullCar,
+
+                                events: Controller.api.operate,
+                                formatter: Table.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(fullCar);
+            },
         },
         add: function () {
             Controller.api.bindevent();
 
         },
         edit: function () {
+            Controller.api.bindevent();
+        },
+        edit_used:function () {
+            Controller.api.bindevent();
+        },
+        edit_rent:function () {
+            Controller.api.bindevent();
+        },
+        edit_full:function () {
             Controller.api.bindevent();
         },
         api: {
@@ -217,7 +355,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                     return value != null ? "<img src=" + row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
 
-                }
+                },
+                status: function (value, row, index) {
+
+                    if(value){
+                        value==1? value='已打款':value='未打款';
+
+                    }else{
+                        return value;
+                    }
+                    var custom = {'已打款': 'success',  '未打款': 'danger'};
+                    if (typeof this.custom !== 'undefined') {
+                        custom = $.extend(custom, this.custom);
+                    }
+                    this.custom = custom;
+                    this.icon = 'fa fa-circle';
+                    return Table.api.formatter.normal.call(this, value, row, index);
+                },
             }
         }
 
