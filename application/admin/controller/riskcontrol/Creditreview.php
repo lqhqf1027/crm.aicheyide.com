@@ -29,7 +29,7 @@ class Creditreview extends Backend
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
     protected $noNeedRight = ['index', 'newcarAudit', 'rentalcarAudit', 'secondhandcarAudit', 'newauditResult', 'newpass', 'newdata', 'newnopass', 'rentalauditResult', 'rentalpass', 'rentalnopass', 'secondhandcarResult', 'secondpass', 'seconddata'
-        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata','getPlanAcarData','getPlanSecondCarData','toViewBigData','getBigData','newsales','newtube','chooseStock','newtubefinance'];
+        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata','getPlanAcarData','getPlanSecondCarData','toViewBigData','getBigData','newsales','newtube','choosestock','newtubefinance','secondchoosestock'];
 
     public function _initialize()
     {
@@ -52,7 +52,7 @@ class Creditreview extends Backend
                 ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], 'or')
                 ->count(),
             'total2' => DB::name('second_sales_order')
-                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'for_the_car'], ['=', 'the_car'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'for_the_car'], ['=', 'the_car'], 'or')
                 ->count(),
 
         ]);
@@ -209,7 +209,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], 'or')
+                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], 'or')
                 ->order($sort, $order)
                 ->count();
 
@@ -223,12 +223,13 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], 'or')
+                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], 'or')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'plan_car_second_name', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['id', 'plan_car_second_name', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data',
+                'id_cardimages', 'drivers_licenseimages',]);
                 $row->visible(['plansecond']);
                 $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
                 $row->visible(['admin']);
@@ -878,8 +879,6 @@ class Creditreview extends Backend
 
             $id = input("id");
 
-//            $this->success('','',$id);
-
             $id = json_decode($id, true);
 
             $admin_nickname = DB::name('admin')->alias('a')->join('rental_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
@@ -1060,53 +1059,149 @@ class Creditreview extends Backend
 
             $admin_nickname = DB::name('admin')->alias('a')->join('second_sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
-            $result = $this->model->save(['review_the_data' => 'for_the_car'], function ($query) use ($id) {
+            $result = $this->model->save(['review_the_data' => 'is_reviewing_pass'], function ($query) use ($id) {
                 $query->where('id', $id);
             });
 
-            $plan_car_second_name = $this->model->where('id', $id)->value('plan_car_second_name');
-
-            DB::name('secondcar_rental_models_info')->where('id', $plan_car_second_name)->setField('status_data', 'is_reviewing_pass');
-
-
             if ($result) {
 
-                $channel = "demo-second_pass";
-                $content = "销售员" . $admin_nickname . "提交的二手车单通过风控审核";
-                goeary_push($channel, $content);
-
-                $data = Db::name("second_sales_order")->where('id', $id)->find();
-                //车型
-                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
-                //销售id
-                $admin_id = $data['admin_id'];
-                //客户姓名
-                $username = $data['username'];
-
-                $data = secondpass_inform($models_name, $username);
-                // var_dump($data);
-                // die;
-                $email = new Email;
-                // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('id', $admin_id)->value('email');
-
-                $result_s = $email
-                    ->to($receiver)
-                    ->subject($data['subject'])
-                    ->message($data['message'])
-                    ->send();
-                if ($result_s) {
-                    $this->success();
-                } else {
-                    $this->error('邮箱发送失败');
-                }
+                $this->success();
 
             } else {
                 $this->error();
             }
 
-
         }
+    }
+
+    //二手车单-----选择库存车
+    public function secondchoosestock($ids = null)
+    {
+
+        if ($this->request->isPost()) {
+
+            $id = input("post.id");
+
+            Db::name("second_sales_order")
+                ->where("id", $ids)
+                ->update([
+                    'second_car_id'   => $id,
+                    'review_the_data' => "for_the_car",
+                    'delivery_datetime' => time()
+                ]);
+
+            $result = Db::name('second_sales_order')->where('id', $ids)->find();
+            //车型
+            $models_name = Db::name('models')->where('id', $result['models_id'])->value('name');
+            
+            //发送销售
+            $channel = "demo-secondpass_inform";
+            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核，匹配完车辆，请及时登录后台进行处理，通知客户进行提车";
+            goeary_push($channel, $content);
+
+            $data = secondpass_inform($models_name, $result['username']);
+            // var_dump($data);
+            // die;
+            $email = new Email;
+            // $receiver = "haoqifei@cdjycra.club";
+            $receiver = DB::name('admin')->where('id', $result['admin_id'])->value('email');
+
+            $result_s = $email
+                ->to($receiver)
+                ->subject($data['subject'])
+                ->message($data['message'])
+                ->send();
+            if ($result_s) {
+                $this->success();
+            } else {
+                $this->error('邮箱发送失败');
+            }
+
+
+            //发送车管
+            $channel = "demo-secondpass_tubeinform";
+            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核，匹配完车辆，请及时登录后台进行处理";
+            goeary_push($channel, $content);
+
+            $data = secondpass_tubeinform($models_name, $result['username']);
+            // var_dump($data);
+            // die;
+            $email = new Email;
+            // $receiver = "haoqifei@cdjycra.club";
+            $receiver = DB::name('admin')->where('rule_message', "message14")->value('email');
+
+            $result_ss = $email
+                ->to($receiver)
+                ->subject($data['subject'])
+                ->message($data['message'])
+                ->send();
+            if ($result_ss) {
+                $this->success();
+            } else {
+                $this->error('邮箱发送失败');
+            }
+            
+        }
+
+        //展示的信息
+        $stock = Db::name("secondcar_rental_models_info")
+            ->alias("i")
+            ->join("models m", "i.models_id=m.id")
+            ->where("status_data", 'NEQ', "the_car")
+            ->field("i.id,m.name,i.licenseplatenumber,i.vin,i.engine_number,i.companyaccount,i.Parkingposition,i.note")
+            ->select();
+        
+        $this->view->assign([
+            'stock' => $stock
+        ]);
+        
+        $seventtime = \fast\Date::unixtime('month', -6);
+        $secondonesales = $secondtwosales = $secondthreesales = [];
+        for ($i = 0; $i < 8; $i++)
+        {
+            $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+            //销售一部
+            $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+            foreach($one_sales as $k => $v){
+                $one_admin[] = $v['uid'];
+            }
+            $secondonetake = Db::name('second_sales_order')
+                    ->where('review_the_data', 'for_the_car')
+                    ->where('admin_id', 'in', $one_admin)
+                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->count();
+            //销售二部
+            $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+            foreach($two_sales as $k => $v){
+                $two_admin[] = $v['uid'];
+            }
+            $secondtwotake = Db::name('second_sales_order')
+                    ->where('review_the_data', 'for_the_car')
+                    ->where('admin_id', 'in', $two_admin)
+                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->count();
+            //销售三部
+            $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
+            foreach($three_sales as $k => $v){
+                $three_admin[] = $v['uid'];
+            }
+            $secondthreetake = Db::name('second_sales_order')
+                    ->where('review_the_data', 'for_the_car')
+                    ->where('admin_id', 'in', $three_admin)
+                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->count();
+            //销售一部
+            $secondonesales[$month] = $secondonetake;
+            //销售二部
+            $secondtwosales[$month] = $secondtwotake;
+            //销售三部
+            $secondthreesales[$month] = $secondthreetake;
+        }
+        Cache::set('secondonesales', $secondonesales);
+        Cache::set('secondtwosales', $secondtwosales);
+        Cache::set('secondthreesales', $secondthreesales);
+
+        return $this->view->fetch();
     }
 
     //二手车单----需提供担保人

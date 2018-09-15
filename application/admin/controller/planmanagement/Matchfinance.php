@@ -233,25 +233,30 @@ class Matchfinance extends Backend
      */
     public function secondedit($ids = NULL)
     {
+        $row = Db::name('financial_platform')->select();
+        // pr($row);
+        // die;
+        $this->view->assign('row', $row);
 
         if($this->request->isAjax()){
-            $id = input("id");
-            $v = input("text");
-
-           $res = Db::name("second_sales_order")
-            ->where("id",$id)
-            ->update([
-                "financial_name"=>$v,
-                "review_the_data"=>"is_reviewing_control"
-            ]);
-
-           if($res){
+            $id = input("ids");
+            $params = $this->request->post('row/a');
+    
+            $financial_name = Db::name('financial_platform')->where('id', $params['financial_platform_id'])->value('name');
+            $res = Db::name("second_sales_order")
+                ->where("id",$id)
+                ->update([
+                    "financial_name"=> $financial_name,
+                    "review_the_data"=> "is_reviewing_control"
+                ]);
+            
+            if($res){
 
                 $channel = "demo-second_control";
                 $content =  "金融已经匹配，请尽快进行风控审核处理";
                 goeary_push($channel, $content);
-
-
+    
+    
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -259,7 +264,7 @@ class Matchfinance extends Backend
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
                 $username= $data['username'];
-
+    
                 $data = secondcontrol_inform($models_name,$admin_name,$username);
                 // var_dump($data);
                 // die;
@@ -277,131 +282,130 @@ class Matchfinance extends Backend
                 else {
                     $this->error('邮箱发送失败');
                 }
-
-           }else{
-               $this->error();
-           }
-
-
+    
+            }else{
+                $this->error();
+            }
+            
         }
-
+        return $this->view->fetch('secondedit');
     }
 
     //新车批量匹配金融
-    public function newbatch()
-    {
-        if($this->request->isAjax()){
-            $ids = input("id");
+    // public function newbatch()
+    // {
+    //     if($this->request->isAjax()){
+    //         $ids = input("id");
 
-            $text = input("text");
+    //         $text = input("text");
 
-            $ids = json_decode($ids,true);
+    //         $ids = json_decode($ids,true);
 
-            $res = Db::name("sales_order")
-            ->where("id",'in',$ids)
-            ->update([
-                'financial_name'=>$text,
-                'review_the_data'=>'is_reviewing_true'
-            ]);
+    //         $res = Db::name("sales_order")
+    //         ->where("id",'in',$ids)
+    //         ->update([
+    //             'financial_name'=>$text,
+    //             'review_the_data'=>'is_reviewing_true'
+    //         ]);
 
-            if($res){
+    //         if($res){
 
-                $channel = "demo-newcar_control";
-                $content =  "金融已经匹配，请尽快进行风控审核处理";
-                goeary_push($channel, $content);
+    //             $channel = "demo-newcar_control";
+    //             $content =  "金融已经匹配，请尽快进行风控审核处理";
+    //             goeary_push($channel, $content);
 
-                $data = Db::name("sales_order")->where('id', $ids)->find();
-                //车型
-                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
-                //销售员
-                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
-                //客户姓名
-                $username= $data['username'];
+    //             $data = Db::name("sales_order")->where('id', $ids)->find();
+    //             //车型
+    //             $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+    //             //销售员
+    //             $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+    //             //客户姓名
+    //             $username= $data['username'];
 
-                $data = newcontrol_inform($models_name,$admin_name,$username);
-                // var_dump($data);
-                // die;
-                $email = new Email;
-                // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
-                $result_s = $email
-                    ->to($receiver)
-                    ->subject($data['subject'])
-                    ->message($data['message'])
-                    ->send();
-                if($result_s){
-                    $this->success('','','success');
-                }
-                else {
-                    $this->error('邮箱发送失败');
-                }
+    //             $data = newcontrol_inform($models_name,$admin_name,$username);
+    //             // var_dump($data);
+    //             // die;
+    //             $email = new Email;
+    //             // $receiver = "haoqifei@cdjycra.club";
+    //             $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
+    //             $result_s = $email
+    //                 ->to($receiver)
+    //                 ->subject($data['subject'])
+    //                 ->message($data['message'])
+    //                 ->send();
+    //             if($result_s){
+    //                 $this->success('','','success');
+    //             }
+    //             else {
+    //                 $this->error('邮箱发送失败');
+    //             }
 
-            }else{
-                $this->error();
-            }
+    //         }else{
+    //             $this->error();
+    //         }
 
 
-        }
+    //     }
 
-    }
+    // }
 
     //二手车批量匹配金融
-    public function secondbatch()
-    {
-        if($this->request->isAjax()){
-            $ids = input("id");
+    // public function secondbatch()
+    // {
+    //     if($this->request->isAjax()){
+    //         $ids = input("id");
 
-            $text = input("text");
+    //         $text = input("text");
 
-            $ids = json_decode($ids,true);
+    //         $ids = json_decode($ids,true);
 
-            $res = Db::name("second_sales_order")
-            ->where("id",'in',$ids)
-            ->update([
-                'financial_name'=>$text,
-                'review_the_data'=>'is_reviewing_control'
-            ]);
+    //         $res = Db::name("second_sales_order")
+    //         ->where("id",'in',$ids)
+    //         ->update([
+    //             'financial_name'=>$text,
+    //             'review_the_data'=>'is_reviewing_control'
+    //         ]);
 
-            if($res){
+    //         if($res){
 
-                $channel = "demo-second_control";
-                $content =  "金融已经匹配，请尽快进行风控审核处理";
-                goeary_push($channel, $content);
+    //             $channel = "demo-second_control";
+    //             $content =  "金融已经匹配，请尽快进行风控审核处理";
+    //             goeary_push($channel, $content);
 
-                $data = Db::name("second_sales_order")->where('id', $ids)->find();
-                //车型
-                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
-                //销售员
-                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
-                //客户姓名
-                $username= $data['username'];
+    //             $data = Db::name("second_sales_order")->where('id', $ids)->find();
+    //             //车型
+    //             $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+    //             //销售员
+    //             $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+    //             //客户姓名
+    //             $username= $data['username'];
 
-                $data = secondcontrol_inform($models_name,$admin_name,$username);
-                // var_dump($data);
-                // die;
-                $email = new Email;
-                // $receiver = "haoqifei@cdjycra.club";
-                $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
-                $result_s = $email
-                    ->to($receiver)
-                    ->subject($data['subject'])
-                    ->message($data['message'])
-                    ->send();
-                if($result_s){
-                    $this->success('','','success');
-                }
-                else {
-                    $this->error('邮箱发送失败');
-                }
+    //             $data = secondcontrol_inform($models_name,$admin_name,$username);
+    //             // var_dump($data);
+    //             // die;
+    //             $email = new Email;
+    //             // $receiver = "haoqifei@cdjycra.club";
+    //             $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
+    //             $result_s = $email
+    //                 ->to($receiver)
+    //                 ->subject($data['subject'])
+    //                 ->message($data['message'])
+    //                 ->send();
+    //             if($result_s){
+    //                 $this->success('','','success');
+    //             }
+    //             else {
+    //                 $this->error('邮箱发送失败');
+    //             }
 
-            }else{
-                $this->error();
-            }
+    //         }else{
+    //             $this->error();
+    //         }
 
 
-        }
+    //     }
 
-    }
+    // }
 
     //添加销售员名称
     public function add_sales($data = array())

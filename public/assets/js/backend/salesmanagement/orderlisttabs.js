@@ -1836,6 +1836,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // index_url: 'order/secondsalesorder/index',
                         secondadd_url: 'salesmanagement/Orderlisttabs/secondadd',
                         secondedit_url: 'salesmanagement/Orderlisttabs/secondedit',
+                        secondaudit_url: 'salesmanagement/Orderlisttabs/secondaudit',
                         del_url: 'salesmanagement/Orderlisttabs/seconddel',
                         multi_url: 'salesmanagement/Orderlisttabs/multi',
                         table: 'second_sales_order',
@@ -1914,6 +1915,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -1948,42 +1952,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         },
 
                                     },
-                                    {
-                                        name: 'secondedit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-secondeditone',
-                                        // url: 'order/secondsalesorder/edit',/**编辑 */
-                                        hidden: function (row, value, index) {
-                                            if (row.review_the_data == 'is_reviewing') {
-                                                return false;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_true') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_control') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_finance') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'send_car_tube') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'for_the_car') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'not_through') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'the_guarantor') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'the_car') {
-                                                return true;
-                                            }
-                                        },
-                                    },
+                                    
                                     {
                                         name: 'is_reviewing_true', text: '内勤正在处理中',
                                         hidden: function (row) {  /**内勤正在处理中 */
@@ -2014,7 +1989,59 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
+                                    },
+                                    {
+                                        name: 'secondedit', text: '资料编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('资料编辑'), classname: 'btn btn-xs btn-success btn-secondeditone',
+                                        // url: 'order/secondsalesorder/edit',/**编辑 */
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'is_reviewing') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }   
+                                        },
+                                    },
+                                    {
+                                        name: 'secondaudit', text: '审核资料上传', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('审核资料上传'), classname: 'btn btn-xs btn-success btn-secondaudit',
+                                        // url: 'order/secondsalesorder/edit',/**编辑 */
+                                        hidden: function (row, value, index) {
+                                            if (!row.id_cardimages || !row.drivers_licenseimages) {
+                                                return false;
+                                            }
+                                            else if (row.id_cardimages && row.drivers_licenseimages) {
+                                                return true;
+                                            }
+                                            
+                                        },
                                     },
                                     {
                                         name: 'is_reviewing_control', text: '风控正在审核中',
@@ -2044,6 +2071,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -2078,6 +2108,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -2110,11 +2143,49 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
-                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '征信已通过，车管正在备车中', classname: ' text-info ',
-                                        hidden: function (row) {  /**征信已通过，车管正在备车中 */
+                                        name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '风控正在匹配车辆', classname: ' text-info ',
+                                        hidden: function (row) {  /**风控正在匹配车辆 */
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_car_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '车管备车中，通知客户可以进行提车', classname: ' text-info ',
+                                        hidden: function (row) {  /**通知客户可以进行提车 */
                                             if (row.review_the_data == 'for_the_car') {
                                                 return false;
                                             }
@@ -2140,6 +2211,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -2175,6 +2249,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -2206,6 +2283,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -2243,10 +2323,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     }
-
-
 
                                 ],
                                 events: Controller.api.events.operate,
@@ -2269,9 +2350,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Table.api.bindevent(orderSecond);
 
                 //实时消息
-                //风控通过---可以提车
+                //风控通过---通知客户可以提车
                 goeasy.subscribe({
-                    channel: 'demo-second_pass',
+                    channel: 'demo-secondpass_inform',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -2759,6 +2840,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 
             });
             // Controller.api.bindevent();
+            // console.log(Config.id);
+            
+ 
+        },
+        secondaudit:function(){
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            Controller.api.bindevent();
             // console.log(Config.id);
             
  
@@ -3284,6 +3392,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, { ids: ids });
                         var url = options.extend.secondedit_url+'/posttype/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    //二手车审核资料上传
+                    'click .btn-secondaudit': function (e, value, row, index) { /**二手车审核资料上传 */
+                        $(".btn-secondaudit").data("area", ["95%", "95%"]);
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = options.extend.secondaudit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核资料上传'), $(this).data() || {});
                     },
                     //全款车编辑按钮
                     'click .btn-fulleditone': function (e, value, row, index) { /**二手车编辑按钮 */
