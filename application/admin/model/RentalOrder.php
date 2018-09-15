@@ -130,4 +130,20 @@ class RentalOrder extends Model
     {
         return $this->belongsTo('Admin','admin_id','id',[],'LEFT')->setEagerlyType(0);
     }
+
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
+//    public function planrental()
+//    {
+//        return $this->belongsTo('PlanRental','plan_car_rental_name','id',[],'LEFT')->setEagerlyType(0);
+//    }
+
+    /**
+     * @return \think\model\relation\BelongsTo
+     */
+    public function customerdownpayment()
+    {
+        return $this->belongsTo('CustomerDownpayment','customer_downpayment_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }
