@@ -31,7 +31,7 @@ class Orderlisttabs extends Backend
                     'add','edit','planacar','planname','reserve','rentalplanname','rentaladd','rentaledit','rentaldel','control','setAudit','secondadd',
 
                     'secondedit','fulladd','fulledit','submitCar','del','fulldel','seconddel','newreserve','newreserveedit','newcontroladd','newinformation','newinformtube',
-                    'secondreserve'];
+                    'secondreserve','secondaudit'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -253,7 +253,8 @@ class Orderlisttabs extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['id', 'order_no', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data',
+                     'id_cardimages', 'drivers_licenseimages']);
                 $row->visible(['plansecond']);
                 $row->getRelation('plansecond')->visible(['newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney', 'licenseplatenumber']);
                 $row->visible(['admin']);
@@ -1663,7 +1664,7 @@ class Orderlisttabs extends Backend
             $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                 ->field('a.id,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond')
-                ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
+                ->where(['a.brand_id' => $value['brandid'], 'b.status_data' => '', 'b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
             $newB = [];
@@ -1725,7 +1726,7 @@ class Orderlisttabs extends Backend
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
                         //如果添加成功,将状态改为提交审核
-                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'send_to_internal']);
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'is_reviewing']);
                         if ($result_s) {
                             $this->success();
                         } else {
@@ -1742,6 +1743,87 @@ class Orderlisttabs extends Backend
         }
 
         return $this->view->fetch();
+    }
+
+    /**
+     * 以租代购（二手车）审核资料上传
+     */
+    public function secondaudit($ids = "")
+    {
+        $this->model = new \app\admin\model\SecondSalesOrder;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
+        $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
+        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+        $row = $this->model->get($ids);
+            if ($row) {
+                //关联订单于方案
+                $result = Db::name('second_sales_order')->alias('a')
+                    ->join('secondcar_rental_models_info b', 'a.plan_car_second_name = b.id')
+                    ->field('b.id as plan_id')
+                    ->where(['a.id' => $row['id']])
+                    ->find();
+            }
+            $newRes = array();
+            //品牌
+            $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
+            // pr(Session::get('admin'));die;
+            foreach ((array) $res as $key => $value) {
+                $sql = Db::name('models')->alias('a')
+                    ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
+                    ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices')
+                    ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
+                    ->whereOr('sales_id', $this->auth->id)
+                    ->select();
+                $newB = [];
+                foreach ((array) $sql as $bValue) {
+                    $bValue['models_name'] = $bValue['models_name'].'【新首付'.$bValue['newpayment'].'，'.'月供'.$bValue['monthlypaymen'].'，'.'期数（月）'.$bValue['periods'].'，'.'总价（元）'.$bValue['totalprices'].'】';
+                    $newB[] = $bValue;
+                }
+                $newRes[] = array(
+                    'brand_name' => $value['brand_name'],
+                // 'brand_logoimage'=>$value['brand_logoimage'],
+                    'data' => $newB,
+                );
+            }
+            // pr($newRes);die;
+            $this->view->assign('newRes', $newRes);
+            $this->view->assign('result', $result);
+
+            if (!$row) {
+                $this->error(__('No Results were found'));
+            }
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                    $this->error(__('You have no permission'));
+                }
+            }
+            if ($this->request->isPost()) {
+                $params = $this->request->post('row/a');
+                if ($params) {
+                    try {
+                        //是否采用模型验证
+                        if ($this->modelValidate) {
+                            $name = basename(str_replace('\\', '/', get_class($this->model)));
+                            $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name.'.edit' : true) : $this->modelValidate;
+                            $row->validate($validate);
+                        }
+                        $result = $row->allowField(true)->save($params);
+                        if ($result !== false) {
+                            $this->success();
+                        } else {
+                            $this->error($row->getError());
+                        }
+                    } catch (\think\exception\PDOException $e) {
+                        $this->error($e->getMessage());
+                    }
+                }
+                $this->error(__('Parameter %s can not be empty', ''));
+            }
+            $this->view->assign('row', $row);
+
+            return $this->view->fetch('secondaudit');
     }
 
     /**
@@ -1968,17 +2050,6 @@ class Orderlisttabs extends Backend
             }
             if ($this->request->isPost()) {
                 $params = $this->request->post('row/a');
-                $ex = explode(',', $params['plan_car_second_name']);
-
-                $result = DB::name('secondcar_rental_models_info')->where('id', $params['plan_car_second_name'])->field('newpayment,monthlypaymen,periods,bond,models_id')->find();
-
-                $params['car_total_price'] = $result['newpayment'] + $result['monthlypaymen'] * $result['periods'];
-                $params['downpayment'] = $result['newpayment'] + $result['monthlypaymen'] + $result['bond'];
-
-                $params['plan_car_second_name'] = reset($ex); //截取id
-                $params['plan_name'] = addslashes(end($ex)); //
-            
-                $params['models_id'] = $result['models_id'];
                 if ($params) {
                     try {
                         //是否采用模型验证

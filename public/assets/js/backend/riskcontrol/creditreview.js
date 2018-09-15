@@ -662,14 +662,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                 field: 'operate', title: __('Operate'), table: secondhandcarAudit,
                                 buttons: [
                                     {
+                                        name: '', icon: 'fa fa-times', text: '审核资料还未完善，无法进行审核', classname: ' text-danger ',
+                                        hidden: function (row) {  /**审核资料还未完善，无法进行审核 */
+                                           
+                                            if (!row.id_cardimages || !row.drivers_licenseimages) {
+                                                return false;
+                                            }
+                                            else if (row.id_cardimages && row.drivers_licenseimages) {
+                                                return true;
+                                            }
+                                        },
+                                    },
+                                    {
                                         name: 'secondhandcarResult', text: '审核', title: '审核征信', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-secondhandcarResult btn-dialog',
                                         url: 'riskcontrol/creditreview/secondhandcarResult',
                                         //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
                                         //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
                                         //....
                                         hidden: function (row) { /**审核 */
-                                            if (row.review_the_data == 'is_reviewing_control') {
+                                            if (row.review_the_data == 'is_reviewing_control' && row.id_cardimages && row.drivers_licenseimages) {
                                                 return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control' || !row.id_cardimages || !row.drivers_licenseimages) {
+                                                return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
@@ -678,6 +693,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -686,8 +704,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
                                         url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
                                         hidden: function (row, value, index) {
-                                            if (row.review_the_data == 'is_reviewing_control') {
+                                            if (row.review_the_data == 'is_reviewing_control'  && row.id_cardimages && row.drivers_licenseimages) {
                                                 return false;
+                                            }
+                                            if (row.review_the_data == 'is_reviewing_control'  || !row.id_cardimages || !row.drivers_licenseimages) {
+                                                return true;
                                             }
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
@@ -698,11 +719,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         },
                                     },
                                     {
-                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '征信已通过，车管正在备车中', classname: ' text-info ',
-                                        hidden: function (row) {  /**征信已通过，车管正在备车中 */
+                                        name: 'is_reviewing_pass', text: '选择库存车', title: '选择库存车', icon: 'fa fa-arrows', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-danger btn-dialog btn-secondchooseStock',
+                                        hidden: function (row) {  /**征信已通过 */
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '车管备车中，客户可以提车', classname: ' text-info ',
+                                        hidden: function (row) {  /**通知销售让客户提车 */
                                             if (row.review_the_data == 'for_the_car') {
                                                 return false;
                                             }
@@ -713,6 +757,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -733,6 +780,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -749,6 +799,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
                                         }
@@ -804,6 +857,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
         },
         choosestock: function () {
+            
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            // Controller.api.bindevent();
+
+        },
+        secondchoosestock: function () {
             
             Table.api.init({
                
@@ -1039,6 +1116,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         row = $.extend({}, row ? row : {}, { ids: ids });
                         var url = 'riskcontrol/creditreview/secondhandcarResult';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+                            callback: function (value) {
+                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            }
+                        })
+                    },
+                    //选择库存车
+                    'click .btn-secondchooseStock': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = 'riskcontrol/creditreview/secondchoosestock';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('选择库存车'), $(this).data() || {
                             callback: function (value) {
                                 //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
                             }

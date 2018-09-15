@@ -1220,7 +1220,7 @@ if (!function_exists('secondcontrol_inform')) {
     }
 }
 /**
- * 以租代购（二手车）风控审核发送给销售，审核通过
+ * 以租代购（二手车）风控审核匹配车辆，发送给销售，补全客户提车资料，通知客户提车
  */
 if (!function_exists('secondpass_inform')) {
 
@@ -1229,8 +1229,28 @@ if (!function_exists('secondpass_inform')) {
     {
         if ($models_name && $username) {
             $arr = [
-                'subject' => "二手车风控审核通过通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，请及时登录后台进行处理 . '</div>'
+                'subject' => "风控匹配车辆成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，匹配完车辆，请及时登录后台进行处理，通知客户进行提车 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）风控审核匹配车辆，发送给车管，进行备车
+ */
+if (!function_exists('secondpass_tubeinform')) {
+
+
+    function secondpass_tubeinform($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "风控匹配车辆成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，匹配完车辆，请及时登录后台进行处理 . '</div>'
             ];
 
             return $arr;
