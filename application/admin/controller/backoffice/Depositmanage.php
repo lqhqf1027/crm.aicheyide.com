@@ -375,8 +375,7 @@ class Depositmanage extends Backend
             $row['bond'] = $order_info['bond'];
 
             $this->view->assign([
-                'row' => $row,
-                'money_list' => $this->money_list()
+                'row' => $row
             ]);
         }
 
@@ -418,7 +417,8 @@ class Depositmanage extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-//        $this->view->assign("row", $row);
+
+        $this->view->assign("money_list", $this->money_list());
         return $this->view->fetch();
     }
 
@@ -452,8 +452,7 @@ class Depositmanage extends Backend
             $row['bond'] = $order_info['bond'];
 
             $this->view->assign([
-                'row' => $row,
-                'money_list' => $this->money_list()
+                'row' => $row
             ]);
         }
 
@@ -496,6 +495,7 @@ class Depositmanage extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
+        $this->view->assign("money_list", $this->money_list());
         return $this->view->fetch();
     }
 
@@ -529,8 +529,7 @@ class Depositmanage extends Backend
             $row['bond'] = $order_info['bond'];
 
             $this->view->assign([
-                'row' => $row,
-                'money_list' => $this->money_list()
+                'row' => $row
             ]);
         }
 
@@ -572,6 +571,7 @@ class Depositmanage extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
+        $this->view->assign("money_list", $this->money_list());
         return $this->view->fetch();
     }
 
@@ -604,8 +604,7 @@ class Depositmanage extends Backend
             $row['bond'] = $order_info['bond'];
 
             $this->view->assign([
-                'row' => $row,
-                'money_list' => $this->money_list()
+                'row' => $row
             ]);
         }
 
@@ -648,6 +647,7 @@ class Depositmanage extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
+        $this->view->assign("money_list", $this->money_list());
         return $this->view->fetch();
     }
 
