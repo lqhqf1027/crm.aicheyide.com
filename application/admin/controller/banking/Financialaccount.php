@@ -17,7 +17,7 @@ class Financialaccount extends Backend
      * @var \app\admin\model\FinancialAccount
      */
     protected $model = null;
-    protected $noNeedRight =['index','edit','del'];
+    protected $noNeedRight =['index','edit','del','add'];
     public function _initialize()
     {
         parent::_initialize();

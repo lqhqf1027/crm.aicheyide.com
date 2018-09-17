@@ -89,16 +89,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
                                 }
                             },
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
-                            {
-                                field: 'genderdata',
-                                title: __('Genderdata'),
-                                visible: false,
-                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
-                            },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+
                             {
                                 field: 'distributsaletime',
                                 title: __('Distributsaletime'),
@@ -233,16 +226,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
                                 }
                             },
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
-                            {
-                                field: 'genderdata',
-                                title: __('Genderdata'),
-                                visible: false,
-                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
-                            },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+
 
                             {
                                 field: 'customerlevel',
@@ -372,16 +358,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
                                 }
                             },
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
-                            {
-                                field: 'genderdata',
-                                title: __('Genderdata'),
-                                visible: false,
-                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
-                            },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+
                             {
                                 field: 'customerlevel',
                                 title: '客户等级',
@@ -507,16 +486,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
                                 }
                             },
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
-                            {
-                                field: 'genderdata',
-                                title: __('Genderdata'),
-                                visible: false,
-                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
-                            },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
+
                             {
                                 field: 'customerlevel',
                                 title: '客户等级',
@@ -644,17 +616,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: Fast.lang('Id'), operate: false},
                             {field: 'platform.name', title: __('客户来源')},
 
-                            // {field: 'sales_id', title: __('Sales_id')},
-                            {field: 'username', title: __('Username')},
+
+                            {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
                             {
-                                field: 'genderdata',
-                                title: __('Genderdata'),
-                                visible: false,
-                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
+                                field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+                                }
                             },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {field: 'reason', title: __('放弃原因'), operate: false,formatter:function (value, row, index) {
 
                                 var html = "";
@@ -715,17 +684,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             },
                             // {field: 'sales_id', title: __('Sales_id')},
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'age', title: __('Age')},
-                            {
-                                field: 'genderdata',
-                                title: __('Genderdata'),
-                                visible: false,
-                                searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
-                            },
-                            {field: 'genderdata_text', title: __('Genderdata'), operate: false},
-                            {field: 'followupdate', title: '下次跟进时间', operate: false},
+
+                            // {field: 'followupdate', title: '下次跟进时间', operate: false},
                             {
                                 field: 'customerlevel',
                                 title: '客户等级',
