@@ -123,26 +123,30 @@
     }
 </style>
 <div class="panel panel-default panel-intro">
+
     <div class="panel-heading">
         {:build_heading(null, false)}
         <ul class="nav nav-tabs">
             <li class="active"><a href="#one" data-toggle="tab">{:__('控制台-成都')}</a></li>
-            <li><a href="#two" data-toggle="tab">{:__('控制台-西安')}</a></li>
+            <li><a href="#xi-an" data-toggle="tab">{:__('控制台-西安')}</a></li>
+            <li><a href="#yinchuan" data-toggle="tab">{:__('控制台-银川')}</a></li>
+            <li><a href="#kuming" data-toggle="tab">{:__('控制台-昆明')}</a></li>
+            <li><a href="#nanchong" data-toggle="tab">{:__('控制台-南充')}</a></li>
         </ul>
     </div>
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="one">
 
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div id="city" style="height:300px;width:100%;"></div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div id="today" style="height:300px;width:100%;"></div>
-                    </div>
-                </div>
-                <br><br><br>
+                <!--<div class="row">-->
+                    <!--<div class="col-lg-6">-->
+                        <!--<div id="city" style="height:300px;width:100%;"></div>-->
+                    <!--</div>-->
+                    <!--<div class="col-lg-6">-->
+                        <!--<div id="today" style="height:300px;width:100%;"></div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<br><br><br>-->
                 <!-- 新车 -->
                 <div class="row">
                     <div class="col-lg-8">
@@ -609,10 +613,31 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="two">
+            <div class="tab-pane fade" id="xi-an">
                 <div class="row">
                     <div class="col-xs-12">
-                        {:__('Custom zone')}
+                        {:__('暂未开放')}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="yinchuan">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {:__('暂未开放')}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="kuming">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {:__('暂未开放')}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nanchong">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {:__('暂未开放')}
                     </div>
                 </div>
             </div>
