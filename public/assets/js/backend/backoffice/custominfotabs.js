@@ -95,7 +95,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 })
                 newCustomer.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-newCustomer").data("area", ["60%", "60%"]);
                 });
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -178,7 +178,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
-                        area: ['50%', '50%'],
+                        area: ['60%', '60%'],
                         callback: function (value) {
 
                         }

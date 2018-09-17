@@ -35,8 +35,8 @@ class Custominfotabs extends Backend
     public function getUserId()
     {
         $this->model = model("Admin");
-        $back = $this->model->where("rule_message", "message13")
-            ->whereOr("rule_message", "message20")
+        $back = $this->model
+            ->where("rule_message",'in',['message13','message20','message24'])
             ->field("id")
             ->select();
 
@@ -408,15 +408,16 @@ class Custominfotabs extends Backend
 
 
         $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message8')->whereOr('rule_message', 'message9');
+            $query->where(['rule_message'=>['in',['message8','message9','message23']]]);
         })->select();
         $saleList = array();
+
 
         if (count($sale) > 0) {
 
             $firstCount = 0;
             $secondCount = 0;
-
+            $thirdCount = 0;
             foreach ($sale as $k => $v) {
                 switch ($v['rule_message']) {
                     case 'message8':
@@ -428,6 +429,11 @@ class Custominfotabs extends Backend
                         $saleList['message9'][$secondCount]['nickname'] = $v['nickname'];
                         $saleList['message9'][$secondCount]['id'] = $v['id'];
                         $secondCount++;
+                        break;
+                    case 'message23':
+                        $saleList['message23'][$thirdCount]['nickname'] = $v['nickname'];
+                        $saleList['message23'][$thirdCount]['id'] = $v['id'];
+                        $thirdCount++;
                         break;
                 }
             }
@@ -441,9 +447,14 @@ class Custominfotabs extends Backend
         if (empty($saleList['message9'])) {
             $saleList['message9'] = null;
         }
-
-        $this->view->assign('firstSale', $saleList['message8']);
-        $this->view->assign('secondSale', $saleList['message9']);
+        if (empty($saleList['message23'])) {
+            $saleList['message23'] = null;
+        }
+        $this->view->assign([
+            'firstSale'=> $saleList['message8'],
+            'secondSale'=> $saleList['message9'],
+            'thirdSale'=>$saleList['message23']
+        ]);
 
         if ($this->request->isPost()) {
 

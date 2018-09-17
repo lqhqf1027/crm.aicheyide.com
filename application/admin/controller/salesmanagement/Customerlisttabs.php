@@ -80,15 +80,15 @@ class Customerlisttabs extends Backend
 
     public function index()
     {
-        $this->view->assign([
-            'newCustomTotal' => $this->get_total($this->noPhone(), $this->getUserId(), null),
-            'relationTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'relation'),
-            'intentionTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'intention'),
-            'nointentionTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'nointention'),
-            'giveupTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'giveup'),
-            'overdueTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'overdue'),
-
-        ]);
+//        $this->view->assign([
+//            'newCustomTotal' => $this->get_total($this->noPhone(), $this->getUserId(), null),
+//            'relationTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'relation'),
+//            'intentionTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'intention'),
+//            'nointentionTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'nointention'),
+//            'giveupTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'giveup'),
+//            'overdueTotal' => $this->get_total($this->noPhone(), $this->getUserId(), 'overdue'),
+//
+//        ]);
 
 
         $this->loadlang('salesmanagement/customerlisttabs');
