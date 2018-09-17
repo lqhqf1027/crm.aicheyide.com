@@ -21,6 +21,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
+            $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
+                $(this).trigger("shown.bs.tab");
+            });
         },
 
 
@@ -36,6 +40,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-edit").data("area", ["80%", "80%"]);
                 });
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:车架号";};
+
+                total(newCustomer,$('#total-login'));
 
                 // 初始化表格
                 newCustomer.bootstrapTable({
@@ -161,6 +167,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-edittwo").data("area", ["50%", "80%"]);
                     $(".btn-edit").data("area", ["50%", "80%"]);
                 });
+
+                total(registryRegistration,$('#total-warehousing'));
+
                 // 初始化表格
                 registryRegistration.bootstrapTable({
                     url: 'material/Newcarinfo/data_warehousing',
@@ -578,6 +587,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     };
 
+    /**
+     * 表格加载完成统计条数
+     * @param table
+     * @param obj
+     */
+    function total(table,obj) {
+        table.on('load-success.bs.table', function (e, data) {
+            obj.text(data.total);
+
+        })
+    }
+
     function getNowFormatDate() {
         var date = new Date();
         var seperator1 = "-";
@@ -594,4 +615,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         return currentdate;
     }
     return Controller;
+
+
 });
