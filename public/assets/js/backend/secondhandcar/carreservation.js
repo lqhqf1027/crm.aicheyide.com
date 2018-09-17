@@ -161,6 +161,202 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'plansecond.totalprices', title: __('车款总价(元)'),operate:false},
                             {field: 'downpayment', title: __('首期款(元)'),operate:false},
 
+                            {
+                                field: 'operate', title: __('Operate'), table: secondcarConfirm,
+                                buttons: [
+                                    {
+                                        name: 'is_reviewing_control', text: '风控正在审核中',
+                                        hidden: function (row) {  /**风控正在审核中 */
+                                            if (row.review_the_data == 'is_reviewing_control') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'is_reviewing_finance', text: '正在匹配金融',
+                                        hidden: function (row) {  /**正在匹配金融 */
+                                            if (row.review_the_data == 'is_reviewing_finance') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '风控正在匹配车辆', classname: ' text-info ',
+                                        hidden: function (row) {  /**风控正在匹配车辆 */
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'for_the_car', icon: 'fa fa-check-circle', text: '车管备车中，通知客户可以进行提车', classname: ' text-info ',
+                                        hidden: function (row) {  /**通知客户可以进行提车 */
+                                            if (row.review_the_data == 'for_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'not_through', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
+                                        hidden: function (row) {  /**征信不通过 */
+
+                                            if (row.review_the_data == 'not_through') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'the_guarantor', text: '需交保证金', title: __('点击上传保证金收据'), classname: 'text-info',
+                                        hidden: function (row) {  /**需交保证金 */
+
+                                            if (row.review_the_data == 'the_guarantor') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+
+                                        name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                        hidden: function (row) {  /**已提车 */
+                                            if (row.review_the_data == 'the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                        }
+                                    }
+
+                                ],
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+
                         ]
                     ]
                 });

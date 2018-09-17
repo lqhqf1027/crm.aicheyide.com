@@ -56,7 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id'),operate:false},
                         // {field: 'sales_id', title: __('Sales_id')},
                         {field: 'licenseplatenumber', title: __('Licenseplatenumber'), formatter:function(value,row,index){
-                            return row.status_data==null?row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中</span>':row.licenseplatenumber;
+                            return row.status_data==''?row.licenseplatenumber:row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中</span>';
                         }},
                         {field: 'models.name', title: __('Models.name')},
                         {field: 'kilometres', title: __('Kilometres'), operate:false},
