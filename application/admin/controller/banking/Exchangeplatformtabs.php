@@ -36,37 +36,35 @@ class Exchangeplatformtabs extends Backend
     public function index()
     {
 
-        $mid = Db::name('sales_order')
-        ->where('review_the_data','the_car')
-        ->field('id,mortgage_id')
-        ->select();
-
-//        pr($mid);die();
-
-        foreach ($mid as $k=>$v){
-            if(!$v['mortgage_id']){
-                Db::name('mortgage')->insert(['mortgage_type'=>'new_car']);
-
-                $last_id = Db::name('mortgage')->getLastInsID();
-
-                Db::name('sales_order')
-                ->where('id',$v['id'])
-                ->setField('mortgage_id',$last_id);
-            }
-        }
-
-        $this->loadlang('banking/exchangeplatformtabs');
-        $new_car = $this->getCar("new_car");
-        $yue_da_car = $this->getCar("yueda_car");
-        $other_car = $this->getCar("other_car");
-        $nan_chong = Db::name("nanchong_driver")->count();
-
-        $this->view->assign([
-            'new_total' => $new_car[0],
-            'yue_total' => $yue_da_car[0],
-            'other_total' => $other_car[0],
-            'nan_chong' => $nan_chong
-        ]);
+//        $mid = Db::name('sales_order')
+//        ->where('review_the_data','the_car')
+//        ->field('id,mortgage_id')
+//        ->select();
+//
+//        foreach ($mid as $k=>$v){
+//            if(!$v['mortgage_id']){
+//                Db::name('mortgage')->insert(['mortgage_type'=>'new_car']);
+//
+//                $last_id = Db::name('mortgage')->getLastInsID();
+//
+//                Db::name('sales_order')
+//                ->where('id',$v['id'])
+//                ->setField('mortgage_id',$last_id);
+//            }
+//        }
+//
+//        $this->loadlang('banking/exchangeplatformtabs');
+//        $new_car = $this->getCar("new_car");
+//        $yue_da_car = $this->getCar("yueda_car");
+//        $other_car = $this->getCar("other_car");
+//        $nan_chong = Db::name("nanchong_driver")->count();
+//
+//        $this->view->assign([
+//            'new_total' => $new_car[0],
+//            'yue_total' => $yue_da_car[0],
+//            'other_total' => $other_car[0],
+//            'nan_chong' => $nan_chong
+//        ]);
 
 
         return $this->view->fetch();

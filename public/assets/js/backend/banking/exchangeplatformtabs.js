@@ -21,6 +21,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
+            $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
+                $(this).trigger("shown.bs.tab");
+            });
         },
 
         change_platform: function () {
@@ -71,7 +75,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     Controller.merge(arr, $("#newCar"), $('#new_car'));
 
 
-                    $('#badge_new_car').text(data.total);
+                    $('#total-new').text(data.total);
                 });
 
                 newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -195,7 +199,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // merge(arr, $("#yueDaCar"));
                     Controller.merge(arr, $("#yueDaCar"), $('#yue_da_car'))
 
-                    $('#badge_yue_da').text(data.total);
+                    $('#total-yueda').text(data.total);
 
                 });
 
@@ -306,13 +310,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             },
             other_car: function () {
-                console.log(Controller);
                 // 表格3
                 var otherCar = $("#otherCar");
                 otherCar.on('load-success.bs.table', function (e, data) {
                     var arr = data.rows;
                     // merge(arr, $("#otherCar"));
-                    $('#badge_other').text(data.total);
+                    $('#total-other').text(data.total);
 
                     Controller.merge(arr, $("#otherCar"), $('#other_car'))
 
@@ -431,7 +434,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var nanchongDriver = $("#nanchongDriver");
                 nanchongDriver.on('load-success.bs.table', function (e, data) {
                     console.log(data.total);
-                    $('#badge_nan_chong').text(data.total);
+                    $('#total-nanchong').text(data.total);
 
                 });
 

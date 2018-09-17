@@ -2500,6 +2500,15 @@ class Orderlisttabs extends Backend
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
 
+    //分页
+    public function page()
+    {
+           $num = $this->request->post('num');
+
+           $num = intval($num)+1;
+
+    }
+
 
 
 }
