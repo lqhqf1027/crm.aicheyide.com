@@ -19,7 +19,8 @@ class Referee extends Backend
      * @var \app\admin\model\Referee
      */
     protected $model = null;
-    protected $noNeedRight = ['index','edit','satisfy_id','getCanUse','del'];
+    protected $noNeedRight = ['index', 'edit', 'satisfy_id', 'getCanUse', 'del'];
+
     public function _initialize()
     {
         parent::_initialize();
@@ -28,7 +29,7 @@ class Referee extends Backend
     }
 
     /**
-     * 如登录的是内勤,得到满足条件的数据进行显示
+     * 如登录的是内勤或者销售经理,得到满足条件的数据进行显示
      * @param $login
      * @return array
      *
@@ -64,7 +65,7 @@ class Referee extends Backend
      */
     public function index()
     {
-        $login =$this->auth->id;
+        $login = $this->auth->id;
 
         $canUseId = $this->getUserId();
 
@@ -74,7 +75,7 @@ class Referee extends Backend
         $phone = null;
 
         //如果操作员是内勤,得到对应销售的客户电话
-        if (in_array($login, $canUseId['back'])) {
+        if (!in_array($login, $canUseId['admin'])) {
             $referee = $this->satisfy_id($login);
 
             $phone = Db::name("referee")
@@ -82,7 +83,7 @@ class Referee extends Backend
                 ->column("customer_phone");
         }
         //扔出头像cdn
-        $this->assignconfig('avatarCdn',Config::get('upload')['cdnurl']);
+        $this->assignconfig('avatarCdn', Config::get('upload')['cdnurl']);
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -95,12 +96,12 @@ class Referee extends Backend
                 ->with(['models' => function ($query) {
                     $query->withField('name');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['nickname', 'avatar']);
                 }])
                 ->where($where)
-                ->where(function ($query) use ($login, $canUseId,$referee,$phone) {
-                    if (in_array($login, $canUseId['back'])) {
-                        $query->where('customer_phone','in',$phone);
+                ->where(function ($query) use ($login, $canUseId, $referee, $phone) {
+                    if (in_array($login, $canUseId['back']) || in_array($login, $canUseId['manager'])) {
+                        $query->where('customer_phone', 'in', $phone);
                     }
                 })
                 ->order($sort, $order)
@@ -110,12 +111,12 @@ class Referee extends Backend
                 ->with(['models' => function ($query) {
                     $query->withField('name');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['nickname', 'avatar']);
                 }])
                 ->where($where)
-                ->where(function ($query) use ($login, $canUseId,$referee,$phone) {
-                    if (in_array($login, $canUseId['back'])) {
-                        $query->where('customer_phone','in',$phone);
+                ->where(function ($query) use ($login, $canUseId, $referee, $phone) {
+                    if (in_array($login, $canUseId['back']) || in_array($login, $canUseId['manager'])) {
+                        $query->where('customer_phone', 'in', $phone);
                     }
                 })
                 ->order($sort, $order)
@@ -135,20 +136,23 @@ class Referee extends Backend
     public function getUserId()
     {
         $this->model = model("Admin");
-        $back = $this->model->where("rule_message", "message13")
-            ->whereOr("rule_message", "message20")
+        $back = $this->model
+            ->where("rule_message",'in', ["message13",'message20','message24'])
             ->field("id")
             ->select();
 
         $backArray = array();
         $backArray['back'] = array();
         $backArray['admin'] = array();
+        $backArray['manager'] = Db::name('admin')
+            ->where('rule_message', 'in', ['message3', 'message4', 'message22'])
+            ->column('id');
 
         foreach ($back as $value) {
             array_push($backArray['back'], $value['id']);
         }
 
-        $superAdmin = $this->model->where("rule_message", "message21")
+        $superAdmin = $this->model->where("rule_message", 'in', ["message21", 'message1'])
             ->field("id")
             ->select();
 
@@ -162,6 +166,7 @@ class Referee extends Backend
     //根据内勤ID得到对应的销售信息
     public function getCanUse($user)
     {
+
         $rules = Db::name("Admin")
             ->where("id", $user)
             ->value("rule_message");
@@ -177,6 +182,31 @@ class Referee extends Backend
             case 'message20':
                 $sales_id = Db::name("Admin")
                     ->where("rule_message", "message9")
+                    ->column("id");
+
+                return $sales_id;
+            case 'message24':
+                $sales_id = Db::name("Admin")
+                    ->where("rule_message", "message23")
+                    ->column("id");
+
+                return $sales_id;
+
+            case 'message3':
+                $sales_id = Db::name("Admin")
+                    ->where("rule_message", "message8")
+                    ->column("id");
+
+                return $sales_id;
+            case 'message4':
+                $sales_id = Db::name("Admin")
+                    ->where("rule_message", "message9")
+                    ->column("id");
+
+                return $sales_id;
+            case 'message22':
+                $sales_id = Db::name("Admin")
+                    ->where("rule_message", "message23")
                     ->column("id");
 
                 return $sales_id;

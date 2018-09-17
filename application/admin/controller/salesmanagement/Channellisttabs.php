@@ -29,7 +29,7 @@ class Channellisttabs extends Backend
     }
 
     /**
-     * 如登录的是内勤,得到满足条件的数据进行显示
+     * 如登录的是销售或者销售经理,得到满足条件的数据进行显示
      * @param $login
      * @return array
      *
@@ -38,11 +38,30 @@ class Channellisttabs extends Backend
     {
         $canUseId = $this->getUserId();
 
+        $message = null;
+
         //得到当前销售所在部门
         if (in_array($this->auth->id, $canUseId['sales'])) {
             $message = Db::name('admin')
                 ->where('id', $this->auth->id)
                 ->value('rule_message');
+        } else if (in_array($this->auth->id, $canUseId['manager'])) {
+
+            $manager = Db::name('admin')
+                ->where('id', $this->auth->id)
+                ->value('rule_message');
+
+            switch ($manager) {
+                case 'message3':
+                    $message = 'message8';
+                    break;
+                case 'message4':
+                    $message = 'message9';
+                    break;
+                case 'message22':
+                    $message = 'message23';
+                    break;
+            }
         }
 
         //得到该部门所有销售
@@ -52,17 +71,17 @@ class Channellisttabs extends Backend
 
 
         $new_car = Db::name("sales_order")
-            ->where("admin_id", 'in',$all_sales)
+            ->where("admin_id", 'in', $all_sales)
             ->where("referee_id", "not null")
             ->column("referee_id");
 
         $used_car = Db::name("second_sales_order")
-            ->where("admin_id", 'in',$all_sales)
+            ->where("admin_id", 'in', $all_sales)
             ->where("referee_id", "not null")
             ->column("referee_id");
 
         $full_car = Db::name("full_parment_order")
-            ->where("admin_id", 'in',$all_sales)
+            ->where("admin_id", 'in', $all_sales)
             ->where("referee_id", "not null")
             ->column("referee_id");
 
@@ -74,12 +93,10 @@ class Channellisttabs extends Backend
 
     public function index()
     {
-
         $login = $this->auth->id;
 
         $canUseId = $this->getUserId();
 
-//        pr($canUseId);die();
 
         $this->model = new \app\admin\model\Referee;
 
@@ -90,10 +107,16 @@ class Channellisttabs extends Backend
         if (in_array($login, $canUseId['sales'])) {
 
             $referee = $this->satisfy_id();
-//pr($referee);die();
             $phone = Db::name("referee")
                 ->where("id", 'in', $referee)
                 ->column("customer_phone");
+        } else if (in_array($login, $canUseId['manager'])) {
+
+            $referee = $this->satisfy_id();
+            $phone = Db::name("referee")
+                ->where("id", 'in', $referee)
+                ->column("customer_phone");
+
         }
 
         //设置过滤方法
@@ -112,9 +135,11 @@ class Channellisttabs extends Backend
                 }])
                 ->where($where)
                 ->where(function ($query) use ($login, $canUseId, $referee, $phone) {
-                    if (in_array($login, $canUseId['sales'])) {
+                    if (in_array($login, $canUseId['sales']) || in_array($login, $canUseId['manager'])) {
                         $query->where('customer_phone', 'in', $phone);
                     }
+
+
                 })
                 ->order($sort, $order)
                 ->count();
@@ -127,7 +152,7 @@ class Channellisttabs extends Backend
                 }])
                 ->where($where)
                 ->where(function ($query) use ($login, $canUseId, $referee, $phone) {
-                    if (in_array($login, $canUseId['sales'])) {
+                    if (in_array($login, $canUseId['sales']) || in_array($login, $canUseId['manager'])) {
                         $query->where('customer_phone', 'in', $phone);
                     }
                 })
@@ -156,10 +181,13 @@ class Channellisttabs extends Backend
             ->where('rule_message', 'message21')
             ->column('id');
 
+        $result['manager'] = Db::name('admin')
+            ->where('rule_message', 'in', ['message3', 'message4', 'message22'])
+            ->column('id');
+
 
         return $result;
     }
-
 
     /**
      * 编辑

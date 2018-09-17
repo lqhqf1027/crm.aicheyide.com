@@ -43,6 +43,9 @@ class Custominfotabs extends Backend
         $backArray = array();
         $backArray['back'] = array();
         $backArray['admin'] = array();
+        $backArray['manager'] =Db::name('admin')
+        ->where('rule_message','in',['message3','message4','message22'])
+        ->column('id');
 
         foreach ($back as $value) {
             array_push($backArray['back'], $value['id']);
@@ -69,53 +72,53 @@ class Custominfotabs extends Backend
         $this->loadlang('backoffice/custominfotabs');
 
 
-        if (in_array($this->auth->id, $canUseId['back'])) {
-            $newTotal = $this->model
-                ->with(['platform','backoffice'=>function ($query){
-                    $query->withField(['nickname','avatar']);
-                }])
-                ->where(function ($query) {
-                    $query->where('backoffice_id', $this->auth->id)
-                        ->where('sales_id', 'null')
-                        ->where('platform_id', 'in', [2, 3, 4]);
-                })
-                ->count();
-
-            $assignedTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) {
-                    $query->where('backoffice_id', $this->auth->id)
-                        ->where('sales_id', 'not null')
-                        ->where('platform_id', 'in', [2, 3, 4]);
-                })
-                ->count();
-
-        } else if (in_array($this->auth->id, $canUseId['admin'])) {
-            $newTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('sales_id', 'null')
-                        ->where('platform_id', 'in', [2, 3, 4]);
-                })
-                ->count();
-
-            $assignedTotal = $this->model
-                ->with(['platform'])
-                ->where(function ($query) {
-                    $query->where('backoffice_id', "not null")
-                        ->where('sales_id', 'not null')
-                        ->where('platform_id', 'in', [2, 3, 4]);
-                })
-                ->count();
-
-        }
-
-
-        $this->view->assign([
-            'newTotal' => $newTotal,
-            'assignedTotal' => $assignedTotal
-        ]);
+//        if (in_array($this->auth->id, $canUseId['back'])) {
+//            $newTotal = $this->model
+//                ->with(['platform','backoffice'=>function ($query){
+//                    $query->withField(['nickname','avatar']);
+//                }])
+//                ->where(function ($query) {
+//                    $query->where('backoffice_id', $this->auth->id)
+//                        ->where('sales_id', 'null')
+//                        ->where('platform_id', 'in', [2, 3, 4]);
+//                })
+//                ->count();
+//
+//            $assignedTotal = $this->model
+//                ->with(['platform'])
+//                ->where(function ($query) {
+//                    $query->where('backoffice_id', $this->auth->id)
+//                        ->where('sales_id', 'not null')
+//                        ->where('platform_id', 'in', [2, 3, 4]);
+//                })
+//                ->count();
+//
+//        } else if (in_array($this->auth->id, $canUseId['admin'])) {
+//            $newTotal = $this->model
+//                ->with(['platform'])
+//                ->where(function ($query) {
+//                    $query->where('backoffice_id', "not null")
+//                        ->where('sales_id', 'null')
+//                        ->where('platform_id', 'in', [2, 3, 4]);
+//                })
+//                ->count();
+//
+//            $assignedTotal = $this->model
+//                ->with(['platform'])
+//                ->where(function ($query) {
+//                    $query->where('backoffice_id', "not null")
+//                        ->where('sales_id', 'not null')
+//                        ->where('platform_id', 'in', [2, 3, 4]);
+//                })
+//                ->count();
+//
+//        }
+//
+//
+//        $this->view->assign([
+//            'newTotal' => $newTotal,
+//            'assignedTotal' => $assignedTotal
+//        ]);
         return $this->view->fetch();
     }
 
@@ -128,6 +131,11 @@ class Custominfotabs extends Backend
         $this->model = model('CustomerResource');
 
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $get_id = null;
+        if(in_array($this->auth->id,$canUseId['manager'])){
+            $get_id = $this->get_manager();
+
+        }
 
 
         //当前是否为关联查询
@@ -148,16 +156,20 @@ class Custominfotabs extends Backend
                         $query->withField(['nickname','avatar']);
                     }])
                     ->where($where)
-                    ->where(function ($query) use ($canUseId) {
+                    ->where(function ($query) use ($canUseId,$get_id) {
                         if(in_array($this->auth->id,$canUseId['back'])){
                             $query->where('backoffice_id', $this->auth->id);
 
-                        }else if (in_array($this->auth->id,$canUseId['admin'])){
+                        }else if(in_array($this->auth->id,$canUseId['manager'])){
+                            $query->where('backoffice_id', 'in',$get_id);
+                        }
+
+                        else if (in_array($this->auth->id,$canUseId['admin'])){
                             $query->where('backoffice_id', 'not null');
 
                         }
                         $query->where('sales_id', 'null')
-                            ->where('platform_id', 'in', [2, 3, 4]);
+                            ->where('platform_id', 'in', [2, 3, 4,8]);
 
                     })
                     ->order($sort, $order)
@@ -170,16 +182,20 @@ class Custominfotabs extends Backend
                     }])
                     ->where($where)
                     ->order($sort, $order)
-                    ->where(function ($query) use ($canUseId) {
+                    ->where(function ($query) use ($canUseId,$get_id) {
                         if(in_array($this->auth->id,$canUseId['back'])){
                             $query->where('backoffice_id', $this->auth->id);
 
-                        }else if (in_array($this->auth->id,$canUseId['admin'])){
+                        }else if(in_array($this->auth->id,$canUseId['manager'])){
+                            $query->where('backoffice_id', 'in',$get_id);
+                        }
+
+                        else if (in_array($this->auth->id,$canUseId['admin'])){
                             $query->where('backoffice_id', 'not null');
 
                         }
                         $query->where('sales_id', 'null')
-                            ->where('platform_id', 'in', [2, 3, 4]);
+                            ->where('platform_id', 'in', [2, 3, 4,8]);
 
                     })
                     ->limit($offset, $limit)
@@ -224,7 +240,7 @@ class Custominfotabs extends Backend
                     ->where(function ($query) {
                         $query->where('backoffice_id', $this->auth->id)
                             ->where('sales_id', 'not null')
-                            ->where('platform_id', 'in', [2, 3, 4]);
+                            ->where('platform_id', 'in', [2, 3, 4,8]);
                     })
                     ->order($sort, $order)
                     ->count();
@@ -241,11 +257,47 @@ class Custominfotabs extends Backend
                     ->where(function ($query) {
                         $query->where('backoffice_id', $this->auth->id)
                             ->where('sales_id', 'not null')
-                            ->where('platform_id', 'in', [2, 3, 4]);
+                            ->where('platform_id', 'in', [2, 3, 4,8]);
                     })
                     ->limit($offset, $limit)
                     ->select();
-            } else if (in_array($this->auth->id, $canUseId['admin'])) {
+            }else if (in_array($this->auth->id, $canUseId['manager'])) {
+
+                $get_id = $this->get_manager();
+
+                $total = $this->model
+                    ->with(['platform','backoffice'=>function ($query){
+                        $query->withField(['nickname','avatar']);
+                    },'admin'=>function ($query){
+                        $query->withField(['nickname','avatar']);
+                    }])
+                    ->where($where)
+                    ->where(function ($query) use($get_id) {
+                        $query->where('backoffice_id', 'in',$get_id)
+                            ->where('sales_id', 'not null')
+                            ->where('platform_id', 'in', [2, 3, 4,8]);
+                    })
+                    ->order($sort, $order)
+                    ->count();
+
+
+                $list = $this->model
+                    ->with(['platform','backoffice'=>function ($query){
+                        $query->withField(['nickname','avatar']);
+                    },'admin'=>function ($query){
+                        $query->withField(['nickname','avatar']);
+                    }])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->where(function ($query) use($get_id) {
+                        $query->where('backoffice_id', 'in',$get_id)
+                            ->where('sales_id', 'not null')
+                            ->where('platform_id', 'in', [2, 3, 4,8]);
+                    })
+                    ->limit($offset, $limit)
+                    ->select();
+
+            }else if (in_array($this->auth->id, $canUseId['admin'])) {
                 $total = $this->model
                     ->with(['platform','backoffice'=>function ($query){
                         $query->withField(['nickname','avatar']);
@@ -256,7 +308,7 @@ class Custominfotabs extends Backend
                     ->where(function ($query) {
                         $query->where('backoffice_id', "not null")
                             ->where('sales_id', 'not null')
-                            ->where('platform_id', 'in', [2, 3, 4]);
+                            ->where('platform_id', 'in', [2, 3, 4,8]);
                     })
                     ->order($sort, $order)
                     ->count();
@@ -273,7 +325,7 @@ class Custominfotabs extends Backend
                     ->where(function ($query) {
                         $query->where('backoffice_id', "not null")
                             ->where('sales_id', 'not null')
-                            ->where('platform_id', 'in', [2, 3, 4]);
+                            ->where('platform_id', 'in', [2, 3, 4,8]);
                     })
                     ->limit($offset, $limit)
                     ->select();
@@ -515,6 +567,33 @@ class Custominfotabs extends Backend
             }
         }
         return $this->view->fetch();
+    }
+
+
+    /**
+     * 销售经理获取自己部门内勤
+     * @return array
+     */
+    public function get_manager()
+    {
+         $message = Db::name('admin')
+         ->where('id',$this->auth->id)
+         ->value('rule_message');
+
+         switch ($message){
+             case 'message3':
+                 return Db::name('admin')
+                     ->where('rule_message','message13')
+                     ->column('id');
+             case 'message4':
+                 return Db::name('admin')
+                     ->where('rule_message','message20')
+                     ->column('id');
+             case 'message22':
+                 return Db::name('admin')
+                     ->where('rule_message','message24')
+                     ->column('id');
+         }
     }
 
     public function test1()

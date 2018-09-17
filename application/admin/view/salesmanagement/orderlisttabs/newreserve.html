@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/assets/css/bootstrap.css">
+
 <form id="newreserve-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
     <h2>
         <center>当前购车方式：以租代购（新车）</center>
@@ -73,42 +75,78 @@
 
                 success: function (data) {
                     var data = JSON.parse(data);
-
                     var html = '<tr>';
 
-                    html += '<th class="col-xs-12 col-sm-1 ">' + '车型' + '</th>'; 
-                    html += '<th class="col-xs-12 col-sm-1 ">' + '首付（元）' + '</th>'; 
-                    html += '<th class="col-xs-12 col-sm-1 ">' + '月供（元）' + '</th>'; 
-                    html += '<th class="col-xs-12 col-sm-1 ">' + '期数（月）' + '</th>'; 
-                    html += '<th class="col-xs-12 col-sm-1 ">' + '尾款（元）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '车型' + '</th>';
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '首付（元）' + '</th>';
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '月供（元）' + '</th>';
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '期数（月）' + '</th>';
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '尾款（元）' + '</th>';
                     html += '<th class="col-xs-12 col-sm-1 ">' + '保证金（元）' + '</th>'
-                    html += '<th class="col-xs-12 col-sm-1 ">' + 'GPS(元)' + '</th>'; 
-                    html += '<th class="col-xs-12 col-sm-1 ">' + '首付总额（元）' + '</th>'; 
+                    html += '<th class="col-xs-12 col-sm-1 ">' + 'GPS(元)' + '</th>';
+                    html += '<th class="col-xs-12 col-sm-1 ">' + '首付总额（元）' + '</th>';
                     html += '<th class="col-xs-12 col-sm-1 ">' + '操作' + '</th>';
                     ;
 
                     html += '</tr>';
                     html += '<tr>';
+                    if(data.length<10){
+                        for (var i in data) {
+                            var result = data[i];
+                            // console.log(result);
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id+ '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
+                            //models_id
+                            html+= '<input>';
+                            html += '</tr>';
+
+                        }
+                    }else{
+                        for (var i in data) {
+                            if(i>=10){
+                                break;
+                            }
+                            var result = data[i];
+                            // console.log(result);
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
+                            html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id+ '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
+                            //models_id
+                            html+= '<input>';
+                            html += '</tr>';
+
+                        }
+                        html += '<ul class="pagination">\n' +
+                            '    <li><a href="#">&laquo;</a></li>\n' +
+                            '    <li><a href="#">1</a></li>\n' +
+                            '    <li><a href="#">2</a></li>\n' +
+                            '    <li><a href="#">3</a></li>\n' +
+                            '    <li><a href="#">4</a></li>\n' +
+                            '    <li><a href="#">5</a></li>\n' +
+                            '    <li><a href="#">&raquo;</a></li>\n' +
+                            '</ul>'
+                    }
+                    console.log(html);
+
+
+
 
                     // console.log(data);
                     
-                    for (var i in data) {
-                        var result = data[i];
-                        // console.log(result);
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>'; 
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
-                        html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id+ '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>' ;
-                        //models_id
-                        html+= '<input>';
-                        html += '</tr>';
 
-                    }
                     
                     $('.plan_acar').html(html);
 

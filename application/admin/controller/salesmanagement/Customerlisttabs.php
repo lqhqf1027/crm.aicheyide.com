@@ -36,7 +36,7 @@ class Customerlisttabs extends Backend
     public function getUserId()
     {
         $this->model = model("Admin");
-        $back = $this->model->where("rule_message", 'in',["message8",'message9','message23'])
+        $back = $this->model->where("rule_message", 'in', ["message8", 'message9', 'message23'])
             ->field("id")
             ->select();
 
@@ -51,11 +51,39 @@ class Customerlisttabs extends Backend
             ->field("id")
             ->select();
 
+
+
+
+
         foreach ($superAdmin as $value) {
             array_push($backArray['admin'], $value['id']);
         }
 
         return $backArray;
+    }
+
+    public function test()
+    {
+        $message = Db::name('admin')
+            ->where('id', $this->auth->id)
+            ->value('rule_message');
+
+        switch ($message){
+            case 'message3';
+            return Db::name('admin')
+            ->where('rule_message','message8')
+            ->column('id');
+            case 'message4';
+                return Db::name('admin')
+                    ->where('rule_message','message8')
+                    ->column('id');
+            case 'message22';
+                return Db::name('admin')
+                    ->where('rule_message','message8')
+                    ->column('id');
+            default:
+                return '没有该角色功能';
+        }
     }
 
     //排除销售列表电话号码用户
@@ -118,63 +146,7 @@ class Customerlisttabs extends Backend
 
     }
 
-    /**
-     * 得到总数
-     * @param $no_phone
-     * @param $getUserId
-     * @param $customerlevel
-     * @return int|string
-     */
-    public function get_total($no_phone, $getUserId, $customerlevel)
-    {
-        $this->model = model('CustomerResource');
 
-        $authId = $this->auth->id;
-        $count = $this->model
-            ->where(function ($query) use ($no_phone, $authId, $getUserId, $customerlevel) {
-                if ($customerlevel == null) {
-                    //超级管理员
-                    if (in_array($authId, $getUserId['admin'])) {
-                        $query->where(['phone' => ['not in', $no_phone], 'customerlevel' => null]);
-                    } //当前销售
-                    else if (in_array($authId, $getUserId['sale'])) {
-                        $query->where(['phone' => ['not in', $no_phone], 'sales_id' => $authId, 'customerlevel' => null]);
-
-                    }
-                } else if ($customerlevel == "giveup") {
-                    //超级管理员
-                    if (in_array($authId, $getUserId['admin'])) {
-                        $query->where(['customerlevel' => $customerlevel]);
-                    } //当前销售
-                    else if (in_array($authId, $getUserId['sale'])) {
-                        $query->where(['sales_id' => $authId, 'customerlevel' => $customerlevel]);
-
-                    }
-                } else if ($customerlevel == "overdue") {
-                    //超级管理员
-                    if (in_array($authId, $getUserId['admin'])) {
-                        $query->where(['phone' => ['not in', $no_phone], 'followuptimestamp' => ['<', time()], 'customerlevel' => ['neq', 'giveup']]);
-                    } //当前销售
-                    else if (in_array($authId, $getUserId['sale'])) {
-                        $query->where(['phone' => ['not in', $no_phone], 'followuptimestamp' => ['<', time()], 'sales_id' => $authId, 'customerlevel' => ['neq', 'giveup']]);
-
-                    }
-                } else {
-                    //超级管理员
-                    if (in_array($authId, $getUserId['admin'])) {
-
-                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $no_phone], 'followuptimestamp' => ['>', time()]]);
-                    } //当前销售
-                    else if (in_array($authId, $getUserId['sale'])) {
-                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $no_phone], 'sales_id' => $authId, 'followuptimestamp' => ['>', time()]]);
-                    }
-                }
-            })
-            ->count();
-
-
-        return $count;
-    }
 
     /**
      * 查询封装
@@ -199,6 +171,7 @@ class Customerlisttabs extends Backend
         $authId = $this->auth->id; // 当前操作员id
         $noPhone = $this->noPhone(); //判断销售单里的电话没有和客户池电话相同的数据
         $getUserId = $this->getUserId();//获取当前可操作权限的id
+        $id_sale = $this->test();      //判断是否为销售经理
         $total = model('CustomerResource')
             ->where($where)
             ->with(['platform' => function ($query) {
@@ -206,7 +179,7 @@ class Customerlisttabs extends Backend
             }, 'admin' => function ($query) {
                 $query->withField(['nickname', 'avatar']);
             }])
-            ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel) {
+            ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel,$id_sale) {
 
                 if ($customerlevel == "overdue") {
                     //超级管理员
@@ -216,6 +189,9 @@ class Customerlisttabs extends Backend
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['phone' => ['not in', $noPhone], 'followuptimestamp' => ['<', time()], 'sales_id' => $authId, 'customerlevel' => ['neq', 'giveup']]);
 
+                    }else{
+
+                        $query->where(['phone' => ['not in', $noPhone], 'followuptimestamp' => ['<', time()], 'sales_id' => ['in',$id_sale], 'customerlevel' => ['neq', 'giveup']]);
                     }
                 } else if ($customerlevel == null) {
                     //超级管理员
@@ -224,6 +200,9 @@ class Customerlisttabs extends Backend
                     } //当前销售
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['phone' => ['not in', $noPhone], 'sales_id' => $authId, 'customerlevel' => null]);
+
+                    }else{
+                        $query->where(['phone' => ['not in', $noPhone], 'sales_id' => ['in',$id_sale], 'customerlevel' => null]);
 
                     }
                 } else if ($customerlevel == "giveup") {
@@ -234,6 +213,9 @@ class Customerlisttabs extends Backend
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['sales_id' => $authId, 'customerlevel' => $customerlevel]);
 
+                    }else{
+                        $query->where(['sales_id' => ['in',$id_sale], 'customerlevel' => $customerlevel]);
+
                     }
                 } else {
                     //超级管理员
@@ -243,6 +225,9 @@ class Customerlisttabs extends Backend
                     } //当前销售
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'sales_id' => $authId, 'followuptimestamp' => ['>', time()]]);
+                    }else{
+                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'sales_id' => ['in',$id_sale], 'followuptimestamp' => ['>', time()]]);
+
                     }
                 }
 
@@ -256,7 +241,7 @@ class Customerlisttabs extends Backend
             }, 'admin' => function ($query) {
                 $query->withField(['nickname', 'avatar']);
             }])
-            ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel) {
+            ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel,$id_sale) {
 
                 if ($customerlevel == "overdue") {
                     //超级管理员
@@ -266,6 +251,9 @@ class Customerlisttabs extends Backend
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['phone' => ['not in', $noPhone], 'followuptimestamp' => ['<', time()], 'sales_id' => $authId, 'customerlevel' => ['neq', 'giveup']]);
 
+                    }else{
+
+                        $query->where(['phone' => ['not in', $noPhone], 'followuptimestamp' => ['<', time()], 'sales_id' => ['in',$id_sale], 'customerlevel' => ['neq', 'giveup']]);
                     }
                 } else if ($customerlevel == null) {
                     //超级管理员
@@ -274,6 +262,9 @@ class Customerlisttabs extends Backend
                     } //当前销售
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['phone' => ['not in', $noPhone], 'sales_id' => $authId, 'customerlevel' => null]);
+
+                    }else{
+                        $query->where(['phone' => ['not in', $noPhone], 'sales_id' => ['in',$id_sale], 'customerlevel' => null]);
 
                     }
                 } else if ($customerlevel == "giveup") {
@@ -284,6 +275,9 @@ class Customerlisttabs extends Backend
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['sales_id' => $authId, 'customerlevel' => $customerlevel]);
 
+                    }else{
+                        $query->where(['sales_id' => ['in',$id_sale], 'customerlevel' => $customerlevel]);
+
                     }
                 } else {
                     //超级管理员
@@ -293,6 +287,9 @@ class Customerlisttabs extends Backend
                     } //当前销售
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'sales_id' => $authId, 'followuptimestamp' => ['>', time()]]);
+                    }else{
+                        $query->where(['customerlevel' => $customerlevel, 'phone' => ['not in', $noPhone], 'sales_id' => ['in',$id_sale], 'followuptimestamp' => ['>', time()]]);
+
                     }
                 }
             })
@@ -301,7 +298,7 @@ class Customerlisttabs extends Backend
             ->select();
         foreach ($list as $k => $row) {
 
-            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime','reason']);
+            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason']);
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
             $row->visible(['admin']);
@@ -570,8 +567,8 @@ class Customerlisttabs extends Backend
             $result = $this->model
                 ->where("id", $id)
                 ->update([
-                    "customerlevel"=> "giveup",
-                    'reason'=>$text
+                    "customerlevel" => "giveup",
+                    'reason' => $text
                 ]);
             if ($result) {
                 $this->success();
@@ -592,7 +589,7 @@ class Customerlisttabs extends Backend
         $this->model = model('CustomerResource');
         $this->view->assign("costomlevelList", $this->model->getCustomerlevelList());
         $row = $this->model->get($ids);
-        $this->view->assign("row",$row);
+        $this->view->assign("row", $row);
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -647,8 +644,8 @@ class Customerlisttabs extends Backend
             $result = $this->model
                 ->where('id', 'in', $id)
                 ->update([
-                    'customerlevel'=> 'giveup',
-                    'reason'=>$text
+                    'customerlevel' => 'giveup',
+                    'reason' => $text
                 ]);
 
             if ($result) {
