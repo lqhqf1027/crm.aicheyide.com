@@ -69,10 +69,10 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('City')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <div class='control-relative'><input id="c-city"  class="form-control form-control" data-toggle="city-picker" name="row[city]" type="text" value=""></div>
+            <div class='control-relative'><input id="c-city"  class="form-control form-control" data-toggle="city-picker" name="row[city]" type="text" value="{$row.city}"></div>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-5">
-            <input id="c-detailed_address"  class="form-control form-control" name="row[detailed_address]" type="text" placeholder="详细地址">
+            <input id="c-detailed_address"  class="form-control form-control" name="row[detailed_address]" type="text" placeholder="详细地址" value="{$row.detailed_address}">
         </div>
     </div>
     <div class="form-group">

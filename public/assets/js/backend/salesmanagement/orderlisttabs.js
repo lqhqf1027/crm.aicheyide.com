@@ -1958,7 +1958,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         },
 
                                     },
-                                    
                                     {
                                         name: 'is_reviewing_true', text: '内勤正在处理中',
                                         hidden: function (row) {  /**内勤正在处理中 */
