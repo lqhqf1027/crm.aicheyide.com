@@ -2488,8 +2488,6 @@ class Orderlisttabs extends Backend
 
            $num = intval($num)+1;
 
-           
-
     }
 
 
