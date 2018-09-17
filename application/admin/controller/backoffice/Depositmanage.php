@@ -662,8 +662,8 @@ class Depositmanage extends Backend
     public function current_login()
     {
         $this->model = model("Admin");
-        $back = $this->model->where("rule_message", "message13")
-            ->whereOr("rule_message", "message20")
+        $back = $this->model
+            ->where("rule_message", 'in',["message13",'message20','message24'])
             ->field("id")
             ->select();
 

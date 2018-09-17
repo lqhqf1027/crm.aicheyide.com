@@ -40,7 +40,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 })
                 newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-editone").data("area", ["70%", "70%"]);
                 });
                 // 初始化表格
                 newCar.bootstrapTable({
@@ -110,7 +110,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 })
                 usedCar.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-editone").data("area", ["70%", "70%"]);
                 });
                 // 初始化表格
                 usedCar.bootstrapTable({
@@ -179,7 +179,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 })
                 rentCar.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-editone").data("area", ["70%", "70%"]);
                 });
                 // 初始化表格
                 rentCar.bootstrapTable({
@@ -244,7 +244,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 })
                 fullCar.on('post-body.bs.table', function (e, settings, json, xhr) {
-                    $(".btn-newCustomer").data("area", ["50%", "50%"]);
+                    $(".btn-editone").data("area", ["70%", "70%"]);
                 });
                 // 初始化表格
                 fullCar.bootstrapTable({
