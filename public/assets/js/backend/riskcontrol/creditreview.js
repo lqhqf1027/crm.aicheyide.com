@@ -178,6 +178,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -208,6 +220,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         },
                                     },
                                     {
@@ -232,6 +256,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
                                         }
@@ -261,6 +297,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -286,6 +334,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
                                         }
@@ -315,6 +375,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -342,6 +414,174 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+
+                                        name: 'take_the_car',  text: '车辆匹配完成',  title: __('车辆匹配完成'), classname: ' text-info ',
+                                        hidden: function (row) {  /**车辆匹配完成 */
+                                            if (row.review_the_data == 'take_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+
+                                        name: 'take_the_data', text: '销售正在补全客户提车资料', title: __('销售正在补全客户提车资料'), classname: ' text-info ',
+                                        hidden: function (row) {  /**销售正在补全客户提车资料 */
+                                            if (row.review_the_data == 'take_the_data') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+
+                                        name: 'inform_the_tube',  text: '资料补全，准备提交车管',  title: __('资料补全，准备提交车管'), classname: ' text-info ',
+                                        hidden: function (row) {  /**资料补全，准备提交车管 */
+                                            if (row.review_the_data == 'inform_the_tube') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+
+                                        name: 'send_the_car',  text: '等待提车',  title: __('等待提车'), classname: ' text-info ',
+                                        hidden: function (row) {  /**等待提车 */
+                                            if (row.review_the_data == 'send_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -367,6 +607,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
                                         }

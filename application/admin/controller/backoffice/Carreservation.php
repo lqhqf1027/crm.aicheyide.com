@@ -19,7 +19,7 @@ class Carreservation extends Backend
      * @var null
      */
     protected $model = null;
-    protected $dataLimitField = 'backoffice_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
+    protected $dataLimitField = "admin_id"; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
 
     protected $noNeedRight = ['index','newcarEntry','secondcarEntry','fullcarEntry','newactual_amount','secondactual_amount','fullactual_amount','rentalcarEntry'];

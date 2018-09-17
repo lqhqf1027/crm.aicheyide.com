@@ -45,7 +45,8 @@ class Creditreview extends Backend
 
         $this->view->assign([
             'total' => $this->model
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], 
+                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], 'or')
                 ->count(),
 
             'total1' => DB::name('rental_order')
@@ -90,7 +91,8 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'],'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], 
+                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], 'or')
                 ->order($sort, $order)
                 ->count();
 
@@ -104,7 +106,8 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], ['=', 'tube_into_stock'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], 
+                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], 'or')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();

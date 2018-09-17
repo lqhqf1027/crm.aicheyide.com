@@ -42,7 +42,7 @@ class Carreservation extends Backend
                 ->where("amount_collected", "not null")
                 ->count();        
         $total1 = Db::name("second_sales_order")
-                ->where("review_the_data", "is_reviewing_control")
+                ->where("review_the_data", ["NEQ", "is_reviewing"], ["NEQ", "is_reviewing_true"], ["NEQ", "send_car_tube"], "or")
                 ->where("amount_collected", "not null")
                 ->count();
         $this->view->assign(
@@ -138,7 +138,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("review_the_data", "is_reviewing_finance")
+                    ->where("review_the_data", ["NEQ", "is_reviewing"], ["NEQ", "is_reviewing_true"], ["NEQ", "send_car_tube"], "or")
                     ->where("amount_collected", "not null")
                     ->order($sort, $order)
                     ->count();
@@ -153,7 +153,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("review_the_data", "is_reviewing_finance")
+                    ->where("review_the_data", ["NEQ", "is_reviewing"], ["NEQ", "is_reviewing_true"], ["NEQ", "send_car_tube"], "or")
                     ->where("amount_collected", "not null")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
