@@ -25,6 +25,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
+            $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
+                $(this).trigger("shown.bs.tab");
+            });
         },
 
 
@@ -42,6 +46,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-editone").data("area", ["70%", "70%"]);
                 });
+
+                //统计
+                total(newCar,$('#total-new'));
+
                 // 初始化表格
                 newCar.bootstrapTable({
                     url: 'backoffice/Depositmanage/new_car',
@@ -112,6 +120,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 usedCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-editone").data("area", ["70%", "70%"]);
                 });
+                //统计
+                total(usedCar,$('#total-used'));
+
                 // 初始化表格
                 usedCar.bootstrapTable({
                     url: 'backoffice/Depositmanage/used_car',
@@ -181,6 +192,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 rentCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-editone").data("area", ["70%", "70%"]);
                 });
+
+                //统计
+                total(rentCar,$('#total-rent'));
+
                 // 初始化表格
                 rentCar.bootstrapTable({
                     url: 'backoffice/Depositmanage/rent_car',
@@ -246,6 +261,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 fullCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-editone").data("area", ["70%", "70%"]);
                 });
+
+                //统计
+                total(fullCar,$('#total-full'));
+
                 // 初始化表格
                 fullCar.bootstrapTable({
                     url: 'backoffice/Depositmanage/full_car',
@@ -376,5 +395,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
+    function total(table,obj) {
+        table.on('load-success.bs.table', function (e, data) {
+            obj.text(data.total);
+
+        })
+    }
     return Controller;
 });

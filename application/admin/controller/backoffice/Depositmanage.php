@@ -78,7 +78,7 @@ class Depositmanage extends Backend
                     $query->withField(['payment', 'monthly', 'nperlist', 'tail_section', 'gps']);
                 }, 'customerdownpayment'])
                 ->where(function ($query) use ($current) {
-                    if(in_array($this->auth->id,$current['back'])){
+                    if(in_array($this->auth->id,$current['back']) || in_array($this->auth->id,$current['manager'])){
                         $sales = $this->get_sales();
                         $query->where('admin_id','in',$sales);
                     }
@@ -97,7 +97,7 @@ class Depositmanage extends Backend
                     $query->withField(['payment', 'monthly', 'nperlist', 'tail_section', 'gps']);
                 }, 'customerdownpayment'])
                 ->where(function ($query) use ($current) {
-                    if(in_array($this->auth->id,$current['back'])){
+                    if(in_array($this->auth->id,$current['back']) || in_array($this->auth->id,$current['manager'])){
                         $sales = $this->get_sales();
                         $query->where('admin_id','in',$sales);
                     }
@@ -153,7 +153,7 @@ class Depositmanage extends Backend
                     $query->withField(['kilometres', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'tailmoney']);
                 }, 'customerdownpayment'])
                 ->where(function ($query) use ($current) {
-                    if(in_array($this->auth->id,$current['back'])){
+                    if(in_array($this->auth->id,$current['back']) || in_array($this->auth->id,$current['manager'])){
                         $sales = $this->get_sales();
                         $query->where('admin_id','in',$sales);
                     }
@@ -172,7 +172,7 @@ class Depositmanage extends Backend
                     $query->withField(['kilometres', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'tailmoney']);
                 }, 'customerdownpayment'])
                 ->where(function ($query) use ($current) {
-                    if(in_array($this->auth->id,$current['back'])){
+                    if(in_array($this->auth->id,$current['back']) || in_array($this->auth->id,$current['manager'])){
                         $sales = $this->get_sales();
                         $query->where('admin_id','in',$sales);
                     }
@@ -226,7 +226,7 @@ class Depositmanage extends Backend
                     $query->withField(['name']);
                 }, 'customerdownpayment'])
                 ->where(function ($query) use ($current) {
-                    if(in_array($this->auth->id,$current['back'])){
+                    if(in_array($this->auth->id,$current['back']) || in_array($this->auth->id,$current['manager'])){
                         $sales = $this->get_sales();
                         $query->where('admin_id','in',$sales);
                     }
@@ -243,7 +243,7 @@ class Depositmanage extends Backend
                     $query->withField(['name']);
                 }, 'customerdownpayment'])
                 ->where(function ($query) use ($current) {
-                    if(in_array($this->auth->id,$current['back'])){
+                    if(in_array($this->auth->id,$current['back']) || in_array($this->auth->id,$current['manager'])){
                         $sales = $this->get_sales();
                         $query->where('admin_id','in',$sales);
                     }
@@ -300,7 +300,7 @@ class Depositmanage extends Backend
                     $query->withField(['full_total_price']);
                 }, 'customerdownpayment'])
                 ->where(function ($query) use ($current) {
-                    if(in_array($this->auth->id,$current['back'])){
+                    if(in_array($this->auth->id,$current['back']) || in_array($this->auth->id,$current['manager'])){
                         $sales = $this->get_sales();
                         $query->where('admin_id','in',$sales);
                     }
@@ -319,7 +319,7 @@ class Depositmanage extends Backend
                     $query->withField(['full_total_price']);
                 }, 'customerdownpayment'])
                 ->where(function ($query) use ($current) {
-                    if(in_array($this->auth->id,$current['back'])){
+                    if(in_array($this->auth->id,$current['back']) || in_array($this->auth->id,$current['manager'])){
                         $sales = $this->get_sales();
                         $query->where('admin_id','in',$sales);
                     }
@@ -670,6 +670,9 @@ class Depositmanage extends Backend
         $backArray = array();
         $backArray['back'] = array();
         $backArray['admin'] = array();
+        $backArray['manager'] = Db::name('admin')
+        ->where('rule_message','in',['message3','message4','message22'])
+        ->column('id');
 
         foreach ($back as $value) {
             array_push($backArray['back'], $value['id']);
@@ -697,14 +700,17 @@ class Depositmanage extends Backend
             ->value('rule_message');
 
         switch ($message) {
+            case 'message3':
             case 'message13':
                 return Db::name('admin')
                     ->where('rule_message', 'message8')
                     ->column('id');
+            case 'message4':
             case 'message20':
                 return Db::name('admin')
                     ->where('rule_message', 'message9')
                     ->column('id');
+            case 'message22':
             case 'message24':
                 return Db::name('admin')
                     ->where('rule_message', 'message23')
