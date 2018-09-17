@@ -28,7 +28,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: 'ID', operate: false},
                         {field: 'admin_id', title: __('Admin_id'), visible: false, operate: false},
-                        {field: 'username', title: __('Username'), formatter: Table.api.formatter.search},
+                        {field: 'https://static.aicheyide.com/admin_form', title: __('Username'), formatter: Table.api.formatter.search},
                         {field: 'title', title: __('Title')},
                         {field: 'url', title: __('Url'), align: 'left'},
                         {field: 'ip', title: __('IP')},

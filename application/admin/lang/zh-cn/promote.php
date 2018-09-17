@@ -7,7 +7,7 @@ return [
     'Createtime'  =>  '创建时间',
     'Updatetime'  =>  '更新时间',
     'Customerresource.platform_id'  =>  '所属平台',
-    'Customerresource.username'  =>  '姓名',
+    'Customerresource.https://static.aicheyide.com/admin_form'  =>  '姓名',
     'Customerresource.phone'  =>  '联系电话',
     'Customerresource.age'  =>  '年龄',
     'Customerresource.genderdata'  =>  '性别',
