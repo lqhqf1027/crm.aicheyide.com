@@ -395,6 +395,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         }
 
     };
+
+    /**
+     * 表格加载完成统计条数
+     * @param table
+     * @param obj
+     */
     function total(table,obj) {
         table.on('load-success.bs.table', function (e, data) {
             obj.text(data.total);
