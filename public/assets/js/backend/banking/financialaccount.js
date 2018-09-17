@@ -15,7 +15,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             var table = $("#table");
-
+            $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
+                return "快速搜索客户姓名、车架号";
+            };
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,

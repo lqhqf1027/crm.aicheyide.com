@@ -18,6 +18,7 @@ class Financialaccount extends Backend
      */
     protected $model = null;
     protected $noNeedRight =['index','edit','del','add'];
+    protected $searchFields='full_name,framenumber';
     public function _initialize()
     {
         parent::_initialize();

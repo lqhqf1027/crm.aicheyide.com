@@ -210,6 +210,7 @@ class Backend extends Controller
             'fastadmin' => Config::get('fastadmin'),
             'referer' => Session::get('referer'),
         ];
+
         $config = array_merge($config, Config::get('view_replace_str'));
 
         Config::set('upload', array_merge(Config::get('upload'), $upload));
@@ -220,6 +221,7 @@ class Backend extends Controller
         $this->loadlang($controllername);
         //渲染站点配置
         $this->assign('site', $site);
+
         //渲染配置信息
         $this->assign('config', $config);
         //渲染权限对象
@@ -228,6 +230,10 @@ class Backend extends Controller
         $this->assign('admin', Session::get('admin'));
         //渲染角色
         $this->assign('rule_message',$site['pushMessage']);
+        $version = collection(model('Config')->where('name','version')->find()->toArray())['value'];
+        //扔出版本信息
+        $this->assign('version',$version);
+
 //        foreach($site['pushMessage'] as $k=>$value){
 //            echo $k;
 //        }

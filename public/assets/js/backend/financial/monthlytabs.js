@@ -60,11 +60,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 newcarMonthly.bootstrapTable({
                     url: 'financial/monthlytabs/newcarMonthly',
                     extend: {
-                        add_url: 'monthly/newcarmonthly/add',
-                        edit_url: 'monthly/newcarmonthly/edit',
-                        del_url: 'monthly/newcarmonthly/del',
-                        import_url: 'monthly/newcarmonthly/import',
-                        multi_url: 'monthly/newcarmonthly/multi',
+                        add_url: 'financial/monthlytabs/add',
+                        edit_url: 'financial/monthlytabs/edit',
+                        del_url: 'financial/monthlytabs/del',
+                        import_url: 'financial/monthlytabs/import',
+                        multi_url: 'financial/monthlytabs/multi',
                         table: 'newcar_monthly',
                     },
                     toolbar: '#toolbar1',
@@ -218,10 +218,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 hasBeenSent.bootstrapTable({
                     url: 'financial/monthlytabs/hasBeenSent',
                     extend: {
-                        edit_url: 'monthly/newcarmonthly/edit',
-                        del_url: 'monthly/newcarmonthly/del',
-                        import_url: 'monthly/newcarmonthly/import',
-                        multi_url: 'monthly/newcarmonthly/multi',
+                        edit_url: 'financial/monthlytabs/edit',
+                        del_url: 'financial/monthlytabs/del',
+                        import_url: 'financial/monthlytabs/import',
+                        multi_url: 'financial/monthlytabs/multi',
                         table: 'newcar_monthly',
 
                     },
@@ -304,11 +304,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 deductionsSucc.bootstrapTable({
                     url: 'financial/monthlytabs/deductionsSucc',
                     extend: {
-                        add_url: 'monthly/newcarmonthly/add',
-                        edit_url: 'monthly/newcarmonthly/edit',
-                        del_url: 'monthly/newcarmonthly/del',
-                        import_url: 'monthly/newcarmonthly/import',
-                        multi_url: 'monthly/newcarmonthly/multi',
+                        add_url: '',
+                        edit_url: 'financial/monthlytabs/edit',
+                        del_url: 'financial/monthlytabs/del',
+                        import_url: 'financial/monthlytabs/import',
+                        multi_url: 'financial/monthlytabs/multi',
                         table: 'newcar_monthly',
                     },
                     toolbar: '#toolbar3',
