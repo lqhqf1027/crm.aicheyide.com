@@ -22,7 +22,7 @@ class Carreservation extends Backend
     protected $dataLimitField = 'backoffice_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
 
-    protected $noNeedRight = ['index','newcarEntry','secondcarEntry','fullcarEntry','newactual_amount','secondactual_amount','fullactual_amount'];
+    protected $noNeedRight = ['index','newcarEntry','secondcarEntry','fullcarEntry','newactual_amount','secondactual_amount','fullactual_amount','rentalcarEntry'];
 
 
     public function _initialize()
@@ -34,21 +34,25 @@ class Carreservation extends Backend
     {
         $total = Db::name("sales_order")
             ->where("backoffice_id", "not null")
-            ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
+            ->where("review_the_data", "NEQ", "send_to_internal")
             ->count();
         $total1 = Db::name("second_sales_order")
             ->where("backoffice_id", "not null")
-            ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+            ->where("review_the_data", "NEQ", "is_reviewing")
             ->count();
         $total2 = Db::name("full_parment_order")
             ->where("backoffice_id", "not null")
-            ->where("review_the_data", ["=","inhouse_handling"], ["=","is_reviewing_true"],'or')
+            ->where("review_the_data", "NEQ", "send_to_internal")
+            ->count();
+        $total3 = Db::name("rental_order")
+            ->where("backoffice_id", "not null")
             ->count();
         $this->view->assign(
             [
                 'total' => $total,
                 'total1' => $total1,
-                'total2' => $total2
+                'total2' => $total2,
+                'total3' => $total3
             ]
         );
         return $this->view->fetch();
@@ -83,7 +87,7 @@ class Carreservation extends Backend
                     ->where($where)
                    
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
+                    ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->count();
                 $list = $this->model
@@ -99,7 +103,7 @@ class Carreservation extends Backend
                     ->where($where)
                     
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
+                    ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -132,7 +136,7 @@ class Carreservation extends Backend
                     ->where($where)
                    
                     ->where("backoffice_id",  $this->auth->id)
-                    ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
+                    ->where("review_the_data", "NEQ", "send_to_internal")
                     
                     ->order($sort, $order)
                     ->count();
@@ -149,7 +153,7 @@ class Carreservation extends Backend
                     ->where($where)
                     
                     ->where("backoffice_id",  $this->auth->id)
-                    ->where("review_the_data", ["=","inhouse_handling"], ["=","send_car_tube"],'or')
+                    ->where("review_the_data", "NEQ", "send_to_internal")
                     
                     ->order($sort, $order)
                     ->limit($offset, $limit)
@@ -208,7 +212,7 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+                    ->where("review_the_data", "NEQ", "is_reviewing")
                     ->order($sort, $order)
                     ->count();
 
@@ -223,7 +227,7 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+                    ->where("review_the_data", "NEQ", "is_reviewing")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -247,7 +251,7 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where("backoffice_id",  $this->auth->id)
-                    ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+                    ->where("review_the_data", "NEQ", "is_reviewing")
                     ->order($sort, $order)
                     ->count();
 
@@ -262,7 +266,7 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where("backoffice_id",  $this->auth->id)
-                    ->where("review_the_data", ["=","is_reviewing_true"], ["=","send_car_tube"],'or')
+                    ->where("review_the_data", "NEQ", "is_reviewing")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -313,7 +317,7 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
+                    ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->count();
 
@@ -327,7 +331,7 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
-                    ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
+                    ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -353,7 +357,7 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where("backoffice_id",  $this->auth->id)
-                    ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
+                    ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->count();
 
@@ -367,7 +371,7 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where("backoffice_id",  $this->auth->id)
-                    ->where("review_the_data", ['=', 'inhouse_handling'], ['=', 'is_reviewing_true'], 'or')
+                    ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
@@ -388,6 +392,105 @@ class Carreservation extends Backend
             return json($result);
         }
         return $this->view->fetch();
+    }
+
+    //租车
+    public function rentalcarEntry()
+    {
+        $this->model = new \app\admin\model\RentalOrder;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+
+            $can_use_id = $this->getUserId();
+            if (in_array($this->auth->id, $can_use_id['admin'])) {
+
+                $total = $this->model
+                    ->with(['admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }, 'carrentalmodelsinfo' => function ($query) {
+                        $query->withField('licenseplatenumber,vin');
+                    }])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->count();
+
+                $list = $this->model
+                    ->with(['admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }, 'carrentalmodelsinfo' => function ($query) {
+                        $query->withField('licenseplatenumber,vin');
+                    }])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+                foreach ($list as $k => $v) {
+                        $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
+                        $v->visible(['admin']);
+                        $v->getRelation('admin')->visible(['nickname']);
+                        $v->visible(['models']);
+                        $v->getRelation('models')->visible(['name']);
+                        $v->visible(['carrentalmodelsinfo']);
+                        $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber', 'vin']);
+                    
+                }
+            } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
+                $total = $this->model
+                    ->with(['admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }, 'carrentalmodelsinfo' => function ($query) {
+                        $query->withField('licenseplatenumber,vin');
+                    }])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->count();
+
+                $list = $this->model
+                    ->with(['admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }, 'carrentalmodelsinfo' => function ($query) {
+                        $query->withField('licenseplatenumber,vin');
+                    }])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+                foreach ($list as $k => $v) {
+                        $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
+                        $v->visible(['admin']);
+                        $v->getRelation('admin')->visible(['nickname']);
+                        $v->visible(['models']);
+                        $v->getRelation('models')->visible(['name']);
+                        $v->visible(['carrentalmodelsinfo']);
+                        $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber', 'vin']);
+                    
+                }
+            }
+
+
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
+            return json($result);
+        }
+
+        return $this->view->fetch();
+
     }
 
     //得到操作员ID
@@ -593,6 +696,78 @@ class Carreservation extends Backend
                 $username= $data['username'];
 
                 $data = fullcar_inform($models_name,$admin_name,$username);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = DB::name('admin')->where('rule_message', "message14")->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if($result_s){
+                    $this->success();
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
+
+            } else {
+                $this->error();
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+        return $this->view->fetch();
+    }
+
+    //租车编辑实际录入金额
+    public function rentalactual_amount($ids = null)
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+
+            //得到首期款
+            $downpayment = Db::name("second_sales_order")
+                ->where("id", $ids)
+                ->field("downpayment")
+                ->find()['downpayment'];
+
+            //得到差额
+            $difference = floatval($downpayment) - floatval($params['amount_collected']);
+
+            if ($difference < 0) {
+                $difference = 0;
+            }
+
+
+            $result = Db::name("second_sales_order")
+                ->where("id", $ids)
+                ->update([
+                    'amount_collected' => $params['amount_collected'],
+                    'decorate' => $params['decorate'],
+                    'review_the_data' => 'send_car_tube',
+                    'difference' => $difference
+                ]);
+
+
+            if ($result !== false) {
+
+                $channel = "demo-second_amount";
+                $content =  "内勤提交的二手车单，请及时进行车辆处理";
+                goeary_push($channel, $content);
+
+                $data = Db::name("second_sales_order")->where('id', $ids)->find();
+                //车型
+                $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username= $data['username'];
+
+                $data = secondcar_inform($models_name,$admin_name,$username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
