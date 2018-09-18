@@ -45,28 +45,29 @@
         <div class="col-xs-12 col-sm-8">
 
             <select id="c-sales_id" class="form-control selectpicker" name=row[sales_id]>
-                {foreach name="sales_id" item="vo"}
-                <option value="{$key}" {in name="key" value="$row.sales_id" } selected{
-                /in}>{$vo}</option>
-
-                {/foreach}
                 {empty name="$row.sales_id"}
                 <option value=" " selected>无</option>
                 {foreach name="$sales" item="vo"}
-                <option value="{$vo.id}">{$vo.nickname}</option>
+                <option value="" disabled>{$vo.name}</option>
+                {foreach name="$vo.message" item="sa"}
+                <option value="{$sa.id}">{$sa.nickname}</option>
+                {/foreach}
                 {/foreach}
                 {else /}
                 <option value=" ">无</option>
+
                 {foreach name="$sales" item="vo"}
-                {eq name="$vo.id" value="$row.sales_id"}
-                <option value="{$vo.id}" selected>{$vo.nickname}</option>
+                <option value="" disabled>{$vo.name}</option>
+                {foreach name="$vo.message" item="sa"}
+                {eq name="$sa.id" value="$row.sales_id"}
+                <option value="{$sa.id}" selected>{$sa.nickname}</option>
                 {else /}
-                <option value="{$vo.id}">{$vo.nickname}</option>
+                <option value="{$sa.id}">{$sa.nickname}</option>
                 {/eq}
-
                 {/foreach}
-                {/empty}
+                {/foreach}
 
+                {/empty}
 
             </select>
 
@@ -187,5 +188,7 @@
         </div>
     </div>
 </form>
-
+{php}
+dump($row['sales_id']);
+{/php}
 

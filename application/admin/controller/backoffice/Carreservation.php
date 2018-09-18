@@ -22,7 +22,7 @@ class Carreservation extends Backend
     protected $dataLimitField = "backoffice_id"; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
 
-    protected $noNeedRight = ['index','newcarEntry','secondcarEntry','fullcarEntry','newactual_amount','secondactual_amount','fullactual_amount','rentalcarEntry'];
+    protected $noNeedRight = ['index', 'newcarEntry', 'secondcarEntry', 'fullcarEntry', 'newactual_amount', 'secondactual_amount', 'fullactual_amount', 'rentalcarEntry'];
 
 
     public function _initialize()
@@ -64,7 +64,7 @@ class Carreservation extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
             $this->model = model('SalesOrder');
-            
+
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
@@ -85,7 +85,6 @@ class Carreservation extends Backend
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
                     ->where($where)
-                   
                     ->where("backoffice_id", "not null")
                     ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
@@ -101,28 +100,14 @@ class Carreservation extends Backend
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
                     ->where($where)
-                    
                     ->where("backoffice_id", "not null")
                     ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
 
-                foreach ($list as $k => $row) {
 
-                    $row->visible(['id', 'order_no', 'username', 'createtime', 'city', 'detailed_address', 'phone', 'id_card', 'car_total_price', 'downpayment', 'review_the_data']);
-                    $row->visible(['planacar']);
-                    $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps']);
-                    $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
-                    $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
-                    $row->visible(['newinventory']);
-                    $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
-
-                }
-
-            } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
+            } else if (in_array($this->auth->id, $can_use_id['backoffice']) || in_array($this->auth->id, $can_use_id['manager'])) {
                 $total = $this->model
                     ->with(['planacar' => function ($query) {
                         $query->withField('payment,monthly,nperlist,margin,tail_section,gps,total_payment');
@@ -134,10 +119,15 @@ class Carreservation extends Backend
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
                     ->where($where)
-                   
-                    ->where("backoffice_id",  $this->auth->id)
+                    ->where(function ($query) use ($can_use_id){
+                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                            $query->where('backoffice_id',$this->auth->id);
+                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                              $all_sale = $this->sales_name();
+                              $query->where('backoffice_id','in',$all_sale);
+                        }
+                    })
                     ->where("review_the_data", "NEQ", "send_to_internal")
-                    
                     ->order($sort, $order)
                     ->count();
                 $list = $this->model
@@ -151,30 +141,36 @@ class Carreservation extends Backend
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
                     ->where($where)
-                    
-                    ->where("backoffice_id",  $this->auth->id)
+                    ->where(function ($query) use ($can_use_id){
+                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                            $query->where('backoffice_id',$this->auth->id);
+                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                            $all_sale = $this->sales_name();
+                            $query->where('backoffice_id','in',$all_sale);
+                        }
+                    })
                     ->where("review_the_data", "NEQ", "send_to_internal")
-                    
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
 
-                foreach ($list as $k => $row) {
 
-                    $row->visible(['id', 'order_no', 'username', 'createtime', 'city', 'detailed_address', 'phone', 'id_card', 'car_total_price', 'downpayment', 'review_the_data']);
-                    $row->visible(['planacar']);
-                    $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps']);
-                    $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
-                    $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
-                    $row->visible(['newinventory']);
-                    $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
-
-                }
             }
 
-           
+            foreach ($list as $k => $row) {
+
+                $row->visible(['id', 'order_no', 'username', 'createtime', 'city', 'detailed_address', 'phone', 'id_card', 'car_total_price', 'downpayment', 'review_the_data']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+                $row->visible(['newinventory']);
+                $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
+
+            }
+
             $list = collection($list)->toArray();
 
             // pr($list);die;
@@ -231,15 +227,7 @@ class Carreservation extends Backend
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
-                foreach ($list as $k => $row) {
-                    $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
-                    $row->visible(['plansecond']);
-                    $row->getRelation('plansecond')->visible(['newpayment', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
-                    $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
-                    $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
-                }
+
             } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
                 $total = $this->model
                     ->with(['plansecond' => function ($query) {
@@ -250,7 +238,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id",  $this->auth->id)
+                    ->where("backoffice_id", $this->auth->id)
                     ->where("review_the_data", "NEQ", "is_reviewing")
                     ->order($sort, $order)
                     ->count();
@@ -265,22 +253,23 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id",  $this->auth->id)
+                    ->where("backoffice_id", $this->auth->id)
                     ->where("review_the_data", "NEQ", "is_reviewing")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
-                foreach ($list as $k => $row) {
-                    $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
-                    $row->visible(['plansecond']);
-                    $row->getRelation('plansecond')->visible(['newpayment', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
-                    $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
-                    $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
-                }
+
             }
 
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['plansecond']);
+                $row->getRelation('plansecond')->visible(['newpayment', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
 
             $list = collection($list)->toArray();
 
@@ -335,18 +324,10 @@ class Carreservation extends Backend
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
-                foreach ($list as $k => $row) {
-                    $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
-                    $row->visible(['planfull']);
-                    $row->getRelation('planfull')->visible(['full_total_price']);
-                    $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
-                    $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
-                }
+
 
             } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
-                
+
                 $total = $this->model
                     ->with(['planfull' => function ($query) {
                         $query->withField('full_total_price');
@@ -356,7 +337,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id",  $this->auth->id)
+                    ->where("backoffice_id", $this->auth->id)
                     ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->count();
@@ -370,20 +351,22 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("backoffice_id",  $this->auth->id)
+                    ->where("backoffice_id", $this->auth->id)
                     ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
-                foreach ($list as $k => $row) {
-                    $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
-                    $row->visible(['planfull']);
-                    $row->getRelation('planfull')->visible(['full_total_price']);
-                    $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
-                    $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
-                }
+
+            }
+
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['planfull']);
+                $row->getRelation('planfull')->visible(['full_total_price']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
             }
 
             $list = collection($list)->toArray();
@@ -435,16 +418,7 @@ class Carreservation extends Backend
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
-                foreach ($list as $k => $v) {
-                        $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
-                        $v->visible(['admin']);
-                        $v->getRelation('admin')->visible(['nickname']);
-                        $v->visible(['models']);
-                        $v->getRelation('models')->visible(['name']);
-                        $v->visible(['carrentalmodelsinfo']);
-                        $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber', 'vin']);
-                    
-                }
+
             } else if (in_array($this->auth->id, $can_use_id['backoffice'])) {
                 $total = $this->model
                     ->with(['admin' => function ($query) {
@@ -470,18 +444,19 @@ class Carreservation extends Backend
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
-                foreach ($list as $k => $v) {
-                        $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
-                        $v->visible(['admin']);
-                        $v->getRelation('admin')->visible(['nickname']);
-                        $v->visible(['models']);
-                        $v->getRelation('models')->visible(['name']);
-                        $v->visible(['carrentalmodelsinfo']);
-                        $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber', 'vin']);
-                    
-                }
+
             }
 
+            foreach ($list as $k => $v) {
+                $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
+                $v->visible(['admin']);
+                $v->getRelation('admin')->visible(['nickname']);
+                $v->visible(['models']);
+                $v->getRelation('models')->visible(['name']);
+                $v->visible(['carrentalmodelsinfo']);
+                $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber', 'vin']);
+
+            }
 
             $list = collection($list)->toArray();
 
@@ -493,14 +468,39 @@ class Carreservation extends Backend
 
     }
 
+    public function sales_name()
+    {
+        $message = Db::name('admin')
+        ->where('id',$this->auth->id)
+        ->value('rule_message');
+
+        switch ($message){
+            case 'message3':
+                return Db::name('admin')
+                    ->where('rule_message','message13')
+                    ->column('id');
+            case 'message4':
+                return Db::name('admin')
+                    ->where('rule_message','message20')
+                    ->column('id');
+            case 'message22':
+                return Db::name('admin')
+                    ->where('rule_message','message24')
+                    ->column('id');
+        }
+    }
+
     //得到操作员ID
     public function getUserId()
     {
         $arr = array();
         $arr['admin'] = array();
         $arr['backoffice'] = array();
+        $arr['manager'] = Db::name('admin')
+            ->where('rule_message', 'in', ['message3', 'message4', 'message22'])
+            ->column('id');
         $admin = Db::name("admin")
-            ->where("rule_message", "in", ["message1", "message21", "message3", "message4","message22"])
+            ->where("rule_message", "in", ["message1", "message21", "message3", "message4", "message22"])
             ->field("id")
             ->select();
 
@@ -554,7 +554,7 @@ class Carreservation extends Backend
             if ($result !== false) {
 
                 $channel = "demo-new_amount";
-                $content =  "内勤提交的新车单，请及时进行车辆处理";
+                $content = "内勤提交的新车单，请及时进行车辆处理";
                 goeary_push($channel, $content);
 
                 $data = Db::name("sales_order")->where('id', $ids)->find();
@@ -563,9 +563,9 @@ class Carreservation extends Backend
                 //销售员
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
-                $username= $data['username'];
+                $username = $data['username'];
 
-                $data = newcar_inform($models_name,$admin_name,$username);
+                $data = newcar_inform($models_name, $admin_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -576,10 +576,9 @@ class Carreservation extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -625,7 +624,7 @@ class Carreservation extends Backend
             if ($result !== false) {
 
                 $channel = "demo-second_amount";
-                $content =  "内勤提交的二手车单，请及时进行车辆处理";
+                $content = "内勤提交的二手车单，请及时进行车辆处理";
                 goeary_push($channel, $content);
 
                 $data = Db::name("second_sales_order")->where('id', $ids)->find();
@@ -635,9 +634,9 @@ class Carreservation extends Backend
                 $admin_id = $data['admin_id'];
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
-                $username= $data['username'];
+                $username = $data['username'];
 
-                $data = secondcar_inform($models_name,$admin_name,$username);
+                $data = secondcar_inform($models_name, $admin_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -648,10 +647,9 @@ class Carreservation extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -683,7 +681,7 @@ class Carreservation extends Backend
             if ($result !== false) {
 
                 $channel = "demo-fullcar_amount";
-                $content =  "内勤提交的全款车单，请及时进行车辆处理";
+                $content = "内勤提交的全款车单，请及时进行车辆处理";
                 goeary_push($channel, $content);
 
                 $data = Db::name("full_parment_order")->where('id', $ids)->find();
@@ -693,9 +691,9 @@ class Carreservation extends Backend
                 $admin_id = $data['admin_id'];
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
-                $username= $data['username'];
+                $username = $data['username'];
 
-                $data = fullcar_inform($models_name,$admin_name,$username);
+                $data = fullcar_inform($models_name, $admin_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -706,10 +704,9 @@ class Carreservation extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -755,7 +752,7 @@ class Carreservation extends Backend
             if ($result !== false) {
 
                 $channel = "demo-second_amount";
-                $content =  "内勤提交的二手车单，请及时进行车辆处理";
+                $content = "内勤提交的二手车单，请及时进行车辆处理";
                 goeary_push($channel, $content);
 
                 $data = Db::name("second_sales_order")->where('id', $ids)->find();
@@ -765,9 +762,9 @@ class Carreservation extends Backend
                 $admin_id = $data['admin_id'];
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
-                $username= $data['username'];
+                $username = $data['username'];
 
-                $data = secondcar_inform($models_name,$admin_name,$username);
+                $data = secondcar_inform($models_name, $admin_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -778,10 +775,9 @@ class Carreservation extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
