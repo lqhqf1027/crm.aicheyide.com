@@ -28,13 +28,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'admin_id', title: __('Admin_id')},
                         {field: 'category_id', title: __('Category_id')},
                         {field: 'category_ids', title: __('Category_ids')},
-                        {field: 'week', title: __('Week'), visible:false, searchList: {"monday":__('week monday'),"tuesday":__('week tuesday'),"wednesday":__('week wednesday')}},
-                        {field: 'week_text', title: __('Week'), operate:false},
-                        {field: 'flag', title: __('Flag'), searchList: {"hot":__('flag hot'),"index":__('flag index'),"recommend":__('flag recommend')}, formatter: Table.api.formatter.flag},
-                        {field: 'genderdata', title: __('Genderdata'), visible:false, searchList: {"male":__('genderdata male'),"female":__('genderdata female')}},
-                        {field: 'genderdata_text', title: __('Genderdata'), operate:false},
-                        {field: 'hobbydata', title: __('Hobbydata'), visible:false, searchList: {"music":__('hobbydata music'),"reading":__('hobbydata reading'),"swimming":__('hobbydata swimming')}},
-                        {field: 'hobbydata_text', title: __('Hobbydata'), operate:false, formatter: Table.api.formatter.label},
+                        {field: 'week', title: __('Week'), searchList: {"monday":__('Week monday'),"tuesday":__('Week tuesday'),"wednesday":__('Week wednesday')}, formatter: Table.api.formatter.normal},
+                        {field: 'flag', title: __('Flag'), searchList: {"hot":__('Flag hot'),"index":__('Flag index'),"recommend":__('Flag recommend')}, operate:'FIND_IN_SET', formatter: Table.api.formatter.label},
+                        {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
+                        {field: 'hobbydata', title: __('Hobbydata'), searchList: {"music":__('Hobbydata music'),"reading":__('Hobbydata reading'),"swimming":__('Hobbydata swimming')}, operate:'FIND_IN_SET', formatter: Table.api.formatter.label},
                         {field: 'title', title: __('Title')},
                         {field: 'image', title: __('Image'), formatter: Table.api.formatter.image},
                         {field: 'images', title: __('Images'), formatter: Table.api.formatter.images},
@@ -52,21 +49,37 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'weigh', title: __('Weigh')},
-                        {field: 'switch', title: __('Switch'), searchList: {"1":__('switch 1')}},
-                        {field: 'status', title: __('Status'), visible:false, searchList: {"normal":__('normal'),"hidden":__('hidden')}},
-                        {field: 'status_text', title: __('Status'), operate:false},
-                        {field: 'state', title: __('State'), visible:false, searchList: {"0":__('State 0'),"1":__('State 1'),"2":__('State 2')}},
-                        {field: 'state_text', title: __('State'), operate:false},
+                        {field: 'switch', title: __('Switch'), searchList: {"1":__('Yes'),"0":__('No')}, formatter: Table.api.formatter.toggle},
+                        {field: 'status', title: __('Status'), searchList: {"normal":__('Normal'),"hidden":__('Hidden')}, formatter: Table.api.formatter.status},
+                        {field: 'state', title: __('State'), searchList: {"0":__('State 0'),"1":__('State 1'),"2":__('State 2')}, formatter: Table.api.formatter.normal},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
+            });
+
+            
+            // 绑定TAB事件
+            $('.panel-heading a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var field = $(this).closest("ul").data("field");
+                var value = $(this).data("value");
+                var options = table.bootstrapTable('getOptions');
+                options.pageNumber = 1;
+                options.queryParams = function (params) {
+                    var filter = {};
+                    if (value !== '') {
+                        filter[field] = value;
+                    }
+                    params.filter = JSON.stringify(filter);
+                    return params;
+                };
+                table.bootstrapTable('refresh', {});
+                return false;
             });
 
             // 为表格绑定事件
             Table.api.bindevent(table);
         },
         add: function () {
-          
             Controller.api.bindevent();
         },
         edit: function () {

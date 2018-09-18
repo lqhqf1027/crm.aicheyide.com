@@ -200,9 +200,10 @@ class Monthly extends Backend
         if ($this->request->isAjax()) {
             $params = input('post.')['ids'];
             $phone = assoc_unique($params,'monthly_phone_number'); //去重电话号码
+
             foreach ($phone as $k=>$v){
                 //循环调用短接接口
-                $result = gets("http://v.juhe.cn/sms/send?mobile={$v['monthly_phone_number']}&tpl_id=100433&tpl_value=".urlencode("#name#={$v['name']}&#code#={$v['monthly_card_number']}&#money#={$v['monthly_monney']}")."&key=9ee7861bdcf01ecb60eb4961b86711cf");
+                $result = gets("http://v.juhe.cn/sms/send?mobile={$v['monthly_phone_number']}&tpl_id=100433&tpl_value=".urlencode("#name#={$v['monthly_name']}&#code#={$v['monthly_card_number']}&#money#={$v['monthly_monney']}")."&key=9ee7861bdcf01ecb60eb4961b86711cf");
             }
              return  $result['error_code']==0?$this->success($result['reason'],null,$result):$this->error($result['reason']);
         }
