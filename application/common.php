@@ -1397,6 +1397,23 @@ if (!function_exists('send_monthly_to_risk')) {
         return $arr;
     }
 }
+
+
+if (!function_exists('send_newmodels_to_sales')) {
+    function send_newmodels_to_sales($model=null,$payment=null,$monthly=null)
+    {
+        if($model && $payment && $monthly){
+            $arr = [
+                'subject' => "定制方案审核结果通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 您需要的车型：. $model . 首付：. $payment . 元， . 月供： . $monthly . 元，该方案已添加成功，请注意查看 . '</div>'
+            ];
+            return $arr;
+        }else{
+            exit('参数错误');
+        }
+
+    }
+}
 /**数组去重
  * @param $arr
  * @param $key

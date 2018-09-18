@@ -174,7 +174,7 @@ if (!function_exists('goeary_push')) {
     function goeary_push($channel = NULL, $content = NULL)
     {
         //请求地址
-        $uri = "https://goeasy.io/goeasy/publish";
+        $uri = "http://goeasy.io/goeasy/publish";
         // 参数数组
         $data = [
             'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
@@ -191,5 +191,8 @@ if (!function_exists('goeary_push')) {
         curl_close ( $ch );
     }
 }
+
+
+
 
 

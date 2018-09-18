@@ -3,6 +3,7 @@
 namespace app\admin\controller\planmanagement;
 
 use app\common\controller\Backend;
+use app\common\library\Email;
 use think\Db;
 
 /**
@@ -31,7 +32,7 @@ class Plantabs extends Backend
      */
     public function index()
     {
-
+//        pr($this->getSales());die();
         $this->loadlang('plan/planacar');
         $this->loadlang('plan/planusedcar');
         $this->loadlang('plan/planfull');
@@ -251,11 +252,27 @@ class Plantabs extends Backend
     public function getSales()
     {
         $sales = Db::name("admin")
-            ->where("rule_message", "in", ['message8', 'message9'])
-            ->field("id,nickname")
+            ->where("rule_message", "in", ['message8', 'message9','message23'])
+            ->field("id,nickname,rule_message")
             ->select();
 
-        return $sales;
+//        pr($sales);
+
+        $arr = array(['id'=>1,'name'=>'销售1部','message'=>array()],['id'=>2,'name'=>'销售2部','message'=>array()],['id'=>3,'name'=>'销售3部','message'=>array()]);
+
+
+
+        foreach ($sales as $value){
+            if($value['rule_message']=='message8'){
+                array_push($arr[0]['message'],$value);
+            }else if($value['rule_message']=='message9'){
+                array_push($arr[1]['message'],$value);
+            }else if($value['rule_message']=='message23'){
+                array_push($arr[2]['message'],$value);
+            }
+        }
+
+        return $arr;
 
     }
 
@@ -481,6 +498,7 @@ class Plantabs extends Backend
         ]);
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+//            pr($params);die;
             if (empty($params['working_insurance'])) {
                 $params['working_insurance'] = "no";
             }
@@ -488,6 +506,7 @@ class Plantabs extends Backend
                 $params['sales_id'] = null;
             }
             if ($params) {
+                $params['acar_status'] = 1;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
@@ -500,6 +519,36 @@ class Plantabs extends Backend
                     }
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
+
+                        $models_name = Db::name('models')
+                        ->where('id',$params['models_id'])
+                        ->value('name');
+
+                        if($params['liu']=='yes' && $params['sales_id']){
+                            $channel = 'custom_model';
+                            $content = '定制方案审核结果通知:您需要的车型<span class="text-info">'.$models_name.',</span>首付<span class="text-info">'.$params['payment'].'</span>元,月供<span>'.$params['monthly'].'</span>元已添加成功,请注意查看';
+
+                            goeary_push($channel,$content);
+
+                            $datas = send_newmodels_to_sales($models_name,$params['payment'],$params['monthly']);
+
+                            $email = new Email;
+
+                            $receiver = Db::name('admin')->where('id',$params['sales_id'])->value('email');
+
+                            $result_sss = $email
+                                ->to($receiver)
+                                ->subject($datas['subject'])
+                                ->message($datas['message'])
+                                ->send();
+
+                            if($result_sss){
+                                $this->success();
+                            }else{
+                                $this->error($this->model->getError());
+                            }
+                        }
+
                         $this->success();
                     } else {
                         $this->error($this->model->getError());
