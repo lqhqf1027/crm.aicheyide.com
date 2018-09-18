@@ -189,6 +189,7 @@ if (!function_exists('goeary_push')) {
         curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
         $return = curl_exec ( $ch );
         curl_close ( $ch );
+        
     }
 }
 
