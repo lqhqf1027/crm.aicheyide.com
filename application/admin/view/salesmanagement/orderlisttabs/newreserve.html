@@ -209,14 +209,14 @@
                             if(i>14){
                                 break;
                             }
-                            if(data[i].sales_id){
-                                html += '<tr style="background-color: orange">';
-                            }else{
-                                html += '<tr>';
-                            }
+
 
                             var result = data[i];
-                            html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>';
+                            if(data[i].sales_id){
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '&nbsp;&nbsp;'+ "<span class='label label-warning' style='cursor: pointer'>专属方案</span>"; +'</td>';
+                            }else{
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>';
+                            }
                             html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
                             html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
                             html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
