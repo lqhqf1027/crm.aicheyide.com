@@ -70,7 +70,7 @@ class Test extends Model
 
     public function getWeekTextAttr($value, $data)
     {        
-        $value = $value ? $value : $data['week'];
+        $value = $value ? $value : (isset($data['week']) ? $data['week'] : '');
         $list = $this->getWeekList();
         return isset($list[$value]) ? $list[$value] : '';
     }
@@ -78,7 +78,7 @@ class Test extends Model
 
     public function getFlagTextAttr($value, $data)
     {
-        $value = $value ? $value : $data['flag'];
+        $value = $value ? $value : (isset($data['flag']) ? $data['flag'] : '');
         $valueArr = explode(',', $value);
         $list = $this->getFlagList();
         return implode(',', array_intersect_key($list, array_flip($valueArr)));
@@ -87,7 +87,7 @@ class Test extends Model
 
     public function getGenderdataTextAttr($value, $data)
     {        
-        $value = $value ? $value : $data['genderdata'];
+        $value = $value ? $value : (isset($data['genderdata']) ? $data['genderdata'] : '');
         $list = $this->getGenderdataList();
         return isset($list[$value]) ? $list[$value] : '';
     }
@@ -95,7 +95,7 @@ class Test extends Model
 
     public function getHobbydataTextAttr($value, $data)
     {
-        $value = $value ? $value : $data['hobbydata'];
+        $value = $value ? $value : (isset($data['hobbydata']) ? $data['hobbydata'] : '');
         $valueArr = explode(',', $value);
         $list = $this->getHobbydataList();
         return implode(',', array_intersect_key($list, array_flip($valueArr)));
@@ -104,14 +104,14 @@ class Test extends Model
 
     public function getRefreshtimeTextAttr($value, $data)
     {
-        $value = $value ? $value : $data['refreshtime'];
+        $value = $value ? $value : (isset($data['refreshtime']) ? $data['refreshtime'] : '');
         return is_numeric($value) ? date("Y-m-d H:i:s", $value) : $value;
     }
 
 
     public function getStatusTextAttr($value, $data)
     {        
-        $value = $value ? $value : $data['status'];
+        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
         $list = $this->getStatusList();
         return isset($list[$value]) ? $list[$value] : '';
     }
@@ -119,7 +119,7 @@ class Test extends Model
 
     public function getStateTextAttr($value, $data)
     {        
-        $value = $value ? $value : $data['state'];
+        $value = $value ? $value : (isset($data['state']) ? $data['state'] : '');
         $list = $this->getStateList();
         return isset($list[$value]) ? $list[$value] : '';
     }

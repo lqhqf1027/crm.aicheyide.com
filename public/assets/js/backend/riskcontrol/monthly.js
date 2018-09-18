@@ -208,6 +208,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             });
                         }
                     }
+
                     var closeLay = Layer.confirm("请选择要发送的客户数据", {
                         title: '发送数据',
                         btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)"],
@@ -217,10 +218,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ,
                         //选中项
                         yes: function (index, layero) {
+                            // var sendTemplte = Layer.confirm('请选择发送类型',{
+                            //     title:'选择要发送的模板类型',
+                            //     btn:['①提醒']
+                            // })
                             if (ids.length < 1) {
                                 Layer.alert('数据不能为空!', {icon: 5})
                                 return false;
                             }
+
                             Fast.api.ajax({
                                 url: 'riskcontrol/monthly/sedMessage',
                                 data: {ids}

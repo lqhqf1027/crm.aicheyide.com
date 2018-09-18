@@ -12,7 +12,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
             });
             // //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                alert(1)
+
 
                 var panel = $($(this).attr("href"));
 
