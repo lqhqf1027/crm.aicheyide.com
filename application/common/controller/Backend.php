@@ -233,11 +233,8 @@ class Backend extends Controller
         $version = collection(model('Config')->where('name','version')->find()->toArray())['value'];
         //扔出版本信息
         $this->assign('version',$version);
-
-//        foreach($site['pushMessage'] as $k=>$value){
-//            echo $k;
-//        }
-//        pr($site);die;
+        //扔出全局的admin信息到js
+        $this->assignconfig('ADMIN_JS',Session::get('admin'));
     }
 
 

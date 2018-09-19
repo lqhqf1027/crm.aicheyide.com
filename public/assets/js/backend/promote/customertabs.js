@@ -336,7 +336,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
                 add_data('.add-same_city', sameCity, 'promote/Customertabs/add_same_city');
 
-                batch_share('.btn-selected-baidu', sameCity);
+                batch_share('.btn-selected-same_city', sameCity);
 
 
             },
