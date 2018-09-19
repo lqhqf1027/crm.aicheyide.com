@@ -513,7 +513,7 @@ class Customertabs extends Backend
         $objPHPExcel->getActiveSheet()->getRowDimension('1')->setRowHeight(30);/*设置行高*/
         $objPHPExcel->setActiveSheetIndex(0)//设置一张sheet为活动表 添加表头信息
         // ->setCellValue('A' . $myrow, 'id')
-        ->setCellValue('A' . $myrow, '所属平台(填写数字[2代表今日头条，3代表百度，4代表58同城，8代表抖音])')
+        ->setCellValue('A' . $myrow, '所属平台')
             ->setCellValue('B' . $myrow, '姓名')
             ->setCellValue('C' . $myrow, '联系电话');
         // ->setCellValue('E' . $myrow, '年龄')

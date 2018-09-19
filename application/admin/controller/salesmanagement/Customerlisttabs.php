@@ -32,7 +32,9 @@ class Customerlisttabs extends Backend
 
     }
 
-    //得到可行管理员ID
+    /**得到可操作的管理员ID
+     * @return array
+     */
     public function getUserId()
     {
         $this->model = model("Admin");
@@ -62,6 +64,9 @@ class Customerlisttabs extends Backend
         return $backArray;
     }
 
+    /**
+     * @return array|string、
+     */
     public function test()
     {
         $message = Db::name('admin')
@@ -86,7 +91,13 @@ class Customerlisttabs extends Backend
         }
     }
 
-    //排除销售列表电话号码用户
+    /**
+     * 排除销售列表电话号码用户
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function noPhone()
     {
         $phone = Db::table("crm_sales_order")
@@ -129,9 +140,16 @@ class Customerlisttabs extends Backend
     //测试封装
 
 
-    //新客户
+    /**
+     * 新客户
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function newCustomer()
     {
+
+
+
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -298,7 +316,7 @@ class Customerlisttabs extends Backend
             ->select();
         foreach ($list as $k => $row) {
 
-            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason']);
+            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason','giveup_time']);
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
             $row->visible(['admin']);
@@ -312,7 +330,14 @@ class Customerlisttabs extends Backend
         return array('total' => $total, "rows" => $list);
     }
 
-    //待联系
+    /**
+     * 待联系
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function relation()
     {
 
@@ -333,7 +358,14 @@ class Customerlisttabs extends Backend
     }
 
 
-    //有意向
+    /**
+     * 有意向
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function intention()
     {
 
@@ -355,7 +387,14 @@ class Customerlisttabs extends Backend
     }
 
 
-    //暂无意向
+    /**
+     * 暂无意向
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function nointention()
     {
 
@@ -377,7 +416,11 @@ class Customerlisttabs extends Backend
     }
 
 
-    //已放弃
+    /**
+     * 已放弃
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function giveup()
     {
         //设置过滤方法
@@ -395,7 +438,14 @@ class Customerlisttabs extends Backend
     }
 
 
-    //跟进时间过期用户
+    /**
+     * 跟进时间过期用户
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function overdue()
     {
 
@@ -416,7 +466,12 @@ class Customerlisttabs extends Backend
 
     }
 
-
+    /**
+     *添加
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\exception\DbException
+     */
     public function add()
     {
 
@@ -553,7 +608,7 @@ class Customerlisttabs extends Backend
     }
 
     /**
-     * 放弃
+     *放弃
      */
     public function ajaxGiveup()
     {
@@ -568,7 +623,8 @@ class Customerlisttabs extends Backend
                 ->where("id", $id)
                 ->update([
                     "customerlevel" => "giveup",
-                    'reason' => $text
+                    'reason' => $text,
+                    'giveup_time'=>time()
                 ]);
             if ($result) {
                 $this->success();

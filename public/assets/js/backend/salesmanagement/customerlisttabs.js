@@ -42,7 +42,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
 
                 Fast.api.close(data);//这里是重点
-                // console.log(data);
+
                 // Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
                 // console.log(data);
@@ -56,7 +56,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
              */
             new_customer: function () {
                 liActive = $('.nav-tabs').find('li.active .tabs-text').text();
-                // console.log($('.nav-tabs').find('li.active .tabs-text').text());
                 // 表格1
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索客户姓名";
@@ -181,11 +180,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 goeasy.subscribe({
                     channel: 'demo-internal',
                     onMessage: function (message) {
-                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-
+                        message = split('|',message);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：' + message[0].content, {icon: 0}, function (index) {
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
                     }
                 });
 
@@ -204,7 +205,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     $(".btn-showFeedback").data("area", ["80%", "80%"]);
                 });
-                console.log($(relations).find('tr td').eq(1).text());
+
                 // 初始化表格
                 relations.bootstrapTable({
                     url: 'salesmanagement/Customerlisttabs/relation',
@@ -628,6 +629,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
                                 }
                             },
+                            {field: 'giveup_time', title: __('放弃时间'),operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+
                             {field: 'reason', title: __('放弃原因'), operate: false,formatter:function (value, row, index) {
 
                                 var html = "";
@@ -703,7 +706,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('历史反馈记录'),
                                 operate: false,
                                 formatter: function (v, r, i) {
-                                    console.log(v);
+
                                     return Controller.feedFun(v);
                                 }
                             },
@@ -794,7 +797,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //切换跳转tabs
                 var tablsToger = $(window.parent.document).find('.nav-tabs li');
-                console.log();
+
+
                 tablsToger.each(function () {
                     var liHtml = $(this).find('.tabs-text');
 
@@ -904,7 +908,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'salesmanagement/customerlisttabs/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('反馈'), $(this).data() || {
                             callback: function (value) {
-                                console.log(value)
+
+
                                 //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
                             },
                             success: function (data) {
@@ -970,7 +975,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 Layer.close(index);
                                                 table.bootstrapTable('refresh');
                                         },function (data,ret) {
-                                            console.log(ret);
+
+
                                         })
                                     })
 
@@ -1080,14 +1086,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     id:JSON.stringify(ids)
                                 }
                             },function (data,ret) {
-                                // console.log(data);
+
+
                                 var pre = $('#badge_give_up').text();
                                 pre = parseInt(pre);
                                 $('#badge_give_up').text(pre + 1);
                                 Layer.close(index);
                                 table.bootstrapTable('refresh');
                             },function (data,ret) {
-                                console.log(ret);
+
+
                             })
                         })
 
