@@ -1262,17 +1262,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
 
-                 //新添加销售方案
-                goeasy.subscribe({
-                    channel: 'custom_model',
-                    onMessage: function(message){
-                        Layer.alert(message.content,{ icon:0},function(index){
-                            Layer.close(index);
 
-                        });
-
-                    }
-                });
 
 
                 //销售预定新车

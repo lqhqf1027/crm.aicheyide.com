@@ -526,9 +526,11 @@ class Plantabs extends Backend
 
                         if($params['liu']=='yes' && $params['sales_id']){
                             $channel = 'custom_model';
-                            $content = '定制方案审核结果通知:您需要的车型<span class="text-info">'.$models_name.',</span>首付<span class="text-info">'.$params['payment'].'</span>元,月供<span>'.$params['monthly'].'</span>元已添加成功,请注意查看';
+                            $results = array();
 
-                            goeary_push($channel,$content);
+                            $content = '定制方案审核结果通知:您需要的车型<span class="text-info">'.$models_name.',</span>首付<span class="text-info">'.$params['payment'].'</span>元,月供<span class="text-info">'.$params['monthly'].'</span>元已添加成功,请注意查看';
+
+                            goeary_push($channel,$content.'|'.$params['sales_id']);
 
                             $datas = send_newmodels_to_sales($models_name,$params['payment'],$params['monthly']);
 

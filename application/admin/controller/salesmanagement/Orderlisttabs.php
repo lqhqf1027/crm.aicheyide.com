@@ -1124,7 +1124,7 @@ class Orderlisttabs extends Backend
             foreach ($result as $k => $v) {
 
                 $result[$k]['downpayment'] = $v['payment'] + $v['monthly'] + $v['margin'] + $v['gps'];
-
+                $result[$k]['admin_id'] = $this->auth->id;
             }
 
             $result = json_encode($result);
@@ -1163,7 +1163,7 @@ class Orderlisttabs extends Backend
         foreach ($result as $k => $v) {
 
             $result[$k]['downpayment'] = $v['payment'] + $v['monthly'] + $v['margin'] + $v['gps'];
-
+            $result[$k]['admin_id'] = $this->auth->id;
         }
 
         echo json_encode($result);

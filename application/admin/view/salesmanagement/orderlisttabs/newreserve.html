@@ -2,10 +2,10 @@
 <style>
     .table th, .table td {
         text-align: center;
-        vertical-align: middle!important;
+        vertical-align: middle !important;
     }
 
-    .page-cursor{
+    .page-cursor {
         cursor: pointer;
     }
 
@@ -50,6 +50,7 @@
 
         </div>
     </div>
+    <input type="hidden" value="{$Think.session.admin.id}" id="user">
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -78,6 +79,7 @@
 
 
     <script type="text/javascript">
+        var ab = '';
 
         function changePlan(that) {
 
@@ -89,7 +91,6 @@
 
                 success: function (data) {
                     var data = JSON.parse(data);
-
                     var page_number = Math.ceil(parseInt(data.length) / 15);
 
 
@@ -105,7 +106,7 @@
                     page += '</ul>';
 
                     $('.paging').html(page);
-                    $('.paging').append('<span class="text-danger" style="float: right;margin-top: 20px">如无合适方案，请向产品方案人员沟通</span>');
+                    $('.paging').append('<span class="text-danger" style="float: right;margin-top: 20px">如无合适方案，请向产品方案人员沟通(方案人员添加成功后，所需方案会直接展示)</span>');
                     var page_li = $('.paging').find('li');
 
                     page_li.eq(0).addClass('active');
@@ -180,6 +181,7 @@
                         });
                     }
 
+
                     /**
                      * 返回显示的表格
                      * @param data
@@ -206,28 +208,41 @@
 
                         for (var i in data) {
 
-                            if(i>14){
+                            if (i > 14) {
                                 break;
                             }
 
 
                             var result = data[i];
-                            if(data[i].sales_id){
-                                html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '&nbsp;&nbsp;'+ "<span class='label label-warning' style='cursor: pointer'>专属方案</span>"; +'</td>';
-                            }else{
+                            if (data[i].sales_id && data[i].sales_id == data[i].admin_id) {
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '&nbsp;&nbsp;' + "<span class='label label-warning' style='cursor: pointer'>专属方案</span>";
+                                +'</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>';
+                                //models_id
+                                html += '<input>';
+                                html += '</tr>';
+                            } else if(!data[i].sales_id){
                                 html += '<td class="col-xs-12 col-sm-1 ">' + result.models_name + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
+                                html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>';
+                                //models_id
+                                html += '<input>';
+                                html += '</tr>';
                             }
-                            html += '<td class="col-xs-12 col-sm-1 ">' + result.payment + '</td>';
-                            html += '<td class="col-xs-12 col-sm-1 ">' + result.monthly + '</td>';
-                            html += '<td class="col-xs-12 col-sm-1 ">' + result.nperlist + '</td>';
-                            html += '<td class="col-xs-12 col-sm-1 ">' + result.tail_section + '</td>';
-                            html += '<td class="col-xs-12 col-sm-1 ">' + result.margin + '</td>';
-                            html += '<td class="col-xs-12 col-sm-1 ">' + result.gps + '</td>';
-                            html += '<td class="col-xs-12 col-sm-1 ">' + result.downpayment + '</td>';
-                            html += '<td class="col-xs-12 col-sm-1 ">' + '<input name="' + result.id + '" type="button" class="btn btn-default" value="选择该方案"></input>' + '</td>';
-                            //models_id
-                            html += '<input>';
-                            html += '</tr>';
+
 
 
                         }
@@ -250,13 +265,43 @@
                     }
 
 
-
                 }
 
             });
         }
 
+        var goeasy = new GoEasy({
+            appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+        });
 
+        //新添加销售方案
+        goeasy.subscribe({
+            channel: 'custom_model',
+            onMessage: function (message) {
+                var content = message.content;
+
+                var user_id = $('#user').val();
+
+                content = content.split('|');
+
+                if(content[1]== user_id){
+
+                    Layer.alert(content[0],{ icon:0},function(index){
+                        Layer.close(index);
+                        if($('.page-cursor').length>0){
+                            $('.page-cursor').eq(0).trigger('click');
+                        }
+                    });
+
+                }
+
+
+
+
+
+
+            }
+        });
 
 
     </script>
@@ -663,3 +708,6 @@
         </div>
     </div>
 </form>
+{php}
+dump(session('admin')['id']);
+{/php}
