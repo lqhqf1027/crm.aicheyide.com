@@ -52,10 +52,10 @@ class Orderlisttabs extends Backend
 
     public function index()
     {
-        $this->view->assign('total', model('SalesOrder')->count());
-        $this->view->assign('total1', model('RentalOrder')->count());
-        $this->view->assign('total2', model('SecondSalesOrder')->count());
-        $this->view->assign('total3', model('FullParmentOrder')->count());
+//        $this->view->assign('total', model('SalesOrder')->count());
+//        $this->view->assign('total1', model('RentalOrder')->count());
+//        $this->view->assign('total2', model('SecondSalesOrder')->count());
+//        $this->view->assign('total3', model('FullParmentOrder')->count());
         return $this->view->fetch();
     }
 
