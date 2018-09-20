@@ -40,7 +40,7 @@ class Demo extends Api
      */
     public function test()
     {
-        $this->success('返回成功', $this->request->param());
+        $this->error('返回成功', $this->request->param());
     }
 
     /**

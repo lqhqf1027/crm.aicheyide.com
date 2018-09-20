@@ -180,9 +180,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 goeasy.subscribe({
                     channel: 'demo-internal',
                     onMessage: function (message) {
-                        message = split('|',message);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：' + message[0].content, {icon: 0}, function (index) {
+                        messageCont = split('|',message.content);
+                        if(Config.ADMIN_JS.id==messageCont[1]){
+                            Layer.alert('新消息：' + messageCont[0], {icon: 0}, function (index) {
                                 Layer.close(index);
                                 $(".btn-refresh").trigger("click");
                             });
@@ -629,7 +629,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
                                 }
                             },
-                            {field: 'giveup_time', title: __('放弃时间'),operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+                            {field: 'giveup_time', title: __('Giveup time'),operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD' },
 
                             {field: 'reason', title: __('放弃原因'), operate: false,formatter:function (value, row, index) {
 
