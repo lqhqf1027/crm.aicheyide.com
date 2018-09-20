@@ -241,11 +241,11 @@ class Vehicleinformation extends Backend
 
             if ($result) {
 
+                $data = Db::name("rental_order")->where('id', $rental_id)->find();
+
                 $channel = "demo-rental_argee";
                 $content =  "车管人员已同意提交的租车预定请求，请及时处理";
-                goeary_push($channel, $content);
-
-                $data = Db::name("rental_order")->where('id', $rental_id)->find();
+                goeary_push($channel, $content . "|" . $data['admin_id']);
         
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');

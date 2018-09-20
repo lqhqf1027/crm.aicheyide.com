@@ -32,6 +32,7 @@ class Index extends Backend
         //左侧菜单
         list($menulist, $navlist, $fixedmenu, $referermenu) = $this->auth->getSidebar([
             'dashboard' => 'hot',
+            'salesmanagement/salesstand' => ['<span class="fa fa-bar-chart"><span>', 'blue'],
             'addon'     => ['new', 'red', 'badge'],
             'auth/rule' => __('Menu'),
             'general'   => ['new', 'purple'],
