@@ -96,6 +96,7 @@ class Secondhandcarcustomer extends Backend
     /**查看二手车单详细资料 */
     public function seconddetails($ids = null)
     {
+        die();
         $this->model = new \app\admin\model\SecondSalesOrder;
         $row = $this->model->get($ids);
         if (!$row)
@@ -174,6 +175,7 @@ class Secondhandcarcustomer extends Backend
                 'application_formimages_arr' => $application_formimages,
                 'call_listfiles_arr' => $call_listfiles,
                 'new_car_marginimages_arr' => $new_car_marginimages,
+
             ]
         );
         return $this->view->fetch();

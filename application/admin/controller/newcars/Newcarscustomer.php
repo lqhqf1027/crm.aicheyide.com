@@ -25,7 +25,8 @@ class Newcarscustomer extends Backend
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
-    protected $noNeedRight = ['index','prepare_lift_car','already_lift_car','choose_stock','show_order','show_order_and_stock','newcustomer','sendcar'];
+    protected $noNeedRight = ['index', 'prepare_lift_car', 'already_lift_car', 'choose_stock', 'show_order', 'show_order_and_stock', 'newcustomer', 'sendcar'];
+
     public function _initialize()
     {
         parent::_initialize();
@@ -90,7 +91,7 @@ class Newcarscustomer extends Backend
                 ->where($where)
                 ->where(function ($query) {
                     $query->where("car_new_inventory_id", "not null")
-                    ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or");
+                        ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or");
                 })
                 ->order($sort, $order)
                 ->count();
@@ -107,7 +108,7 @@ class Newcarscustomer extends Backend
                 ->where($where)
                 ->where(function ($query) {
                     $query->where("car_new_inventory_id", "not null")
-                    ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or");
+                        ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or");
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -185,7 +186,7 @@ class Newcarscustomer extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data','delivery_datetime']);
+                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data', 'delivery_datetime']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
@@ -268,8 +269,26 @@ class Newcarscustomer extends Backend
 
             if ($result !== false) {
 
-                $this->success();
-               
+                $peccancy = Db::name('sales_order')
+                    ->alias('so')
+                    ->join('models m', 'so.models_id = m.id')
+                    ->join('car_new_inventory ni', 'so.car_new_inventory_id = ni.id')
+                    ->where('so.id', $id)
+                    ->field('so.username,so.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
+                    ->find();
+
+                $peccancy['car_type'] = 1;
+
+                $peccancy_result = Db::name('violation_inquiry')->insert($peccancy);
+
+                if($peccancy_result){
+                    $this->success();
+                }else{
+                    $this->error('添加违章查询信息失败');
+                }
+
+
+
             } else {
                 $this->error('提交失败', null, $result);
 
@@ -296,10 +315,10 @@ class Newcarscustomer extends Backend
             ->join('models c', 'b.models_id=c.id');
 
 
-        if($row['admin_id']){
+        if ($row['admin_id']) {
             $row['sales_name'] = Db::name("admin")
-            ->where("id",$row['admin_id'])
-            ->value("nickname");
+                ->where("id", $row['admin_id'])
+                ->value("nickname");
         }
 
 
@@ -463,9 +482,9 @@ class Newcarscustomer extends Backend
             ->join('plan_acar b', 'a.plan_acar_name = b.id')
             ->join('models c', 'b.models_id=c.id');
 
-        if($row['admin_id']){
+        if ($row['admin_id']) {
             $row['sales_name'] = Db::name("admin")
-                ->where("id",$row['admin_id'])
+                ->where("id", $row['admin_id'])
                 ->value("nickname");
         }
 
