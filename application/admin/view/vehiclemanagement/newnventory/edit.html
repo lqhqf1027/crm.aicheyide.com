@@ -30,72 +30,11 @@
 
         </div>
     </div>
-
-
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Carnumber')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-carnumber" class="form-control" name="row[carnumber]" type="number" value="{$row.carnumber}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Reservecar')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-reservecar" class="form-control" name="row[reservecar]" type="number"
-                   value="{$row.reservecar}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Carprocess')}:</label>
-        <div class="col-xs-12 col-sm-8">
-
-            <!-- <select  id="c-carprocess" class="form-control selectpicker" name="row[carprocess]">
-                {foreach name="carprocessList" item="vo"}
-                    <option value="{$key}" {in name="key" value="$row.carprocess"}selected{/in}>{$vo}</option>
-                {/foreach}
-            </select> -->
-            <div class="radio">
-                {foreach name="carprocessList" item="vo"}
-                <label for="row[carprocess]-{$key}">
-                    {if condition="$key==$row['carprocess']"}
-                    <input id="row[carprocess]-{$key}" name="row[carprocess]" type="radio" value="{$key}" checked/>
-                    {else /}
-                    <input id="row[carprocess]-{$key}" name="row[carprocess]" type="radio" value="{$key}"/>
-                    {/if}
-                     {$vo}</label>
-                {/foreach}
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Pledge')}:</label>
-        <div class="col-xs-12 col-sm-8">
-
-            <!-- <select  id="c-pledge" class="form-control selectpicker" name="row[pledge]">
-                {foreach name="pledgeList" item="vo"}
-                    <option value="{$key}" {in name="key" value="$row.pledge"}selected{/in}>{$vo}</option>
-                {/foreach}
-            </select> -->
-            <div class="radio">
-                {foreach name="pledgeList" item="vo"}
-                <label for="row[pledge]-{$key}">
-                    {if condition="$key==$row['carprocess']"}
-                    <input id="row[pledge]-{$key}" name="row[pledge]" type="radio" value="{$key}" checked/>
-                    {else /}
-                    <input id="row[pledge]-{$key}" name="row[pledge]" type="radio" value="{$key}"/>
-                    {/if}
-                    {$vo}</label>
-                {/foreach}
-            </div>
-
-        </div>
-    </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Licensenumber')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-licensenumber" data-rule="required" class="form-control" name="row[licensenumber]" type="text"
-                   value="{$row.licensenumber}">
+            <input id="c-licensenumber"  class="form-control" name="row[licensenumber]" type="text"
+                   value="{$row.licensenumber}" placeholder="选填">
         </div>
     </div>
     <div class="form-group">
@@ -122,13 +61,7 @@
             <input id="c-4s_shop" data-rule="required" class="form-control" name="row[4s_shop]" type="text" value="{$row.4s_shop}">
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Presentationcondition')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <textarea id="c-presentationcondition" class="form-control " rows="5" name="row[presentationcondition]"
-                      cols="50">{$row.presentationcondition}</textarea>
-        </div>
-    </div>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
         <div class="col-xs-12 col-sm-8">
