@@ -1,0 +1,220 @@
+<style type="text/css">
+    .sm-st {
+        background:#fff;
+        padding:20px;
+        -webkit-border-radius:3px;
+        -moz-border-radius:3px;
+        border-radius:3px;
+        margin-bottom:20px;
+        -webkit-box-shadow: 0 1px 0px rgba(0,0,0,0.05);
+        box-shadow: 0 1px 0px rgba(0,0,0,0.05);
+    }
+    .sm-st-icon {
+        width:60px;
+        height:60px;
+        display:inline-block;
+        line-height:60px;
+        text-align:center;
+        font-size:30px;
+        background:#eee;
+        -webkit-border-radius:5px;
+        -moz-border-radius:5px;
+        border-radius:5px;
+        float:left;
+        margin-right:10px;
+        color:#fff;
+    }
+    .sm-st-info {
+        font-size:12px;
+        padding-top:2px;
+    }
+    .sm-st-info span {
+        display:block;
+        font-size:24px;
+        font-weight:600;
+    }
+    .orange {
+        background:#fa8564 !important;
+    }
+    .tar {
+        background:#45cf95 !important;
+    }
+    .sm-st .green {
+        background:#86ba41 !important;
+    }
+    .pink {
+        background:#AC75F0 !important;
+    }
+    .yellow-b {
+        background: #fdd752 !important;
+    }
+    .stat-elem {
+
+        background-color: #fff;
+        padding: 18px;
+        border-radius: 40px;
+
+    }
+
+    .stat-info {
+        text-align: center;
+        background-color:#fff;
+        border-radius: 5px;
+        margin-top: -5px;
+        padding: 8px;
+        -webkit-box-shadow: 0 1px 0px rgba(0,0,0,0.05);
+        box-shadow: 0 1px 0px rgba(0,0,0,0.05);
+        font-style: italic;
+    }
+
+    .stat-icon {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .st-red {
+        background-color: #F05050;
+    }
+    .st-green {
+        background-color: #27C24C;
+    }
+    .st-violet {
+        background-color: #7266ba;
+    }
+    .st-blue {
+        background-color: #23b7e5;
+    }
+
+    .stats .stat-icon {
+        color: #28bb9c;
+        display: inline-block;
+        font-size: 26px;
+        text-align: center;
+        vertical-align: middle;
+        width: 50px;
+        float:left;
+    }
+
+    .stat {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        margin-right: 10px; }
+    .stat .value {
+        font-size: 20px;
+        line-height: 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 500; }
+    .stat .name {
+        overflow: hidden;
+        text-overflow: ellipsis; }
+    .stat.lg .value {
+        font-size: 26px;
+        line-height: 28px; }
+    .stat.lg .name {
+        font-size: 16px; }
+    .stat-col .progress {height:2px;}
+    .stat-col .progress-bar {line-height:2px;height:2px;}
+
+    .item {
+        padding:30px 0;
+    }
+</style>
+<div class="panel panel-default panel-intro">
+
+    <div class="panel-heading">
+        {:build_heading(null, false)}
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#new" data-toggle="tab">{:__('以租代购（新车）签单流程')}</a></li>
+            <li><a href="#rental" data-toggle="tab">{:__('纯租签单流程')}</a></li>
+            <li><a href="#second" data-toggle="tab">{:__('已租代购（二手车）签单流程')}</a></li>
+            <li><a href="#full" data-toggle="tab">{:__('全款签单流程')}</a></li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="new">
+                <!-- 新车 -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="city" style="height:300px;width:100%;"></div>
+                    </div>
+                    
+                </div>
+                <br><br><br>
+                <!-- 租车 -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="rentalechart" style="height:200px;width:100%;"></div>
+                    </div>
+                    
+                </div>
+                <br><br><br>
+                <!-- 二手车 -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="secondechart" style="height:200px;width:100%;"></div>
+                    </div>
+                    
+                </div>
+                <br><br><br>
+                <!-- 全款车 -->
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div id="fullechart" style="height:200px;width:100%;"></div>
+                    </div>
+                    
+                </div>
+                <br><br><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var Ordernewdata = {
+            column: {:json_encode(array_keys($newonesales))},
+            newonesales: {:json_encode(array_values($newonesales))},
+            newtwosales: {:json_encode(array_values($newtwosales))},
+            newthreesales: {:json_encode(array_values($newthreesales))},
+    };
+    var Orderrentaldata = {
+            column: {:json_encode(array_keys($rentalonesales))},
+            rentalonesales: {:json_encode(array_values($rentalonesales))},
+            rentaltwosales: {:json_encode(array_values($rentaltwosales))},
+            rentalthreesales: {:json_encode(array_values($rentalthreesales))},
+    };
+    var Orderseconddata = {
+            column: {:json_encode(array_keys($secondonesales))},
+            secondonesales: {:json_encode(array_values($secondonesales))},
+            secondtwosales: {:json_encode(array_values($secondtwosales))},
+            secondthreesales: {:json_encode(array_values($secondthreesales))},
+    };
+    var Orderfulldata = {
+            column: {:json_encode(array_keys($fullonesales))},
+            fullonesales: {:json_encode(array_values($fullonesales))},
+            fulltwosales: {:json_encode(array_values($fulltwosales))},
+            fullthreesales: {:json_encode(array_values($fullthreesales))},
+    };
+    // console.log(Orderrentaldata);
+    var Citydata = {
+        num: {:json_encode($num)},
+        newpeoplecity: {:json_encode($newpeoplecity)},
+        relationcity: {:json_encode($relationcity)},
+        intentioncity: {:json_encode($intentioncity)},
+        nointentioncity: {:json_encode($nointentioncity)},
+        giveupcity: {:json_encode($giveupcity)},
+        overduecity: {:json_encode($overduecity)},
+    };
+    var Todaydata = {
+        num: {:json_encode($num)},
+        newpeopletoday: {:json_encode($newpeopletoday)},
+        relationtoday: {:json_encode($relationtoday)},
+        intentiontoday: {:json_encode($intentiontoday)},
+        nointentiontoday: {:json_encode($nointentiontoday)},
+        giveuptoday: {:json_encode($giveuptoday)},
+        overduetoday: {:json_encode($overduetoday)},
+    };
+</script>

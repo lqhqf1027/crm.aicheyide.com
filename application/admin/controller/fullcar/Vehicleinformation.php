@@ -221,10 +221,6 @@ class Vehicleinformation extends Backend
                 ->where("id", $id)
                 ->setField("statuss", 0);
 
-            $channel = "demo-full_takecar";
-            $content = "销售提交的全款车单，可以进行提车处理";
-            goeary_push($channel, $content);
-
             $full_info = Db::name("full_parment_order")
                 ->where("id", $ids)
                 ->field("admin_id,models_id,username,phone,customer_source,introduce_name,introduce_phone,introduce_card")

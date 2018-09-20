@@ -1221,10 +1221,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 goeasy.subscribe({
                     channel: 'demo-newpass_finance',
                     onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
                         
                     }
                 });
@@ -1233,10 +1236,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 goeasy.subscribe({
                     channel: 'demo-newcar_data',
                     onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
                         
                     }
                 });
@@ -1245,11 +1251,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 goeasy.subscribe({
                     channel: 'demo-newcar_nopass',
                     onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
+                            
                     }
                 });
 
@@ -1257,10 +1266,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  goeasy.subscribe({
                     channel: 'demo-newtake_car',
                     onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
                         
                     }
                 });
@@ -1718,10 +1730,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             goeasy.subscribe({
                 channel: 'demo-rental_argee',
                 onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
+                    message = split('|',message.content);
+                    if(Config.ADMIN_JS.id==message[1]){
+                        Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                    }
                 }
             });
 
@@ -1730,10 +1745,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             goeasy.subscribe({
                 channel: 'demo-rental_pass',
                 onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
+                    message = split('|',message.content);
+                    if(Config.ADMIN_JS.id==message[1]){
+                        Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                    }
                     
                 }
             });
@@ -1743,10 +1761,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             goeasy.subscribe({
                 channel: 'demo-rental_nopass',
                 onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
+                    message = split('|',message.content);
+                    if(Config.ADMIN_JS.id==message[1]){
+                        Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                    }
                     
                 }
             });
@@ -2360,10 +2381,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 goeasy.subscribe({
                     channel: 'demo-secondpass_inform',
                     onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
                         
                     }
                 });
@@ -2372,10 +2396,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 goeasy.subscribe({
                     channel: 'demo-second_data',
                     onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
                         
                     }
                 });
@@ -2384,11 +2411,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 goeasy.subscribe({
                     channel: 'demo-second_nopass',
                     onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
                     }
                 });
 
@@ -2652,14 +2681,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(orderFull);
 
-                //车管发送----可以进行提车
+                //车管发送---销售接收----可以进行提车
                 goeasy.subscribe({
                     channel: 'demo-full_takecar',
                     onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
                         
                     }
                 });

@@ -228,8 +228,8 @@ class Newcarscustomer extends Backend
             if ($result !== false) {
 
                 $channel = "demo-newtake_car";
-                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，已经可以进行提车，请补全提车资料，请及时登陆后台进行处理";
-                goeary_push($channel, $content);
+                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，已经可以进行提车，请补全提车资料";
+                goeary_push($channel, $content . "|" . $admin_id);
 
                 $data = newtake_car($models_name, $username);
                 // var_dump($data);
