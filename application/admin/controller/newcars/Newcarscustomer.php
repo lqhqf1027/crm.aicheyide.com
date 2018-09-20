@@ -48,20 +48,20 @@ class Newcarscustomer extends Backend
         $this->loadlang('newcars/newcarscustomer');
         $this->loadlang('order/salesorder');
 
-        $prepare_total = Db::name("sales_order")
-            ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or")
-            ->where("car_new_inventory_id", "not null")
-            ->count();
-
-        $already_total = Db::name("sales_order")
-            ->where("review_the_data", "the_car")
-            ->where("car_new_inventory_id", "not null")
-            ->count();
-
-        $this->view->assign([
-            'prepare_total' => $prepare_total,
-            'already_total' => $already_total
-        ]);
+//        $prepare_total = Db::name("sales_order")
+//            ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or")
+//            ->where("car_new_inventory_id", "not null")
+//            ->count();
+//
+//        $already_total = Db::name("sales_order")
+//            ->where("review_the_data", "the_car")
+//            ->where("car_new_inventory_id", "not null")
+//            ->count();
+//
+//        $this->view->assign([
+//            'prepare_total' => $prepare_total,
+//            'already_total' => $already_total
+//        ]);
         return $this->view->fetch();
     }
 
