@@ -25,6 +25,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
+            $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
+                $(this).trigger("shown.bs.tab");
+            })
         },
 
         choose_stock: function () {

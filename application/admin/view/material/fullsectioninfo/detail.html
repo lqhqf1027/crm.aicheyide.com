@@ -517,6 +517,9 @@
         if ($(this).find("span").length == 0) {
             $(this).on('click', function () {
 
+                if($(this).find('img')){
+
+                }
 
                 if ($(this).find(".text-warning").length == 0) {
                     $(this).append("<span class='check-span' style='float: right;padding-top: 27px'><span class='text-warning' style='font-size: large'>已选中</span><i class=\"fa fa-check text-success fa-lg\"></i></span>");
@@ -617,6 +620,3 @@
     };
 
 </script>
-{php}
-//dump($row);
-{/php}

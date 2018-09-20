@@ -383,7 +383,7 @@ class Customertabs extends Backend
             });
             if ($result) {
                 $channel = "demo-platform";
-                $content = "你有推广平台给你分配的新客户，请登录后台进行处理";
+                $content = "你有推广平台给你分配的新客户，请登录后台进行处理"."|".$params['backoffice_id'];
                 goeary_push($channel, $content);
 
                 $data = dstribution_inform();
@@ -453,7 +453,7 @@ class Customertabs extends Backend
             if ($result) {
 
                 $channel = "demo-platform";
-                $content = "你有推广平台给你分配的新客户，请注意查看";
+                $content = "你有推广平台给你分配的新客户，请注意查看"."|".$params['backoffice_id'];
                 goeary_push($channel, $content);
 
                 $data = dstribution_inform();

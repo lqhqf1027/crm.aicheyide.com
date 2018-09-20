@@ -37,20 +37,20 @@ class Carreservation extends Backend
 
     public function index()
     {
-        $total = Db::name("second_sales_order")
-                ->where("review_the_data", "send_car_tube")
-                ->where("amount_collected", "not null")
-                ->count();        
-        $total1 = Db::name("second_sales_order")
-                ->where("review_the_data", ["NEQ", "is_reviewing"], ["NEQ", "is_reviewing_true"], ["NEQ", "send_car_tube"], "or")
-                ->where("amount_collected", "not null")
-                ->count();
-        $this->view->assign(
-            [
-                'total' => $total,
-                'total1' => $total1
-            ]
-        );
+//        $total = Db::name("second_sales_order")
+//                ->where("review_the_data", "send_car_tube")
+//                ->where("amount_collected", "not null")
+//                ->count();
+//        $total1 = Db::name("second_sales_order")
+//                ->where("review_the_data", ["NEQ", "is_reviewing"], ["NEQ", "is_reviewing_true"], ["NEQ", "send_car_tube"], "or")
+//                ->where("amount_collected", "not null")
+//                ->count();
+//        $this->view->assign(
+//            [
+//                'total' => $total,
+//                'total1' => $total1
+//            ]
+//        );
         return $this->view->fetch();
     }
 

@@ -270,7 +270,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false
                             },
                             {
-                                field: 'registryregistration.deposit_contractimages',
+                                field: 'registryregistration.deposit',
                                 title: __('定金协议'),
                                 formatter: Controller.api.formatter.judge, operate: false
                             },
@@ -296,7 +296,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false
                             },
                             {
-                                field: 'tianfu_bank_cardimages',
+                                field: 'registryregistration.tianfu_bank_cardimages',
                                 title: __('天府银行卡附件'),
                                 formatter: Controller.api.formatter.judge, operate: false
                             },
@@ -342,7 +342,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             //
                             {
-                                field: 'registryregistration.rr_tax',
+                                field: 'registryregistration.tax',
                                 title: __('购置税'),
                                 formatter: Controller.api.formatter.judge,
                                 operate: false
@@ -454,20 +454,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
 
                 judge: function (value) {
-                    var res = "";
-                    var color = "";
-                    if (value == "no" || value == "" || value == null) {
-                        res = "<i class='fa fa-times'></i>";
-                        color = "danger";
-                    } else {
-                        res = "<i class='fa fa-check'></i>"
-                        color = "success";
-                    }
 
-                    //渲染状态
-                    var html = '<span class="text-' + color + '"> ' + __(res) + '</span>';
 
-                    return html;
+
+                        var res = "";
+                        var color = "";
+                        if (value == "no") {
+                            res = "<i class='fa fa-times'></i>";
+                            color = "danger";
+                        } else if(value == 'yes'){
+                            res = "<i class='fa fa-check'></i>"
+                            color = "success";
+                        }else{
+                            return '-' ;
+                        }
+
+                        //渲染状态
+                        var html = '<span class="text-' + color + '"> ' + __(res) + '</span>';
+
+                        return html;
+
+
                 },
 
                 inspection: function (value, row, index) {
