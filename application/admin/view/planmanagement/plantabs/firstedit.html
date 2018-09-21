@@ -4,11 +4,10 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择销售方案类型')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]"
-            >
+            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]">
 
                 {foreach name="$category" item="vo"}
-                {eq name="$vo.id" value="{$row.category_id}"}
+                {eq name="$vo.id" value="$row.category_id"}
                 <option value="{$vo.id}" selected>{$vo.name}</option>
                 {else /}
                 <option value="{$vo.id}">{$vo.name}</option>
@@ -188,7 +187,4 @@
         </div>
     </div>
 </form>
-{php}
-dump($row['sales_id']);
-{/php}
 

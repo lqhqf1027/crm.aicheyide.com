@@ -24,7 +24,7 @@ class Vehicleinformation extends Backend
      */
     protected $model = null;
     protected $multiFields = 'shelfismenu';
-    protected $noNeedRight = ['index', 'rentalrequest', 'carsingle', 'takecar','add','getInfo','edit'];
+    protected $noNeedRight = ['index', 'rentalrequest', 'carsingle', 'takecar', 'add', 'getInfo', 'edit'];
 
     public function _initialize()
     {
@@ -80,7 +80,6 @@ class Vehicleinformation extends Backend
 
 
             $list = collection($list)->toArray();
-
 
 
             $result = array("total" => $total, "rows" => $list);
@@ -235,8 +234,8 @@ class Vehicleinformation extends Backend
                 ->where("id", $id)
                 ->setField("status_data", "is_reviewing_true");
 
-            $rental_id =  Db::name('rental_order')->where('plan_car_rental_name', $id)->where('order_no', null)->value('id');
-    
+            $rental_id = Db::name('rental_order')->where('plan_car_rental_name', $id)->where('order_no', null)->value('id');
+
             Db::name('rental_order')->where("id", $rental_id)->setField("review_the_data", "is_reviewing_argee");
 
             if ($result) {
@@ -244,18 +243,18 @@ class Vehicleinformation extends Backend
                 $data = Db::name("rental_order")->where('id', $rental_id)->find();
 
                 $channel = "demo-rental_argee";
-                $content =  "车管人员已同意提交的租车预定请求，请及时处理";
+                $content = "车管人员已同意提交的租车预定请求，请及时处理";
                 goeary_push($channel, $content . "|" . $data['admin_id']);
-        
+
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
                 $admin_id = $data['admin_id'];
-                
-                //客户姓名
-                $username= $data['username'];
 
-                $data = rentalsales_inform($models_name,$username);
+                //客户姓名
+                $username = $data['username'];
+
+                $data = rentalsales_inform($models_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -266,10 +265,9 @@ class Vehicleinformation extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
+                if ($result_s) {
                     $this->success();
-                }
-                else {
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -284,23 +282,20 @@ class Vehicleinformation extends Backend
     // 打印提车单
     public function carsingle($ids = NULL)
     {
-       
+
         $row = $this->model->get($ids);
         $id = $row['id'];
         // var_dump($id);
         // die; 
-        
+
         $rental_order_id = Db::name('rental_order')->where('plan_car_rental_name', $id)->value('id');
         // var_dump($rental_order_id);
         // die;
         $result = Db::name('rental_order')->alias('a')
-
-            
-
-                ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
-                ->join('models c', 'c.id=b.models_id')
-                ->where('a.id', $rental_order_id)
-                ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,b.status_data ,a.order_no,
+            ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
+            ->join('models c', 'c.id=b.models_id')
+            ->where('a.id', $rental_order_id)
+            ->field('a.username,a.phone,a.cash_pledge,a.rental_price,a.tenancy_term,a.createtime,a.delivery_datetime,b.status_data ,a.order_no,
 
                     c.name as models_name,b.licenseplatenumber as licenseplatenumber')
             ->find();
@@ -341,47 +336,46 @@ class Vehicleinformation extends Backend
 
             $seventtime = \fast\Date::unixtime('day', -6);
             $rentalonesales = $rentaltwosales = $rentalthreesales = [];
-            for ($i = 0; $i < 8; $i++)
-            {
+            for ($i = 0; $i < 8; $i++) {
                 $month = date("Y-m", $seventtime + ($i * 86400 * 30));
                 //销售一部
                 $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-                foreach($one_sales as $k => $v){
+                foreach ($one_sales as $k => $v) {
                     $one_admin[] = $v['uid'];
                 }
                 $rentalonetake = Db::name('rental_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
+                    ->where('review_the_data', 'for_the_car')
+                    ->where('admin_id', 'in', $one_admin)
+                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->count();
                 //销售二部
                 $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                foreach($two_sales as $k => $v){
+                foreach ($two_sales as $k => $v) {
                     $two_admin[] = $v['uid'];
                 }
                 $rentaltwotake = Db::name('rental_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
+                    ->where('review_the_data', 'for_the_car')
+                    ->where('admin_id', 'in', $two_admin)
+                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->count();
                 //销售三部
                 $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                foreach($three_sales as $k => $v){
+                foreach ($three_sales as $k => $v) {
                     $three_admin[] = $v['uid'];
                 }
                 $rentalthreetake = Db::name('rental_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
+                    ->where('review_the_data', 'for_the_car')
+                    ->where('admin_id', 'in', $three_admin)
+                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->count();
                 //销售一部
                 $rentalonesales[$month] = $rentalonetake;
                 //销售二部
                 $rentaltwosales[$month] = $rentaltwotake;
                 //销售三部
                 $rentalthreesales[$month] = $rentalthreetake;
-            
-            } 
+
+            }
             Cache::set('rentalonesales', $rentalonesales);
             Cache::set('rentaltwosales', $rentaltwosales);
             Cache::set('rentalthreesales', $rentalthreesales);
@@ -408,7 +402,27 @@ class Vehicleinformation extends Backend
                 // }else{
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
-                $this->success();
+                    //添加到违章信息表
+                $peccancy = Db::name('rental_order')
+                    ->alias('ro')
+                    ->join('models m', 'ro.models_id = m.id')
+                    ->join('car_rental_models_info mi', 'ro.car_rental_models_info_id = mi.id')
+                    ->where('mi.id', $id)
+                    ->field('ro.username,ro.phone,m.name as models,mi.licenseplatenumber as license_plate_number,mi.vin as frame_number,mi.engine_no as engine_number')
+                    ->find();
+
+                $peccancy['car_type'] = 4;
+
+                $result_peccancy = Db::name('violation_inquiry')->insert($peccancy);
+
+
+                if($result_peccancy){
+                    $this->success();
+                }else{
+                    $this->error('违章信息表添加失败');
+                }
+
+
 
 
             } else {
@@ -460,7 +474,7 @@ class Vehicleinformation extends Backend
     {
 
         $brand = Db::name("brand")
-            ->where('name','二手车专用车型')
+            ->where('name', '二手车专用车型')
             ->field("id,name")
             ->select();
 
@@ -490,7 +504,7 @@ class Vehicleinformation extends Backend
      * 编辑
      */
     public function edit($ids = NULL)
-    {   
+    {
         $this->view->assign("car_models", $this->getInfo());
         $row = $this->model->get($ids);
         if (!$row)
