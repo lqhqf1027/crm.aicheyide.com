@@ -357,9 +357,9 @@
             <div class="radio">
                 {foreach name="genderdataList" item="vo"}
                 <label for="row[genderdata]-{$key}">
-                    <input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key"
-                           value="male" }checked{/in}
-                    /> {$vo}</label>
+                    <input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="male" }checked{/in}/>
+
+                    {$vo}</label>
                 {/foreach}
             </div>
 
@@ -581,7 +581,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Bank_cardimages')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('银行卡正反面')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
                 <input id="c-bank_cardimages" data-rule="required" class="form-control" size="50"
