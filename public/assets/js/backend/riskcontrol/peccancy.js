@@ -33,12 +33,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'frame_number', title: __('Frame_number')},
                         {field: 'engine_number', title: __('Engine_number')},
                         {field: 'total_deduction', title: __('Total_deduction')},
-                        {field: 'total_fine', title: __('Total_fine'), operate:'BETWEEN'},
+                        {field: 'total_fine', title: __('Total_fine'), operate: 'BETWEEN'},
                         {field: 'query_times', title: __('Query_times')},
-                        {field: 'car_type', title: __('Car_type'), searchList: {"1":__('Car_type 1'),"2":__('Car_type 2'),"3":__('Car_type 3'),"4":__('Car_type 4')}, formatter: Controller.api.formatter.normal},
+                        {
+                            field: 'car_type',
+                            title: __('Car_type'),
+                            searchList: {
+                                "1": __('Car_type 1'),
+                                "2": __('Car_type 2'),
+                                "3": __('Car_type 3'),
+                                "4": __('Car_type 4')
+                            },
+                            formatter: Controller.api.formatter.normal
+                        },
                         {field: 'peccancy_status', title: __('Peccancy_status')},
-                        {field: 'final_time', title: __('Final_time'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {
+                            field: 'final_time',
+                            title: __('Final_time'),
+                            operate: 'RANGE',
+                            addclass: 'datetimerange',
+                            formatter: Table.api.formatter.datetime
+                        },
+                        {
+                            field: 'operate',
+                            title: __('Operate'),
+                            table: table,
+                            events: Table.api.events.operate,
+                            formatter: Table.api.formatter.operate
+                        }
                     ]
                 ]
             });
@@ -55,63 +77,77 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var page = table.bootstrapTable('getData');
 
-               console.log(tableRow);
+                // console.log(tableRow);return;
+                var closeLay = Layer.confirm("请选择要查询的客户数据", {
+                    title: '查询数据',
+                    btn: ["选中项(" + tableRow.length + "条)", "本页(" + page.length + "条)"],
+                    success: function (layero, index) {
+                        $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
+                    }
+                    ,
+                    //选中项
+                    yes: function (index, layero) {
 
-                // var closeLay = Layer.confirm("请选择要查询的客户数据", {
-                //     title: '查询数据',
-                //     btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)"],
-                //     success: function (layero, index) {
-                //         $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
-                //     }
-                //     ,
-                //     //选中项
-                //     yes: function (index, layero) {
-                //         // var sendTemplte = Layer.confirm('请选择发送类型',{
-                //         //     title:'选择要发送的模板类型',
-                //         //     btn:['①提醒']
-                //         // })
-                //         if (ids.length < 1) {
-                //             Layer.alert('数据不能为空!', {icon: 5})
-                //             return false;
-                //         }
-                //
-                //         Fast.api.ajax({
-                //             url: 'riskcontrol/monthly/sedMessage',
-                //             data: {ids}
-                //
-                //         }, function (data, ret) {
-                //             Layer.close(closeLay);
-                //             newcarMonthly.bootstrapTable('refresh');
-                //         })
-                //     }
-                //     ,
-                //     //本页
-                //     btn2: function (index, layero) {
-                //         ids = [];
-                //         for (var i in page) {
-                //             ids.push({
-                //                 'id':page[i]['id'],
-                //                 'monthly_name':page[i]['monthly_name'],
-                //                 'monthly_phone_number':page[i]['monthly_phone_number'].slice(0,11),
-                //                 'monthly_card_number':page[i]['monthly_card_number'].match(/.*(.{4})/)[1],
-                //                 'monthly_monney':page[i]['monthly_monney']
-                //             });
-                //         }
-                //
-                //         // return;false;
-                //         Fast.api.ajax({
-                //             url: 'riskcontrol/monthly/sedMessage',
-                //             data: {ids}
-                //         }, function (data, ret) {
-                //             Layer.close(closeLay);
-                //
-                //             newcarMonthly.bootstrapTable('refresh');
-                //         })
-                //     }
-                //     ,
-                // })
+                        // var sendTemplte = Layer.confirm('请选择发送类型',{
+                        //     title:'选择要发送的模板类型',
+                        //     btn:['①提醒']
+                        // })
+                        if (tableRow.length < 1) {
+                            Layer.alert('数据不能为空!', {icon: 5});
+                            return false;
+                        }
+                        ids = [];
+                        // console.log(tableRow);
+                        for (var i in tableRow) {
+                            ids.push({
+                                key: '217fb8552303cb6074f88dbbb5329be7',
+                                hphm: tableRow[i]['license_plate_number'].substr(0, 2),
+                                hphms: tableRow[i]['license_plate_number'],
+                                engineno: tableRow[i]['engine_number'],
+                                classno: tableRow[i]['frame_number']
+                            })
+                        }
+
+                        // console.log(ids);
+
+                        Fast.api.ajax({
+                            url: 'riskcontrol/Peccancy/sendMessage',
+                            data: {ids}
+
+                        }, function (data, ret) {
+                            console.log(data);
+                            // Layer.close(closeLay);
+                            // newcarMonthly.bootstrapTable('refresh');
+                        })
+                    }
+                    ,
+                    //本页
+                    btn2: function (index, layero) {
+                        ids = [];
+                        for (var i in page) {
+                            ids.push({
+                                'id': page[i]['id'],
+                                'monthly_name': page[i]['monthly_name'],
+                                'monthly_phone_number': page[i]['monthly_phone_number'].slice(0, 11),
+                                'monthly_card_number': page[i]['monthly_card_number'].match(/.*(.{4})/)[1],
+                                'monthly_monney': page[i]['monthly_monney']
+                            });
+                        }
+
+                        // return;false;
+                        Fast.api.ajax({
+                            url: 'riskcontrol/monthly/sedMessage',
+                            data: {ids}
+                        }, function (data, ret) {
+                            Layer.close(closeLay);
+
+                            newcarMonthly.bootstrapTable('refresh');
+                        })
+                    }
+
+
+                })
             });
-
 
         },
         add: function () {
@@ -124,8 +160,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
             },
-            formatter:{
-                normal:function (value, row, index) {
+            formatter: {
+                normal: function (value, row, index) {
                     switch (value) {
                         case 1:
                             return "<span class='text-success'>(以租代购)新车</span>";

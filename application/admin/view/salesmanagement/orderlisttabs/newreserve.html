@@ -105,10 +105,14 @@
                     var page = "";
 
                     page += '<ul class="pagination">';
+                       if(page_number==0){
+                           page += '<li class="page-cursor"><a>' + 1 + '</a></li>';
+                       }else{
+                           for (var i = 0; i < page_number; i++) {
+                               page += '<li class="page-cursor"><a>' + (i + 1) + '</a></li>';
+                           }
+                       }
 
-                    for (var i = 0; i < page_number; i++) {
-                        page += '<li class="page-cursor"><a>' + (i + 1) + '</a></li>';
-                    }
                     page += '</ul>';
 
                     $('.paging').html(page);
