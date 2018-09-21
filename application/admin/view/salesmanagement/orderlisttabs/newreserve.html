@@ -54,7 +54,17 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2" style="color: red">{:__('注意')}:</label>
         <div class="callout callout-warning col-xs-12 col-sm-8">
-                <h3>如无合适方案，请向产品方案人员沟通(方案人员添加成功后，所需方案会直接展示)</h3>
+
+                <h4>如你的实际销售方案（首付、月供、gps等）与产品经理发布的方案不一致，请私下向产品方案人员沟通并添加专属定制方案(待添加成功后，所需方案会直接展示)！！！</h4>
+        </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-8 col-md-12 text-center">
+
+            <strong class="text-danger" > 如你的定金上面合同签署的销售方案与系统展示的方案不一致，将会驳回你的订单请求，请严格按照系统要求签单，谢谢配合！！！</strong>
+
+
         </div>
     </div>
     <input type="hidden" value="{$Think.session.admin.id}" id="user">
@@ -83,8 +93,6 @@
 
 
     </div>
-
-
     <script type="text/javascript">
 
         function changePlan(that) {
@@ -312,15 +320,6 @@
 
     </script>
 
-    <!--<div class="form-group">-->
-        <!--<label class="control-label col-xs-12 col-sm-2">{:__('Decoration')}:</label>-->
-        <!--<div class="col-xs-12 col-sm-8 col-md-3">-->
-            <!--<input id="c-decoration" placeholder="如：脚垫，全车膜，行车记录仪等" class="form-control" name="row[decoration]"-->
-                   <!--type="text">-->
-        <!--</div>-->
-
-
-    <!--</div>-->
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
@@ -338,9 +337,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-phone" data-rule="required;mobile" class="form-control" name="row[phone]" type="text"
-                   onkeyup="this.value=this.value.replace(/\D/g,'')"
-                   onafterpaste="this.value=this.value.replace(/\D/g,'')">
+            <input id="c-phone" data-rule="required" class="form-control" name="row[phone]" type="text">
         </div>
 
 
