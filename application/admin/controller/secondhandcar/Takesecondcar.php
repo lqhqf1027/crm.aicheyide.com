@@ -14,35 +14,34 @@ use app\common\library\Email;
  */
 class Takesecondcar extends Backend
 {
-    
+
     /**
      * Sms模型对象
      * @var \app\admin\model\Sms
      */
     protected $model = null;
-    protected $noNeedRight = ['index','secondtakecar','takecar','seconddetails'];
+    protected $noNeedRight = ['index', 'secondtakecar', 'takecar', 'seconddetails'];
 
     public function _initialize()
     {
         parent::_initialize();
-        
+
 
     }
-    
+
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-    
+
 
     public function index()
     {
         $total = Db::name("second_sales_order")
-                ->where("review_the_data", ["=", "for_the_car"], ["=", "the_car"], "or")
-                
-                ->count();        
-        
+            ->where("review_the_data", ["=", "for_the_car"], ["=", "the_car"], "or")
+            ->count();
+
         $this->view->assign('total', $total);
         return $this->view->fetch();
     }
@@ -59,42 +58,42 @@ class Takesecondcar extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
-            
+
             $total = $this->model
-                    ->with(['plansecond' => function ($query) {
-                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name');
-                    }])
-                    ->where($where)
-                    ->where("review_the_data", ["=", "for_the_car"], ["=", "the_car"], "or")
-                    ->order($sort, $order)
-                    ->count();
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where("review_the_data", ["=", "for_the_car"], ["=", "the_car"], "or")
+                ->order($sort, $order)
+                ->count();
 
 
             $list = $this->model
-                    ->with(['plansecond' => function ($query) {
-                        $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name');
-                    }])
-                    ->where($where)
-                    ->where("review_the_data", ["=", "for_the_car"], ["=", "the_car"], "or")
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where("review_the_data", ["=", "for_the_car"], ["=", "the_car"], "or")
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
             foreach ($list as $k => $row) {
-                    $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
-                    $row->visible(['plansecond']);
-                    $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
-                    $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
-                    $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
+                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['plansecond']);
+                $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
             }
 
             $list = collection($list)->toArray();
@@ -112,6 +111,13 @@ class Takesecondcar extends Backend
     {
         $this->model = new \app\admin\model\SecondSalesOrder;
         $row = $this->model->get($ids);
+
+        if ($row['admin_id']) {
+            $row['sales_name'] = Db::name('admin')
+                ->where('id', $row['admin_id'])
+                ->value('nickname');
+
+        }
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -169,7 +175,7 @@ class Takesecondcar extends Backend
         /**不必填 */
         //保证金收据
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
-        if($new_car_marginimages){
+        if ($new_car_marginimages) {
             foreach ($new_car_marginimages as $k => $v) {
                 $new_car_marginimages[$k] = Config::get('upload')['cdnurl'] . $v;
             }
@@ -201,24 +207,40 @@ class Takesecondcar extends Backend
 
             $id = $this->request->post('id');
 
-            $result = Db::name('second_sales_order')->where('id',$id)->setField('review_the_data', 'the_car');
+            $result = Db::name('second_sales_order')->where('id', $id)->setField('review_the_data', 'the_car');
 
-            $second_car_id = Db::name('second_sales_order')->where('id',$id)->value('second_car_id');
+            $second_car_id = Db::name('second_sales_order')->where('id', $id)->value('second_car_id');
 
-            if($result !== false){
+            if ($result !== false) {
 
-                $result_s = Db::name('secondcar_rental_models_info')->where('id',$second_car_id)->setField('status_data', 'the_car');
+                $result_s = Db::name('secondcar_rental_models_info')->where('id', $second_car_id)->setField('status_data', 'the_car');
 
-                if($result_s !== false){
-                    $this->success();
+                if ($result_s !== false) {
+
+                    $peccancy = Db::name('second_sales_order')
+                        ->alias('so')
+                        ->join('models m', 'so.models_id = m.id')
+                        ->join('secondcar_rental_models_info mi', 'so.plan_car_second_name = mi.id')
+                        ->where('so.id', $id)
+                        ->field('so.username,so.phone,m.name as models,mi.licenseplatenumber as license_plate_number,mi.vin as frame_number,mi.engine_number')
+                        ->find();
+
+                    $peccancy['car_type'] = 2;
+                    $result_peccancy = Db::name('violation_inquiry')->insert($peccancy);
+                    if ($result_peccancy) {
+                        $this->success();
+                    } else {
+                        $this->error('违章信息添加失败');
+                    }
+
+
+                } else {
+                    $this->error('提交失败', null, $result);
                 }
-                else{
-                    $this->error('提交失败',null,$result);
-                }
-               
-            }else{
-                $this->error('提交失败',null,$result);
-                
+
+            } else {
+                $this->error('提交失败', null, $result);
+
             }
         }
     }

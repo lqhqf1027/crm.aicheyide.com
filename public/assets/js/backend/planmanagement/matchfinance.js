@@ -56,6 +56,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newprepareMatch.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-neweditone").data("area", ["40%", "40%"]);
                     $(".btn-newtest").data("area", ["40%", "40%"]);
+                    $(".btn-new").data("area", ["95%", "95%"]);
                     // $(".btn-showOrder").data("area", ["95%", "95%"]);
                 });
                 // 初始化表格
@@ -96,10 +97,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'car_total_price', title: __('车款总价(元)'),operate:false},
                             {field: 'downpayment', title: __('首期款(元)'),operate:false},
                             {field: 'difference', title: __('差额(元)'),operate:false},
+                            {
+                                field: 'id', title: __('查看详细资料'), table: newprepareMatch, buttons: [
+                                    {
+                                        name: 'details', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-new',
+                                        url: 'planmanagement/Matchfinance/new_details', callback: function (data) {
+
+                                        }
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
                             // {field: 'engine_number', title: __('发动机号')},
                             // {field: 'household', title: __('行驶证所有户')},
                             {field: 'newinventory.4s_shop', title: __('4S店')},
-                            {field: 'amount_collected', title: __('实收金额'),operate:false},
+                            {field: 'amount_collected', title: __('实收定金金额'),operate:false},
                             {field: 'decorate', title: __('装饰'),operate:false},
 
                             {
@@ -197,6 +210,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
                     $(".btn-secondeditone").data("area", ["40%", "40%"]);
                     $(".btn-secondtest").data("area", ["40%", "40%"]);
+                    $(".btn-used").data("area", ["95%", "95%"]);
                 });
                 // 初始化表格
                 secondprepareMatch.bootstrapTable({
@@ -232,7 +246,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'plansecond.totalprices', title: __('车款总价(元)'),operate:false},
                             {field: 'downpayment', title: __('首期款(元)'),operate:false},
                             {field: 'difference', title: __('差额(元)'),operate:false},
-                            {field: 'amount_collected', title: __('实收金额'),operate:false},
+                            {
+                                field: 'id', title: __('查看详细资料'), table: secondprepareMatch, buttons: [
+                                    {
+                                        name: 'details', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-used',
+                                        url: 'planmanagement/Matchfinance/used_details', callback: function (data) {
+
+                                        }
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
+                            {field: 'amount_collected', title: __('实收定金金额'),operate:false},
                             {field: 'decorate', title: __('装饰'),operate:false},
 
                             {
@@ -432,6 +458,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = options.extend.secondedit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('二手车匹配金融'), $(this).data() || {});
+                    },
+
+                    'click .btn-new': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'planmanagement/Matchfinance/new_details';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('二手车匹配金融'), $(this).data() || {});
+                    },
+
+                    'click .btn-used': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'planmanagement/Matchfinance/used_details';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('二手车匹配金融'), $(this).data() || {});
                     }
 
