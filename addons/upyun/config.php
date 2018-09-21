@@ -129,7 +129,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => 'jpg,png,bmp,jpeg,gif,zip,rar,xls,xlsx',
+    'value' => 'jpg,png,bmp,jpeg,gif,zip,rar,xls,xlsx,pdf',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',
