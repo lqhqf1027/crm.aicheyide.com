@@ -120,6 +120,7 @@ class Carreservation extends Backend
                 return $this->selectpage();
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+          
             $total = $this->model
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
@@ -131,7 +132,8 @@ class Carreservation extends Backend
                     $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
                 ->where($where)
-                ->where("review_the_data", ["NEQ", "send_to_internal"], ["NEQ", "send_car_tube"], ["NEQ", "inhouse_handling"], "or")
+                ->where('review_the_data','not in',['send_to_internal','send_car_tube','inhouse_handling'])
+                // ->where("review_the_data", ["neq", "send_to_internal"], ["neq", "send_car_tube"], ["neq", "inhouse_handling"], "or")
                 ->where("amount_collected", "not null")
                 ->order($sort, $order)
                 ->count();
@@ -148,7 +150,8 @@ class Carreservation extends Backend
                     $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
                 ->where($where)
-                ->where("review_the_data", ["NEQ", "send_to_internal"], ["NEQ", "send_car_tube"], ["NEQ", "inhouse_handling"], "or")
+                ->where('review_the_data','not in',['send_to_internal','send_car_tube','inhouse_handling'])
+                // ->where("review_the_data", ['NEQ', "send_to_internal"], ['NEQ', "send_car_tube"], ['NEQ', "inhouse_handling"], "or")
                 ->where("amount_collected", "not null")
                 ->order($sort, $order)
                 ->limit($offset, $limit)

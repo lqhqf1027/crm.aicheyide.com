@@ -23,6 +23,7 @@
             <strong> {:__('请仔细填写录入以下客户资料')}:</strong>
         </label>
     </div>
+    
     <h3>
         <center>基本资料</center>
     </h3>
@@ -48,6 +49,12 @@
         <div class="col-xs-12 col-sm-8">
             <p>123</p>
 
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2" style="color: red">{:__('注意')}:</label>
+        <div class="callout callout-warning col-xs-12 col-sm-8">
+                <h3>如无合适方案，请向产品方案人员沟通(方案人员添加成功后，所需方案会直接展示)</h3>
         </div>
     </div>
     <input type="hidden" value="{$Think.session.admin.id}" id="user">
