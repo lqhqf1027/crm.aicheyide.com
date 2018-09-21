@@ -112,10 +112,11 @@
 
             <select id="c-nperlist" data-rule="required" class="form-control selectpicker" name="row[nperlist]">
                 {foreach name="nperlistList" item="vo"}
-                <option value="{$key}" {in name="key" value="36" }selected{
-                /in}>{$vo}</option>
-
-
+                {eq name="$key" value="36"}
+                <option value="{$key}" selected>{$vo}</option>
+                {else /}
+                <option value="{$key}">{$vo}</option>
+                {/eq}
                 {/foreach}
             </select>
 
@@ -178,5 +179,5 @@
     </div>
 </form>
 {php}
-//dump($car_models);
+//dump($nperlistList);
 {/php}

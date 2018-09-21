@@ -6,6 +6,30 @@
     #p-new_car_marginimages .btn-trash {
         display: block !important;
     }
+    #p-id_cardimages .btn-trash {
+        display: block !important;
+    }
+    #p-drivers_licenseimages .btn-trash {
+        display: block !important;
+    }
+    #p-mate_id_cardimages .btn-trash {
+        display: block !important;
+    }
+    #p-bank_cardimages .btn-trash {
+        display: block !important;
+    }
+    #p-undertakingimages .btn-trash {
+        display: block !important;
+    }
+    #p-accreditimages .btn-trash {
+        display: block !important;
+    }
+    #p-informationimages .btn-trash {
+        display: block !important;
+    }
+    #p-faceimages .btn-trash {
+        display: block !important;
+    }
 </style>
  
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
@@ -296,19 +320,19 @@
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_name')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]" type="text" value="{$row.turn_to_introduce_name}">
+                <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]" type="text" value="{$row.turn_to_introduce_name}" disabled>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_phone')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_phone" class="form-control" name="row[turn_to_introduce_phone]" type="text" value="{$row.turn_to_introduce_phone}">
+                <input id="c-turn_to_introduce_phone" class="form-control" name="row[turn_to_introduce_phone]" type="text" value="{$row.turn_to_introduce_phone}" disabled>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_card')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_card" class="form-control" name="row[turn_to_introduce_card]" type="text" value="{$row.turn_to_introduce_card}">
+                <input id="c-turn_to_introduce_card" class="form-control" name="row[turn_to_introduce_card]" type="text" value="{$row.turn_to_introduce_card}" disabled>
             </div>
         </div>
 
@@ -510,7 +534,7 @@
                 </div>
                 <span class="msg-box n-right" for="c-faceimages"></span>
             </div>
-
+            <ul class="row list-inline plupload-preview" id="p-faceimages"></ul>
         </div>
     </div>
     <div class="form-group layer-footer">
