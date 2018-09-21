@@ -161,7 +161,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     console.log("error");
                                 return false;
-                                },
+                                }
                             )
                         }
                     );
