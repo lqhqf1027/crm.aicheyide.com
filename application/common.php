@@ -769,8 +769,8 @@ if (!function_exists('newinternal_inform')) {
     {
         if ($models_name && $admin_name && $username) {
             $arr = [
-                'subject' => "新车待录入金额通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行金额录入 . '</div>'
+                'subject' => "待录入实收定金、装饰通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的预定，请及时登录后台进行金额、装饰录入 . '</div>'
             ];
 
             return $arr;

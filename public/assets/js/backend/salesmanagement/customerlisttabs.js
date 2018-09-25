@@ -94,7 +94,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-
+                            {field: 'jobs', title: __('求职岗位')},
                             {
                                 field: 'distributsaletime',
                                 title: __('Distributsaletime'),
@@ -233,7 +233,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-
+                            {field: 'jobs', title: __('求职岗位')},
 
                             {
                                 field: 'customerlevel',
@@ -365,7 +365,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-
+                            {field: 'jobs', title: __('求职岗位')},
                             {
                                 field: 'customerlevel',
                                 title: '客户等级',
@@ -493,7 +493,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-
+                            {field: 'jobs', title: __('求职岗位')},
                             {
                                 field: 'customerlevel',
                                 title: '客户等级',
@@ -693,7 +693,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
-
+                            {field: 'jobs', title: __('求职岗位')},
                             // {field: 'followupdate', title: '下次跟进时间', operate: false},
                             {
                                 field: 'customerlevel',

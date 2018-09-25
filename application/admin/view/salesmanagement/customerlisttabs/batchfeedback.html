@@ -14,21 +14,17 @@
 
             <select  id="c-customlevel" data-rule="required" class="form-control selectpicker" name="row[customerlevel]" >
 
-                <option value=""  style="display: none" >未选择任何项</option>
-                {empty name="$row.customerlevel"}
-                {foreach name="costomlevelList" item="vo"}
-                <option value="{$key}">{$vo}</option>
-                {/foreach}
-                {else /}
-                {foreach name="costomlevelList" item="vo"}
-                {notin name="$key" value="$row.customerlevel"}
-                <option value="{$key}">{$vo}</option>
-                {/notin}
+                <option value="" style="display: none"></option>
 
+                {foreach name="costomlevelList" item="vo"}
+                {if condition="$row.customerlevel eq null"}
+
+                {/if}
+                <option value="{$key}" >{$vo}</option>
                 {/foreach}
 
 
-                {/empty}
+
 
             </select>
 

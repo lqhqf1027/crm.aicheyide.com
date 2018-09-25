@@ -100,11 +100,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate', title: __('Operate'), table: orderAcar,
                                 buttons: [
                                     {
-                                        name: 'submit_audit', text: '提交给内勤', title: '提交到当前部门内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_audit',
+                                        name: 'submit_audit', text: '提交给内勤', title: '提交到当前部门内勤,用户记录实收定金金额与', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_audit',
                                         url: 'salesmanagement/orderlisttabs/sedAudit',
-                                        //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
-                                        //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
-                                        //....
                                         hidden: function (row) { /**提交给内勤 */
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -162,9 +159,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**删除 */
                                     {
                                         icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        // url: 'order/salesorder/del',/**删除 */
+                                        // url: 'order/salesorder/del',
                                         hidden: function (row) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -221,9 +219,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         },
 
                                     },
+                                    /**预定编辑 */
                                     {
                                         name: 'send_to_internal', text: '预定编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('预定编辑'), classname: 'btn btn-xs btn-success btn-newreserveeditone',
-                                        // url: 'order/salesorder/edit',/**预定编辑 */
+                                        // url: 'order/salesorder/edit',
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -278,9 +277,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
+                                    /**内勤正在处理中 */
                                     {
                                         name: 'inhouse_handling', text: '内勤正在处理中',
-                                        hidden: function (row) {  /**内勤正在处理中 */
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'inhouse_handling') {
                                                 return false;
                                             }
@@ -334,6 +334,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**录入审核资料*/
                                     {
                                         name: 'newcontroladd', text: '录入审核资料', icon: 'fa fa-plus', extend: 'data-toggle="tooltip"', title: __('录入审核资料'), classname: 'btn btn-xs btn-success btn-newcontroladd',
                                         
@@ -347,9 +348,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
+                                    /**车管正在处理中 */
                                     {
                                         name: 'send_car_tube', text: '车管正在处理中',
-                                        hidden: function (row) {  /**车管正在处理中 */
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'send_car_tube') {
                                                 return false;
                                             }
@@ -403,9 +405,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**风控正在审核中 */
                                     {
                                         name: 'is_reviewing_true', text: '风控正在审核中',
-                                        hidden: function (row) {  /**风控正在审核中 */
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'is_reviewing_true') {
                                                 return false;
                                             }
@@ -459,9 +462,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**正在匹配金融 */
                                     {
                                         name: 'is_reviewing', text: '正在匹配金融',
-                                        hidden: function (row) {  /**正在匹配金融 */
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'is_reviewing') {
                                                 return false;
                                             }
@@ -515,9 +519,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**征信已通过 */
                                     {
                                         name: 'for_the_car', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
-                                        hidden: function (row) {  /**征信已通过 */
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'for_the_car') {
                                                 return false;
                                             }
@@ -571,9 +576,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**客户在签订金融合同*/
                                     {
                                         name: 'conclude_the_contract', icon: 'fa fa-check-circle', text: '客户在签订金融合同', classname: ' text-info ',
-                                        hidden: function (row) {  /**客户在签订金融合同*/
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'conclude_the_contract') {
                                                 return false;
                                             }
@@ -627,9 +633,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**征信已通过 */
                                     {
                                         name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
-                                        hidden: function (row) {  /**征信已通过 */
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'is_reviewing_pass') {
                                                 return false;
                                             }
@@ -683,9 +690,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**风控匹配车辆*/
                                     {
                                         name: 'take_the_car', icon: 'fa fa-check-circle', text: '风控匹配车辆', classname: ' text-info ',
-                                        hidden: function (row) {  /**风控匹配车辆*/
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'take_the_car') {
                                                 return false;
                                             }
@@ -739,6 +747,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**补全客户提车资料*/
                                     {
                                         name: 'take_the_data', text: '补全客户提车资料', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('补全客户提车资料'), classname: 'btn btn-xs btn-success btn-customer_information',
                                         
@@ -796,6 +805,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
+                                    /**资料补全，提交车管提车*/
                                     {
                                         name: 'inform_the_tube', text: '资料补全，提交车管提车', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('资料补全，提交车管提车'), classname: 'btn btn-xs btn-info btn-newinform_tube',
                                         
@@ -853,6 +863,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
+                                    /***提车资料编辑*/
                                     {
                                         name: 'edit', text: '提车资料编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('提车资料编辑'), classname: 'btn btn-xs btn-success btn-editone',
                                         
@@ -910,6 +921,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
+                                    /**等待提车*/
                                     {
                                         name: 'send_the_car', icon: 'fa fa-check-circle', text: '等待提车', classname: ' text-info ',
                                         hidden: function (row) {  /**等待提车*/
@@ -966,6 +978,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**车管正在录入库存**/
                                     {
                                         name: 'tube_into_stock', icon: 'fa fa-check-circle', text: '车管正在录入库存', classname: ' text-info ',
                                         hidden: function (row) {  /**车管正在录入库存 */
@@ -1022,9 +1035,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**征信不通过 */
                                     {
                                         name: 'not_through', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
-                                        hidden: function (row) {  /**征信不通过 */
+                                        hidden: function (row) {
 
                                             if (row.review_the_data == 'not_through') {
                                                 return false;
@@ -1079,9 +1093,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**需交保证金 */
                                     {
                                         name: 'the_guarantor', icon: 'fa fa-upload', text: '需交保证金', extend: 'data-toggle="tooltip"', title: __('点击上传保证金收据'), classname: 'btn btn-xs btn-warning btn-the_guarantor',
-                                        hidden: function (row) {  /**需交保证金 */
+                                        hidden: function (row) {
 
                                             if (row.review_the_data == 'the_guarantor') {
                                                 return false;
@@ -1136,10 +1151,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**已提车 */
                                     {
 
                                         name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
-                                        hidden: function (row) {  /**已提车 */
+                                        hidden: function (row) {
                                             if (row.review_the_data == 'the_car') {
                                                 return false;
                                             }
