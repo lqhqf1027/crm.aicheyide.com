@@ -19,11 +19,90 @@ class Peccancy extends Backend
      */
     protected $model = null;
 
+    protected $noNeedRight = ['index','prepare_send','already_send','sendMessage','details','sendCustomer'];
+
     public function _initialize()
     {
         parent::_initialize();
         $this->model = new \app\admin\model\violation\Inquiry;
         $this->view->assign("carTypeList", $this->model->getCarTypeList());
+    }
+    /**
+     * 查看
+     */
+    public function index()
+    {
+       return $this->view->fetch();
+    }
+
+    //未发送给客服
+    public function prepare_send()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,license_plate_number');
+            $total = $this->model
+                ->where($where)
+                ->where(function ($query){
+                    $query->where('customer_status',0);
+                })
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->where($where)
+                ->where(function ($query){
+                    $query->where('customer_status',0);
+                })
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+    }
+
+    //已发送给客服
+    public function already_send()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,license_plate_number');
+            $total = $this->model
+                ->where($where)
+                ->where(function ($query){
+                    $query->where('customer_status',1);
+                })
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->where($where)
+                ->where(function ($query){
+                    $query->where('customer_status',1);
+                })
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
     }
 
     /**
@@ -49,6 +128,7 @@ class Peccancy extends Backend
                     if ($data['error_code'] == 0) {
                         $total_fraction = 0;     //总扣分
                         $total_money = 0;        //总罚款
+                        $flag = -1;
                         if ($data['result']['lists']) {
                             foreach ($data['result']['lists'] as $key => $value) {
                                 if ($value['fen']) {
@@ -63,16 +143,15 @@ class Peccancy extends Backend
                                     $total_money += $value['money'];
                                 }
 
+                                if ($value['handled'] == 0) {
+                                    $flag = -2;
+                                }
+
                             }
                             $field['peccancy_detail'] = json_encode($data['result']['lists']);
                         }
 
-                        if (count($data['result']['lists']) > 0) {
-                            $field['peccancy_status'] = 2;
-                        } else {
-                            $field['peccancy_status'] = 1;
-                        }
-
+                        $flag == -2 ? $field['peccancy_status'] = 2 : $field['peccancy_status'] = 1;
 
                         $field['total_deduction'] = $total_fraction;
                         $field['total_fine'] = $total_money;
@@ -110,24 +189,6 @@ class Peccancy extends Backend
     }
 
 
-    public function sedMessage()
-    {
-        $this->model = new \app\admin\model\NewcarMonthly;
-        if ($this->request->isAjax()) {
-            $params = input('post.')['ids'];
-            $phone = assoc_unique($params, 'monthly_phone_number'); //去重电话号码
-
-            foreach ($phone as $k => $v) {
-                //循环调用短接接口
-                $result = gets("http://v.juhe.cn/sms/send?mobile={$v['monthly_phone_number']}&tpl_id=100433&tpl_value=" . urlencode("#name#={$v['monthly_name']}&#code#={$v['monthly_card_number']}&#money#={$v['monthly_monney']}") . "&key=9ee7861bdcf01ecb60eb4961b86711cf");
-
-
-            }
-            return $result['error_code'] == 0 ? $this->success($result['reason'], null, $result) : $this->error($result['reason']);
-        }
-    }
-
-
     public function details($ids = null)
     {
         $detail = Db::name('violation_inquiry')
@@ -142,15 +203,40 @@ class Peccancy extends Backend
 //        }
 
         $this->view->assign([
-            'detail'=>$details,
-            'phone'=>$detail['phone'],
-            'username'=>$detail['username'],
-            'total_fine'=>$detail['total_fine'],
-            'total_deduction'=>$detail['total_deduction']
-            ]);
+            'detail' => $details,
+            'phone' => $detail['phone'],
+            'username' => $detail['username'],
+            'total_fine' => $detail['total_fine'],
+            'total_deduction' => $detail['total_deduction']
+        ]);
 
         return $this->view->fetch();
     }
 
+
+    public function sendCustomer()
+    {
+        if ($this->request->isAjax()) {
+            $ids = input("ids");
+            $ids = json_decode($ids, true);
+            $res = Db::name('violation_inquiry')
+                ->where('id', 'in', $ids)
+                ->update([
+                    'customer_status' => 1,
+                    'customer_time' => time()
+
+                ]);
+
+            if($res){
+                $this->success('', '', $ids);
+            }else{
+                $this->error();
+            }
+
+
+
+
+        }
+    }
 
 }

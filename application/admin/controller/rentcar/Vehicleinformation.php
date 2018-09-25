@@ -408,7 +408,7 @@ class Vehicleinformation extends Backend
                     ->join('models m', 'ro.models_id = m.id')
                     ->join('car_rental_models_info mi', 'ro.car_rental_models_info_id = mi.id')
                     ->where('mi.id', $id)
-                    ->field('ro.username,ro.phone,m.name as models,mi.licenseplatenumber as license_plate_number,mi.vin as frame_number,mi.engine_no as engine_number')
+                    ->field('ro.username,ro.phone,ro.delivery_datetime as start_renttime,ro.car_backtime as end_renttime,m.name as models,mi.licenseplatenumber as license_plate_number,mi.vin as frame_number,mi.engine_no as engine_number')
                     ->find();
 
                 $peccancy['car_type'] = 4;
