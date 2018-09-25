@@ -409,8 +409,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'is_reviewing_true', text: '风控正在审核中',
                                         hidden: function (row) {
-                                            if (row.review_the_data == 'is_reviewing_true') {
+                                            if (row.review_the_data == 'is_reviewing_true' && row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages && row.accreditimages && row.faceimages  && row.informationimages) {
                                                 return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true' || !row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages || !row.accreditimages || !row.faceimages  || !row.informationimages) {
+                                                return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing') {
                                                 return true;
