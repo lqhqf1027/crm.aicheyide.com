@@ -58,7 +58,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
-                console.log(data);
+
                 // Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
                 // console.log(data);
@@ -163,7 +163,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //数据实时统计
                 headlines.on('load-success.bs.table', function (e, data) {
-                        console.log(data.total)
+
                         $('#badge_new_toutiao').text(data.total);
                 })
                 add_data('.add-headline', headlines, 'promote/Customertabs/add_headline');
@@ -549,6 +549,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                         for (var i in v) {
+
                             var level = "";
                             switch (v[i]['customerlevel']){
                                 case '有意向':
@@ -561,6 +562,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     level+="<span class='text-info'>"+v[i]['customerlevel']+"</span>";
                                     break;
                                 case '已放弃':
+
                                     level+="<span class='text-danger'>"+v[i]['customerlevel']+"</span>";
                                     break;
                             }
@@ -705,7 +707,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         //导出分配客户的信息
         var submitForm = function (ids, layero) {
             var options = table.bootstrapTable('getOptions');
-            console.log(options);
+
             var columns = [];
             $.each(options.columns[0], function (i, j) {
                 if (j.field && !j.checkbox && j.visible && j.field != 'operate') {

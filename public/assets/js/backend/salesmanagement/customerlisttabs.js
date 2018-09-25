@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
+define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepicker'], function ($, undefined, Backend, Table, Form) {
 
     var goeasy = new GoEasy({
         appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
@@ -794,6 +794,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         edit: function () {
+
+
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 //切换跳转tabs
                 var tablsToger = $(window.parent.document).find('.nav-tabs li');
@@ -898,7 +900,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 operate: {
 
                     'click .btn-editone': function (e, value, row, index) {  //编辑
-
+                        $('.btn-editone').data("area", ["60%", "60%"]);
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -1114,7 +1116,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             var options = {
                 shadeClose: false,
                 shade: [0.3, '#393D49'],
-                area: ['50%', '50%'],
+                area: ['60%', '60%'],
                 callback: function (value) {
 
                 }

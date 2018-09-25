@@ -26,16 +26,16 @@
 
         </div>
     </div>
-
     <div class="form-group" id="checks">
         <label class="control-label col-xs-12 col-sm-2">下次跟进时间</label>
         <div class="col-xs-12 col-sm-8">
 
-            <input id="c-followupdate" class="form-control datetimepicker" data-rule="required" data-date-format="YYYY-MM-DD" placeholder="" data-use-current="true" data-min-date="2018-08-03" name="row[followupdate]" type="text" onblur="remind()">
+            <input id="c-followupdate" class="form-control datetimepicker" data-rule="required" data-date-format="YYYY-MM-DD " placeholder="" data-use-current="true" name="row[followupdate]" type="text" onblur="remind()">
 
 
 
         </div>
+
     </div>
 
     <div class="form-group">
@@ -45,7 +45,19 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('常用快捷反馈')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:Form::radios('row[radio]',
+            ['电话关机'=>'电话关机', '暂时/无法接通'=>'暂时/无法接通', '无人接听 等哈再打'=>'无人接听 等哈再打','拨打的电话是空号'=>'拨打的电话是空号',
+            '拨打的电话已过期'=>'拨打的电话已过期', '没有意向'=>'没有意向','拨打的电话已过期'=>'拨打的电话已过期','挂断电话'=>'挂断电话',
+            '不考虑跑网约车'=>'不考虑跑网约车','客户在忙'=>'客户在忙','已找到工作'=>'已找到工作','考虑一下,后面再说'=>'考虑一下,后面再说',
+            '对网约车无兴趣'=>'对网约车无兴趣','已加微信'=>'已加微信','暗中观察'=>'暗中观察','整死都不跑滴滴。。'=>'整死都不跑滴滴。。'], '')}
 
+            <p class="text-gray text-right">如需添加更多常用反馈内容，请联系@<u>我换头像了</u></p>
+        </div>
+
+    </div>
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
@@ -57,11 +69,16 @@
 <script>
 
 //设置时间提示
-$('#c-followupdate').attr('placeholder','请选择大于'+getNowFormatDate()+'的日期');
+
+$('input[type="radio"]').change(function (e) {
+
+    $(this).prop('checked',true)?$('#c-feedback').val(e.target.value):'';
+})
+$('#c-followupdate').attr('placeholder','请选择大于'+getNowFormatDate()+'的日期').val(getNowFormatDate(1));
 //错误时间提醒
     function remind() {
 
-        var now = new Date(getNowFormatDate()).getTime();
+        var now = new Date(getNowFormatDate(-1)).getTime();
 
         var choose = $("#c-followupdate").val();
 
@@ -72,7 +89,7 @@ $('#c-followupdate').attr('placeholder','请选择大于'+getNowFormatDate()+'�
             // 您选择的时间无效，请重新选择
            var index =  layer.alert('您选择的时间无效，请重新选择', {
                 icon: 5,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                skin: 'layer-ext-moon'
             },function () {
                layer.close(index);
                 $('#c-followupdate').val(getNowFormatDate(1));
