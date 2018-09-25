@@ -15,7 +15,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             var table = $("#table");
+            table.on('post-body.bs.table', function (e, settings, json, xhr) {
+                $(".btn-details").data("area", ["90%", "90%"]);
 
+            });
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
@@ -32,7 +35,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'license_plate_number', title: __('License_plate_number')},
                         {field: 'frame_number', title: __('Frame_number')},
                         {field: 'engine_number', title: __('Engine_number')},
-                        {field: 'total_deduction', title: __('Total_deduction')},
+                        {field: 'total_deduction', title: __('Total_deduction'),operate: 'BETWEEN'},
                         {field: 'total_fine', title: __('Total_fine'), operate: 'BETWEEN'},
                         {field: 'query_times', title: __('Query_times')},
                         {
@@ -46,14 +49,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             formatter: Controller.api.formatter.normal
                         },
-                        {field: 'peccancy_status', title: __('Peccancy_status')},
+                        {field: 'peccancy_status', title: __('Peccancy_status'),formatter:Controller.api.formatter.status},
+                        {
+                            field: 'id', title: __('查看详细资料'), table: table, buttons: [
+                                {
+                                    name: 'details', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-details',
+                                    url: 'riskcontrol/Peccancy/details'
+                                }
+                            ],
+
+                            operate: false, formatter: Table.api.formatter.buttons
+                        },
                         {
                             field: 'final_time',
                             title: __('Final_time'),
                             operate: 'RANGE',
                             addclass: 'datetimerange',
-                            formatter: Table.api.formatter.datetime
+                            formatter: Table.api.formatter.datetime,
+                            datetimeFormat:"YYYY-MM-DD"
                         },
+
                         {
                             field: 'operate',
                             title: __('Operate'),
@@ -100,7 +115,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // console.log(tableRow);
                         for (var i in tableRow) {
                             ids.push({
-                                key: '217fb8552303cb6074f88dbbb5329be7',
                                 hphm: tableRow[i]['license_plate_number'].substr(0, 2),
                                 hphms: tableRow[i]['license_plate_number'],
                                 engineno: tableRow[i]['engine_number'],
@@ -116,32 +130,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         }, function (data, ret) {
                             console.log(data);
-                            // Layer.close(closeLay);
-                            // newcarMonthly.bootstrapTable('refresh');
+                            Layer.close(closeLay);
+                            table.bootstrapTable('refresh');
                         })
                     }
                     ,
                     //本页
                     btn2: function (index, layero) {
                         ids = [];
+                        // console.log(page);
                         for (var i in page) {
                             ids.push({
-                                'id': page[i]['id'],
-                                'monthly_name': page[i]['monthly_name'],
-                                'monthly_phone_number': page[i]['monthly_phone_number'].slice(0, 11),
-                                'monthly_card_number': page[i]['monthly_card_number'].match(/.*(.{4})/)[1],
-                                'monthly_monney': page[i]['monthly_monney']
+                                hphm: page[i]['license_plate_number'].substr(0, 2),
+                                hphms: page[i]['license_plate_number'],
+                                engineno: page[i]['engine_number'],
+                                classno: page[i]['frame_number']
                             });
                         }
 
                         // return;false;
                         Fast.api.ajax({
-                            url: 'riskcontrol/monthly/sedMessage',
+                            url: 'riskcontrol/Peccancy/sendMessage',
                             data: {ids}
                         }, function (data, ret) {
                             Layer.close(closeLay);
 
-                            newcarMonthly.bootstrapTable('refresh');
+                            table.bootstrapTable('refresh');
                         })
                     }
 
@@ -172,7 +186,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         case 4:
                             return "<span class='text-info'>租车</span>";
                     }
-                }
+                },
+                status: function (value, row, index) {
+                    if(!value){
+                        return '-';
+                    }
+
+                    value==1?value='已处理':value='未处理';
+                    var custom = {'已处理': 'success', '未处理': 'danger'};
+                    if (typeof this.custom !== 'undefined') {
+                        custom = $.extend(custom, this.custom);
+                    }
+                    this.custom = custom;
+
+                    this.icon = 'fa fa-circle';
+                    return Table.api.formatter.normal.call(this, value, row, index);
+                },
             },
             selectIdsRow: function (table) {
                 var options = table.bootstrapTable('getOptions');
