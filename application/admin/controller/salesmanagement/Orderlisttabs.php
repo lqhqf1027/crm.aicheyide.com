@@ -81,7 +81,7 @@ class Orderlisttabs extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,licensenumber', true);
             $total = $this->model
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
@@ -113,7 +113,7 @@ class Orderlisttabs extends Backend
                 ->select();
             foreach ($list as $k => $row) {
                 $row->visible(['id', 'order_no', 'financial_name', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data',
-                    'id_cardimages', 'drivers_licenseimages', 'bank_cardimages', 'undertakingimages', 'accreditimages', 'faceimages', 'informationimages']);
+                    'id_cardimages', 'drivers_licenseimages', 'bank_cardimages', 'undertakingimages', 'accreditimages', 'faceimages', 'informationimages','financial_name']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
@@ -134,6 +134,7 @@ class Orderlisttabs extends Backend
         return $this->view->fetch('index');
 
     }
+
 
     /**
      * 纯租订单

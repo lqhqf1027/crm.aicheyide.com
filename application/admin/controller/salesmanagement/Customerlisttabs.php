@@ -312,7 +312,7 @@ class Customerlisttabs extends Backend
             ->select();
         foreach ($list as $k => $row) {
 
-            $row->visible(['id', 'username', 'phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason', 'giveup_time']);
+            $row->visible(['id', 'username', 'jobs','phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason', 'giveup_time']);
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
             $row->visible(['admin']);
@@ -397,7 +397,6 @@ class Customerlisttabs extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-
             $result = $this->encapsulationSelect('nointention');
             //关联反馈表内容
             foreach ($result['rows'] as $key => $value) {
@@ -421,10 +420,9 @@ class Customerlisttabs extends Backend
     {
         //设置过滤方法
         $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
+            if ($this->request->isAjax()) {
 
             $result = $this->encapsulationSelect('giveup');
-
 
             return json($result);
         }
@@ -523,7 +521,7 @@ class Customerlisttabs extends Backend
 
 
     /**
-     * 编辑
+     * 编辑 单个反馈
      */
     public function edit($ids = NULL)
     {
@@ -610,7 +608,7 @@ class Customerlisttabs extends Backend
     {
         if ($this->request->isAjax()) {
             $id = input("id");
-            $text = input("text");
+            $text = input("text"); //放弃原因
 
             $this->model = model('CustomerResource');
 
@@ -622,8 +620,13 @@ class Customerlisttabs extends Backend
                     'reason' => $text,
                     'giveup_time' => time()
                 ]);
-            if ($result) {
+            //如果放弃的客户，更新字段到反馈表  feedback_info 中
+            $feedback = Db::name('feedback_info')->insert(['feedbackcontent'=>$text,'feedbacktime'=>time(),'customerlevel'=>'已放弃','customer_id'=>$id]);
+            if ($result && $feedback) {
                 $this->success();
+            }
+            else{
+                $this->error('放弃失败',null,[$result,$feedback]);
             }
 
         }
@@ -700,11 +703,11 @@ class Customerlisttabs extends Backend
                     'reason' => $text,
                     'giveup_time'=>time()
                 ]);
-
-            if ($result) {
-                $this->success('', '', $result);
+            $feedback = Db::name('feedback_info')->insertAll(['feedbackcontent'=>$text,'feedbacktime'=>time(),'customerlevel'=>'已放弃','customer_id'=>$id]);
+            if ($result && $feedback) {
+                $this->success();
             } else {
-                $this->error();
+                $this->error('批量放弃失败',null,[$result,$feedback]);
             }
         }
 
