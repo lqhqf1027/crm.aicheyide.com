@@ -701,7 +701,8 @@ class Customerlisttabs extends Backend
                 ->where('id', 'in', $id)
                 ->update([
                     'customerlevel' => 'giveup',
-                    'reason' => $text
+                    'reason' => $text,
+                    'giveup_time'=>time()
                 ]);
 
             if ($result) {

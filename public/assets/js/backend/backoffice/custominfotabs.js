@@ -35,8 +35,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         //刷新
         admeasure: function () {
 
-            // $(".btn-add").data("area", ["300px","200px"]);
-            // Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
 
                 var pre = parseInt($('#assigned-customer').text());
@@ -56,7 +54,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
+
 
 
         },
@@ -66,8 +64,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                console.log(data);
-
                 var datas = parseInt(data);
 
                 var pre = parseInt($('#assigned-customer').text());
@@ -78,13 +74,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // console.log(data);
                  Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
-                // console.log(data);
+
 
                 Toastr.success("失败");
 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
+
 
 
         },
@@ -95,7 +91,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var newCustomer = $("#newCustomer");
                 newCustomer.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
+
                     $('#new-customer').text(data.total);
 
                 })
