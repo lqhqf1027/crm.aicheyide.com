@@ -94,6 +94,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
+                            {field: 'invalidtime', title: __('号码失效时间'),formatter:function (v,r,i) {
+                                return Controller.numberFailure(v);
+                            }},
                             {field: 'jobs', title: __('求职岗位')},
                             {
                                 field: 'distributsaletime',
@@ -229,10 +232,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
                                     return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+
                                 }
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
+                            {field: 'invalidtime', title: __('号码失效时间'),formatter:function (v,r,i) {
+                                    return Controller.numberFailure(v);
+                                }},
                             {field: 'jobs', title: __('求职岗位')},
 
                             {
@@ -365,6 +372,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
+                            {field: 'invalidtime', title: __('号码失效时间'),formatter:function (v,r,i) {
+                                    return Controller.numberFailure(v);
+                                }},
                             {field: 'jobs', title: __('求职岗位')},
                             {
                                 field: 'customerlevel',
@@ -493,6 +503,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
+                            {field: 'invalidtime', title: __('号码失效时间'),formatter:function (v,r,i) {
+                                    return Controller.numberFailure(v);
+                                }},
                             {field: 'jobs', title: __('求职岗位')},
                             {
                                 field: 'customerlevel',
@@ -693,6 +706,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
+                            {field: 'invalidtime', title: __('号码失效时间'),formatter:function (v,r,i) {
+                                    return Controller.numberFailure(v);
+                            }},
                             {field: 'jobs', title: __('求职岗位')},
                             // {field: 'followupdate', title: '下次跟进时间', operate: false},
                             {
@@ -816,6 +832,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                 Toastr.error("失败");
 
             });
+        },
+        /**
+         * 判断时间是否过期
+         * @param v 格式时间
+         * @returns {string}
+         */
+        numberFailure:function(v){
+
+            return v == null ? '-' : new Date(v.replace(/-/g, '/')).getTime() < new Date().getTime() ? v + ' <span class="label label-danger">已过期</span>' : v;
+
         },
         /**
          * 格式化时间 几天前 时 分 秒

@@ -789,8 +789,8 @@ if (!function_exists('newcar_inform')) {
     {
         if ($models_name && $admin_name && $username) {
             $arr = [
-                'subject' => "新车待车管确认通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，待车管确认，请及时登录后台进行处理 . '</div>'
+                'subject' => "新增订车通知",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的预定，请及时登录后台进行处理 . '</div>'
             ];
 
             return $arr;
@@ -809,8 +809,8 @@ if (!function_exists('newfinance_inform')) {
     {
         if ($models_name && $admin_name && $username) {
             $arr = [
-                'subject' => "新车金融匹配通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行金融匹配 . '</div>'
+                'subject' => "金融待匹配通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行金融匹配 . '</div>'
             ];
 
             return $arr;
@@ -829,8 +829,8 @@ if (!function_exists('newcontrol_inform')) {
     {
         if ($models_name && $admin_name && $username) {
             $arr = [
-                'subject' => "新车风控审核通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，金融已匹配，请及时登录后台进行风控审核 . '</div>'
+                'subject' => "征信待审核通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行风控审核 . '</div>'
             ];
 
             return $arr;
@@ -849,8 +849,8 @@ if (!function_exists('newpass_inform')) {
     {
         if ($models_name && $username) {
             $arr = [
-                'subject' => "新车风控审核通过通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，请及时登录后台进行处理 . '</div>'
+                'subject' => "征信审核结果通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;color: green">' . 客户： . $username .已经通过风控审核，请及时登录后台进行处理 . '</div>'
             ];
 
             return $arr;
@@ -860,7 +860,7 @@ if (!function_exists('newpass_inform')) {
     }
 }
 /**
- * 以租代购（新车）风控审核发送给销售，签订金融合同
+ * 以租代购（新车）风控审核发送给销售，签订金融合同 --- 走一汽金平台，先签合同再订车
  */
 if (!function_exists('newpass_finance')) {
 
@@ -869,8 +869,8 @@ if (!function_exists('newpass_finance')) {
     {
         if ($models_name && $username) {
             $arr = [
-                'subject' => "新车风控审核通过，可以签订金融合同通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，已经通过风控审核，请及时通知客户进行签订金融合同 . '</div>'
+                'subject' => "待签订金融合同通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .你的客户： . $username . 已经通过风控审核，请通知客户进行签订金融合同 . '</div>'
             ];
 
             return $arr;
@@ -880,7 +880,7 @@ if (!function_exists('newpass_finance')) {
     }
 }
 /**
- * 以租代购（新车）风控审核发送给车管，进行录入库存
+ * 以租代购（新车）风控审核发送给车管，进行录入库存  ---   一汽租赁
  */
 if (!function_exists('newcontrol_tube')) {
 
