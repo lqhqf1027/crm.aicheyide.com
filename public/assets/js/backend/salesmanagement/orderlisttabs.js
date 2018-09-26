@@ -411,13 +411,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         name: 'is_reviewing', text: '产品经理正在对销售方案匹配金融平台',
                                         hidden: function (row) {
 
-                                            if (row.review_the_data == 'is_reviewing_true' && row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages && row.accreditimages && row.faceimages  && row.informationimages) {
+                                            if (row.review_the_data == 'is_reviewing') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing_true' || !row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages || !row.accreditimages || !row.faceimages  || !row.informationimages) {
-                                                return true;
-                                            }
-
+                                            
                                             else if (row.review_the_data == 'the_financial') {
 
                                                 return true;
