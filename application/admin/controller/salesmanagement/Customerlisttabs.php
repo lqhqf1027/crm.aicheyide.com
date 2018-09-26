@@ -312,7 +312,7 @@ class Customerlisttabs extends Backend
             ->select();
         foreach ($list as $k => $row) {
 
-            $row->visible(['id', 'username', 'jobs','phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason', 'giveup_time']);
+            $row->visible(['id', 'username', 'jobs','phone', 'age', 'genderdata', 'customerlevel', 'sales_id', 'followupdate', 'feedbacktime', 'distributsaletime', 'reason', 'giveup_time','invalidtime']);
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
             $row->visible(['admin']);
