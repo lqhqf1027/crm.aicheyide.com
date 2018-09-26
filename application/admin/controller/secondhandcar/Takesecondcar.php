@@ -128,47 +128,47 @@ class Takesecondcar extends Backend
         }
 
         //定金合同（多图）
-        $deposit_contractimages = explode(',', $row['deposit_contractimages']);
+        $deposit_contractimages = $row['deposit_contractimages']==''? [] : explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {
             $deposit_contractimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //定金收据上传
-        $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
+        $deposit_receiptimages = $row['deposit_receiptimages'] ==''? [] : explode(',', $row['deposit_receiptimages']);
         foreach ($deposit_receiptimages as $k => $v) {
             $deposit_receiptimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //身份证正反面（多图）
-        $id_cardimages = explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
         foreach ($id_cardimages as $k => $v) {
             $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //驾照正副页（多图）
-        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] ==''? [] : explode(',', $row['drivers_licenseimages']);
         foreach ($drivers_licenseimages as $k => $v) {
             $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] ==''? [] : explode(',', $row['residence_bookletimages']);
         foreach ($residence_bookletimages as $k => $v) {
             $residence_bookletimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //住房合同/房产证（多图）
-        $housingimages = explode(',', $row['housingimages']);
+        $housingimages = $row['housingimages'] ==''? [] : explode(',', $row['housingimages']);
         foreach ($housingimages as $k => $v) {
             $housingimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //银行卡照（可多图）
-        $bank_cardimages = explode(',', $row['bank_cardimages']);
+        $bank_cardimages = $row['bank_cardimages'] ==''? [] : explode(',', $row['bank_cardimages']);
         foreach ($bank_cardimages as $k => $v) {
             $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //申请表（多图）
-        $application_formimages = explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] ==''? [] : explode(',', $row['application_formimages']);
         foreach ($application_formimages as $k => $v) {
             $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //通话清单（文件上传）
-        $call_listfiles = explode(',', $row['call_listfiles']);
+        $call_listfiles = $row['call_listfiles'] ==''? [] : explode(',', $row['call_listfiles']);
         foreach ($call_listfiles as $k => $v) {
             $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
         }

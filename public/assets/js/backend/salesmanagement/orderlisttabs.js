@@ -40,7 +40,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 $(".btn-add").data("area", ["95%", "95%"]);
                 $(".btn-edit").data("area", ["95%", "95%"]);
-                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名、车牌号";};
 
                 // 初始化表格
                 orderAcar.bootstrapTable({
@@ -73,8 +73,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'newinventory.licensenumber', title: __('车牌号') },
                             { field: 'models.name', title: __('销售车型') },
                             { field: 'username', title: __('Username') },
-                            // { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
-                            // { field: 'genderdata_text', title: __('Genderdata'), operate: false },
+                            { field: 'financial_name', title: __('金融平台') },
+
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
                             {
@@ -99,8 +99,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: orderAcar,
                                 buttons: [
+                                    /**提交给内勤**/
                                     {
-                                        name: 'submit_audit', text: '提交给内勤', title: '提交到当前部门内勤,用户记录实收定金金额与', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_audit',
+                                        name: 'submit_audit', text: '提交给内勤', title: '提交到当前部门内勤,用户记录实收定金金额与装饰', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_audit',
                                         url: 'salesmanagement/orderlisttabs/sedAudit',
                                         hidden: function (row) { /**提交给内勤 */
                                             if (row.review_the_data == 'send_to_internal') {
@@ -221,7 +222,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
                                     /**预定编辑 */
                                     {
-                                        name: 'send_to_internal', text: '预定编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('预定编辑'), classname: 'btn btn-xs btn-success btn-newreserveeditone',
+                                        name: 'send_to_internal', text: '预定编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('编辑订车资料'), classname: 'btn btn-xs btn-success btn-newreserveeditone',
                                         // url: 'order/salesorder/edit',
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
@@ -279,7 +280,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
                                     /**内勤正在处理中 */
                                     {
-                                        name: 'inhouse_handling', text: '内勤正在处理中',
+                                        name: 'inhouse_handling', text: '正在等待内勤录入实收定金和装饰',
                                         hidden: function (row) {
                                             if (row.review_the_data == 'inhouse_handling') {
                                                 return false;
@@ -350,7 +351,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
                                     /**车管正在处理中 */
                                     {
-                                        name: 'send_car_tube', text: '车管正在处理中',
+                                        name: 'send_car_tube', text: '正在等待车管将订车表发送给财务匹配金融',
                                         hidden: function (row) {
                                             if (row.review_the_data == 'send_car_tube') {
                                                 return false;
@@ -405,32 +406,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**风控正在审核中 */
+                                    /**正在匹配金融 */
                                     {
-                                        name: 'is_reviewing_true', text: '风控正在审核中',
+                                        name: 'is_reviewing', text: '产品经理正在对销售方案匹配金融平台',
                                         hidden: function (row) {
+
                                             if (row.review_the_data == 'is_reviewing_true' && row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages && row.accreditimages && row.faceimages  && row.informationimages) {
                                                 return false;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_true' || !row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages || !row.accreditimages || !row.faceimages  || !row.informationimages) {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing') {
+
+                                            else if (row.review_the_data == 'the_financial') {
+
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'the_financial') {
+                                            else if (row.review_the_data == 'send_to_internal') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'send_to_internal') {
+                                            else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'inhouse_handling') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'send_car_tube') {
+                                            else if (row.review_the_data == 'is_reviewing_true') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'not_through') {
@@ -465,29 +469,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**正在匹配金融 */
+                                    /**风控正在审核中 */
                                     {
-                                        name: 'is_reviewing', text: '正在匹配金融',
+                                        name: 'is_reviewing_true', text: '风控正在审核该客户的资料',
                                         hidden: function (row) {
-                                            if (row.review_the_data == 'is_reviewing') {
+                                            if (row.review_the_data == 'is_reviewing_true') {
                                                 return false;
                                             }
-                                            else if (row.review_the_data == 'the_financial') {
+                                            else if (row.review_the_data == 'is_reviewing') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'send_to_internal') {
+                                            else if (row.review_the_data == 'the_financial') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'send_car_tube') {
+                                            else if (row.review_the_data == 'send_to_internal') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'inhouse_handling') {
                                                 return true;
                                             }
-                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                            else if (row.review_the_data == 'send_car_tube') {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'not_through') {

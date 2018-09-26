@@ -109,6 +109,7 @@ class Customertabs extends Backend
             foreach ($result['rows'] as $k=>$v){
                 $result['rows'][$k]['feedback_content'] = $this->tableShowF_d($v['id']);
             }
+
             return json($result);
         }
         return $this->view->fetch();
