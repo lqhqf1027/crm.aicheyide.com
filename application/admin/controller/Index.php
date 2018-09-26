@@ -36,6 +36,7 @@ class Index extends Backend
             'addon'     => ['new', 'red', 'badge'],
             'auth/rule' => __('Menu'),
             'general'   => ['new', 'purple'],
+            'customerservice' =>['<span class="fa fa-volume-control-phone"><span>', 'blue']
         ], $this->view->site['fixedpage']);
         $action = $this->request->request('action');
         if ($this->request->isPost()) {

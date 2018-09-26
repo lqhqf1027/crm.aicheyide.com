@@ -198,16 +198,31 @@ class Peccancy extends Backend
 
         $details = json_decode($detail['peccancy_detail'], true);
 
-//        foreach ($detail as $k=>$v){
-//            pr($v['money']);
-//        }
+//        pr($details);die();
+
+        $score = 0;
+        $money = 0;
+        $no_handle = array();
+        $handle = array();
+        foreach ($details as $k=>$v){
+            if($v['handled']==0){
+                $score+=floatval($v['fen']);
+                $money+=floatval($v['money']);
+                array_push($no_handle,$v);
+            }else{
+                array_push($handle,$v);
+            }
+        }
+
+
+        $details = array_merge($no_handle,$handle);
 
         $this->view->assign([
             'detail' => $details,
             'phone' => $detail['phone'],
             'username' => $detail['username'],
-            'total_fine' => $detail['total_fine'],
-            'total_deduction' => $detail['total_deduction']
+            'total_fine' => $money,
+            'total_deduction' => $score
         ]);
 
         return $this->view->fetch();
@@ -217,6 +232,7 @@ class Peccancy extends Backend
     public function sendCustomer()
     {
         if ($this->request->isAjax()) {
+
             $ids = input("ids");
             $ids = json_decode($ids, true);
             $res = Db::name('violation_inquiry')

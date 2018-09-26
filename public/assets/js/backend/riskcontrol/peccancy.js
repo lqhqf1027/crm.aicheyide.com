@@ -27,10 +27,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
 
-
         },
-        table:{
-            prepare_send:function(){
+        table: {
+            prepare_send: function () {
 
                 var table = $("#prepareSend");
                 table.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -87,7 +86,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'start_renttime',
                                 title: __('起租时间'),
-                                operate: false,
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD",
 
@@ -115,9 +115,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD",
+                                datetimeFormat: "YYYY-MM-DD H:m",
 
                             },
+                            {field: 'inquiry_note', title: __('违章备注'),operate:false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -132,14 +133,36 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格绑定事件
                 Table.api.bindevent(table);
 
-                Controller.api.inquire_violation('.btn-peccancy',table);
+                Controller.api.inquire_violation('.btn-peccancy', table);
 
-                Controller.api.send_customer('.btn-share',table);
+                $(document).on('click', '.btn-share', function () {
+                    var ids = Table.api.selectedids(table);
+
+                    ids = JSON.stringify(ids);
+                    console.log(ids);
+                    Layer.confirm(
+                        __('确定发送给客服?', ids.length),
+                        {icon: 3, title: __('Warning'), offset: 0, shadeClose: true},
+                        function (index) {
+
+                            Fast.api.ajax({
+                                url: 'riskcontrol/Peccancy/sendCustomer',
+                                data: {ids:ids}
+
+                            }, function (data, ret) {
+                                console.log(data);
+                                Layer.close(index);
+                                table.bootstrapTable('refresh');
+                            })
+
+                        }
+                    );
+                })
 
 
             },
 
-            already_send:function(){
+            already_send: function () {
 
                 var alreadySend = $("#alreadySend");
                 alreadySend.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -196,7 +219,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'start_renttime',
                                 title: __('起租时间'),
-                                operate: false,
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD",
 
@@ -227,9 +251,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD H:m",
 
                             },
-                            {field: 'customer_status', title: __('是否发送给客服'),formatter: function (value, row, index) {
+                            {
+                                field: 'customer_status',
+                                title: __('是否发送给客服'),
+                                formatter: function (value, row, index) {
 
-                                           value = '已发送';
+                                    value = '已发送';
 
                                     var custom = {'已发送': 'success'};
                                     if (typeof this.custom !== 'undefined') {
@@ -239,7 +266,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     this.icon = 'fa fa-circle';
                                     return Table.api.formatter.normal.call(this, value, row, index);
-                                },operate:false},
+                                },
+                                operate: false
+                            },
                             {
                                 field: 'customer_time',
                                 title: __('发送给客服时间'),
@@ -248,6 +277,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD",
 
                             },
+                            {field: 'inquiry_note', title: __('违章备注'),operate:false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -262,9 +292,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格绑定事件
                 Table.api.bindevent(alreadySend);
 
-                Controller.api.inquire_violation('.btn-peccancy2',alreadySend);
-
-                Controller.api.send_customer('.btn-share',alreadySend);
+                Controller.api.inquire_violation('.btn-peccancy2', alreadySend);
 
 
             },
@@ -276,7 +304,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
-
 
 
         api: {
@@ -320,6 +347,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var buttons = $.extend([], this.buttons || []);
 
                     buttons.push({
+                        name: 'edit',
+                        text:'编辑备注',
+                        icon: 'fa fa-pencil',
+                        title: __('Edit'),
+                        extend: 'data-toggle="tooltip"',
+                        classname: 'btn btn-xs btn-success btn-editone',
+                        url: 'riskcontrol/peccancy/edit'
+                    });
+
+                    buttons.push({
                         name: '查询违章',
                         text: '查询违章',
                         icon: 'fa fa-search',
@@ -333,7 +370,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                     }
 
-                    if(row && !row.total_fine && !row.total_deduction){
+                    if (row && !row.total_fine && !row.total_deduction) {
                         return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                     }
 
@@ -362,8 +399,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'riskcontrol/Peccancy/details';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看违章详情'), $(this).data() || {});
                     },
-                    'click .btn-search':function (e, value, row, index) {
-                        console.log(row);
+                    'click .btn-search': function (e, value, row, index) {
                         e.stopPropagation();
 
                         e.preventDefault();
@@ -380,18 +416,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             data: {ids}
 
                         }, function (data, ret) {
-                            // console.log(data);
-                            // Layer.close(closeLay);
+                            console.log(data);
                             table.bootstrapTable('refresh');
                         })
 
-                        // var table = $(this).closest('table');
-                        // var options = table.bootstrapTable('getOptions');
-                        // var ids = row[options.pk];
-                        // row = $.extend({}, row ? row : {}, {ids: ids});
-                        // var url = 'riskcontrol/Peccancy/details';
-                        // Fast.api.open(Table.api.replaceurl(url, row, table), __('查看违章详情'), $(this).data() || {});
-                    }
+                    },
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
 
                 }
             },
@@ -412,7 +451,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             /**
              * 批量查询违章
              */
-            inquire_violation:function(clickobj,table) {
+            inquire_violation: function (clickobj, table) {
                 $(document).on("click", clickobj, function () {
                     var ids = [];
                     var tableRow = Controller.api.selectIdsRow(table);//获取选中的行数据
@@ -448,7 +487,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 })
                             }
 
-                            // console.log(ids);
 
                             Fast.api.ajax({
                                 url: 'riskcontrol/Peccancy/sendMessage',
@@ -490,39 +528,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     })
                 });
             },
-            /**
-             * 批量发送给客服
-             * @param clickobj
-             * @param table
-             */
-            send_customer:function(clickobj,table){
-                $(document).on('click', clickobj, function () {
-                    var ids = Table.api.selectedids(table);
 
-                    ids = JSON.stringify(ids);
-                    // console.log(ids);
-                    Layer.confirm(
-                        __('确定发送给客服?', ids.length),
-                        {icon: 3, title: __('Warning'), offset: 0, shadeClose: true},
-                        function (index) {
-
-                            Fast.api.ajax({
-                                url: 'riskcontrol/Peccancy/sendCustomer',
-                                data: {ids}
-
-                            }, function (data, ret) {
-                                // console.log(data);
-                                Layer.close(index);
-                                table.bootstrapTable('refresh');
-                            })
-
-                        }
-                    );
-                })
-            }
         }
     };
-
 
 
     return Controller;
