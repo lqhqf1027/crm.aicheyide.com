@@ -1850,7 +1850,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var options = {
                     shadeClose: false,
                     shade: [0.3, '#393D49'],
-                    area:['70%','70%'],
+                    area:['90%','90%'],
                     // closeBtn: 0, //不显示关闭按钮
                     callback:function(value){
                         console.log(123);
@@ -2762,7 +2762,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
             // console.log(Config.id);
             
  
@@ -2843,7 +2843,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
             // console.log(Config.id);
             
  
@@ -2924,7 +2924,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
             // console.log(Config.id);
             
  
@@ -3005,7 +3005,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
             // console.log(Config.id);
             
  
@@ -3032,7 +3032,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
             // console.log(Config.id);
             
  
@@ -3059,7 +3059,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
             // console.log(Config.id);
             
  
@@ -3086,7 +3086,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
             // console.log(Config.id);
             
  
