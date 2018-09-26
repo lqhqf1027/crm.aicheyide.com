@@ -18,7 +18,7 @@ class Breakrules extends Backend
      * @var \app\admin\model\violation\Inquiry
      */
     protected $model = null;
-
+    protected $noNeedRight = ['index','prepare_feedback','already_feedback','handle_feedback','handle_feedback_lots'];
     public function _initialize()
     {
         parent::_initialize();
@@ -33,6 +33,13 @@ class Breakrules extends Backend
         return $this->view->fetch();
     }
 
+    /**
+     * 待反馈
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function prepare_feedback()
     {
         //设置过滤方法
@@ -69,6 +76,13 @@ class Breakrules extends Backend
         }
     }
 
+    /**
+     * 已反馈
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function already_feedback()
     {
         //设置过滤方法
@@ -105,6 +119,11 @@ class Breakrules extends Backend
         }
     }
 
+    /**
+     * 反馈
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     */
     public function handle_feedback()
     {
         if ($this->request->isAjax()) {
@@ -127,6 +146,11 @@ class Breakrules extends Backend
         }
     }
 
+    /**
+     * 批量反馈
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     */
     public function handle_feedback_lots()
     {
         if ($this->request->isAjax()) {
@@ -144,7 +168,7 @@ class Breakrules extends Backend
                 ]);
 
             if ($res) {
-                $this->success('', '', 'success');
+                $this->success('', '', $res);
             } else {
                 $this->error('反馈失败');
             }

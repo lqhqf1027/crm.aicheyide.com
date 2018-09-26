@@ -67,66 +67,16 @@ class Custominfotabs extends Backend
      */
     public function index()
     {
-        $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
         $this->loadlang('backoffice/custominfotabs');
 
 
-//        if (in_array($this->auth->id, $canUseId['back'])) {
-//            $newTotal = $this->model
-//                ->with(['platform','backoffice'=>function ($query){
-//                    $query->withField(['nickname','avatar']);
-//                }])
-//                ->where(function ($query) {
-//                    $query->where('backoffice_id', $this->auth->id)
-//                        ->where('sales_id', 'null')
-//                        ->where('platform_id', 'in', [2, 3, 4]);
-//                })
-//                ->count();
-//
-//            $assignedTotal = $this->model
-//                ->with(['platform'])
-//                ->where(function ($query) {
-//                    $query->where('backoffice_id', $this->auth->id)
-//                        ->where('sales_id', 'not null')
-//                        ->where('platform_id', 'in', [2, 3, 4]);
-//                })
-//                ->count();
-//
-//        } else if (in_array($this->auth->id, $canUseId['admin'])) {
-//            $newTotal = $this->model
-//                ->with(['platform'])
-//                ->where(function ($query) {
-//                    $query->where('backoffice_id', "not null")
-//                        ->where('sales_id', 'null')
-//                        ->where('platform_id', 'in', [2, 3, 4]);
-//                })
-//                ->count();
-//
-//            $assignedTotal = $this->model
-//                ->with(['platform'])
-//                ->where(function ($query) {
-//                    $query->where('backoffice_id', "not null")
-//                        ->where('sales_id', 'not null')
-//                        ->where('platform_id', 'in', [2, 3, 4]);
-//                })
-//                ->count();
-//
-//        }
-//
-//
-//        $this->view->assign([
-//            'newTotal' => $newTotal,
-//            'assignedTotal' => $assignedTotal
-//        ]);
         return $this->view->fetch();
     }
 
     //新客户
     public function newCustomer()
     {
-
-
         $canUseId = $this->getUserId();
         $this->model = model('CustomerResource');
 

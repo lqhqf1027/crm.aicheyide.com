@@ -45,7 +45,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
 
                 // Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
-                // console.log(data);
                 Toastr.success("失败");
             });
         },

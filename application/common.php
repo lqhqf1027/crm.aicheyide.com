@@ -1394,6 +1394,19 @@ if (!function_exists('send_newmodels_to_sales')) {
 
     }
 }
+
+if (!function_exists('send_peccancy')) {
+    function send_peccancy()
+    {
+            $arr = [
+                'subject' => "新违章客户进入通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .您有新的违章客户进入，请注意查看. '</div>'
+            ];
+            return $arr;
+
+
+    }
+}
 /**数组去重
  * @param $arr
  * @param $key

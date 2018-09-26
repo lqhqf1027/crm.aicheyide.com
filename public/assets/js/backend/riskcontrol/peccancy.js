@@ -20,7 +20,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             //必须默认触发shown.bs.tab事件
-            $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+            // $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
 
             $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
                 $(this).trigger("shown.bs.tab");
@@ -139,20 +139,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var ids = Table.api.selectedids(table);
 
                     ids = JSON.stringify(ids);
-                    console.log(ids);
                     Layer.confirm(
                         __('确定发送给客服?', ids.length),
                         {icon: 3, title: __('Warning'), offset: 0, shadeClose: true},
                         function (index) {
-
                             Fast.api.ajax({
                                 url: 'riskcontrol/Peccancy/sendCustomer',
                                 data: {ids:ids}
 
                             }, function (data, ret) {
-                                console.log(data);
+
+                               var pre = $('#already_send_total').text();
+                               pre = parseInt(pre);
+
+                                $('#already_send_total').text(pre+parseInt(data));
                                 Layer.close(index);
                                 table.bootstrapTable('refresh');
+
                             })
 
                         }
@@ -425,11 +428,41 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
-                        var options = table.bootstrapTable('getOptions');
-                        var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = options.extend.edit_url;
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+
+                        layer.prompt({
+                            formType: 2,
+                            value:row.inquiry_note==null?'':row.inquiry_note,
+                            title: '备注信息',
+                            area: ['800px', '350px'] //自定义文本域宽高
+                        }, function(value, index, elem){
+
+
+                            Fast.api.ajax({
+                                url: 'riskcontrol/Peccancy/note',
+                                data: {
+                                    content:value,
+                                    ids:row.id
+                                }
+
+                            }, function (data, ret) {
+                                table.bootstrapTable('refresh');
+                                layer.close(index);
+
+                                var pre = $('#already-total').text();
+
+                                pre = parseInt(pre);
+
+                                $('#already-total').text(pre+1);
+                            })
+
+
+                        });
+
+                        // var options = table.bootstrapTable('getOptions');
+                        // var ids = row[options.pk];
+                        // row = $.extend({}, row ? row : {}, {ids: ids});
+                        // var url = options.extend.edit_url;
+                        // Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
 
                 }
