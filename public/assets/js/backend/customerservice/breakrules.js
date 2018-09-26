@@ -1,5 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    var goeasy = new GoEasy({
+        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    });
+
     var Controller = {
         index: function () {
             // 初始化表格参数配置
@@ -23,6 +27,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
                 $(this).trigger("shown.bs.tab");
+            });
+
+            goeasy.subscribe({
+                channel: 'send_peccancy',
+                onMessage: function(message){
+
+                        Layer.alert(message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+
+                }
             });
 
         },
@@ -113,7 +129,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
-                            {field: 'inquiry_note', title: __('Inquiry_note'),operate:false},
+                            {field: 'inquiry_note', title: __('备注'),operate:false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -143,9 +159,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
 
                         }, function (data, ret) {
-                            console.log(data);
+                            // console.log(data);
                             table.bootstrapTable('refresh');
                             layer.close(index);
+
+                            var pre = $('#already-total').text();
+
+                            pre = parseInt(pre);
+
+                            $('#already-total').text(pre+parseInt(data));
                         })
 
 
@@ -241,7 +263,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
-                            {field: 'inquiry_note', title: __('Inquiry_note'),operate:false},
+                            {field: 'inquiry_note', title: __('备注'),operate:false},
                             {field: 'feedback', title: __('反馈内容'),operate:false},
                             {
                                 field: 'feedbacktime',
@@ -355,6 +377,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }, function (data, ret) {
                                 table.bootstrapTable('refresh');
                                 layer.close(index);
+
+                                var pre = $('#already-total').text();
+
+                                pre = parseInt(pre);
+
+                                $('#already-total').text(pre+1);
                             })
 
 

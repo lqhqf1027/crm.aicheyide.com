@@ -4,7 +4,7 @@ namespace app\admin\controller\riskcontrol;
 
 use app\common\controller\Backend;
 use think\Db;
-
+use app\common\library\Email;
 /**
  * 违章信息管理
  *
@@ -19,7 +19,7 @@ class Peccancy extends Backend
      */
     protected $model = null;
 
-    protected $noNeedRight = ['index','prepare_send','already_send','sendMessage','details','sendCustomer'];
+    protected $noNeedRight = ['index', 'prepare_send', 'already_send', 'sendMessage', 'details', 'sendCustomer'];
 
     public function _initialize()
     {
@@ -27,15 +27,22 @@ class Peccancy extends Backend
         $this->model = new \app\admin\model\violation\Inquiry;
         $this->view->assign("carTypeList", $this->model->getCarTypeList());
     }
+
     /**
      * 查看
      */
     public function index()
     {
-       return $this->view->fetch();
+        return $this->view->fetch();
     }
 
-    //未发送给客服
+    /**
+     * 待发送给客服
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function prepare_send()
     {
         //设置过滤方法
@@ -48,51 +55,16 @@ class Peccancy extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,license_plate_number');
             $total = $this->model
                 ->where($where)
-                ->where(function ($query){
-                    $query->where('customer_status',0);
+                ->where(function ($query) {
+                    $query->where('customer_status', 0);
                 })
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
                 ->where($where)
-                ->where(function ($query){
-                    $query->where('customer_status',0);
-                })
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-
-            $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
-
-            return json($result);
-        }
-    }
-
-    //已发送给客服
-    public function already_send()
-    {
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,license_plate_number');
-            $total = $this->model
-                ->where($where)
-                ->where(function ($query){
-                    $query->where('customer_status',1);
-                })
-                ->order($sort, $order)
-                ->count();
-
-            $list = $this->model
-                ->where($where)
-                ->where(function ($query){
-                    $query->where('customer_status',1);
+                ->where(function ($query) {
+                    $query->where('customer_status', 0);
                 })
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -106,7 +78,53 @@ class Peccancy extends Backend
     }
 
     /**
-     * 根据车牌号获取城市代码
+     * 已发送给客服
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function already_send()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,license_plate_number');
+            $total = $this->model
+                ->where($where)
+                ->where(function ($query) {
+                    $query->where('customer_status', 1);
+                })
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->where($where)
+                ->where(function ($query) {
+                    $query->where('customer_status', 1);
+                })
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            $list = collection($list)->toArray();
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result);
+        }
+    }
+
+    /**
+     * 请求第三方接口获取违章信息
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
      */
     public function sendMessage()
     {
@@ -188,7 +206,15 @@ class Peccancy extends Backend
         }
     }
 
-
+    /**
+     * 查看违章详情
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function details($ids = null)
     {
         $detail = Db::name('violation_inquiry')
@@ -204,18 +230,18 @@ class Peccancy extends Backend
         $money = 0;
         $no_handle = array();
         $handle = array();
-        foreach ($details as $k=>$v){
-            if($v['handled']==0){
-                $score+=floatval($v['fen']);
-                $money+=floatval($v['money']);
-                array_push($no_handle,$v);
-            }else{
-                array_push($handle,$v);
+        foreach ($details as $k => $v) {
+            if ($v['handled'] == 0) {
+                $score += floatval($v['fen']);
+                $money += floatval($v['money']);
+                array_push($no_handle, $v);
+            } else {
+                array_push($handle, $v);
             }
         }
 
 
-        $details = array_merge($no_handle,$handle);
+        $details = array_merge($no_handle, $handle);
 
         $this->view->assign([
             'detail' => $details,
@@ -228,7 +254,29 @@ class Peccancy extends Backend
         return $this->view->fetch();
     }
 
+    public function note()
+    {
+        if($this->request->isAjax()){
+            $content = input('content');
+            $ids = input('ids');
 
+            $res = Db::name('violation_inquiry')
+            ->where('id',$ids)
+            ->setField('inquiry_note',$content);
+
+            if($res){
+                $this->success('','','success');
+            }else{
+                $this->error('备注失败');
+            }
+        }
+    }
+
+    /**
+     * 发送给客服
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     */
     public function sendCustomer()
     {
         if ($this->request->isAjax()) {
@@ -243,14 +291,37 @@ class Peccancy extends Backend
 
                 ]);
 
-            if($res){
-                $this->success('', '', $ids);
-            }else{
+            if ($res) {
+
+                $channel = 'send_peccancy';
+                $content = '有新的客户违章信息进入，请注意查看';
+                goeary_push($channel, $content);
+
+                $data = send_peccancy();
+
+                $address = Db::name('admin')
+                    ->where('rule_message', 'message25')
+                    ->field('email')
+                    ->find()['email'];
+
+                $email = new Email;
+                $send = $email
+                    ->to($address)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+
+                if($send){
+                    $this->success('', '', $res);
+
+                }else{
+                    $this->error('邮箱发送失败');
+                }
+
+
+            } else {
                 $this->error();
             }
-
-
-
 
         }
     }
