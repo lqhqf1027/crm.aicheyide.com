@@ -234,14 +234,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         api: {
-            bindevent: function () {
-                $(document).on('click', "input[name='row[ismenu]']", function () {
-                    var name = $("input[name='row[name]']");
-                    name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
-                });
-                $("input[name='row[ismenu]']:checked").trigger("click");
-                Form.api.bindevent($("form[role=form]"));
-            },
+
             formatter: {
                 operate: function (value, row, index) {
 
@@ -254,14 +247,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
                 toggle: function (value, row, index) {
-                    
+
                     var color = typeof this.color !== 'undefined' ? this.color : 'success';
                     var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                     var no = typeof this.no !== 'undefined' ? this.no : 0;
                     return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
                             + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
-                    
-                    
+
+
                 }
                
             }
