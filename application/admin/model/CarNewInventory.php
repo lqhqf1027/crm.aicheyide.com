@@ -57,4 +57,10 @@ class CarNewInventory extends Model
     {
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+    public function salesorder()
+    {
+        return $this->belongsTo('SalesOrder', 'sales_order_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
 }

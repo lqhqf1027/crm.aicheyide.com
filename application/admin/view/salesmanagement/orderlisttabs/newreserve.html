@@ -359,7 +359,7 @@
         </div> -->
 
     </div>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
 		$('#c-username').bind('blur input propertychange ', function() {
             var username = $(this).val();
 			if(!username){
@@ -393,7 +393,7 @@
             }
 
         });
-	</script>
+	</script> -->
 
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Genderdata')}:</label>
@@ -528,7 +528,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('是否有配偶')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[idcard]"
+            <select id="c-customer_source"  class="form-control selectpicker" name="row[idcard]"
                     onchange="idchangeFun(this)">
 
                 <option value="yes">是</option>
@@ -542,7 +542,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('配偶的身份证正反面（多图）')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-mate_id_cardimages" data-rule="required" class="form-control" size="50"
+                <input id="c-mate_id_cardimages" class="form-control" size="50"
                        name="row[mate_id_cardimages]" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -582,7 +582,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-id_cardimages" data-rule="required" class="form-control" size="50"
+                <input id="c-id_cardimages"  class="form-control" size="50"
                        name="row[id_cardimages]" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -605,7 +605,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-drivers_licenseimages" data-rule="required" class="form-control" size="50"
+                <input id="c-drivers_licenseimages"  class="form-control" size="50"
                        name="row[drivers_licenseimages]"
                        type="text">
                 <div class="input-group-addon no-border no-padding">
@@ -629,7 +629,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('银行卡正反面')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-bank_cardimages" data-rule="required" class="form-control" size="50"
+                <input id="c-bank_cardimages"  class="form-control" size="50"
                        name="row[bank_cardimages]" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -652,7 +652,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('承诺书')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-undertakingimages" data-rule="required" class="form-control" size="50"
+                <input id="c-undertakingimages"  class="form-control" size="50"
                        name="row[undertakingimages]" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -675,7 +675,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('授权书')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-accreditimages" data-rule="required" class="form-control" size="50"
+                <input id="c-accreditimages"  class="form-control" size="50"
                        name="row[accreditimages]" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -698,7 +698,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('信息表')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-informationimages" data-rule="required" class="form-control" size="50"
+                <input id="c-informationimages"  class="form-control" size="50"
                        name="row[informationimages]" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -721,7 +721,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('面签照')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-faceimages" data-rule="required" class="form-control" size="50" name="row[faceimages]"
+                <input id="c-faceimages"  class="form-control" size="50" name="row[faceimages]"
                        type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>

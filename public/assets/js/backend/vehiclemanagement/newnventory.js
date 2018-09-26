@@ -30,7 +30,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
-                        {field: 'models.name', title: __('车型名称')},
+                        {field: 'models.name', title: __('车型名称'),formatter:function(v,r,i){
+                            return r.the_car_username ? v+'<span class="label label-info">'+r.the_car_username+'</span>':v;
+                        }},
                         // {field: 'carnumber', title: __('Carnumber')},
                         // {field: 'reservecar', title: __('Reservecar')},
                         {field: 'licensenumber', title: __('车牌号')},
@@ -41,7 +43,63 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'note', title: __('备注'),operate:false},
                         {field: 'createtime', title: __('创建时间'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('更新时间'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, 
+                        buttons: [
+                            /**删除 */
+                            {
+                                name: 'del',
+                                icon: 'fa fa-trash',  
+                                icon: 'fa fa-trash', 
+                                extend: 'data-toggle="tooltip"', 
+                                title: __('Del'), 
+                                classname: 'btn btn-xs btn-danger btn-delone',
+                                hidden: function (row) { 
+                                    if (!row.the_car_username) {
+                                        return false;
+                                    }
+                                    else if (row.the_car_username) {
+                                        return true;
+                                    }
+                                }
+                            },
+                            /**编辑 */
+                            {
+                                name: 'edit', 
+                                text: '', 
+                                icon: 'fa fa-pencil', 
+                                extend: 'data-toggle="tooltip"', 
+                                title: __('编辑'), 
+                                classname: 'btn btn-xs btn-success btn-editone',
+                                hidden: function (row) { 
+                                    if (!row.the_car_username) {
+                                        return false;
+                                    }
+                                    else if (row.the_car_username) {
+                                        return true;
+                                    }
+                                }
+                            },
+                            /**车辆已出售 */
+                            {
+                                name: '车辆已出售', 
+                                text: '车辆已出售',  
+                                icon: 'fa fa-automobile', 
+                                classname: 'text text-success',
+                                hidden: function (row) { 
+                                    if (row.the_car_username) {
+                                        return false;
+                                    }
+                                    else if (!row.the_car_username) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        
+                        ],
+                        events: Controller.api.events.operate,
+
+                        formatter: Controller.api.formatter.operate
+                        }
                     ]
                 ]
             });
@@ -86,6 +144,62 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
+            },
+            events: {
+                operate: {
+                    //编辑按钮
+                    'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */
+                        $(".btn-editone").data("area", ["55%", "60%"]);
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    //删除按钮
+                    'click .btn-delone': function (e, value, row, index) {  /**删除按钮 */
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('Are you sure you want to delete this item?'),
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Table.api.multi("del", row[options.pk], table, that);
+                                Layer.close(index);
+                            }
+                        );
+                    }
+                }
+
+            },
+            formatter: {
+                operate: function (value, row, index) {
+
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    var buttons = $.extend([], this.buttons || []);
+
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                }
+
             }
         }
     };

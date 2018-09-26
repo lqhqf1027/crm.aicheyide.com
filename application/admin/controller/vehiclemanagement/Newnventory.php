@@ -53,26 +53,39 @@ class Newnventory extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                ->with(['models'])
+                ->with(['models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
-                ->where("statuss",1)
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
-                ->with(['models'])
+                ->with(['models' => function ($query) {
+                    $query->withField('name');
+                }])
                 ->where($where)
-                ->where("statuss",1)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
 
-            foreach ($list as $row) {
-                $row->visible(['id', 'carnumber', 'reservecar', 'licensenumber', 'presentationcondition', 'note', 'frame_number', 'engine_number', 'household', '4s_shop', 'createtime', 'updatetime']);
+            foreach ($list as $key=>$row) {
+                // $list[$key]['aaa'] = 11;
+                $row->visible(['id', 'carnumber', 'reservecar', 'licensenumber', 'presentationcondition', 'note', 'frame_number', 'engine_number', 'household', '4s_shop', 'createtime', 'updatetime','the_car_username']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name']); 
+                foreach((array)$this->getOrderName($row['id']) as $k=>$v){
+                    foreach($v as $rows){
+                        if($rows['licensenumber']==$row['licensenumber']){
+                           
+                            $list[$key]['the_car_username']= $rows['username'];
+                        }
+                    }
+                }
             }
             $list = collection($list)->toArray();
+            
+            // pr($this->getOrderName());
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -80,6 +93,41 @@ class Newnventory extends Backend
         return $this->view->fetch();
     }
 
+    public function getOrderName($NewnventoryId = null){
+        // $name = [
+        //     model('SalesOrder')->with([
+        //         'newinventory' => function ($query) {
+        //             $query->withField('licensenumber');
+        //         }
+        //     ])->select(),
+        //     model('FullParmentOrder')->with([
+        //         'newinventory' => function ($query) {
+        //             $query->withField('licensenumber');
+        //         }
+        //     ])->select()
+        // ];
+        // return $name;
+        // pr($name);
+        // foreach ($name as $key=>$row) {
+        //     $row->visible();
+        //     pr();
+        // }
+      
+        $name= [
+            Db::name('sales_order')->alias('a')
+                ->join('car_new_inventory b','a.car_new_inventory_id = b.id')
+                ->field('a.username,a.car_new_inventory_id,b.id,b.licensenumber')
+                ->where(['a.car_new_inventory_id'=>$NewnventoryId,'a.review_the_data'=>'the_car'])
+                ->select(),
+            Db::name('full_parment_order')->alias('a')
+                ->join('car_new_inventory b','a.car_new_inventory_id = b.id')
+                ->field('a.username,a.car_new_inventory_id,b.id,b.licensenumber')
+                ->where(['a.car_new_inventory_id'=>$NewnventoryId,'a.review_the_data'=>'for_the_car'])
+                ->select()
+        ]; 
+       
+        return $name;
+    }
 
     public function add()
     {
