@@ -783,8 +783,6 @@ if (!function_exists('newinternal_inform')) {
  * 以租代购（新车）内勤发送给车管
  */
 if (!function_exists('newcar_inform')) {
-
-
     function newcar_inform($models_name = NULL, $admin_name = NULLL, $username = NULL)
     {
         if ($models_name && $admin_name && $username) {

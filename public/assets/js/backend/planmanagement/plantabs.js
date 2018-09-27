@@ -147,7 +147,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
-            alert(1);
+
             Controller.api.bindevent();
         },
         merge: function (arr, obj) {
@@ -234,7 +234,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         api: {
+            bindevent: function () {
 
+                Form.api.bindevent($("form[role=form]"));
+            },
             formatter: {
                 operate: function (value, row, index) {
 

@@ -33,11 +33,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         choose_stock: function () {
 
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                // console.log(data);
-
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);
                 // console.log(data);
@@ -46,22 +43,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
 
             });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-
-
         },
 
         table: {
-
+            /**
+             * 待提车
+             */
             prepare_lift_car: function () {
-                // 表格1
+
                 var prepareLiftCar = $("#prepareLiftCar");
                 prepareLiftCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
+
                     $('#badge_prepare').text(data.total);
 
                 });
+
                 prepareLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-chooseStock").data("area", ["60%", "60%"]);
                     $(".btn-showOrder").data("area", ["95%", "95%"]);
@@ -87,7 +83,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: __('Id'),operate:false},
                             {field: 'order_no', title: __('订单编号')},
                             {field: 'models.name', title: __('销售车型')},
-                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'financial_name', title: __('金融平台')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+
+                                }},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
                             {field: 'id_card', title: __('身份证号')},
@@ -101,7 +101,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'createtime',
                                 title: __('订车时间'),
                                 formatter: Table.api.formatter.datetime,
-                                operate: false
+                                datetimeFormat:'YYYY-MM-DD'
                             },
                             {
                                 field: 'operate',
@@ -219,12 +219,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
             },
+            /**
+             * 已提车
+              */
             already_lift_car: function () {
 
                 // 表格2
                 var alreadyLiftCar = $("#alreadyLiftCar");
                 alreadyLiftCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
+
+
                     $('#badge_already').text(data.total);
 
                 });
@@ -252,6 +256,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: __('Id'),operate:false},
                             {field: 'order_no', title: __('订单编号')},
                             {field: 'models.name', title: __('销售车型')},
+                            {field: 'financial_name', title: __('金融平台')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+
+                                }},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
                             {field: 'id_card', title: __('身份证号')},

@@ -62,16 +62,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     sortName: 'id',
                     pageSize:25,
                     searchFormVisible: true,
-                    fixedColumns:true,
-                    fixedNumber:1,
                     columns: [
                         [
                             { checkbox: true },
                             { field: 'id', title: __('Id') ,operate:false},
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
+                            {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
 
-                            { field: 'admin.nickname', title: __('销售员') },
+                            }},
+
                             { field: 'newinventory.licensenumber', title: __('车牌号') },
                             { field: 'models.name', title: __('销售车型') },
                             { field: 'username', title: __('Username') },
@@ -1367,7 +1368,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'order_no', title: __('Order_no')},
 
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
-                        {field: 'admin.nickname', title: __('销售员')},
+                        {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+                                return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+
+                            }},
                         {field: 'models.name', title: __('车型')},
                         {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
                         {field: 'carrentalmodelsinfo.vin', title: __('车架号')},
@@ -1904,7 +1908,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             { field: 'plansecond.licenseplatenumber', title: __('车牌号') },
                             { field: 'models.name', title: __('销售车型') },
-                            { field: 'admin.nickname', title: __('销售员') },
+                            {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+
+                                }},
                             { field: 'username', title: __('Username') },
                             { field: 'phone', title: __('Phone') },
                             {
@@ -2501,7 +2508,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime, datetimeFormat:"YYYY-MM-DD" },
                             { field: 'models.name', title: __('销售车型') },
-                            { field: 'admin.nickname', title: __('销售员') },
+                            {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+
+                                }},
                             { field: 'planfull.full_total_price', title: __('全款总价（元）') },
 
                             {
@@ -2519,10 +2529,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            // {field: 'id_card', title: __('Id_card')},
-                            // {field: 'city', title: __('居住地址')},
-                            // {field: 'detailed_address', title: __('详细地址')},
-                            // {field: 'detailed_address', title: __('Detailed_address')},
                             { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
 
                             {
