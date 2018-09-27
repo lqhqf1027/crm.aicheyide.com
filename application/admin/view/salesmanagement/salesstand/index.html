@@ -124,30 +124,50 @@
 </style>
 <div class="panel panel-default panel-intro">
 
-    <div class="panel-heading">
-        {:build_heading(null, false)}
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#one" data-toggle="tab">{:__('控制台-成都')}</a></li>
-            <li><a href="#xi-an" data-toggle="tab">{:__('控制台-西安')}</a></li>
-            <li><a href="#yinchuan" data-toggle="tab">{:__('控制台-银川')}</a></li>
-            <li><a href="#kuming" data-toggle="tab">{:__('控制台-昆明')}</a></li>
-            <li><a href="#nanchong" data-toggle="tab">{:__('控制台-南充')}</a></li>
-        </ul>
-    </div>
+    
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="one">
 
-                <!--<div class="row">-->
-                    <!--<div class="col-lg-6">-->
-                        <!--<div id="city" style="height:300px;width:100%;"></div>-->
-                    <!--</div>-->
-                    <!--<div class="col-lg-6">-->
-                        <!--<div id="today" style="height:300px;width:100%;"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<br><br><br>-->
-                <!-- 新车 -->
+                <div class="row">
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="sm-st clearfix">
+                            <span class="sm-st-icon st-red"><i class="fa fa-users"></i></span>
+                            <div class="sm-st-info">
+                                <span>{$totaluser}</span>
+                                {:__('Total user')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="sm-st clearfix">
+                            <span class="sm-st-icon st-violet"><i class="fa fa-book"></i></span>
+                            <div class="sm-st-info">
+                                <span>{$totalviews}</span>
+                                {:__('Total view')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="sm-st clearfix">
+                            <span class="sm-st-icon st-blue"><i class="fa fa-shopping-bag"></i></span>
+                            <div class="sm-st-info">
+                                <span>{$totalorder}</span>
+                                {:__('Total order')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-6">
+                        <div class="sm-st clearfix">
+                            <span class="sm-st-icon st-green"><i class="fa fa-cny"></i></span>
+                            <div class="sm-st-info">
+                                <span>{$totalorderamount}</span>
+                                {:__('Total order amount')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 销售一部 -->
                 <div class="row">
                     <div class="col-lg-8">
                         <div id="newechart" style="height:200px;width:100%;"></div>
@@ -206,23 +226,14 @@
                                             <div class="progress-bar progress-bar-success" style="width: 25%"></div>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-xs-6 stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-dollar"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$sevendau} </div>
-                                            <div class="name"> {:__('Seven dau')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div> -->
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br><br><br>
-                <!-- 租车 -->
+                <!-- 销售二部 -->
                 <div class="row">
                     <div class="col-lg-8">
                         <div id="rentalechart" style="height:200px;width:100%;"></div>
@@ -297,7 +308,7 @@
                     </div>
                 </div>
                 <br><br><br>
-                <!-- 二手车 -->
+                <!-- 销售三部 -->
                 <div class="row">
                     <div class="col-lg-8">
                         <div id="secondechart" style="height:200px;width:100%;"></div>
@@ -372,275 +383,9 @@
                     </div>
                 </div>
                 <br><br><br>
-                <!-- 全款车 -->
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div id="fullechart" style="height:200px;width:100%;"></div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card sameheight-item stats">
-                            <div class="card-block">
-                                <div class="row row-sm stats-container">
-                                    <div class="col-xs-6 stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-rocket"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$fullcount} </div>
-                                            <div class="name"> {:__('历史成交数')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 30%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6 stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-shopping-cart"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$todayfulltake} </div>
-                                            <div class="name"> {:__('本月成交数')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6  stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-line-chart"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$todayfullorder} </div>
-                                            <div class="name"> {:__('本月订车数')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6  stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-users"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$fullguest} </div>
-                                            <div class="name"> {:__('本月直客成交百分比')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6  stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-list-alt"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$fullintroduce} </div>
-                                            <div class="name"> {:__('本月转介绍成交百分比')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div>
-                                    <!-- <div class="col-xs-6 stat-col">
-                                        <div class="stat-icon"> <i class="fa fa-dollar"></i> </div>
-                                        <div class="stat">
-                                            <div class="value"> {$sevendau} </div>
-                                            <div class="name"> {:__('Seven dau')} </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" style="width: 25%"></div>
-                                        </div>
-                                    </div> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br><br><br>
-                <!-- <div class="row" style="margin-top:15px;">
-
-                    <div class="col-lg-12">
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <div class="panel bg-blue">
-                            <div class="panel-body">
-                                <div class="panel-title">
-                                    <span class="label label-success pull-right">{:__('Real time')}</span>
-                                    <h5>{:__('Category count')}</h5>
-                                </div>
-                                <div class="panel-content">
-                                    <h1 class="no-margins">1234</h1>
-                                    <div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>
-                                    <small>{:__('Category count tips')}</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <div class="panel bg-aqua-gradient">
-                            <div class="panel-body">
-                                <div class="ibox-title">
-                                    <span class="label label-info pull-right">{:__('Real time')}</span>
-                                    <h5>{:__('Attachment count')}</h5>
-                                </div>
-                                <div class="ibox-content">
-                                    <h1 class="no-margins">1043</h1>
-                                    <div class="stat-percent font-bold text-gray"><i class="fa fa-modx"></i> 2592</div>
-                                    <small>{:__('Attachment count tips')}</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-6 col-md-3">
-                        <div class="panel bg-purple-gradient">
-                            <div class="panel-body">
-                                <div class="ibox-title">
-                                    <span class="label label-primary pull-right">{:__('Real time')}</span>
-                                    <h5>{:__('Article count')}</h5>
-                                </div>
-                                <div class="ibox-content">
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h1 class="no-margins">1234</h1>
-                                            <div class="font-bold text-navy"><i class="fa fa-commenting"></i> <small>{:__('Comment count')}</small></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h1 class="no-margins">6754</h1>
-                                            <div class="font-bold text-navy"><i class="fa fa-heart"></i> <small>{:__('Like count')}</small></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-6 col-md-3">
-                        <div class="panel bg-green-gradient">
-                            <div class="panel-body">
-                                <div class="ibox-title">
-                                    <span class="label label-primary pull-right">{:__('Real time')}</span>
-                                    <h5>{:__('News count')}</h5>
-                                </div>
-                                <div class="ibox-content">
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h1 class="no-margins">5302</h1>
-                                            <div class="font-bold text-navy"><i class="fa fa-commenting"></i> <small>{:__('Comment count')}</small></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h1 class="no-margins">8205</h1>
-                                            <div class="font-bold text-navy"><i class="fa fa-user"></i> <small>{:__('Like count')}</small></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="box box-danger">
-                            <div class="box-header">
-                                <!-- <h3 class="box-title">{:__('Recent news')}</h3> -->
-                                <div class="box-tools pull-right">
-                                    <!-- <a href="https://www.fastadmin.net" target="_blank" class="btn btn-box-tool">{:__('More')}</a> -->
-                                </div>
-                            </div>
-                            <div class="box-body" id="news-list">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="box box-success">
-                            <div class="box-header">
-                                <!-- <h3 class="box-title">{:__('Recent discussion')}</h3> -->
-                                <div class="box-tools pull-right">
-                                    <!-- <a href="https://forum.fastadmin.net" class="btn btn-box-tool">{:__('More')}</a> -->
-                                </div>
-                            </div>
-                            <div class="box-body" id="discussion-list">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="box box-info">
-                            <div class="box-header"><h3 class="box-title">{:__('Server info')}</h3></div>
-                            <div class="box-body">
-                                <table class="table table-striped">
-                                    <tbody>
-                                        <!-- <tr>
-                                            <td width="140">{:__('FastAdmin version')}</td>
-                                            <td>{$Think.config.fastadmin.version} <a href="javascript:;" class="btn btn-xs btn-checkversion">检查最新版</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('FastAdmin addon version')}</td>
-                                            <td>{$addonversion}</td>
-                                        </tr> -->
-                                        <tr>
-                                            <td>{:__('Sapi name')}</td>
-                                            <td>{:php_sapi_name()}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Debug mode')}</td>
-                                            <td>{$Think.config.app_debug?__('Yes'):__('No')}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Software')}</td>
-                                            <td>{$Think.server.SERVER_SOFTWARE}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Upload mode')}</td>
-                                            <td>{$uploadmode}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Upload url')}</td>
-                                            <td>{$config.upload.uploadurl}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Upload Cdn url')}</td>
-                                            <td>{$config.upload.cdnurl}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Timezone')}</td>
-                                            <td>{:date_default_timezone_get()}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Cdn url')}</td>
-                                            <td>__CDN__</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{:__('Language')}</td>
-                                            <td>{$config.language}</td>
-                                        </tr>
-                                    </tbody></table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+     
             </div>
-            <div class="tab-pane fade" id="xi-an">
-                <div class="row">
-                    <div class="col-xs-12">
-                        {:__('暂未开放')}
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="yinchuan">
-                <div class="row">
-                    <div class="col-xs-12">
-                        {:__('暂未开放')}
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="kuming">
-                <div class="row">
-                    <div class="col-xs-12">
-                        {:__('暂未开放')}
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="nanchong">
-                <div class="row">
-                    <div class="col-xs-12">
-                        {:__('暂未开放')}
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 </div>
@@ -673,30 +418,28 @@
     </ul>
 </script>
 <script>
-    var Ordernewdata = {
+    var Orderonedata = {
             column: {:json_encode(array_keys($newonesales))},
             newonesales: {:json_encode(array_values($newonesales))},
-            newtwosales: {:json_encode(array_values($newtwosales))},
-            newthreesales: {:json_encode(array_values($newthreesales))},
-    };
-    var Orderrentaldata = {
-            column: {:json_encode(array_keys($rentalonesales))},
             rentalonesales: {:json_encode(array_values($rentalonesales))},
-            rentaltwosales: {:json_encode(array_values($rentaltwosales))},
-            rentalthreesales: {:json_encode(array_values($rentalthreesales))},
+            secondonesales: {:json_encode(array_values($secondonesales))},
+            fullonesales: {:json_encode(array_values($fullonesales))},
     };
     var Orderseconddata = {
-            column: {:json_encode(array_keys($secondonesales))},
-            secondonesales: {:json_encode(array_values($secondonesales))},
-            secondtwosales: {:json_encode(array_values($secondtwosales))},
-            secondthreesales: {:json_encode(array_values($secondthreesales))},
+            column: {:json_encode(array_keys($newsecondsales))},
+            newsecondsales: {:json_encode(array_values($newsecondsales))},
+            rentalsecondsales: {:json_encode(array_values($rentalsecondsales))},
+            secondsecondsales: {:json_encode(array_values($secondsecondsales))},
+            fullsecondsales: {:json_encode(array_values($fullsecondsales))},
     };
-    var Orderfulldata = {
-            column: {:json_encode(array_keys($fullonesales))},
-            fullonesales: {:json_encode(array_values($fullonesales))},
-            fulltwosales: {:json_encode(array_values($fulltwosales))},
+    var Orderthreedata = {
+            column: {:json_encode(array_keys($newthreesales))},
+            newthreesales: {:json_encode(array_values($newthreesales))},
+            rentalthreesales: {:json_encode(array_values($rentalthreesales))},
+            secondthreesales: {:json_encode(array_values($secondthreesales))},
             fullthreesales: {:json_encode(array_values($fullthreesales))},
     };
+    
     // console.log(Orderrentaldata);
     var Citydata = {
         num: {:json_encode($num)},

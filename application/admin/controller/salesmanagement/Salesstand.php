@@ -143,8 +143,6 @@ class Salesstand extends Backend
                 $secondintroduce = 0 . '%';
         }
         
-        
-
 
         //二手车本月订车数
         $todaysecondorder = DB::name('second_sales_order')
@@ -194,287 +192,149 @@ class Salesstand extends Backend
                 ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
                 ->count();
 
-        //总数
-        $num = DB::name('customer_resource')
-            ->count();
-        //58同城
-        //新客户
-        $newpeoplecity = DB::name('customer_resource')
-                ->where('platform_id', '4')
-                ->where('customerlevel', NULL)
-                ->count();
-        //待联系
-        $relationcity = DB::name('customer_resource')
-                ->where('platform_id', '4')
-                ->where('customerlevel', 'relation')
-                ->count();
-        //有意向
-        $intentioncity = DB::name('customer_resource')
-                ->where('platform_id', '4')
-                ->where('customerlevel', 'intention')
-                ->count();
-        //暂无意向
-        $nointentioncity = DB::name('customer_resource')
-                ->where('platform_id', '4')
-                ->where('customerlevel', 'nointention')
-                ->count();
-        //已放弃
-        $giveupcity = DB::name('customer_resource')
-                ->where('platform_id', '4')
-                ->where('customerlevel', 'giveup')
-                ->count();
-        //跟进时间过期客户
-        $overduecity = DB::name('customer_resource')
-                ->where('platform_id', '4')
-                ->where('feedbacktime', '<', time())
-                ->count();
 
-        
-        //今日头条
-        //新客户
-        $newpeopletoday = DB::name('customer_resource')
-                ->where('platform_id', '2')
-                ->where('customerlevel', NULL)
-                ->count();
-        //待联系
-        $relationtoday = DB::name('customer_resource')
-                ->where('platform_id', '2')
-                ->where('customerlevel', 'relation')
-                ->count();
-        //有意向
-        $intentiontoday = DB::name('customer_resource')
-                ->where('platform_id', '2')
-                ->where('customerlevel', 'intention')
-                ->count();
-        //暂无意向
-        $nointentiontoday = DB::name('customer_resource')
-                ->where('platform_id', '2')
-                ->where('customerlevel', 'nointention')
-                ->count();
-        //已放弃
-        $giveuptoday = DB::name('customer_resource')
-                ->where('platform_id', '2')
-                ->where('customerlevel', 'giveup')
-                ->count();
-        //跟进时间过期客户
-        $overduetoday = DB::name('customer_resource')
-                ->where('platform_id', '2')
-                ->where('feedbacktime', '<', time())
-                ->count();
-        // pr($overdue);
-        // die;
         $seventtime = \fast\Date::unixtime('month', -6);
         // pr($seventtime);
         // die;
-        $newonesales = $newtwosales = $newthreesales = $rentalonesales = $rentaltwosales = $rentalthreesales = $secondonesales = $secondtwosales = $secondthreesales = $fullonesales = $fulltwosales = $fullthreesales = [];
-        //新车销售情况
-        $newonesales = Cache::get('newonesales');
-        $newtwosales = Cache::get('newtwosales');
-        $newthreesales = Cache::get('newthreesales');
-        if(!$newonesales && !$newtwosales && !$newthreesales){
-           
-            for ($i = 0; $i < 8; $i++)
-            {
+        $newonesales = $rentalonesales = $secondonesales = $fullonesales = [];
+        
+        //销售一部的销售情况    
+        for ($i = 0; $i < 8; $i++)
+        {
                 $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                // pr($month);
+                // die;
+                
                 //销售一部
                 $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
                 foreach($one_sales as $k => $v){
                     $one_admin[] = $v['uid'];
                 }
+                //以租代购（新车）
                 $newonetake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $one_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-                //销售二部
-                $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                foreach($two_sales as $k => $v){
-                    $two_admin[] = $v['uid'];
-                }
-                $newtwotake = Db::name('sales_order')
-                        ->where('review_the_data', 'the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-                //销售三部
-                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                foreach($three_sales as $k => $v){
-                    $three_admin[] = $v['uid'];
-                }
-                $newthreetake = Db::name('sales_order')
-                        ->where('review_the_data', 'the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-
-                //销售一部
-                $newonesales[$month . '(月)'] = $newonetake;
-                //销售二部
-                $newtwosales[$month . '(月)'] = $newtwotake;
-                //销售三部
-                $newthreesales[$month . '(月)'] = $newthreetake;
-            }
-            // pr($newtake);die;
-            Cache::set('newonesales', $newonesales);
-            Cache::set('newtwosales', $newtwosales);
-            Cache::set('newthreesales', $newthreesales);
-            
-
-        }
-        //租车出租情况
-        $rentalonesales = Cache::get('rentalonesales');
-        $rentaltwosales = Cache::get('rentaltwosales');
-        $rentalthreesales = Cache::get('rentalthreesales');
-        if(!$rentalonesales && !$rentaltwosales && !$rentalthreesales){
-            
-            for ($i = 0; $i < 8; $i++)
-            {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
-                //销售一部
-                $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-                foreach($one_sales as $k => $v){
-                    $one_admin[] = $v['uid'];
-                }
+                //租车 
                 $rentalonetake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-                //销售二部
-                $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                foreach($two_sales as $k => $v){
-                    $two_admin[] = $v['uid'];
-                }
-                $rentaltwotake = Db::name('rental_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-                //销售三部
-                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                foreach($three_sales as $k => $v){
-                    $three_admin[] = $v['uid'];
-                }
-                $rentalthreetake = Db::name('rental_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-                //销售一部
-                $rentalonesales[$month . '(月)'] = $rentalonetake;
-                //销售二部
-                $rentaltwosales[$month . '(月)'] = $rentaltwotake;
-                //销售三部
-                $rentalthreesales[$month . '(月)'] = $rentalthreetake;
-            
-            } 
-            Cache::set('rentalonesales', $rentalonesales);
-            Cache::set('rentaltwosales', $rentaltwosales);
-            Cache::set('rentalthreesales', $rentalthreesales);
-
-        }
-        //二手车销售情况
-        $secondonesales = Cache::get('secondonesales');
-        $secondtwosales = Cache::get('secondtwosales');
-        $secondthreesales = Cache::get('secondthreesales');
-        if(!$secondonesales && !$secondtwosales && !$secondthreesales){
-           
-            for ($i = 0; $i < 8; $i++)
-            {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
-                //销售一部
-                $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-                foreach($one_sales as $k => $v){
-                    $one_admin[] = $v['uid'];
-                }
+                //以租代购（二手车）
                 $secondonetake = Db::name('second_sales_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-                //销售二部
-                $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                foreach($two_sales as $k => $v){
-                    $two_admin[] = $v['uid'];
-                }
-                $secondtwotake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-                //销售二部
-                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                foreach($three_sales as $k => $v){
-                    $three_admin[] = $v['uid'];
-                }
-                $secondthreetake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                        ->count();
-                //销售一部
-                $secondonesales[$month . '(月)'] = $secondonetake;
-                //销售二部
-                $secondtwosales[$month . '(月)'] = $secondtwotake;
-                //销售三部
-                $secondthreesales[$month . '(月)'] = $secondthreetake;
-            }
-            Cache::set('secondonesales', $secondonesales);
-            Cache::set('secondtwosales', $secondtwosales);
-            Cache::set('secondthreesales', $secondthreesales);
-
-        }
-        //全款车销售情况
-        $fullonesales = Cache::get('fullonesales');
-        $fulltwosales = Cache::get('fulltwosales');
-        $fullthreesales = Cache::get('fullthreesales');
-        if(!$fullonesales && !$fulltwosales && !$fullthreesales){
-           
-            for ($i = 0; $i < 8; $i++)
-            {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
-                //销售一部
-                $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-                foreach($one_sales as $k => $v){
-                    $one_admin[] = $v['uid'];
-                }
+                //全款车
                 $fullonetake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
+                //以租代购（新车）
+                $newonesales[$month . '(月)'] = $newonetake;
+                //租车
+                $rentalonesales[$month . '(月)'] = $rentalonetake;
+                //以租代购（二手车）
+                $secondonesales[$month . '(月)'] = $secondonetake;
+                //全款车
+                $fullonesales[$month . '(月)'] = $fullonetake;
+        }
+           
+        $newsecondsales = $rentalsecondsales = $secondsecondsales = $fullsecondsales = [];
+
+        //销售二部的销售情况    
+        for ($i = 0; $i < 8; $i++)
+        {
+                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
                 //销售二部
                 $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
                 foreach($two_sales as $k => $v){
                     $two_admin[] = $v['uid'];
                 }
-                $fulltwotake = Db::name('full_parment_order')
+                //以租代购（新车）
+                $newsecondtake = Db::name('sales_order')
+                        ->where('review_the_data', 'the_car')
+                        ->where('admin_id', 'in', $two_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //租车 
+                $rentalsecondtake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-                //销售三部
+                //以租代购（二手车）
+                $secondsecondtake = Db::name('second_sales_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $two_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //全款车
+                $fullsecondtake = Db::name('full_parment_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $two_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //以租代购（新车）
+                $newsecondsales[$month . '(月)'] = $newsecondtake;
+                //租车
+                $rentalsecondsales[$month . '(月)'] = $rentalsecondtake;
+                //以租代购（二手车）
+                $secondsecondsales[$month . '(月)'] = $secondsecondtake;
+                //全款车
+                $fullsecondsales[$month . '(月)'] = $fullsecondtake;
+            
+        } 
+            
+        $newthreesales = $rentalthreesales = $secondthreesales = $fullthreesales = [];
+
+        //销售三部的销售情况 
+        for ($i = 0; $i < 8; $i++)
+        {
+                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                //销售二部
                 $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
                 foreach($three_sales as $k => $v){
                     $three_admin[] = $v['uid'];
                 }
+                //以租代购（新车）
+                $newthreetake = Db::name('sales_order')
+                        ->where('review_the_data', 'the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //租车 
+                $rentalthreetake = Db::name('rental_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //以租代购（二手车）
+                $secondthreetake = Db::name('second_sales_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->count();
+                //全款车
                 $fullthreetake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $three_admin)
                         ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
                         ->count();
-                //销售一部
-                $fullonesales[$month . '(月)'] = $fullonetake;
-                //销售二部
-                $fulltwosales[$month . '(月)'] = $fulltwotake;
-                //销售三部
+                //以租代购（新车）
+                $newthreesales[$month . '(月)'] = $newthreetake;
+                //租车
+                $rentalthreesales[$month . '(月)'] = $rentalthreetake;
+                //以租代购（二手车）
+                $secondthreesales[$month . '(月)'] = $secondthreetake;
+                //全款车
                 $fullthreesales[$month . '(月)'] = $fullthreetake;
-            }
-            Cache::set('fullonesales', $fullonesales);
-            Cache::set('fulltwosales', $fulltwosales);
-            Cache::set('fullthreesales', $fullthreesales);
 
-        }        
+        }
 
         $hooks = config('addons.hooks');
         $uploadmode = isset($hooks['upload_config_init']) && $hooks['upload_config_init'] ? implode(',', $hooks['upload_config_init']) : 'local';
@@ -483,6 +343,25 @@ class Salesstand extends Backend
         $config = Config::get("composer");
         $addonVersion = isset($config['version']) ? $config['version'] : __('Unknown');
         $this->view->assign([
+
+            //销售情况 --- 一部
+            'newonesales'           => $newonesales,
+            'rentalonesales'        => $rentalonesales,
+            'secondonesales'        => $secondonesales,
+            'fullonesales'          => $fullonesales,
+            
+            //销售情况 --- 二部
+            'newsecondsales'        => $newsecondsales,
+            'rentalsecondsales'     => $rentalsecondsales,
+            'secondsecondsales'     => $secondsecondsales,
+            'fullsecondsales'       => $fullsecondsales,
+            
+            //销售情况 --- 三部
+            'newthreesales'         => $newthreesales,
+            'rentalthreesales'      => $rentalthreesales,
+            'secondthreesales'      => $secondthreesales,
+            'fullthreesales'        => $fullthreesales,
+
             //新车数据
             'newcount'            => $newcount,
             'todaynewtake'        => $todaynewtake,
@@ -511,36 +390,6 @@ class Salesstand extends Backend
             'fullguest'           => $fullguest,
             'fullintroduce'       => $fullintroduce,
 
-            //58同城
-            'num'                   => $num,
-            'newpeoplecity'         => $newpeoplecity,
-            'relationcity'          => $relationcity,
-            'intentioncity'         => $intentioncity,
-            'nointentioncity'       => $nointentioncity,
-            'giveupcity'            => $giveupcity,
-            'overduecity'           => $overduecity,
-
-            //今日头条
-            'newpeopletoday'         => $newpeopletoday,
-            'relationtoday'          => $relationtoday,
-            'intentiontoday'         => $intentiontoday,
-            'nointentiontoday'       => $nointentiontoday,
-            'giveuptoday'            => $giveuptoday,
-            'overduetoday'           => $overduetoday,
-            
-            //销售情况 --- 一部与二部和三部
-            'newonesales'           => $newonesales,
-            'newtwosales'           => $newtwosales,
-            'newthreesales'         => $newthreesales,
-            'rentalonesales'        => $rentalonesales,
-            'rentaltwosales'        => $rentaltwosales,
-            'rentalthreesales'      => $rentalthreesales,
-            'secondonesales'        => $secondonesales,
-            'secondtwosales'        => $secondtwosales,
-            'secondthreesales'      => $secondthreesales,
-            'fullonesales'          => $fullonesales,
-            'fulltwosales'          => $fulltwosales,
-            'fullthreesales'        => $fullthreesales
 
         ]);
 
