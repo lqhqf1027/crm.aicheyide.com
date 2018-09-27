@@ -3,69 +3,204 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     var Controller = {
         index: function () {
             // 初始化表格参数配置
-            Table.api.init({
-                extend: {
-                    index_url: 'rentcar/rentcarscustomer/index',
-                    table: 'rental_order',
+            Table.api.init({});
+
+            //绑定事件
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var panel = $($(this).attr("href"));
+                if (panel.size() > 0) {
+                    Controller.table[panel.attr("id")].call(this);
+                    $(this).on('click', function (e) {
+                        $($(this).attr("href")).find(".btn-refresh").trigger("click");
+                    });
                 }
+                //移除绑定的事件
+                $(this).unbind('shown.bs.tab');
             });
 
-            var table = $("#table");
+            //必须默认触发shown.bs.tab事件
+            $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
 
-            // 初始化表格
-            table.bootstrapTable({
-                url: $.fn.bootstrapTable.defaults.extend.index_url,
-                pk: 'id',
-                sortName: 'id',
-                searchFormVisible: true,
-                columns: [
-                    [
-                        {checkbox: true},
-                        {field: 'id', title: __('Id'),operate:false},
-                        {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
-                        {field: 'order_no', title: __('订单编号')}, 
-                        {field: 'createtime', title: __('订车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
-                        {field: 'delivery_datetime', title: __('提车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
-                        {field: 'models.name', title: __('租车型号')},
-                        {field: 'sales.nickname', title: __('销售员')},
+            $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
+                $(this).trigger("shown.bs.tab");
+            });
 
-                        {field: 'username', title: __('客户姓名')}, 
-                        {field: 'phone', title: __('手机号')},
-                        {field: 'id_card', title: __('身份证号')},
-                        
-                        {field: 'genderdata', title: __('性别'), searchList: {"male":__('男'),"female":__('女')}, formatter: Table.api.formatter.normal},
-                        {field: 'cash_pledge', title: __('押金（元）'),operate:false},
-                        {field: 'rental_price', title: __('租金（元）'),operate:false},
-                        {field: 'tenancy_term', title: __('租期（月）'),operate:false},
+        },
+        table: {
+            being_rented: function () {
+                var table = $("#beingRented");
 
-                        {field: 'operate', title: __('Operate'), table: table, buttons: [
-                            {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 
-                                url: 'rentcar/rentcarscustomer/rentaldetails', callback:function(data){
-                                    console.log(data)
-                                }
-                            } 
-                            ],
-                        
-                            events: Table.api.events.operate,
-                             
-                            formatter: Table.api.formatter.operate
-                           
-                        }
+                table.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-back_car").data("area", ["80%", "80%"]);
+                    $(".btn-rentalDetails").data("area", ["95%", "95%"]);
+                });
+                // 初始化表格
+                table.bootstrapTable({
+                    url: 'rentcar/Rentcarscustomer/being_rented',
+                    pk: 'id',
+                    sortName: 'id',
+                    toolbar: '#toolbar1',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id'), operate: false},
+                            {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
+                            {field: 'order_no', title: __('订单编号')},
+                            {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {field: 'models.name', title: __('租车型号')},
+                            {field: 'admin.nickname', title: __('销售员'), formatter: Controller.api.formatter.sales},
+
+                            {field: 'username', title: __('客户姓名')},
+                            {field: 'phone', title: __('手机号')},
+                            {field: 'id_card', title: __('身份证号')},
+
+                            {
+                                field: 'genderdata',
+                                title: __('性别'),
+                                searchList: {"male": __('男'), "female": __('女')},
+                                formatter: Table.api.formatter.normal
+                            },
+                            {field: 'cash_pledge', title: __('押金（元）'), operate: false},
+                            {field: 'rental_price', title: __('租金（元）'), operate: false},
+                            {field: 'tenancy_term', title: __('租期（月）'), operate: false},
+                            {
+                                field: 'car_backtime',
+                                title: __('退租时间'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {field: 'customer_information_note', title: __('备注信息'), operate: false},
+
+                            {
+                                field: 'operate', title: __('Operate'), table: table,
+
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+                        ]
                     ]
-                ]
-            });
+                });
 
-            
 
-            // 为表格绑定事件
-            Table.api.bindevent(table);
+                // 为表格绑定事件
+                Table.api.bindevent(table);
 
-            table.on('load-success.bs.table', function (e, data) {
-                // console.log(data);
-               
-                $(".btn-rentalDetails").data("area", ["95%", "95%"]);
-            })
+                table.on('load-success.bs.table', function (e, data) {
 
+                    $('#using_total').text(data.total);
+                })
+            },
+            retiring: function () {
+                var retirings = $("#retirings");
+
+                retirings.on('post-body.bs.table', function (e, settings, json, xhr) {
+                    $(".btn-back_car").data("area", ["80%", "80%"]);
+                    $(".btn-rentalDetails").data("area", ["95%", "95%"]);
+                });
+                // 初始化表格
+                retirings.bootstrapTable({
+                    url: 'rentcar/Rentcarscustomer/retiring',
+                    pk: 'id',
+                    sortName: 'id',
+                    toolbar: '#toolbar2',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id'), operate: false},
+                            {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
+                            {field: 'order_no', title: __('订单编号')},
+                            {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {field: 'models.name', title: __('租车型号')},
+                            {field: 'admin.nickname', title: __('销售员'), formatter: Controller.api.formatter.sales},
+
+                            {field: 'username', title: __('客户姓名')},
+                            {field: 'phone', title: __('手机号')},
+                            {field: 'id_card', title: __('身份证号')},
+
+                            // {
+                            //     field: 'genderdata',
+                            //     title: __('性别'),
+                            //     searchList: {"male": __('男'), "female": __('女')},
+                            //     formatter: Table.api.formatter.normal
+                            // },
+                            // {field: 'cash_pledge', title: __('押金（元）'), operate: false},
+                            // {field: 'rental_price', title: __('租金（元）'), operate: false},
+                            // {field: 'tenancy_term', title: __('租期（月）'), operate: false},
+                            {
+                                field: 'car_backtime',
+                                title: __('退租时间'),
+                                operate: false,
+                                addclass: 'datetimerange',
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {
+                                field: 'carrentalmodelsinfo.actual_backtime',
+                                title: __('实际退租时间'),
+                                operate: false,
+                                addclass: 'datetimerange',
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {field: 'customer_information_note', title: __('备注信息'), operate: false},
+
+                            {
+                                field: 'operate', title: __('Operate'), table: retirings,
+
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+                        ]
+                    ]
+                });
+
+
+                // 为表格绑定事件
+                Table.api.bindevent(retirings);
+
+                retirings.on('load-success.bs.table', function (e, data) {
+                    $('#back_total').text(data.total);
+
+                })
+            }
         },
         add: function () {
             Controller.api.bindevent();
@@ -73,28 +208,125 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+        back_car: function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
+                $(document).on('click', "input[name='row[ismenu]']", function () {
+                    var name = $("input[name='row[name]']");
+                    name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
+                });
+                $("input[name='row[ismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
             },
-            formatter:{
-                datetime:function (value, row, index) {
+            formatter: {
+                datetime: function (value, row, index) {
 
-                    if(value){
+                    if (value) {
                         return timestampToTime(value);
                     }
 
                     function timestampToTime(timestamp) {
                         var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
                         var Y = date.getFullYear() + '-';
-                        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-                        var D = date.getDate()<10? '0'+date.getDate():date.getDate();
+                        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                        var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
 
-                        return Y+M+D;
+                        return Y + M + D;
                     }
 
+                },
+                sales: function (value, row, index) {
+                    if (!value) {
+                        return '-';
+                    }
+
+                    return row.admin.department + ' -- ' + value;
+                },
+                operate: function (value, row, index) {
+                    var table = this.table;
+                    // 操作配置
+                    var options = table ? table.bootstrapTable('getOptions') : {};
+                    // 默认按钮组
+                    console.log(row.car_backtime);
+                    var buttons = $.extend([], this.buttons || []);
+                    if (row.review_the_data == 'for_the_car') {
+                        buttons.push(
+                            {
+                                name: 'edits',
+                                text: '编辑',
+                                icon: 'fa fa-pencil',
+                                title: __('编辑'),
+                                classname: 'btn btn-xs btn-success btn-editone',
+                                url: 'rentcar/Rentcarscustomer/edit'
+                            }
+                        );
+                    }
+
+
+                    buttons.push(
+                        {
+                            name: 'rentalDetails',
+                            text: '查看详细资料',
+                            title: '查看订单详细资料',
+                            icon: 'fa fa-eye',
+                            classname: 'btn btn-xs btn-primary btn-rentalDetails',
+                            callback: function (data) {
+                                console.log(data)
+                            }
+                        }
+                    );
+                    if (row.review_the_data == 'for_the_car' && row.car_backtime!=null) {
+                        buttons.push(
+                            {
+                                name: 'back',
+                                text: '退车',
+                                icon: 'fa fa-sign-out',
+                                title: __('退车'),
+                                classname: 'btn btn-xs btn-warning btn-back_car',
+                            }
+                        );
+                    }
+
+
+                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 }
-            }
+            },
+            events: {
+                operate: {
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'rentcar/Rentcarscustomer/edit';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                    'click .btn-back_car': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'rentcar/Rentcarscustomer/back_car';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('退车'), $(this).data() || {});
+                    },
+                    'click .btn-rentalDetails': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'rentcar/rentcarscustomer/rentaldetails';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看详情'), $(this).data() || {});
+                    },
+                }
+            },
 
         }
     };
