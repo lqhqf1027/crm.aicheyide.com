@@ -91,6 +91,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     pk: 'id',
                     // sortName: 'id',
                     searchFormVisible: true,
+                    fixedColumns:true,
+                    fixedNumber:1,
                     columns: [
                         [
                             {checkbox: true},

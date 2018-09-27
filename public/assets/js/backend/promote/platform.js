@@ -22,6 +22,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 pk: 'id',
                 // sortName: 'id',
                 searchFormVisible: true,
+               
                 columns: [
                     [
                         {checkbox: true},
