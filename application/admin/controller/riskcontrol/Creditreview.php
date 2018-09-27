@@ -50,7 +50,7 @@ class Creditreview extends Backend
                 ->count(),
 
             'total1' => DB::name('rental_order')
-                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], ['=', 'for_the_car'], 'or')
                 ->count(),
             'total2' => DB::name('second_sales_order')
                 ->where('review_the_data', ['=', 'is_reviewing_control'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'for_the_car'], ['=', 'the_car'], 'or')
@@ -156,7 +156,7 @@ class Creditreview extends Backend
                 }])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], ['=', 'for_the_car'], 'or')
                 ->count();
 
             $list = $this->model
@@ -169,7 +169,7 @@ class Creditreview extends Backend
                 }])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], ['=', 'for_the_car'], 'or')
                 ->select();
             foreach ($list as $row) {
                 $row->visible(['id', 'plan_car_rental_name', 'order_no', 'createtime', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'review_the_data']);
@@ -179,7 +179,7 @@ class Creditreview extends Backend
                 $row->getRelation('models')->visible(['name']);
             }
             $list = collection($list)->toArray();
-//            pr($list);die;
+
             $result = array("total" => $total, "rows" => $list);
             return json($result);
         }
