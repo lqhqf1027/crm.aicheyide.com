@@ -114,7 +114,7 @@ return array (
     'content' => 
     array (
     ),
-    'value' => '2M',
+    'value' => '10M',
     'rule' => 'required',
     'msg' => '',
     'tip' => '',

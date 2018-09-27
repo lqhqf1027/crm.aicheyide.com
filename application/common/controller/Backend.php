@@ -235,6 +235,8 @@ class Backend extends Controller
         $this->assign('version',$version);
         //扔出全局的admin信息到js
         $this->assignconfig('ADMIN_JS',Session::get('admin'));
+        //扔出Cdnurl
+        $this->assignconfig('cdn_url',Config::get('upload')['cdnurl']);
     }
 
 
