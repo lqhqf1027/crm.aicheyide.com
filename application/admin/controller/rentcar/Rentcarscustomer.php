@@ -19,7 +19,7 @@ class Rentcarscustomer extends Backend
      * @var \app\admin\model\Rentalpeople
      */
     protected $model = null;
-    protected $noNeedRight = ['index', 'rentaldetails'];
+    protected $noNeedRight = ['index', 'rentaldetails','being_rented','retiring','edit','back_car'];
 
     public function _initialize()
     {
@@ -42,7 +42,13 @@ class Rentcarscustomer extends Backend
 
     }
 
-    //正在出租
+    /**
+     * 正在出租
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function being_rented()
     {
         $this->model = new \app\admin\model\RentalOrder();
@@ -101,7 +107,13 @@ class Rentcarscustomer extends Backend
         }
     }
 
-    //已退租
+    /**
+     * 已退租
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function retiring()
     {
         $this->model = new \app\admin\model\RentalOrder();
@@ -266,7 +278,12 @@ class Rentcarscustomer extends Backend
         return $this->view->fetch();
     }
 
-    //退车
+    /**
+     * 退车
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     */
     public function back_car($ids = null)
     {
 
