@@ -1449,6 +1449,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'retiring'){
+                                        return true;
+                                    }
                                 }
                             },
                             /**
@@ -1477,6 +1480,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'retiring'){
                                         return true;
                                     }
                                 }
@@ -1509,6 +1515,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'retiring'){
                                         return true;
                                     }
                                    
@@ -1545,6 +1554,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'retiring'){
+                                        return true;
+                                    }
                                    
                                 },
                                 
@@ -1578,6 +1590,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'retiring'){
+                                        return true;
+                                    }
                                 }, 
                             },
                             /**
@@ -1606,6 +1621,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     } 
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'retiring'){
                                         return true;
                                     }
                                 }
@@ -1638,6 +1656,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_nopass'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'retiring'){
+                                        return true;
+                                    }
                                 }
                             },
                             /**
@@ -1666,6 +1687,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if (row.review_the_data == 'is_reviewing_nopass') {
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'retiring'){
                                         return true;
                                     }
                                 }
@@ -1699,6 +1723,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.review_the_data == 'is_reviewing_false'){
                                         return true;
                                     }
+                                    else if(row.review_the_data == 'retiring'){
+                                        return true;
+                                    }
                                 }
                             },
                             /**
@@ -1728,6 +1755,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.review_the_data == 'is_reviewing_false'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'retiring'){
+                                        return true;
+                                    }
+                                }
+                            },
+                            /**
+                             * 已退车
+                             */
+                            {
+
+                                name: 'retiring', icon: 'fa fa-automobile', text: '已退车', extend: 'data-toggle="tooltip"', title: __('租期到期，已退车'), classname: ' text-danger ',
+                                hidden: function (row) {  /**已退车 */
+                                    if (row.review_the_data == 'retiring') {
+                                        return false;
+                                    }
+                                    else if (row.review_the_data == 'is_reviewing_pass') {
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_control'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_argee'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.review_the_data == 'is_reviewing_nopass'){
+                                        return true;
+                                    }
+                                    else if (row.review_the_data == 'is_reviewing_true') {
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'is_reviewing_false'){
+                                        return true;
+                                    }
+                                    else if(row.review_the_data == 'for_the_car'){
                                         return true;
                                     }
                                 }
