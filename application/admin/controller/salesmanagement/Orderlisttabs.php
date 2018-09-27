@@ -86,7 +86,7 @@ class Orderlisttabs extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['id','nickname','avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -101,7 +101,7 @@ class Orderlisttabs extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['id','nickname','avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -117,7 +117,7 @@ class Orderlisttabs extends Backend
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname','avatar']);
+                $row->getRelation('admin')->visible(['id','nickname','avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['newinventory']);
@@ -127,6 +127,14 @@ class Orderlisttabs extends Backend
 
             $list = collection($list)->toArray();
 
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
             $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
@@ -159,7 +167,7 @@ class Orderlisttabs extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['id','nickname','avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -171,7 +179,7 @@ class Orderlisttabs extends Backend
 
             $list = $this->model
                 ->with(['admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['id','nickname','avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -185,7 +193,7 @@ class Orderlisttabs extends Backend
             foreach ($list as $k => $v) {
                 $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
                 $v->visible(['admin']);
-                $v->getRelation('admin')->visible(['nickname','avatar']);
+                $v->getRelation('admin')->visible(['id','nickname','avatar']);
                 $v->visible(['models']);
                 $v->getRelation('models')->visible(['name']);
                 $v->visible(['carrentalmodelsinfo']);
@@ -195,7 +203,14 @@ class Orderlisttabs extends Backend
 
             $list = collection($list)->toArray();
 
-
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
             $result = array("total" => $total, "rows" => $list);
             return json($result);
         }
@@ -233,7 +248,7 @@ class Orderlisttabs extends Backend
                 ->with(['plansecond' => function ($query) {
                     $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,licenseplatenumber');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['id','nickname','avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -246,7 +261,7 @@ class Orderlisttabs extends Backend
                 ->with(['plansecond' => function ($query) {
                     $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,licenseplatenumber');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['id','nickname','avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -260,13 +275,22 @@ class Orderlisttabs extends Backend
                 $row->visible(['plansecond']);
                 $row->getRelation('plansecond')->visible(['newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney', 'licenseplatenumber']);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname','avatar']);
+                $row->getRelation('admin')->visible(['id','nickname','avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
 
 
             $list = collection($list)->toArray();
+
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
 
             $result = array('total' => $total, "rows" => $list);
             return json($result);
@@ -293,7 +317,7 @@ class Orderlisttabs extends Backend
                 ->with(['planfull' => function ($query) {
                     $query->withField('full_total_price');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['id','nickname','avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -306,7 +330,7 @@ class Orderlisttabs extends Backend
                 ->with(['planfull' => function ($query) {
                     $query->withField('full_total_price');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar']);
+                    $query->withField(['id','nickname','avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -320,14 +344,21 @@ class Orderlisttabs extends Backend
                 $row->visible(['planfull']);
                 $row->getRelation('planfull')->visible(['full_total_price']);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname','avatar']);
+                $row->getRelation('admin')->visible(['id','nickname','avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
 
 
             $list = collection($list)->toArray();
-
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
             $result = array('total' => $total, "rows" => $list);
             return json($result);
         }

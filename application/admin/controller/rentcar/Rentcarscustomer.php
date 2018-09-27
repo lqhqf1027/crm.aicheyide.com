@@ -78,7 +78,7 @@ class Rentcarscustomer extends Backend
                 ->with(['models' => function ($query) {
                     $query->withField("name");
                 }, 'admin' => function ($query) {
-                    $query->withField('id,nickname');
+                    $query->withField('id,nickname,avatar');
                 }, 'carrentalmodelsinfo' => function ($query) {
                     $query->withField(['licenseplatenumber', 'review_the_data' => 'data']);
                 }])
@@ -143,7 +143,7 @@ class Rentcarscustomer extends Backend
                 ->with(['models' => function ($query) {
                     $query->withField("name");
                 }, 'admin' => function ($query) {
-                    $query->withField('id,nickname');
+                    $query->withField('id,nickname,avatar');
                 }, 'carrentalmodelsinfo' => function ($query) {
                     $query->withField(['licenseplatenumber', 'review_the_data' => 'data', 'actual_backtime', 'car_loss', 'back_kilometre', 'check_list']);
                 }])

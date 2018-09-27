@@ -189,7 +189,7 @@ class Customerlisttabs extends Backend
             ->with(['platform' => function ($query) {
                 $query->withField('name');
             }, 'admin' => function ($query) {
-                $query->withField(['nickname', 'avatar']);
+                $query->withField(['id','nickname', 'avatar']);
             }])
             ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel, $id_sale) {
 
@@ -253,7 +253,7 @@ class Customerlisttabs extends Backend
             ->with(['platform' => function ($query) {
                 $query->withField('name');
             }, 'admin' => function ($query) {
-                $query->withField(['nickname', 'avatar']);
+                $query->withField(['id','nickname', 'avatar']);
             }])
             ->where(function ($query) use ($noPhone, $authId, $getUserId, $customerlevel, $id_sale) {
 
@@ -316,12 +316,21 @@ class Customerlisttabs extends Backend
             $row->visible(['platform']);
             $row->getRelation('platform')->visible(['name']);
             $row->visible(['admin']);
-            $row->getRelation('admin')->visible(['nickname', 'avatar']);
+            $row->getRelation('admin')->visible(['id','nickname', 'avatar']);
             //转化头像
             $list[$k]['admin']['avatar'] = Config::get('upload')['cdnurl'] . $row['admin']['avatar'];
 
         }
         $list = collection($list)->toArray();
+
+        foreach ($list as $k=>$v){
+            $department = Db::name('auth_group_access')
+                ->alias('a')
+                ->join('auth_group b','a.group_id = b.id')
+                ->where('a.uid',$v['admin']['id'])
+                ->value('b.name');
+            $list[$k]['admin']['department'] = $department;
+        }
 
         return array('total' => $total, "rows" => $list);
     }

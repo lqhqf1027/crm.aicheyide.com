@@ -321,10 +321,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 },
                 sales: function (value, row, index) {
+
                     if (value) {
                         row.admin.avatar = "https://static.aicheyide.com" + row.admin.avatar;
                     }
-                    return value != null ? "<img src=" + row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
+                    return value != null ? "<img src=" + row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+ value : value;
 
                 }
             }

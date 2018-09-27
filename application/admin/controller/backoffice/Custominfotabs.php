@@ -184,7 +184,7 @@ class Custominfotabs extends Backend
                     ->with(['platform','backoffice'=>function ($query){
                         $query->withField(['nickname','avatar']);
                     },'admin'=>function ($query){
-                        $query->withField(['nickname','avatar']);
+                        $query->withField(['id','nickname','avatar']);
                     }])
                     ->where($where)
                     ->where(function ($query) {
@@ -200,7 +200,7 @@ class Custominfotabs extends Backend
                     ->with(['platform','backoffice'=>function ($query){
                         $query->withField(['nickname','avatar']);
                     },'admin'=>function ($query){
-                        $query->withField(['nickname','avatar']);
+                        $query->withField(['id','nickname','avatar']);
                     }])
                     ->where($where)
                     ->order($sort, $order)
@@ -219,7 +219,7 @@ class Custominfotabs extends Backend
                     ->with(['platform','backoffice'=>function ($query){
                         $query->withField(['nickname','avatar']);
                     },'admin'=>function ($query){
-                        $query->withField(['nickname','avatar']);
+                        $query->withField(['id','nickname','avatar']);
                     }])
                     ->where($where)
                     ->where(function ($query) use($get_id) {
@@ -235,7 +235,7 @@ class Custominfotabs extends Backend
                     ->with(['platform','backoffice'=>function ($query){
                         $query->withField(['nickname','avatar']);
                     },'admin'=>function ($query){
-                        $query->withField(['nickname','avatar']);
+                        $query->withField(['id','nickname','avatar']);
                     }])
                     ->where($where)
                     ->order($sort, $order)
@@ -252,7 +252,7 @@ class Custominfotabs extends Backend
                     ->with(['platform','backoffice'=>function ($query){
                         $query->withField(['nickname','avatar']);
                     },'admin'=>function ($query){
-                        $query->withField(['nickname','avatar']);
+                        $query->withField(['id','nickname','avatar']);
                     }])
                     ->where($where)
                     ->where(function ($query) {
@@ -268,7 +268,7 @@ class Custominfotabs extends Backend
                     ->with(['platform','backoffice'=>function ($query){
                         $query->withField(['nickname','avatar']);
                     },'admin'=>function ($query){
-                        $query->withField(['nickname','avatar']);
+                        $query->withField(['id','nickname','avatar']);
                     }])
                     ->where($where)
                     ->order($sort, $order)
@@ -282,13 +282,24 @@ class Custominfotabs extends Backend
             }
 
 
-            foreach ($list as $row) {
+//            foreach ($list as $row) {
+//
+//                $row->getRelation('platform')->visible(['name']);
+//                $row->getRelation('backoffice')->visible(['nickname','avatar']);
+//                $row->getRelation('admin')->visible(['nickname','avatar']);
+//            }
 
-                $row->getRelation('platform')->visible(['name']);
-                $row->getRelation('backoffice')->visible(['nickname','avatar']);
-                $row->getRelation('admin')->visible(['nickname','avatar']);
-            }
             $list = collection($list)->toArray();
+
+            foreach ($list as $k=>$v){
+               $department = Db::name('auth_group_access')
+                ->alias('a')
+                ->join('auth_group b','a.group_id = b.id')
+                ->where('a.uid',$v['admin']['id'])
+               ->value('b.name');
+               $list[$k]['admin']['department'] = $department;
+            }
+
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
