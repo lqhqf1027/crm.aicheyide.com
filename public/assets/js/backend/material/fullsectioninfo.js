@@ -61,7 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: __('ID')},
                             {field: 'mortgageregistration.archival_coding', title: __('档案编码')},
-                            {field: 'admin.nickname', title: __('部门-销售员')},
+                            {field: 'admin.nickname', title: __('部门-销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'mortgageregistration.signdate', title: __('签订日期')},
                             {field: 'username', title: __('Username'), formatter: Controller.api.formatter.inspection},
                             {field: 'id_card', title: __('身份证号')},
@@ -166,7 +166,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'carnewinventory.licensenumber', title: __('车牌号')},
                             {field: 'carnewinventory.frame_number', title: __('车架号')},
                             {field: 'carnewinventory.household', title: __('所属分公司')},
-                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {
                                 field: 'registryregistration.id_card',
                                 title: __('身份证复印件'),
@@ -491,7 +491,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
 
 
-                }
+                },
+                sales:function (value, row, index) {
+                    // console.log(row);
+
+                    return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
+                },
             }
         }
 

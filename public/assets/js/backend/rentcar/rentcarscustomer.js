@@ -237,12 +237,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
 
                 },
-                sales: function (value, row, index) {
-                    if (!value) {
-                        return '-';
-                    }
+                sales:function (value, row, index) {
+                    // console.log(row);
 
-                    return row.admin.department + ' -- ' + value;
+                    return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
                 operate: function (value, row, index) {
                     var table = this.table;
@@ -316,6 +314,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('退车'), $(this).data() || {});
                     },
                     'click .btn-rentalDetails': function (e, value, row, index) {
+                        return;
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');

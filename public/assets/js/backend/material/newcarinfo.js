@@ -61,7 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: __('ID'), operate: false},
                             {field: 'mortgageregistration.archival_coding', title: __('档案编码')},
-                            {field: 'sales.nickname', title: __('部门-销售员'), operate: false},
+                            {field: 'sales.nickname', title: __('部门-销售员'), operate: false,formatter:Controller.api.formatter.sales},
                             {
                                 field: 'createtime',
                                 title: __('签订日期'),
@@ -196,7 +196,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
                             {field: 'newinventory.household', title: __('所属分公司')},
-                            {field: 'sales.nickname', title: __('销售员')},
+                            {field: 'sales.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {
                                 field: 'registryregistration.id_card',
                                 title: __('身份证复印件'),
@@ -452,7 +452,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+                sales:function (value, row, index) {
+                    // console.log(row);
 
+                    return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
+                },
                 judge: function (value) {
 
 

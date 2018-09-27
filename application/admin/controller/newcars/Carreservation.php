@@ -56,7 +56,7 @@ class Carreservation extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['id','avatar','nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -73,7 +73,7 @@ class Carreservation extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['id','avatar','nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -90,7 +90,7 @@ class Carreservation extends Backend
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname']);
+                $row->getRelation('admin')->visible(['id','avatar','nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['newinventory']);
@@ -99,7 +99,14 @@ class Carreservation extends Backend
 
 
             $list = collection($list)->toArray();
-
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
             $result = array('total' => $total, "rows" => $list);
             return json($result);
         }
@@ -125,7 +132,7 @@ class Carreservation extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['id','avatar','nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -143,7 +150,7 @@ class Carreservation extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['id','avatar','nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -161,7 +168,7 @@ class Carreservation extends Backend
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname']);
+                $row->getRelation('admin')->visible(['id','avatar','nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['newinventory']);
@@ -170,7 +177,14 @@ class Carreservation extends Backend
 
 
             $list = collection($list)->toArray();
-
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
             $result = array('total' => $total, "rows" => $list);
             return json($result);
         }

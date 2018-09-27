@@ -177,7 +177,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'secondcarrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
                             {field: 'secondcarrentalmodelsinfo.vin', title: __('车架号')},
                             {field: 'secondcarrentalmodelsinfo.companyaccount', title: __('所属分公司')},
-                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {
                                 field: 'registryregistration.id_card',
                                 title: __('身份证复印件'),
@@ -450,6 +450,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var html = '<span class="text-' + color + '"> ' + __(res) + '</span>';
 
                     return html;
+                },
+                sales:function (value, row, index) {
+                    // console.log(row);
+
+                    return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
                 transfer: function (value, row, index) {
                     if (value == 1) {

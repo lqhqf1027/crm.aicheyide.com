@@ -56,8 +56,8 @@ class Newcarinfo extends Backend
         if ($this->request->isAjax()) {
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('newinventory.frame_number', true);
             $total = $this->model
-                ->with(['sales' => function ($query) {
-                    $query->withField('nickname');
+                ->with(['admin' => function ($query) {
+                    $query->withField('nickname,id,avatar');
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -78,8 +78,8 @@ class Newcarinfo extends Backend
                 ->count();
 
             $list = $this->model
-                ->with(['sales' => function ($query) {
-                    $query->withField('nickname');
+                ->with(['admin' => function ($query) {
+                    $query->withField('nickname,id,avatar');
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -108,7 +108,14 @@ class Newcarinfo extends Backend
                 $list[$k]['used_car'] = $used;
             }
             $list = collection($list)->toArray();
-
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
 
             $result = array("total" => $total, "rows" => $list);
 
@@ -133,7 +140,7 @@ class Newcarinfo extends Backend
         if ($this->request->isAjax()) {
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
-                ->with(['sales' => function ($query) {
+                ->with(['admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber,frame_number');
@@ -153,8 +160,8 @@ class Newcarinfo extends Backend
                 ->count();
 
             $list = $this->model
-                ->with(['sales' => function ($query) {
-                    $query->withField('nickname');
+                ->with(['admin' => function ($query) {
+                    $query->withField(['nickname','id','avatar']);
                 }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber,frame_number');
                 }, 'planacar' => function ($query) {
@@ -172,6 +179,15 @@ class Newcarinfo extends Backend
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
+
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
 
             $result = array("total" => $total, "rows" => $list);
 
