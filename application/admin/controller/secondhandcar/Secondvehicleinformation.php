@@ -32,11 +32,6 @@ class Secondvehicleinformation extends Backend
         $this->view->assign("shelfismenuList", $this->model->getShelfismenuList());
     }
 
-    /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
 
 
     /**
@@ -78,7 +73,13 @@ class Secondvehicleinformation extends Backend
         return $this->view->fetch();
     }
 
-    //确认提车
+
+
+    /**确认提车
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function takecar()
     {
         if ($this->request->isAjax()) {
@@ -233,6 +234,12 @@ class Secondvehicleinformation extends Backend
         return $this->view->fetch();
     }
 
+    /**车型对应车辆
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getInfo()
     {
 

@@ -4,6 +4,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
     });
 
+    /**
+     * 二手车车辆信息
+     * @type {{index: index, add: add, edit: edit, api: {bindevent: bindevent, events: {operate: {"click .btn-editone": click .btn-editone, "click .btn-delone": click .btn-delone, "click .btn-takecar": click .btn-takecar}}, formatter: {operate: (function(*=, *=, *=): *), toggle: toggle}}}}
+     */
     var Controller = {
         index: function () {
             // 初始化表格参数配置
@@ -329,25 +333,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                     
                 }
-                // status: function (value, row, index) {
 
-                //     var colorArr = {relation: 'info', intention: 'success', nointention: 'danger'};
-                //     //如果字段列有定义custom
-                //     if (typeof this.custom !== 'undefined') {
-                //         colorArr = $.extend(colorArr, this.custom);
-                //     }
-                //     value = value === null ? '' : value.toString();
-
-                //     var color = value && typeof colorArr[value] !== 'undefined' ? colorArr[value] : 'primary';
-
-                //     var newValue = value.charAt(0).toUpperCase() + value.slice(1);
-                //     //渲染状态
-                //     var html = '<span class="text-' + color + '"><i class="fa fa-circle"></i> ' + __(newValue) + '</span>';
-                //     // if (this.operate != false) {
-                //     //     html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
-                //     // }
-                //     return html;
-                // },
             }
         }
     };

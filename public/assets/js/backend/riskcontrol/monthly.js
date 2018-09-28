@@ -468,6 +468,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
 
             },
+            /**
+             * 得到选中行信息
+             * @param table
+             * @returns {*}
+             */
             selectIdsRow: function (table) {
                 var options = table.bootstrapTable('getOptions');
                 if (options.templateView) {

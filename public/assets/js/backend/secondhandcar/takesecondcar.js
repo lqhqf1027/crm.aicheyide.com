@@ -31,6 +31,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 进件列表---待车管确认
+             */
             secondcar_waitconfirm: function () {
                 // 表格1
                 var secondcarWaitconfirm = $("#secondcarWaitconfirm");
@@ -179,6 +182,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
+                    /**
+                     * 确认提车
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondtakecar': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();

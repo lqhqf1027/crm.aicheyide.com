@@ -32,7 +32,6 @@ class Plantabs extends Backend
      */
     public function index()
     {
-//        pr($this->getSales());die();
         $this->loadlang('plan/planacar');
         $this->loadlang('plan/planusedcar');
         $this->loadlang('plan/planfull');
@@ -248,7 +247,14 @@ class Plantabs extends Backend
         return ['yes' => '有', 'no' => '无'];
     }
 
-    //得到销售员信息
+
+
+    /**得到销售员信息
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getSales()
     {
         $sales = Db::name("admin")
@@ -256,7 +262,6 @@ class Plantabs extends Backend
             ->field("id,nickname,rule_message")
             ->select();
 
-//        pr($sales);
 
         $arr = array(['id'=>1,'name'=>'销售1部','message'=>array()],['id'=>2,'name'=>'销售2部','message'=>array()],['id'=>3,'name'=>'销售3部','message'=>array()]);
 
@@ -276,7 +281,14 @@ class Plantabs extends Backend
 
     }
 
-    //得到销售方案类别信息
+
+
+    /**得到销售方案类别信息
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getCategory()
     {
         $res = Db::name("scheme_category")->select();
@@ -449,6 +461,12 @@ class Plantabs extends Backend
     }
 
 
+    /**车型对应车辆
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getInfo()
     {
 
@@ -486,9 +504,7 @@ class Plantabs extends Backend
 
         $this->model = model("PlanAcar");
         $financial = Db::name("financial_platform")->where('status', 'normal')->select();
-//        pr($this->getSales());
-//        pr($this->getInfo());
-//        die();
+
         $this->view->assign([
             'sales' => $this->getSales(),
             'category' => $this->getCategory(),
@@ -498,7 +514,6 @@ class Plantabs extends Backend
         ]);
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-//            pr($params);die;
             if (empty($params['working_insurance'])) {
                 $params['working_insurance'] = "no";
             }

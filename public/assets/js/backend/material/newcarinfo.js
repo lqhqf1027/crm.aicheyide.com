@@ -29,7 +29,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
         table: {
-
+            /**
+             * 新车信息登记
+             */
             new_customer: function () {
                 // 表格1
                 var newCustomer = $("#newCustomer");
@@ -160,6 +162,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 新车资料入库
+             */
             registry_registration: function () {
                 // 表格2
                 var registryRegistration = $("#registryRegistration");
@@ -428,6 +433,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
+                    /**
+                     * 详情
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-detail': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -457,6 +469,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
+                /**
+                 * 返回√和x
+                 * @param value
+                 * @returns {string}
+                 */
                 judge: function (value) {
 
 
@@ -481,6 +498,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 },
 
+                /**
+                 * 判断年检
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {*}
+                 */
                 inspection: function (value, row, index) {
 
                     var license_status = -1;

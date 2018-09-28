@@ -141,7 +141,7 @@ class Newcarinfo extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField('nickname,id,avatar');
                 }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber,frame_number');
                 }, 'planacar' => function ($query) {
@@ -557,7 +557,9 @@ class Newcarinfo extends Backend
         return ['yes' => '有', 'no' => '无'];
     }
 
-
+    /**
+     * 检查年检
+     */
     public function check_year()
     {
         if ($this->request->isAjax()) {

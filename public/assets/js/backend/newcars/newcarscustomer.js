@@ -68,8 +68,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
-                        // edit_url: 'order/salesorder/edit',
-                        // del_url: 'order/salesorder/del',
                         multi_url: 'order/salesorder/multi',
                         table: 'sales_order',
                     },
@@ -336,7 +334,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
-                    //新车提交销售，让销售通知客户进行提车
+
+                    /**
+                     * 新车提交销售，让销售通知客户进行提车
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-submit_newcustomer': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -382,7 +387,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //确认提车
+
+                    /**
+                     * 确认提车
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-sendcar': function (e, value, row, index) {
 
                         e.stopPropagation();

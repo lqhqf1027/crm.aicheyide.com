@@ -52,7 +52,7 @@ class Fullsectioninfo extends Backend
                     }, 'carnewinventory' => function ($query) {
                         $query->withField('carnumber,reservecar,licensenumber,presentationcondition,frame_number,engine_number,household,4s_shop');
                     }, 'admin' => function ($query) {
-                        $query->withField('nickname');
+                        $query->withField(['nickname','id','avatar']);
                     }])
                 ->where(function ($query){
                     $query->where('review_the_data','for_the_car');
@@ -69,7 +69,7 @@ class Fullsectioninfo extends Backend
                     }, 'carnewinventory' => function ($query) {
                         $query->withField('carnumber,reservecar,licensenumber,presentationcondition,frame_number,engine_number,household,4s_shop');
                     }, 'admin' => function ($query) {
-                        $query->withField('nickname');
+                        $query->withField(['nickname','id','avatar']);
                     }])
                 ->where(function ($query){
                     $query->where('review_the_data','for_the_car');
@@ -94,7 +94,14 @@ class Fullsectioninfo extends Backend
 
 
             $list = collection($list)->toArray();
-
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
 
             $result = array("total" => $total, "rows" => $list);
 
@@ -334,6 +341,9 @@ class Fullsectioninfo extends Backend
         return $list;
     }
 
+    /**
+     * 检查年检
+     */
     public function check_year()
     {
         if ($this->request->isAjax()) {
@@ -358,7 +368,12 @@ class Fullsectioninfo extends Backend
         }
     }
 
-    //资料入库登记表
+
+
+    /**资料入库登记表
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function data_warehousing()
     {
         //设置过滤方法
@@ -375,7 +390,7 @@ class Fullsectioninfo extends Backend
                 }, 'carnewinventory' => function ($query) {
                     $query->withField('licensenumber,frame_number,household');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['nickname','id','avatar']);
                 }, 'registryregistration'])
                 ->where(function ($query){
                     $query->where('review_the_data','for_the_car');
@@ -390,7 +405,7 @@ class Fullsectioninfo extends Backend
                 }, 'carnewinventory' => function ($query) {
                     $query->withField('licensenumber,frame_number,household');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['nickname','id','avatar']);
                 }, 'registryregistration'])
                 ->where(function ($query){
                     $query->where('review_the_data','for_the_car');
@@ -401,6 +416,14 @@ class Fullsectioninfo extends Backend
                 ->select();
 
             $list = collection($list)->toArray();
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -408,6 +431,14 @@ class Fullsectioninfo extends Backend
         return $this->view->fetch();
     }
 
+    /**编辑
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function edit_dataware($ids = null)
     {
 

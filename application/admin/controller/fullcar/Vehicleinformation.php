@@ -31,12 +31,6 @@ class Vehicleinformation extends Backend
     }
 
     /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
-
-    /**
      * 查看
      */
     public function index()
@@ -44,24 +38,18 @@ class Vehicleinformation extends Backend
 
         $this->loadlang('order/fullparmentorder');
 
-//        $prepare_total = Db::name("full_parment_order")
-//            ->where("review_the_data", "is_reviewing_true")
-//            ->where("car_new_inventory_id", null)
-//            ->count();
-//
-//        $already_total = Db::name("full_parment_order")
-//            ->where("review_the_data", "for_the_car")
-//            ->where("car_new_inventory_id", "not null")
-//            ->count();
-//
-//        $this->view->assign([
-//            'prepare_total' => $prepare_total,
-//            'already_total' => $already_total
-//        ]);
         return $this->view->fetch();
     }
 
-    //待提车
+
+
+    /**待提车
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function prepare_lift_car()
     {
         $this->model = model('full_parment_order');
@@ -135,7 +123,15 @@ class Vehicleinformation extends Backend
 
     }
 
-    //已提车
+
+
+    /**已提车
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function already_lift_car()
     {
 
@@ -209,7 +205,17 @@ class Vehicleinformation extends Backend
 
     }
 
-    //选择库存车
+
+
+    /**选择库存车
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function choose_stock($ids = null)
     {
         if ($this->request->isPost()) {
@@ -402,7 +408,16 @@ class Vehicleinformation extends Backend
         return $this->view->fetch();
     }
 
-    //查看订单表和库存表所有信息
+
+
+    /**查看订单表和库存表所有信息
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function show_order_and_stock($ids = null)
     {
         $this->model = new \app\admin\model\FullParmentOrder;

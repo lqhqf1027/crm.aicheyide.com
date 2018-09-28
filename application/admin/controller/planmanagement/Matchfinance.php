@@ -40,7 +40,12 @@ class Matchfinance extends Backend
         return $this->view->fetch();
     }
 
-    //新车匹配
+
+
+    /**新车匹配
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function newprepare_match()
     {
         $this->model = model('SalesOrder');
@@ -105,7 +110,12 @@ class Matchfinance extends Backend
         return $this->view->fetch();
     }
 
-    //二手车匹配
+
+
+    /**二手车匹配
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function secondprepare_match()
     {
         $this->model = model('SecondSalesOrder');
@@ -171,8 +181,7 @@ class Matchfinance extends Backend
     public function newedit($ids = NULL)
     {
         $row = Db::name('financial_platform')->select();
-        // pr($row);
-        // die;
+
         $this->view->assign('row', $row);
 
         if($this->request->isAjax()){
@@ -293,123 +302,17 @@ class Matchfinance extends Backend
         return $this->view->fetch('secondedit');
     }
 
-    //新车批量匹配金融
-    // public function newbatch()
-    // {
-    //     if($this->request->isAjax()){
-    //         $ids = input("id");
-
-    //         $text = input("text");
-
-    //         $ids = json_decode($ids,true);
-
-    //         $res = Db::name("sales_order")
-    //         ->where("id",'in',$ids)
-    //         ->update([
-    //             'financial_name'=>$text,
-    //             'review_the_data'=>'is_reviewing_true'
-    //         ]);
-
-    //         if($res){
-
-    //             $channel = "demo-newcar_control";
-    //             $content =  "金融已经匹配，请尽快进行风控审核处理";
-    //             goeary_push($channel, $content);
-
-    //             $data = Db::name("sales_order")->where('id', $ids)->find();
-    //             //车型
-    //             $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
-    //             //销售员
-    //             $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
-    //             //客户姓名
-    //             $username= $data['username'];
-
-    //             $data = newcontrol_inform($models_name,$admin_name,$username);
-    //             // var_dump($data);
-    //             // die;
-    //             $email = new Email;
-    //             // $receiver = "haoqifei@cdjycra.club";
-    //             $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
-    //             $result_s = $email
-    //                 ->to($receiver)
-    //                 ->subject($data['subject'])
-    //                 ->message($data['message'])
-    //                 ->send();
-    //             if($result_s){
-    //                 $this->success('','','success');
-    //             }
-    //             else {
-    //                 $this->error('邮箱发送失败');
-    //             }
-
-    //         }else{
-    //             $this->error();
-    //         }
 
 
-    //     }
-
-    // }
-
-    //二手车批量匹配金融
-    // public function secondbatch()
-    // {
-    //     if($this->request->isAjax()){
-    //         $ids = input("id");
-
-    //         $text = input("text");
-
-    //         $ids = json_decode($ids,true);
-
-    //         $res = Db::name("second_sales_order")
-    //         ->where("id",'in',$ids)
-    //         ->update([
-    //             'financial_name'=>$text,
-    //             'review_the_data'=>'is_reviewing_control'
-    //         ]);
-
-    //         if($res){
-
-    //             $channel = "demo-second_control";
-    //             $content =  "金融已经匹配，请尽快进行风控审核处理";
-    //             goeary_push($channel, $content);
-
-    //             $data = Db::name("second_sales_order")->where('id', $ids)->find();
-    //             //车型
-    //             $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
-    //             //销售员
-    //             $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
-    //             //客户姓名
-    //             $username= $data['username'];
-
-    //             $data = secondcontrol_inform($models_name,$admin_name,$username);
-    //             // var_dump($data);
-    //             // die;
-    //             $email = new Email;
-    //             // $receiver = "haoqifei@cdjycra.club";
-    //             $receiver = DB::name('admin')->where('rule_message', "message7")->value('email');
-    //             $result_s = $email
-    //                 ->to($receiver)
-    //                 ->subject($data['subject'])
-    //                 ->message($data['message'])
-    //                 ->send();
-    //             if($result_s){
-    //                 $this->success('','','success');
-    //             }
-    //             else {
-    //                 $this->error('邮箱发送失败');
-    //             }
-
-    //         }else{
-    //             $this->error();
-    //         }
 
 
-    //     }
-
-    // }
-
-    //添加销售员名称
+    /**添加销售员名称
+     * @param array $data
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function add_sales($data = array())
     {
         foreach ($data as $k => $v) {
@@ -425,6 +328,12 @@ class Matchfinance extends Backend
         return $data;
     }
 
+    /**新车详情
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\exception\DbException
+     */
     public function new_details($ids = null)
     {
         $this->model = model('SalesOrder');
@@ -518,6 +427,12 @@ class Matchfinance extends Backend
         return $this->view->fetch();
     }
 
+    /**二手车详情
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\exception\DbException
+     */
     public function used_details($ids = null)
     {
         $this->model = new \app\admin\model\SecondSalesOrder;

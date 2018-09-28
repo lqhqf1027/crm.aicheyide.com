@@ -32,13 +32,6 @@ class Depositmanage extends Backend
     }
 
     /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
-
-
-    /**
      * 查看
      */
     public function index()
@@ -658,7 +651,13 @@ class Depositmanage extends Backend
         return ['1' => '已打款', '2' => '未打款'];
     }
 
-    //当前登录
+
+    /**当前登录
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function current_login()
     {
         $this->model = model("Admin");

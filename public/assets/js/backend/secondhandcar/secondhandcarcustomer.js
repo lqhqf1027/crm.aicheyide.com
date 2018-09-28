@@ -1,5 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    /**
+     * 二手车客户信息
+     * @type {{index: index, add: add, edit: edit, api: {bindevent: bindevent, formatter: {datetime: datetime}}}}
+     */
     var Controller = {
         index: function () {
             // 初始化表格参数配置
@@ -26,12 +30,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'order_no', title: __('订单编号')}, 
                         {field: 'createtime', title: __('订车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
                         {field: 'delivery_datetime', title: __('提车时间'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
-                        // {field: 'models.name', title: __('二手车型号')},
-                        // {field: 'admin.nickname', title: __('销售员')},
-                        //
-                        // {field: 'username', title: __('客户姓名')},
-                        // {field: 'phone', title: __('手机号')},
-                        // {field: 'id_card', title: __('身份证号')},
+
                         
                         {field: 'genderdata', title: __('性别'), searchList: {"male":__('男'),"female":__('女')}, formatter: Table.api.formatter.normal},
                         {field: 'plansecond.newpayment', title: __('新首付（元）'),operate:false },
@@ -44,7 +43,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'operate', title: __('Operate'), table: table, buttons: [
                             {name: 'secondDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-secondDetails', 
                                 url: 'secondhandcar/secondhandcarcustomer/secondDetails', callback:function(data){
-                                    console.log(data)
                                 }
                             } 
                             ],
@@ -64,8 +62,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.bindevent(table);
 
             table.on('load-success.bs.table', function (e, data) {
-                // console.log(data);
-               
+
                 $(".btn-secondDetails").data("area", ["95%", "95%"]);
             })
 

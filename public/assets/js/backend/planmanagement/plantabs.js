@@ -24,6 +24,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
         table: {
+            /**
+             * （以租代购）新车
+             */
             first: function () {
 
                 var table1 = $("#table1");
@@ -102,7 +105,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Table.api.bindevent(table1);
             },
 
-
+            /**
+             * 全款车
+             */
             planfull: function () {
                 // 表格3
                 var table3 = $("#table3");
@@ -150,6 +155,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             Controller.api.bindevent();
         },
+        /**
+         * 合并表格
+         * @param arr
+         * @param obj
+         */
         merge: function (arr, obj) {
             var hash = [];
             var data_arr = [];
@@ -249,6 +259,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+                /**
+                 * 是否销售
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
                 toggle: function (value, row, index) {
 
                     var color = typeof this.color !== 'undefined' ? this.color : 'success';

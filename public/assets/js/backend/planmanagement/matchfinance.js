@@ -45,6 +45,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 新车匹配
+             */
             newprepare_match: function () {
                 // 新车匹配金融
                 var newprepareMatch = $("#newprepareMatch");
@@ -197,6 +200,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                   })
 
             },
+            /**
+             * 二手车匹配
+             */
             secondprepare_match: function () {
 
                 //二手车匹配金融
@@ -414,13 +420,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Form.api.bindevent($("form[role=form]"));
 
 
-                // //Bootstrap-table的父元素,包含table,toolbar,pagnation
-                // var parenttable = table.closest('.bootstrap-table');
-                // //Bootstrap-table配置
-                // var options = table.bootstrapTable('getOptions');
-                // //Bootstrap操作区
-                // var toolbar = $(options.toolbar, parenttable);
-
 
 
             },
@@ -439,7 +438,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
-                    //新车匹配金融
+
+                    /**
+                     * 新车匹配金融
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-neweditone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -450,6 +456,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.newedit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('新车匹配金融'), $(this).data() || {});
                     },
+                    /**
+                     * 二手车匹配金融
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondeditone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -460,7 +473,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.secondedit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('二手车匹配金融'), $(this).data() || {});
                     },
-
+                    /**
+                     * 新车匹配金融
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-new': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -471,7 +490,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'planmanagement/Matchfinance/new_details';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('二手车匹配金融'), $(this).data() || {});
                     },
-
+                    /**
+                     * 二手车匹配金融
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-used': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();

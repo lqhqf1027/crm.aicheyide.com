@@ -71,7 +71,12 @@ class Creditreview extends Backend
     }
 
 
-    //展示需要审核的新车销售单
+
+
+    /**展示需要审核的新车销售单
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function newcarAudit()
     {
         //设置过滤方法
@@ -142,7 +147,12 @@ class Creditreview extends Backend
     }
 
 
-    //展示需要审核的租车单
+
+
+    /**展示需要审核的租车单
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function rentalcarAudit()
     {
         $this->model = model('RentalOrder');
@@ -205,7 +215,15 @@ class Creditreview extends Backend
     }
 
 
-    //展示需要审核的二手车单
+
+
+    /**展示需要审核的二手车单
+     * @return string|\think\response\Json
+     * @throws DataNotFoundException
+     * @throws \think\Exception
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function secondhandcarAudit()
 
     {
@@ -367,7 +385,11 @@ class Creditreview extends Backend
 
     }
 
-    //新车单----审核通过
+
+
+    /**
+     * 新车单----审核通过
+     */
     public function newpass()
     {
         if ($this->request->isAjax()) {
@@ -417,7 +439,11 @@ class Creditreview extends Backend
         }
     }
 
-    //通知销售---签订金融合同
+
+
+    /**
+     * 通知销售---签订金融合同
+     */
     public function newsales()
     {
         $this->model = model('SalesOrder');
@@ -466,7 +492,11 @@ class Creditreview extends Backend
         }
     }
 
-    //通知车管---录入库存
+
+
+    /**
+     * 通知车管---录入库存
+     */
     public function newtube()
     {
         $this->model = model('SalesOrder');
@@ -515,7 +545,11 @@ class Creditreview extends Backend
         }
     }
 
-    //通知车管---录入库存---其他金融
+    //
+
+    /**
+     * 通知车管---录入库存---其他金融
+     */
     public function newtubefinance()
     {
         $this->model = model('SalesOrder');
@@ -564,7 +598,17 @@ class Creditreview extends Backend
         }
     }
 
-    //选择库存车
+
+
+    /**选择库存车
+     * @param null $ids
+     * @return string
+     * @throws DataNotFoundException
+     * @throws \think\Exception
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function choosestock($ids = null)
     {
 
@@ -738,7 +782,13 @@ class Creditreview extends Backend
         return $this->view->fetch();
     }
 
-    //新车单----需提供保证金
+
+
+    /**新车单----需提供保证金
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function newdata()
     {
         if ($this->request->isAjax()) {
@@ -800,7 +850,13 @@ class Creditreview extends Backend
     }
 
 
-    //新车单----审核不通过
+
+
+    /**新车单----审核不通过
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function newnopass()
     {
         if ($this->request->isAjax()) {
@@ -901,7 +957,13 @@ class Creditreview extends Backend
 
     }
 
-    //租车单----审核通过
+
+
+    /**租车单----审核通过
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function rentalpass()
     {
         if ($this->request->isAjax()) {
@@ -962,7 +1024,13 @@ class Creditreview extends Backend
         }
     }
 
-    //租车单----审核不通过
+
+
+    /**租车单----审核不通过
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function rentalnopass()
     {
         if ($this->request->isAjax()) {
@@ -1081,7 +1149,11 @@ class Creditreview extends Backend
 
     }
 
-    //二手车单----审核通过
+
+
+    /**
+     * 二手车单----审核通过
+     */
     public function secondpass()
     {
         if ($this->request->isAjax()) {
@@ -1109,7 +1181,17 @@ class Creditreview extends Backend
         }
     }
 
-    //二手车单-----选择库存车
+
+
+    /**二手车单-----选择库存车
+     * @param null $ids
+     * @return string
+     * @throws DataNotFoundException
+     * @throws \think\Exception
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function secondchoosestock($ids = null)
     {
 
@@ -1239,7 +1321,13 @@ class Creditreview extends Backend
         return $this->view->fetch();
     }
 
-    //二手车单----需提供担保人
+
+
+    /**二手车单----需提供担保人
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function seconddata()
     {
         if ($this->request->isAjax()) {
@@ -1298,7 +1386,13 @@ class Creditreview extends Backend
         }
     }
 
-    //二手车单----审核不通过
+
+
+    /**二手车单----审核不通过
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function secondnopass()
     {
         if ($this->request->isAjax()) {
@@ -1608,7 +1702,7 @@ class Creditreview extends Backend
         return $this->view->fetch();
     }
 
-    public  function toViewBigData($ids,$table)
+    public function toViewBigData($ids,$table)
     {
 
         $row = Db::name($table)->find(function ($query) use ($ids) {

@@ -942,7 +942,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
 
                     },
 
-
+                    /**
+                     * 查看跟进结果
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-showFeedback': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -954,7 +960,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看跟进信息'), $(this).data() || {});
                     },
                     /***
-                     *
+                     *加入放弃名单
                      * @param e
                      * @param value
                      * @param row
@@ -1009,6 +1015,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
 
                     },
 
+                    /**
+                     * 新增销售单
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-newSalesList': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -1073,7 +1086,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
 
     };
 
-    //批量放弃
+
+    /**
+     * 批量放弃
+     * @param clickobj
+     * @param table
+     * @param url
+     */
     function batch_giveup(clickobj, table, url) {
         $(document).on("click", clickobj, function (e, value, row, index) {
             var ids = Table.api.selectedids(table);
@@ -1127,7 +1146,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
         });
     }
 
-    //批量反馈
+
+    /**
+     * 批量反馈
+     * @param clickobj
+     * @param table
+     */
     function batch_feedback(clickobj, table) {
         $(document).on("click", clickobj, function (e, value, row, index) {
             //获取ids对象
@@ -1145,7 +1169,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
         })
     }
 
-    //跟进跟进时间排序
+
+    /**
+     * 跟进跟进时间排序
+     * @param property
+     * @returns {function(*, *): number}
+     */
     function compare(property){
         return function(a,b){
             var value1 = a[property];

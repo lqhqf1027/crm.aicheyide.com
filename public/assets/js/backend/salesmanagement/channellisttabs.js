@@ -1,5 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    /**
+     * 推荐人列表
+     * @type {{index: index, add: add, edit: edit, api: {bindevent: bindevent}}}
+     */
     var Controller = {
         index: function () {
             // 初始化表格参数配置

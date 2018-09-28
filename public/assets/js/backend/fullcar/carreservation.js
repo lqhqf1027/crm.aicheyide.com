@@ -33,6 +33,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 全款待确认
+             */
             fullcar_waitconfirm: function () {
                 // 全款待确认
                 var fullcarWaitconfirm = $("#fullcarWaitconfirm");
@@ -111,6 +114,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
             },
+            /**
+             * 全款已确认
+             */
             fullcar_confirm: function () {
 
                 // 全款确认
@@ -228,6 +234,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
+                    /**
+                     * 确认提车
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-fullcarWaitconfirm': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -265,8 +278,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
                                 )
 
-                                // Table.api.multi("del", row[options.pk], table, that);
-                                // Layer.close(index);
                             }
                         );
                     }

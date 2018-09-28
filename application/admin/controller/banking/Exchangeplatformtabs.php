@@ -20,7 +20,6 @@ class Exchangeplatformtabs extends Backend
     protected $searchFields = 'username,licensenumber,frame_number';
     protected $noNeedRight = ['index', 'new_car', 'yue_da_car', 'other_car', 'nanchong_driver', 'edit', 'change_platform', 'batch_change_platform', 'details', 'loan'];
 
-//    protected $multiFields = 'batch';
     public function _initialize()
     {
 
@@ -52,20 +51,6 @@ class Exchangeplatformtabs extends Backend
                 ->setField('mortgage_id',$last_id);
             }
         }
-//
-//        $this->loadlang('banking/exchangeplatformtabs');
-//        $new_car = $this->getCar("new_car");
-//        $yue_da_car = $this->getCar("yueda_car");
-//        $other_car = $this->getCar("other_car");
-//        $nan_chong = Db::name("nanchong_driver")->count();
-//
-//        $this->view->assign([
-//            'new_total' => $new_car[0],
-//            'yue_total' => $yue_da_car[0],
-//            'other_total' => $other_car[0],
-//            'nan_chong' => $nan_chong
-//        ]);
-
 
         return $this->view->fetch();
     }
@@ -98,7 +83,6 @@ class Exchangeplatformtabs extends Backend
                         'mortgage.mortgage_type'=> 'new_car'
                     ]);
                 })
-//                ->whereOr('mortgage_type', null)
                 ->where($where)
                 ->order("mortgage.lending_date desc")
                 ->order($sort, $order)
@@ -427,7 +411,6 @@ class Exchangeplatformtabs extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
-//              pr($params);die();
 
                 try {
 

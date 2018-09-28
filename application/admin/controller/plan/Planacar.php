@@ -28,11 +28,7 @@ class Planacar extends Backend
         $this->view->assign("ismenuList", $this->model->getIsmenuList());
     }
 
-    /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
+
 
 
     /**
@@ -190,7 +186,14 @@ class Planacar extends Backend
         return ['yes'=>'有','no'=>'无'];
     }
 
-//得到销售员信息
+
+
+    /**得到销售员信息
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getSales()
     {
         $sales = Db::name("admin")
@@ -202,7 +205,14 @@ class Planacar extends Backend
 
     }
 
-    //得到销售方案类别信息
+
+
+    /**得到销售方案类别信息
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getCategory()
     {
        $res = Db::name("scheme_category")->select();
@@ -210,7 +220,12 @@ class Planacar extends Backend
        return $res;
     }
 
-
+    /**车型对应车辆
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getInfo()
     {
 

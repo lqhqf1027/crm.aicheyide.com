@@ -23,15 +23,18 @@ class Custominfotabs extends Backend
     protected $dataLimit = false; //表示不启用，显示所有数据
     static protected $token = null;
 
-//    protected $multiFields = 'batch';
     public function _initialize()
     {
         parent::_initialize();
-        // self::$token = $this->getAccessToken();
     }
 
 
-    //得到可行管理员ID
+
+
+    /**
+     * 得到可行管理员ID
+     * @return array
+     */
     public function getUserId()
     {
         $this->model = model("Admin");
@@ -74,7 +77,13 @@ class Custominfotabs extends Backend
         return $this->view->fetch();
     }
 
-    //新客户
+
+
+    /**
+     * 新客户
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function newCustomer()
     {
         $canUseId = $this->getUserId();
@@ -160,7 +169,12 @@ class Custominfotabs extends Backend
         return $this->view->fetch('index');
     }
 
-    //已分配给销售的用户
+
+    /**
+     * 已分配给销售的用户
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function assignedCustomers()
     {
         $canUseId = $this->getUserId();
@@ -308,9 +322,15 @@ class Custominfotabs extends Backend
         return $this->view->fetch('index');
     }
 
-    //分配客户资源给销售
-    //单个分配
-    //销售  message8=>销售一部，message9=>销售二部
+
+    /**单个分配客户给销售
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function admeasure($ids = NULL)
     {
         $this->model = model('CustomerResource');
@@ -410,9 +430,15 @@ class Custominfotabs extends Backend
     }
 
 
-    //分配客户资源给销售
-    //批量分配
-    //销售  message8=>销售一部，message9=>销售二部
+
+    /**批量分配
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function batch($ids = null)
     {
 
@@ -477,38 +503,15 @@ class Custominfotabs extends Backend
                 $query->where('id', 'in', $ids);
             });
             if ($result) {
-                //这里开始调用微信推送
-                //1、use  wechat/WechatMessage  这个类
-                //2、实例化并传参
-                //推送给内勤：温馨提示：你有新客户导入，请登陆系统查看。
-                //  $sendmessage = new WechatMessage(Config::get('wechat')['APPID'],Config::get('wechat')['APPSECRET'], $token,'oklZR1J5BGScztxioesdguVsuDoY','测试测试5555');#;实例化
-                //dump($sendmessage->sendMsgToAll());exit;
-                // $token = self::$token;
-                // $getAdminOpenid = adminModel::get(['id' => $params['id']])->toArray();
-                // $openid = $getAdminOpenid['openid'];
-                // // var_dump($openid);
-                // // die;
-                // $sendmessage = new WechatMessage(Config::get('wechat')['APPID'], Config::get('wechat')['APPSECRET'], $token, $openid, '温馨提示：你有新客户导入，请登陆系统查看。');#;实例化
 
-                // $msg = $sendmessage->sendMsgToAll();
-
-                // if ($msg['errcode'] == 0) {
-                    // $this->success('', '', $result);
-                // } else {
-                    // $this->error('消息推送失败');
-                // }
-                
                 $channel = "demo-internal";
                 $content =  "你有内勤给你分配的新客户，请注意查看";
                 goeary_push($channel, $content.'|'.$params['id']);
 
-                $data = sales_inform();
 
                 $data = sales_inform();
-                // var_dump($data);
-                // die;
+
                 $email = new Email;
-                // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $params['id'])->value('email');
                 $result_s = $email
                     ->to($receiver)
@@ -557,30 +560,6 @@ class Custominfotabs extends Backend
          }
     }
 
-    public function test1()
-    {
-        $arr = array(
-            'touser' => 'oklZR1J5BGScztxioesdguVsuDoY',
-            'template_id' => 'wndsjqki8_p4qyyvBsgMao1WB-5dh1gGBeYFwP5c_1w',
-            "topcolor" => "#FF0000",
-            'url' => '',
-            'data' => array(
-                'first' => '您好！您的订单已确认，即将安排送货人员配送。',
-                'keyword1' => array('value'=>'B0412578452658'),
-                'keyword2' => array('value'=>'五粮液 54度'),
-                'keyword3' => array('value'=>'2瓶'),
-                'keyword4' =>array('value'=>'张伟') ,
-                'keyword5' =>array('value'=>'如皋德顺门大厅') ,
-                'remark' => array('value'=>'为了送货人员能及时联系您，请保持通讯设备畅通')
-            ),
-
-        );
-
-        $result = posts("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".self::$token,json_encode($arr));
-
-        pr($result);
-
-    }
 
 
 }

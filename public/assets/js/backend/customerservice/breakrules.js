@@ -43,6 +43,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         table:{
+            /**
+             * 待反馈
+             */
             prepare_feedback: function () {
                 var table = $("#prepareFeedback");
 
@@ -177,6 +180,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格绑定事件
                 Table.api.bindevent(table);
             },
+            /**
+             * 已反馈
+             */
             already_feedback: function () {
                 var alreadyFeedback = $("#alreadyFeedback");
 
@@ -235,13 +241,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     "2": __('未处理'),
 
                                 },},
-                            // {
-                            //     field: 'final_time',
-                            //     title: __('Final_time'),
-                            //     operate: false,
-                            //     addclass: 'datetimerange',
-                            //     formatter: Table.api.formatter.datetime
-                            // },
+
                             {
                                 field: 'customer_time',
                                 title: __('Customer_time'),
@@ -272,14 +272,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 addclass: 'datetimerange',
                                 formatter: Table.api.formatter.datetime
                             },
-                            // {
-                            //     field: 'operate',
-                            //     title: __('Operate'),
-                            //     table: alreadyFeedback,
-                            //     events: Controller.api.events.operate,
-                            //     formatter: Controller.api.formatter.operate,
-                            //
-                            // }
+
                         ]
                     ]
                 });
@@ -356,6 +349,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate:{
+                    /**
+                     * 编辑反馈
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-feedback': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();

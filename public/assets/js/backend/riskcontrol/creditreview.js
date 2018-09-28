@@ -28,6 +28,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
+        /**
+         * 大数据
+         */
         bigdata:function(){
             //欺诈评分图表
             
@@ -87,10 +90,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 newcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/newcarAudit',
                     extend: {
-                        //  add_url: 'order/salesorder/add',
-                        // edit_url: 'order/salesorder/edit',
-                        // del_url: 'order/salesorder/del',
-                        // multi_url: 'order/salesorder/multi',
+
                         table: 'sales_order',
                     },
                     toolbar: '#toolbar1',
@@ -706,11 +706,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 rentalcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/rentalcarAudit',
                     extend: {
-                    //     index_url: 'plan/planusedcar/index',
-                    //     add_url: 'plan/planusedcar/add',
-                    //     edit_url: 'plan/planusedcar/edit',
-                    //     del_url: 'plan/planusedcar/del',
-                    //     multi_url: 'plan/planusedcar/multi',
+
                         table: 'rental_order',
                     },
                     toolbar: '#toolbar2',
@@ -893,13 +889,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 secondhandcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/secondhandcarAudit',
                     extend: {
-                        // index_url: 'customer/customerresource/index',
-                        // add_url: 'customer/customerresource/add',
-                        // edit_url: 'customer/customerresource/edit',
-                        // del_url: 'customer/customerresource/del',
-                        // multi_url: 'customer/customerresource/multi',
-                        // distribution_url: 'promote/customertabs/distribution',
-                        // import_url: 'customer/customerresource/import',
+
                         table: 'second_sales_order',
                     },
                     toolbar: '#toolbar3',
@@ -1199,7 +1189,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
             },
             events: {
                 operate: {
-                    //审核新车单
+
+                    /**
+                     * 审核新车单
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-newauditResult': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1215,7 +1212,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             }
                         })
                     },
-                    //新车提交销售，通知客户签金融合同
+
+                    /**
+                     * 新车提交销售，通知客户签金融合同
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-submit_newsales': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1261,7 +1265,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         );
 
                     },
-                    //新车提交车管，通知进行录入库存
+
+                    /**
+                     * 新车提交车管，通知进行录入库存
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-submit_newtube': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1307,7 +1318,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         );
 
                     },
-                    //新车提交车管，通知进行录入库存---其他金融
+
+                    /**
+                     * 新车提交车管，通知进行录入库存---其他金融
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-submit_newtube_finance': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1353,7 +1371,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         );
 
                     },
-                    //选择库存车
+
+                    /**
+                     * 选择库存车
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-chooseStock': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1369,7 +1394,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             }
                         })
                     },
-                    //审核租车单
+
+                    /**
+                     * 审核租车单
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-rentalauditResult': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1386,7 +1418,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         })
                     },
 
-                    //审核二手车单
+
+                    /**
+                     * 审核二手车单
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondhandcarResult': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1402,7 +1441,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             }
                         })
                     },
-                    //选择库存车
+
+                    /**
+                     * 选择库存车
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondchooseStock': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -1418,7 +1464,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             }
                         })
                     },
-                    //查看大数据
+
+                    /**
+                     * 查看大数据
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-bigData': function (e, value, row, index) { 
                         e.stopPropagation();
                         e.preventDefault();
@@ -1501,6 +1554,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
     });
 
+    /**
+     * 提供担保人
+     */
     $('#newdata').click(function () {
         // alert(123);
         // return false;   
@@ -1540,6 +1596,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
     });
 
+    /**
+     * 不通过审核
+     */
     $('#newnopass').click(function () {
         // alert(123);
         // return false;   
@@ -1580,8 +1639,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
     });
 
 
-    //租车审核
-
+    /**
+     * 租车审核通过
+     */
     $('#rentalpass').click(function () {
         // alert(123);
         // return false;   
@@ -1619,6 +1679,9 @@ console.log(ret);
 
     });
 
+    /**
+     * 租车审核不通过
+     */
     $('#rentalnopass').click(function () {
         // alert(123);
         // return false;   
@@ -1659,8 +1722,9 @@ console.log(ret);
     });
 
 
-    //二手车审核
-
+    /**
+     * 二手车审核通过
+     */
     $('#secondpass').click(function () {
         // alert(123);
         // return false;   
@@ -1699,6 +1763,9 @@ console.log(ret);
 
     });
 
+    /**
+     * 二手车提供担保人
+     */
     $('#seconddata').click(function () {
         // alert(123);
         // return false;   
@@ -1738,6 +1805,9 @@ console.log(ret);
 
     });
 
+    /**
+     * 二手车审核不通过
+     */
     $('#secondnopass').click(function () {
         // alert(123);
         // return false;   

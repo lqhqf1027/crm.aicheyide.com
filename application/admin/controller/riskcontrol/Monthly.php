@@ -125,11 +125,7 @@ class Monthly extends Backend
             $list = [];
             $this->model
                 ->field($columns)
-//                ->field('id', 'monthly_card_number', 'monthly_name',
-//                    'monthly_phone_number', 'monthly_models', 'monthly_monney',
-//                    'monthly_data', 'monthly_failure_why', 'monthly_in_arrears_time',
-//                    'monthly_company','monthly_car_number','monthly_arrears_months','monthly_note','monthly_supplementary'
-//                )
+
                 ->where('monthly_status','has_been_sent')
                 ->where($where)
                 ->where($whereIds)

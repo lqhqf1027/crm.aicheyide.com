@@ -132,7 +132,14 @@ class Referee extends Backend
     }
 
 
-    //得到可行管理员ID
+
+
+    /**得到可行管理员ID
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getUserId()
     {
         $this->model = model("Admin");
@@ -163,7 +170,11 @@ class Referee extends Backend
         return $backArray;
     }
 
-    //根据内勤ID得到对应的销售信息
+
+    /**根据内勤ID得到对应的销售信息
+     * @param $user
+     * @return array
+     */
     public function getCanUse($user)
     {
 
