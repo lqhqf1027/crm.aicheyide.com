@@ -71,7 +71,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         table: {
-            //今日头条
+            /**
+             * 今日头条
+             */
             headline: function () {
 
                 var headlines = $("#headlines");
@@ -173,7 +175,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
-            //百度
+
+            /**
+             * 百度
+             */
             baidu: function () {
                 // 已分配的客户
                 var baidus = $("#baidus");
@@ -258,7 +263,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
-            //58同城
+
+            /**
+             * 58同城
+             */
             same_city: function () {
                 // 已分配的客户
                 var sameCity = $("#sameCity");
@@ -342,7 +350,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
-            //抖音
+
+            /**
+             * 抖音
+             */
             music: function () {
                 // 已分配的客户
                 var musics = $("#musics");
@@ -546,10 +557,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
 
                 } else {
-
-
-
-
                         for (var i in v) {
 
                             var level = "";
@@ -590,6 +597,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
+                    /**
+                     * 分配给内勤
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-newCustomer': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -704,60 +718,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     };
 
-    function f(table) {
 
-        //导出分配客户的信息
-        var submitForm = function (ids, layero) {
-            var options = table.bootstrapTable('getOptions');
-
-            var columns = [];
-            $.each(options.columns[0], function (i, j) {
-                if (j.field && !j.checkbox && j.visible && j.field != 'operate') {
-                    columns.push(j.field);
-                }
-            });
-            var search = options.queryParams({});
-            $("input[name=search]", layero).val(options.searchText);
-            $("input[name=ids]", layero).val(ids);
-            $("input[name=filter]", layero).val(search.filter);
-            $("input[name=op]", layero).val(search.op);
-            $("input[name=columns]", layero).val(columns.join(','));
-            $("form", layero).submit();
-        };
-
-        $(document).on("click", '.btn-export', function () {
-            var ids = Table.api.selectedids(table);
-            var page = table.bootstrapTable('getData');
-            var all = table.bootstrapTable('getOptions').totalRows;
-            Layer.confirm("请选择导出的选项<form action='" + Fast.api.fixurl("promote/customertabs/allocationexport") + "' method='post' target='_blank'><input type='hidden' name='ids' value='' /><input type='hidden' name='filter' ><input type='hidden' name='op'><input type='hidden' name='search'><input type='hidden' name='columns'></form>", {
-                title: '导出数据',
-                btn: ["选中项(" + ids.length + "条)", "本页(" + page.length + "条)", "全部(" + all + "条)"],
-                success: function (layero, index) {
-                    $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
-                }
-                , yes: function (index, layero) {
-                    submitForm(ids.join(","), layero);
-                    // return false;
-                }
-                ,
-                btn2: function (index, layero) {
-                    var ids = [];
-                    $.each(page, function (i, j) {
-                        ids.push(j.id);
-                    });
-                    submitForm(ids.join(","), layero);
-                    // return false;
-                }
-                ,
-                btn3: function (index, layero) {
-                    submitForm("all", layero);
-                    // return false;
-                }
-            })
-        });
-    }
-
-    //添加按钮
+    /**
+     * 添加按钮
+     * @param clickname
+     * @param table
+     * @param urls
+     */
     function add_data(clickname, table, urls) {
         $(document).on('click', clickname, function () {
             var ids = Table.api.selectedids(table);
@@ -769,7 +736,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         });
     }
 
-    // 批量分配
+
+    /**
+     * 批量分配
+     * @param clickname
+     * @param table
+     */
     function batch_share(clickname, table) {
         var num = 0;
         $(document).on("click", clickname, function () {

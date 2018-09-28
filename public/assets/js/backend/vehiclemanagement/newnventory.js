@@ -4,6 +4,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
     });
 
+    /**
+     * 车辆管理库存
+     * @type {{index: index, add: add, edit: edit, api: {bindevent: bindevent, events: {operate: {"click .btn-editone": click .btn-editone, "click .btn-delone": click .btn-delone}}, formatter: {operate: (function(*=, *=, *=): *)}}}}
+     */
     var Controller = {
         index: function () {
             // 初始化表格参数配置

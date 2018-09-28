@@ -33,6 +33,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 待提交给金融
+             */
             prepare_submit: function () {
                 // 表格1
                 var prepareSubmit = $("#prepareSubmit");
@@ -169,6 +172,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 已提交给金融
+             */
             already_submit: function () {
 
                 // 表格2

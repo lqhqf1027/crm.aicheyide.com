@@ -33,11 +33,6 @@ class Vehicleinformation extends Backend
         $this->view->assign("shelfismenuList", $this->model->getShelfismenuList());
     }
 
-    /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
 
 
     /**
@@ -89,7 +84,16 @@ class Vehicleinformation extends Backend
         return $this->view->fetch();
     }
 
-    //销售预定
+
+
+    /**销售预定
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function salesbook($ids = NULL)
     {
         $this->model = model('CarRentalModelsInfo');
@@ -153,7 +157,16 @@ class Vehicleinformation extends Backend
         return $this->view->fetch();
     }
 
-    //修改销售预定
+
+
+    /**修改销售预定
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function salesbookedit($ids = NULL)
     {
         $this->model = model('CarRentalModelsInfo');
@@ -222,7 +235,13 @@ class Vehicleinformation extends Backend
     }
 
 
-    //车管人员对租车请求的同意
+
+
+    /**车管人员对租车请求的同意
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function rentalrequest()
     {
         if ($this->request->isAjax()) {
@@ -279,7 +298,16 @@ class Vehicleinformation extends Backend
 
     }
 
-    // 打印提车单
+
+
+    /**打印提车单
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function carsingle($ids = NULL)
     {
 
@@ -322,7 +350,13 @@ class Vehicleinformation extends Backend
         return $this->view->fetch();
     }
 
-    //确认提车
+
+
+    /**确认提车
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function takecar()
     {
         if ($this->request->isAjax()) {
@@ -442,7 +476,6 @@ class Vehicleinformation extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
-//                pr($params);die();
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
                 }
@@ -470,6 +503,12 @@ class Vehicleinformation extends Backend
         return $this->view->fetch();
     }
 
+    /**车型对应车辆
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getInfo()
     {
 

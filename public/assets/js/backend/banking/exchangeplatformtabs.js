@@ -29,7 +29,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         change_platform: function () {
 
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
                 // console.log(data);
@@ -66,6 +65,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 新车
+             */
             new_car: function () {
                 // 表格1
                 var newCar = $("#newCar");
@@ -94,7 +96,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
                         edit_url: 'banking/exchangeplatformtabs/edit',
-                        // del_url: 'order/salesorder/del',
                         multi_url: 'order/salesorder/multi',
                         table: 'sales_order',
                     },
@@ -188,6 +189,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             },
+            /**
+             *悦达
+             */
             yue_da_car: function () {
                 // 表格2
                 var yueDaCar = $("#yueDaCar");
@@ -196,7 +200,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var arr = data.rows;
 
 
-                    // merge(arr, $("#yueDaCar"));
                     Controller.merge(arr, $("#yueDaCar"), $('#yue_da_car'))
 
                     $('#total-yueda').text(data.total);
@@ -309,6 +312,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             },
+            /**
+             * 其他
+             */
             other_car: function () {
                 // 表格3
                 var otherCar = $("#otherCar");
@@ -429,6 +435,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             },
 
+            /**
+             * 南充司机
+             */
             nanchong_driver: function () {
                 // 表格1
                 var nanchongDriver = $("#nanchongDriver");
@@ -538,6 +547,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         loan: function () {
             Controller.api.bindevent();
         },
+        /**
+         *  合并
+         * @param arr
+         * @param obj
+         * @param parentDom
+         */
         merge: function (arr, obj, parentDom) {
             var hash = [];
             var data_arr = [];
@@ -610,7 +625,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         return value + " " + row.mortgage.firm_stage;
                     } else {
 
-                       // return "<span class='text-info'>实打实</span>";
                        return value? value:" - ";
                     }
 
@@ -646,6 +660,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('编辑'), $(this).data() || {});
 
                     },
+                    /**
+                     * 更改平台
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-changePlatform': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -656,6 +677,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'banking/exchangeplatformtabs/change_platform';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('更改平台'), $(this).data() || {});
                     },
+                    /**
+                     * 详情
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-details': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();

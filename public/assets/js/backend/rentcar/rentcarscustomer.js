@@ -27,6 +27,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         table: {
+            /**
+             * 正在出租
+             */
             being_rented: function () {
                 var table = $("#beingRented");
 
@@ -110,6 +113,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $('#using_total').text(data.total);
                 })
             },
+            /**
+             * 已退租
+             */
             retiring: function () {
                 var retirings = $("#retirings");
 
@@ -275,7 +281,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         }
                     );
-                    if (row.review_the_data == 'for_the_car' && row.car_backtime!=null) {
+                    if (row.review_the_data == 'for_the_car') {
                         buttons.push(
                             {
                                 name: 'back',
@@ -303,9 +309,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'rentcar/Rentcarscustomer/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
+                    /**
+                     * 退车
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-back_car': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
+                        if(!row.car_backtime){
+                            layer.msg('请先编辑退车时间，再点击退车');
+                            return;
+                        }
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
@@ -313,8 +330,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'rentcar/Rentcarscustomer/back_car';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('退车'), $(this).data() || {});
                     },
+                    /**
+                     * 详情
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-rentalDetails': function (e, value, row, index) {
-                        return;
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');

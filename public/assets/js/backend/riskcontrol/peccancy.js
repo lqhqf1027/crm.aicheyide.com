@@ -29,6 +29,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         table: {
+            /**
+             * 待发送给客服
+             */
             prepare_send: function () {
 
                 var table = $("#prepareSend");
@@ -165,6 +168,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             },
 
+            /**
+             * 已发送给客服
+             */
             already_send: function () {
 
                 var alreadySend = $("#alreadySend");
@@ -392,6 +398,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
+                    /**
+                     * 查看违章详情
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-detail': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -402,6 +415,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'riskcontrol/Peccancy/details';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看违章详情'), $(this).data() || {});
                     },
+                    /**
+                     * 查询违章
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-search': function (e, value, row, index) {
                         e.stopPropagation();
 
@@ -458,15 +478,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         });
 
-                        // var options = table.bootstrapTable('getOptions');
-                        // var ids = row[options.pk];
-                        // row = $.extend({}, row ? row : {}, {ids: ids});
-                        // var url = options.extend.edit_url;
-                        // Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
 
                 }
             },
+            /**
+             * 得到选中行信息
+             * @param table
+             * @returns {*}
+             */
             selectIdsRow: function (table) {
                 var options = table.bootstrapTable('getOptions');
                 if (options.templateView) {

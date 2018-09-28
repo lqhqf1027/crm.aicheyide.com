@@ -52,10 +52,7 @@ class Orderlisttabs extends Backend
 
     public function index()
     {
-//        $this->view->assign('total', model('SalesOrder')->count());
-//        $this->view->assign('total1', model('RentalOrder')->count());
-//        $this->view->assign('total2', model('SecondSalesOrder')->count());
-//        $this->view->assign('total3', model('FullParmentOrder')->count());
+
         return $this->view->fetch();
     }
 
@@ -71,7 +68,6 @@ class Orderlisttabs extends Backend
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
-        // pr(collection($this->model->with('planacar.models')->select())->toArray());die();
 
 
         //设置过滤方法
@@ -1085,7 +1081,11 @@ class Orderlisttabs extends Backend
 
     }
 
-    //资料已补全，提交车管进行提车
+
+
+    /**资料已补全，提交车管进行提车
+     * @param null $ids
+     */
     public function newinformtube($ids = null)
     {
         $this->model = model('SalesOrder');
@@ -1136,7 +1136,14 @@ class Orderlisttabs extends Backend
         }
     }
 
-    //显示方案列表
+
+
+    /**显示方案列表
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function planacar()
     {
         if ($this->request->isAjax()) {
@@ -1170,7 +1177,13 @@ class Orderlisttabs extends Backend
     }
 
 
-    //分页
+
+
+    /**分页
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function page()
     {
         $category_id = input("category_id");
@@ -1207,7 +1220,13 @@ class Orderlisttabs extends Backend
 
     }
 
-    //方案组装
+
+
+    /**方案组装
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function planname()
     {
         if ($this->request->isAjax()) {
@@ -1385,7 +1404,14 @@ class Orderlisttabs extends Backend
      *  租车.
      */
 
-    //租车预定
+
+    /**租车预定
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function reserve()
     {
         $this->model = new \app\admin\model\RentalOrder;
@@ -1507,7 +1533,13 @@ class Orderlisttabs extends Backend
         return $this->view->fetch();
     }
 
-    //方案组装
+
+
+    /**方案组装
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function rentalplanname()
     {
         if ($this->request->isAjax()) {
@@ -1531,7 +1563,16 @@ class Orderlisttabs extends Backend
         }
     }
 
-    //租车客户信息的补全
+
+
+    /**租车客户信息的补全
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function rentaladd($ids = null)
     {
         $this->model = new \app\admin\model\RentalOrder;
@@ -1593,7 +1634,16 @@ class Orderlisttabs extends Backend
         return $this->view->fetch();
     }
 
-    // 租车订单修改
+
+
+    /**租车订单修改
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function rentaledit($ids = NULL)
     {
         $this->model = new \app\admin\model\RentalOrder;
@@ -1664,7 +1714,13 @@ class Orderlisttabs extends Backend
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
 
-    //提交风控审核
+
+
+    /**提交风控审核
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function control()
     {
         $this->model = new \app\admin\model\RentalOrder;
@@ -2493,7 +2549,13 @@ class Orderlisttabs extends Backend
         return $this->view->fetch();
     }
 
-    //提交内勤
+
+
+    /**提交内勤
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function submitCar()
     {
         $this->model = new \app\admin\model\FullParmentOrder;

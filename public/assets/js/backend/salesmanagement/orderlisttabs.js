@@ -3196,7 +3196,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
-                    //新车提交内勤审核
+
+                    /**
+                     * 新车提交内勤审核
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-submit_audit': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -3242,7 +3249,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //租车客户信息的补全
+
+                    /**
+                     * 租车客户信息的补全
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-customerInformation': function (e, value, row, index) {
 
                         $(".btn-customerInformation").data("area", ["95%", "95%"]);
@@ -3261,7 +3275,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                     },
-                    //租车提交风控审核
+
+                    /**
+                     * 租车提交风控审核
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-control': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -3307,7 +3328,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //二手车提交内勤
+
+                    /**
+                     * 二手车提交内勤
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-second_audit': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -3353,7 +3381,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //全款车提交内勤
+
+                    /**
+                     * 全款车提交内勤
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-submitCar': function (e, value, row, index) {
 
                         e.stopPropagation();
@@ -3400,7 +3435,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //编辑预定按钮
+
+                    /**
+                     * 编辑预定按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-newreserveeditone': function (e, value, row, index) { /**编辑预定按钮 */
                         $(".btn-newreserveeditone").data("area", ["95%", "95%"]);
 
@@ -3413,7 +3455,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.newreserveedit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('编辑预定'), $(this).data() || {});
                     },
-                    //录入审核资料按钮
+
+                    /**
+                     * 录入审核资料按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-newcontroladd': function (e, value, row, index) { /**录入审核资料按钮 */
                         $(".btn-newcontroladd").data("area", ["95%", "95%"]);
 
@@ -3426,7 +3475,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.newcontroladd_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('录入审核资料'), $(this).data() || {});
                     },
-                     //录入客户提车资料按钮
+
+                    /**
+                     * 录入客户提车资料按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-customer_information': function (e, value, row, index) { /**录入客户提车资料按钮 */
                         $(".btn-customer_information").data("area", ["95%", "95%"]);
 
@@ -3439,7 +3495,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.newinformation_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('补全提车客户资料'), $(this).data() || {});
                     },
-                     //资料补全，提交车管提车按钮
+
+                    /**
+                     * 资料补全，提交车管提车按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                      'click .btn-newinform_tube': function (e, value, row, index) { /**资料补全，提交车管提车 */
                         e.stopPropagation();
                         e.preventDefault();
@@ -3484,7 +3547,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         );
 
                     },
-                    //编辑按钮
+
+                    /**
+                     * 编辑按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */
                         $(".btn-editone").data("area", ["95%", "95%"]);
 
@@ -3497,7 +3567,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url+'/posttype/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    //租车编辑按钮
+
+                    /**
+                     * 租车编辑按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-rentaleditone': function (e, value, row, index) { /**二手车编辑按钮 */
                         $(".btn-rentaleditone").data("area", ["95%", "95%"]);
 
@@ -3510,7 +3587,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.rentaledit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    //二手车编辑按钮
+
+                    /**
+                     * 二手车编辑按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondeditone': function (e, value, row, index) { /**二手车编辑按钮 */
                         $(".btn-secondeditone").data("area", ["95%", "95%"]);
 
@@ -3523,7 +3607,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.secondedit_url+'/posttype/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    //二手车审核资料上传
+
+                    /**
+                     * 二手车审核资料上传
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondaudit': function (e, value, row, index) { /**二手车审核资料上传 */
                         $(".btn-secondaudit").data("area", ["95%", "95%"]);
 
@@ -3536,7 +3627,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.secondaudit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('审核资料上传'), $(this).data() || {});
                     },
-                    //全款车编辑按钮
+
+                    /**
+                     * 全款车编辑按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-fulleditone': function (e, value, row, index) { /**二手车编辑按钮 */
                         $(".btn-fulleditone").data("area", ["95%", "95%"]);
 
@@ -3549,7 +3647,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.fulledit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    //删除按钮
+
+                    /**
+                     * 删除按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-delone': function (e, value, row, index) {  /**删除按钮 */
 
                         e.stopPropagation();
@@ -3574,7 +3679,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         );
                     },
-                    //提交保证金
+
+                    /**
+                     * 提交保证金
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-the_guarantor': function (e, value, row, index) { /**提交保证金 */
                         $(".btn-the_guarantor").data("area", ["95%", "95%"]); 
                         e.stopPropagation();
@@ -3586,7 +3698,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url+'/posttype/the_guarantor';  
                         Fast.api.open(Table.api.replaceurl(url,row, table), __('请上传保证金收据'), $(this).data() || {});
                     },
-                    //二手车提交保证金
+
+                    /**
+                     * 二手车提交保证金
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondthe_guarantor': function (e, value, row, index) { /**二手车提交保证金 */
                         $(".btn-secondthe_guarantor").data("area", ["95%", "95%"]); 
                         e.stopPropagation();
@@ -3627,8 +3746,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         return Y+M+D;
                     }
                 },
+                /**
+                 * 退租时间
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
                 car_back:function (value, row, index) {
-
                     if(value && row.tenancy_term){
                         value = timestampToTime(value);
 
@@ -3675,25 +3800,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 }
 
-                // status: function (value, row, index) {
 
-                //     var colorArr = {relation: 'info', intention: 'success', nointention: 'danger'};
-                //     //如果字段列有定义custom
-                //     if (typeof this.custom !== 'undefined') {
-                //         colorArr = $.extend(colorArr, this.custom);
-                //     }
-                //     value = value === null ? '' : value.toString();
-
-                //     var color = value && typeof colorArr[value] !== 'undefined' ? colorArr[value] : 'primary';
-
-                //     var newValue = value.charAt(0).toUpperCase() + value.slice(1);
-                //     //渲染状态
-                //     var html = '<span class="text-' + color + '"><i class="fa fa-circle"></i> ' + __(newValue) + '</span>';
-                //     // if (this.operate != false) {
-                //     //     html = '<a href="javascript:;" class="searchit" data-toggle="tooltip" title="' + __('Click to search %s', __(newValue)) + '" data-field="' + this.field + '" data-value="' + value + '">' + html + '</a>';
-                //     // }
-                //     return html;
-                // },
             }
         }
     };

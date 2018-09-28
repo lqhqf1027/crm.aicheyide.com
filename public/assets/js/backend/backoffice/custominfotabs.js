@@ -32,7 +32,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
 
-        //刷新
+
         admeasure: function () {
 
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
@@ -86,7 +86,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         table: {
-
+            /**
+             * 新客户
+             */
             new_customer: function () {
                 // 表格1
                 var newCustomer = $("#newCustomer");
@@ -116,17 +118,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'platform.name', title: __('所属平台')},
                             {field: 'backoffice.nickname', title: __('所属内勤'),operate:false,formatter:Controller.api.formatter.backoffice},
 
-                            // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            // {field: 'age', title: __('Age')},
                             {
                                 field: 'genderdata',
                                 title: __('Genderdata'),
                                 visible: false,
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
-                            // {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {
                                 field: 'distributinternaltime',
                                 title: __('Distributinternaltime'),
@@ -144,7 +143,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: __('Allocation'),
                                         icon: 'fa fa-share',
                                         classname: 'btn btn-xs btn-info btn-newCustomer',
-                                        // url: 'backoffice/custominfotabs/admeasure'
 
                                     },
 
@@ -180,7 +178,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                // 批量分配
+
+                /**
+                 * 批量分配
+                 */
                 $(document).on("click", ".btn-selected", function () {
                     var ids = Table.api.selectedids(newCustomer);
                     var url = 'backoffice/custominfotabs/batch?ids=' + ids;
@@ -200,6 +201,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 已分配客户
+             */
             assigned_customers: function () {
                 // 表格2
                 var assignedCustomers = $("#assignedCustomers");
@@ -225,23 +229,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('Id'),operate:false},
-                            // {field: 'platform_id', title: __('Platform_id')},
-                            // {field: 'backoffice_id', title: __('Backoffice_id')},
+
                             {field: 'platform.name', title: __('所属平台')},
                             {field: 'backoffice.nickname', title: __('所属内勤'),operate:false,formatter:Controller.api.formatter.backoffice},
                             {field: 'admin.nickname', title: __('所属销售'),formatter:Controller.api.formatter.sales},
 
-                            // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            // {field: 'age', title: __('Age')},
                             {
                                 field: 'genderdata',
                                 title: __('Genderdata'),
                                 visible: false,
                                 searchList: {"male": __('genderdata male'), "female": __('genderdata female')}
                             },
-                            // {field: 'genderdata_text', title: __('Genderdata'), operate: false},
                             {
                                 field: 'distributinternaltime',
                                 title: __('Distributinternaltime'),
@@ -289,6 +289,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Form.api.bindevent($("form[role=form]"));
             },
             operate:{
+                /**
+                 * 单个分配给销售
+                 * @param e
+                 * @param value
+                 * @param row
+                 * @param index
+                 */
                 'click .btn-newCustomer': function (e, value, row, index) {
                     e.stopPropagation();
                     e.preventDefault();

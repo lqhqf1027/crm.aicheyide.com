@@ -169,7 +169,11 @@ class Channellisttabs extends Backend
     }
 
 
-    //得到可行管理员ID
+
+
+    /**得到可行管理员ID
+     * @return array
+     */
     public function getUserId()
     {
         $result = array();

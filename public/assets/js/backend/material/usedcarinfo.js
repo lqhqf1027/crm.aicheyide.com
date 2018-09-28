@@ -30,6 +30,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 二手车信息登记
+             */
             car_purchase_info: function () {
                 // 表格1
                 var carPurchaseInfo = $("#carPurchaseInfo");
@@ -141,6 +144,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Table.api.bindevent(carPurchaseInfo);
 
             },
+            /**
+             * 二手车资料入库
+             */
             data_warehousing: function () {
                 // 表格2
                 var dataWarehousing = $("#dataWarehousing");
@@ -399,6 +405,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
+                    /**
+                     * 详情
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-detail': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -409,6 +422,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = "material/usedcarinfo/details";
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
+                    /**
+                     * 入库编辑
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-dataware':function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -434,7 +454,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
-
+                /**
+                 * 返回√和x
+                 * @param value
+                 * @returns {string}
+                 */
                 judge: function (value) {
                     var res = "";
                     var color = "";
@@ -456,6 +480,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
+
+
                 transfer: function (value, row, index) {
                     if (value == 1) {
                         return "已过户"
@@ -463,6 +489,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         return "未过户"
                     }
                 },
+                /**
+                 * 判断年检
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {*}
+                 */
                 inspection: function (value, row, index) {
 
                     var status = -1;

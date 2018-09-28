@@ -35,6 +35,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 新车定金
+             */
             new_car: function () {
                 // 表格1
                 var newCar = $("#newCar");
@@ -109,6 +112,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 二手车定金
+             */
             used_car: function () {
                 // 表格1
                 var usedCar = $("#usedCar");
@@ -181,6 +187,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(usedCar);
             },
+            /**
+             * 租车定金
+             */
             rent_car: function () {
                 // 表格1
                 var rentCar = $("#rentCar");
@@ -250,6 +259,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(rentCar);
             },
+            /**
+             * 全款车定金
+             */
             full_car: function () {
                 // 表格1
                 var fullCar = $("#fullCar");

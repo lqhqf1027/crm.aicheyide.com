@@ -35,9 +35,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
         table: {
-
+            /**
+             * 新车录入定金
+             */
             newcar_entry: function () {
-                // 新车录入定金
+                //
                 var newcarEntry = $("#newcarEntry");
                
                 // 初始化表格
@@ -914,8 +916,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 二手车录入定金
+             */
             secondcar_entry: function () {
-                // 二手车录入定金
+
                 var secondcarEntry = $("#secondcarEntry");
                
                 // 初始化表格
@@ -1280,15 +1285,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
             },
+            /**
+             * 全款车录入定金
+             */
             fullcar_entry: function () {
-                // 全款车录入定金
+
                 var fullcarEntry = $("#fullcarEntry");
                
                 // 初始化表格
                 fullcarEntry.bootstrapTable({
                     url: 'backoffice/carreservation/fullcarEntry',
                     extend: {
-                        // edit_url: 'backoffice/carreservation/secondactual_amount',
                         table: 'full_parment_order',
                     },
                     toolbar: '#toolbar3',
@@ -1422,15 +1429,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 租车录入定金
+             */
             rentalcar_entry: function () {
-                // 租车录入定金
+
                 var rentalcarEntry = $("#rentalcarEntry");
                
                 // 初始化表格
                 rentalcarEntry.bootstrapTable({
                     url: 'backoffice/carreservation/rentalcarEntry',
                     extend: {
-                        // edit_url: 'backoffice/carreservation/secondactual_amount',
                         table: 'rental_order',
                     },
                     toolbar: '#toolbar4',
@@ -1463,7 +1472,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                      */
                                     {
                                         name:'is_reviewing_argee',text:'销售正在补全客户资料', title:'销售正在补全客户资料', classname: 'text-info',
-                                        // url: 'order/rentalorder/add',
                                         hidden:function(row){
                                             if(row.review_the_data == 'is_reviewing_argee'){ 
                                                 return false; 
@@ -1715,10 +1723,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+
         newactual_amount: function () {
             Controller.api.bindevent();
 
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
 
@@ -1733,8 +1741,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
 
             });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
+
 
         },
         secondactual_amount: function () {
@@ -1747,7 +1754,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);//这里是重点
-                // console.log(data);
                 Toastr.success("成功");//这个可有可无
             }, function (data, ret) {
 
@@ -1755,8 +1761,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
 
             });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
+
 
         },
         fullactual_amount: function () {
@@ -1812,6 +1817,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         return Y+M+D;
                     }
                 },
+                
+                /**
+                 * 退车时间
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
                 car_back:function (value, row, index) {
 
                     if(value && row.tenancy_term){
@@ -1821,7 +1834,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                          return GetNextMonthDay(value,row.tenancy_term);
                     }
 
-                    //获取几个月后的日期
+
+                    /**
+                     * 获取几个月后的日期
+                     * @param date
+                     * @param monthNum
+                     * @returns {string}
+                     * @constructor
+                     */
                      function GetNextMonthDay(date, monthNum){
                          var dateArr = date.split('-');
                          var year = dateArr[0]; //获取当前日期的年份
@@ -1863,7 +1883,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             
             events: {
                 operate: {
-                    //新车录入订车金额
+
+                    /**
+                     * 新车录入订车金额
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-newactual_amount': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -1875,7 +1902,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'backoffice/carreservation/newactual_amount';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
                     },
-                    //二手车录入订车金额
+
+                    /**
+                     * 二手车录入订车金额
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondactual_amount': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -1887,7 +1921,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'backoffice/carreservation/secondactual_amount';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
                     },
-                    //全款车录入订车金额
+
+                    /**
+                     * 全款车录入订车金额
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-fullactual_amount': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();

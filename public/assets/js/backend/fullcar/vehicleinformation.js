@@ -54,6 +54,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 待提车
+             */
             prepare_lift_car: function () {
                 // 表格1
                 var prepareLiftCar = $("#prepareLiftCar");
@@ -70,11 +73,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 prepareLiftCar.bootstrapTable({
                     url: "fullcar/vehicleinformation/prepare_lift_car",
                     extend: {
-                        // index_url: 'order/salesorder/index',
-                        // add_url: 'order/salesorder/add',
-                        // edit_url: 'order/salesorder/edit',
-                        // del_url: 'order/salesorder/del',
-                        // multi_url: 'order/salesorder/multi',
+
                         table: 'full_parment_order',
                     },
                     toolbar: '#toolbar1',
@@ -156,6 +155,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
             },
+            /**
+             * 已提车
+             */
             already_lift_car: function () {
 
                 // 表格2
@@ -172,11 +174,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 alreadyLiftCar.bootstrapTable({
                     url: 'fullcar/vehicleinformation/already_lift_car',
                     extend: {
-                        // index_url: 'order/salesorder/index',
-                        // add_url: 'order/salesorder/add',
-                        // edit_url: 'order/salesorder/edit',
-                        // del_url: 'order/salesorder/del',
-                        // multi_url: 'order/salesorder/multi',
+
                         table: 'full_parment_order',
                     },
                     toolbar: '#toolbar2',
@@ -271,7 +269,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
                 sales:function (value, row, index) {
-                    // console.log(row);
 
                     return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },

@@ -38,7 +38,14 @@ class Usedcarinfo extends Backend
         return $this->view->fetch();
     }
 
-    //二手车购车信息登记表
+
+    /**二手车购车信息登记表
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function car_information()
     {
         //设置过滤方法
@@ -52,7 +59,7 @@ class Usedcarinfo extends Backend
             $total = $this->model
                 ->with(['mortgageregistration',
                     'admin' => function ($query) {
-                        $query->withField('nickname');
+                        $query->withField(['nickname','id','avatar']);
                     }, 'secondcarrentalmodelsinfo' => function ($query) {
                         $query->withField('newpayment,monthlypaymen,periods,bond,tailmoney,licenseplatenumber,vin');
                     }, 'models' => function ($query) {
@@ -71,7 +78,7 @@ class Usedcarinfo extends Backend
             $list = $this->model
                 ->with(['mortgageregistration',
                     'admin' => function ($query) {
-                        $query->withField('nickname');
+                        $query->withField(['nickname','id','avatar']);
                     }, 'secondcarrentalmodelsinfo' => function ($query) {
                         $query->withField('newpayment,monthlypaymen,periods,bond,tailmoney,licenseplatenumber,vin');
                     }, 'models' => function ($query) {
@@ -89,6 +96,14 @@ class Usedcarinfo extends Backend
                 ->select();
 
             $list = collection($list)->toArray();
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -208,6 +223,9 @@ class Usedcarinfo extends Backend
         return $this->view->fetch();
     }
 
+    /**
+     * 检查年检
+     */
     public function check_year()
     {
         if ($this->request->isAjax()) {
@@ -233,6 +251,14 @@ class Usedcarinfo extends Backend
         }
     }
 
+    /**查看详情
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function details($ids = null)
     {
         $row = Db::name("second_sales_order")
@@ -459,7 +485,15 @@ class Usedcarinfo extends Backend
 
     }
 
-    //资料入库登记表
+
+
+    /**资料入库登记表
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function data_warehousing()
     {
         //设置过滤方法
@@ -476,7 +510,7 @@ class Usedcarinfo extends Backend
                 }, 'secondcarrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin,companyaccount');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['nickname','id','avatar']);
                 }, 'registryregistration'])
                 ->where(function ($query){
                     $query->where([
@@ -494,7 +528,7 @@ class Usedcarinfo extends Backend
                 }, 'secondcarrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin,companyaccount');
                 }, 'admin' => function ($query) {
-                    $query->withField('nickname');
+                    $query->withField(['nickname','id','avatar']);
                 }, 'registryregistration'])
                 ->where(function ($query){
                     $query->where([
@@ -508,6 +542,14 @@ class Usedcarinfo extends Backend
                 ->select();
 
             $list = collection($list)->toArray();
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
@@ -515,6 +557,14 @@ class Usedcarinfo extends Backend
         return $this->view->fetch();
     }
 
+    /**编辑
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function edit_dataware($ids = null)
     {
         $registry_registration_id = Db::name("second_sales_order")

@@ -23,24 +23,16 @@ class Carreservation extends Backend
 
     public function index()
     {
-//        $total = DB::name('sales_order')
-//                ->where("review_the_data", "send_car_tube")
-//                ->where("amount_collected", "not null")
-//                ->count();
-//        $total1 = DB::name('sales_order')
-//                ->where("review_the_data", ["NEQ", "send_to_internal"], ["NEQ", "send_car_tube"], ["NEQ", "inhouse_handling"], "or")
-//                ->where("amount_collected", "not null")
-//                ->count();
-//
-//        $this->view->assign([
-//            "total" => $total,
-//            "total1" => $total1
-//        ]);
 
         return $this->view->fetch();
     }
 
-    //待提交
+
+
+    /**待提交
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function prepare_submit()
     {
         $this->model = model('SalesOrder');
@@ -115,7 +107,12 @@ class Carreservation extends Backend
 
     }
 
-    //已提交
+
+
+    /**已提交
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function already_submit()
     {
         $this->model = model('SalesOrder');
@@ -140,7 +137,6 @@ class Carreservation extends Backend
                 }])
                 ->where($where)
                 ->where('review_the_data','not in',['send_to_internal','send_car_tube','inhouse_handling'])
-                // ->where("review_the_data", ["neq", "send_to_internal"], ["neq", "send_car_tube"], ["neq", "inhouse_handling"], "or")
                 ->where("amount_collected", "not null")
                 ->order($sort, $order)
                 ->count();
@@ -158,7 +154,6 @@ class Carreservation extends Backend
                 }])
                 ->where($where)
                 ->where('review_the_data','not in',['send_to_internal','send_car_tube','inhouse_handling'])
-                // ->where("review_the_data", ['NEQ', "send_to_internal"], ['NEQ', "send_car_tube"], ['NEQ', "inhouse_handling"], "or")
                 ->where("amount_collected", "not null")
                 ->order($sort, $order)
                 ->limit($offset, $limit)
@@ -194,7 +189,13 @@ class Carreservation extends Backend
     }
 
 
-    //提交匹配金融
+
+
+    /**提交匹配金融
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function matching_finance()
     {
         if ($this->request->isAjax()) {
@@ -245,7 +246,15 @@ class Carreservation extends Backend
         }
     }
 
-    //批量加入金融
+
+
+    /**批量加入金融
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function mass_finance()
     {
         if ($this->request->isAjax()) {
@@ -321,6 +330,13 @@ class Carreservation extends Backend
         print_r($return);
     }
 
+    /**增加销售信息
+     * @param array $data
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function add_sales($data = array())
     {
         foreach ($data as $k => $v) {

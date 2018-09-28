@@ -1,5 +1,9 @@
 define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echarts-theme', 'template'], function ($, undefined, Backend, Datatable, Table, Echarts, undefined, Template) {
 
+    /**
+     * 销售看台
+     * @type {{index: index}}
+     */
     var Controller = {
         index: function () {
 

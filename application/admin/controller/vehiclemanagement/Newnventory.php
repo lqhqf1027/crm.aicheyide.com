@@ -29,12 +29,6 @@ class Newnventory extends Backend
         $this->loadlang("newcars/newnventory");
     }
 
-    /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
-
 
     /**
      * 查看
@@ -94,24 +88,6 @@ class Newnventory extends Backend
     }
 
     public function getOrderName($NewnventoryId = null){
-        // $name = [
-        //     model('SalesOrder')->with([
-        //         'newinventory' => function ($query) {
-        //             $query->withField('licensenumber');
-        //         }
-        //     ])->select(),
-        //     model('FullParmentOrder')->with([
-        //         'newinventory' => function ($query) {
-        //             $query->withField('licensenumber');
-        //         }
-        //     ])->select()
-        // ];
-        // return $name;
-        // pr($name);
-        // foreach ($name as $key=>$row) {
-        //     $row->visible();
-        //     pr();
-        // }
       
         $name= [
             Db::name('sales_order')->alias('a')
@@ -129,6 +105,10 @@ class Newnventory extends Backend
         return $name;
     }
 
+    /**添加
+     * @return string
+     * @throws \think\Exception
+     */
     public function add()
     {
         $this->view->assign("car_models", $this->getInfo());
@@ -171,7 +151,12 @@ class Newnventory extends Backend
         return $this->view->fetch();
     }
 
-
+    /**编辑
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\exception\DbException
+     */
     public function edit($ids = NULL)
     {
 
@@ -217,6 +202,14 @@ class Newnventory extends Backend
         return $this->view->fetch();
     }
 
+    /**
+     * 得到车型信息
+     * @param $id
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getReally($id)
     {
         $result = Db::name("car_new_inventory")

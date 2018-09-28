@@ -32,33 +32,15 @@ class Carreservation extends Backend
 
     public function index()
     {
-//        $total = Db::name("sales_order")
-//            ->where("backoffice_id", "not null")
-//            ->where("review_the_data", "NEQ", "send_to_internal")
-//            ->count();
-//        $total1 = Db::name("second_sales_order")
-//            ->where("backoffice_id", "not null")
-//            ->where("review_the_data", "NEQ", "is_reviewing")
-//            ->count();
-//        $total2 = Db::name("full_parment_order")
-//            ->where("backoffice_id", "not null")
-//            ->where("review_the_data", "NEQ", "send_to_internal")
-//            ->count();
-//        $total3 = Db::name("rental_order")
-//            ->where("backoffice_id", "not null")
-//            ->count();
-//        $this->view->assign(
-//            [
-//                'total' => $total,
-//                'total1' => $total1,
-//                'total2' => $total2,
-//                'total3' => $total3
-//            ]
-//        );
         return $this->view->fetch();
     }
 
-    //新车录入实际订车金额
+
+    /**
+     * 新车录入实际订车金额
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function newcarEntry()
     {
         $this->request->filter(['strip_tags']);
@@ -182,7 +164,15 @@ class Carreservation extends Backend
         return $this->view->fetch();
     }
 
-    //二手车录入实际订车金额
+
+    /**
+     * 二手车录入实际订车金额
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function secondcarEntry()
     {
         $this->model = new \app\admin\model\SecondSalesOrder;
@@ -295,7 +285,15 @@ class Carreservation extends Backend
 
     }
 
-    //全款车录入实际订车金额
+
+    /**
+     * 全款车录入实际订车金额
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function fullcarEntry()
     {
         $this->model = new \app\admin\model\FullParmentOrder;
@@ -405,7 +403,15 @@ class Carreservation extends Backend
         return $this->view->fetch();
     }
 
-    //租车
+
+    /**
+     * 租车
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function rentalcarEntry()
     {
         $this->model = new \app\admin\model\RentalOrder;
@@ -512,6 +518,10 @@ class Carreservation extends Backend
 
     }
 
+    /**
+     * 获取销售经理的全部内勤
+     * @return array
+     */
     public function sales_name()
     {
         $message = Db::name('admin')
@@ -534,7 +544,14 @@ class Carreservation extends Backend
         }
     }
 
-    //得到操作员ID
+
+    /**
+     * 得到操作员ID
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getUserId()
     {
         $arr = array();
@@ -565,7 +582,17 @@ class Carreservation extends Backend
         return $arr;
     }
 
-    //新车编辑实际录入金额
+
+    /**
+     * 新车编辑实际录入金额
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function newactual_amount($ids = null)
     {
         if ($this->request->isPost()) {
@@ -635,7 +662,17 @@ class Carreservation extends Backend
         return $this->view->fetch();
     }
 
-    //二手车编辑实际录入金额
+
+    /**
+     * 二手车编辑实际录入金额
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function secondactual_amount($ids = null)
     {
         if ($this->request->isPost()) {
@@ -706,7 +743,17 @@ class Carreservation extends Backend
         return $this->view->fetch();
     }
 
-    //全款车编辑实际录入金额
+
+    /**
+     * 全款车编辑实际录入金额
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function fullactual_amount($ids = null)
     {
         if ($this->request->isPost()) {
@@ -763,7 +810,17 @@ class Carreservation extends Backend
         return $this->view->fetch();
     }
 
-    //租车编辑实际录入金额
+
+    /**
+     * 租车编辑实际录入金额
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function rentalactual_amount($ids = null)
     {
         if ($this->request->isPost()) {

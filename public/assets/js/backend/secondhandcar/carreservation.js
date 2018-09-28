@@ -33,6 +33,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         table: {
 
+            /**
+             * 二手车待车管确认
+             */
             secondcar_waitconfirm: function () {
                 // 表格1
                 var secondcarWaitconfirm = $("#secondcarWaitconfirm");
@@ -121,6 +124,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
             },
+            /**
+             * 二手车车管已确认
+             */
             secondcar_confirm: function () {
 
                 // 表格2
@@ -414,6 +420,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
+                    /**
+                     * 确认提交金融匹配
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-secondcarWaitconfirm': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();

@@ -49,24 +49,19 @@ class Newcarscustomer extends Backend
         $this->loadlang('newcars/newcarscustomer');
         $this->loadlang('order/salesorder');
 
-//        $prepare_total = Db::name("sales_order")
-//            ->where("review_the_data", ["=", "take_the_car"], ["=", "take_the_data"], ["=", "inform_the_tube"], ["=", "send_the_car"], "or")
-//            ->where("car_new_inventory_id", "not null")
-//            ->count();
-//
-//        $already_total = Db::name("sales_order")
-//            ->where("review_the_data", "the_car")
-//            ->where("car_new_inventory_id", "not null")
-//            ->count();
-//
-//        $this->view->assign([
-//            'prepare_total' => $prepare_total,
-//            'already_total' => $already_total
-//        ]);
+
         return $this->view->fetch();
     }
 
-    //待提车
+
+
+    /**待提车
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function prepare_lift_car()
     {
 
@@ -144,7 +139,15 @@ class Newcarscustomer extends Backend
 
     }
 
-    //已提车
+
+
+    /**已提车
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function already_lift_car()
     {
         $this->model = model('SalesOrder');
@@ -224,7 +227,11 @@ class Newcarscustomer extends Backend
 
     }
 
-    //通知销售---补全客户信息进行提车
+
+
+    /**
+     * 通知销售---补全客户信息进行提车
+     */
     public function newcustomer()
     {
         $this->model = model('SalesOrder');
@@ -273,7 +280,13 @@ class Newcarscustomer extends Backend
         }
     }
 
-    //资料已补全，提交车管进行提车
+
+
+    /**资料已补全，提交车管进行提车
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function sendcar()
     {
         $this->model = model('SalesOrder');
@@ -475,7 +488,16 @@ class Newcarscustomer extends Backend
         return $this->view->fetch();
     }
 
-    //查看订单表和库存表所有信息
+
+
+    /**查看订单表和库存表所有信息
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function show_order_and_stock($ids = null)
     {
         $row = Db::table("crm_order_view")

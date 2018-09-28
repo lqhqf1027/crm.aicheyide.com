@@ -28,33 +28,23 @@ class Carreservation extends Backend
 
     }
     
-    /**
-     * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
-     * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
-     * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
-     */
-    
+
 
     public function index()
     {
-//        $total = Db::name("second_sales_order")
-//                ->where("review_the_data", "send_car_tube")
-//                ->where("amount_collected", "not null")
-//                ->count();
-//        $total1 = Db::name("second_sales_order")
-//                ->where("review_the_data", ["NEQ", "is_reviewing"], ["NEQ", "is_reviewing_true"], ["NEQ", "send_car_tube"], "or")
-//                ->where("amount_collected", "not null")
-//                ->count();
-//        $this->view->assign(
-//            [
-//                'total' => $total,
-//                'total1' => $total1
-//            ]
-//        );
+
         return $this->view->fetch();
     }
 
-    //待车管确认
+
+
+    /**待车管确认
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function secondcarWaitconfirm()
     {
         $this->model = new \app\admin\model\SecondSalesOrder;
@@ -123,7 +113,15 @@ class Carreservation extends Backend
 
     }
 
-    //车管已确认
+
+
+    /**车管已确认
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function secondcarConfirm()
     {
         $this->model = new \app\admin\model\SecondSalesOrder;
@@ -193,7 +191,13 @@ class Carreservation extends Backend
 
     }
 
-    //提交匹配金融
+
+
+    /**提交匹配金融
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function setAudit()
     {
         if ($this->request->isAjax()) {
