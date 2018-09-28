@@ -41,6 +41,7 @@ class Creditreview extends Backend
 
     public function index()
     {
+
         $this->loadlang('order/salesorder');
 
         $this->view->assign([
@@ -1711,6 +1712,7 @@ class Creditreview extends Backend
             ->where(["a.{$table}_id" => $order_id])
             ->field('a.*')
             ->find();
+
         if (!empty($bigData)) {
             $bigData['share_data'] = object_to_array(json_decode(base64_decode($bigData['share_data'])));
             $bigData['risk_data'] = object_to_array(json_decode(base64_decode($bigData['risk_data'])));
