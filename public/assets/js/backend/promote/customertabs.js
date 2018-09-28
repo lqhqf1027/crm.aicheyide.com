@@ -534,9 +534,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
 
 
-
-
-
                     for (var i in arr) {
                         var level = "";
                         switch (arr[i]['customerlevel']){
@@ -552,6 +549,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             case '已放弃':
                                 level+="<span class='text-danger'>"+arr[i]['customerlevel']+"</span>";
                                 break;
+                        }
+                        if(arr[i]['feedbackcontent'].length>=30){
+                            arr[i]['feedbackcontent'] = arr[i]['feedbackcontent'].replace(arr[i]['feedbackcontent'].substr(30),'...');
                         }
                         feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(arr[i]["feedbacktime"]) + '（' + Controller.getLocalTime(arr[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + arr[i]['feedbackcontent'] + "（等级：" + level + "）" + '<br>';
                     }
@@ -574,6 +574,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     level+="<span class='text-danger'>"+v[i]['customerlevel']+"</span>";
                                     break;
+                            }
+                            if(v[i]['feedbackcontent'].length>=30){
+                                v[i]['feedbackcontent'] = v[i]['feedbackcontent'].replace(v[i]['feedbackcontent'].substr(30),'...');
                             }
                             feedHtml += "<span class='text-gray'>" + Controller.getDateDiff(v[i]["feedbacktime"]) + '（' + Controller.getLocalTime(v[i]['feedbacktime']) + '）' + '&nbsp;' + "</span>" + v[i]['feedbackcontent'] + "（等级：" + level + "）" + '<br>';
                         }

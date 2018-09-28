@@ -98,7 +98,7 @@ class Plantabs extends Backend
                 $row->getRelation('schemecategory')->visible(['name','category_note']);
             }
             $list = collection($list)->toArray();
-//            pr($list);
+
             foreach ((array) $list as $key=>$value){
                 $list[$key]['brand_name'] =$this->getBrandName($value['id']);
             }
