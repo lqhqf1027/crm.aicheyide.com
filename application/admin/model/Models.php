@@ -20,16 +20,6 @@ class Models extends Model
     protected $append = [
 
     ];
-    
-
-    
-
-
-
-
-
-
-
     public function brand()
     {
         return $this->belongsTo('Brand', 'brand_id', 'id', [], 'LEFT')->setEagerlyType(0);
