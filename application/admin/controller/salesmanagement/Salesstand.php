@@ -22,176 +22,23 @@ class Salesstand extends Backend
      */
     public function index()
     {
-
-        $time = \fast\Date::unixtime('month');
-        //新车历史成交数
-        $newcount = DB::name('sales_order')
+        //以租代购（新车）成交量
+        $newcount = Db::name('sales_order')
                 ->where('review_the_data', "the_car")
                 ->count();
-        
-        //新车本月成交数
-        $todaynewtake = DB::name('sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+        //租车成交量
+        $rentalcount = Db::name('rental_order')
+                ->where('review_the_data', "for_the_car")
                 ->count();
-        //直客成交数
-        $new_direct_the_guest = DB::name('sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        //转介绍成交数
-        $new_turn_to_introduce = DB::name('sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        if($todaynewtake !== 0){
-                $newguest = round(($new_direct_the_guest / $todaynewtake) * 10000)  / 10000 * 100 . '%';
-        }
-        else{
-                $newguest = 0 . '%';
-        }
-        if($todaynewtake !== 0){
-                $newintroduce = round(($new_turn_to_introduce / $todaynewtake) * 10000) / 10000 * 100 . '%';
-        }
-        else{
-                $newintroduce = 0 . '%';
-        }
-
-        //新车本月订车数
-        $todayneworder = DB::name('sales_order')
-                ->where('review_the_data', 'NEQ', "the_car")
-                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
+        //以租代购（二手车）成交量
+        $secondcount = Db::name('second_sales_order')
+                ->where('review_the_data', "for_the_car")
                 ->count();
 
-        //租车历史出租数
-        $rentalcount = DB::name('rental_order')
+        //全款成交量
+        $fullcount = Db::name('full_parment_order')
                 ->where('review_the_data', "for_the_car")
-                ->count();
-        //租车本月成交数
-        $todayrentaltake = DB::name('rental_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-
-        //直客成交数
-        $rental_direct_the_guest = DB::name('rental_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        //转介绍成交数
-        $rental_turn_to_introduce = DB::name('rental_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        if($todayrentaltake !== 0){
-                $rentalguest = round(($rental_direct_the_guest / $todayrentaltake) * 10000)  / 10000 * 100 . '%';
-        }
-        else{
-                $rentalguest = 0 . '%';
-        }
-        if($todayrentaltake !== 0){
-                $rentalintroduce = round(($rental_turn_to_introduce / $todayrentaltake) * 10000) / 10000 * 100 . '%';
-        }
-        else{
-                $rentalintroduce = 0 . '%';
-        }
-        
-        
-
-        //租车本月订车数
-        $todayrentalorder = DB::name('rental_order')
-                ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-
-        //二手车历史成交数
-        $secondcount = DB::name('second_sales_order')
-                 ->where('review_the_data', "for_the_car")
-                ->count();
-        //二手车本月成交数
-        $todaysecondtake = DB::name('second_sales_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        
-        //直客成交数
-        $second_direct_the_guest = DB::name('second_sales_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        //转介绍成交数
-        $second_turn_to_introduce = DB::name('second_sales_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        if($todaysecondtake !== 0){
-                $secondguest = round(($second_direct_the_guest / $todaysecondtake) * 10000)  / 10000 * 100 . '%';
-        }
-        else{
-                $secondguest = 0 . '%';
-        }
-        if($todaysecondtake !== 0){
-                $secondintroduce = round(($second_turn_to_introduce / $todaysecondtake) * 10000) / 10000 * 100 . '%';
-        }
-        else{
-                $secondintroduce = 0 . '%';
-        }
-        
-
-        //二手车本月订车数
-        $todaysecondorder = DB::name('second_sales_order')
-                ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-
-        //全款历史成交数
-        $fullcount = DB::name('full_parment_order')
-                ->where('review_the_data', "for_the_car")
-                ->count();
-        //全款车本月成交数
-        $todayfulltake = DB::name('full_parment_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        
-        //直客成交数
-        $full_direct_the_guest = DB::name('full_parment_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'straight')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        //转介绍成交数
-        $full_turn_to_introduce = DB::name('full_parment_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'introduce')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-        if($todayfulltake !== 0){
-                $fullguest = round(($full_direct_the_guest / $todayfulltake) * 10000)  / 10000 * 100 . '%';
-        }
-        else{
-                $fullguest = 0 . '%';
-        }
-        if($todayfulltake !== 0){
-                $fullintroduce = round(($full_turn_to_introduce / $todayfulltake) * 10000) / 10000 * 100 . '%';
-        }
-        else{
-                $fullintroduce = 0 . '%';
-        }
-        
-
-        //全款车本月订车数
-        $todayfullorder = DB::name('full_parment_order')
-                ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
-                ->count();
-
+                ->count();    
 
         $seventtime = \fast\Date::unixtime('month', -6);
         // pr($seventtime);
@@ -201,7 +48,7 @@ class Salesstand extends Backend
         //销售一部的销售情况    
         for ($i = 0; $i < 8; $i++)
         {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                $month = date("Y-m", $seventtime + ($i * 86400 * 31));
                 // pr($month);
                 // die;
                 
@@ -210,29 +57,51 @@ class Salesstand extends Backend
                 foreach($one_sales as $k => $v){
                     $one_admin[] = $v['uid'];
                 }
+                //以租代购（新车）历史成交数
+                $newonecount = Db::name('sales_order')
+                        ->where('review_the_data', "the_car")
+                        ->where('admin_id', 'in', $one_admin)
+                        ->count();
+                //租车历史出租数
+                $rentalonecount = Db::name('rental_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $one_admin)
+                        ->count();
+                //以租代购（二手车）历史成交数
+                $secondonecount = DB::name('second_sales_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $one_admin)
+                        ->count();
+
+                //全款历史成交数
+                $fullonecount = DB::name('full_parment_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $one_admin)
+                        ->count();       
+
                 //以租代购（新车）
                 $newonetake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //租车 
                 $rentalonetake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //以租代购（二手车）
                 $secondonetake = Db::name('second_sales_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //全款车
                 $fullonetake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //以租代购（新车）
                 $newonesales[$month . '(月)'] = $newonetake;
@@ -249,35 +118,58 @@ class Salesstand extends Backend
         //销售二部的销售情况    
         for ($i = 0; $i < 8; $i++)
         {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                
+                $month = date("Y-m", $seventtime + ($i * 86400 * 31));
                 //销售二部
                 $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
                 foreach($two_sales as $k => $v){
                     $two_admin[] = $v['uid'];
                 }
+                //以租代购（新车）历史成交数
+                $newsecondcount = Db::name('sales_order')
+                        ->where('review_the_data', "the_car")
+                        ->where('admin_id', 'in', $two_admin)
+                        ->count();
+                //租车历史出租数
+                $rentalsecondcount = Db::name('rental_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $two_admin)
+                        ->count();
+                //以租代购（二手车）历史成交数
+                $secondsecondcount = DB::name('second_sales_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $two_admin)
+                        ->count();
+
+                //全款历史成交数
+                $fullsecondcount = DB::name('full_parment_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $two_admin)
+                        ->count();       
+
                 //以租代购（新车）
                 $newsecondtake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //租车 
                 $rentalsecondtake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //以租代购（二手车）
                 $secondsecondtake = Db::name('second_sales_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //全款车
                 $fullsecondtake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //以租代购（新车）
                 $newsecondsales[$month . '(月)'] = $newsecondtake;
@@ -289,41 +181,66 @@ class Salesstand extends Backend
                 $fullsecondsales[$month . '(月)'] = $fullsecondtake;
             
         } 
+        // pr($month);
+        // pr($rentalsecondsales);
+        // die;
             
         $newthreesales = $rentalthreesales = $secondthreesales = $fullthreesales = [];
 
         //销售三部的销售情况 
         for ($i = 0; $i < 8; $i++)
         {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                $month = date("Y-m", $seventtime + ($i * 86400 * 31));
                 //销售二部
                 $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
                 foreach($three_sales as $k => $v){
                     $three_admin[] = $v['uid'];
                 }
+                //以租代购（新车）历史成交数
+                $newthreecount = Db::name('sales_order')
+                        ->where('review_the_data', "the_car")
+                        ->where('admin_id', 'in', $three_admin)
+                        ->count();
+                //租车历史出租数
+                $rentalthreecount = Db::name('rental_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $three_admin)
+                        ->count();
+                //以租代购（二手车）历史成交数
+                $secondthreecount = Db::name('second_sales_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $three_admin)
+                        ->count();
+
+                //全款历史成交数
+                $fullthreecount = Db::name('full_parment_order')
+                        ->where('review_the_data', "for_the_car")
+                        ->where('admin_id', 'in', $three_admin)
+                        ->count();       
+
                 //以租代购（新车）
                 $newthreetake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //租车 
                 $rentalthreetake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //以租代购（二手车）
                 $secondthreetake = Db::name('second_sales_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //全款车
                 $fullthreetake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
                         ->count();
                 //以租代购（新车）
                 $newthreesales[$month . '(月)'] = $newthreetake;
@@ -355,6 +272,12 @@ class Salesstand extends Backend
             'rentalsecondsales'     => $rentalsecondsales,
             'secondsecondsales'     => $secondsecondsales,
             'fullsecondsales'       => $fullsecondsales,
+
+            //总共成交量
+            'newcount'              => $newcount,
+            'rentalcount'           => $rentalcount,
+            'secondcount'           => $secondcount,
+            'fullcount'             => $fullcount,
             
             //销售情况 --- 三部
             'newthreesales'         => $newthreesales,
@@ -362,34 +285,23 @@ class Salesstand extends Backend
             'secondthreesales'      => $secondthreesales,
             'fullthreesales'        => $fullthreesales,
 
-            //新车数据
-            'newcount'            => $newcount,
-            'todaynewtake'        => $todaynewtake,
-            'todayneworder'       => $todayneworder,
-            'newguest'            => $newguest,
-            'newintroduce'        => $newintroduce,
+            //历史成交数---一部
+            'newonecount'           => $newonecount,
+            'rentalonecount'        => $rentalonecount,
+            'secondonecount'        => $secondonecount,
+            'fullonecount'          => $fullonecount,
 
-             //租车数据
-            'rentalcount'         => $rentalcount,
-            'todayrentaltake'     => $todayrentaltake,
-            'todayrentalorder'    => $todayrentalorder,
-            'rentalguest'         => $rentalguest,
-            'rentalintroduce'     => $rentalintroduce,
+            //历史成交数---二部
+            'newsecondcount'        => $newsecondcount,
+            'rentalsecondcount'     => $rentalsecondcount,
+            'secondsecondcount'     => $secondsecondcount,
+            'fullsecondcount'       => $fullsecondcount,
 
-            //二手车数据
-            'secondcount'         => $secondcount,
-            'todaysecondtake'     => $todaysecondtake,
-            'todaysecondorder'    => $todaysecondorder,
-            'secondguest'         => $secondguest,
-            'secondintroduce'     => $secondintroduce,
-
-            //全款数据
-            'fullcount'           => $fullcount,
-            'todayfulltake'       => $todayfulltake,
-            'todayfullorder'      => $todayfullorder,
-            'fullguest'           => $fullguest,
-            'fullintroduce'       => $fullintroduce,
-
+            //历史成交数---三部
+            'newthreecount'         => $newthreecount,
+            'rentalthreecount'      => $rentalthreecount,
+            'secondthreecount'      => $secondthreecount,
+            'fullthreecount'        => $fullthreecount
 
         ]);
 

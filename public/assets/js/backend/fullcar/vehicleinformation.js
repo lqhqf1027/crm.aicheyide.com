@@ -87,7 +87,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: __('Id'),operate:false},
                             {field: 'order_no', title: __('订单编号')},
                             {field: 'models.name', title: __('销售车型')},
-                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
                             {field: 'id_card', title: __('身份证号')},
@@ -269,6 +269,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
+                sales:function (value, row, index) {
+                    // console.log(row);
+
+                    return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
             }
         }

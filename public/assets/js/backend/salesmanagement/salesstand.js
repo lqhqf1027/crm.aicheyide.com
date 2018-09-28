@@ -3,14 +3,14 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
     var Controller = {
         index: function () {
 
-            //新车表
+            //销售一部
             // 基于准备好的dom，初始化echarts实例
-            var newEchart = Echarts.init(document.getElementById('newechart'), 'walden');
+            var oneEchart = Echarts.init(document.getElementById('oneechart'), 'walden');
 
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '新车销售情况（单位：月）',
+                    text: '销售一部销售情况（单位：月）',
                     subtext: ''
                 },
                 tooltip: {
@@ -29,7 +29,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: Ordernewdata.column
+                    data: Orderonedata.column
                 },
                 yAxis: {},
                 grid: [{
@@ -39,7 +39,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     bottom: 30
                 }],
                 series: [{
-                    name: "销售一部",
+                    name: "以租代购（新车）",
                     type: 'line',
                     smooth: true,
                     areaStyle: {
@@ -50,10 +50,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                             width: 1.5
                         }
                     },
-                    data: Ordernewdata.newonesales
+                    data: Orderonedata.newonesales
                 },
                     {
-                        name: "销售二部",
+                        name: "租车",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
@@ -64,10 +64,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Ordernewdata.newtwosales
+                        data: Orderonedata.rentalonesales
                     },
                     {
-                        name: "销售三部",
+                        name: "以租代购（二手车）",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
@@ -80,73 +80,15 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Ordernewdata.newthreesales
-                    }
-                ]
-            };
-
-            // 使用刚指定的配置项和数据显示图表。
-            newEchart.setOption(option);
-
-
-            //租车表
-            // 基于准备好的dom，初始化echarts实例
-            var rentalEchart = Echarts.init(document.getElementById('rentalechart'), 'walden');
-
-            // 指定图表的配置项和数据
-            var option = {
-                title: {
-                    text: '租车出租情况（单位：月）',
-                    subtext: ''
-                },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data: ["销售一部","销售二部","销售三部"]
-                },
-                toolbox: {
-                    show: false,
-                    feature: {
-                        magicType: {show: true, type: ['stack', 'tiled']},
-                        saveAsImage: {show: true}
-                    }
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: Orderrentaldata.column
-                },
-                yAxis: {},
-                grid: [{
-                    left: 'left',
-                    top: 'top',
-                    right: '10',
-                    bottom: 30
-                }],
-                series: [{
-                    name: "销售一部",
-                    type: 'line',
-                    smooth: true,
-                    areaStyle: {
-                        normal: {
-                            color: 'yellow'
-                        }
+                        data: Orderonedata.secondonesales
                     },
-                    lineStyle: {
-                        normal: {
-                            width: 1.5
-                        }
-                    },
-                    data: Orderrentaldata.rentalonesales
-                },
                     {
-                        name: "销售二部",
+                        name: "全款车",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
                             normal: {
-                                color: 'pink'
+                                color: 'red'
                             }
                         },
                         lineStyle: {
@@ -154,46 +96,30 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderrentaldata.rentaltwosales
-                    },
-                    {
-                        name: "销售三部",
-                        type: 'line',
-                        smooth: true,
-                        areaStyle: {
-                            normal: {
-                                color: 'cyan'
-                            }
-                        },
-                        lineStyle: {
-                            normal: {
-                                width: 1.5
-                            }
-                        },
-                        data: Orderrentaldata.rentalthreesales
+                        data: Orderonedata.fullonesales
                     }
                 ]
             };
 
             // 使用刚指定的配置项和数据显示图表。
-            rentalEchart.setOption(option);
+            oneEchart.setOption(option);
 
 
-            //二手车表
+            //销售二部
             // 基于准备好的dom，初始化echarts实例
             var secondEchart = Echarts.init(document.getElementById('secondechart'), 'walden');
 
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '二手车销售情况（单位：月）',
+                    text: '销售二部销售情况（单位：月）',
                     subtext: ''
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["销售一部","销售二部","销售三部"]
+                    data: ["以租代购（新车）","租车","以租代购（二手车）","全款车"]
                 },
                 toolbox: {
                     show: false,
@@ -215,28 +141,40 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     bottom: 30
                 }],
                 series: [{
-                    name: "销售一部",
+                    name: "以租代购（新车）",
                     type: 'line',
                     smooth: true,
                     areaStyle: {
-                        normal: {
-                            color: 'cyan'
-                        }
+                        normal: {}
                     },
                     lineStyle: {
                         normal: {
                             width: 1.5
                         }
                     },
-                    data: Orderseconddata.secondonesales
+                    data: Orderseconddata.newsecondsales
                 },
                     {
-                        name: "销售二部",
+                        name: "租车",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {}
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Orderseconddata.rentalsecondsales
+                    },
+                    {
+                        name: "以租代购（二手车）",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
                             normal: {
-                                color: 'lavender'
+                                color: 'pink'
                             }
                         },
                         lineStyle: {
@@ -244,84 +182,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderseconddata.secondtwosales
+                        data: Orderseconddata.secondsecondsales
                     },
                     {
-                        name: "销售三部",
-                        type: 'line',
-                        smooth: true,
-                        areaStyle: {
-                            normal: {
-                                color: 'orange'
-                            }
-                        },
-                        lineStyle: {
-                            normal: {
-                                width: 1.5
-                            }
-                        },
-                        data: Orderseconddata.secondthreesales
-                    }
-                ]
-            };
-
-            // 使用刚指定的配置项和数据显示图表。
-            secondEchart.setOption(option);
-            
-
-            //全款车表
-            // 基于准备好的dom，初始化echarts实例
-            var fullEchart = Echarts.init(document.getElementById('fullechart'), 'walden');
-
-            // 指定图表的配置项和数据
-            var option = {
-                title: {
-                    text: '全款车销售情况（单位：月）',
-                    subtext: ''
-                },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data: ["销售一部","销售二部","销售三部"]
-                },
-                toolbox: {
-                    show: false,
-                    feature: {
-                        magicType: {show: true, type: ['stack', 'tiled']},
-                        saveAsImage: {show: true}
-                    }
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: Orderfulldata.column
-                },
-                yAxis: {},
-                grid: [{
-                    left: 'left',
-                    top: 'top',
-                    right: '10',
-                    bottom: 30
-                }],
-                series: [{
-                    name: "销售一部",
-                    type: 'line',
-                    smooth: true,
-                    areaStyle: {
-                        normal: {
-                            color: 'lilac'
-                        }
-                    },
-                    lineStyle: {
-                        normal: {
-                            width: 1.5
-                        }
-                    },
-                    data: Orderfulldata.fullonesales
-                },
-                    {
-                        name: "销售二部",
+                        name: "全款车",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
@@ -334,15 +198,84 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderfulldata.fulltwosales
+                        data: Orderseconddata.fullsecondsales
+                    }
+                ]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            secondEchart.setOption(option);
+
+
+            //销售三部
+            // 基于准备好的dom，初始化echarts实例
+            var threeEchart = Echarts.init(document.getElementById('threeechart'), 'walden');
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: '销售三部销售情况（单位：月）',
+                    subtext: ''
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ["以租代购（新车）","租车","以租代购（二手车）","全款车"]
+                },
+                toolbox: {
+                    show: false,
+                    feature: {
+                        magicType: {show: true, type: ['stack', 'tiled']},
+                        saveAsImage: {show: true}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: Orderthreedata.column
+                },
+                yAxis: {},
+                grid: [{
+                    left: 'left',
+                    top: 'top',
+                    right: '10',
+                    bottom: 30
+                }],
+                series: [{
+                    name: "以租代购（新车）",
+                    type: 'line',
+                    smooth: true,
+                    areaStyle: {
+                        normal: {}
+                    },
+                    lineStyle: {
+                        normal: {
+                            width: 1.5
+                        }
+                    },
+                    data: Orderthreedata.newthreesales
+                },
+                    {
+                        name: "租车",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {}
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Orderthreedata.rentalthreesales
                     },
                     {
-                        name: "销售三部",
+                        name: "以租代购（二手车）",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
                             normal: {
-                                color: 'blue'
+                                color: 'pink'
                             }
                         },
                         lineStyle: {
@@ -350,13 +283,30 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderfulldata.fullthreesales
+                        data: Orderthreedata.secondthreesales
+                    },
+                    {
+                        name: "全款车",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                color: 'red'
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Orderthreedata.fullthreesales
                     }
                 ]
             };
 
             // 使用刚指定的配置项和数据显示图表。
-            fullEchart.setOption(option);
+            threeEchart.setOption(option);
+            
 
         }
     };

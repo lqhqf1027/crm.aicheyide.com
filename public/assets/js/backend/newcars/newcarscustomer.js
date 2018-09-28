@@ -85,7 +85,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'models.name', title: __('销售车型')},
                             {field: 'financial_name', title: __('金融平台')},
                             {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
-                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
 
                                 }},
                             {field: 'username', title: __('Username')},
@@ -258,8 +258,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'models.name', title: __('销售车型')},
                             {field: 'financial_name', title: __('金融平台')},
                             {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
-                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + v : v;
-
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
                                 }},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},

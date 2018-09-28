@@ -107,7 +107,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
                             { field: 'financial_name', title: __('金融平台') },
                             { field: 'models.name', title: __('销售车型') },
-                            { field: 'admin.nickname', title: __('销售员') },
+                            { field: 'admin.nickname', title: __('销售员') ,formatter:Controller.api.formatter.sales},
                             {
                                 field: 'id', title: __('查看详细资料'), table: newcarAudit, buttons: [
                                     {
@@ -724,7 +724,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {field: 'order_no', title: __('Order_no')}, 
                             {field: 'createtime', title: __('提交时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'models.name', title: __('租车车型') },
-                            {field: 'admin.nickname', title: __('销售员') },
+                            {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales },
 
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
@@ -914,7 +914,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
 
                             { field: 'models.name', title: __('销售车型') },
-                            { field: 'admin.nickname', title: __('销售员') },
+                            { field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales },
                             {
                                 field: 'id', title: __('查看详细资料'), table: secondhandcarAudit, buttons: [
                                     {
@@ -1448,6 +1448,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     var buttons = $.extend([], this.buttons || []);
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
+                },
+                sales:function (value, row, index) {
+                    // console.log(row);
+
+                   return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 }
 
             }

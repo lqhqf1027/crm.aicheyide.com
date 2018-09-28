@@ -69,7 +69,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: '编号',operate:false},
                             {field: 'createtime', title: __('订车日期')},
                             // {field: 'newinventory.household', title: __('公司')},
-                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'city', title: __('居住地址'),operate:false},
@@ -201,7 +201,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: '编号',operate:false},
                             {field: 'createtime', title: __('订车日期')},
                             // {field: 'household', title: __('公司')},
-                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'city', title: __('居住地址'),operate:false},
@@ -897,6 +897,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+                sales:function (value, row, index) {
+                    // console.log(row);
+
+                    return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
+                }
             },
             events: {
                 operate: {
