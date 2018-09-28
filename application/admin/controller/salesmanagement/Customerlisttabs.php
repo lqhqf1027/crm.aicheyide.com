@@ -45,6 +45,7 @@ class Customerlisttabs extends Backend
         $backArray = array();
         $backArray['sale'] = array();
         $backArray['admin'] = array();
+        $backArray['backoffice'] = array();
         foreach ($back as $value) {
             array_push($backArray['sale'], $value['id']);
         }
@@ -53,9 +54,16 @@ class Customerlisttabs extends Backend
             ->field("id")
             ->select();
 
+        $backoffice = $this->model->where("rule_message", 'in', ['message13', 'message20','message24'])
+            ->field("id")
+            ->select();
 
         foreach ($superAdmin as $value) {
             array_push($backArray['admin'], $value['id']);
+        }
+
+        foreach ($backoffice as $value) {
+            array_push($backArray['backoffice'], $value['id']);
         }
 
         return $backArray;
@@ -70,15 +78,18 @@ class Customerlisttabs extends Backend
             ->where('id', $this->auth->id)
             ->value('rule_message');
         switch ($message) {
-            case 'message3';
+            case 'message3':
+            case 'message13':
                 return Db::name('admin')
                     ->where('rule_message', 'message8')
                     ->column('id');
-            case 'message4';
+            case 'message4':
+            case 'message20':
                 return Db::name('admin')
                     ->where('rule_message', 'message9')
                     ->column('id');
-            case 'message22';
+            case 'message22':
+            case 'message24':
                 return Db::name('admin')
                     ->where('rule_message', 'message23')
                     ->column('id');
