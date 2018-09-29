@@ -195,44 +195,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     {
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
                                         url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
-                                        hidden: function (row, value, index) {
-                                            if ((row.review_the_data == 'is_reviewing_true') && row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages && row.accreditimages && row.faceimages  && row.informationimages) {
-                                                return false;
-                                            }
-                                            else if ((row.review_the_data == 'is_reviewing_true') || !row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages || !row.accreditimages || !row.faceimages  || !row.informationimages) {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'for_the_car') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'not_through') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'the_car') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'conclude_the_contract') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'tube_into_stock') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_pass') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'take_the_car') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'take_the_data') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'inform_the_tube') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'send_the_car') {
-                                                return true;
-                                            }
-                                        },
+                                        
                                     },
                                     {
                                         name: 'for_the_car', text: '提交给销售，通知客户签订金融合同', title: '提交到销售，通知客户签订金融合同', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_newsales',
@@ -767,20 +730,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     {
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
                                         url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
-                                        hidden: function (row, value, index) {
-                                            if (row.review_the_data == 'is_reviewing_control') {
-                                                return false;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_pass') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_nopass') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'for_the_car') {
-                                                return true;
-                                            }
-                                        },
+                                        
                                     },
                                     {
                                         name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
@@ -974,26 +924,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     {
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
                                         url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
-                                        hidden: function (row, value, index) {
-                                            if (row.review_the_data == 'is_reviewing_control'  && row.id_cardimages && row.drivers_licenseimages) {
-                                                return false;
-                                            }
-                                            if (row.review_the_data == 'is_reviewing_control'  || !row.id_cardimages || !row.drivers_licenseimages) {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'the_car') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'not_through') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'for_the_car') {
-                                                return true;
-                                            }
-                                            else if (row.review_the_data == 'is_reviewing_pass') {
-                                                return true;
-                                            }
-                                        },
+                                        
                                     },
                                     {
                                         name: 'is_reviewing_pass', text: '选择库存车', title: '选择库存车', icon: 'fa fa-arrows', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-danger btn-dialog btn-secondchooseStock',

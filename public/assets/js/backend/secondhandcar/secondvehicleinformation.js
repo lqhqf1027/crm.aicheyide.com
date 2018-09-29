@@ -39,7 +39,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'sales_id', title: __('Sales_id')},
                         {field: 'licenseplatenumber', title: __('Licenseplatenumber'), formatter:function(value,row,index){
                             if(row.status_data !=  ""){
-                                return row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中</span>';
+                                return row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中, 销售员：' + row.department + '--' + row.admin_name + '</span>';
 
                             }
                             else{
@@ -76,8 +76,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 name: '', icon: 'fa fa-check-circle', text: '等待出售', classname: ' text-info ',
                                 hidden: function (row) {  /**等待出售 */
-                                    if(row.status_data == ''){
+                                    if(row.status_data == '' && row.shelfismenu != 0){
                                         return false; 
+                                    }
+                                    else if(row.shelfismenu == 0 && row.status_data == ''){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                }
+                            },
+                            {
+                                name: '', icon: 'fa fa-check-circle', text: '已下架', classname: ' text-warning ',
+                                hidden: function (row) {  /**已下架 */
+                                    if(row.shelfismenu == 0){
+                                        return false; 
+                                    }
+                                    else if(row.status_data == '' && row.shelfismenu != 0){
+                                        return true;
                                     }
                                     else if(row.status_data == 'for_the_car'){
                                       
