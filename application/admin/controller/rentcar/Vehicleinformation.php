@@ -74,6 +74,31 @@ class Vehicleinformation extends Backend
                 ->select();
 
 
+            foreach ($list as $k=>$row){
+                $data = Db::name('second_sales_order')->alias('a')
+                    ->join('secondcar_rental_models_info b','a.plan_car_second_name = b.id')
+                    ->field('a.plan_car_second_name, a.admin_id')
+                    ->select();
+                $row->visible(['id', 'licenseplatenumber', 'kilometres', 'companyaccount', 'cashpledge', 'threemonths', 'sixmonths', 'manysixmonths', 'drivinglicenseimages', 'vin',
+                        'engine_no', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
+                        'status_data', 'department', 'admin_name']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+                foreach ((array)$data as $key => $value){
+                    if($value['plan_car_second_name'] == $row['id']){
+                        $department = Db::name('auth_group_access')
+                            ->alias('a')
+                            ->join('auth_group b','a.group_id = b.id')
+                            ->where('a.uid',$value['admin_id'])
+                            ->value('b.name');
+                        $admin_name = Db::name('admin')->where('id', $value['admin_id'])->value('nickname');
+                        $list[$k]['department'] = $department;
+                        $list[$k]['admin_name'] = $admin_name;
+                    }
+                }
+            }
+
+
             $list = collection($list)->toArray();
 
 
