@@ -42,7 +42,6 @@ class Vehicleinformation extends Backend
     }
 
 
-
     /**待提车
      * @return string|\think\response\Json
      * @throws \think\Exception
@@ -65,7 +64,7 @@ class Vehicleinformation extends Backend
                 ->with(['planfull' => function ($query) {
                     $query->withField('full_total_price');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','id','avatar']);
+                    $query->withField(['nickname', 'id', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -82,7 +81,7 @@ class Vehicleinformation extends Backend
                 ->with(['planfull' => function ($query) {
                     $query->withField('full_total_price');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','id','avatar']);
+                    $query->withField(['nickname', 'id', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -99,7 +98,7 @@ class Vehicleinformation extends Backend
                 $row->visible(['planfull']);
                 $row->getRelation('planfull')->visible(['full_total_price']);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname','id','avatar']);
+                $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
 
@@ -107,11 +106,11 @@ class Vehicleinformation extends Backend
 
 
             $list = collection($list)->toArray();
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
             }
@@ -122,7 +121,6 @@ class Vehicleinformation extends Backend
         return $this->view->fetch();
 
     }
-
 
 
     /**已提车
@@ -206,7 +204,6 @@ class Vehicleinformation extends Backend
     }
 
 
-
     /**选择库存车
      * @param null $ids
      * @return string
@@ -262,6 +259,19 @@ class Vehicleinformation extends Backend
             }
 
             if ($result) {
+
+                $data = sales_inform($full_info['username']);
+
+                $email = new Email();
+
+                $receiver = Db::name('admin')->where('id', $full_info['admin_id'])->value('email');
+
+                $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+
                 //添加到违章表
                 $peccancy = DB::name('full_parment_order')
                     ->alias('po')
@@ -361,8 +371,8 @@ class Vehicleinformation extends Backend
         }
         if ($row['admin_id']) {
             $row['sales_name'] = DB::name('admin')
-            ->where('id',$row['admin_id'])
-            ->value('nickname');
+                ->where('id', $row['admin_id'])
+                ->value('nickname');
         }
 
         //身份证正反面（多图）
@@ -409,7 +419,6 @@ class Vehicleinformation extends Backend
     }
 
 
-
     /**查看订单表和库存表所有信息
      * @param null $ids
      * @return string
@@ -433,7 +442,7 @@ class Vehicleinformation extends Backend
 
         if ($row['admin_id']) {
             $row['sales_name'] = DB::name('admin')
-                ->where('id',$row['admin_id'])
+                ->where('id', $row['admin_id'])
                 ->value('nickname');
         }
 

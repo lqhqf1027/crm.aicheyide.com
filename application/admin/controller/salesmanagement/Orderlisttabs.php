@@ -636,11 +636,25 @@ class Orderlisttabs extends Backend
             }
         }
 
+        $second = Db::name('second_sales_order')
+            ->where('id',$ids)
+            ->value('plan_car_second_name');
+
+        $drivinglicenseimages = Db::name('secondcar_rental_models_info')
+            ->where('id',$second)
+            ->value('drivinglicenseimages');
+
         if ($row['admin_id']) {
             $row['sales_name'] = Db::name("admin")
                 ->where("id", $row['admin_id'])
                 ->value("nickname");
 
+        }
+
+        //行驶证照（多图）
+        $drivinglicenseimages = $drivinglicenseimages ==''? [] : explode(',',$drivinglicenseimages);
+        foreach ($drivinglicenseimages as $k => $v) {
+            $drivinglicenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
 
         //定金合同（多图）
@@ -710,6 +724,7 @@ class Orderlisttabs extends Backend
                 'application_formimages_arr' => $application_formimages,
                 'call_listfiles_arr' => $call_listfiles,
                 'new_car_marginimages_arr' => $new_car_marginimages,
+                'drivinglicenseimages_arr' => $drivinglicenseimages,
             ]
         );
         return $this->view->fetch();
