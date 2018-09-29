@@ -50,7 +50,7 @@ class Customerlisttabs extends Backend
             array_push($backArray['sale'], $value['id']);
         }
 
-        $superAdmin = $this->model->where("rule_message", 'in', ['message1', 'message21'])
+        $superAdmin = $this->model->where("rule_message", 'in', ['message1', 'message21','message6'])
             ->field("id")
             ->select();
 
@@ -72,7 +72,7 @@ class Customerlisttabs extends Backend
     /**
      * @return array|string、
      */
-    public function test()
+    public function special()
     {
         $message = Db::name('admin')
             ->where('id', $this->auth->id)
@@ -184,7 +184,7 @@ class Customerlisttabs extends Backend
         $authId = $this->auth->id; // 当前操作员id
         $noPhone = $this->noPhone(); //判断销售单里的电话没有和客户池电话相同的数据
         $getUserId = $this->getUserId();//获取当前可操作权限的id
-        $id_sale = $this->test();      //判断是否为销售经理
+        $id_sale = $this->special();      //判断是否为销售经理
         $total = model('CustomerResource')
             ->where($where)
             ->with(['platform' => function ($query) {

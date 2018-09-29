@@ -848,7 +848,7 @@ if (!function_exists('newpass_inform')) {
         if ($models_name && $username) {
             $arr = [
                 'subject' => "征信审核结果通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;color: green">' . 客户： . $username .已经通过风控审核，请及时登录后台进行处理 . '</div>'
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;color: green">' . 客户： . $username . 已经通过风控审核，请及时登录后台进行处理 . '</div>'
             ];
 
             return $arr;
@@ -868,7 +868,7 @@ if (!function_exists('newpass_finance')) {
         if ($models_name && $username) {
             $arr = [
                 'subject' => "待签订金融合同通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .你的客户： . $username . 已经通过风控审核，请通知客户进行签订金融合同 . '</div>'
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你的客户： . $username . 已经通过风控审核，请通知客户进行签订金融合同 . '</div>'
             ];
 
             return $arr;
@@ -1378,15 +1378,15 @@ if (!function_exists('send_monthly_to_risk')) {
 
 
 if (!function_exists('send_newmodels_to_sales')) {
-    function send_newmodels_to_sales($model=null,$payment=null,$monthly=null)
+    function send_newmodels_to_sales($model = null, $payment = null, $monthly = null)
     {
-        if($model && $payment && $monthly){
+        if ($model && $payment && $monthly) {
             $arr = [
                 'subject' => "定制方案审核结果通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 您需要的车型：. $model . 首付：. $payment . 元， . 月供： . $monthly . 元，该方案已添加成功，请注意查看 . '</div>'
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 您需要的车型： . $model . 首付： . $payment . 元， . 月供： . $monthly . 元，该方案已添加成功，请注意查看 . '</div>'
             ];
             return $arr;
-        }else{
+        } else {
             exit('参数错误');
         }
 
@@ -1396,15 +1396,26 @@ if (!function_exists('send_newmodels_to_sales')) {
 if (!function_exists('send_peccancy')) {
     function send_peccancy()
     {
-            $arr = [
-                'subject' => "新违章客户进入通知：",
-                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' .您有新的违章客户进入，请注意查看. '</div>'
-            ];
-            return $arr;
+        $arr = [
+            'subject' => "新违章客户进入通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 您有新的违章客户进入，请注意查看 . '</div>'
+        ];
+        return $arr;
 
 
     }
 }
+if (!function_exists('lift_car')) {
+    function lift_car($customer=null)
+    {
+        $arr = [
+            'subject' => "客户提车成功通知：",
+            'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 您的客户：.$customer.已成功提车 . '</div>'
+        ];
+        return $arr;
+    }
+}
+
 /**数组去重
  * @param $arr
  * @param $key

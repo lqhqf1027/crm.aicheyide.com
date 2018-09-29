@@ -43,7 +43,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // })
                 carPurchaseInfo.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-detail").data("area", ["95%", "95%"]);
-                    $(".btn-edit").data("area", ["80%", "80%"]);
+                    $(".btn-editone").data("area", ["80%", "80%"]);
                 });
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:车架号";};
 
@@ -462,7 +462,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 judge: function (value) {
                     var res = "";
                     var color = "";
-                    if (value == "no" || value == "" || value == null) {
+                    if(value == "" || value == null){
+                        return value;
+                    }
+                    if (value == "no") {
                         res = "<i class='fa fa-times'></i>";
                         color = "danger";
                     } else {

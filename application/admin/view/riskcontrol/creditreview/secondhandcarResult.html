@@ -134,11 +134,16 @@
             </div>
 
             <div class="col-xs-12 col-sm-8 col-md-4" style="line-height: 80px">
-                <strong>{:__('通话清单')}：</strong>
-                {foreach $call_listfiles as $k => $v}
-                <a href="{$cdn}{$v}" target="_blank">
+                {empty name="$call_listfiles_arr"}
+                <p style="margin-top: 8%"><strong>{:__('通话清单')}：</strong><span class="text-info">暂无</span></p>
+
+                {else /}
+
+                {foreach $call_listfiles_arr as $k => $v}
+                <a href="{$v}" target="_blank">
                     <button type="button" class="btn btn-info">查看通话清单</button>
                 </a> {/foreach}
+                {/empty}
             </div>
 
         </div>
@@ -171,3 +176,6 @@
 
 </form>
 
+<script>
+    image_preview($("img"));
+</script>

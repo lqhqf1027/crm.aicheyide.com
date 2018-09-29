@@ -137,6 +137,21 @@ class Takesecondcar extends Backend
             }
         }
 
+        $second = Db::name('second_sales_order')
+            ->where('id',$ids)
+            ->value('plan_car_second_name');
+
+        $drivinglicenseimages = Db::name('secondcar_rental_models_info')
+            ->where('id',$second)
+            ->value('drivinglicenseimages');
+
+        //行驶证照（多图）
+
+        $drivinglicenseimages = $drivinglicenseimages ==''? [] : explode(',',$drivinglicenseimages);
+        foreach ($drivinglicenseimages as $k => $v) {
+            $drivinglicenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
+
         //定金合同（多图）
         $deposit_contractimages = $row['deposit_contractimages']==''? [] : explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {
@@ -204,6 +219,7 @@ class Takesecondcar extends Backend
                 'application_formimages_arr' => $application_formimages,
                 'call_listfiles_arr' => $call_listfiles,
                 'new_car_marginimages_arr' => $new_car_marginimages,
+                'drivinglicenseimages_arr' => $drivinglicenseimages,
             ]
         );
         return $this->view->fetch();
@@ -232,6 +248,23 @@ class Takesecondcar extends Backend
                 $result_s = Db::name('secondcar_rental_models_info')->where('id', $second_car_id)->setField('status_data', 'the_car');
 
                 if ($result_s !== false) {
+
+                   $order_info = Db::name('second_sales_order')
+                        ->where('id',$id)
+                    ->field('username,admin_id')
+                    ->find();
+
+                    $data = sales_inform($order_info['username']);
+
+                    $email = new Email();
+
+                    $receiver = Db::name('admin')->where('id', $order_info['admin_id'])->value('email');
+
+                    $email
+                        ->to($receiver)
+                        ->subject($data['subject'])
+                        ->message($data['message'])
+                        ->send();
 
                     $peccancy = Db::name('second_sales_order')
                         ->alias('so')

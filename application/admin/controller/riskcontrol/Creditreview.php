@@ -1595,6 +1595,15 @@ class Creditreview extends Backend
     {
         $this->model = new \app\admin\model\SecondSalesOrder;
         $row = $this->model->get($ids);
+
+       $second = Db::name('second_sales_order')
+        ->where('id',$ids)
+        ->value('plan_car_second_name');
+
+        $drivinglicenseimages = Db::name('secondcar_rental_models_info')
+       ->where('id',$second)
+       ->value('drivinglicenseimages');
+
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -1608,6 +1617,14 @@ class Creditreview extends Backend
                 ->where("id",$row['admin_id'])
                 ->value("nickname");
         }
+
+        //行驶证照（多图）
+
+        $drivinglicenseimages = $drivinglicenseimages ==''? [] : explode(',',$drivinglicenseimages);
+        foreach ($drivinglicenseimages as $k => $v) {
+            $drivinglicenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
+
         //定金合同（多图）
         $deposit_contractimages = $row['deposit_contractimages'] == ''? [] : explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {
@@ -1676,6 +1693,7 @@ class Creditreview extends Backend
                 'application_formimages_arr' => $application_formimages,
                 'call_listfiles_arr' => $call_listfiles,
                 'new_car_marginimages_arr' => $new_car_marginimages,
+                'drivinglicenseimages_arr' => $drivinglicenseimages,
             ]
         );
         return $this->view->fetch();
