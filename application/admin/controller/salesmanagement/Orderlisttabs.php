@@ -455,8 +455,31 @@ class Orderlisttabs extends Backend
     /**查看详细资料 */
     public function details($ids = null)
     {
-        $this->model = model('SalesOrder');
-        $row = $this->model->get($ids);
+        $row = Db::name('sales_order')->alias('a')
+            ->join('admin b', 'b.id=a.admin_id', 'LEFT')
+            ->join('plan_acar c', 'c.id = a.plan_acar_name', 'LEFT')
+            ->join('mortgage_registration d', 'd.id = a.mortgage_registration_id', 'LEFT')
+            ->join('car_new_inventory e', 'e.id=a.car_new_inventory_id', 'LEFT')
+            ->join('mortgage f', 'f.id=a.mortgage_id', 'LEFT')
+            ->field('a.genderdata,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
+                a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
+                a.turn_to_introduce_card,a.id_cardimages,a.residence_bookletimages,a.bank_cardimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
+                a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,
+                a.undertakingimages,a.accreditimages,a.faceimages,a.informationimages,a.mate_id_cardimages,
+                b.nickname as sales_name,
+                c.tail_section,c.note,
+                d.archival_coding,d.contract_total,d.end_money,d.yearly_inspection,d.next_inspection,d.transferdate,d.hostdate,d.ticketdate,d.supplier,d.tax_amount,d.no_tax_amount,d.pay_taxesdate,d.house_fee,
+                d.luqiao_fee,d.insurance_buydate,d.car_boat_tax,d.insurance_policy,
+                d.commercial_insurance_policy,d.registry_remark,
+                e.licensenumber,e.engine_number,e.frame_number,e.household,e.note as nnote,
+                f.car_imgeas,f.lending_date,f.bank_card,f.invoice_monney,f.registration_code,f.tax,f.business_risks,f.insurance,f.mortgage_type')
+            ->where('a.id', $ids)
+            ->find();
+        // pr($row);
+        // die;
+        if ($row['new_car_marginimages'] == "") {
+            $row['new_car_marginimages'] = null;
+        }
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -465,84 +488,202 @@ class Orderlisttabs extends Backend
                 $this->error(__('You have no permission'));
             }
         }
+        //承诺书
+        $undertakingimages = $row['undertakingimages'];
+        $undertakingimage = explode(',', $undertakingimages);
 
-        if ($row['admin_id']) {
-            $row['sales_name'] = Db::name("admin")
-                ->where("id", $row['admin_id'])
-                ->value("nickname");
+        $undertakingimages_arr = [];
+        foreach ($undertakingimage as $k => $v) {
+            $undertakingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
 
+        //授权书
+        $accreditimages = $row['accreditimages'];
+        $accreditimage = explode(',', $accreditimages);
+
+        $accreditimages_arr = [];
+        foreach ($accreditimage as $k => $v) {
+            $accreditimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //面签照
+        $faceimages = $row['faceimages'];
+        $faceimage = explode(',', $faceimages);
+
+        $faceimages_arr = [];
+        foreach ($faceimage as $k => $v) {
+            $faceimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //信息表
+        $informationimages = $row['informationimages'];
+        $informationimage = explode(',', $informationimages);
+
+        $informationimages_arr = [];
+        foreach ($informationimage as $k => $v) {
+            $informationimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //配偶的身份证正反面（多图）
+        $mate_id_cardimages = $row['mate_id_cardimages'];
+        $mate_id_cardimage = explode(',', $mate_id_cardimages);
+
+        $mate_id_cardimages_arr = [];
+        foreach ($mate_id_cardimage as $k => $v) {
+            $mate_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
         //定金合同（多图）
-        $deposit_contractimages = $row['deposit_contractimages'] == ''? [] : explode(',', $row['deposit_contractimages']);
-        foreach ($deposit_contractimages as $k => $v) {
-            $deposit_contractimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $deposit_contractimages = $row['deposit_contractimages'];
+        $deposit_contractimage = explode(',', $deposit_contractimages);
+
+        $deposit_contractimages_arr = [];
+        foreach ($deposit_contractimage as $k => $v) {
+            $deposit_contractimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
         //定金收据上传
-        $deposit_receiptimages = $row['deposit_receiptimages'] == ''? [] : explode(',', $row['deposit_receiptimages']);
-        foreach ($deposit_receiptimages as $k => $v) {
-            $deposit_receiptimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $deposit_receiptimages = $row['deposit_receiptimages'];
+        $deposit_receiptimage = explode(',', $deposit_receiptimages);
+
+        $deposit_receiptimages_arr = [];
+        foreach ($deposit_receiptimage as $k => $v) {
+            $deposit_receiptimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+
         //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
-        foreach ($id_cardimages as $k => $v) {
-            $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $id_cardimages = $row['id_cardimages'];
+        $id_cardimage = explode(',', $id_cardimages);
+
+        $id_cardimages_arr = [];
+        foreach ($id_cardimage as $k => $v) {
+            $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+
         //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] ==''? [] : explode(',', $row['drivers_licenseimages']);
-        foreach ($drivers_licenseimages as $k => $v) {
-            $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $drivers_licenseimages = $row['drivers_licenseimages'];
+        $drivers_licenseimage = explode(',', $drivers_licenseimages);
+
+        $drivers_licenseimages_arr = [];
+        foreach ($drivers_licenseimage as $k => $v) {
+            $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages']==''? [] : explode(',', $row['residence_bookletimages']);
-        foreach ($residence_bookletimages as $k => $v) {
-            $residence_bookletimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $residence_bookletimages = $row['residence_bookletimages'];
+        $residence_bookletimage = explode(',', $residence_bookletimages);
+
+        $residence_bookletimages_arr = [];
+        foreach ($residence_bookletimage as $k => $v) {
+            $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+
         //住房合同/房产证（多图）
-        $housingimages = $row['housingimages'] == ''? [] : explode(',', $row['housingimages']);
-        foreach ($housingimages as $k => $v) {
-            $housingimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $housingimages = $row['housingimages'];
+        $housingimage = explode(',', $housingimages);
+
+        $housingimages_arr = [];
+        foreach ($housingimage as $k => $v) {
+            $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+
         //银行卡照（可多图）
-        $bank_cardimages = $row['bank_cardimages'] == ''? [] :  explode(',', $row['bank_cardimages']);
-        foreach ($bank_cardimages as $k => $v) {
-            $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $bank_cardimages = $row['bank_cardimages'];
+        $bank_cardimage = explode(',', $bank_cardimages);
+
+        $bank_cardimages_arr = [];
+        foreach ($bank_cardimage as $k => $v) {
+            $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+
         //申请表（多图）
-        $application_formimages = $row['application_formimages'] == ''? [] : explode(',', $row['application_formimages']);
-        foreach ($application_formimages as $k => $v) {
-            $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $application_formimages = $row['application_formimages'];
+        $application_formimage = explode(',', $application_formimages);
+
+        $application_formimages_arr = [];
+        foreach ($application_formimage as $k => $v) {
+            $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
+
         //通话清单（文件上传）
-        $call_listfiles = $row['call_listfiles'] == ''? [] : explode(',', $row['call_listfiles']);
-        foreach ($call_listfiles as $k => $v) {
-            $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
+        $call_listfiles = $row['call_listfiles'];
+        $call_listfile = explode(',', $call_listfiles);
+
+        $call_listfiles_arr = [];
+        foreach ($call_listfile as $k => $v) {
+            $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
-        /**不必填 */
-        //保证金收据
-        $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
-        if ($new_car_marginimages) {
-            foreach ($new_car_marginimages as $k => $v) {
-                $new_car_marginimages[$k] = Config::get('upload')['cdnurl'] . $v;
+
+        //保证金收据（多图）
+        $new_car_marginimages = $row['new_car_marginimages'];
+        $new_car_marginimages = explode(',', $new_car_marginimages);
+
+        $new_car_marginimages_arr = [];
+        foreach ($new_car_marginimages as $k => $v) {
+            $new_car_marginimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //担保人身份证正反面（多图）
+        $guarantee_id_cardimages = $row['guarantee_id_cardimages'];
+        $guarantee_id_cardimage = explode(',', $guarantee_id_cardimages);
+
+        $guarantee_id_cardimages_arr = [];
+        foreach ($guarantee_id_cardimage as $k => $v) {
+            $guarantee_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //担保协议（多图）
+        $guarantee_agreementimages = $row['guarantee_agreementimages'];
+        $guarantee_agreementimage = explode(',', $guarantee_agreementimages);
+
+        $guarantee_agreementimages_arr = [];
+        foreach ($guarantee_agreementimage as $k => $v) {
+            $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //车辆所有的扫描件 (多图)
+
+        $car_imgeas = $row['car_imgeas'];
+
+        $car_imgeas = explode(",", $car_imgeas);
+
+        $car_imgeas_arr = array();
+
+        foreach ($car_imgeas as $k => $v) {
+            $car_imgeas_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        $data = array(
+            'deposit_contractimages_arr' => $deposit_contractimages_arr,
+            'deposit_receiptimages_arr' => $deposit_receiptimages_arr,
+            'id_cardimages_arr' => $id_cardimages_arr,
+            'drivers_licenseimages_arr' => $drivers_licenseimages_arr,
+            'residence_bookletimages_arr' => $residence_bookletimages_arr,
+            'housingimages_arr' => $housingimages_arr,
+            'bank_cardimages_arr' => $bank_cardimages_arr,
+            'application_formimages_arr' => $application_formimages_arr,
+            'call_listfiles_arr' => $call_listfiles_arr,
+            'new_car_marginimages_arr' => $new_car_marginimages_arr,
+            'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
+            'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
+            'car_imgeas_arr' => $car_imgeas_arr,
+            'undertakingimages_arr' => $undertakingimages_arr,
+            'accreditimages_arr' => $accreditimages_arr,
+            'faceimages_arr' => $faceimages_arr,
+            'informationimages_arr' => $informationimages_arr,
+            'mate_id_cardimages_arr' => $mate_id_cardimages_arr
+
+        );
+
+        foreach ($data as $k => $v) {
+            if ($v[0] == "https://static.aicheyide.com") {
+                $data[$k] = null;
             }
         }
-        $this->view->assign(
-            [
-                'row' => $row,
-                'cdn' => Config::get('upload')['cdnurl'],
-                'deposit_contractimages_arr' => $deposit_contractimages,
-                'deposit_receiptimages_arr' => $deposit_receiptimages,
-                'id_cardimages_arr' => $id_cardimages,
-                'drivers_licenseimages_arr' => $drivers_licenseimages,
-                'residence_bookletimages_arr' => $residence_bookletimages,
-                'housingimages_arr' => $housingimages,
-                'bank_cardimages_arr' => $bank_cardimages,
-                'application_formimages_arr' => $application_formimages,
-                'call_listfiles_arr' => $call_listfiles,
-                'new_car_marginimages_arr' => $new_car_marginimages,
-            ]
-        );
+
+
+        $this->view->assign($data);
+        $this->view->assign("row", $row);
         return $this->view->fetch();
     }
 
@@ -622,112 +763,289 @@ class Orderlisttabs extends Backend
 
     }
 
-    /**查看二手车单详细资料 */
+    /**查看二手车单详细资料
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function seconddetails($ids = null)
     {
-        $this->model = new \app\admin\model\SecondSalesOrder;
-        $row = $this->model->get($ids);
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
-
-        $second = Db::name('second_sales_order')
-            ->where('id',$ids)
-            ->value('plan_car_second_name');
-
-        $drivinglicenseimages = Db::name('secondcar_rental_models_info')
-            ->where('id',$second)
-            ->value('drivinglicenseimages');
-
-        if ($row['admin_id']) {
-            $row['sales_name'] = Db::name("admin")
-                ->where("id", $row['admin_id'])
-                ->value("nickname");
-
-        }
-
-        //行驶证照（多图）
-        $drivinglicenseimages = $drivinglicenseimages ==''? [] : explode(',',$drivinglicenseimages);
-        foreach ($drivinglicenseimages as $k => $v) {
-            $drivinglicenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-
+        $row = Db::name('second_sales_order')->alias('a')
+            ->join('admin b', 'b.id=a.admin_id', 'LEFT')
+            ->join('secondcar_rental_models_info c', 'c.id = a.plan_car_second_name', 'LEFT')
+            ->join('mortgage_registration d', 'd.id = a.mortgage_registration_id', 'LEFT')
+            ->field('a.genderdata,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
+                a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
+                a.turn_to_introduce_card,a.id_cardimages,a.residence_bookletimages,a.bank_cardimages,a.marriedimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
+                a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,a.bond,
+                a.crime_undertakingimages,a.credit_reportimages,a.car_confirmationimages,a.informationimages,a.mate_id_cardimages,a.amount_collected,
+                b.nickname as sales_name,
+                c.licenseplatenumber,c.engine_number,c.vin,c.kilometres,c.companyaccount,c.tailmoney,c.drivinglicenseimages,
+                d.contract_total,d.mortgage_people,d.end_money,d.yearly_inspection,d.next_inspection,d.transferdate,d.hostdate,d.ticketdate,d.supplier,d.tax_amount,d.no_tax_amount,
+                d.pay_taxesdate,d.house_fee,d.luqiao_fee,d.insurance_buydate,d.car_boat_tax,d.insurance_policy,d.insurance,d.business_risks,
+                d.commercial_insurance_policy,d.registry_remark')
+            ->where('a.id', $ids)
+            ->find();
+        // pr($row);
+        // die;
+       
         //定金合同（多图）
-        $deposit_contractimages = $row['deposit_contractimages'] == ''? [] : explode(',', $row['deposit_contractimages']);
-        foreach ($deposit_contractimages as $k => $v) {
-            $deposit_contractimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //定金收据上传
-        $deposit_receiptimages = $row['deposit_receiptimages'] == ''? [] : explode(',', $row['deposit_receiptimages']);
-        foreach ($deposit_receiptimages as $k => $v) {
-            $deposit_receiptimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
-        foreach ($id_cardimages as $k => $v) {
-            $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] == ''? [] : explode(',', $row['drivers_licenseimages']);
-        foreach ($drivers_licenseimages as $k => $v) {
-            $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages'] == ''? [] : explode(',', $row['residence_bookletimages']);
-        foreach ($residence_bookletimages as $k => $v) {
-            $residence_bookletimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //住房合同/房产证（多图）
-        $housingimages = $row['housingimages']==''? [] : explode(',', $row['housingimages']);
-        foreach ($housingimages as $k => $v) {
-            $housingimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //银行卡照（可多图）
-        $bank_cardimages = $row['bank_cardimages'] == ''? [] : explode(',', $row['bank_cardimages']);
-        foreach ($bank_cardimages as $k => $v) {
-            $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //申请表（多图）
-        $application_formimages = $row['application_formimages'] == ''? [] : explode(',', $row['application_formimages']);
-        foreach ($application_formimages as $k => $v) {
-            $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //通话清单（文件上传）
-        $call_listfiles = explode(',', $row['call_listfiles']);
-        foreach ($call_listfiles as $k => $v) {
-            $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        /**不必填 */
-        //保证金收据
-        $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
-        if ($new_car_marginimages) {
-            foreach ($new_car_marginimages as $k => $v) {
-                $new_car_marginimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        $deposit_contractimages = $row['deposit_contractimages'];
+        $deposit_contractimage = explode(',', $deposit_contractimages);
+
+        $deposit_contractimages_arr = [];
+
+        if ($deposit_contractimage[0]) {
+            foreach ($deposit_contractimage as $k => $v) {
+                $deposit_contractimages_arr[] = Config::get('upload')['cdnurl'] . $v;
             }
         }
-        $this->view->assign(
-            [
-                'row' => $row,
-                'cdn' => Config::get('upload')['cdnurl'],
-                'deposit_contractimages_arr' => $deposit_contractimages,
-                'deposit_receiptimages_arr' => $deposit_receiptimages,
-                'id_cardimages_arr' => $id_cardimages,
-                'drivers_licenseimages_arr' => $drivers_licenseimages,
-                'residence_bookletimages_arr' => $residence_bookletimages,
-                'housingimages_arr' => $housingimages,
-                'bank_cardimages_arr' => $bank_cardimages,
-                'application_formimages_arr' => $application_formimages,
-                'call_listfiles_arr' => $call_listfiles,
-                'new_car_marginimages_arr' => $new_car_marginimages,
-                'drivinglicenseimages_arr' => $drivinglicenseimages,
-            ]
-        );
+
+        //定金收据上传
+        $deposit_receiptimages = $row['deposit_receiptimages'];
+        $deposit_receiptimage = explode(',', $deposit_receiptimages);
+
+        $deposit_receiptimages_arr = [];
+
+        if ($deposit_receiptimage[0]) {
+            foreach ($deposit_receiptimage as $k => $v) {
+                $deposit_receiptimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //身份证正反面（多图）
+        $id_cardimages = $row['id_cardimages'];
+        $id_cardimage = explode(',', $id_cardimages);
+
+        $id_cardimages_arr = [];
+
+        if ($id_cardimage[0]) {
+            foreach ($id_cardimage as $k => $v) {
+                $id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //配偶的身份证正反面（多图）
+        $mate_id_cardimages = $row['mate_id_cardimages'];
+        $mate_id_cardimage = explode(',', $mate_id_cardimages);
+
+        $mate_id_cardimages_arr = [];
+
+        if ($mate_id_cardimage[0]) {
+            foreach ($mate_id_cardimage as $k => $v) {
+                $mate_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //结婚证复印件（非必须）
+        $marriedimages = $row['marriedimages'];
+        $marriedimage = explode(',', $marriedimages);
+
+        $marriedimages_arr = [];
+
+        if ($marriedimage[0]) {
+            foreach ($marriedimage as $k => $v) {
+                $marriedimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //无犯罪记录承诺书
+        $crime_undertakingimages = $row['crime_undertakingimages'];
+        $crime_undertakingimage = explode(',', $crime_undertakingimages);
+
+        $crime_undertakingimages_arr = [];
+
+        if ($crime_undertakingimage[0]) {
+            foreach ($crime_undertakingimage as $k => $v) {
+                $crime_undertakingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //购车确认书
+        $car_confirmationimages = $row['car_confirmationimages'];
+        $car_confirmationimage = explode(',', $car_confirmationimages);
+
+        $car_confirmationimages_arr = [];
+
+        if ($car_confirmationimage[0]) {
+            foreach ($car_confirmationimage as $k => $v) {
+                $car_confirmationimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+
+
+        //驾照正副页（多图）
+        $drivers_licenseimages = $row['drivers_licenseimages'];
+        $drivers_licenseimage = explode(',', $drivers_licenseimages);
+
+        $drivers_licenseimages_arr = [];
+
+        if ($drivers_licenseimage[0]) {
+            foreach ($drivers_licenseimage as $k => $v) {
+                $drivers_licenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //户口簿【首页、主人页、本人页】
+        $residence_bookletimages = $row['residence_bookletimages'];
+        $residence_bookletimage = explode(',', $residence_bookletimages);
+
+        $residence_bookletimages_arr = [];
+
+        if ($residence_bookletimage[0]) {
+            foreach ($residence_bookletimage as $k => $v) {
+                $residence_bookletimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //住房合同/房产证（多图）
+        $housingimages = $row['housingimages'];
+        $housingimage = explode(',', $housingimages);
+
+        $housingimages_arr = [];
+
+        if ($housingimage[0]) {
+            foreach ($housingimage as $k => $v) {
+                $housingimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //银行卡照（可多图）
+        $bank_cardimages = $row['bank_cardimages'];
+        $bank_cardimage = explode(',', $bank_cardimages);
+
+        $bank_cardimages_arr = [];
+
+        if ($bank_cardimage[0]) {
+            foreach ($bank_cardimage as $k => $v) {
+                $bank_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //申请表（多图）
+        $application_formimages = $row['application_formimages'];
+        $application_formimage = explode(',', $application_formimages);
+
+        $application_formimages_arr = [];
+
+        if ($application_formimage[0]) {
+            foreach ($application_formimage as $k => $v) {
+                $application_formimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //通话清单（文件上传）
+        $call_listfiles = $row['call_listfiles'];
+        $call_listfile = explode(',', $call_listfiles);
+
+        $call_listfiles_arr = [];
+
+        if ($call_listfile[0]) {
+            foreach ($call_listfile as $k => $v) {
+                $call_listfiles_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //保证金收据（多图）
+        $new_car_marginimages = $row['new_car_marginimages'];
+        $new_car_marginimages = explode(',', $new_car_marginimages);
+
+        $new_car_marginimages_arr = [];
+
+        if ($new_car_marginimages[0]) {
+            foreach ($new_car_marginimages as $k => $v) {
+                $new_car_marginimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+        //担保人身份证正反面（多图）
+        $guarantee_id_cardimages = $row['guarantee_id_cardimages'];
+        $guarantee_id_cardimage = explode(',', $guarantee_id_cardimages);
+
+        $guarantee_id_cardimages_arr = [];
+        if ($guarantee_id_cardimage[0]) {
+            foreach ($guarantee_id_cardimage as $k => $v) {
+                $guarantee_id_cardimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+        }
+
+
+        //担保协议（多图）
+        $guarantee_agreementimages = $row['guarantee_agreementimages'];
+        $guarantee_agreementimage = explode(',', $guarantee_agreementimages);
+
+        $guarantee_agreementimages_arr = [];
+
+        if ($guarantee_agreementimage[0]) {
+            foreach ($guarantee_agreementimage as $k => $v) {
+                $guarantee_agreementimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+            }
+
+        }
+
+
+        //征信审核图片(多图)
+        $credit_reviewimages = $row['credit_reviewimages'];
+        $credit_reviewimages = explode(",", $credit_reviewimages);
+
+        $credit_reviewimages_arr = [];
+        foreach ($credit_reviewimages as $k => $v) {
+            $credit_reviewimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //行驶证照(多图)
+
+        $drivinglicenseimages = $row['drivinglicenseimages'];
+
+        $drivinglicenseimages = explode(",", $drivinglicenseimages);
+
+        $drivinglicenseimages_arr = [];
+        foreach ($drivinglicenseimages as $k => $v) {
+            $drivinglicenseimages_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+        //车辆所有扫描件相关信息
+        $car_images = $row['car_images'];
+
+        $car_images = explode(",", $car_images);
+
+        $car_images_arr = [];
+
+        foreach ($car_images as $k => $v) {
+            $car_images_arr[] = Config::get('upload')['cdnurl'] . $v;
+        }
+
+
+
+        $this->view->assign([
+            'deposit_contractimages_arr' => $deposit_contractimages_arr,
+            'deposit_receiptimages_arr' => $deposit_receiptimages_arr,
+            'id_cardimages_arr' => $id_cardimages_arr,
+            'drivers_licenseimages_arr' => $drivers_licenseimages_arr,
+            'residence_bookletimages_arr' => $residence_bookletimages_arr,
+            'housingimages_arr' => $housingimages_arr,
+            'bank_cardimages_arr' => $bank_cardimages_arr,
+            'application_formimages_arr' => $application_formimages_arr,
+            'call_listfiles_arr' => $call_listfiles_arr,
+            'new_car_marginimages_arr' => $new_car_marginimages_arr,
+            'guarantee_id_cardimages_arr' => $guarantee_id_cardimages_arr,
+            'guarantee_agreementimages_arr' => $guarantee_agreementimages_arr,
+            'credit_reviewimages_arr' => $credit_reviewimages_arr,
+            'drivinglicenseimages_arr' => $drivinglicenseimages_arr,
+            'car_images_arr' => $car_images_arr,
+            'mate_id_cardimages_arr' => $mate_id_cardimages_arr,
+            'marriedimages_arr' => $marriedimages_arr,
+            'crime_undertakingimages_arr' => $crime_undertakingimages_arr,
+            'car_confirmationimages_arr' => $car_confirmationimages_arr,
+            'row' => $row
+        ]);
+
         return $this->view->fetch();
+
     }
 
 
