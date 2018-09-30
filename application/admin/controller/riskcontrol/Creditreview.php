@@ -1703,7 +1703,7 @@ class Creditreview extends Backend
     /**
      * 查看大数据  新车、二手车、租车
      * @param null $ids
-     * @param null $bigdatatype
+     * @param null $bigdatatype  数据表区分
      * @return null|string
      * @throws \think\Exception
      */
@@ -1711,7 +1711,7 @@ class Creditreview extends Backend
     {
 
         //$bigdatatype为表名
-
+    //唐玉全	15828604423	510623196501259219  +aXoOaVsOaNriIsInBhcmFtcyI6eyJ0eCI6IjEwMiIsImRhdGEiOnsibG9hblJlY29yZHMiOltdLCJyaXNrUmVzdWx0cyI6W10sImZsb3dJZCI6IjcxNmFkOTk1N2MwNTQ0NWU4ZmVmNDE1OTIxMWFmYTBiIn19fQ==
         $bigdata = $this->toViewBigData($ids, $bigdatatype);
         pr($bigdata);
         $this->assignconfig([
@@ -1754,9 +1754,15 @@ class Creditreview extends Backend
             $result['createtime'] = time();
             // pr($result);die;
             $result['share_data'] = posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params);
+
             /**共享数据接口 */
             //只有errorCode返回 '0000'  '0001'  '0005' 时为正确查询
             if ($result['share_data']['errorCode'] == '0000' || $result['share_data']['errorCode'] == '0001' || $result['share_data']['errorCode'] == '0005') {
+//                //测试
+//                $result['share_data']['params']['data']['loanRecords'] = [
+//                    ['approvalStatusCode'=>201,'certNo'=>542301198001015308,'loanAmount'=>'(50000,100000]','loanDate'=>]
+//                ];
+//                pr($result['share_data']);return;
                 //风险数据接口
                 /**
                  * @params pricedAuthentification

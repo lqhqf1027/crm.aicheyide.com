@@ -42,6 +42,7 @@ class My extends Base
      */
     public function aboutus()
     {
+
         $pageInfo = Page::getByDiyname('aboutus');
         if (!$pageInfo || $pageInfo['status'] == 'hidden') {
             $this->error(__('单页未找到'));
