@@ -7,7 +7,7 @@
 
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
-    <table class="table table-bordered table-striped table-hover click-table">
+    <table class="table table-bordered table-striped table-hover click-table" id="click-table">
         <tbody class="">
         <th colspan="2"> 资料类型</th>
         <th>是否入库</th>
@@ -545,6 +545,37 @@
 </form>
 <script>
     $(function () {
+        var trClick = document.getElementById('click-table').addEventListener('click',function (e) {
+            // 兼容性处理
+            var event = e || window.event;
+            var target = event.target || event.srcElement;
+
+            if (target.matches('tr.tr-click')) {
+                console.log('the content is: ', target.innerHTML);
+            }
+        })
+        return;
+            // 兼容性处理
+            var event = e || window.event;
+            var target = event.target || event.srcElement;
+            // alert(obj.id+' was click')
+            console.log(e);
+
+            console.log(e.target.data)
+            if(e.currentTarget){
+
+            }
+            console.log(e.currentTarget.cells[1].childNodes.value)
+
+       
+
+        //     trClick.onclick=function (e) {
+        //         alert(1)
+        //         var e=e||window.event;
+        //         var obj=e.target||e.srcElement;
+        //         alert(obj.id+' was click')
+        // }
+        return;
         var trC = $('.click-table').find('.tr-click').each(function () {
             $(this).on('click',function () {
                 var attrTr = $(this).find('.td2 i');

@@ -198,8 +198,8 @@
             <div class="radio">
                 {foreach name="genderdataList" item="vo"}
                 <label for="row[genderdata]-{$key}">
-                    <input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"
-                        }checked{/in} disabled/> {$vo}</label>
+                    <input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata" }checked{/in} disabled/> {$vo}</label>
+
                 {/foreach}
             </div>
 
@@ -281,26 +281,26 @@
         }
 
     </script>
-    <div id="introduce-view" {if condition="$row.customer_source eq direct_the_guest" } style="display: none" {else /} style="display: block"
-        {/if}>
+    <div id="introduce-view" style="{if condition='$row.customer_source eq direct_the_guest'} display: none {else /} display: block {/if}" >
+
 
 
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_name')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]" type="text" value="{$row.turn_to_introduce_name}">
+                <input id="c-turn_to_introduce_name" class="form-control" name="row[turn_to_introduce_name]" type="text" value="{$row.turn_to_introduce_name}" disabled>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_phone')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_phone" class="form-control" name="row[turn_to_introduce_phone]" type="text" value="{$row.turn_to_introduce_phone}">
+                <input id="c-turn_to_introduce_phone" class="form-control" name="row[turn_to_introduce_phone]" type="text" value="{$row.turn_to_introduce_phone}" disabled>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('Turn_to_introduce_card')}:</label>
             <div class="col-xs-12 col-sm-8">
-                <input id="c-turn_to_introduce_card" class="form-control" name="row[turn_to_introduce_card]" type="text" value="{$row.turn_to_introduce_card}">
+                <input id="c-turn_to_introduce_card" class="form-control" name="row[turn_to_introduce_card]" type="text" value="{$row.turn_to_introduce_card}" disabled>
             </div>
         </div>
 
@@ -314,7 +314,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('是否有配偶')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[idcard]"
+            <select data-rule="required" class="form-control selectpicker"
                     onchange="idchangeFun(this)" disabled>
 
                 <option value="yes">是</option>
@@ -627,7 +627,7 @@
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
-            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="submit" class="btn btn-success btn-embossed ">{:__('OK')}</button>
             <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
         </div>
     </div>
