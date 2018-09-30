@@ -314,6 +314,63 @@ class Newcarscustomer extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
+                
+                $seventtime = \fast\Date::unixtime('day', -6);
+                $newonesales = $newtwosales = $newthreesales = [];
+                $month = date("Y-m", $seventtime);
+                $day = date('t', strtotime("$month +1 month -1 day"));
+                for ($i = 0; $i < 8; $i++)
+                    {
+                        $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                        $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                        $secondday = strtotime(date('Y-m-01', strtotime($months)));
+                        //销售一部
+                        $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+                        foreach($one_sales as $k => $v){
+                            $one_admin[] = $v['uid'];
+                        }
+                        $newonetake = Db::name('sales_order')
+                                ->where('review_the_data', 'the_car')
+                                ->where('admin_id', 'in', $one_admin)
+                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                                ->count();
+                        //销售二部
+                        $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+                        foreach($two_sales as $k => $v){
+                            $two_admin[] = $v['uid'];
+                        }
+                        $newtwotake = Db::name('sales_order')
+                                ->where('review_the_data', 'the_car')
+                                ->where('admin_id', 'in', $two_admin)
+                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                                ->count();
+                        //销售三部
+                        $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
+                        foreach($three_sales as $k => $v){
+                            $three_admin[] = $v['uid'];
+                        }
+                        $newthreetake = Db::name('sales_order')
+                                ->where('review_the_data', 'the_car')
+                                ->where('admin_id', 'in', $three_admin)
+                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                                ->count();
+        
+                        //销售一部
+                        $newonesales[$month . '(月)'] = $newonetake;
+                        //销售二部
+                        $newtwosales[$month . '(月)'] = $newtwotake;
+                        //销售三部
+                        $newthreesales[$month . '(月)'] = $newthreetake;
+
+                        $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                        $day = date('t', strtotime("$months +1 month -1 day"));
+
+                    }
+                    // pr($newtake);die;
+                    Cache::set('newonesales', $newonesales);
+                    Cache::set('newtwosales', $newtwosales);
+                    Cache::set('newthreesales', $newthreesales);
 
 
                 $peccancy = Db::name('sales_order')

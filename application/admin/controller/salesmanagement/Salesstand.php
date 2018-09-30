@@ -32,7 +32,7 @@ class Salesstand extends Backend
                 ->count();
         //以租代购（二手车）成交量
         $secondcount = Db::name('second_sales_order')
-                ->where('review_the_data', "for_the_car")
+                ->where('review_the_data', "the_car")
                 ->count();
 
         //全款成交量
@@ -44,13 +44,15 @@ class Salesstand extends Backend
         // pr($seventtime);
         // die;
         $newonesales = $rentalonesales = $secondonesales = $fullonesales = [];
-        
+
+        $month = date("Y-m", $seventtime);
+        $day = date('t', strtotime("$month +1 month -1 day"));
         //销售一部的销售情况    
         for ($i = 0; $i < 8; $i++)
         {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 31));
-                // pr($month);
-                // die;
+                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 
                 //销售一部
                 $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
@@ -69,7 +71,7 @@ class Salesstand extends Backend
                         ->count();
                 //以租代购（二手车）历史成交数
                 $secondonecount = DB::name('second_sales_order')
-                        ->where('review_the_data', "for_the_car")
+                        ->where('review_the_data', "the_car")
                         ->where('admin_id', 'in', $one_admin)
                         ->count();
 
@@ -83,25 +85,25 @@ class Salesstand extends Backend
                 $newonetake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //租车 
                 $rentalonetake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //以租代购（二手车）
                 $secondonetake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
+                        ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //全款车
                 $fullonetake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //以租代购（新车）
                 $newonesales[$month . '(月)'] = $newonetake;
@@ -111,17 +113,24 @@ class Salesstand extends Backend
                 $secondonesales[$month . '(月)'] = $secondonetake;
                 //全款车
                 $fullonesales[$month . '(月)'] = $fullonetake;
+
+                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                $day = date('t', strtotime("$months +1 month -1 day"));
         }
            
         $newsecondsales = $rentalsecondsales = $secondsecondsales = $fullsecondsales = [];
 
+        $month = date("Y-m", $seventtime);
+        $day = date('t', strtotime("$month +1 month -1 day"));
         //销售二部的销售情况    
         for ($i = 0; $i < 8; $i++)
         {
-                
-                $month = date("Y-m", $seventtime + ($i * 86400 * 31));
+                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 //销售二部
-                $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+                $two_sales = Db::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
                 foreach($two_sales as $k => $v){
                     $two_admin[] = $v['uid'];
                 }
@@ -136,13 +145,13 @@ class Salesstand extends Backend
                         ->where('admin_id', 'in', $two_admin)
                         ->count();
                 //以租代购（二手车）历史成交数
-                $secondsecondcount = DB::name('second_sales_order')
-                        ->where('review_the_data', "for_the_car")
+                $secondsecondcount = Db::name('second_sales_order')
+                        ->where('review_the_data', "the_car")
                         ->where('admin_id', 'in', $two_admin)
                         ->count();
 
                 //全款历史成交数
-                $fullsecondcount = DB::name('full_parment_order')
+                $fullsecondcount = Db::name('full_parment_order')
                         ->where('review_the_data', "for_the_car")
                         ->where('admin_id', 'in', $two_admin)
                         ->count();       
@@ -151,25 +160,25 @@ class Salesstand extends Backend
                 $newsecondtake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //租车 
                 $rentalsecondtake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //以租代购（二手车）
                 $secondsecondtake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
+                        ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //全款车
                 $fullsecondtake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //以租代购（新车）
                 $newsecondsales[$month . '(月)'] = $newsecondtake;
@@ -179,18 +188,25 @@ class Salesstand extends Backend
                 $secondsecondsales[$month . '(月)'] = $secondsecondtake;
                 //全款车
                 $fullsecondsales[$month . '(月)'] = $fullsecondtake;
+
+                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                $day = date('t', strtotime("$months +1 month -1 day"));
             
         } 
-        // pr($month);
-        // pr($rentalsecondsales);
-        // die;
+        
             
         $newthreesales = $rentalthreesales = $secondthreesales = $fullthreesales = [];
+
+        $month = date("Y-m", $seventtime);
+        $day = date('t', strtotime("$month +1 month -1 day"));
 
         //销售三部的销售情况 
         for ($i = 0; $i < 8; $i++)
         {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 31));
+                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 //销售二部
                 $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
                 foreach($three_sales as $k => $v){
@@ -208,7 +224,7 @@ class Salesstand extends Backend
                         ->count();
                 //以租代购（二手车）历史成交数
                 $secondthreecount = Db::name('second_sales_order')
-                        ->where('review_the_data', "for_the_car")
+                        ->where('review_the_data', "the_car")
                         ->where('admin_id', 'in', $three_admin)
                         ->count();
 
@@ -222,25 +238,25 @@ class Salesstand extends Backend
                 $newthreetake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //租车 
                 $rentalthreetake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //以租代购（二手车）
                 $secondthreetake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
+                        ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //全款车
                 $fullthreetake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 31), $seventtime + (($i + 1) * 86400 * 31)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //以租代购（新车）
                 $newthreesales[$month . '(月)'] = $newthreetake;
@@ -250,6 +266,10 @@ class Salesstand extends Backend
                 $secondthreesales[$month . '(月)'] = $secondthreetake;
                 //全款车
                 $fullthreesales[$month . '(月)'] = $fullthreetake;
+
+                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                $day = date('t', strtotime("$months +1 month -1 day"));
 
         }
 

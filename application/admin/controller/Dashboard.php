@@ -36,19 +36,19 @@ class Dashboard extends Backend
         //新车本月成交数
         $todaynewtake = Db::name('sales_order')
                 ->where('review_the_data', "the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         //直客成交数
         $new_direct_the_guest = Db::name('sales_order')
                 ->where('review_the_data', "the_car")
                 ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         //转介绍成交数
         $new_turn_to_introduce = Db::name('sales_order')
                 ->where('review_the_data', "the_car")
                 ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         if($todaynewtake !== 0){
                 $newguest = round(($new_direct_the_guest / $todaynewtake) * 10000)  / 10000 * 100 . '%';
@@ -66,7 +66,7 @@ class Dashboard extends Backend
         //新车本月订车数
         $todayneworder = Db::name('sales_order')
                 ->where('review_the_data', 'NEQ', "the_car")
-                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('createtime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
 
         //租车历史出租数
@@ -76,20 +76,20 @@ class Dashboard extends Backend
         //租车本月成交数
         $todayrentaltake = Db::name('rental_order')
                 ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
 
         //直客成交数
         $rental_direct_the_guest = Db::name('rental_order')
                 ->where('review_the_data', "for_the_car")
                 ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         //转介绍成交数
         $rental_turn_to_introduce = Db::name('rental_order')
                 ->where('review_the_data', "for_the_car")
                 ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         if($todayrentaltake !== 0){
                 $rentalguest = round(($rental_direct_the_guest / $todayrentaltake) * 10000)  / 10000 * 100 . '%';
@@ -109,30 +109,30 @@ class Dashboard extends Backend
         //租车本月订车数
         $todayrentalorder = Db::name('rental_order')
                 ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('createtime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
 
         //二手车历史成交数
         $secondcount = Db::name('second_sales_order')
-                 ->where('review_the_data', "for_the_car")
+                 ->where('review_the_data', "the_car")
                 ->count();
         //二手车本月成交数
         $todaysecondtake = Db::name('second_sales_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('review_the_data', "the_car")
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         
         //直客成交数
         $second_direct_the_guest = Db::name('second_sales_order')
-                ->where('review_the_data', "for_the_car")
+                ->where('review_the_data', "the_car")
                 ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         //转介绍成交数
         $second_turn_to_introduce = Db::name('second_sales_order')
-                ->where('review_the_data', "for_the_car")
+                ->where('review_the_data', "the_car")
                 ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         if($todaysecondtake !== 0){
                 $secondguest = round(($second_direct_the_guest / $todaysecondtake) * 10000)  / 10000 * 100 . '%';
@@ -152,8 +152,8 @@ class Dashboard extends Backend
 
         //二手车本月订车数
         $todaysecondorder = Db::name('second_sales_order')
-                ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('review_the_data', 'NEQ', "the_car")
+                ->where('createtime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
 
         //全款历史成交数
@@ -163,14 +163,14 @@ class Dashboard extends Backend
         //全款车本月成交数
         $todayfulltake = Db::name('full_parment_order')
                 ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         
         //直客成交数
         $full_direct_the_guest = Db::name('full_parment_order')
                 ->where('review_the_data', "for_the_car")
                 ->where('customer_source', 'straight')
-                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('delivery_datetime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         //转介绍成交数
         $full_turn_to_introduce = Db::name('full_parment_order')
@@ -195,7 +195,7 @@ class Dashboard extends Backend
         //全款车本月订车数
         $todayfullorder = Db::name('full_parment_order')
                 ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$time, ($time + 86400 * 30)])
+                ->where('createtime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
 
         //总数
@@ -276,10 +276,14 @@ class Dashboard extends Backend
         $newtwosales = Cache::get('newtwosales');
         $newthreesales = Cache::get('newthreesales');
         if(!$newonesales && !$newtwosales && !$newthreesales){
-           
+                
+            $month = date("Y-m", $seventtime);
+            $day = date('t', strtotime("$month +1 month -1 day"));
             for ($i = 0; $i < 8; $i++)
             {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 //销售一部
                 $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
                 foreach($one_sales as $k => $v){
@@ -288,7 +292,7 @@ class Dashboard extends Backend
                 $newonetake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售二部
                 $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
@@ -298,7 +302,7 @@ class Dashboard extends Backend
                 $newtwotake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售三部
                 $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
@@ -308,7 +312,7 @@ class Dashboard extends Backend
                 $newthreetake = Db::name('sales_order')
                         ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
 
                 //销售一部
@@ -317,6 +321,10 @@ class Dashboard extends Backend
                 $newtwosales[$month . '(月)'] = $newtwotake;
                 //销售三部
                 $newthreesales[$month . '(月)'] = $newthreetake;
+
+                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                $day = date('t', strtotime("$months +1 month -1 day"));
             }
             // pr($newtake);die;
             Cache::set('newonesales', $newonesales);
@@ -331,9 +339,13 @@ class Dashboard extends Backend
         $rentalthreesales = Cache::get('rentalthreesales');
         if(!$rentalonesales && !$rentaltwosales && !$rentalthreesales){
             
+            $month = date("Y-m", $seventtime);
+            $day = date('t', strtotime("$month +1 month -1 day"));
             for ($i = 0; $i < 8; $i++)
             {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 //销售一部
                 $one_sales = Db::name('auth_group_access')->where('group_id', '18')->select();
                 foreach($one_sales as $k => $v){
@@ -342,7 +354,7 @@ class Dashboard extends Backend
                 $rentalonetake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售二部
                 $two_sales = Db::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
@@ -352,7 +364,7 @@ class Dashboard extends Backend
                 $rentaltwotake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售三部
                 $three_sales = Db::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
@@ -362,7 +374,7 @@ class Dashboard extends Backend
                 $rentalthreetake = Db::name('rental_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售一部
                 $rentalonesales[$month . '(月)'] = $rentalonetake;
@@ -370,6 +382,10 @@ class Dashboard extends Backend
                 $rentaltwosales[$month . '(月)'] = $rentaltwotake;
                 //销售三部
                 $rentalthreesales[$month . '(月)'] = $rentalthreetake;
+
+                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                $day = date('t', strtotime("$months +1 month -1 day"));
             
             } 
             Cache::set('rentalonesales', $rentalonesales);
@@ -383,18 +399,22 @@ class Dashboard extends Backend
         $secondthreesales = Cache::get('secondthreesales');
         if(!$secondonesales && !$secondtwosales && !$secondthreesales){
            
+            $month = date("Y-m", $seventtime);
+            $day = date('t', strtotime("$month +1 month -1 day"));
             for ($i = 0; $i < 8; $i++)
             {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 //销售一部
                 $one_sales = Db::name('auth_group_access')->where('group_id', '18')->select();
                 foreach($one_sales as $k => $v){
                     $one_admin[] = $v['uid'];
                 }
                 $secondonetake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
+                        ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售二部
                 $two_sales = Db::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
@@ -402,9 +422,9 @@ class Dashboard extends Backend
                     $two_admin[] = $v['uid'];
                 }
                 $secondtwotake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
+                        ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售二部
                 $three_sales = Db::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
@@ -412,9 +432,9 @@ class Dashboard extends Backend
                     $three_admin[] = $v['uid'];
                 }
                 $secondthreetake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'for_the_car')
+                        ->where('review_the_data', 'the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售一部
                 $secondonesales[$month . '(月)'] = $secondonetake;
@@ -422,6 +442,11 @@ class Dashboard extends Backend
                 $secondtwosales[$month . '(月)'] = $secondtwotake;
                 //销售三部
                 $secondthreesales[$month . '(月)'] = $secondthreetake;
+
+                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                $day = date('t', strtotime("$months +1 month -1 day"));
+
             }
             Cache::set('secondonesales', $secondonesales);
             Cache::set('secondtwosales', $secondtwosales);
@@ -434,9 +459,13 @@ class Dashboard extends Backend
         $fullthreesales = Cache::get('fullthreesales');
         if(!$fullonesales && !$fulltwosales && !$fullthreesales){
            
+            $month = date("Y-m", $seventtime);
+            $day = date('t', strtotime("$month +1 month -1 day"));
             for ($i = 0; $i < 8; $i++)
             {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 //销售一部
                 $one_sales = Db::name('auth_group_access')->where('group_id', '18')->select();
                 foreach($one_sales as $k => $v){
@@ -445,7 +474,7 @@ class Dashboard extends Backend
                 $fullonetake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售二部
                 $two_sales = Db::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
@@ -455,7 +484,7 @@ class Dashboard extends Backend
                 $fulltwotake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售三部
                 $three_sales = Db::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
@@ -465,7 +494,7 @@ class Dashboard extends Backend
                 $fullthreetake = Db::name('full_parment_order')
                         ->where('review_the_data', 'for_the_car')
                         ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
                         ->count();
                 //销售一部
                 $fullonesales[$month . '(月)'] = $fullonetake;
@@ -473,6 +502,11 @@ class Dashboard extends Backend
                 $fulltwosales[$month . '(月)'] = $fulltwotake;
                 //销售三部
                 $fullthreesales[$month . '(月)'] = $fullthreetake;
+
+                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                $day = date('t', strtotime("$months +1 month -1 day"));
+
             }
             Cache::set('fullonesales', $fullonesales);
             Cache::set('fulltwosales', $fulltwosales);
