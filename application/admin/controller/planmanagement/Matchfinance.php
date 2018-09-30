@@ -16,8 +16,8 @@ use think\Config;
 class Matchfinance extends Backend
 {
     protected $model = null;
-    protected $noNeedRight = ['index', 'newprepare_match', 'secondprepare_match', 'newedit', 'secondedit', 'newbatch','secondbatch','add_sales'
-    ,'used_details','new_details'];
+    protected $noNeedRight = ['index', 'newprepare_match', 'secondprepare_match', 'newedit', 'secondedit', 'newbatch', 'secondbatch', 'add_sales'
+        , 'used_details', 'new_details'];
 
     public function _initialize()
     {
@@ -28,18 +28,17 @@ class Matchfinance extends Backend
     public function index()
     {
         $total = Db::name('sales_order')
-        ->where("review_the_data", 'not in',['send_to_internal','send_car_tube','inhouse_handling'])
-                ->count();
+            ->where("review_the_data", 'not in', ['send_to_internal', 'send_car_tube', 'inhouse_handling'])
+            ->count();
         $total1 = Db::name('second_sales_order')
-        ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
-                ->count();
+            ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
+            ->count();
         $this->view->assign([
             "total" => $total,
             "total1" => $total1
         ]);
         return $this->view->fetch();
     }
-
 
 
     /**新车匹配
@@ -49,67 +48,76 @@ class Matchfinance extends Backend
     public function newprepare_match()
     {
         $this->model = model('SalesOrder');
-       //设置过滤方法
-       $this->request->filter(['strip_tags']);
-       if ($this->request->isAjax()) {
-           //如果发送的来源是Selectpage，则转发到Selectpage
-           if ($this->request->request('keyField')) {
-               return $this->selectpage();
-           }
-           list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
-           $total = $this->model
-               ->with(['planacar' => function ($query) {
-                   $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
-               }, 'admin' => function ($query) {
-                   $query->withField('nickname');
-               }, 'models' => function ($query) {
-                   $query->withField('name');
-               }, 'newinventory' => function ($query) {
-                $query->withField('frame_number,engine_number,household,4s_shop');
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'newinventory' => function ($query) {
+                    $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
-               ->where($where)
-               ->where("review_the_data", 'not in',['send_to_internal','send_car_tube','inhouse_handling'])
-               ->order($sort, $order)
-               ->count();
+                ->where($where)
+                ->where("review_the_data", 'not in', ['send_to_internal', 'send_car_tube', 'inhouse_handling'])
+                ->order($sort, $order)
+                ->count();
 
 
-           $list = $this->model
-               ->with(['planacar' => function ($query) {
-                   $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
-               }, 'admin' => function ($query) {
-                   $query->withField('nickname');
-               }, 'models' => function ($query) {
-                   $query->withField('name');
-               }, 'newinventory' => function ($query) {
-                $query->withField('frame_number,engine_number,household,4s_shop');
+            $list = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField(['nickname', 'id', 'avatar']);
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }, 'newinventory' => function ($query) {
+                    $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
-               ->where($where)
-               ->where("review_the_data", 'not in',['send_to_internal','send_car_tube','inhouse_handling'])
-               ->order($sort, $order)
-               ->limit($offset, $limit)
-               ->select();
-           foreach ($list as $k => $row) {
+                ->where($where)
+                ->where("review_the_data", 'not in', ['send_to_internal', 'send_car_tube', 'inhouse_handling'])
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+            foreach ($list as $k => $row) {
 
-               $row->visible(['id', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data']);
-               $row->visible(['planacar']);
-               $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
-               $row->visible(['admin']);
-               $row->getRelation('admin')->visible(['nickname']);
-               $row->visible(['models']);
-               $row->getRelation('models')->visible(['name']);
-               $row->visible(['newinventory']);
+                $row->visible(['id', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data']);
+                $row->visible(['planacar']);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+                $row->visible(['newinventory']);
                 $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
-           }
+            }
 
 
-           $list = collection($list)->toArray();
+            $list = collection($list)->toArray();
 
-           $result = array('total' => $total, "rows" => $list);
-           return json($result);
-       }
+            foreach ($list as $k => $v) {
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
+
+
+            $result = array('total' => $total, "rows" => $list);
+            return json($result);
+        }
         return $this->view->fetch();
     }
-
 
 
     /**二手车匹配
@@ -119,59 +127,68 @@ class Matchfinance extends Backend
     public function secondprepare_match()
     {
         $this->model = model('SecondSalesOrder');
-       //设置过滤方法
-       $this->request->filter(['strip_tags']);
-       if ($this->request->isAjax()) {
-           //如果发送的来源是Selectpage，则转发到Selectpage
-           if ($this->request->request('keyField')) {
-               return $this->selectpage();
-           }
-           list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
-           $total = $this->model
-               ->with(['plansecond' => function ($query) {
-                   $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-               }, 'admin' => function ($query) {
-                   $query->withField('nickname');
-               }, 'models' => function ($query) {
-                   $query->withField('name');
-               }])
-               ->where($where)
-               ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
-               ->order($sort, $order)
-               ->count();
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
+                ->order($sort, $order)
+                ->count();
 
 
-           $list = $this->model
-               ->with(['plansecond' => function ($query) {
-                   $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-               }, 'admin' => function ($query) {
-                   $query->withField('nickname');
-               }, 'models' => function ($query) {
-                   $query->withField('name');
-               }])
-               ->where($where)
-               ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
-               ->order($sort, $order)
-               ->limit($offset, $limit)
-               ->select();
-           foreach ($list as $k => $row) {
+            $list = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField(['nickname', 'id', 'avatar']);
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+            foreach ($list as $k => $row) {
 
-               $row->visible(['id', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data']);
-               $row->visible(['plansecond']);
-               $row->getRelation('plansecond')->visible(['companyaccount', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney']);
-               $row->visible(['admin']);
-               $row->getRelation('admin')->visible(['nickname']);
-               $row->visible(['models']);
-               $row->getRelation('models')->visible(['name']);
-              
-           }
+                $row->visible(['id', 'financial_name', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data']);
+                $row->visible(['plansecond']);
+                $row->getRelation('plansecond')->visible(['companyaccount', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+
+            }
 
 
-           $list = collection($list)->toArray();
+            $list = collection($list)->toArray();
 
-           $result = array('total' => $total, "rows" => $list);
-           return json($result);
-       }
+            foreach ($list as $k => $v) {
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
+
+            $result = array('total' => $total, "rows" => $list);
+            return json($result);
+        }
         return $this->view->fetch();
     }
 
@@ -184,23 +201,23 @@ class Matchfinance extends Backend
 
         $this->view->assign('row', $row);
 
-        if($this->request->isAjax()){
+        if ($this->request->isAjax()) {
             $id = input("ids");
             $params = $this->request->post('row/a');
-    
+
             $financial_name = Db::name('financial_platform')->where('id', $params['financial_platform_id'])->value('name');
             $res = Db::name("sales_order")
-                ->where("id",$id)
+                ->where("id", $id)
                 ->update([
-                    "financial_name"=> $financial_name,
-                    "review_the_data"=> "is_reviewing_true"
+                    "financial_name" => $financial_name,
+                    "review_the_data" => "is_reviewing_true"
                 ]);
 
 
-           if($res){
+            if ($res) {
 
                 $channel = "demo-newcar_control";
-                $content =  "金融已经匹配，请尽快进行风控审核处理";
+                $content = "金融已经匹配，请尽快进行风控审核处理";
                 goeary_push($channel, $content);
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
@@ -209,9 +226,9 @@ class Matchfinance extends Backend
                 //销售员
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
-                $username= $data['username'];
+                $username = $data['username'];
 
-                $data = newcontrol_inform($models_name,$admin_name,$username);
+                $data = newcontrol_inform($models_name, $admin_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -222,23 +239,23 @@ class Matchfinance extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
-                    $this->success('','','success');
-                }
-                else {
+                if ($result_s) {
+                    $this->success('', '', 'success');
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
-           }else{
-               $this->error();
-           }
+            } else {
+                $this->error();
+            }
 
         }
-        
+
         return $this->view->fetch('newedit');
 
 
     }
+
     /**
      * 二手车金融匹配
      */
@@ -249,34 +266,34 @@ class Matchfinance extends Backend
         // die;
         $this->view->assign('row', $row);
 
-        if($this->request->isAjax()){
+        if ($this->request->isAjax()) {
             $id = input("ids");
             $params = $this->request->post('row/a');
-    
+
             $financial_name = Db::name('financial_platform')->where('id', $params['financial_platform_id'])->value('name');
             $res = Db::name("second_sales_order")
-                ->where("id",$id)
+                ->where("id", $id)
                 ->update([
-                    "financial_name"=> $financial_name,
-                    "review_the_data"=> "is_reviewing_control"
+                    "financial_name" => $financial_name,
+                    "review_the_data" => "is_reviewing_control"
                 ]);
-            
-            if($res){
+
+            if ($res) {
 
                 $channel = "demo-second_control";
-                $content =  "金融已经匹配，请尽快进行风控审核处理";
+                $content = "金融已经匹配，请尽快进行风控审核处理";
                 goeary_push($channel, $content);
-    
-    
+
+
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
                 $admin_name = DB::name('admin')->where('id', $data['admin_id'])->value('nickname');
                 //客户姓名
-                $username= $data['username'];
-    
-                $data = secondcontrol_inform($models_name,$admin_name,$username);
+                $username = $data['username'];
+
+                $data = secondcontrol_inform($models_name, $admin_name, $username);
                 // var_dump($data);
                 // die;
                 $email = new Email;
@@ -287,23 +304,19 @@ class Matchfinance extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
-                    $this->success('','','success');
-                }
-                else {
+                if ($result_s) {
+                    $this->success('', '', 'success');
+                } else {
                     $this->error('邮箱发送失败');
                 }
-    
-            }else{
+
+            } else {
                 $this->error();
             }
-            
+
         }
         return $this->view->fetch('secondedit');
     }
-
-
-
 
 
     /**添加销售员名称
@@ -355,48 +368,48 @@ class Matchfinance extends Backend
         }
 
         //定金合同（多图）
-        $deposit_contractimages = $row['deposit_contractimages'] == ''? [] : explode(',', $row['deposit_contractimages']);
+        $deposit_contractimages = $row['deposit_contractimages'] == '' ? [] : explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {
             $deposit_contractimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
 
         //定金收据上传
-        $deposit_receiptimages = $row['deposit_receiptimages'] == ''? [] : explode(',', $row['deposit_receiptimages']);
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] : explode(',', $row['deposit_receiptimages']);
         foreach ($deposit_receiptimages as $k => $v) {
             $deposit_receiptimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         foreach ($id_cardimages as $k => $v) {
             $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] ==''? [] : explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         foreach ($drivers_licenseimages as $k => $v) {
             $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages']==''? [] : explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         foreach ($residence_bookletimages as $k => $v) {
             $residence_bookletimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //住房合同/房产证（多图）
-        $housingimages = $row['housingimages'] == ''? [] : explode(',', $row['housingimages']);
+        $housingimages = $row['housingimages'] == '' ? [] : explode(',', $row['housingimages']);
         foreach ($housingimages as $k => $v) {
             $housingimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //银行卡照（可多图）
-        $bank_cardimages = $row['bank_cardimages'] == ''? [] :  explode(',', $row['bank_cardimages']);
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
         foreach ($bank_cardimages as $k => $v) {
             $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //申请表（多图）
-        $application_formimages = $row['application_formimages'] == ''? [] : explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
         foreach ($application_formimages as $k => $v) {
             $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //通话清单（文件上传）
-        $call_listfiles = $row['call_listfiles'] == ''? [] : explode(',', $row['call_listfiles']);
+        $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
         foreach ($call_listfiles as $k => $v) {
             $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
         }
@@ -454,42 +467,42 @@ class Matchfinance extends Backend
         }
 
         //定金合同（多图）
-        $deposit_contractimages = $row['deposit_contractimages'] == ''? [] : explode(',', $row['deposit_contractimages']);
+        $deposit_contractimages = $row['deposit_contractimages'] == '' ? [] : explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {
             $deposit_contractimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //定金收据上传
-        $deposit_receiptimages = $row['deposit_receiptimages'] == ''? [] : explode(',', $row['deposit_receiptimages']);
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] : explode(',', $row['deposit_receiptimages']);
         foreach ($deposit_receiptimages as $k => $v) {
             $deposit_receiptimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         foreach ($id_cardimages as $k => $v) {
             $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] == ''? [] : explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         foreach ($drivers_licenseimages as $k => $v) {
             $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages'] == ''? [] : explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         foreach ($residence_bookletimages as $k => $v) {
             $residence_bookletimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //住房合同/房产证（多图）
-        $housingimages = $row['housingimages']==''? [] : explode(',', $row['housingimages']);
+        $housingimages = $row['housingimages'] == '' ? [] : explode(',', $row['housingimages']);
         foreach ($housingimages as $k => $v) {
             $housingimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //银行卡照（可多图）
-        $bank_cardimages = $row['bank_cardimages'] == ''? [] : explode(',', $row['bank_cardimages']);
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
         foreach ($bank_cardimages as $k => $v) {
             $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //申请表（多图）
-        $application_formimages = $row['application_formimages'] == ''? [] : explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
         foreach ($application_formimages as $k => $v) {
             $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }

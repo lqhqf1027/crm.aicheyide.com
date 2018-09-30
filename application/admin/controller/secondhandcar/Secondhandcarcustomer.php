@@ -39,7 +39,7 @@ class Secondhandcarcustomer extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,plansecond.licenseplatenumber', true);
             $total = $this->model
                     ->with(['plansecond' => function ($query) {
                         $query->withField('licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
@@ -56,9 +56,9 @@ class Secondhandcarcustomer extends Backend
 
             $list = $this->model
                     ->with(['plansecond' => function ($query) {
-                        $query->withField('licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                        $query->withField('licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,vin,engine_number');
                     }, 'admin' => function ($query) {
-                        $query->withField('nickname');
+                        $query->withField(['nickname','id','avatar']);
                     }, 'models' => function ($query) {
                         $query->withField('name');
                     }])
@@ -68,17 +68,27 @@ class Secondhandcarcustomer extends Backend
                     ->limit($offset, $limit)
                     ->select();
             foreach ($list as $k => $row) {
-                    $row->visible(['id', 'order_no', 'username', 'genderdata', 'createtime', 'delivery_datetime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                    $row->visible(['id','financial_name', 'order_no', 'username', 'genderdata', 'createtime', 'delivery_datetime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
                     $row->visible(['plansecond']);
-                    $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
+                    $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber','vin','engine_number', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
                     $row->visible(['admin']);
-                    $row->getRelation('admin')->visible(['nickname']);
+                    $row->getRelation('admin')->visible(['id','avatar','nickname']);
                     $row->visible(['models']);
                     $row->getRelation('models')->visible(['name']);
                 }
             
 
             $list = collection($list)->toArray();
+
+            foreach ($list as $k=>$v){
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b','a.group_id = b.id')
+                    ->where('a.uid',$v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
+
 
             $result = array('total' => $total, "rows" => $list);
             return json($result);
@@ -91,7 +101,6 @@ class Secondhandcarcustomer extends Backend
     /**查看二手车单详细资料 */
     public function seconddetails($ids = null)
     {
-        die();
         $this->model = new \app\admin\model\SecondSalesOrder;
         $row = $this->model->get($ids);
         if (!$row)
