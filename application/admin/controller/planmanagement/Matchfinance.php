@@ -27,11 +27,11 @@ class Matchfinance extends Backend
 
     public function index()
     {
-        $total = DB::name('sales_order')
-                ->where("review_the_data", ["=", "is_reviewing"], ["=", "is_reviewing_true"], "or")
+        $total = Db::name('sales_order')
+        ->where("review_the_data", 'not in',['send_to_internal','send_car_tube','inhouse_handling'])
                 ->count();
-        $total1 = DB::name('second_sales_order')
-                ->where("review_the_data", ["=", "is_reviewing_finance"], ["=", "is_reviewing_control"], "or")
+        $total1 = Db::name('second_sales_order')
+        ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
                 ->count();
         $this->view->assign([
             "total" => $total,
@@ -68,7 +68,7 @@ class Matchfinance extends Backend
                 $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
                ->where($where)
-               ->where("review_the_data", ["=", "is_reviewing"], ["=", "is_reviewing_true"], "or")
+               ->where("review_the_data", 'not in',['send_to_internal','send_car_tube','inhouse_handling'])
                ->order($sort, $order)
                ->count();
 
@@ -84,7 +84,7 @@ class Matchfinance extends Backend
                 $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
                ->where($where)
-               ->where("review_the_data", ["=", "is_reviewing"], ["=", "is_reviewing_true"], "or")
+               ->where("review_the_data", 'not in',['send_to_internal','send_car_tube','inhouse_handling'])
                ->order($sort, $order)
                ->limit($offset, $limit)
                ->select();
@@ -136,7 +136,7 @@ class Matchfinance extends Backend
                    $query->withField('name');
                }])
                ->where($where)
-               ->where("review_the_data", ["=", "is_reviewing_finance"], ["=", "is_reviewing_control"], "or")
+               ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
                ->order($sort, $order)
                ->count();
 
@@ -150,7 +150,7 @@ class Matchfinance extends Backend
                    $query->withField('name');
                }])
                ->where($where)
-               ->where("review_the_data", ["=", "is_reviewing_finance"], ["=", "is_reviewing_control"], "or")
+               ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
                ->order($sort, $order)
                ->limit($offset, $limit)
                ->select();

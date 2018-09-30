@@ -298,6 +298,24 @@ class Newcarscustomer extends Backend
 
             if ($result !== false) {
 
+                $new_info = Db::name('sales_order')
+                ->where('id',$id)
+                ->field('username,admin_id')
+                ->select();
+
+                $data = sales_inform($new_info['username']);
+
+                $email = new Email();
+
+                $receiver = Db::name('admin')->where('id', $new_info['admin_id'])->value('email');
+
+                $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+
+
                 $peccancy = Db::name('sales_order')
                     ->alias('so')
                     ->join('models m', 'so.models_id = m.id')

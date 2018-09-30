@@ -230,7 +230,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('起租时间'),
                                 operate: 'RANGE',
                                 addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
+                                formatter: Controller.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD",
 
                             },
@@ -346,6 +346,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     this.icon = 'fa fa-circle';
                     return Table.api.formatter.normal.call(this, value, row, index);
+                },
+
+                datetime: function (value, row, index) {
+                    var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
+                    if (isNaN(value)) {
+                        return value ? Moment(value).format(datetimeFormat) : __('None');
+                    } else {
+                        return value ? Moment(parseInt(value) * 1000).format(datetimeFormat) : __('None');
+                    }
                 },
 
                 operate: function (value, row, index) {

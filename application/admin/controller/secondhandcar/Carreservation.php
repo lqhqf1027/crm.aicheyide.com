@@ -143,7 +143,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("review_the_data", ["NEQ", "is_reviewing"], ["NEQ", "is_reviewing_true"], ["NEQ", "send_car_tube"], "or")
+                    ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
                     ->where("amount_collected", "not null")
                     ->order($sort, $order)
                     ->count();
@@ -158,7 +158,7 @@ class Carreservation extends Backend
                         $query->withField('name');
                     }])
                     ->where($where)
-                    ->where("review_the_data", ["NEQ", "is_reviewing"], ["NEQ", "is_reviewing_true"], ["NEQ", "send_car_tube"], "or")
+                    ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
                     ->where("amount_collected", "not null")
                     ->order($sort, $order)
                     ->limit($offset, $limit)

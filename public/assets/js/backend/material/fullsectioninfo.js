@@ -449,7 +449,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 judge: function (value) {
                     var res = "";
                     var color = "";
-                    if (value == "no" || value == "" || value == null) {
+
+                    if(value == "" || value == null){
+                        return value;
+                    }
+
+                    if (value == "no") {
                         res = "<i class='fa fa-times'></i>";
                         color = "danger";
                     } else {

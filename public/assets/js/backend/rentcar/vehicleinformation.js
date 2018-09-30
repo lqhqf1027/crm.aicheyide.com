@@ -60,7 +60,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id'),operate:false},
                         // {field: 'sales_id', title: __('Sales_id')},
                         {field: 'licenseplatenumber', title: __('Licenseplatenumber'), formatter:function(value,row,index){
-                            return row.status_data==''?row.licenseplatenumber:row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中</span>';
+                            return row.status_data==''?row.licenseplatenumber:row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中, 销售员：' + row.department + '--' + row.admin_name + '</span>';
                         }},
                         {field: 'models.name', title: __('Models.name')},
                         {field: 'kilometres', title: __('Kilometres'), operate:false},
@@ -207,10 +207,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 name: '', icon: 'fa fa-check-circle', text: '等待出租', classname: ' text-info ',
                                 hidden: function (row) {  /**等待出租 */
-                                    if(row.status_data == ''){
+                                    if(row.status_data == '' && row.shelfismenu != 0){
                                         return false; 
                                     }
-                                    else if(row.shelfismenu !=0){
+
+                                    else if(row.shelfismenu == 0 && row.status_data == ''){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'is_reviewing_pass'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'is_reviewing'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'is_reviewing_true'){
+                                      
+                                        return true;
+                                    } 
+                                }
+                            },
+                            {
+                                name: '', icon: 'fa fa-check-circle', text: '已下架', classname: ' text-warning ',
+                                hidden: function (row) {  /**已下架 */
+                                    if(row.shelfismenu == 0){
+                                        return false; 
+                                    }
+                                    else if(row.status_data == '' && row.shelfismenu != 0){
 
                                         return true;
                                     }

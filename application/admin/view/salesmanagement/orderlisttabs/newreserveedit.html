@@ -214,13 +214,13 @@
 
         <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-phone" data-rule="required" class="form-control" name="row[phone]" type="text" value="{$row.phone}" disabled>
+            <input id="c-phone" data-rule="required;mobile" class="form-control" name="row[phone]" type="text" value="{$row.phone}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-id_card" data-rule="required" class="form-control" name="row[id_card]" type="text" value="{$row.id_card}" disabled>
+            <input id="c-id_card" data-rule="required;IDcard" class="form-control" name="row[id_card]" type="text" value="{$row.id_card}" disabled>
         </div>
     </div>
     <div class="form-group">
