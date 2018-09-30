@@ -55,14 +55,14 @@ class Rentcarscustomer extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,carrentalmodelsinfo.licenseplatenumber', true);
             $total = $this->model
                 ->with(['models' => function ($query) {
                     $query->withField("name");
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'carrentalmodelsinfo' => function ($query) {
-                    $query->withField(['licenseplatenumber', 'review_the_data' => 'data']);
+                    $query->withField(['licenseplatenumber', 'vin','engine_no','review_the_data' => 'data']);
                 }])
                 ->where('review_the_data', 'for_the_car')
                 ->where($where)
@@ -75,7 +75,7 @@ class Rentcarscustomer extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('id,nickname,avatar');
                 }, 'carrentalmodelsinfo' => function ($query) {
-                    $query->withField(['licenseplatenumber', 'review_the_data' => 'data']);
+                    $query->withField(['licenseplatenumber', 'vin','engine_no','review_the_data' => 'data']);
                 }])
                 ->where('review_the_data', 'for_the_car')
                 ->where($where)

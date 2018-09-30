@@ -37,6 +37,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var table = $("#prepareSend");
                 table.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-detail").data("area", ["90%", "90%"]);
+                    $(".btn-editone").data("area", ["70%", "70%"]);
 
                 });
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
@@ -366,7 +367,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     buttons.push({
                         name: 'edit',
-                        text:'编辑备注',
+                        text:'编辑',
                         icon: 'fa fa-pencil',
                         title: __('Edit'),
                         extend: 'data-toggle="tooltip"',
@@ -434,6 +435,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     'click .btn-search': function (e, value, row, index) {
                         e.stopPropagation();
 
+                        if(!row['license_plate_number'] || row['license_plate_number']==''){
+                            layer.msg('请补全车牌号');
+                            return
+                        }
+
+                        if(!row['engine_number'] || row['engine_number']==''){
+                            layer.msg('请补全发动机号');
+                            return
+                        }
+
+                        if(!row['frame_number'] ||row['frame_number']==''){
+                            layer.msg('请补全车架号');
+                            return
+                        }
+
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var ids = [{
@@ -457,35 +473,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
-
-                        layer.prompt({
-                            formType: 2,
-                            value:row.inquiry_note==null?'':row.inquiry_note,
-                            title: '备注信息',
-                            area: ['800px', '350px'] //自定义文本域宽高
-                        }, function(value, index, elem){
-
-
-                            Fast.api.ajax({
-                                url: 'riskcontrol/Peccancy/note',
-                                data: {
-                                    content:value,
-                                    ids:row.id
-                                }
-
-                            }, function (data, ret) {
-                                table.bootstrapTable('refresh');
-                                layer.close(index);
-
-                                var pre = $('#already-total').text();
-
-                                pre = parseInt(pre);
-
-                                $('#already-total').text(pre+1);
-                            })
-
-
-                        });
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
 
                     },
 
@@ -517,7 +509,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(document).on("click", clickobj, function () {
                     var ids = [];
                     var tableRow = Controller.api.selectIdsRow(table);//获取选中的行数据
-
+                    var flag = -1;
                     var page = table.bootstrapTable('getData');
 
                     // console.log(tableRow);return;
@@ -541,12 +533,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                             ids = [];
                             for (var i in tableRow) {
+
+                                if(!tableRow[i]['license_plate_number'] || tableRow[i]['license_plate_number']==''){
+                                    flag = -2;
+                                    break;
+                                }
+
+                                if(!tableRow[i]['engine_number'] || tableRow[i]['engine_number']==''){
+                                    flag = -3;
+                                    break;
+                                }
+
+                                if(!tableRow[i]['frame_number'] || tableRow[i]['frame_number']==''){
+                                    flag = -4;
+                                    break;
+                                }
+
                                 ids.push({
                                     hphm: tableRow[i]['license_plate_number'].substr(0, 2),
                                     hphms: tableRow[i]['license_plate_number'],
                                     engineno: tableRow[i]['engine_number'],
                                     classno: tableRow[i]['frame_number']
                                 })
+                            }
+
+                            if(flag==-2){
+                                layer.msg('选中行中有数据没有车牌号，请添加后查询');
+                                return;
+                            }
+
+                            if(flag==-3){
+                                layer.msg('选中行中有数据没有发动机号，请添加后查询');
+                                return;
+                            }
+
+                            if(flag==-4){
+                                layer.msg('选中行中有数据没有车架号，请添加后查询');
+                                return;
                             }
 
 
@@ -564,8 +587,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         //本页
                         btn2: function (index, layero) {
                             ids = [];
-                            // console.log(page);
                             for (var i in page) {
+
+                                if(!page[i]['license_plate_number'] || page[i]['license_plate_number']==''){
+                                    flag = -2;
+                                    break;
+                                }
+
+                                if(!page[i]['engine_number'] || page[i]['engine_number']==''){
+                                    flag = -3;
+                                    break;
+                                }
+
+                                if(!page[i]['frame_number'] || page[i]['frame_number']==''){
+                                    flag = -4;
+                                    break;
+                                }
+
+
                                 ids.push({
                                     hphm: page[i]['license_plate_number'].substr(0, 2),
                                     hphms: page[i]['license_plate_number'],
@@ -574,7 +613,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 });
                             }
 
-                            // return;false;
+                            if(flag==-2){
+                                layer.msg('本页中有数据没有车牌号，请添加后查询');
+                                return;
+                            }
+
+                            if(flag==-3){
+                                layer.msg('本页中有数据没有发动机号，请添加后查询');
+                                return;
+                            }
+
+                            if(flag==-4){
+                                layer.msg('本页中有数据没有车架号，请添加后查询');
+                                return;
+                            }
+
                             Fast.api.ajax({
                                 url: 'riskcontrol/Peccancy/sendMessage',
                                 data: {ids}

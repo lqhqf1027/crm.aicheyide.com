@@ -37,6 +37,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-back_car").data("area", ["80%", "80%"]);
                     $(".btn-rentalDetails").data("area", ["95%", "95%"]);
                 });
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索：客户姓名，车牌号";};
                 // 初始化表格
                 table.bootstrapTable({
                     url: 'rentcar/Rentcarscustomer/being_rented',
@@ -48,8 +49,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('Id'), operate: false},
-                            {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
                             {field: 'order_no', title: __('订单编号')},
+                            {field: 'username', title: __('客户姓名')},
+                            {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
+                            {field: 'carrentalmodelsinfo.vin', title: __('车架号')},
+                            {field: 'carrentalmodelsinfo.engine_no', title: __('发动机号')},
+
+                            {field: 'models.name', title: __('租车型号')},
+                            {field: 'admin.nickname', title: __('销售员'), formatter: Controller.api.formatter.sales},
+
+
+                            {field: 'phone', title: __('手机号')},
+                            {field: 'id_card', title: __('身份证号')},
+
+                            {field: 'cash_pledge', title: __('押金（元）'), operate: false},
+                            {field: 'rental_price', title: __('租金（元）'), operate: false},
+                            {field: 'tenancy_term', title: __('租期（月）'), operate: false},
+                            {
+                                field: 'car_backtime',
+                                title: __('退租时间'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {field: 'customer_information_note', title: __('备注信息'), operate: false},
                             {
                                 field: 'createtime',
                                 title: __('订车时间'),
@@ -66,32 +90,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.datetime,
                                 datetimeFormat: 'YYYY-MM-DD'
                             },
-                            {field: 'models.name', title: __('租车型号')},
-                            {field: 'admin.nickname', title: __('销售员'), formatter: Controller.api.formatter.sales},
-
-                            {field: 'username', title: __('客户姓名')},
-                            {field: 'phone', title: __('手机号')},
-                            {field: 'id_card', title: __('身份证号')},
-
-                            {
-                                field: 'genderdata',
-                                title: __('性别'),
-                                searchList: {"male": __('男'), "female": __('女')},
-                                formatter: Table.api.formatter.normal
-                            },
-                            {field: 'cash_pledge', title: __('押金（元）'), operate: false},
-                            {field: 'rental_price', title: __('租金（元）'), operate: false},
-                            {field: 'tenancy_term', title: __('租期（月）'), operate: false},
-                            {
-                                field: 'car_backtime',
-                                title: __('退租时间'),
-                                operate: 'RANGE',
-                                addclass: 'datetimerange',
-                                formatter: Controller.api.formatter.datetime,
-                                datetimeFormat: 'YYYY-MM-DD'
-                            },
-                            {field: 'customer_information_note', title: __('备注信息'), operate: false},
-
                             {
                                 field: 'operate', title: __('Operate'), table: table,
 
