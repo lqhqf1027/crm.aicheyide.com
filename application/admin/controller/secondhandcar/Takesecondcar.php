@@ -26,9 +26,7 @@ class Takesecondcar extends Backend
     {
         parent::_initialize();
 
-
     }
-
 
 
     public function index()
@@ -40,7 +38,6 @@ class Takesecondcar extends Backend
         $this->view->assign('total', $total);
         return $this->view->fetch();
     }
-
 
 
     /**待车管确认
@@ -80,7 +77,7 @@ class Takesecondcar extends Backend
                 ->with(['plansecond' => function ($query) {
                     $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
                 }, 'admin' => function ($query) {
-                    $query->withField(['nickname','avatar','id']);
+                    $query->withField(['nickname', 'avatar', 'id']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -94,17 +91,17 @@ class Takesecondcar extends Backend
                 $row->visible(['plansecond']);
                 $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['nickname','avatar','id']);
+                $row->getRelation('admin')->visible(['nickname', 'avatar', 'id']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
 
             $list = collection($list)->toArray();
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
             }
@@ -138,62 +135,62 @@ class Takesecondcar extends Backend
         }
 
         $second = Db::name('second_sales_order')
-            ->where('id',$ids)
+            ->where('id', $ids)
             ->value('plan_car_second_name');
 
         $drivinglicenseimages = Db::name('secondcar_rental_models_info')
-            ->where('id',$second)
+            ->where('id', $second)
             ->value('drivinglicenseimages');
 
         //行驶证照（多图）
 
-        $drivinglicenseimages = $drivinglicenseimages ==''? [] : explode(',',$drivinglicenseimages);
+        $drivinglicenseimages = $drivinglicenseimages == '' ? [] : explode(',', $drivinglicenseimages);
         foreach ($drivinglicenseimages as $k => $v) {
             $drivinglicenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
 
         //定金合同（多图）
-        $deposit_contractimages = $row['deposit_contractimages']==''? [] : explode(',', $row['deposit_contractimages']);
+        $deposit_contractimages = $row['deposit_contractimages'] == '' ? [] : explode(',', $row['deposit_contractimages']);
         foreach ($deposit_contractimages as $k => $v) {
             $deposit_contractimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //定金收据上传
-        $deposit_receiptimages = $row['deposit_receiptimages'] ==''? [] : explode(',', $row['deposit_receiptimages']);
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] : explode(',', $row['deposit_receiptimages']);
         foreach ($deposit_receiptimages as $k => $v) {
             $deposit_receiptimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         foreach ($id_cardimages as $k => $v) {
             $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] ==''? [] : explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         foreach ($drivers_licenseimages as $k => $v) {
             $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages'] ==''? [] : explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         foreach ($residence_bookletimages as $k => $v) {
             $residence_bookletimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //住房合同/房产证（多图）
-        $housingimages = $row['housingimages'] ==''? [] : explode(',', $row['housingimages']);
+        $housingimages = $row['housingimages'] == '' ? [] : explode(',', $row['housingimages']);
         foreach ($housingimages as $k => $v) {
             $housingimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //银行卡照（可多图）
-        $bank_cardimages = $row['bank_cardimages'] ==''? [] : explode(',', $row['bank_cardimages']);
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
         foreach ($bank_cardimages as $k => $v) {
             $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //申请表（多图）
-        $application_formimages = $row['application_formimages'] ==''? [] : explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
         foreach ($application_formimages as $k => $v) {
             $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //通话清单（文件上传）
-        $call_listfiles = $row['call_listfiles'] ==''? [] : explode(',', $row['call_listfiles']);
+        $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
         foreach ($call_listfiles as $k => $v) {
             $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
         }
@@ -226,8 +223,6 @@ class Takesecondcar extends Backend
     }
 
 
-
-
     /**确认提车
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -249,10 +244,10 @@ class Takesecondcar extends Backend
 
                 if ($result_s !== false) {
 
-                   $order_info = Db::name('second_sales_order')
-                        ->where('id',$id)
-                    ->field('username,admin_id')
-                    ->find();
+                    $order_info = Db::name('second_sales_order')
+                        ->where('id', $id)
+                        ->field('username,admin_id')
+                        ->find();
 
                     $data = sales_inform($order_info['username']);
 
@@ -292,6 +287,87 @@ class Takesecondcar extends Backend
 
             }
         }
+    }
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL)
+    {
+
+        $row = Db::name('second_sales_order')
+            ->where('id', $ids)
+            ->field('mortgage_registration_id,downpayment,service_charge,registry_registration_id')
+            ->find();
+
+        if ($row['mortgage_registration_id']) {
+            $mortgage_registration = Db::name('mortgage_registration')
+                ->where('id', $row['mortgage_registration_id'])
+                ->field('contract_number,withholding_service,other_lines,collect_account')
+                ->find();
+
+            $row = array_merge($row, $mortgage_registration);
+        }
+
+        if($row['registry_registration_id']){
+            $registry_registration = Db::name('registry_registration')
+            ->where('id',$row['registry_registration_id'])
+            ->field('id_card,registered_residence,marry_and_divorceimages,credit_reportimages,halfyear_bank_flowimages,guarantee,
+            residence_permitimages,driving_license,residence_permit,renting_contract,company_contractimages,lift_listimages,
+            deposit,truth_management_protocolimages,confidentiality_agreementimages,supplementary_contract_agreementimages,explain_situation,
+            tianfu_bank_cardimages,crime_promise,buy_rent,customer_query,fengbang_rent,maximum_guarantee_contractimages,transfer_agreement')
+            ->find();
+
+            $row = array_merge($row, $registry_registration);
+        }
+
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            $orders = $this->request->post("order/a");
+            $registration = $this->request->post("registration/a");
+            $params['classification'] = 'used';
+            if ($params) {
+                try {
+                    if ($row['mortgage_registration_id']) {
+                        Db::name('mortgage_registration')
+                            ->where('id', $row['mortgage_registration_id'])
+                            ->update($params);
+                    } else {
+                        Db::name('mortgage_registration')->insert($params);
+                        $orders['mortgage_registration_id'] = Db::name('mortgage_registration')->getLastInsID();
+
+                    }
+
+                    if($row['registry_registration_id']){
+                        Db::name('registry_registration')
+                        ->where('id',$row['registry_registration_id'])
+                        ->update($registration);
+                    }else{
+                        Db::name('registry_registration')->insert($registration);
+                        $orders['registry_registration_id'] = Db::name('registry_registration')->getLastInsID();
+                    }
+
+                    $result = Db::name('second_sales_order')
+                        ->where('id', $ids)
+                        ->update($orders);
+
+
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
     }
 
 }

@@ -79,11 +79,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: secondcarWaitconfirm,
                                 buttons: [
+                                    {
+                                        name: 'data_dock', icon: 'fa pencil', text: '资料对接', extend: 'data-toggle="tooltip"', title: __('资料对接'), classname: ' btn btn-xs btn-info btn-editone ',
+                                        hidden: function (row) {  /**已提车 */
+                                            if(row.review_the_data == 'the_car'){
+                                                return false;
+                                            }
+                                            else if(row.review_the_data == 'for_the_car'){
+
+                                                return true;
+                                            }
+                                        }
+                                    },
                                     {name: 'secondDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-secondDetails', 
                                         url: 'secondhandcar/takesecondcar/secondDetails', callback:function(data){
                                             // console.log(data)
                                         }
                                     },
+
                                     {
                                         name: 'for_the_car', text: '确认提车', icon: 'fa fa-share', title: __('确认提车'), extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-secondtakecar',
                                         hidden: function (row) {  /**确认提车 */
@@ -96,6 +109,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             } 
                                         }
                                     },
+
                                     {
                                         name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
                                         hidden: function (row) {  /**已提车 */
@@ -107,7 +121,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             } 
                                         }
-                                    }
+                                    },
+
                                 ],
 
                                 events: Controller.api.events.operate,
@@ -122,6 +137,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //数据实时统计
                 secondcarWaitconfirm.on('load-success.bs.table',function(e,data){ 
                     $(".btn-secondDetails").data("area", ["95%", "95%"]);
+                    $(".btn-editone").data("area", ["80%", "80%"]);
 
                     var secondcarWaitconfirm =  $('#badge_secondcar_waitconfirm').text(data.total); 
                     secondcarWaitconfirm = parseInt($('#badge_secondcar_waitconfirm').text());
@@ -188,6 +204,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param row
                      * @param index
                      */
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = "secondhandcar/takesecondcar/edit";
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
                     'click .btn-secondtakecar': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
