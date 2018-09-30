@@ -24,8 +24,8 @@ class Creditreview extends Backend
      * @var \app\admin\model\Ordertabs
      */
     protected $model = null;
-    protected $userid = 'junyi_testusr'; //用户id
-    protected $Rc4 = '12b39127a265ce21'; //apikey
+    protected $userid = 'junyi'; //用户id
+    protected $Rc4 = 'd477d6d1803125f1'; //apikey
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
     protected $noNeedRight = ['index', 'newcarAudit', 'rentalcarAudit', 'secondhandcarAudit', 'newauditResult', 'newpass', 'newdata', 'newnopass', 'rentalauditResult', 'rentalpass', 'rentalnopass', 'secondhandcarResult', 'secondpass', 'seconddata'
@@ -1713,7 +1713,7 @@ class Creditreview extends Backend
         //$bigdatatype为表名
 
         $bigdata = $this->toViewBigData($ids, $bigdatatype);
-        // pr($bigdata);
+        pr($bigdata);
         $this->assignconfig([
             'zcFraudScore' => $bigdata['risk_data']['data']['zcFraudScore']
         ]);

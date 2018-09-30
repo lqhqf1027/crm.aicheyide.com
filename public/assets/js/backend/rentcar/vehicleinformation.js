@@ -210,6 +210,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     if(row.status_data == '' && row.shelfismenu != 0){
                                         return false; 
                                     }
+
                                     else if(row.shelfismenu == 0 && row.status_data == ''){
                                       
                                         return true;
@@ -243,6 +244,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return false; 
                                     }
                                     else if(row.status_data == '' && row.shelfismenu != 0){
+
                                         return true;
                                     }
                                     else if(row.status_data == 'is_reviewing_pass'){
@@ -264,7 +266,46 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.status_data == 'is_reviewing_true'){
                                       
                                         return true;
-                                    } 
+                                    }
+                                    else if(row.shelfismenu == 0 ){
+                                        return true;
+                                    }
+                                }
+                            },
+                            {
+                                name: '', icon: 'fa fa-check-circle', text: '已下架', classname: ' text-warning ',
+                                hidden: function (row) {  /**已下架 */
+                                    if(row.shelfismenu == 0 ){
+                                        return false;
+                                    }
+                                    else if(row.shelfismenu != 0){
+                                        return true;
+
+                                    }
+                                    else if(row.status_data == 'is_reviewing_pass'){
+
+                                        return true;
+                                    }
+                                    else if(row.status_data == 'for_the_car'){
+
+                                        return true;
+                                    }
+                                    else if(row.status_data == 'is_reviewing'){
+
+                                        return true;
+                                    }
+                                    else if(row.status_data == 'the_car'){
+
+                                        return true;
+                                    }
+                                    else if(row.status_data == 'is_reviewing_true'){
+
+                                        return true;
+                                    }
+                                    else if(row.status_data ==''){
+
+                                        return true;
+                                    }
                                 }
                             },
                             /**
@@ -296,7 +337,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     else if(row.status_data == 'is_reviewing_true'){
                                       
                                         return true;
-                                    } 
+                                    }
+                                    else if(row.shelfismenu == 0){
+                                        return true;
+                                    }
                                    
                                 },
                                 
