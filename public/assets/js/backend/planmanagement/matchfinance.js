@@ -60,7 +60,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         var text = $(this).siblings('td').eq(3).text();
 
-                        if(text || text!=''){
+
+                        if(text||text!=''){
                            $(this).find('input[type=checkbox]').attr('disabled','disabled');
                         }
 
@@ -102,7 +103,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD"
                             },
                             {field: 'newinventory.household', title: __('公司')},
-                            {field: 'financial_name', title: __('金融平台')},
+                            {field: 'financial_name', title: __('金融平台'),formatter:function (v,r,e) {
+                                     if(!v){
+                                         return '';
+                                     }
+
+                                     return v;
+                                }},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
 
@@ -918,7 +925,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'plansecond.companyaccount', title: __('公司')},
                             {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'username', title: __('客户姓名')},
-                            {field: 'financial_name', title: __('金融平台')},
+                            {field: 'financial_name', title: __('金融平台'),formatter:function (v,r,e) {
+                                    if(!v){
+                                        return '';
+                                    }
+
+                                    return v;
+                                }},
 
                             // {field: 'id_card', title: __('身份证号')},
                             // {field: 'phone', title: __('联系电话')},

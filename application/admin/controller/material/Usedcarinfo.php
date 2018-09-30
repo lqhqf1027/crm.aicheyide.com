@@ -66,10 +66,7 @@ class Usedcarinfo extends Backend
                         $query->withField('name');
                     }])
                 ->where(function ($query){
-                    $query->where([
-                        'review_the_data'=>'the_car',
-
-                    ]);
+                    $query->where('mortgage_registration_id','not null');
                 })
                 ->where($where)
                 ->order($sort, $order)
@@ -85,10 +82,7 @@ class Usedcarinfo extends Backend
                         $query->withField('name');
                     }])
                 ->where(function ($query){
-                    $query->where([
-                        'review_the_data'=>'the_car',
-
-                    ]);
+                    $query->where('mortgage_registration_id','not null');
                 })
                 ->where($where)
                 ->order($sort, $order)
@@ -499,10 +493,7 @@ class Usedcarinfo extends Backend
                     $query->withField(['nickname','id','avatar']);
                 }, 'registryregistration'])
                 ->where(function ($query){
-                    $query->where([
-                        'review_the_data'=>'the_car',
-
-                    ]);
+                    $query->where('registry_registration_id','not null');
                 })
                 ->where($where)
                 ->order($sort, $order)
@@ -517,10 +508,7 @@ class Usedcarinfo extends Backend
                     $query->withField(['nickname','id','avatar']);
                 }, 'registryregistration'])
                 ->where(function ($query){
-                    $query->where([
-                        'review_the_data'=>'the_car',
-
-                    ]);
+                    $query->where('registry_registration_id','not null');
                 })
                 ->where($where)
                 ->order($sort, $order)
