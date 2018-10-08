@@ -40,6 +40,7 @@ class Exchangeplatformtabs extends Backend
         ->field('id,mortgage_id')
         ->select();
 
+
         foreach ($mid as $k=>$v){
             if(!$v['mortgage_id']){
                 Db::name('mortgage')->insert(['mortgage_type'=>'new_car']);
@@ -225,20 +226,24 @@ class Exchangeplatformtabs extends Backend
         $this->model = new \app\admin\model\Mortgage();
 
 
-        $gage_id = Db::name("sales_order")
+        $data = Db::name("sales_order")
             ->where("id", $ids)
-            ->field("mortgage_id")
-            ->find()['mortgage_id'];
-
-        $row = $this->model->get($gage_id);
-
+            ->field("mortgage_id,car_new_inventory_id")
+            ->find();
+    
+        $row = $this->model
+                ->where('id', $data['mortgage_id'])
+                ->find();
+        
         if ($row) {
+            $row['licensenumber'] = Db::name('car_new_inventory')->where('id',$data['car_new_inventory_id'])->value('licensenumber');
+
             $this->view->assign("row", $row);
         }
 
-
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -261,7 +266,10 @@ class Exchangeplatformtabs extends Backend
                             ->setField("mortgage_id", $this->model->id);
 
                     }
-
+                    Db::name("car_new_inventory")
+                        ->where("id", $data['car_new_inventory_id'])
+                        ->setField("licensenumber", $params['licensenumber']);
+                    
                     if ($result !== false) {
                         $this->success();
                     } else {
@@ -388,15 +396,7 @@ class Exchangeplatformtabs extends Backend
      */
     public function details($ids = null)
     {
-        $res = Db::view("crm_plan_acar_view", "id,lending_date,household,createtime,bank_card,username,id_card,phone,detailed_address,name,invoice_monney,registration_code,tax,business_risks,insurance,payment,delivery_datetime,licensenumber,mortgage_type,margin,tail_section,gps,note,4s_shop,engine_number,frame_number,presentationcondition,car_imgeas,plan_name,emergency_contact_1,emergency_contact_2,family_members,id_cardimages,drivers_licenseimages,residence_bookletimages,housingimages,bank_cardimages,application_formimages,call_listfiles,deposit_contractimages,deposit_receiptimages,genderdata,city")
-            ->where("id", $ids)
-            ->select();
-        $res = $res[0];
-
-        $this->view->assign([
-            'row' => $res
-        ]);
-
+        
         return $this->view->fetch();
     }
 

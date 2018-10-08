@@ -63,7 +63,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {checkbox: true},
                             {field: 'id', title: __('ID'), operate: false},
                             {field: 'mortgageregistration.archival_coding', title: __('档案编码')},
-                            {field: 'sales.nickname', title: __('部门-销售员'), operate: false,formatter:Controller.api.formatter.sales},
+                            {field: 'admin.nickname', title: __('部门-销售员'), operate: false,formatter:Controller.api.formatter.sales},
                             {
                                 field: 'createtime',
                                 title: __('签订日期'),
@@ -201,7 +201,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
                             {field: 'newinventory.household', title: __('所属分公司')},
-                            {field: 'sales.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {
                                 field: 'registryregistration.id_card',
                                 title: __('身份证复印件'),
@@ -304,12 +304,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'registryregistration.tianfu_bank_cardimages',
                                 title: __('天府银行卡附件'),
                                 formatter: Controller.api.formatter.judge, operate: false
-                            },
-                            {
-                                field: 'registryregistration.other_documentsimages',
-                                title: __('其他'),
-                                formatter: Controller.api.formatter.judge,
-                                operate: false
                             },
                             {
                                 field: 'registryregistration.driving_licenseimages',
