@@ -74,14 +74,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 extend: 'data-toggle="tooltip"', 
                                 title: __('编辑'), 
                                 classname: 'btn btn-xs btn-success btn-editone',
-                                hidden: function (row) { 
-                                    if (!row.the_car_username) {
-                                        return false;
-                                    }
-                                    else if (row.the_car_username) {
-                                        return true;
-                                    }
-                                }
+                                
                             },
                             /**车辆已出售 */
                             {

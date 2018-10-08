@@ -83,7 +83,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
 
-                    $(".btn-btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-details").data("area", ["95%", "95%"]);
                     $(".btn-edit").data("area", ["80%", "80%"]);
                     $(".btn-loan").data("area", ["40%", "40%"]);
                     });
@@ -164,6 +165,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: __('更改平台'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
+                                    },
+                                    {
+                                        
+                                        name: 'details', 
+                                        text: '查看详细资料', 
+                                        title: '查看订单详细资料', 
+                                        icon: 'fa fa-eye', 
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-primary btn-dialog btn-details',
+                                        url: 'banking/exchangeplatformtabs/details', callback: function (data) {
+
+                                        }
                                     },
 
                                 ]
