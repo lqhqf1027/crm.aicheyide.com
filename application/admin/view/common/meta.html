@@ -40,8 +40,9 @@
         }
 
         obj.each(function () {
-            $(this).on("click", function () {
-
+            $(this).on("click", function (e) {
+                //阻止事件冒泡
+                window.event? window.event.cancelBubble = true : e.stopPropagation();
                 //给body添加弹出层的html
                 $("body").append("<div class=\"mask-layer\" style=\"magin-bottom: 10px\">" +
                     "   <div class=\"mask-layer-black\"></div>" +
@@ -49,9 +50,9 @@
                     "       <div class=\"mask-layer-container-operate\">" +
                     "           <button class=\"mask-prev btn-default-styles\">上一张</button>" +
                     "           <button class=\"mask-clockwise btn-default-styles\">旋转</button>" +
-                    "           <button class=\"mask-close btn-default-styles\">关闭 <i class='fa fa-power-off'></i></button>" +
+                    "           <button class=\"mask-close btn-default-styles\" style='background:red'>关闭 <i class='fa fa-power-off'></i></button>" +
                     "           <button class=\"mask-next btn-default-styles\">下一张</button>" +
-                    "           <button class=\"mask-all-screen btn-default-styles\">全屏/退出</button>" +
+                    "           <button class=\"mask-all-screen btn-default-styles\">全屏</button>" +
                     "       </div>" +
                     "       <div class=\"mask-layer-imgbox auto-img-center\"></div>" +
                     "   </div>" +
@@ -193,15 +194,70 @@
 
                 //下一张
                 $(".mask-next").on("click", function () {
-
-                    console.log(arrPic[num]);
                     $(".mask-layer-imgbox p img").remove();
-                    num++;
-                    if (num == len) {
-                        num = 0;
-                    }
-                    showImg();
+                    num++; if (num == len)  num = 0; showImg();
                 });
+                //上一张
+                var mask_prev = $(".mask-prev").on("click", function () {
+                    $(".mask-layer-imgbox p img").remove();
+                    num--;if (num == -1) num = len - 1;showImg();
+                });
+                //键盘事件
+                var spin_n = 0;
+                function jumpPage() {
+                    //j键盘左键 上一张
+                    if (event.keyCode==37){
+                        $(".mask-layer-imgbox p img").remove();
+                        num--; if (num == -1)  num = len - 1; showImg()
+                    }
+                    //j键盘右键 下一张
+                    if (event.keyCode==39){
+                        $(".mask-layer-imgbox p img").remove();
+                        num++;
+                        if (num == len) num = 0;showImg();
+                    }
+                    //j键盘上键 顺时针旋转
+                    if (event.keyCode==38){
+                        spin_n += 90;
+                        $(".mask-layer-imgbox img").parent("p").css({
+                            "transform": "rotate(" + spin_n + "deg)",
+                            "-moz-transform": "rotate(" + spin_n + "deg)",
+                            "-ms-transform": "rotate(" + spin_n + "deg)",
+                            "-o-transform": "rotate(" + spin_n + "deg)",
+                            "-webkit-transform": "rotate(" + spin_n + "deg)"
+                        });
+
+                        $(".mask-layer-imgbox img").css({
+                            "transform": "scale(" + 1 + ")",
+                            "-moz-transform": "scale(" + 1 + ")",
+                            "-ms-transform": "scale(" + 1 + ")",
+                            "-o-transform": "scale(" + 1 + ")",
+                            "-webkit-transform": "scale(" + 1 + ")",
+                        });
+                    }
+                    //j键盘下键 逆时针旋转
+                    if (event.keyCode==40){
+                        spin_n -= 90;
+                        $(".mask-layer-imgbox img").parent("p").css({
+                            "transform": "rotate(" + spin_n + "deg)",
+                            "-moz-transform": "rotate(" + spin_n + "deg)",
+                            "-ms-transform": "rotate(" + spin_n + "deg)",
+                            "-o-transform": "rotate(" + spin_n + "deg)",
+                            "-webkit-transform": "rotate(" + spin_n + "deg)"
+                        });
+
+                        $(".mask-layer-imgbox img").css({
+                            "transform": "scale(" + 1 + ")",
+                            "-moz-transform": "scale(" + 1 + ")",
+                            "-ms-transform": "scale(" + 1 + ")",
+                            "-o-transform": "scale(" + 1 + ")",
+                            "-webkit-transform": "scale(" + 1 + ")",
+                        });
+                    }
+
+                }
+                document.onkeydown=jumpPage;
+
                 //全屏
                 var fullscreen = function () {
                     elem = document.body;
@@ -260,15 +316,7 @@
                 });
 
 
-                //上一张
-                $(".mask-prev").on("click", function () {
-                    $(".mask-layer-imgbox p img").remove();
-                    num--;
-                    if (num == -1) {
-                        num = len - 1;
-                    }
-                    showImg();
-                });
+
 
 
             })

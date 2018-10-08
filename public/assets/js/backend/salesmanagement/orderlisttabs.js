@@ -101,7 +101,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'id', title: __('查看详细资料'), table: orderAcar, buttons: [
                                     {
                                         name: 'details', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-details',
-                                        url: 'salesmanagement/Orderlisttabs/details', callback: function (data) {
+                                        url: 'Sharedetailsdatas/new_car_share_data', callback: function (data) {
 
                                         }
                                     }
