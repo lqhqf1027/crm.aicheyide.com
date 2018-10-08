@@ -288,12 +288,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.judge, operate: false
                             },
                             {
-                                field: 'registryregistration.other_documentsimages',
-                                title: __('其他'),
-                                formatter: Controller.api.formatter.judge,
-                                operate: false
-                            },
-                            {
                                 field: 'registryregistration.driving_licenseimages',
                                 title: __('行驶证'),
                                 formatter: Controller.api.formatter.judge,
