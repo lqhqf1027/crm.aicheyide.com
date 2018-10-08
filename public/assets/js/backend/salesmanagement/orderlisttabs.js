@@ -1,16 +1,23 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    /**
+     * goeasy推送的key
+     */
     var goeasy = new GoEasy({
         appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
     });
 
     var Controller = {
+
         index: function () {
+
             Table.api.init({
 
             });
 
-            //绑定事件
+            /**
+             * 绑定事件
+             */
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var panel = $($(this).attr("href"));
                 if (panel.size() > 0) {
@@ -19,11 +26,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         $($(this).attr("href")).find(".btn-refresh").trigger("click");
                     });
                 }
-                //移除绑定的事件
+                /**
+                 * 移除绑定的事件
+                 */
                 $(this).unbind('shown.bs.tab');
             });
 
-            //必须默认触发shown.bs.tab事件
+            /**
+             * 必须默认触发shown.bs.tab事件
+             */
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
 
             $('ul.nav-tabs li a[data-toggle="tab"]').each(function () {
@@ -31,7 +42,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             })
 
         },
+        /**
+         * 多表格渲染
+         */
         table: {
+
             /**
              * 新车单
              */
@@ -42,11 +57,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(".btn-edit").data("area", ["95%", "95%"]);
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名、车牌号";};
 
-                // 初始化表格
+                /**
+                 * 初始化表格
+                 */
                 orderAcar.bootstrapTable({
                     url: 'salesmanagement/Orderlisttabs/orderAcar',
                     extend: {
-                        // index_url: 'order/salesorder/index',
+                        
                         add_url: 'salesmanagement/Orderlisttabs/add',
                         edit_url: 'salesmanagement/Orderlisttabs/edit',
                         newreserveedit_url: 'salesmanagement/Orderlisttabs/newreserveedit',
@@ -102,7 +119,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: orderAcar,
                                 buttons: [
-                                    /**提交给内勤**/
+                                    /**
+                                     * 提交内勤
+                                     */
                                     {
                                         name: 'submit_audit', text: '提交给内勤', title: '提交到当前部门内勤,用户记录实收定金金额与装饰', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_audit',
                                         url: 'salesmanagement/orderlisttabs/sedAudit',
@@ -163,10 +182,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**删除 */
+                                    /**、
+                                     * 删除 
+                                     */
                                     {
                                         icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        // url: 'order/salesorder/del',
+                                       
                                         hidden: function (row) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -223,10 +244,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         },
 
                                     },
-                                    /**预定编辑 */
+                                    /**
+                                     * 预定编辑 
+                                     */
                                     {
                                         name: 'send_to_internal', text: '预定编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('编辑订车资料'), classname: 'btn btn-xs btn-success btn-newreserveeditone',
-                                        // url: 'order/salesorder/edit',
+                                       
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -281,7 +304,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
-                                    /**内勤正在处理中 */
+                                    /**
+                                     * 内勤正在处理中
+                                     */
                                     {
                                         name: 'inhouse_handling', text: '正在等待内勤录入实收定金和装饰',
                                         hidden: function (row) {
@@ -338,7 +363,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**录入审核资料*/
+                                    /**
+                                     * 录入审核资料
+                                     */
                                     {
                                         name: 'newcontroladd', text: '录入审核资料', icon: 'fa fa-plus', extend: 'data-toggle="tooltip"', title: __('录入审核资料'), classname: 'btn btn-xs btn-success btn-newcontroladd',
                                         
@@ -352,7 +379,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
-                                    /**车管正在处理中 */
+                                    /**
+                                     * 车管正在处理中 
+                                     */
                                     {
                                         name: 'send_car_tube', text: '正在等待车管将订车表发送给财务匹配金融',
                                         hidden: function (row) {
@@ -409,7 +438,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**正在匹配金融 */
+                                    /**
+                                     * 正在匹配金融 
+                                     */
                                     {
                                         name: 'is_reviewing', text: '产品经理正在对销售方案匹配金融平台',
                                         hidden: function (row) {
@@ -469,7 +500,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**风控正在审核中 */
+                                    /**
+                                     * 风控正在审核中 
+                                     */
                                     {
                                         name: 'is_reviewing_true', text: '风控正在审核该客户的资料',
                                         hidden: function (row) {
@@ -526,7 +559,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**征信已通过 */
+                                    /**
+                                     * 征信已通过 
+                                     */
                                     {
                                         name: 'for_the_car', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
                                         hidden: function (row) {
@@ -583,7 +618,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**客户在签订金融合同*/
+                                    /**
+                                     * 客户在签订金融合同
+                                     */
                                     {
                                         name: 'conclude_the_contract', icon: 'fa fa-check-circle', text: '客户在签订金融合同', classname: ' text-info ',
                                         hidden: function (row) {
@@ -640,7 +677,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**征信已通过 */
+                                    /**
+                                     * 征信已通过 
+                                     */
                                     {
                                         name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过', classname: ' text-info ',
                                         hidden: function (row) {
@@ -697,7 +736,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**风控匹配车辆*/
+                                    /**
+                                     * 风控匹配车辆
+                                     */
                                     {
                                         name: 'take_the_car', icon: 'fa fa-check-circle', text: '风控匹配车辆', classname: ' text-info ',
                                         hidden: function (row) {
@@ -754,7 +795,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**补全客户提车资料*/
+                                    /**
+                                     * 补全客户提车资料
+                                     */
                                     {
                                         name: 'take_the_data', text: '补全客户提车资料', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('补全客户提车资料'), classname: 'btn btn-xs btn-success btn-customer_information',
                                         
@@ -812,7 +855,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
-                                    /**资料补全，提交车管提车*/
+                                    /**
+                                     * 资料补全，提交车管提车
+                                     */
                                     {
                                         name: 'inform_the_tube', text: '资料补全，提交车管提车', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('资料补全，提交车管提车'), classname: 'btn btn-xs btn-info btn-newinform_tube',
                                         
@@ -870,7 +915,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
-                                    /***提车资料编辑*/
+                                    /**
+                                     *提车资料编辑
+                                     */
                                     {
                                         name: 'edit', text: '提车资料编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('提车资料编辑'), classname: 'btn btn-xs btn-success btn-editone',
                                         
@@ -928,7 +975,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
-                                    /**等待提车*/
+                                    /**
+                                     * 等待提车
+                                     */
                                     {
                                         name: 'send_the_car', icon: 'fa fa-check-circle', text: '等待提车', classname: ' text-info ',
                                         hidden: function (row) {  /**等待提车*/
@@ -985,7 +1034,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**车管正在录入库存**/
+                                    /**
+                                     * 车管正在录入库存
+                                     */
                                     {
                                         name: 'tube_into_stock', icon: 'fa fa-check-circle', text: '车管正在录入库存', classname: ' text-info ',
                                         hidden: function (row) {  /**车管正在录入库存 */
@@ -1042,7 +1093,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**征信不通过 */
+                                    /**
+                                     * 征信不通过
+                                     */
                                     {
                                         name: 'not_through', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
                                         hidden: function (row) {
@@ -1100,7 +1153,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**需交保证金 */
+                                    /**
+                                     * 需交保证金
+                                     */
                                     {
                                         name: 'the_guarantor', icon: 'fa fa-upload', text: '需交保证金', extend: 'data-toggle="tooltip"', title: __('点击上传保证金收据'), classname: 'btn btn-xs btn-warning btn-the_guarantor',
                                         hidden: function (row) {
@@ -1158,7 +1213,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**已提车 */
+                                    /**
+                                     * 已提车
+                                     */
                                     {
 
                                         name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
@@ -1216,21 +1273,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     }
-
-
-
                                 ],
                                 events: Controller.api.events.operate,
-
                                 formatter: Controller.api.formatter.operate
-
                             }
                         ]
                     ]
 
                 });
 
-
+                /**
+                 * 刷新表格渲染
+                 */
                 orderAcar.on('load-success.bs.table', function (e, data) {
                     // console.log(data);
                     $('#badge_order_acar').text(data.total);
@@ -1239,8 +1293,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(orderAcar);
 
-                //实时消息
-                //通过---签订金融合同
+                /**
+                 * 通过---签订金融合同
+                 */
                 goeasy.subscribe({
                     channel: 'demo-newpass_finance',
                     onMessage: function(message){
@@ -1254,8 +1309,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         
                     }
                 });
+
+                /**
+                 * 车管通知销售，客户已提车
+                 */
+                goeasy.subscribe({
+                    channel: 'demo-sales_takecar',
+                    onMessage: function (message) {
+                        messageCont = split('|',message.content);
+                        if(Config.ADMIN_JS.id==messageCont[1]){
+                            Layer.alert('新消息：' + messageCont[0], {icon: 0}, function (index) {
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
+                    }
+                });
                 
-                //提供保证金
+                /**
+                 * 提供保证金
+                 */
                 goeasy.subscribe({
                     channel: 'demo-newcar_data',
                     onMessage: function(message){
@@ -1270,7 +1343,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                //不通过
+                /**
+                 * 不通过
+                 */
                 goeasy.subscribe({
                     channel: 'demo-newcar_nopass',
                     onMessage: function(message){
@@ -1285,7 +1360,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                 //补全提车资料
+                 /**
+                 * 补全提车资料
+                 */
                  goeasy.subscribe({
                     channel: 'demo-newtake_car',
                     onMessage: function(message){
@@ -1300,11 +1377,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-
-
-
-
-                //销售预定新车
+                /**
+                 * 销售预定新车
+                 */
                 $(document).on("click", ".btn-newreserve", function () {   
                         
                     var url = 'salesmanagement/Orderlisttabs/newreserve';
@@ -1312,22 +1387,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
                         area:['95%','95%'],
-                        // closeBtn: 0, //不显示关闭按钮
                         callback:function(value){
-                            console.log(123);
-
-                            // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            // parent.layer.close(index);  
-                            // $(".btn-refresh").trigger("click");   
 
                         }
                     }
                     Fast.api.open(url,'新车预定',options)
                 })
-
-
-                // alert(Table.api.getrowdata(table, index));
             },
+
             /**
              * 租车单
              */
@@ -1339,609 +1406,560 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
 
                 // 初始化表格
-                 orderRental.bootstrapTable({
-                url: 'salesmanagement/Orderlisttabs/orderRental',
-                extend: {
-                    // index_url: 'order/salesorder/index',
-                    rentaladd_url: 'salesmanagement/Orderlisttabs/rentaladd',
-                    rentaledit_url: 'salesmanagement/Orderlisttabs/rentaledit',
-                    del_url: 'salesmanagement/Orderlisttabs/rentaldel',
-                    rentalmulti_url: 'order/rentalorder/multi',
-                    reserve_url: 'salesmanagement/Orderlisttabs/reserve',
-                    table: 'rental_order',
-                },
-                toolbar: '#toolbar2',
-                pk: 'id',
-                sortName: 'id',
-                searchFormVisible: true,
-                columns: [
-                    [
-                        {checkbox: true},
-                        {field: 'id', title: __('Id'),operate:false},
-                        // {field: 'plan_car_rental_name', title: __('Plan_car_rental_name')},
-                        // {field: 'sales_id', title: __('Sales_id')},
-                        // {field: 'admin_id', title: __('Admin_id')},
-                        // {field: 'control_id', title: __('Control_id')},
-                        // {field: 'rental_car_id', title: __('Rental_car_id')},
-                        // {field: 'insurance_id', title: __('Insurance_id')},
-                        // {field: 'general_manager_id', title: __('General_manager_id')},
-                        {field: 'order_no', title: __('Order_no')},
-
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
-                        {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
-                                return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
-
-                            }},
-                        {field: 'models.name', title: __('车型')},
-                        {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
-                        {field: 'carrentalmodelsinfo.vin', title: __('车架号')},
-                        {field: 'username', title: __('Username'),formatter:function(value,row,index){
-                            if(row.order_no ==  null){ /**如果订单编号为空，就处于预定状态 */
-                                return row.username+' <span class="label label-success">预定中</span>'
-
-                            }
-                            else{
-                                return row.username
-                            }
-                        }}, 
-                        {field: 'phone', title: __('Phone')},
-                        // {field: 'id_card', title: __('Id_card')},
-                        {field: 'id', title: __('查看详细资料'), table: orderRental, buttons: [
-                            {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 
-                                url: 'salesmanagement/Orderlisttabs/rentaldetails', 
-                                hidden:function(row){
-                                    if(row.order_no !== null){ 
-                                        return false; 
-                                    }  
-                                    else if(row.order_no == null){
-                                        return true;
-                                    }
-                                }
-                            },
-                            {
-                                name: 'null',text: '暂无详细资料',title:'暂无详细资料',icon: 'fa fa-eye-slash',classname: 'btn btn-xs btn-danger btn-primary',
-                                hidden:function(row){  /**暂无详细资料 */
-                                    if(row.order_no == null){ 
-                                        return false; 
-                                    }
-                                    else if(row.order_no !== null){
-                                        return true;
-                                    }
-                                }
-                            },
-                            ],
-                            
-                            operate:false, formatter: Table.api.formatter.buttons
-                        },
-                        // {field: 'genderdata', title: __('Genderdata'), searchList: {"male":__('Genderdata male'),"female":__('Genderdata female')}, formatter: Table.api.formatter.normal},
-                        {field: 'cash_pledge', title: __('Cash_pledge'),operate:false},
-                        {field: 'rental_price', title: __('Rental_price'),operate:false},
-                        {field: 'tenancy_term', title: __('Tenancy_term'),operate:false},
-                        {field: 'delivery_datetime', title: __('开始租车日期'),operate:false,formatter:Controller.api.formatter.datetime},
-                        {field: 'delivery_datetime', title: __('应退车日期'),operate:false,formatter:Controller.api.formatter.car_back},
-                        {field: 'operate', title: __('Operate'), table: orderRental, 
-                        buttons: [
-                            /**
-                             * 补全客户信息，开始提车
-                             */
-                            {
-                                name:'customerInformation',text:'开始提车', title:'补全客户信息，开始提车', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-customerInformation',
-                                // url: 'order/rentalorder/add',
-                                hidden:function(row){
-                                    if(row.review_the_data == 'is_reviewing_argee'){ 
-                                        return false; 
-                                    }  
-                                    else if(row.review_the_data == 'is_reviewing_true'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_pass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_false'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                }
-                            },
-                            /**
-                             * 提交风控审核
-                             */
-                            {
-                                name:'control',text:'提交风控审核', title:'提交风控审核', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-control',
-                                // url: 'order/rentalorder/control',  
-                                hidden:function(row){ /** */
-                                    if(row.review_the_data == 'is_reviewing_false'){ 
-                                        return false; 
-                                    }  
-                                    else if(row.review_the_data == 'is_reviewing_true'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_pass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                }
-                            },
-                            /**
-                             * 取消预定
-                             */
-                            { 
-                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'取消预定', title: __('取消预定'),classname: 'btn btn-xs btn-danger btn-delone',
-                                // url:'order/rentalorder/del',/** */
-                                hidden:function(row){
-                                    if(row.review_the_data == 'is_reviewing_argee'){ 
-                                        return false; 
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_true'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_false'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_pass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                   
-                                },
-                                
-                            },
-                            /**
-                             * 删除
-                             */
-                            { 
-                                icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
-                                // url:'order/rentalorder/del',/** */
-                                hidden:function(row){
-                                    if(row.review_the_data == 'is_reviewing_false'){ 
-                                        return false; 
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_true'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_pass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                   
-                                },
-                                
-                            },
-                            /**
-                             * 修改订单
-                             */
-                            { 
-                                name: 'rentaledit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'修改订单', title: __('修改订单'),classname: 'btn btn-xs btn-success btn-rentaleditone', 
-                                // url:'order/rentalorder/edit',/**修改订单 */
-                                hidden:function(row,value,index){ 
-                                    if(row.review_the_data == 'is_reviewing_false'){ 
-                                        return false; 
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                      
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_true'){ 
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_pass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                }, 
-                            },
-                            /**
-                             * 车管正在处理中
-                             */
-                            {
-                                name: 'is_reviewing_true',text: '车管正在处理中',title:'车管正在处理你的租车请求',extend: 'data-toggle="tooltip"',
-                                hidden:function(row){  /**车管正在处理中 */
-                                    if(row.review_the_data == 'is_reviewing_true'){ 
-                                        return false; 
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_false'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_pass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                }
-                            },
-                            /**
-                             * 风控正在处理中
-                             */
-                            {
-                                name: 'is_reviewing_control',text: '风控正在处理中',title:'风控正在处理中',
-                                hidden:function(row){  /**风控正在处理中 */
-                                    if(row.review_the_data == 'is_reviewing_control'){ 
-                                        return false; 
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_false'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_pass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_true'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                }
-                            },
-                            /**
-                             * 征信已通过，待提车
-                             */
-                            {
-                                name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过，待提车', classname: ' text-info ',
-                                hidden: function (row) {  /**征信已通过，待提车 */
-                                    if (row.review_the_data == 'is_reviewing_pass') {
-                                        return false;
-                                    }
-                                    else if (row.review_the_data == 'is_reviewing_true') {
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_false'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if (row.review_the_data == 'is_reviewing_nopass') {
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                }
-                            },
-                            /**
-                             * 征信不通过
-                             */
-                            {
-                                name: 'is_reviewing_nopass', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
-                                hidden: function (row) {  /**征信不通过 */
-
-                                    if (row.review_the_data == 'is_reviewing_nopass') {
-                                        return false;
-                                    }
-                                    else if (row.review_the_data == 'is_reviewing_pass') {
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                    else if (row.review_the_data == 'is_reviewing_true') {
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_false'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                }
-                            },
-                            /**
-                             * 已提车
-                             */
-                            {
-
-                                name: 'for_the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
-                                hidden: function (row) {  /**已提车 */
-                                    if (row.review_the_data == 'for_the_car') {
-                                        return false;
-                                    }
-                                    else if (row.review_the_data == 'is_reviewing_pass') {
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if (row.review_the_data == 'is_reviewing_true') {
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_false'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'retiring'){
-                                        return true;
-                                    }
-                                }
-                            },
-                            /**
-                             * 已退车
-                             */
-                            {
-
-                                name: 'retiring', icon: 'fa fa-automobile', text: '已退车', extend: 'data-toggle="tooltip"', title: __('租期到期，已退车'), classname: ' text-danger ',
-                                hidden: function (row) {  /**已退车 */
-                                    if (row.review_the_data == 'retiring') {
-                                        return false;
-                                    }
-                                    else if (row.review_the_data == 'is_reviewing_pass') {
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_control'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_argee'){
-                                      
-                                        return true;
-                                    } 
-                                    else if(row.review_the_data == 'is_reviewing_nopass'){
-                                        return true;
-                                    }
-                                    else if (row.review_the_data == 'is_reviewing_true') {
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'is_reviewing_false'){
-                                        return true;
-                                    }
-                                    else if(row.review_the_data == 'for_the_car'){
-                                        return true;
-                                    }
-                                }
-                            }
-
-                        ],
-                            events: Controller.api.events.operate,
-                             
-                            formatter: Controller.api.formatter.operate
-                           
-                        }
-                    ]
-                ]
-                
-            });
-
-            goeasy.subscribe({
-                channel: 'demo3',
-                onMessage: function(message){
-                   
-                    $(".btn-refresh").trigger("click");
-                }
-            });
-
-            //车管同意预定---销售接受消息
-            goeasy.subscribe({
-                channel: 'demo-rental_argee',
-                onMessage: function(message){
-                    message = split('|',message.content);
-                    if(Config.ADMIN_JS.id==message[1]){
-                        Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                    }
-                }
-            });
-
-            //实时消息
-            //风控通过---可以提车
-            goeasy.subscribe({
-                channel: 'demo-rental_pass',
-                onMessage: function(message){
-                    message = split('|',message.content);
-                    if(Config.ADMIN_JS.id==message[1]){
-                        Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                    }
-                    
-                }
-            });
-
-        
-            //不通过
-            goeasy.subscribe({
-                channel: 'demo-rental_nopass',
-                onMessage: function(message){
-                    message = split('|',message.content);
-                    if(Config.ADMIN_JS.id==message[1]){
-                        Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                    }
-                    
-                }
-            });
-
-            orderRental.on('load-success.bs.table', function (e, data) {
-                // console.log(data);
-                $('#badge_order_rental').text(data.total);
-                $(".btn-rentalDetails").data("area", ["95%", "95%"]);
-            })
-            // 为表格1绑定事件
-            Table.api.bindevent(orderRental);
-               
-            $(document).on("click", ".rental-list", function (index) {   
-                    
-                    
-                var url = 'order/rentalorder/add';
-                var options = {
-                    shadeClose: false,
-                    shade: [0.3, '#393D49'],
-                    area:['95%','95%'],
-                    // closeBtn: 0, //不显示关闭按钮
-                    cancel: function(index){ 
-                        //右上角关闭回调
-                            
-                        if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭
-                                
-                            Fast.api.ajax({
-                                url: 'order/rentalorder/giveup',
-                                // data: {ids: JSON.stringify($ids)}
-                            }, function (data, rets) {
-                                // console.log(data);
-                                // return;
-                                // Toastr.success("成功");
-                                Layer.close(index);
-                                    
-                                // return false;
-                            }, function (data, ret) {
-                                //失败的回调
-                                    
-                                return false;
-                            });
-
-                                layer.close(index)
-                            }
-
-                        return false; 
-                            
+                orderRental.bootstrapTable({
+                    url: 'salesmanagement/Orderlisttabs/orderRental',
+                    extend: {
+                        rentaladd_url: 'salesmanagement/Orderlisttabs/rentaladd',
+                        rentaledit_url: 'salesmanagement/Orderlisttabs/rentaledit',
+                        del_url: 'salesmanagement/Orderlisttabs/rentaldel',
+                        rentalmulti_url: 'order/rentalorder/multi',
+                        reserve_url: 'salesmanagement/Orderlisttabs/reserve',
+                        table: 'rental_order',
                     },
-                    callback:function(value){
-                                                        
-                    }
-                }
-                Fast.api.open(url,'新增租车单',options)
-            })
+                    toolbar: '#toolbar2',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: __('Id'),operate:false},
+                            {field: 'order_no', title: __('Order_no')},
 
-            //销售预定租车
-            $(document).on("click", ".btn-reserve", function () {   
+                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Controller.api.formatter.datetime},
+                            {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
+
+                                }},
+                            {field: 'models.name', title: __('车型')},
+                            {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
+                            {field: 'carrentalmodelsinfo.vin', title: __('车架号')},
+                            {field: 'username', title: __('Username'),formatter:function(value,row,index){
+                                if(row.order_no ==  null){ /**如果订单编号为空，就处于预定状态 */
+                                    return row.username+' <span class="label label-success">预定中</span>'
+
+                                }
+                                else{
+                                    return row.username
+                                }
+                            }}, 
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'id', title: __('查看详细资料'), table: orderRental, buttons: [
+                                {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 
+                                    url: 'salesmanagement/Orderlisttabs/rentaldetails', 
+                                    hidden:function(row){
+                                        if(row.order_no !== null){ 
+                                            return false; 
+                                        }  
+                                        else if(row.order_no == null){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                {
+                                    name: 'null',text: '暂无详细资料',title:'暂无详细资料',icon: 'fa fa-eye-slash',classname: 'btn btn-xs btn-danger btn-primary',
+                                    hidden:function(row){  /**暂无详细资料 */
+                                        if(row.order_no == null){ 
+                                            return false; 
+                                        }
+                                        else if(row.order_no !== null){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                ],
+                                
+                                operate:false, formatter: Table.api.formatter.buttons
+                            },
+                            {field: 'cash_pledge', title: __('Cash_pledge'),operate:false},
+                            {field: 'rental_price', title: __('Rental_price'),operate:false},
+                            {field: 'tenancy_term', title: __('Tenancy_term'),operate:false},
+                            {field: 'delivery_datetime', title: __('开始租车日期'),operate:false,formatter:Controller.api.formatter.datetime},
+                            {field: 'delivery_datetime', title: __('应退车日期'),operate:false,formatter:Controller.api.formatter.car_back},
+                            {field: 'operate', title: __('Operate'), table: orderRental, 
+                            buttons: [
+                                /**
+                                 * 补全客户信息，开始提车
+                                 */
+                                {
+                                    name:'customerInformation',text:'开始提车', title:'补全客户信息，开始提车', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-customerInformation',
+                                
+                                    hidden:function(row){
+                                        if(row.review_the_data == 'is_reviewing_argee'){ 
+                                            return false; 
+                                        }  
+                                        else if(row.review_the_data == 'is_reviewing_true'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_pass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_false'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                /**
+                                 * 提交风控审核
+                                 */
+                                {
+                                    name:'control',text:'提交风控审核', title:'提交风控审核', icon: 'fa fa-share',extend: 'data-toggle="tooltip"',classname: 'btn btn-xs btn-info btn-control',
+                                    
+                                    hidden:function(row){ /** */
+                                        if(row.review_the_data == 'is_reviewing_false'){ 
+                                            return false; 
+                                        }  
+                                        else if(row.review_the_data == 'is_reviewing_true'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_pass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                /**
+                                 * 取消预定
+                                 */
+                                { 
+                                    icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'取消预定', title: __('取消预定'),classname: 'btn btn-xs btn-danger btn-delone',
+                                    
+                                    hidden:function(row){
+                                        if(row.review_the_data == 'is_reviewing_argee'){ 
+                                            return false; 
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_true'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_false'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_pass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    
+                                    },
+                                    
+                                },
+                                /**
+                                 * 删除
+                                 */
+                                { 
+                                    icon: 'fa fa-trash', name: 'rentaldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"',text:'删除订单', title: __('删除订单'),classname: 'btn btn-xs btn-danger btn-delone',
+                                    
+                                    hidden:function(row){
+                                        if(row.review_the_data == 'is_reviewing_false'){ 
+                                            return false; 
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_true'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_pass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    
+                                    },
+                                    
+                                },
+                                /**
+                                 * 修改订单
+                                 */
+                                { 
+                                    name: 'rentaledit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'修改订单', title: __('修改订单'),classname: 'btn btn-xs btn-success btn-rentaleditone', 
+                                    
+                                    hidden:function(row,value,index){ 
+                                        if(row.review_the_data == 'is_reviewing_false'){ 
+                                            return false; 
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                        
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_true'){ 
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_pass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    }, 
+                                },
+                                /**
+                                 * 车管正在处理中
+                                 */
+                                {
+                                    name: 'is_reviewing_true',text: '车管正在处理中',title:'车管正在处理你的租车请求',extend: 'data-toggle="tooltip"',
+                                    hidden:function(row){  /**车管正在处理中 */
+                                        if(row.review_the_data == 'is_reviewing_true'){ 
+                                            return false; 
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_false'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_pass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                /**
+                                 * 风控正在处理中
+                                 */
+                                {
+                                    name: 'is_reviewing_control',text: '风控正在处理中',title:'风控正在处理中',
+                                    hidden:function(row){  /**风控正在处理中 */
+                                        if(row.review_the_data == 'is_reviewing_control'){ 
+                                            return false; 
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_false'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_pass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_true'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                /**
+                                 * 征信已通过，待提车
+                                 */
+                                {
+                                    name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '征信已通过，待提车', classname: ' text-info ',
+                                    hidden: function (row) {  /**征信已通过，待提车 */
+                                        if (row.review_the_data == 'is_reviewing_pass') {
+                                            return false;
+                                        }
+                                        else if (row.review_the_data == 'is_reviewing_true') {
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_false'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if (row.review_the_data == 'is_reviewing_nopass') {
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                /**
+                                 * 征信不通过
+                                 */
+                                {
+                                    name: 'is_reviewing_nopass', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
+                                    hidden: function (row) {  /**征信不通过 */
+
+                                        if (row.review_the_data == 'is_reviewing_nopass') {
+                                            return false;
+                                        }
+                                        else if (row.review_the_data == 'is_reviewing_pass') {
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                        else if (row.review_the_data == 'is_reviewing_true') {
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_false'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                /**
+                                 * 已提车
+                                 */
+                                {
+
+                                    name: 'for_the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                    hidden: function (row) {  /**已提车 */
+                                        if (row.review_the_data == 'for_the_car') {
+                                            return false;
+                                        }
+                                        else if (row.review_the_data == 'is_reviewing_pass') {
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if (row.review_the_data == 'is_reviewing_true') {
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_false'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'retiring'){
+                                            return true;
+                                        }
+                                    }
+                                },
+                                /**
+                                 * 已退车
+                                 */
+                                {
+
+                                    name: 'retiring', icon: 'fa fa-automobile', text: '已退车', extend: 'data-toggle="tooltip"', title: __('租期到期，已退车'), classname: ' text-danger ',
+                                    hidden: function (row) {  /**已退车 */
+                                        if (row.review_the_data == 'retiring') {
+                                            return false;
+                                        }
+                                        else if (row.review_the_data == 'is_reviewing_pass') {
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_control'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_argee'){
+                                        
+                                            return true;
+                                        } 
+                                        else if(row.review_the_data == 'is_reviewing_nopass'){
+                                            return true;
+                                        }
+                                        else if (row.review_the_data == 'is_reviewing_true') {
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'is_reviewing_false'){
+                                            return true;
+                                        }
+                                        else if(row.review_the_data == 'for_the_car'){
+                                            return true;
+                                        }
+                                    }
+                                }
+
+                            ],
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
+                        ]
+                    ]
                     
-                var url = 'salesmanagement/Orderlisttabs/reserve';
-                var options = {
-                    shadeClose: false,
-                    shade: [0.3, '#393D49'],
-                    area:['90%','90%'],
-                    // closeBtn: 0, //不显示关闭按钮
-                    callback:function(value){
-                        console.log(123);
+                });
 
-                        // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                        // parent.layer.close(index);  
-                        // $(".btn-refresh").trigger("click");   
-
+                goeasy.subscribe({
+                    channel: 'demo3',
+                    onMessage: function(message){
+                    
+                        $(".btn-refresh").trigger("click");
                     }
-                }
-                Fast.api.open(url,'租车预定',options)
-            })
+                });
 
+                /**
+                 * 车管同意预定---销售接受消息
+                 */
+                goeasy.subscribe({
+                    channel: 'demo-rental_argee',
+                    onMessage: function(message){
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
+                    }
+                });
+
+                //
+                /**
+                 * 风控通过---可以提车
+                 */
+                goeasy.subscribe({
+                    channel: 'demo-rental_pass',
+                    onMessage: function(message){
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
+                        
+                    }
+                });
+
+                /**
+                 * 不通过
+                 */
+                goeasy.subscribe({
+                    channel: 'demo-rental_nopass',
+                    onMessage: function(message){
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
+                        
+                    }
+                });
+
+                /**
+                 * 表格刷新渲染
+                 */
+                orderRental.on('load-success.bs.table', function (e, data) {
+                
+                    $('#badge_order_rental').text(data.total);
+                    $(".btn-rentalDetails").data("area", ["95%", "95%"]);
+                })
+                
+                /**
+                 * 为租车表格绑定事件
+                 */
+                Table.api.bindevent(orderRental);
+
+                
+                /**
+                 * 销售预定租车
+                 */
+                $(document).on("click", ".btn-reserve", function () {   
+                        
+                    var url = 'salesmanagement/Orderlisttabs/reserve';
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area:['90%','90%'],
+                        callback:function(value){
+
+                        }
+                    }
+                    Fast.api.open(url,'租车预定',options)
+                })
 
             },
+
             /**
              * 二手车单
              */
             order_second: function () {
-
-                // 二手车单
                 var orderSecond = $("#orderSecond");
 
                 $(".btn-add").data("area", ["95%", "95%"]);
@@ -1951,7 +1969,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 orderSecond.bootstrapTable({
                     url: 'salesmanagement/Orderlisttabs/orderSecond',
                     extend: {
-                        // index_url: 'order/secondsalesorder/index',
+                        
                         secondadd_url: 'salesmanagement/Orderlisttabs/secondadd',
                         secondedit_url: 'salesmanagement/Orderlisttabs/secondedit',
                         secondaudit_url: 'salesmanagement/Orderlisttabs/secondaudit',
@@ -2002,6 +2020,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: orderSecond,
                                 buttons: [
+                                    /**
+                                     * 提交内勤
+                                     */
                                     {
                                         name: 'second_audit', text: '提交内勤', title: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-second_audit',
                                         url: 'order/secondsalesorder/setAudit',
@@ -2041,9 +2062,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 删除
+                                     */
                                     {
                                         icon: 'fa fa-trash', name: 'seconddel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        // url: 'order/secondsalesorder/del',/**删除 */
+                                       
                                         hidden: function (row) {
                                             if (row.review_the_data == 'is_reviewing') {
                                                 return false;
@@ -2079,6 +2103,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         },
 
                                     },
+                                    /**
+                                     * 内勤正在处理中
+                                     */
                                     {
                                         name: 'is_reviewing_true', text: '内勤正在处理中',
                                         hidden: function (row) {  /**内勤正在处理中 */
@@ -2114,9 +2141,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 资料编辑
+                                     */
                                     {
                                         name: 'secondedit', text: '资料编辑', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('资料编辑'), classname: 'btn btn-xs btn-success btn-secondeditone',
-                                        // url: 'order/secondsalesorder/edit',/**编辑 */
+                                        
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'is_reviewing') {
                                                 return false;
@@ -2150,9 +2180,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }   
                                         },
                                     },
+                                    /**
+                                     * 审核资料上传
+                                     */
                                     {
                                         name: 'secondaudit', text: '审核资料上传', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('审核资料上传'), classname: 'btn btn-xs btn-success btn-secondaudit',
-                                        // url: 'order/secondsalesorder/edit',/**编辑 */
+                                        
                                         hidden: function (row, value, index) {
                                             if (!row.id_cardimages || !row.drivers_licenseimages) {
                                                 return false;
@@ -2163,6 +2196,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             
                                         },
                                     },
+                                    /**
+                                     * 风控正在审核中
+                                     */
                                     {
                                         name: 'is_reviewing_control', text: '风控正在审核中',
                                         hidden: function (row) {  /**风控正在审核中 */
@@ -2198,6 +2234,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 正在匹配金融
+                                     */
                                     {
                                         name: 'is_reviewing_finance', text: '正在匹配金融',
                                         hidden: function (row) {  /**正在匹配金融 */
@@ -2233,6 +2272,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 车管正在处理中
+                                     */
                                     {
                                         name: 'send_car_tube', text: '车管正在处理中',
                                         hidden: function (row) {  /**车管正在处理中 */
@@ -2268,6 +2310,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 风控正在匹配车辆
+                                     */
                                     {
                                         name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '风控正在匹配车辆', classname: ' text-info ',
                                         hidden: function (row) {  /**风控正在匹配车辆 */
@@ -2303,6 +2348,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 通知客户可以进行提车
+                                     */
                                     {
                                         name: 'for_the_car', icon: 'fa fa-check-circle', text: '车管备车中，通知客户可以进行提车', classname: ' text-info ',
                                         hidden: function (row) {  /**通知客户可以进行提车 */
@@ -2338,6 +2386,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 征信不通过
+                                     */
                                     {
                                         name: 'not_through', icon: 'fa fa-times', text: '征信未通过，订单已关闭', classname: ' text-danger ',
                                         hidden: function (row) {  /**征信不通过 */
@@ -2374,6 +2425,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 需交保证金
+                                     */
                                     {
                                         name: 'the_guarantor', icon: 'fa fa-upload', text: '需交保证金', extend: 'data-toggle="tooltip"', title: __('点击上传保证金收据'), classname: 'btn btn-xs btn-warning btn-secondthe_guarantor',
                                         hidden: function (row) {  /**需交保证金 */
@@ -2410,6 +2464,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
+                                    /**
+                                     * 已提车
+                                     */
                                     {
 
                                         name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
@@ -2451,7 +2508,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                 ],
                                 events: Controller.api.events.operate,
-
                                 formatter: Controller.api.formatter.operate
 
                             }
@@ -2460,17 +2516,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
 
-
+                /**
+                 * 刷新表格渲染
+                 */
                 orderSecond.on('load-success.bs.table', function (e, data) {
-                    // console.log(data);
+                    
                     $('#badge_order_second').text(data.total);
                     $(".btn-seconddetails").data("area", ["95%", "95%"]);
                 })
-                // 为表格1绑定事件
+                /**
+                 * 为二手车表格绑定事件
+                 */
                 Table.api.bindevent(orderSecond);
 
-                //实时消息
-                //风控通过---通知客户可以提车
+                /**
+                 * 风控通过---通知客户可以提车
+                 */
                 goeasy.subscribe({
                     channel: 'demo-secondpass_inform',
                     onMessage: function(message){
@@ -2485,7 +2546,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                //提供保证金
+                /**
+                 * 提供保证金
+                 */
                 goeasy.subscribe({
                     channel: 'demo-second_data',
                     onMessage: function(message){
@@ -2500,7 +2563,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                //不通过
+                /**
+                 * 不通过
+                 */
                 goeasy.subscribe({
                     channel: 'demo-second_nopass',
                     onMessage: function(message){
@@ -2514,8 +2579,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-
-                //销售预定二手车
+                /**
+                 * 销售预定二手车
+                 */
                 $(document).on("click", ".btn-secondreserve", function () {   
                         
                     var url = 'salesmanagement/Orderlisttabs/secondreserve';
@@ -2523,28 +2589,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
                         area:['95%','95%'],
-                        // closeBtn: 0, //不显示关闭按钮
-                        callback:function(value){
-                            console.log(123);
-
-                            // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            // parent.layer.close(index);  
-                            // $(".btn-refresh").trigger("click");   
+                        callback:function(value){  
 
                         }
                     }
                     Fast.api.open(url,'二手车预定',options)
                 })
-
-
-                // alert(Table.api.getrowdata(table, index));
             },
+
             /**
              * 全款单
              */
             order_full: function () {
-
-                // 全款单
                 var orderFull = $("#orderFull");
 
                 $(".btn-add").data("area", ["95%", "95%"]);
@@ -2554,7 +2610,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 orderFull.bootstrapTable({
                     url: 'salesmanagement/Orderlisttabs/orderFull',
                     extend: {
-                        // index_url: 'order/fullparmentorder/index',
                         fulladd_url: 'salesmanagement/Orderlisttabs/fulladd',
                         fulledit_url: 'salesmanagement/Orderlisttabs/fulledit',
                         del_url: 'salesmanagement/Orderlisttabs/fulldel',
@@ -2598,9 +2653,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: orderFull,
                                 buttons: [
+                                    /**
+                                     * 提交内勤
+                                     */
                                     {
                                         name: 'submitCar', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-info btn-submitCar',
-                                        // url: 'order/fullparmentorder/submitCar',/**提交内勤 */
                                        
                                         hidden: function (row) { /**提交内勤 */
                                             if (row.review_the_data == 'send_to_internal') {
@@ -2621,9 +2678,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             
                                         }
                                     },
+                                    /**
+                                     * 删除
+                                     */
                                     {
                                         icon: 'fa fa-trash', name: 'fulldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                        // url: 'order/fullparmentorder/del',/**删除 */
+                                        
                                         hidden: function (row) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -2644,9 +2704,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         },
 
                                     },
+                                    /**
+                                     * 编辑
+                                     */
                                     {
                                         name: 'fulledit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-fulleditone',
-                                        // url: 'order/fullparmentorder/edit',/**编辑 */
+                                        
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
                                                 return false;
@@ -2665,6 +2728,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },
                                     },
+                                    /**
+                                     * 车管正在备车中
+                                     */
                                     {
                                         name: 'is_reviewing_true', icon: 'fa fa-check-circle', text: '车管正在备车中', classname: ' text-info ',
                                         hidden: function (row) {  /**车管正在备车中 */
@@ -2686,6 +2752,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                            
                                         }
                                     },
+                                    /**
+                                     * 内勤正在处理
+                                     */
                                     {
                                         name: 'inhouse_handling', text: '内勤正在处理',
                                         hidden: function (row) {  /**内勤正在处理 */
@@ -2704,9 +2773,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
-                                           
                                         }
                                     },
+                                    /**
+                                     * 车管备车成功，等待提车
+                                     */
                                     {
                                         name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '车管备车成功，等待提车', classname: ' text-info ',
                                         hidden: function (row) {  /**车管备车成功，等待提车 */
@@ -2725,11 +2796,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
-                                           
                                         }
                                     },
+                                    /**
+                                     * 已提车
+                                     */
                                     {
-
                                         name: 'for_the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
                                         hidden: function (row) {  /**已提车 */
                                             if (row.review_the_data == 'for_the_car') {
@@ -2749,31 +2821,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     }
-
-
-
                                 ],
                                 events: Controller.api.events.operate,
-
                                 formatter: Controller.api.formatter.operate
-
                             }
-
                         ]
                     ]
-
                 });
 
-
+                /**
+                 * 刷新表格渲染
+                 */
                 orderFull.on('load-success.bs.table', function (e, data) {
-                    // console.log(data);
+                    
                     $('#badge_order_full').text(data.total);
                     $(".btn-fulldetails").data("area", ["95%", "95%"]);
                 })
-                // 为表格1绑定事件
+          
+                /**
+                 * 为全款单表格绑定事件
+                 */
                 Table.api.bindevent(orderFull);
 
-                //车管发送---销售接收----可以进行提车
+                /**
+                 * 车管发送---销售接收----可以进行提车
+                 */
                 goeasy.subscribe({
                     channel: 'demo-full_takecar',
                     onMessage: function(message){
@@ -2788,7 +2860,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 });
 
-                //新增全款单
+                /**
+                 * 新增全款单
+                 */
                 $(document).on("click", ".btn-fulladd", function () {   
                         
                     var url = 'salesmanagement/Orderlisttabs/fulladd';
@@ -2796,346 +2870,281 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
                         area:['95%','95%'],
-                        // closeBtn: 0, //不显示关闭按钮
-                        callback:function(value){
-                            console.log(123);
-
-                            // var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            // parent.layer.close(index);  
-                            // $(".btn-refresh").trigger("click");   
+                        callback:function(value){ 
 
                         }
                     }
                     Fast.api.open(url,'新增全款单',options)
                 })
-
-
             },
         },
+        /**
+         * 租车预定
+         */
         reserve:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
+            
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
-                
+            
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
- 
+      
         },
+        /**
+         * 租车资料添加
+         */
         rentaladd:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 租车资料修改
+         */
         rentaledit:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 二手车预定
+         */
         secondreserve:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
+            
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 二手车资料添加
+         */
         secondadd:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 二手车资料修改
+         */
         secondedit:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 二手车提交内勤
+         */
         secondaudit:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 全款车资料添加
+         */
         fulladd:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 全款车资料修改
+         */
         fulledit:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 新车预定
+         */
         newreserve:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 新车预定资料修改
+         */
         newreserveedit:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 新车审核资料添加
+         */
         newcontroladd:function(){
             
-            // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum);
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
             });
             // Controller.api.bindevent();
-            // console.log(Config.id);
-            
  
         },
+        /**
+         * 新车提车资料完善
+         */
         newinformation:function(){
             Table.api.init({
                
@@ -3150,27 +3159,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // Controller.api.bindevent();
 
         },
+        /**
+         * 新车资料添加
+         */
         add: function () {
 
             Controller.api.bindevent();
         },
+        /**
+         * 新车资料修改
+         */
         edit: function () {
-            // $(".btn-add").data("area", ["300px","200px"]);
+ 
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
                 Fast.api.close(data);//这里是重点
                 
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                // console.log(data);
                 
                 Toastr.success("失败");
                 
@@ -3256,10 +3266,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, { ids:ids}); 
                         var url = 'salesmanagement/Orderlisttabs/rentaladd';
 
-
-                        // console.log(url);
                         Fast.api.open(Table.api.replaceurl(url,row, table), __('补全客户信息'), $(this).data() || {});
-
 
                     },
 
@@ -3291,7 +3298,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
 
-
                                 Fast.api.ajax({
 
                                     url: 'salesmanagement/Orderlisttabs/control',
@@ -3309,8 +3315,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     return false;
                                 });
-
-
                             }
                         );
 
@@ -3344,7 +3348,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
 
-
                                 Fast.api.ajax({
 
                                     url: 'salesmanagement/orderlisttabs/setAudit',
@@ -3362,11 +3365,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     return false;
                                 });
-
-
                             }
                         );
-
                     },
 
                     /**
@@ -3393,7 +3393,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
  
                             __('请确认资料完整并发送给内勤生成提车单?'),
  
- 
                             { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
 
                             function (index) {
@@ -3416,11 +3415,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     return false;
                                 });
-
-
                             }
                         );
-
                     },
 
                     /**
@@ -3510,7 +3506,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
 
-
                                 Fast.api.ajax({
 
                                     url: 'salesmanagement/orderlisttabs/newinformtube',
@@ -3528,11 +3523,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                     return false;
                                 });
-
-
                             }
                         );
-
                     },
 
                     /**
@@ -3705,11 +3697,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         Fast.api.open(Table.api.replaceurl(url,row, table), __('请上传保证金收据'), $(this).data() || {});
                     },
                 }
-
             },
             formatter: {
                 operate: function (value, row, index) {
-
                     var table = this.table;
                     // 操作配置
                     var options = table ? table.bootstrapTable('getOptions') : {};
@@ -3723,7 +3713,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if(value){
                         return timestampToTime(value);
                     }
-
                     function timestampToTime(timestamp) {
                         var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
                         var Y = date.getFullYear() + '-';
@@ -3743,7 +3732,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 car_back:function (value, row, index) {
                     if(value && row.tenancy_term){
                         value = timestampToTime(value);
-
 
                          return GetNextMonthDay(value,row.tenancy_term);
                     }
@@ -3784,10 +3772,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         return Y+M+D;
                     }
-
                 }
-
-
             }
         }
     };

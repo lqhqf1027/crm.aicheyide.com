@@ -978,6 +978,26 @@ if (!function_exists('newsend_car')) {
     }
 }
 /**
+ * 以租代购（新车）车管发送销售，已提车
+ */
+if (!function_exists('sales_takecar')) {
+
+
+    function sales_takecar($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "客户提车成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经提车，请悉知 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
  * 以租代购（新车）风控审核发送给销售，审核需要保证金
  */
 if (!function_exists('newdata_inform')) {
