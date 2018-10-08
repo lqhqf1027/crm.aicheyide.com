@@ -298,22 +298,35 @@ class Newcarscustomer extends Backend
 
             if ($result !== false) {
 
-                $new_info = Db::name('sales_order')
-                ->where('id',$id)
-                ->field('username,admin_id')
-                ->select();
+                $channel = "demo-sales_takecar";
+                $content =  "客户已经提车，请悉知！";
+                goeary_push($channel, $content.'|'.$id);
 
-                $data = sales_inform($new_info['username']);
+                $new_info = Db::name('sales_order')
+                    ->where('id',$id)
+                    ->field('username,admin_id,models_id')
+                    ->find();
+
+                //车型
+                $models_name = Db::name('models')->where('id', $new_info['models_id'])->value('name');
+
+                $data = sales_takecar($models_name,$new_info['username']);
 
                 $email = new Email();
 
                 $receiver = Db::name('admin')->where('id', $new_info['admin_id'])->value('email');
 
-                $email
+                $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
+                if($result_s){
+                    $this->success('','','success');
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
                 
                 $seventtime = \fast\Date::unixtime('day', -6);
                 $newonesales = $newtwosales = $newthreesales = [];
