@@ -3158,7 +3158,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
                 
             });
-            // Controller.api.bindevent();
+            Controller.api.bindevent();
             // console.log(Config.id);
             
  
