@@ -23,7 +23,7 @@ class Zcaf extends Api
     // 无需鉴权的接口,*表示全部
     protected $noNeedRight = ['test2'];
     protected $userid = 'junyi'; //用户id
-    protected $Rc4Key = '12b39127a265ce21'; //apikey  测试key 12b39127a265ce21   正式key d477d6d1803125f1
+    protected $Rc4Key = 'd477d6d1803125f1'; //apikey  测试key 12b39127a265ce21   正式key d477d6d1803125f1
     protected $sign = null; //sign  md5加密
 
     /**

@@ -395,8 +395,13 @@ class Vehicleinformation extends Backend
 
             $seventtime = \fast\Date::unixtime('day', -6);
             $rentalonesales = $rentaltwosales = $rentalthreesales = [];
-            for ($i = 0; $i < 8; $i++) {
-                $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+            $month = date("Y-m", $seventtime);
+            $day = date('t', strtotime("$month +1 month -1 day"));
+            for ($i = 0; $i < 8; $i++)
+            {
+                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 //销售一部
                 $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
                 foreach ($one_sales as $k => $v) {
@@ -405,7 +410,7 @@ class Vehicleinformation extends Backend
                 $rentalonetake = Db::name('rental_order')
                     ->where('review_the_data', 'for_the_car')
                     ->where('admin_id', 'in', $one_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->where('delivery_datetime', 'between', [$firstday, $secondday])
                     ->count();
                 //销售二部
                 $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
@@ -415,7 +420,7 @@ class Vehicleinformation extends Backend
                 $rentaltwotake = Db::name('rental_order')
                     ->where('review_the_data', 'for_the_car')
                     ->where('admin_id', 'in', $two_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->where('delivery_datetime', 'between', [$firstday, $secondday])
                     ->count();
                 //销售三部
                 $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
@@ -425,7 +430,7 @@ class Vehicleinformation extends Backend
                 $rentalthreetake = Db::name('rental_order')
                     ->where('review_the_data', 'for_the_car')
                     ->where('admin_id', 'in', $three_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                    ->where('delivery_datetime', 'between', [$firstday, $secondday])
                     ->count();
                 //销售一部
                 $rentalonesales[$month] = $rentalonetake;
@@ -433,6 +438,11 @@ class Vehicleinformation extends Backend
                 $rentaltwosales[$month] = $rentaltwotake;
                 //销售三部
                 $rentalthreesales[$month] = $rentalthreetake;
+
+                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                
+                $day = date('t', strtotime("$months +1 month -1 day"));
+
 
             }
             Cache::set('rentalonesales', $rentalonesales);

@@ -440,21 +440,7 @@ class Usedcarinfo extends Backend
             $car_images_arr[] = Config::get('upload')['cdnurl'] . $v;
         }
 
-//        if ($row['createtime']) {
-//            $row['createtime'] = date("Y-m-d", $row['createtime']);
-//        }
-//
-//        if ($row['delivery_datetime']) {
-//            $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
-//        }
-//
-//        if ($row['expirydate']) {
-//            $row['expirydate'] = date("Y-m-d", $row['expirydate']);
-//        }
-//
-//        if ($row['annualverificationdate']) {
-//            $row['annualverificationdate'] = date("Y-m-d", $row['annualverificationdate']);
-//        }
+
 
         $this->view->assign([
             'deposit_contractimages_arr' => $deposit_contractimages_arr,
