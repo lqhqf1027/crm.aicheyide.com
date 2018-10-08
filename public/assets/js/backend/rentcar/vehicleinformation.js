@@ -272,42 +272,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }
                                 }
                             },
-                            {
-                                name: '', icon: 'fa fa-check-circle', text: '已下架', classname: ' text-warning ',
-                                hidden: function (row) {  /**已下架 */
-                                    if(row.shelfismenu == 0 ){
-                                        return false;
-                                    }
-                                    else if(row.shelfismenu != 0){
-                                        return true;
-
-                                    }
-                                    else if(row.status_data == 'is_reviewing_pass'){
-
-                                        return true;
-                                    }
-                                    else if(row.status_data == 'for_the_car'){
-
-                                        return true;
-                                    }
-                                    else if(row.status_data == 'is_reviewing'){
-
-                                        return true;
-                                    }
-                                    else if(row.status_data == 'the_car'){
-
-                                        return true;
-                                    }
-                                    else if(row.status_data == 'is_reviewing_true'){
-
-                                        return true;
-                                    }
-                                    else if(row.status_data ==''){
-
-                                        return true;
-                                    }
-                                }
-                            },
                             /**
                              * 删除
                              */
