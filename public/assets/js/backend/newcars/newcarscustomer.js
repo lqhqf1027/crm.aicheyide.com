@@ -232,6 +232,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 alreadyLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
+                    $(".btn-editone").data("area", ["80%", "80%"]);
                 });
                 // 初始化表格
                 alreadyLiftCar.bootstrapTable({
@@ -288,9 +289,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate',
                                 title: __('Operate'),
                                 table: alreadyLiftCar,
-                                events: Table.api.events.operate,
+                                events: Controller.api.events.operate,
                                 formatter: Table.api.formatter.operate,
                                 buttons: [
+                                    {
+                                        name: 'data_dock',
+                                        icon: 'fa pencil',
+                                        text: '资料对接',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('资料对接'),
+                                        classname: ' btn btn-xs btn-success btn-editone '
+                                    },
                                     {
                                         name: 'look',
                                         text: '查看客户详细资料',
@@ -298,6 +307,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-showOrderAndStock',
                                         url: 'newcars/newcarscustomer/show_order_and_stock',
+                                    },
+                                    {
+                                        name: 'the_car',
+                                        icon: 'fa fa-automobile',
+                                        text: '已提车',
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('订单已完成，客户已提车'),
+                                        classname: ' text-success ',
                                     }
                                 ]
                             }
@@ -342,6 +359,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param row
                      * @param index
                      */
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'newcars/Newcarscustomer/edit';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
                     'click .btn-submit_newcustomer': function (e, value, row, index) {
 
                         e.stopPropagation();

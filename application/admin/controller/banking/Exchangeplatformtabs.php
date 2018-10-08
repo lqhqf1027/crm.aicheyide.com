@@ -40,6 +40,7 @@ class Exchangeplatformtabs extends Backend
         ->field('id,mortgage_id')
         ->select();
 
+
         foreach ($mid as $k=>$v){
             if(!$v['mortgage_id']){
                 Db::name('mortgage')->insert(['mortgage_type'=>'new_car']);

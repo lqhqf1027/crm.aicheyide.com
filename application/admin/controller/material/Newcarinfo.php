@@ -68,10 +68,7 @@ class Newcarinfo extends Backend
                     $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status');
                 }])
                 ->where(function ($query){
-                    $query->where([
-                        'review_the_data'=>'the_car',
-
-                    ]);
+                    $query->where('mortgage_registration_id','not null');
                 })
                 ->where($where)
                 ->order($sort, $order)
@@ -90,10 +87,7 @@ class Newcarinfo extends Backend
                     $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status');
                 }])
                 ->where(function ($query){
-                    $query->where([
-                        'review_the_data'=>'the_car',
-
-                    ]);
+                    $query->where('mortgage_registration_id','not null');
                 })
                 ->where($where)
                 ->order($sort, $order)
@@ -150,10 +144,7 @@ class Newcarinfo extends Backend
                     $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people');
                 }, 'registryregistration'])
                 ->where(function ($query){
-                    $query->where([
-                        'review_the_data'=>'the_car',
-
-                    ]);
+                    $query->where('registry_registration_id','not null');
                 })
                 ->where($where)
                 ->order($sort, $order)
@@ -170,10 +161,7 @@ class Newcarinfo extends Backend
                     $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people');
                 }, 'registryregistration'])
                 ->where(function ($query){
-                    $query->where([
-                        'review_the_data'=>'the_car',
-
-                    ]);
+                    $query->where('registry_registration_id','not null');
                 })
                 ->where($where)
                 ->order($sort, $order)

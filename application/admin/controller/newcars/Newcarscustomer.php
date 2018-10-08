@@ -25,7 +25,7 @@ class Newcarscustomer extends Backend
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
-    protected $noNeedRight = ['index', 'prepare_lift_car', 'already_lift_car', 'choose_stock', 'show_order', 'show_order_and_stock', 'newcustomer', 'sendcar'];
+    protected $noNeedRight = ['index', 'prepare_lift_car', 'already_lift_car', 'choose_stock', 'show_order', 'show_order_and_stock', 'newcustomer', 'sendcar','edit'];
 
     public function _initialize()
     {
@@ -762,6 +762,88 @@ class Newcarscustomer extends Backend
 
         $this->view->assign($data);
         $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL)
+    {
+        $row = Db::name('sales_order')
+            ->where('id', $ids)
+            ->field('mortgage_registration_id,downpayment,service_charge,registry_registration_id')
+            ->find();
+
+
+        if ($row['mortgage_registration_id']) {
+            $mortgage_registration = Db::name('mortgage_registration')
+                ->where('id', $row['mortgage_registration_id'])
+                ->field('contract_number,withholding_service,other_lines,collect_account')
+                ->find();
+
+            $row = array_merge($row, $mortgage_registration);
+        }
+
+        if($row['registry_registration_id']){
+            $registry_registration = Db::name('registry_registration')
+                ->where('id',$row['registry_registration_id'])
+                ->field('id_card,registered_residence,marry_and_divorceimages,credit_reportimages,halfyear_bank_flowimages,guarantee,
+            residence_permitimages,driving_license,residence_permit,renting_contract,company_contractimages,lift_listimages,
+            deposit,truth_management_protocolimages,confidentiality_agreementimages,supplementary_contract_agreementimages,explain_situation,
+            tianfu_bank_cardimages,crime_promise,buy_rent,customer_query,fengbang_rent,maximum_guarantee_contractimages,transfer_agreement')
+                ->find();
+
+            $row = array_merge($row, $registry_registration);
+        }
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            $orders = $this->request->post("order/a");
+            $registration = $this->request->post("registration/a");
+            $params['classification'] = 'new';
+            $registration['classification'] = 'new';
+            if ($params) {
+                try {
+
+                    if ($row['mortgage_registration_id']) {
+                        Db::name('mortgage_registration')
+                            ->where('id', $row['mortgage_registration_id'])
+                            ->update($params);
+                    } else {
+                        Db::name('mortgage_registration')->insert($params);
+                        $orders['mortgage_registration_id'] = Db::name('mortgage_registration')->getLastInsID();
+
+                    }
+
+                    if($row['registry_registration_id']){
+                        Db::name('registry_registration')
+                            ->where('id',$row['registry_registration_id'])
+                            ->update($registration);
+                    }else{
+                        Db::name('registry_registration')->insert($registration);
+                        $orders['registry_registration_id'] = Db::name('registry_registration')->getLastInsID();
+                    }
+
+                    $result = Db::name('sales_order')
+                        ->where('id', $ids)
+                        ->update($orders);
+
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+
         return $this->view->fetch();
     }
 

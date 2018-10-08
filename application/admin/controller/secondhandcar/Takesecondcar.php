@@ -382,6 +382,7 @@ class Takesecondcar extends Backend
             $orders = $this->request->post("order/a");
             $registration = $this->request->post("registration/a");
             $params['classification'] = 'used';
+            $registration['classification'] = 'used';
             if ($params) {
                 try {
                     if ($row['mortgage_registration_id']) {
