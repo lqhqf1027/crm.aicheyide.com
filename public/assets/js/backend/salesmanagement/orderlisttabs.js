@@ -3155,7 +3155,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             }, function(data, ret){
                 Toastr.success("失败");
             });
+
             // Controller.api.bindevent();
+
         },
         /**
          * 新车资料添加
