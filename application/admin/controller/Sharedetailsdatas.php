@@ -50,10 +50,10 @@ class Sharedetailsdatas extends Backend
             ->field('a.order_no,a.genderdata,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.amount_collected,a.residence_bookletimages,a.bank_cardimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
-                a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,
+                a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,a.withholding_service,
                 a.undertakingimages,a.accreditimages,a.faceimages,a.informationimages,a.mate_id_cardimages,
                 b.nickname as sales_name,
-                c.tail_section,c.note,
+                c.tail_section,c.note,c.nperlist,
                 d.archival_coding,d.contract_total,d.end_money,d.yearly_inspection,d.next_inspection,d.transferdate,d.hostdate,d.ticketdate,d.supplier,d.tax_amount,d.no_tax_amount,d.pay_taxesdate,d.house_fee,
                 d.luqiao_fee,d.insurance_buydate,d.car_boat_tax,d.insurance_policy,
                 d.commercial_insurance_policy,d.registry_remark,
@@ -61,6 +61,23 @@ class Sharedetailsdatas extends Backend
                 f.car_imgeas,f.lending_date,f.bank_card,f.invoice_monney,f.registration_code,f.tax,f.business_risks,f.insurance,f.mortgage_type')
             ->where('a.id', $ids)
             ->find();
+       //计算保险
+       if($row['business_risks'] && $row['insurance'] && $row['car_boat_tax']){
+          $insurance = floatval($row['business_risks']) + floatval($row['insurance']) + floatval($row['car_boat_tax']);
+       }
+
+       //计算服务费
+       if($row['contract_total'] && $row['invoice_monney'] && $insurance){
+           $service_charge = floatval($row['contract_total']) - floatval($insurance) - floatval($row['invoice_monney']);
+       }
+
+       //计算首期服务费
+       if($service_charge && $row['withholding_service'] && $row['nperlist'] && $row['payment']){
+         $down_payment =  floatval($service_charge) - (floatval($row['withholding_service']) * floatval($row['nperlist']));
+
+         $down_payment = $down_payment<$row['payment']? $down_payment : $row['payment'];
+       }
+        return;
 //        pr($row['bank_card']);return;
         if ($row['new_car_marginimages'] == "") {
             $row['new_car_marginimages'] = null;

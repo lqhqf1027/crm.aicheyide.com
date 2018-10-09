@@ -168,7 +168,7 @@ class Matchfinance extends Backend
 
                 $row->visible(['id', 'financial_name', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data']);
                 $row->visible(['plansecond']);
-                $row->getRelation('plansecond')->visible(['companyaccount', 'licenseplatenumber','newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney']);
+                $row->getRelation('plansecond')->visible(['companyaccount', 'licenseplatenumber', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
                 $row->visible(['models']);
@@ -199,6 +199,8 @@ class Matchfinance extends Backend
      */
     public function newedit($ids = NULL)
     {
+
+
         $row = Db::name('financial_platform')->select();
 
 
@@ -208,7 +210,13 @@ class Matchfinance extends Backend
             $id = input("ids");
             $params = $this->request->post('row/a');
 
+            $plan_acar = Db::name('sales_order')
+            ->where('id',$ids)
+            ->value('plan_acar_name');
 
+            $monthly = Db::name('plan_acar')
+            ->where('id',$plan_acar)
+            ->value('monthly');
 
             $financial_name = Db::name('financial_platform')->where('id', $params['financial_platform_id'])->value('name');
 
@@ -217,6 +225,15 @@ class Matchfinance extends Backend
             $fields['financial_name'] = $financial_name;
             $fields['financial_monthly'] = $params['financial_monthly'];
             $fields['review_the_data'] = 'is_reviewing_true';
+
+            if ($params['financial_monthly'] && $monthly){
+               $money = floatval($monthly) - floatval($params['financial_monthly']);
+               if($money<0){
+                   $money = 0;
+               }
+
+                  $fields['withholding_service'] = $money;
+            }
 
 
             $res = Db::name("sales_order")
