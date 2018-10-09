@@ -199,19 +199,27 @@ class Matchfinance extends Backend
     {
         $row = Db::name('financial_platform')->select();
 
+
         $this->view->assign('row', $row);
 
-        if ($this->request->isAjax()) {
+        if ($this->request->isPost()) {
             $id = input("ids");
             $params = $this->request->post('row/a');
 
+
+
             $financial_name = Db::name('financial_platform')->where('id', $params['financial_platform_id'])->value('name');
+
+            $fields = array();
+
+            $fields['financial_name'] = $financial_name;
+            $fields['financial_monthly'] = $params['financial_monthly'];
+            $fields['review_the_data'] = 'is_reviewing_true';
+
+
             $res = Db::name("sales_order")
                 ->where("id", $id)
-                ->update([
-                    "financial_name" => $financial_name,
-                    "review_the_data" => "is_reviewing_true"
-                ]);
+                ->update($fields);
 
 
             if ($res) {

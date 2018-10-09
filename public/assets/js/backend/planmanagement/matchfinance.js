@@ -54,6 +54,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newprepareMatch.on('load-success.bs.table', function (e, data) {
                     // console.log(data.total);
                     $('#badge_newprepare_match').text(data.total);
+                    $('.btn-neweditone').data('area',['50%','50%']);
 
 
                     newprepareMatch.find('tbody').find('.bs-checkbox').each(function () {
