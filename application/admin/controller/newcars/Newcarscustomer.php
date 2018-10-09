@@ -438,7 +438,7 @@ class Newcarscustomer extends Backend
     {
         $row = Db::name('sales_order')
             ->where('id', $ids)
-            ->field('mortgage_registration_id,downpayment,service_charge,registry_registration_id')
+            ->field('mortgage_registration_id,downpayment,service_charge,registry_registration_id,withholding_service')
             ->find();
 
         $images = Db::name('sales_order')
@@ -452,7 +452,7 @@ class Newcarscustomer extends Backend
         if ($row['mortgage_registration_id']) {
             $mortgage_registration = Db::name('mortgage_registration')
                 ->where('id', $row['mortgage_registration_id'])
-                ->field('contract_number,withholding_service,other_lines,collect_account')
+                ->field('contract_number,other_lines,collect_account')
                 ->find();
 
             $row = array_merge($row, $mortgage_registration);
@@ -497,7 +497,6 @@ class Newcarscustomer extends Backend
                         Db::name('registry_registration')->insert($registration);
                         $orders['registry_registration_id'] = Db::name('registry_registration')->getLastInsID();
                     }
-
                     $result = Db::name('sales_order')
                         ->where('id', $ids)
                         ->update($orders);
