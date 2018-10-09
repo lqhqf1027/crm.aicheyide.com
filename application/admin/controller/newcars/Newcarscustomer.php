@@ -312,6 +312,25 @@ class Newcarscustomer extends Backend
 
                 $data = sales_takecar($models_name,$new_info['username']);
 
+
+                $peccancy = Db::name('sales_order')
+                    ->alias('so')
+                    ->join('models m', 'so.models_id = m.id')
+                    ->join('car_new_inventory ni', 'so.car_new_inventory_id = ni.id')
+                    ->where('so.id', $id)
+                    ->field('so.username,so.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
+                    ->find();
+
+                $peccancy['car_type'] = 1;
+
+                $peccancy_result = Db::name('violation_inquiry')->insert($peccancy);
+
+                if($peccancy_result){
+                    $this->success();
+                }else{
+                    $this->error('添加违章查询信息失败');
+                }
+
                 $email = new Email();
 
                 $receiver = Db::name('admin')->where('id', $new_info['admin_id'])->value('email');
@@ -386,23 +405,7 @@ class Newcarscustomer extends Backend
                     Cache::set('newthreesales', $newthreesales);
 
 
-                $peccancy = Db::name('sales_order')
-                    ->alias('so')
-                    ->join('models m', 'so.models_id = m.id')
-                    ->join('car_new_inventory ni', 'so.car_new_inventory_id = ni.id')
-                    ->where('so.id', $id)
-                    ->field('so.username,so.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
-                    ->find();
 
-                $peccancy['car_type'] = 1;
-
-                $peccancy_result = Db::name('violation_inquiry')->insert($peccancy);
-
-                if($peccancy_result){
-                    $this->success();
-                }else{
-                    $this->error('添加违章查询信息失败');
-                }
 
 
 
@@ -775,6 +778,13 @@ class Newcarscustomer extends Backend
             ->field('mortgage_registration_id,downpayment,service_charge,registry_registration_id')
             ->find();
 
+        $images = Db::name('sales_order')
+        ->where('id',$ids)
+        ->field('id_cardimages,residence_bookletimages,housingimages,bank_cardimages,deposit_contractimages,guarantee_agreementimages')
+        ->find();
+
+
+
 
         if ($row['mortgage_registration_id']) {
             $mortgage_registration = Db::name('mortgage_registration')
@@ -842,7 +852,10 @@ class Newcarscustomer extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign("row", $row);
+        $this->view->assign([
+            "row"=> $row,
+            'images'=>$images
+        ]);
 
         return $this->view->fetch();
     }

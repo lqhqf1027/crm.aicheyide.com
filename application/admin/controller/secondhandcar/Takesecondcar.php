@@ -251,6 +251,22 @@ class Takesecondcar extends Backend
 
                     $data = sales_inform($order_info['username']);
 
+                    $peccancy = Db::name('second_sales_order')
+                        ->alias('so')
+                        ->join('models m', 'so.models_id = m.id')
+                        ->join('secondcar_rental_models_info mi', 'so.plan_car_second_name = mi.id')
+                        ->where('so.id', $id)
+                        ->field('so.username,so.phone,m.name as models,mi.licenseplatenumber as license_plate_number,mi.vin as frame_number,mi.engine_number')
+                        ->find();
+
+                    $peccancy['car_type'] = 2;
+                    $result_peccancy = Db::name('violation_inquiry')->insert($peccancy);
+                    if ($result_peccancy) {
+                        $this->success();
+                    } else {
+                        $this->error('违章信息添加失败');
+                    }
+
                     $email = new Email();
 
                     $receiver = Db::name('admin')->where('id', $order_info['admin_id'])->value('email');
@@ -316,21 +332,7 @@ class Takesecondcar extends Backend
                     Cache::set('secondtwosales', $secondtwosales);
                     Cache::set('secondthreesales', $secondthreesales);
 
-                    $peccancy = Db::name('second_sales_order')
-                        ->alias('so')
-                        ->join('models m', 'so.models_id = m.id')
-                        ->join('secondcar_rental_models_info mi', 'so.plan_car_second_name = mi.id')
-                        ->where('so.id', $id)
-                        ->field('so.username,so.phone,m.name as models,mi.licenseplatenumber as license_plate_number,mi.vin as frame_number,mi.engine_number')
-                        ->find();
 
-                    $peccancy['car_type'] = 2;
-                    $result_peccancy = Db::name('violation_inquiry')->insert($peccancy);
-                    if ($result_peccancy) {
-                        $this->success();
-                    } else {
-                        $this->error('违章信息添加失败');
-                    }
 
 
                 } else {
@@ -354,6 +356,17 @@ class Takesecondcar extends Backend
             ->where('id', $ids)
             ->field('mortgage_registration_id,downpayment,service_charge,registry_registration_id')
             ->find();
+
+        $images = Db::name('second_sales_order')
+        ->where('id',$ids)
+        ->field('id_cardimages,residence_bookletimages,housingimages,bank_cardimages,crime_undertakingimages,credit_reportimages,deposit_contractimages')
+        ->find();
+
+        foreach ($images as $k=>$v){
+            if($images[$k]==''){
+                $images[$k] = null;
+            }
+        }
 
         if ($row['mortgage_registration_id']) {
             $mortgage_registration = Db::name('mortgage_registration')
@@ -422,7 +435,10 @@ class Takesecondcar extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign("row", $row);
+        $this->view->assign([
+            "row"=> $row,
+            'images'=>$images
+        ]);
         return $this->view->fetch();
     }
 
