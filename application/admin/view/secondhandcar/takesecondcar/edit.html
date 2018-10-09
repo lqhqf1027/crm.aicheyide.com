@@ -45,13 +45,13 @@
                    type="number" value="{$row.service_charge}">
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('收款账户')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-collect_account" data-rule="required" class="form-control" name="row[collect_account]"
-                   type="text" value="{$row.collect_account}">
-        </div>
-    </div>
+    <!--<div class="form-group">-->
+        <!--<label class="control-label col-xs-12 col-sm-2">{:__('收款账户')}:</label>-->
+        <!--<div class="col-xs-12 col-sm-8">-->
+            <!--<input id="c-collect_account" data-rule="required" class="form-control" name="row[collect_account]"-->
+                   <!--type="text" value="{$row.collect_account}">-->
+        <!--</div>-->
+    <!--</div>-->
 
     <table class="table table-bordered table-striped table-hover click-table" style="width:80%;margin: auto">
         <tbody class="">
@@ -60,8 +60,15 @@
         <tr class="tr-click">
             <td colspan="2">身份证</td>
             {empty name="$row.id_card"}
+            {empty name="$images.id_cardimages"}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
             <input type="hidden" name="registration[id_card]" value="no">
+            {else /}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="registration[id_card]" value="yes">
+            {/empty}
             {else /}
             {eq name="$row.id_card" value="yes"}
             <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
@@ -78,8 +85,15 @@
         <tr class="tr-click">
             <td colspan="2">户口复印件</td>
             {empty name="$row.registered_residence"}
+            {empty name="$images.residence_bookletimages"}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
             <input type="hidden" name="registration[registered_residence]" value="no">
+            {else /}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="registration[registered_residence]" value="yes">
+            {/empty}
             {else /}
             {eq name="$row.registered_residence" value="yes"}
             <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
@@ -114,8 +128,15 @@
         <tr class="tr-click">
             <td colspan="2">征信报告</td>
             {empty name="$row.credit_reportimages"}
+            {empty name="$images.credit_reportimages"}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
             <input type="hidden" name="registration[credit_reportimages]" value="no">
+            {else /}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="registration[credit_reportimages]" value="yes">
+            {/empty}
             {else /}
             {eq name="$row.credit_reportimages" value="yes"}
             <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
@@ -168,8 +189,15 @@
         <tr class="tr-click">
             <td colspan="2">房产复印件</td>
             {empty name="$row.residence_permitimages"}
+            {empty name="$images.housingimages"}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
             <input type="hidden" name="registration[residence_permitimages]" value="no">
+            {else /}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="registration[residence_permitimages]" value="yes">
+            {/empty}
             {else /}
             {eq name="$row.residence_permitimages" value="yes"}
             <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
@@ -276,8 +304,15 @@
         <tr class="tr-click">
             <td colspan="2">定金协议</td>
             {empty name="$row.deposit"}
+            {empty name="$images.deposit_contractimages"}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
             <input type="hidden" name="registration[deposit]" value="no">
+            {else /}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="registration[deposit]" value="yes">
+            {/empty}
             {else /}
             {eq name="$row.deposit" value="yes"}
             <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
@@ -366,8 +401,15 @@
         <tr class="tr-click">
             <td colspan="2">银行卡</td>
             {empty name="$row.tianfu_bank_cardimages"}
+            {empty name="$images.bank_cardimages"}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
             <input type="hidden" name="registration[tianfu_bank_cardimages]" value="no">
+            {else /}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="registration[tianfu_bank_cardimages]" value="yes">
+            {/empty}
             {else /}
             {eq name="$row.tianfu_bank_cardimages" value="yes"}
             <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
@@ -384,8 +426,15 @@
         <tr class="tr-click">
             <td colspan="2">无犯罪承诺书</td>
             {empty name="$row.crime_promise"}
+            {empty name="$images.crime_undertakingimages"}
             <td class="td2"><i class="fa fa-times text-danger fa-lg"></i></td>
+
             <input type="hidden" name="registration[crime_promise]" value="no">
+            {else /}
+            <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>
+
+            <input type="hidden" name="registration[crime_promise]" value="yes">
+            {/empty}
             {else /}
             {eq name="$row.crime_promise" value="yes"}
             <td class="td2"><i class="fa fa-check text-success fa-lg"></i></td>

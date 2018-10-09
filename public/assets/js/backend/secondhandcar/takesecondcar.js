@@ -137,7 +137,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //数据实时统计
                 secondcarWaitconfirm.on('load-success.bs.table',function(e,data){ 
                     $(".btn-secondDetails").data("area", ["95%", "95%"]);
-                    $(".btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-editone").data("area", ["90%", "90%"]);
 
                     var secondcarWaitconfirm =  $('#badge_secondcar_waitconfirm').text(data.total); 
                     secondcarWaitconfirm = parseInt($('#badge_secondcar_waitconfirm').text());
