@@ -44,6 +44,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'engine_number', title: __('发动机号')},
                         {field: 'household', title: __('所属户')},
                         {field: '4s_shop', title: __('4S店')},
+                        {field: 'open_fare', title: __('开票价(元)')},
                         {field: 'note', title: __('备注'),operate:false},
                         {field: 'createtime', title: __('创建时间'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('更新时间'), operate:false, addclass:'datetimerange', formatter: Table.api.formatter.datetime},

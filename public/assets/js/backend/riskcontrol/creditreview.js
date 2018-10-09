@@ -112,7 +112,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                 field: 'id', title: __('查看详细资料'), table: newcarAudit, buttons: [
                                     {
                                         name: 'newcardetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-newcardetails',
-                                        url: 'riskcontrol/creditreview/newcardetails', callback: function (data) {
+                                        url: 'Sharedetailsdatas/new_car_share_data', callback: function (data) {
                                             // console.log(data)
                                         }
                                     }
@@ -988,7 +988,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { checkbox: true },
                             { field: 'id', title: __('Id'),operate:false },
                             { field: 'order_no', title: __('Order_no') },
-                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD' },
+
+                            { field: 'plansecond.licenseplatenumber', title: __('车牌号') },
+
+                            { field: 'models.name', title: __('销售车型') },
 
                             { field: 'models.name', title: __('销售车型') },
                             { field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales },
@@ -997,7 +1001,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     {
                                         name: 'secondhandcardetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-secondhandcardetails',
                                         url: 'riskcontrol/creditreview/secondhandcardetails', callback: function (data) {
-                                            console.log(data)
+
                                         }
                                     }
                                 ],
@@ -1022,7 +1026,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     {
                                         name: '', icon: 'fa fa-times', text: '审核资料还未完善，无法进行审核', classname: ' text-danger ',
                                         hidden: function (row) {  /**审核资料还未完善，无法进行审核 */
-                                           
+
                                             if (!row.id_cardimages || !row.drivers_licenseimages) {
                                                 return false;
                                             }
@@ -1035,7 +1039,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         name: 'secondhandcarResult', text: '审核', title: '审核征信', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-secondhandcarResult btn-dialog',
                                         url: 'riskcontrol/creditreview/secondhandcarResult',
                                         //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
-                                        //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
+                                        //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除
                                         //....
                                         hidden: function (row) { /**审核 */
                                             if (row.review_the_data == 'is_reviewing_control' && row.id_cardimages && row.drivers_licenseimages) {
@@ -1064,7 +1068,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     {
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
                                         url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
-                                        
+
                                     },
                                     {
                                         name: 'is_reviewing_pass', text: '选择库存车', title: '选择库存车', icon: 'fa fa-arrows', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-danger btn-dialog btn-secondchooseStock',

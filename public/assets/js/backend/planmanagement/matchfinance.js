@@ -134,7 +134,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '查看订单详细资料',
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-primary btn-dialog btn-new',
-                                        url: 'planmanagement/Matchfinance/new_details',
+                                        url: 'Sharedetailsdatas/new_car_share_data',
                                         callback: function (data) {
 
                                         }
@@ -1013,21 +1013,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('订车日期'),
                                 operate: 'RANGE',
                                 addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
+                                formatter: Table.api.formatter.datetime,datetimeFormat: 'YYYY-MM-DD'
                             },
                             {field: 'plansecond.companyaccount', title: __('公司')},
                             {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'financial_name', title: __('金融平台'),formatter:function (v,r,e) {
-                                    if(!v){
-                                        return '';
-                                    }
-
-                                    return v;
-                                }},
-
-                            // {field: 'id_card', title: __('身份证号')},
-                            // {field: 'phone', title: __('联系电话')},
+                                return !v?'':v;
+                            }},
+                            {field: 'plansecond.licenseplatenumber', title: __('车牌号') },
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'plansecond.newpayment', title: __('首付(元)'), operate: false},
                             {field: 'plansecond.monthlypaymen', title: __('月供(元)'), operate: false},

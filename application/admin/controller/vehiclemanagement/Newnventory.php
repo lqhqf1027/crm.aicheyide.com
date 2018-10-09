@@ -65,7 +65,7 @@ class Newnventory extends Backend
 
             foreach ($list as $key=>$row) {
                 // $list[$key]['aaa'] = 11;
-                $row->visible(['id', 'carnumber', 'reservecar', 'licensenumber', 'presentationcondition', 'note', 'frame_number', 'engine_number', 'household', '4s_shop', 'createtime', 'updatetime','the_car_username']);
+                $row->visible(['id', 'carnumber', 'reservecar','open_fare', 'licensenumber', 'presentationcondition', 'note', 'frame_number', 'engine_number', 'household', '4s_shop', 'createtime', 'updatetime','the_car_username']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']); 
                 foreach((array)$this->getOrderName($row['id']) as $k=>$v){
@@ -137,6 +137,7 @@ class Newnventory extends Backend
                         $this->model->validate($validate);
                     }
                     $result = $this->model->allowField(true)->save($params);
+//                    $resultMortgage = model('Mortgage')->allowField(true)->save(['id'=>self::getInvoiceMoney($this->model->id),'invoice_monney'=>$params['invoice_monney']]);
                     if ($result !== false) {
                         $this->success();
                     } else {
@@ -195,12 +196,31 @@ class Newnventory extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
+//        $row['invoice_monney'] =self::getInvoiceMoney($row['id'])['invoice_monney'];
         $this->view->assign("row", $row);
+//        pr(collection($row)->toArray());die;
         $this->view->assign("car_models", $this->getInfo());
         $this->view->assign("validate_models_id", $validate['models_id']);
 
         return $this->view->fetch();
     }
+
+    /**
+     * 获取按揭列表里的开票价
+     * @param $inventoryId 新车库存id
+     * @return array|false|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+ /*   public static function getInvoiceMoney($inventoryId){
+        return Db::name('sales_order')->alias('a')
+                ->join('car_new_inventory b','a.car_new_inventory_id=b.id')
+                ->join('mortgage c','a.mortgage_id = c.id')
+                ->field('a.id as sales_id,c.invoice_monney,a.id as mortgage_id')
+                ->where(['b.id'=>$inventoryId])
+                ->find();
+    }*/
 
     /**
      * 得到车型信息

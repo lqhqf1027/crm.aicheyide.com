@@ -334,7 +334,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="">
+            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="" placeholder="必填">
             <span id="username-value" style="color: red"></span>
         </div>
 
@@ -343,14 +343,14 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-id_card" data-rule="required;IDcard" class="form-control" name="row[id_card]" type="text">
+            <input id="c-id_card" data-rule="required;IDcard" class="form-control" name="row[id_card]" type="text" placeholder="必填">
             <span id="idcard-value" style="color: red"></span>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-phone" data-rule="required;mobile" class="form-control" name="row[phone]" type="text">
+            <input id="c-phone" data-rule="required;mobile" class="form-control" name="row[phone]" type="text" placeholder="必填">
             <span id="phone-value" style="color: red"></span>
         </div>
 
@@ -417,7 +417,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_contractimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-deposit_contractimages" data-rule="required" class="form-control" size="50"
+                <input id="c-deposit_contractimages"  class="form-control" size="50"
                        name="row[deposit_contractimages]"
                        type="text">
                 <div class="input-group-addon no-border no-padding">
@@ -443,7 +443,7 @@
             <div class="input-group">
                 <input id="c-deposit_receiptimages" data-rule="required" class="form-control" size="50"
                        name="row[deposit_receiptimages]"
-                       type="text">
+                       type="text" placeholder="必填">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-deposit_receiptimages" class="btn btn-danger plupload"
