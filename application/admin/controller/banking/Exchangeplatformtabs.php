@@ -388,18 +388,6 @@ class Exchangeplatformtabs extends Backend
         return $this->view->fetch();
     }
 
-
-    /**
-     * 查看详情信息
-     * @param null $ids
-     * @return string
-     */
-    public function details($ids = null)
-    {
-        
-        return $this->view->fetch();
-    }
-
     /**
      * 输入放款时间
      * @param null $ids

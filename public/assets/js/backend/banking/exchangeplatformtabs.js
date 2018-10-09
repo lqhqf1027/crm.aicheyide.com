@@ -174,9 +174,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         icon: 'fa fa-eye', 
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-primary btn-dialog btn-details',
-                                        url: 'banking/exchangeplatformtabs/details', callback: function (data) {
-
-                                        }
+                                        url: 'Sharedetailsdatas/new_car_share_data'
                                     },
 
                                 ]
@@ -690,23 +688,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'banking/exchangeplatformtabs/change_platform';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('更改平台'), $(this).data() || {});
                     },
-                    /**
-                     * 详情
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-details': function (e, value, row, index) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var table = $(this).closest('table');
-                        var options = table.bootstrapTable('getOptions');
-                        var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'banking/exchangeplatformtabs/details';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看详情'), $(this).data() || {});
-                    }
+
                 }
             },
 

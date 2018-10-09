@@ -224,6 +224,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 // 表格2
                 var alreadyLiftCar = $("#alreadyLiftCar");
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名、车牌号";};
+
                 alreadyLiftCar.on('load-success.bs.table', function (e, data) {
 
 
@@ -277,13 +279,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'createtime',
                                 title: __('订车时间'),
                                 formatter: Table.api.formatter.datetime,
-                                operate: false
+                                datetimeFormat:'YYYY-MM-DD',
+                                // operate: false
                             },
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
                                 formatter: Table.api.formatter.datetime,
-                                operate: false
+                                datetimeFormat:'YYYY-MM-DD',
                             },
                             {
                                 field: 'operate',
@@ -306,7 +309,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '查看客户详细资料',
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-showOrderAndStock',
-                                        url: 'newcars/newcarscustomer/show_order_and_stock',
+                                        url: 'Sharedetailsdatas/new_car_share_data',
                                     },
                                     {
                                         name: 'the_car',

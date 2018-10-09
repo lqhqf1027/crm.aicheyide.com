@@ -41,7 +41,8 @@ class Matchfinance extends Backend
     }
 
 
-    /**新车匹配
+    /**
+     * 新车匹配
      * @return string|\think\response\Json
      * @throws \think\Exception
      */
@@ -120,7 +121,8 @@ class Matchfinance extends Backend
     }
 
 
-    /**二手车匹配
+    /**
+     * 二手车匹配
      * @return string|\think\response\Json
      * @throws \think\Exception
      */
@@ -137,7 +139,7 @@ class Matchfinance extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['plansecond' => function ($query) {
-                    $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,licenseplatenumber');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
@@ -151,7 +153,7 @@ class Matchfinance extends Backend
 
             $list = $this->model
                 ->with(['plansecond' => function ($query) {
-                    $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                    $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,licenseplatenumber');
                 }, 'admin' => function ($query) {
                     $query->withField(['nickname', 'id', 'avatar']);
                 }, 'models' => function ($query) {
@@ -166,7 +168,7 @@ class Matchfinance extends Backend
 
                 $row->visible(['id', 'financial_name', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data']);
                 $row->visible(['plansecond']);
-                $row->getRelation('plansecond')->visible(['companyaccount', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney']);
+                $row->getRelation('plansecond')->visible(['companyaccount', 'licenseplatenumber','newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
                 $row->visible(['models']);
