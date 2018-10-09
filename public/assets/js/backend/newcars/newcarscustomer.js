@@ -183,7 +183,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '查看客户详细资料',
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-showOrder',
-                                        url: 'newcars/newcarscustomer/show_order',
+                                        url: 'Sharedetailsdatas/new_car_share_data',
                                     }
                                 ]
                             }
