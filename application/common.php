@@ -998,6 +998,26 @@ if (!function_exists('sales_takecar')) {
     }
 }
 /**
+ * 以租代购（新车）车管发送金融按揭专员，已提车
+ */
+if (!function_exists('financial_takecar')) {
+
+
+    function financial_takecar($models_name = NULL, $username = NULL)
+    {
+        if ($models_name && $username) {
+            $arr = [
+                'subject' => "客户提车成功通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，已经提车，请悉知 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
  * 以租代购（新车）风控审核发送给销售，审核需要保证金
  */
 if (!function_exists('newdata_inform')) {
@@ -1049,6 +1069,46 @@ if (!function_exists('newnopass_inform')) {
             $arr = [
                 'subject' => "新车风控审核不通过通知：",
                 'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）风控审核发送给销售，审核不通过，待补录资料
+ */
+if (!function_exists('new_information')) {
+
+
+    function new_information($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "新车风控审核不通过,待补录资料通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，需补录. $text .资料，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（新车）销售发送给风控，资料补录完成
+ */
+if (!function_exists('new_collection_data')) {
+
+
+    function new_collection_data($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "新车资料补录完成通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，补录：. $text . 资料已完成，请及时登录后台进行处理 . '</div>'
             ];
 
             return $arr;
@@ -1149,6 +1209,46 @@ if (!function_exists('rentalnopass_inform')) {
             $arr = [
                 'subject' => "租车风控审核不通过通知：",
                 'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的租车请求，没有通过风控审核，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车 风控审核发送给销售，审核不通过，待补录资料
+ */
+if (!function_exists('rental_information')) {
+
+
+    function rental_information($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "租车风控审核不通过,待补录资料通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，需补录. $text .资料，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 租车 销售发送给风控，资料补录完成
+ */
+if (!function_exists('rental_collection_data')) {
+
+
+    function rental_collection_data($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "租车资料补录完成通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，补录：. $text . 资料已完成，请及时登录后台进行处理 . '</div>'
             ];
 
             return $arr;
@@ -1317,7 +1417,46 @@ if (!function_exists('secondnopass_inform')) {
 
     }
 }
+/**
+ * 以租代购（二手车）风控审核发送给销售，审核不通过，待补录资料
+ */
+if (!function_exists('second_information')) {
 
+
+    function second_information($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "二手车风控审核不通过,待补录资料通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 你发起的客户： . $username . 对车型： . $models_name . 的购买，没有通过风控审核，需补录：. $text . 资料，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 以租代购（二手车）销售发送给风控，资料补录完成
+ */
+if (!function_exists('second_collection_data')) {
+
+
+    function second_collection_data($models_name = NULL, $username = NULL, $text = NULL)
+    {
+        if ($models_name && $username && $text) {
+            $arr = [
+                'subject' => "二手车资料补录完成通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 客户： . $username . 对车型： . $models_name . 的购买，补录：. $text . 资料已完成，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
 
 if (!function_exists('fullinternal_inform')) {
 

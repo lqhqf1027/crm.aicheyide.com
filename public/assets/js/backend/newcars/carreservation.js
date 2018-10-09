@@ -276,6 +276,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -323,6 +326,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -368,6 +374,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -420,6 +429,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -467,6 +479,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -512,6 +527,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -562,6 +580,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         },
                                     },
                                     {
@@ -608,6 +629,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         },
@@ -657,6 +681,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -702,6 +729,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -752,6 +782,60 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'collection_data', icon: 'fa fa-times', text: '征信不通过，待补录资料', classname: ' text-danger ',
+                                        hidden: function (row) {  /**征信不通过，待补录资料 */
+
+                                            if (row.review_the_data == 'collection_data') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -800,6 +884,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -846,6 +933,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }

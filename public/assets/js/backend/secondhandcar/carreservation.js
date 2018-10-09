@@ -196,6 +196,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -220,6 +223,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -248,6 +254,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -272,6 +281,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -301,6 +313,39 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'not_through', icon: 'fa fa-times', text: '征信不通过，待补录资料', classname: ' text-danger ',
+                                        hidden: function (row) {  /**征信不通过，待补录资料 */
+
+                                            if (row.review_the_data == 'collection_data') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_finance') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -328,6 +373,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -353,6 +401,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
