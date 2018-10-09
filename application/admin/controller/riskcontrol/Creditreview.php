@@ -3,13 +3,14 @@
 namespace app\admin\controller\riskcontrol;
 
 use app\common\controller\Backend;
-use think\DB;
+use think\Db;
 use think\Config;
 use think\db\exception\DataNotFoundException;
 use app\admin\model\SalesOrder as salesOrderModel;
 use app\admin\controller\Bigdata as bg;
 use app\common\library\Email;
 use think\Cache;
+use think\Session;
 
 /**
  * 订单列管理.
@@ -29,7 +30,8 @@ class Creditreview extends Backend
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
     protected $noNeedRight = ['index', 'newcarAudit', 'rentalcarAudit', 'secondhandcarAudit', 'newauditResult', 'newpass', 'newdata', 'newnopass', 'rentalauditResult', 'rentalpass', 'rentalnopass', 'secondhandcarResult', 'secondpass', 'seconddata'
-        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata','getPlanAcarData','getPlanSecondCarData','toViewBigData','getBigData','newsales','newtube','choosestock','newtubefinance','secondchoosestock'];
+        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata','getPlanAcarData','getPlanSecondCarData','toViewBigData','getBigData','newsales','newtube','choosestock','newtubefinance','secondchoosestock', 
+        'secondinformation', 'newinformation', 'rentalinformation'];
 
     public function _initialize()
     {
@@ -98,7 +100,7 @@ class Creditreview extends Backend
                 }])
                 ->where($where)
                 ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], 
-                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], 'or')
+                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], ['=', 'collection_data'], 'or')
                 ->order($sort, $order)
                 ->count();
 
@@ -113,7 +115,7 @@ class Creditreview extends Backend
                 }])
                 ->where($where)
                 ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], 
-                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], 'or')
+                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], ['=', 'collection_data'], 'or')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -175,7 +177,7 @@ class Creditreview extends Backend
                 }])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], ['=', 'for_the_car'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], ['=', 'for_the_car'], ['=', 'collection_data'], 'or')
                 ->count();
 
             $list = $this->model
@@ -188,7 +190,7 @@ class Creditreview extends Backend
                 }])
                 ->where($where)
                 ->order($sort, $order)
-                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], ['=', 'for_the_car'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], ['=', 'for_the_car'], ['=', 'collection_data'], 'or')
                 ->select();
             foreach ($list as $row) {
                 $row->visible(['id', 'plan_car_rental_name', 'order_no', 'createtime', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'review_the_data']);
@@ -247,7 +249,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], 'or')
+                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'collection_data'], 'or')
                 ->order($sort, $order)
                 ->count();
 
@@ -261,7 +263,7 @@ class Creditreview extends Backend
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], 'or')
+                ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'collection_data'], 'or')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -917,6 +919,61 @@ class Creditreview extends Backend
         }
     }
 
+    /**新车单----审核不通过，待补录资料
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function newinformation()
+    {
+        if ($this->request->isAjax()) {
+
+            $this->model = model('SalesOrder');
+
+            $id = input("id");
+            $text = input("text");
+            Session::set('text', $text);
+            $id = json_decode($id, true);
+
+            $result = $this->model->save(['review_the_data' => 'collection_data'], function ($query) use ($id) {
+                $query->where('id', $id);
+            });
+
+            if ($result) {
+
+                $data = Db::name("sales_order")->where('id', $id)->find();
+                $admin_nickname = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
+
+                $channel = "demo-new_information";
+                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
+                goeary_push($channel, $content . "|" . $data['admin_id']);
+                
+                //车型
+                $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
+
+                $data_s = new_information($models_name, $data['username'],$text);
+                
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('id', $data['admin_id'])->value('email');
+
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data_s['subject'])
+                    ->message($data_s['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+            } else {
+                $this->error();
+            }
+        }
+    }
+
     /** 审核提交过来的租车单*/
     public function rentalauditResult($ids = null)
     {
@@ -1086,6 +1143,61 @@ class Creditreview extends Backend
             }
 
 
+        }
+    }
+
+    /**租车单----审核不通过，待补录资料
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function rentalinformation()
+    {
+        if ($this->request->isAjax()) {
+
+            $this->model = new \app\admin\model\RentalOrder;
+
+            $id = input("id");
+            $text = input("text");
+            Session::set('text', $text);
+            $id = json_decode($id, true);
+
+            $result = $this->model->save(['review_the_data' => 'collection_data'], function ($query) use ($id) {
+                $query->where('id', $id);
+            });
+
+            if ($result) {
+
+                $data = Db::name("rental_order")->where('id', $id)->find();
+                $admin_nickname = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
+
+                $channel = "demo-rental_information";
+                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
+                goeary_push($channel, $content . "|" . $data['admin_id']);
+                
+                //车型
+                $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
+
+                $data_s = rental_information($models_name, $data['username'],$text);
+                
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('id', $data['admin_id'])->value('email');
+
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data_s['subject'])
+                    ->message($data_s['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+            } else {
+                $this->error();
+            }
         }
     }
 
@@ -1449,6 +1561,62 @@ class Creditreview extends Backend
             }
 
 
+        }
+    }
+
+
+    /**二手车单----审核不通过，待补录资料
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function secondinformation()
+    {
+        if ($this->request->isAjax()) {
+
+            $this->model = new \app\admin\model\SecondSalesOrder;
+
+            $id = input("id");
+            $text = input("text");
+            Session::set('text', $text);
+            $id = json_decode($id, true);
+
+            $result = $this->model->save(['review_the_data' => 'collection_data'], function ($query) use ($id) {
+                $query->where('id', $id);
+            });
+
+            if ($result) {
+
+                $data = Db::name("second_sales_order")->where('id', $id)->find();
+                $admin_nickname = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
+
+                $channel = "demo-second_information";
+                $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核,需要补录：" . $text ."资料";
+                goeary_push($channel, $content . "|" . $data['admin_id']);
+                
+                //车型
+                $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
+
+                $data_s = second_information($models_name, $data['username'],$text);
+                
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('id', $data['admin_id'])->value('email');
+
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data_s['subject'])
+                    ->message($data_s['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+            } else {
+                $this->error();
+            }
         }
     }
 

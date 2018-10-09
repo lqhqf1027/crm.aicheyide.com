@@ -327,6 +327,22 @@ class Newcarscustomer extends Backend
                 else {
                     $this->error('邮箱发送失败');
                 }
+                //发送金融按揭专员
+                $data_s = financial_takecar($models_name,$new_info['username']);
+
+                $receiver = Db::name('admin')->where('rule_message', 'message27')->value('email');
+
+                $result_ss = $email
+                    ->to($receiver)
+                    ->subject($data_s['subject'])
+                    ->message($data_s['message'])
+                    ->send();
+                if($result_ss){
+                    $this->success('','','success');
+                }
+                else {
+                    $this->error('邮箱发送失败');
+                }
                 
                 $seventtime = \fast\Date::unixtime('day', -6);
                 $newonesales = $newtwosales = $newthreesales = [];
