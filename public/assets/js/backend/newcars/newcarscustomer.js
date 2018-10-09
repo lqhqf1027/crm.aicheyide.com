@@ -234,7 +234,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 alreadyLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
-                    $(".btn-editone").data("area", ["80%", "80%"]);
+                    $(".btn-editone").data("area", ["90%", "90%"]);
                 });
                 // 初始化表格
                 alreadyLiftCar.bootstrapTable({

@@ -190,6 +190,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -233,6 +236,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -270,6 +276,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -311,6 +320,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -348,6 +360,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -389,6 +404,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'collection_data', icon: 'fa fa-times', text: '征信不通过，待补录资料', classname: ' text-danger ',
+                                        hidden: function (row) {  /**征信不通过，待补录资料 */
+
+                                            if (row.review_the_data == 'collection_data') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -426,6 +486,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -467,6 +530,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'send_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -504,6 +570,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -545,6 +614,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -582,6 +654,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -632,6 +707,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         
                     }
                 });
+
+                /**
+                 * 补录资料完成
+                 */
+                goeasy.subscribe({
+                    channel: 'demo-new_collection_data',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
                  //指定搜索条件
             $(document).on("click", ".btn-singlesearch", function () {
                
@@ -725,6 +815,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -747,6 +840,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -765,6 +861,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'is_reviewing_nopass', icon: 'fa fa-times', text: '征信不通过，待补录资料', classname: ' text-danger ',
+                                        hidden: function (row) {  /**征信不通过，待补录资料 */
+
+                                            if (row.review_the_data == 'collection_data') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_nopass') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -780,6 +900,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_nopass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -812,6 +935,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 //租车销售发送给风控
                 goeasy.subscribe({
                     channel: 'demo-rental_control',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
+                /**
+                 * 补录资料完成
+                 */
+                goeasy.subscribe({
+                    channel: 'demo-rental_collection_data',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -923,6 +1060,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -948,6 +1088,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'for_the_car') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -966,6 +1109,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
                                                 return true;
                                             }
                                         }
@@ -989,6 +1135,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'collection_data', icon: 'fa fa-times', text: '征信不通过，待补录资料', classname: ' text-danger ',
+                                        hidden: function (row) {  /**征信不通过,待补录资料 */
+
+                                            if (row.review_the_data == 'collection_data') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
                                         }
                                     },
                                     {
@@ -1010,6 +1183,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                             else if (row.review_the_data == 'is_reviewing_pass') {
                                                 return true;
                                             }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
                                         }
                                     }
 
@@ -1024,6 +1200,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 });
                 Table.api.bindevent(secondhandcarAudit);
 
+                /**
+                 * 审核刷新页面
+                 */
                 goeasy.subscribe({
                     channel: 'demo6',
                     onMessage: function(message){
@@ -1031,12 +1210,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         $(".btn-refresh").trigger("click");
                     }
                 });
-                
 
                 //实时消息
                 //金融发给风控
                 goeasy.subscribe({
                     channel: 'demo-second_control',
+                    onMessage: function(message){
+                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+                        
+                    }
+                });
+
+                /**
+                 * 补录资料完成
+                 */
+                goeasy.subscribe({
+                    channel: 'demo-second_collection_data',
                     onMessage: function(message){
                         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
                             Layer.close(index);
@@ -1573,6 +1765,47 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
     });
 
+    /**
+     * 新车审核不通过,待补录资料
+     */
+    $('#newinformation').click(function () {
+        
+        var id = $('#hidden1').val();
+       
+        var prompt = Layer.prompt(
+            {title: '输入需要补录的资料，并确认', shadeClose: true}, 
+
+            function (text,index) {
+                // console.log(text);
+                Fast.api.ajax({
+                    url: 'riskcontrol/creditreview/newinformation',
+                    data: {id: JSON.stringify(id), text: text}
+                }, function (data, ret) {
+
+                    Toastr.success("成功");
+                    Layer.close(prompt);
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index);
+
+                    goeasy.publish ({
+                        channel: 'demo4', 
+                        message: '123'
+                    });
+                    
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+
+                    return false;
+                });
+
+
+            }
+        );
+
+
+    });
+
 
     /**
      * 租车审核通过
@@ -1656,6 +1889,45 @@ console.log(ret);
 
     });
 
+    /**
+     * 租车审核不通过,待补录资料
+     */
+    $('#rentalinformation').click(function () {
+        
+        var id = $('#hidden1').val();
+       
+        var prompt = Layer.prompt(
+            {title: '输入需要补录的资料，并确认', shadeClose: true}, 
+
+            function (text,index) {
+                // console.log(text);
+                Fast.api.ajax({
+                    url: 'riskcontrol/creditreview/rentalinformation',
+                    data: {id: JSON.stringify(id), text: text}
+                }, function (data, ret) {
+
+                    Toastr.success("成功");
+                    Layer.close(prompt);
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index);
+
+                    goeasy.publish ({
+                        channel: 'demo5', 
+                        message: '123'
+                    });
+                    
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+
+                    return false;
+                });
+
+
+            }
+        );
+
+    });
 
     /**
      * 二手车审核通过
@@ -1760,6 +2032,47 @@ console.log(ret);
 
                     Toastr.success("成功");
                     Layer.close(confirm);
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index);
+
+                    goeasy.publish ({
+                        channel: 'demo6', 
+                        message: '123'
+                    });
+                    
+                    return false;
+                }, function (data, ret) {
+                    //失败的回调
+
+                    return false;
+                });
+
+
+            }
+        );
+
+
+    });
+
+    /**
+     * 二手车审核不通过,待补录资料
+     */
+    $('#secondinformation').click(function () {
+        
+        var id = $('#hidden1').val();
+       
+        var prompt = Layer.prompt(
+            {title: '输入需要补录的资料，并确认', shadeClose: true}, 
+
+            function (text,index) {
+                // console.log(text);
+                Fast.api.ajax({
+                    url: 'riskcontrol/creditreview/secondinformation',
+                    data: {id: JSON.stringify(id), text: text}
+                }, function (data, ret) {
+
+                    Toastr.success("成功");
+                    Layer.close(prompt);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
 
