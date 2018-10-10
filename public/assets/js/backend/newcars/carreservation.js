@@ -40,9 +40,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var prepareSubmit = $("#prepareSubmit");
                 prepareSubmit.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#badge_prepare').text(data.total);
-
                 });
                 prepareSubmit.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-chooseStock").data("area", ["60%", "60%"]);
@@ -161,8 +159,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 prepareSubmit.bootstrapTable('refresh');
                                 return false;
                                 }, function (data, ret) {
-
-                                    console.log("error");
                                 return false;
                                 }
                             )
@@ -180,7 +176,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格2
                 var alreadySubmit = $("#alreadySubmit");
                 alreadySubmit.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#badge_already').text(data.total);
 
                 });
@@ -994,8 +989,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
                 sales:function (value, row, index) {
-                    // console.log(row);
-
                     return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 }
             },
@@ -1025,8 +1018,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         data: {id: row[options.pk]},
 
                                     }, function (data, ret) {
-                                        // console.log(data);
-
                                     var res = data;
 
                                     res = data.toString();
@@ -1045,9 +1036,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         table.bootstrapTable('refresh');
 
                                     }, function (data, ret) {
-
-                                        console.log(ret);
-
                                     },
                                 )
 
