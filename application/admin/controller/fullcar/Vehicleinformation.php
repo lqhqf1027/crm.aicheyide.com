@@ -227,6 +227,28 @@ class Vehicleinformation extends Backend
                     'delivery_datetime' => time()
                 ]);
 
+            if($result){
+                $source = Db::name('full_parment_order')
+                    ->where('id', $id)
+                    ->value('customer_source');
+
+                if($source == 'introduce'){
+                    $useful_info = Db::name('full_parment_order')
+                        ->where('id', $ids)
+                        ->field('models_id,admin_id,introduce_name as referee_name,introduce_phone as referee_phone,introduce_card as referee_idcard,username as customer_name,phone as customer_phone')
+                        ->find();
+                    $useful_info['buy_way'] = '全款车';
+
+                    Db::name('referee')->insert($useful_info);
+
+                    $last_id = Db::name('referee')->getLastInsID();
+
+                    Db::name('full_parment_order')
+                        ->where('id', $id)
+                        ->setField('referee_id', $last_id);
+                }
+            }
+
             Db::name("car_new_inventory")
                 ->where("id", $id)
                 ->setField("statuss", 0);

@@ -25,7 +25,7 @@ class Newcarscustomer extends Backend
     protected $userid = null;//用户id
     protected $apikey = null;//apikey
     protected $sign = null;//sign  md5加密
-    protected $noNeedRight = ['index', 'prepare_lift_car', 'already_lift_car', 'choose_stock', 'show_order', 'show_order_and_stock', 'newcustomer', 'sendcar','edit'];
+    protected $noNeedRight = ['index', 'prepare_lift_car', 'already_lift_car', 'choose_stock', 'show_order', 'show_order_and_stock', 'newcustomer', 'sendcar', 'edit'];
 
     public function _initialize()
     {
@@ -54,7 +54,6 @@ class Newcarscustomer extends Backend
     }
 
 
-
     /**待提车
      * @return string|\think\response\Json
      * @throws \think\Exception
@@ -79,7 +78,7 @@ class Newcarscustomer extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -96,7 +95,7 @@ class Newcarscustomer extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -110,11 +109,11 @@ class Newcarscustomer extends Backend
                 ->select();
 
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime','financial_name', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
+                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'financial_name', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['id','nickname','avatar']);
+                $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
 
@@ -123,11 +122,11 @@ class Newcarscustomer extends Backend
 
             $list = collection($list)->toArray();
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
             }
@@ -138,7 +137,6 @@ class Newcarscustomer extends Backend
         return $this->view->fetch();
 
     }
-
 
 
     /**已提车
@@ -163,7 +161,7 @@ class Newcarscustomer extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -182,7 +180,7 @@ class Newcarscustomer extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -197,11 +195,11 @@ class Newcarscustomer extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone','financial_name', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data', 'delivery_datetime']);
+                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'financial_name', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data', 'delivery_datetime']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps']);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['id','nickname','avatar']);
+                $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['newinventory']);
@@ -211,11 +209,11 @@ class Newcarscustomer extends Backend
 
             $list = collection($list)->toArray();
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
             }
@@ -226,7 +224,6 @@ class Newcarscustomer extends Backend
         return $this->view->fetch();
 
     }
-
 
 
     /**
@@ -281,7 +278,6 @@ class Newcarscustomer extends Backend
     }
 
 
-
     /**资料已补全，提交车管进行提车
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -299,37 +295,35 @@ class Newcarscustomer extends Backend
             if ($result !== false) {
 
                 $channel = "demo-sales_takecar";
-                $content =  "客户已经提车，请悉知！";
-                goeary_push($channel, $content.'|'.$id);
+                $content = "客户已经提车，请悉知！";
+                goeary_push($channel, $content . '|' . $id);
 
                 $new_info = Db::name('sales_order')
-                    ->where('id',$id)
-                    ->field('username,admin_id,models_id')
+                    ->where('id', $id)
+                    ->field('username,admin_id,models_id,customer_source')
                     ->find();
 
                 //车型
                 $models_name = Db::name('models')->where('id', $new_info['models_id'])->value('name');
 
-                $data = sales_takecar($models_name,$new_info['username']);
+                $data = sales_takecar($models_name, $new_info['username']);
 
+                if ($new_info['customer_source'] == 'turn_to_introduce') {
+                    $useful_info = Db::name('sales_order')
+                        ->where('id', $id)
+                        ->field('models_id,admin_id,turn_to_introduce_name as referee_name,turn_to_introduce_phone as referee_phone,turn_to_introduce_card as referee_idcard,username as customer_name,phone as customer_phone')
+                        ->find();
+                    $useful_info['buy_way'] = '新车';
 
-                // $peccancy = Db::name('sales_order')
-                //     ->alias('so')
-                //     ->join('models m', 'so.models_id = m.id')
-                //     ->join('car_new_inventory ni', 'so.car_new_inventory_id = ni.id')
-                //     ->where('so.id', $id)
-                //     ->field('so.username,so.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
-                //     ->find();
+                    Db::name('referee')->insert($useful_info);
 
-                // $peccancy['car_type'] = 1;
+                    $last_id = Db::name('referee')->getLastInsID();
 
-                // $peccancy_result = Db::name('violation_inquiry')->insert($peccancy);
+                    Db::name('sales_order')
+                        ->where('id', $id)
+                        ->setField('referee_id', $last_id);
+                }
 
-                // if($peccancy_result){
-                //     $this->success();
-                // }else{
-                //     $this->error('添加违章查询信息失败');
-                // }
 
                 $email = new Email();
 
@@ -340,14 +334,13 @@ class Newcarscustomer extends Backend
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
-                if($result_s){
-                    $this->success('','','success');
-                }
-                else {
+                if ($result_s) {
+                    $this->success('', '', 'success');
+                } else {
                     $this->error('邮箱发送失败');
                 }
                 //发送金融按揭专员
-                $data_s = financial_takecar($models_name,$new_info['username']);
+                $data_s = financial_takecar($models_name, $new_info['username']);
 
                 $receiver = Db::name('admin')->where('rule_message', 'message27')->value('email');
 
@@ -356,73 +349,67 @@ class Newcarscustomer extends Backend
                     ->subject($data_s['subject'])
                     ->message($data_s['message'])
                     ->send();
-                if($result_ss){
-                    $this->success('','','success');
-                }
-                else {
+                if ($result_ss) {
+                    $this->success('', '', 'success');
+                } else {
                     $this->error('邮箱发送失败');
                 }
-                
+
                 $seventtime = \fast\Date::unixtime('day', -6);
                 $newonesales = $newtwosales = $newthreesales = [];
                 $month = date("Y-m", $seventtime);
                 $day = date('t', strtotime("$month +1 month -1 day"));
-                for ($i = 0; $i < 8; $i++)
-                    {
-                        $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
-                        $firstday = strtotime(date('Y-m-01', strtotime($month)));
-                        $secondday = strtotime(date('Y-m-01', strtotime($months)));
-                        //销售一部
-                        $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-                        foreach($one_sales as $k => $v){
-                            $one_admin[] = $v['uid'];
-                        }
-                        $newonetake = Db::name('sales_order')
-                                ->where('review_the_data', 'the_car')
-                                ->where('admin_id', 'in', $one_admin)
-                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                                ->count();
-                        //销售二部
-                        $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                        foreach($two_sales as $k => $v){
-                            $two_admin[] = $v['uid'];
-                        }
-                        $newtwotake = Db::name('sales_order')
-                                ->where('review_the_data', 'the_car')
-                                ->where('admin_id', 'in', $two_admin)
-                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                                ->count();
-                        //销售三部
-                        $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                        foreach($three_sales as $k => $v){
-                            $three_admin[] = $v['uid'];
-                        }
-                        $newthreetake = Db::name('sales_order')
-                                ->where('review_the_data', 'the_car')
-                                ->where('admin_id', 'in', $three_admin)
-                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                                ->count();
-        
-                        //销售一部
-                        $newonesales[$month . '(月)'] = $newonetake;
-                        //销售二部
-                        $newtwosales[$month . '(月)'] = $newtwotake;
-                        //销售三部
-                        $newthreesales[$month . '(月)'] = $newthreetake;
-
-                        $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
-                
-                        $day = date('t', strtotime("$months +1 month -1 day"));
-
+                for ($i = 0; $i < 8; $i++) {
+                    $months = date("Y-m", $seventtime + (($i + 1) * 86400 * $day));
+                    $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                    $secondday = strtotime(date('Y-m-01', strtotime($months)));
+                    //销售一部
+                    $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+                    foreach ($one_sales as $k => $v) {
+                        $one_admin[] = $v['uid'];
                     }
-                    // pr($newtake);die;
-                    Cache::set('newonesales', $newonesales);
-                    Cache::set('newtwosales', $newtwosales);
-                    Cache::set('newthreesales', $newthreesales);
+                    $newonetake = Db::name('sales_order')
+                        ->where('review_the_data', 'the_car')
+                        ->where('admin_id', 'in', $one_admin)
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                        ->count();
+                    //销售二部
+                    $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+                    foreach ($two_sales as $k => $v) {
+                        $two_admin[] = $v['uid'];
+                    }
+                    $newtwotake = Db::name('sales_order')
+                        ->where('review_the_data', 'the_car')
+                        ->where('admin_id', 'in', $two_admin)
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                        ->count();
+                    //销售三部
+                    $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
+                    foreach ($three_sales as $k => $v) {
+                        $three_admin[] = $v['uid'];
+                    }
+                    $newthreetake = Db::name('sales_order')
+                        ->where('review_the_data', 'the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                        ->count();
 
+                    //销售一部
+                    $newonesales[$month . '(月)'] = $newonetake;
+                    //销售二部
+                    $newtwosales[$month . '(月)'] = $newtwotake;
+                    //销售三部
+                    $newthreesales[$month . '(月)'] = $newthreetake;
 
+                    $month = date("Y-m", $seventtime + (($i + 1) * 86400 * $day));
 
+                    $day = date('t', strtotime("$months +1 month -1 day"));
 
+                }
+                // pr($newtake);die;
+                Cache::set('newonesales', $newonesales);
+                Cache::set('newtwosales', $newtwosales);
+                Cache::set('newthreesales', $newthreesales);
 
 
             } else {
@@ -431,6 +418,7 @@ class Newcarscustomer extends Backend
             }
         }
     }
+
     /**
      * 编辑
      */
@@ -442,11 +430,9 @@ class Newcarscustomer extends Backend
             ->find();
 
         $images = Db::name('sales_order')
-        ->where('id',$ids)
-        ->field('id_cardimages,residence_bookletimages,housingimages,bank_cardimages,deposit_contractimages,guarantee_agreementimages')
-        ->find();
-
-
+            ->where('id', $ids)
+            ->field('id_cardimages,residence_bookletimages,housingimages,bank_cardimages,deposit_contractimages,guarantee_agreementimages')
+            ->find();
 
 
         if ($row['mortgage_registration_id']) {
@@ -458,9 +444,9 @@ class Newcarscustomer extends Backend
             $row = array_merge($row, $mortgage_registration);
         }
 
-        if($row['registry_registration_id']){
+        if ($row['registry_registration_id']) {
             $registry_registration = Db::name('registry_registration')
-                ->where('id',$row['registry_registration_id'])
+                ->where('id', $row['registry_registration_id'])
                 ->field('id_card,registered_residence,marry_and_divorceimages,credit_reportimages,halfyear_bank_flowimages,guarantee,
             residence_permitimages,driving_license,residence_permit,renting_contract,company_contractimages,lift_listimages,
             deposit,truth_management_protocolimages,confidentiality_agreementimages,supplementary_contract_agreementimages,explain_situation,
@@ -489,11 +475,11 @@ class Newcarscustomer extends Backend
 
                     }
 
-                    if($row['registry_registration_id']){
+                    if ($row['registry_registration_id']) {
                         Db::name('registry_registration')
-                            ->where('id',$row['registry_registration_id'])
+                            ->where('id', $row['registry_registration_id'])
                             ->update($registration);
-                    }else{
+                    } else {
                         Db::name('registry_registration')->insert($registration);
                         $orders['registry_registration_id'] = Db::name('registry_registration')->getLastInsID();
                     }
@@ -515,8 +501,8 @@ class Newcarscustomer extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
         $this->view->assign([
-            "row"=> $row,
-            'images'=>$images
+            "row" => $row,
+            'images' => $images
         ]);
 
         return $this->view->fetch();

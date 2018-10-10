@@ -33,7 +33,7 @@ class Orderlisttabs extends Backend
         'add', 'edit', 'planacar', 'planname', 'reserve', 'rentalplanname', 'rentaladd', 'rentaledit', 'rentaldel', 'control', 'setAudit', 'secondadd',
 
         'secondedit', 'fulladd', 'fulledit', 'submitCar', 'del', 'fulldel', 'seconddel', 'newreserve', 'newreserveedit', 'newcontroladd', 'newinformation', 'newinformtube',
-        'secondreserve', 'secondaudit', 'page','new_car_share_data', 'secondinformation', 'rentalinformation', 'newinformation'];
+        'secondreserve', 'secondaudit', 'page', 'new_car_share_data', 'secondinformation', 'rentalinformation', 'newinformation'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -83,7 +83,7 @@ class Orderlisttabs extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -98,7 +98,7 @@ class Orderlisttabs extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'newinventory' => function ($query) {
@@ -111,11 +111,11 @@ class Orderlisttabs extends Backend
 
             foreach ($list as $k => $row) {
                 $row->visible(['id', 'order_no', 'financial_name', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data',
-                    'id_cardimages', 'drivers_licenseimages', 'bank_cardimages', 'undertakingimages', 'accreditimages', 'faceimages', 'informationimages','financial_name']);
+                    'id_cardimages', 'drivers_licenseimages', 'bank_cardimages', 'undertakingimages', 'accreditimages', 'faceimages', 'informationimages', 'financial_name']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['id','nickname','avatar']);
+                $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['newinventory']);
@@ -125,11 +125,11 @@ class Orderlisttabs extends Backend
 
             $list = collection($list)->toArray();
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
             }
@@ -165,7 +165,7 @@ class Orderlisttabs extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -177,7 +177,7 @@ class Orderlisttabs extends Backend
 
             $list = $this->model
                 ->with(['admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -191,7 +191,7 @@ class Orderlisttabs extends Backend
             foreach ($list as $k => $v) {
                 $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);
                 $v->visible(['admin']);
-                $v->getRelation('admin')->visible(['id','nickname','avatar']);
+                $v->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $v->visible(['models']);
                 $v->getRelation('models')->visible(['name']);
                 $v->visible(['carrentalmodelsinfo']);
@@ -201,11 +201,11 @@ class Orderlisttabs extends Backend
 
             $list = collection($list)->toArray();
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
             }
@@ -246,7 +246,7 @@ class Orderlisttabs extends Backend
                 ->with(['plansecond' => function ($query) {
                     $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,licenseplatenumber');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -259,7 +259,7 @@ class Orderlisttabs extends Backend
                 ->with(['plansecond' => function ($query) {
                     $query->withField('newpayment,monthlypaymen,periods,totalprices,bond,tailmoney,licenseplatenumber');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -273,7 +273,7 @@ class Orderlisttabs extends Backend
                 $row->visible(['plansecond']);
                 $row->getRelation('plansecond')->visible(['newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney', 'licenseplatenumber']);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['id','nickname','avatar']);
+                $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
@@ -281,11 +281,11 @@ class Orderlisttabs extends Backend
 
             $list = collection($list)->toArray();
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
             }
@@ -315,7 +315,7 @@ class Orderlisttabs extends Backend
                 ->with(['planfull' => function ($query) {
                     $query->withField('full_total_price');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -328,7 +328,7 @@ class Orderlisttabs extends Backend
                 ->with(['planfull' => function ($query) {
                     $query->withField('full_total_price');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','nickname','avatar']);
+                    $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -342,18 +342,18 @@ class Orderlisttabs extends Backend
                 $row->visible(['planfull']);
                 $row->getRelation('planfull')->visible(['full_total_price']);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['id','nickname','avatar']);
+                $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
 
 
             $list = collection($list)->toArray();
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
             }
@@ -521,21 +521,20 @@ class Orderlisttabs extends Backend
         }
 
 
-
-            //身份证正反面（多图）
-            $id_cardimages = $row['id_cardimages'] == ''? [] :  explode(',', $row['id_cardimages']);
-            foreach ($id_cardimages as $k => $v) {
-                $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
-            }
+        //身份证正反面（多图）
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
+        foreach ($id_cardimages as $k => $v) {
+            $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
+        }
 
 
         //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] == ''? [] : explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         foreach ($drivers_licenseimages as $k => $v) {
             $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
         //申请表（多图）
-        $application_formimages = $row['application_formimages'] == ''? [] : explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
         foreach ($application_formimages as $k => $v) {
             $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
         }
@@ -594,7 +593,6 @@ class Orderlisttabs extends Backend
             $params['downpayment'] = $data['payment'] + $data['monthly'] + $data['margin'] + $data['gps'];
 
 
-
             //把当前销售员所在的部门的内勤id 入库
 
             //message8=>销售一部顾问，message13=>内勤一部
@@ -627,12 +625,12 @@ class Orderlisttabs extends Backend
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
 
-                        if(Session::has('appoint_sale')){
-                              Db::name('plan_acar')
-                              ->where('id',Session::get('plan_id'))
-                              ->setField('acar_status',2);
-                              
-                              Session::delete('appoint_sale');
+                        if (Session::has('appoint_sale')) {
+                            Db::name('plan_acar')
+                                ->where('id', Session::get('plan_id'))
+                                ->setField('acar_status', 2);
+
+                            Session::delete('appoint_sale');
                         }
 
                         //如果添加成功,将状态改为提交审核
@@ -852,7 +850,6 @@ class Orderlisttabs extends Backend
     }
 
 
-
     /**
      * 资料已补全，提交车管进行提车
      * @param null $ids
@@ -908,7 +905,6 @@ class Orderlisttabs extends Backend
     }
 
 
-
     /**
      * 显示方案列表
      * @return false|\PDOStatement|string|\think\Collection
@@ -928,11 +924,11 @@ class Orderlisttabs extends Backend
                 ->join('models b', 'b.id=a.models_id')
                 ->join('scheme_category s', 'a.category_id = s.id')
                 ->where([
-                    'a.category_id'=> $category_id,
-                    'a.acar_status'=> 1
+                    'a.category_id' => $category_id,
+                    'a.acar_status' => 1
                 ])
-             //   ->where('sales_id', NULL)
-             //   ->whereOr('sales_id', $this->auth->id)
+                //   ->where('sales_id', NULL)
+                //   ->whereOr('sales_id', $this->auth->id)
                 ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.sales_id,a.note,b.name as models_name,b.id as models_id,s.category_note')
                 ->order('id desc')
                 ->select();
@@ -947,8 +943,6 @@ class Orderlisttabs extends Backend
             return $result;
         }
     }
-
-
 
 
     /**
@@ -972,11 +966,11 @@ class Orderlisttabs extends Backend
             ->join('models b', 'b.id=a.models_id')
             ->join('scheme_category s', 'a.category_id = s.id')
             ->where([
-                'a.category_id'=> $category_id,
-                'a.acar_status'=> 1
+                'a.category_id' => $category_id,
+                'a.acar_status' => 1
             ])
-           // ->where('sales_id', NULL)
-           // ->whereOr('sales_id', $this->auth->id)
+            // ->where('sales_id', NULL)
+            // ->whereOr('sales_id', $this->auth->id)
             ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,a.sales_id,b.name as models_name,b.id as models_id,s.category_note')
             ->limit($limit_number, 15)
             ->order('id desc')
@@ -992,7 +986,6 @@ class Orderlisttabs extends Backend
 
 
     }
-
 
 
     /**
@@ -1180,7 +1173,7 @@ class Orderlisttabs extends Backend
     public function newcollectioninformation($ids = null)
     {
         $this->model = model('SalesOrder');
-        
+
         $row = $this->model->get($ids);
         if ($row) {
             //关联订单于方案
@@ -1200,7 +1193,7 @@ class Orderlisttabs extends Backend
 
         $this->view->assign('result', $result);
 
-         if (!$row) {
+        if (!$row) {
             $this->error(__('No Results were found'));
         }
         $adminIds = $this->getDataLimitAdminIds();
@@ -1226,10 +1219,10 @@ class Orderlisttabs extends Backend
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
                         $channel = "demo-new_collection_data";
-                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $row['text'] . "资料已完成";
+                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
                         goeary_push($channel, $content);
 
-                        $data = new_collection_data($models_name,$row['username'],$row['text']);
+                        $data = new_collection_data($models_name, $row['username'], $row['text']);
 
                         $email = new Email();
 
@@ -1241,13 +1234,12 @@ class Orderlisttabs extends Backend
                             ->message($data['message'])
                             ->send();
 
-                        if($result_s){
-                            $this->success('','','success');
-                        }
-                        else {
+                        if ($result_s) {
+                            $this->success('', '', 'success');
+                        } else {
                             $this->error('邮箱发送失败');
                         }
-                        
+
                     } else {
                         $this->error($row->getError());
                     }
@@ -1397,7 +1389,6 @@ class Orderlisttabs extends Backend
     }
 
 
-
     /**
      * 方案组装
      * @throws \think\db\exception\DataNotFoundException
@@ -1426,7 +1417,6 @@ class Orderlisttabs extends Backend
 
         }
     }
-
 
 
     /**
@@ -1498,7 +1488,6 @@ class Orderlisttabs extends Backend
 
         return $this->view->fetch();
     }
-
 
 
     /**
@@ -1594,10 +1583,10 @@ class Orderlisttabs extends Backend
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
                         $channel = "demo-rental_collection_data";
-                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $row['text'] . "资料已完成";
+                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
                         goeary_push($channel, $content);
 
-                        $data = rental_collection_data($models_name,$row['username'],$row['text']);
+                        $data = rental_collection_data($models_name, $row['username'], $row['text']);
 
                         $email = new Email();
 
@@ -1609,13 +1598,12 @@ class Orderlisttabs extends Backend
                             ->message($data['message'])
                             ->send();
 
-                        if($result_s){
-                            $this->success('','','success');
-                        }
-                        else {
+                        if ($result_s) {
+                            $this->success('', '', 'success');
+                        } else {
                             $this->error('邮箱发送失败');
                         }
-                        
+
                     } else {
                         $this->error($row->getError());
                     }
@@ -1656,7 +1644,6 @@ class Orderlisttabs extends Backend
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
-
 
 
     /**
@@ -2178,7 +2165,7 @@ class Orderlisttabs extends Backend
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
-        
+
         $row = $this->model->get($ids);
         if ($row) {
             //关联订单于方案
@@ -2213,7 +2200,7 @@ class Orderlisttabs extends Backend
         // pr($newRes);die;
         $this->view->assign('newRes', $newRes);
         $this->view->assign('result', $result);
-        
+
         if (!$row) {
             $this->error(__('No Results were found'));
         }
@@ -2240,10 +2227,10 @@ class Orderlisttabs extends Backend
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
                         $channel = "demo-second_collection_data";
-                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $row['text'] . "资料已完成";
+                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
                         goeary_push($channel, $content);
 
-                        $data = second_collection_data($models_name,$row['username'],$row['text']);
+                        $data = second_collection_data($models_name, $row['username'], $row['text']);
 
                         $email = new Email();
 
@@ -2255,13 +2242,12 @@ class Orderlisttabs extends Backend
                             ->message($data['message'])
                             ->send();
 
-                        if($result_s){
-                            $this->success('','','success');
-                        }
-                        else {
+                        if ($result_s) {
+                            $this->success('', '', 'success');
+                        } else {
                             $this->error('邮箱发送失败');
                         }
-                        
+
                     } else {
                         $this->error($row->getError());
                     }
@@ -2274,7 +2260,7 @@ class Orderlisttabs extends Backend
         $this->view->assign('row', $row);
 
         return $this->view->fetch('secondinformation');
-        
+
     }
 
     /**
@@ -2603,7 +2589,6 @@ class Orderlisttabs extends Backend
     }
 
 
-
     /**
      * 提交内勤
      * @throws \think\db\exception\DataNotFoundException
@@ -2683,6 +2668,71 @@ class Orderlisttabs extends Backend
             }
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+
+    /**
+     * 删除订单
+     */
+    public function del_order()
+    {
+        if ($this->request->isAjax()) {
+            $flag = input('flag');
+            $id = input('id');
+            
+            switch ($flag) {
+                case -1:
+                    $del_table = Db::name('sales_order')
+                        ->where('id', $id)
+                        ->field('mortgage_registration_id,registry_registration_id,mortgage_id,referee_id,customer_downpayment_id')
+                        ->find();
+
+
+
+                    if($del_table['mortgage_registration_id']){
+                        Db::name('mortgage_registration')
+                        ->where('id',$del_table['mortgage_registration_id'])
+                        ->delete();
+                    }
+
+                    if($del_table['registry_registration_id']){
+                        Db::name('registry_registration')
+                        ->where('id',$del_table['registry_registration_id'])
+                        ->delete();
+                    }
+
+                    if($del_table['mortgage_id']){
+                        Db::name('mortgage')
+                        ->where('id',$del_table['mortgage_id'])
+                        ->delete();
+                    }
+
+                    if($del_table['referee_id']){
+                        Db::name('referee')
+                        ->where('id',$del_table['referee_id'])
+                        ->delete();
+                    }
+
+                    if($del_table['customer_downpayment_id']){
+                        Db::name('customer_downpayment')
+                        ->where('id',$del_table['customer_downpayment_id'])
+                        ->delete();
+                    }
+
+                    $res = Db::name('sales_order')
+                    ->where('id',$id)
+                    ->delete();
+                case -2:
+                case -3:
+                case -4:
+
+
+                    if($res){
+                        $this->success('','','success');
+                    }else{
+                        $this->error('','','error');
+                    }
+            }
+        }
     }
 
 

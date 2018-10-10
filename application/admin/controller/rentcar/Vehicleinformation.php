@@ -34,7 +34,6 @@ class Vehicleinformation extends Backend
     }
 
 
-
     /**
      * 查看
      */
@@ -74,41 +73,42 @@ class Vehicleinformation extends Backend
                 ->select();
 
 
-            foreach ($list as $k=>$row){
-                $data = Db::name('second_sales_order')->alias('a')
-                    ->join('secondcar_rental_models_info b','a.plan_car_second_name = b.id')
-                    ->field('a.plan_car_second_name, a.admin_id')
+            foreach ($list as $k => $row) {
+                $data = Db::name('rental_order')->alias('a')
+                    ->join('car_rental_models_info b', 'a.plan_car_rental_name = b.id')
+                    ->field('a.plan_car_rental_name, a.admin_id')
                     ->select();
+
                 $row->visible(['id', 'licenseplatenumber', 'kilometres', 'companyaccount', 'cashpledge', 'threemonths', 'sixmonths', 'manysixmonths', 'drivinglicenseimages', 'vin',
-                        'engine_no', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
-                        'status_data', 'department', 'admin_name']);
+                    'engine_no', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
+                    'status_data', 'department', 'admin_name']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
-                foreach ((array)$data as $key => $value){
-                    if($value['plan_car_second_name'] == $row['id']){
+                foreach ((array)$data as $key => $value) {
+                    if ($value['plan_car_rental_name'] == $row['id']) {
                         $department = Db::name('auth_group_access')
                             ->alias('a')
-                            ->join('auth_group b','a.group_id = b.id')
-                            ->where('a.uid',$value['admin_id'])
+                            ->join('auth_group b', 'a.group_id = b.id')
+                            ->where('a.uid', $value['admin_id'])
                             ->value('b.name');
+
+
                         $admin_name = Db::name('admin')->where('id', $value['admin_id'])->value('nickname');
                         $list[$k]['department'] = $department;
                         $list[$k]['admin_name'] = $admin_name;
+
                     }
                 }
             }
 
 
             $list = collection($list)->toArray();
-
-
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
         return $this->view->fetch();
     }
-
 
 
     /**销售预定
@@ -181,7 +181,6 @@ class Vehicleinformation extends Backend
 
         return $this->view->fetch();
     }
-
 
 
     /**修改销售预定
@@ -260,8 +259,6 @@ class Vehicleinformation extends Backend
     }
 
 
-
-
     /**车管人员对租车请求的同意
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -324,7 +321,6 @@ class Vehicleinformation extends Backend
     }
 
 
-
     /**打印提车单
      * @param null $ids
      * @return string
@@ -376,7 +372,6 @@ class Vehicleinformation extends Backend
     }
 
 
-
     /**确认提车
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -389,6 +384,42 @@ class Vehicleinformation extends Backend
 
             $result = $this->model->isUpdate(true)->save(['id' => $id, 'status_data' => 'the_car']);
 
+            if ($result) {
+                $all_info = Db::name('rental_order')
+                    ->alias('ro')
+                    ->join('car_rental_models_info mi', 'ro.plan_car_rental_name = mi.id')
+                    ->field('ro.id,customer_source,ro.models_id,admin_id,turn_to_introduce_name as referee_name,turn_to_introduce_phone as referee_phone,turn_to_introduce_card as referee_idcard,username as customer_name,phone as customer_phone')
+                    ->where('mi.id', $id)
+                    ->find();
+
+                $useful = array();
+
+                if($all_info['customer_source'] == 'turn_to_introduce'){
+                    foreach ($all_info as $k=>$v){
+                        if($k == 'customer_source'){
+                            continue;
+                        }
+
+                        if($k == 'id'){
+                            continue;
+                        }
+
+                        $useful[$k] = $v;
+                    }
+
+                    $useful['buy_way'] = '租车';
+
+                    $last_id = Db::name('referee')->insertGetId($useful);
+
+
+                    Db::name('rental_order')
+                        ->where('id', $all_info['id'])
+                        ->setField('referee_id', $last_id);
+
+
+                }
+            }
+
             $rental_order_id = DB::name('rental_order')->where('plan_car_rental_name', $id)->value('id');
 
             $result_s = DB::name('rental_order')->where('id', $rental_order_id)->setField('review_the_data', 'for_the_car');
@@ -397,9 +428,8 @@ class Vehicleinformation extends Backend
             $rentalonesales = $rentaltwosales = $rentalthreesales = [];
             $month = date("Y-m", $seventtime);
             $day = date('t', strtotime("$month +1 month -1 day"));
-            for ($i = 0; $i < 8; $i++)
-            {
-                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+            for ($i = 0; $i < 8; $i++) {
+                $months = date("Y-m", $seventtime + (($i + 1) * 86400 * $day));
                 $firstday = strtotime(date('Y-m-01', strtotime($month)));
                 $secondday = strtotime(date('Y-m-01', strtotime($months)));
                 //销售一部
@@ -439,8 +469,8 @@ class Vehicleinformation extends Backend
                 //销售三部
                 $rentalthreesales[$month] = $rentalthreetake;
 
-                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
-                
+                $month = date("Y-m", $seventtime + (($i + 1) * 86400 * $day));
+
                 $day = date('t', strtotime("$months +1 month -1 day"));
 
 
@@ -451,9 +481,11 @@ class Vehicleinformation extends Backend
 
             if ($result !== false) {
 
-                $rent_info =Db::name('rental_order')
+                $rent_info = Db::name('rental_order')
                     ->where('plan_car_rental_name', $id)
-                ->field('admin_id,username');
+                    ->field('admin_id,username')
+                ->find();
+
 
                 $data = sales_inform($rent_info['username']);
 
@@ -481,13 +513,11 @@ class Vehicleinformation extends Backend
                 $result_peccancy = Db::name('violation_inquiry')->insert($peccancy);
 
 
-                if($result_peccancy){
+                if ($result_peccancy) {
                     $this->success();
-                }else{
+                } else {
                     $this->error('违章信息表添加失败');
                 }
-
-
 
 
             } else {

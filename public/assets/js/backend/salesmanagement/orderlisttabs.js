@@ -87,6 +87,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'order_no', title: __('Order_no') },
                             { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
                             {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+
                                     return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
 
                             }},
@@ -4403,6 +4404,81 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.secondedit_url+'/posttype/the_guarantor';  
                         Fast.api.open(Table.api.replaceurl(url,row, table), __('请上传保证金收据'), $(this).data() || {});
                     },
+
+
+                    'click .btn-delones': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('是否真的要删除该条订单?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+
+                               var text = $('ul.nav-tabs li.active a[data-toggle="tab"]').text();
+
+
+
+                                Layer.close(index);
+
+                                layer.prompt({
+                                    formType: 1,
+
+                                    title: '请输入删除密码',
+                                }, function(value, indexs, elem){
+
+                                    if(value == 'aicheyide'){
+
+                                        var flag = 1;
+                                        if(text.indexOf('新车')>-1){
+                                            flag = -1;
+                                        }else if(text.indexOf('纯租')>-1){
+                                            flag = -2;
+                                        }else if(text.indexOf('二手车')>-1){
+                                            flag = -3;
+                                        }else if(text.indexOf('全款')>-1){
+                                            flag = -4;
+                                        }
+
+                                        Fast.api.ajax({
+                                            url:'salesmanagement/Orderlisttabs/del_order',
+                                            data:{
+                                                flag:flag,
+                                                id:row[options.pk]
+                                            }
+                                        },function (data,ret) {
+
+                                            alert(data);
+
+
+                                            // Layer.close(index);
+                                            // table.bootstrapTable('refresh');
+                                        },function (data,ret) {
+
+
+                                        })
+
+                                    }else{
+                                        layer.msg('密码输入错误');
+                                    }
+                                    // layer.close(index);
+                                });
+
+
+                            }
+                        );
+                    }
                 }
             },
             formatter: {
@@ -4412,6 +4488,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = table ? table.bootstrapTable('getOptions') : {};
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
+
+                    if(Config.ADMIN_JS.rule_message == 'message21'){
+                        buttons.push({
+                            name: 'del',
+                            icon: 'fa fa-trash',
+                            title: __('Del'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-danger btn-delones'
+                        });
+                    }
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },

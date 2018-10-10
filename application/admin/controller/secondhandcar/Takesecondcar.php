@@ -129,7 +129,29 @@ class Takesecondcar extends Backend
 
             $second_car_id = Db::name('second_sales_order')->where('id', $id)->value('second_car_id');
 
+
             if ($result !== false) {
+
+                $source = Db::name('second_sales_order')
+                    ->where('id', $id)
+                    ->value('customer_source');
+
+                if ($source == 'turn_to_introduce') {
+                    $useful_info = Db::name('second_sales_order')
+                        ->where('id', $id)
+                        ->field('models_id,admin_id,turn_to_introduce_name as referee_name,turn_to_introduce_phone as referee_phone,turn_to_introduce_card as referee_idcard,username as customer_name,phone as customer_phone')
+                        ->find();
+
+                    $useful_info['buy_way'] = '二手车';
+
+                    Db::name('referee')->insert($useful_info);
+
+                    $last_id = Db::name('referee')->getLastInsID();
+
+                    Db::name('second_sales_order')
+                        ->where('id', $id)
+                        ->setField('referee_id', $last_id);
+                }
 
                 $result_s = Db::name('secondcar_rental_models_info')->where('id', $second_car_id)->setField('status_data', 'the_car');
 
@@ -172,41 +194,40 @@ class Takesecondcar extends Backend
                     $secondonesales = $secondtwosales = $secondthreesales = [];
                     $month = date("Y-m", $seventtime);
                     $day = date('t', strtotime("$month +1 month -1 day"));
-                    for ($i = 0; $i < 8; $i++)
-                    {
-                        $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                    for ($i = 0; $i < 8; $i++) {
+                        $months = date("Y-m", $seventtime + (($i + 1) * 86400 * $day));
                         $firstday = strtotime(date('Y-m-01', strtotime($month)));
                         $secondday = strtotime(date('Y-m-01', strtotime($months)));
                         //销售一部
                         $one_sales = Db::name('auth_group_access')->where('group_id', '18')->select();
-                        foreach($one_sales as $k => $v){
+                        foreach ($one_sales as $k => $v) {
                             $one_admin[] = $v['uid'];
                         }
                         $secondonetake = Db::name('second_sales_order')
-                                ->where('review_the_data', 'the_car')
-                                ->where('admin_id', 'in', $one_admin)
-                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                                ->count();
+                            ->where('review_the_data', 'the_car')
+                            ->where('admin_id', 'in', $one_admin)
+                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                            ->count();
                         //销售二部
                         $two_sales = Db::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                        foreach($two_sales as $k => $v){
+                        foreach ($two_sales as $k => $v) {
                             $two_admin[] = $v['uid'];
                         }
                         $secondtwotake = Db::name('second_sales_order')
-                                ->where('review_the_data', 'the_car')
-                                ->where('admin_id', 'in', $two_admin)
-                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                                ->count();
+                            ->where('review_the_data', 'the_car')
+                            ->where('admin_id', 'in', $two_admin)
+                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                            ->count();
                         //销售二部
                         $three_sales = Db::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                        foreach($three_sales as $k => $v){
+                        foreach ($three_sales as $k => $v) {
                             $three_admin[] = $v['uid'];
                         }
                         $secondthreetake = Db::name('second_sales_order')
-                                ->where('review_the_data', 'the_car')
-                                ->where('admin_id', 'in', $three_admin)
-                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                                ->count();
+                            ->where('review_the_data', 'the_car')
+                            ->where('admin_id', 'in', $three_admin)
+                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                            ->count();
                         //销售一部
                         $secondonesales[$month . '(月)'] = $secondonetake;
                         //销售二部
@@ -214,16 +235,14 @@ class Takesecondcar extends Backend
                         //销售三部
                         $secondthreesales[$month . '(月)'] = $secondthreetake;
 
-                        $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
-                
+                        $month = date("Y-m", $seventtime + (($i + 1) * 86400 * $day));
+
                         $day = date('t', strtotime("$months +1 month -1 day"));
 
                     }
                     Cache::set('secondonesales', $secondonesales);
                     Cache::set('secondtwosales', $secondtwosales);
                     Cache::set('secondthreesales', $secondthreesales);
-
-
 
 
                 } else {
@@ -249,12 +268,12 @@ class Takesecondcar extends Backend
             ->find();
 
         $images = Db::name('second_sales_order')
-        ->where('id',$ids)
-        ->field('id_cardimages,residence_bookletimages,housingimages,bank_cardimages,crime_undertakingimages,credit_reportimages,deposit_contractimages')
-        ->find();
+            ->where('id', $ids)
+            ->field('id_cardimages,residence_bookletimages,housingimages,bank_cardimages,crime_undertakingimages,credit_reportimages,deposit_contractimages')
+            ->find();
 
-        foreach ($images as $k=>$v){
-            if($images[$k]==''){
+        foreach ($images as $k => $v) {
+            if ($images[$k] == '') {
                 $images[$k] = null;
             }
         }
@@ -268,14 +287,14 @@ class Takesecondcar extends Backend
             $row = array_merge($row, $mortgage_registration);
         }
 
-        if($row['registry_registration_id']){
+        if ($row['registry_registration_id']) {
             $registry_registration = Db::name('registry_registration')
-            ->where('id',$row['registry_registration_id'])
-            ->field('id_card,registered_residence,marry_and_divorceimages,credit_reportimages,halfyear_bank_flowimages,guarantee,
+                ->where('id', $row['registry_registration_id'])
+                ->field('id_card,registered_residence,marry_and_divorceimages,credit_reportimages,halfyear_bank_flowimages,guarantee,
             residence_permitimages,driving_license,residence_permit,renting_contract,company_contractimages,lift_listimages,
             deposit,truth_management_protocolimages,confidentiality_agreementimages,supplementary_contract_agreementimages,explain_situation,
             tianfu_bank_cardimages,crime_promise,buy_rent,customer_query,fengbang_rent,maximum_guarantee_contractimages,transfer_agreement')
-            ->find();
+                ->find();
 
             $row = array_merge($row, $registry_registration);
         }
@@ -299,11 +318,11 @@ class Takesecondcar extends Backend
 
                     }
 
-                    if($row['registry_registration_id']){
+                    if ($row['registry_registration_id']) {
                         Db::name('registry_registration')
-                        ->where('id',$row['registry_registration_id'])
-                        ->update($registration);
-                    }else{
+                            ->where('id', $row['registry_registration_id'])
+                            ->update($registration);
+                    } else {
                         Db::name('registry_registration')->insert($registration);
                         $orders['registry_registration_id'] = Db::name('registry_registration')->getLastInsID();
                     }
@@ -327,8 +346,8 @@ class Takesecondcar extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
         $this->view->assign([
-            "row"=> $row,
-            'images'=>$images
+            "row" => $row,
+            'images' => $images
         ]);
         return $this->view->fetch();
     }
