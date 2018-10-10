@@ -89,6 +89,7 @@ class Sharedetailsdatas extends Backend
          $row['down_payment_service'] = $down_payment;
        }
 
+
        //计算首期款
         if($down_payment && $row['payment']){
             $first_money = floatval($row['payment']) - floatval($down_payment);
@@ -102,6 +103,7 @@ class Sharedetailsdatas extends Backend
                 'service_charge'=>$down_payment
                 ]);
         }
+
 
 
         if ($row['new_car_marginimages'] == "") {
@@ -147,6 +149,9 @@ class Sharedetailsdatas extends Backend
         $guarantee_agreementimages = $row['guarantee_agreementimages'] == '' ? [] : explode(',', $row['guarantee_agreementimages']);
         //车辆所有的扫描件 (多图)
         $car_imgeas = $row['car_imgeas'] == '' ? [] : explode(',', $row['car_imgeas']);
+        //滴滴授权承诺书
+        $car_authorizationimages = $row['car_authorizationimages'] == '' ? [] : explode(',', $row['car_authorizationimages']);
+
 
         $this->view->assign([
             "row" => $row,
@@ -169,6 +174,7 @@ class Sharedetailsdatas extends Backend
             'guarantee_id_cardimages' => $guarantee_id_cardimages,
             'guarantee_agreementimages' => $guarantee_agreementimages,
             'car_imgeas' => $car_imgeas,
+            'car_authorizationimages' => $car_authorizationimages,
         ]);
         return $this->view->fetch();
     }
@@ -189,7 +195,7 @@ class Sharedetailsdatas extends Backend
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.residence_bookletimages,a.bank_cardimages,a.marriedimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
                 a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,a.bond,
-                a.crime_undertakingimages,a.credit_reportimages,a.car_confirmationimages,a.informationimages,a.mate_id_cardimages,a.amount_collected,
+                a.crime_undertakingimages,a.credit_reportimages,a.car_confirmationimages,a.informationimages,a.mate_id_cardimages,a.amount_collected,a.order_no,
                 b.nickname as sales_name,
                 c.licenseplatenumber,c.engine_number,c.vin,c.kilometres,c.companyaccount,c.tailmoney,c.drivinglicenseimages,
                 d.contract_total,d.mortgage_people,d.end_money,d.yearly_inspection,d.next_inspection,d.transferdate,d.hostdate,d.ticketdate,d.supplier,d.tax_amount,d.no_tax_amount,
@@ -236,6 +242,8 @@ class Sharedetailsdatas extends Backend
         $drivinglicenseimages = $row['drivinglicenseimages'] == '' ? [] : explode(',', $row['drivinglicenseimages']);
         //车辆所有的扫描件 (多图)
         $car_imgeas = $row['car_imgeas'] == '' ? [] : explode(',', $row['car_imgeas']);
+        //滴滴授权承诺书
+        $car_authorizationimages = $row['car_authorizationimages'] == '' ? [] : explode(',', $row['car_authorizationimages']);
 
         $this->view->assign([
             "row" => $row,
@@ -259,7 +267,62 @@ class Sharedetailsdatas extends Backend
             'drivinglicenseimages' => $drivinglicenseimages,
             'car_confirmationimages' => $car_confirmationimages,
             'car_imgeas' => $car_imgeas,
+            'car_authorizationimages' => $car_authorizationimages,
         ]);
+        return $this->view->fetch();
+    }
+
+    /**
+     * 租车详细资料
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     */
+    public function rental_car_share_data($ids = null)
+    {
+        $row = Db::name('rental_order')->alias('a')
+            ->join('admin b', 'b.id=a.admin_id', 'LEFT')
+            ->join('car_rental_models_info c', 'c.id = a.plan_car_rental_name', 'LEFT')
+            ->field('a.order_no,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.down_payment,a.bond,a.car_backtime,a.cash_pledge,
+                a.rental_price,a.tenancy_term,a.customer_source,a.turn_to_introduce_name,a.turn_to_introduce_phone,a.turn_to_introduce_card,a.id_cardimages,
+                a.residence_bookletimages,a.drivers_licenseimages,a.deposit_receiptimages,a.call_listfilesimages,a.customer_information_note,
+                b.nickname as sales_name,
+                c.licenseplatenumber,c.engine_no,c.vin,c.kilometres,c.companyaccount,c.drivinglicenseimages,c.expirydate,c.annualverificationdate,c.carcolor,c.note,
+                c.actual_backtime,c.car_loss,c.back_kilometre,c.check_list')
+            ->where('a.id', $ids)
+            ->find();
+
+        //身份证正反面（多图）
+        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
+        //驾照正副页（多图）
+        $drivers_licenseimages = $row['drivers_licenseimages'] == ''? [] : explode(',', $row['drivers_licenseimages']);
+        //户口簿【首页、主人页、本人页】
+        $residence_bookletimages = $row['residence_bookletimages'] == ''? [] : explode(',', $row['residence_bookletimages']);
+        //通话清单（文件上传）
+        $call_listfilesimages = explode(',', $row['call_listfilesimages']);
+        //定金收据上传
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] : explode(',', $row['deposit_receiptimages']);
+        //行驶证照(多图)
+        $drivinglicenseimages = $row['drivinglicenseimages'] == '' ? [] : explode(',', $row['drivinglicenseimages']);
+        //滴滴授权承诺书
+        $car_authorizationimages = $row['car_authorizationimages'] == '' ? [] : explode(',', $row['car_authorizationimages']);
+        //验车单
+        $check_list = $row['check_list'] == '' ? [] : explode(',', $row['check_list']);
+
+        $this->view->assign(
+            [
+                'row' => $row,
+                'cdnurl' => Config::get('upload')['cdnurl'],
+                'id_cardimages' => $id_cardimages,
+                'drivers_licenseimages' => $drivers_licenseimages,
+                'residence_bookletimages' => $residence_bookletimages,
+                'call_listfilesimages' => $call_listfilesimages,
+                'deposit_receiptimages' => $deposit_receiptimages,
+                'car_authorizationimages' => $car_authorizationimages,
+                'drivinglicenseimages' => $drivinglicenseimages,
+                'check_list' => $check_list,
+            ]
+        );
         return $this->view->fetch();
     }
 }

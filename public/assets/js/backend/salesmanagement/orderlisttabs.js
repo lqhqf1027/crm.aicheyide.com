@@ -1585,7 +1585,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'phone', title: __('Phone')},
                             {field: 'id', title: __('查看详细资料'), table: orderRental, buttons: [
                                 {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 
-                                    url: 'salesmanagement/Orderlisttabs/rentaldetails', 
+                                    url: 'Sharedetailsdatas/rental_car_share_data', 
                                     hidden:function(row){
                                         if(row.order_no !== null){ 
                                             return false; 
