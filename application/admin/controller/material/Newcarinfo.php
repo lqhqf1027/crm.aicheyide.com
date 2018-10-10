@@ -65,7 +65,7 @@ class Newcarinfo extends Backend
                 }, 'planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,tail_section,margin');
                 }, 'mortgageregistration' => function ($query) {
-                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status');
+                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status,next_inspection');
                 }])
                 ->where(function ($query){
                     $query->where('mortgage_registration_id','not null');
@@ -84,7 +84,7 @@ class Newcarinfo extends Backend
                 }, 'planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,tail_section,margin');
                 }, 'mortgageregistration' => function ($query) {
-                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status');
+                    $query->withField('archival_coding,signdate,end_money,hostdate,mortgage_people,transfer,transferdate,registry_remark,yearly_inspection,year_range,year_status,next_inspection');
                 }])
                 ->where(function ($query){
                     $query->where('mortgage_registration_id','not null');
@@ -226,7 +226,7 @@ class Newcarinfo extends Backend
 
                 if ($params['next_inspection']) {
 
-                    //自动根据年检日期得到年检的时间段
+                    //自动根据年检日期得到即将年检的时间段
                     $date = $params['next_inspection'];
 
                     $first_day = date("Y-m-01", strtotime("-1 month", strtotime($date)));
@@ -235,7 +235,8 @@ class Newcarinfo extends Backend
 
                     $last_date = date("Y-m-d", strtotime("-1 day", strtotime($last_date)));
 
-                    $params['year_range'] = $first_day . ";" . $last_date;
+                    $now_month = $this->getMonth($params['next_inspection']);
+                    $params['year_range'] = $first_day . ";" . $last_date."|".$now_month[0].";".$now_month[1];
                 }
 
 
@@ -277,6 +278,12 @@ class Newcarinfo extends Backend
         }
 
         return $this->view->fetch();
+    }
+
+    public function getMonth($date){
+        $firstday = date("Y-m-01",strtotime($date));
+        $lastday = date("Y-m-d",strtotime("$firstday +1 month -1 day"));
+        return array($firstday,$lastday);
     }
 
 
