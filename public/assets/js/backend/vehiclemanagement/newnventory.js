@@ -35,7 +35,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
                         {field: 'models.name', title: __('车型名称'),formatter:function(v,r,i){
-                            return r.the_car_username ? v+'<span class="label label-info">'+r.the_car_username+'</span>':v;
+                            return r.the_car_username ? v+ ' <span class="label label-info"><i class="fa fa-user"> '+r.the_car_username+'</i></span>':v;
                         }},
                         // {field: 'carnumber', title: __('Carnumber')},
                         // {field: 'reservecar', title: __('Reservecar')},

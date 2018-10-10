@@ -76,6 +76,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             },
                             {field: 'username', title: __('Username'), formatter: Controller.api.formatter.inspection},
+                            {
+                                field: 'id', title: __('查看详细资料'), table: newCustomer, buttons: [
+                                    {
+                                        name: 'details', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog ',
+                                        url: 'Sharedetailsdatas/new_car_share_data', callback: function (data) {
+
+                                        }
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
+
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
                             {field: 'planacar.payment', title: __('首付'), operate: false},
@@ -123,14 +136,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         // hidden:function (row) {
                                         //     // return false;
                                         // }
-                                    },
-                                    {
-                                        name: 'detail',
-                                        text: '查看详细信息',
-                                        icon: 'fa fa-eye',
-                                        title: __('detail'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-info btn-detail',
                                     },
 
 
@@ -427,23 +432,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    /**
-                     * 详情
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-detail': function (e, value, row, index) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var table = $(this).closest('table');
-                        var options = table.bootstrapTable('getOptions');
-                        var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = "material/newcarinfo/detail";
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看详细信息'), $(this).data() || {});
-                    }
+
                 }
             },
             formatter: {
@@ -528,10 +517,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         first = new Date(first).getTime();
                         last = new Date(last).getTime();
-
-
-
-
                         if (now >= first && now <= last) {
                             status = 1;
                         } else if (now > last) {
@@ -539,8 +524,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         } else {
                             status = 0;
                         }
-
-
                         $.ajax({
                                 url:'material/Newcarinfo/check_year',
                                 dataType:"json",
@@ -551,7 +534,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }, success:function (data) {
 
                                 },error:function (type) {
-                                    console.log(type);
                                 }
                             });
 
