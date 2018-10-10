@@ -785,7 +785,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                 field: 'id', title: __('查看详细资料'), table: rentalcarAudit, buttons: [
                                     {
                                         name: 'rentalcardetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-rentalcardetails',
-                                        url: 'riskcontrol/creditreview/rentalcardetails', callback: function (data) {
+                                        url: 'Sharedetailsdatas/rental_car_share_data', callback: function (data) {
                                             console.log(data)
                                         }
                                     }

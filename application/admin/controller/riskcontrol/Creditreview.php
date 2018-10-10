@@ -933,10 +933,9 @@ class Creditreview extends Backend
 
             $id = input("id");
             $text = input("text");
-            Session::set('text', $text);
             $id = json_decode($id, true);
 
-            $result = $this->model->save(['review_the_data' => 'collection_data'], function ($query) use ($id) {
+            $result = $this->model->save(['review_the_data' => 'collection_data', 'text' => $text], function ($query) use ($id) {
                 $query->where('id', $id);
             });
 
@@ -1160,10 +1159,9 @@ class Creditreview extends Backend
 
             $id = input("id");
             $text = input("text");
-            Session::set('text', $text);
             $id = json_decode($id, true);
 
-            $result = $this->model->save(['review_the_data' => 'collection_data'], function ($query) use ($id) {
+            $result = $this->model->save(['review_the_data' => 'collection_data', 'text' => $text], function ($query) use ($id) {
                 $query->where('id', $id);
             });
 
@@ -1581,10 +1579,10 @@ class Creditreview extends Backend
 
             $id = input("id");
             $text = input("text");
-            Session::set('text', $text);
+            
             $id = json_decode($id, true);
 
-            $result = $this->model->save(['review_the_data' => 'collection_data'], function ($query) use ($id) {
+            $result = $this->model->save(['review_the_data' => 'collection_data', 'text' => $text], function ($query) use ($id) {
                 $query->where('id', $id);
             });
 
@@ -1621,57 +1619,6 @@ class Creditreview extends Backend
                 $this->error();
             }
         }
-    }
-
-    /**查看新车单详细资料 */
-    public function newcardetails($ids = null)
-    {
-        $newCarDetailsDatas = new  Sharedetailsdatas();
-        pr($newCarDetailsDatas->new_car_share_data($ids));die;
-    }
-
-    /**
-     * 查看二手车单详细资料
-     * @param null $ids
-     * @return string
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function secondhandcardetails($ids = null)
-    {
-        $secondCarDetailsDatas = new  Sharedetailsdatas();
-    }
-
-
-
-    /** 查看租车单详细资料*/
-    public function rentalcardetails($ids = null)
-    {
-
-        $this->model = new \app\admin\model\RentalOrder;
-        $row = $this->model->get($ids);
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
-        if ($row['admin_id']) {
-            $row['sales_name'] = Db::name("admin")
-                ->where("id", $row['admin_id'])
-                ->value("nickname");
-        }
-        //身份证图片
-        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
-        //驾照图片
-        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
-        //户口簿图片
-        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
-        //通话清单
     }
 
 

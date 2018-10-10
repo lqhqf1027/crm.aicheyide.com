@@ -453,15 +453,6 @@ class Orderlisttabs extends Backend
         }
     }
 
-    /**查看详细资料 */
-    public function details($ids = null)
-    {
-
-        $newCarDetailsDatas = new  Sharedetailsdatas();
-        pr($newCarDetailsDatas->new_car_share_data($ids));die;
-    }
-
-
     /**
      * 根据方案id查询 车型名称，首付、月供等
      *
@@ -479,49 +470,6 @@ class Orderlisttabs extends Backend
 
     }
 
-    /**查看纯租详细资料 */
-    public function rentaldetails($ids = null)
-    {
-        $this->model = new \app\admin\model\RentalOrder;
-        $row = $this->model->get($ids);
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
-//        $row['plan'] = Db::name('sales_order')->alias('a')
-//            ->join('plan_acar b', 'a.plan_acar_name = b.id')
-//            ->join('models c', 'b.models_id=c.id');
-
-        //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
-
-        //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] == ''? [] : explode(',', $row['drivers_licenseimages']);
-
-        //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages'] == ''? [] : explode(',', $row['residence_bookletimages']);
-
-        //通话清单（文件上传）
-        $call_listfilesimages = explode(',', $row['call_listfilesimages']);
-
-        $this->view->assign(
-            [
-                'row' => $row,
-                'cdn' => Config::get('upload')['cdnurl'],
-                'id_cardimages' => $id_cardimages,
-                'drivers_licenseimages' => $drivers_licenseimages,
-                'residence_bookletimages' => $residence_bookletimages,
-                'call_listfilesimages' => $call_listfilesimages,
-            ]
-        );
-        return $this->view->fetch();
-    }
-
-
     /**
      * 根据方案id查询 车型名称，首付、月供等
      */
@@ -536,22 +484,6 @@ class Orderlisttabs extends Backend
             ->find();
 
     }
-
-    /**
-     * 查看二手车单详细资料
-     * @param null $ids
-     * @return string
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function seconddetails($ids = null)
-    {
-        $secondCarDetailsDatas = new  Sharedetailsdatas();
-        pr($secondCarDetailsDatas->second_car_share_data($ids));die;
-    }
-
 
     /**
      * 根据方案id查询 车型名称，首付、月供等
@@ -1262,11 +1194,7 @@ class Orderlisttabs extends Backend
 
         $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
 
-        $category = DB::name('scheme_category')->field('id,name')->select();
-
-        $text = Session::get('text');
-
-        $this->view->assign('text', $text);
+        $category = Db::name('scheme_category')->field('id,name')->select();
 
         $this->view->assign('category', $category);
 
@@ -1298,10 +1226,10 @@ class Orderlisttabs extends Backend
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
                         $channel = "demo-new_collection_data";
-                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $text . "资料已完成";
+                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $row['text'] . "资料已完成";
                         goeary_push($channel, $content);
 
-                        $data = new_collection_data($models_name,$row['username'],$text);
+                        $data = new_collection_data($models_name,$row['username'],$row['text']);
 
                         $email = new Email();
 
@@ -1666,10 +1594,10 @@ class Orderlisttabs extends Backend
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
                         $channel = "demo-rental_collection_data";
-                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $text . "资料已完成";
+                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $row['text'] . "资料已完成";
                         goeary_push($channel, $content);
 
-                        $data = rental_collection_data($models_name,$row['username'],$text);
+                        $data = rental_collection_data($models_name,$row['username'],$row['text']);
 
                         $email = new Email();
 
@@ -2283,8 +2211,6 @@ class Orderlisttabs extends Backend
             );
         }
         // pr($newRes);die;
-        $text = Session::get('text');
-        $this->view->assign('text', $text);
         $this->view->assign('newRes', $newRes);
         $this->view->assign('result', $result);
         
@@ -2314,10 +2240,10 @@ class Orderlisttabs extends Backend
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
                         $channel = "demo-second_collection_data";
-                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $text . "资料已完成";
+                        $content =  "客户： " . $row['usename'] . "对车型： ". $models_name . "的购买，补录：". $row['text'] . "资料已完成";
                         goeary_push($channel, $content);
 
-                        $data = second_collection_data($models_name,$row['username'],$text);
+                        $data = second_collection_data($models_name,$row['username'],$row['text']);
 
                         $email = new Email();
 
