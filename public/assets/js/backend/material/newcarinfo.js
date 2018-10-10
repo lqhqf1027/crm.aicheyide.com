@@ -76,7 +76,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             },
                             {field: 'username', title: __('Username'), formatter: Controller.api.formatter.inspection},
-                            {
+
                                 field: 'mortgageregistration.next_inspection',
                                 title: __('年检截止日期'),
                                 operate: 'RANGE',
@@ -87,6 +87,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                             },
+
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
                             {field: 'planacar.payment', title: __('首付'), operate: false},
@@ -134,14 +135,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         // hidden:function (row) {
                                         //     // return false;
                                         // }
-                                    },
-                                    {
-                                        name: 'detail',
-                                        text: '查看详细信息',
-                                        icon: 'fa fa-eye',
-                                        title: __('detail'),
-                                        extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-info btn-detail',
                                     },
 
 
@@ -438,23 +431,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    /**
-                     * 详情
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
-                    'click .btn-detail': function (e, value, row, index) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        var table = $(this).closest('table');
-                        var options = table.bootstrapTable('getOptions');
-                        var ids = row[options.pk];
-                        row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'Sharedetailsdatas/new_car_share_data';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看详细信息'), $(this).data() || {});
-                    }
+
                 }
             },
             formatter: {
@@ -546,6 +523,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         var now = new Date(getNowFormatDate()).getTime();
 
+ 
                         soon_first = new Date(soon_first).getTime();
                         soon_last = new Date(soon_last).getTime();
 
@@ -559,6 +537,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                         if (now >= soon_first && now <= soon_last) {
+ 
                             status = 1;
                         } else if (now >= now_first && now <= now_last) {
                             status = 3;
@@ -567,8 +546,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }else{
                             status = 0;
                         }
-
-
                         $.ajax({
                                 url:'material/Newcarinfo/check_year',
                                 dataType:"json",
@@ -579,7 +556,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }, success:function (data) {
 
                                 },error:function (type) {
-                                    console.log(type);
                                 }
                             });
 

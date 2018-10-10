@@ -1622,6 +1622,7 @@ class Creditreview extends Backend
     }
 
 
+
     /**
      * 查看大数据  新车、二手车、租车
      * @param null $ids
@@ -1635,7 +1636,6 @@ class Creditreview extends Backend
         //$bigdatatype为表名
     //唐玉全	15828604423	510623196501259219  +aXoOaVsOaNriIsInBhcmFtcyI6eyJ0eCI6IjEwMiIsImRhdGEiOnsibG9hblJlY29yZHMiOltdLCJyaXNrUmVzdWx0cyI6W10sImZsb3dJZCI6IjcxNmFkOTk1N2MwNTQ0NWU4ZmVmNDE1OTIxMWFmYTBiIn19fQ==
         $bigdata = $this->toViewBigData($ids, $bigdatatype);
-        pr($bigdata);
         $this->assignconfig([
             'zcFraudScore' => $bigdata['risk_data']['data']['zcFraudScore']
         ]);
