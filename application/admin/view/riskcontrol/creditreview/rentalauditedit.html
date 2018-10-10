@@ -52,43 +52,43 @@
             <div class="form-group">
                     <label class="control-label col-xs-12 col-sm-2">{:__('实付定金（元）')}:</label>
                     <div class="col-xs-12 col-sm-8">
-                        <input id="c-down_payment" data-rule="required" class="form-control form-control" name="row[down_payment]" type="number" value="{$row.down_payment}">
+                        <input id="c-down_payment" data-rule="required" class="form-control form-control" name="row[down_payment]" type="number" value="{$row.down_payment}" disabled>
                     </div>
                 </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('实付押金（元）')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-cash_pledge" data-rule="required" class="form-control form-control" name="row[cash_pledge]" type="number" value="{$row.cash_pledge}">
+            <input id="c-cash_pledge" data-rule="required" class="form-control form-control" name="row[cash_pledge]" type="number" value="{$row.cash_pledge}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('实付租金（元）')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-rental_price" data-rule="required" class="form-control form-control" name="row[rental_price]" type="number" value="{$row.rental_price}">
+            <input id="c-rental_price" data-rule="required" class="form-control form-control" name="row[rental_price]" type="number" value="{$row.rental_price}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('实际租期（月）')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-tenancy_term" data-rule="required" class="form-control form-control" name="row[tenancy_term]" type="number" value="{$row.tenancy_term}">
+            <input id="c-tenancy_term" data-rule="required" class="form-control form-control" name="row[tenancy_term]" type="number" value="{$row.tenancy_term}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-username" data-rule="required" class="form-control form-control" name="row[username]" type="text" value="{$row.username}">
+            <input id="c-username" data-rule="required" class="form-control form-control" name="row[username]" type="text" value="{$row.username}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-phone" data-rule="required;mobile" class="form-control form-control" name="row[phone]" type="text" value="{$row.phone}">
+            <input id="c-phone" data-rule="required;mobile" class="form-control form-control" name="row[phone]" type="text" value="{$row.phone}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-id_card" data-rule="required;IDcard" class="form-control form-control" name="row[id_card]" type="text" value="{$row.id_card}">
+            <input id="c-id_card" data-rule="required;IDcard" class="form-control form-control" name="row[id_card]" type="text" value="{$row.id_card}" disabled>
         </div>
     </div>
     <div class="form-group">
@@ -97,7 +97,7 @@
             
             <div class="radio">
             {foreach name="genderdataList" item="vo"}
-            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"}checked{/in} /> {$vo}</label> 
+            <label for="row[genderdata]-{$key}"><input id="row[genderdata]-{$key}" name="row[genderdata]" type="radio" value="{$key}" {in name="key" value="$row.genderdata"}checked{/in} disabled/> {$vo}</label> 
             {/foreach}
             </div>
 
@@ -154,7 +154,6 @@
             <ul class="row list-inline plupload-preview" id="p-residence_bookletimages"></ul>
         </div>
     </div>
-    
     <div class="form-group">
             <label class="control-label col-xs-12 col-sm-2">{:__('定金收据上传')}:</label>
             <div class="col-xs-12 col-sm-8">
@@ -175,7 +174,7 @@
             </div>
         </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfilesimages')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('通话清单')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
                 <input id="c-call_listfilesimages" data-rule="required" class="form-control form-control" size="50" name="row[call_listfilesimages]" type="text" value="{$row.call_listfilesimages}">

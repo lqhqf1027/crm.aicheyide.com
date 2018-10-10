@@ -181,53 +181,6 @@ class Rentcarscustomer extends Backend
 
     }
 
-    /**查看纯租详细资料 */
-    public function rentaldetails($ids = null)
-    {
-        $this->model = new \app\admin\model\RentalOrder();
-        $row = $this->model->get($ids);
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
-       $car_tube = Db::name('car_rental_models_info')
-            ->where('id', $row['car_rental_models_info_id'])
-        ->find();
-
-        //身份证正反面（多图）
-        $id_cardimages = explode(',', $row['id_cardimages']);
-
-        //驾照正副页（多图）
-        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
-
-        //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = explode(',', $row['residence_bookletimages']);
-
-        $check_list =$car_tube['check_list']==''? [] : explode(',', $car_tube['check_list']);
-
-        //通话清单（文件上传）
-        $call_listfilesimages = explode(',', $row['call_listfilesimages']);
-
-        $this->view->assign(
-            [
-                'row' => $row,
-                'cdn' => Config::get('upload')['cdnurl'],
-                'id_cardimages' => $id_cardimages,
-                'drivers_licenseimages' => $drivers_licenseimages,
-                'residence_bookletimages' => $residence_bookletimages,
-                'call_listfilesimages' => $call_listfilesimages,
-                'check_list' =>$check_list,
-                'car_tube' =>$car_tube
-            ]
-        );
-        return $this->view->fetch();
-    }
-
-
     /**
      * 编辑
      */
