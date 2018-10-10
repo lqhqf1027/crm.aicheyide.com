@@ -243,6 +243,13 @@ class Exchangeplatformtabs extends Backend
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $check_licensenumber = null;
+
+           if($data['car_new_inventory_id']){
+              $check_licensenumber = Db::name('car_new_inventory')->where('id',$data['car_new_inventory_id'])->value('licensenumber');
+           }
+
+
             
             if ($params) {
                 try {
@@ -269,6 +276,22 @@ class Exchangeplatformtabs extends Backend
                     Db::name("car_new_inventory")
                         ->where("id", $data['car_new_inventory_id'])
                         ->setField("licensenumber", $params['licensenumber']);
+
+                    if($data['car_new_inventory_id'] && !$check_licensenumber){
+
+                        $peccancy = Db::name('sales_order')
+                            ->alias('so')
+                            ->join('models m', 'so.models_id = m.id')
+                            ->join('car_new_inventory ni', 'so.car_new_inventory_id = ni.id')
+                            ->where('so.id', $ids)
+                            ->field('so.username,so.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
+                            ->find();
+
+                        $peccancy['car_type'] = 1;
+
+                        Db::name('violation_inquiry')->insert($peccancy);
+
+                    }
                     
                     if ($result !== false) {
                         $this->success();

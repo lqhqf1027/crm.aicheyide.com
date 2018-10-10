@@ -76,17 +76,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             },
                             {field: 'username', title: __('Username'), formatter: Controller.api.formatter.inspection},
-                            {
-                                field: 'id', title: __('查看详细资料'), table: newCustomer, buttons: [
-                                    {
-                                        name: 'details', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog ',
-                                        url: 'Sharedetailsdatas/new_car_share_data', callback: function (data) {
 
-                                        }
-                                    }
-                                ],
+                                field: 'mortgageregistration.next_inspection',
+                                title: __('年检截止日期'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat:"YYYY-MM-DD",
 
-                                operate: false, formatter: Table.api.formatter.buttons
+
+
                             },
 
                             {field: 'id_card', title: __('身份证号')},
@@ -490,6 +489,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  */
                 inspection: function (value, row, index) {
 
+                    console.log(row);
+
                     var license_status = -1;
                     var status = -1;
 
@@ -507,21 +508,42 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if (row.mortgageregistration.year_range) {
                         var range = row.mortgageregistration.year_range;
 
-                        var arr = range.split(";");
+                        var arr = range.split("|");
+
+                        var soon_arr = arr[0];
+                        var now_arr = arr[1];
+
+                        soon_arr = soon_arr.split(';');
+                        now_arr = now_arr.split(';');
 
 
-                        var first = arr[0];
-                        var last = arr[1];
+
+                        var soon_first = soon_arr[0];
+                        var soon_last = soon_arr[1];
 
                         var now = new Date(getNowFormatDate()).getTime();
 
-                        first = new Date(first).getTime();
-                        last = new Date(last).getTime();
-                        if (now >= first && now <= last) {
+ 
+                        soon_first = new Date(soon_first).getTime();
+                        soon_last = new Date(soon_last).getTime();
+
+
+
+                        var now_first = now_arr[0];
+                        var now_last = now_arr[1];
+
+                        now_first = new Date(now_first).getTime();
+                        now_last = new Date(now_last).getTime();
+
+
+                        if (now >= soon_first && now <= soon_last) {
+ 
                             status = 1;
-                        } else if (now > last) {
+                        } else if (now >= now_first && now <= now_last) {
+                            status = 3;
+                        } else if(now>now_last){
                             status = 2;
-                        } else {
+                        }else{
                             status = 0;
                         }
                         $.ajax({
