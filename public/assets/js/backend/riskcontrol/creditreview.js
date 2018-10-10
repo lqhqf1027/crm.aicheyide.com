@@ -136,13 +136,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                 field: 'operate', title: __('Operate'), table: newcarAudit,
                                 buttons: [
                                     {
+                                        name: 'auditedit', 
+                                        text: '编辑资料', 
+                                        icon: 'fa fa-pencil', 
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('编辑资料'), 
+                                        classname: 'btn btn-xs btn-success btn-dialog btn-auditedit',
+                                        url: 'riskcontrol/creditreview/auditedit',
+                                    },
+                                    {
                                         name: '', icon: 'fa fa-times', text: '审核资料还未完善，无法进行审核', classname: ' text-danger ',
                                         hidden: function (row) {  /**审核资料还未完善，无法进行审核 */
                                            
-                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages || !row.accreditimages || !row.faceimages  || !row.informationimages) {
+                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages) {
                                                 return false;
                                             }
-                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages && row.accreditimages && row.faceimages  && row.informationimages) {
+                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages) {
                                                 return true;
                                             }
                                         },
@@ -154,10 +163,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
                                         //....
                                         hidden: function (row) { /**审核 */
-                                            if ((row.review_the_data == 'is_reviewing_true') && row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages && row.accreditimages && row.faceimages  && row.informationimages) {
+                                            if ((row.review_the_data == 'is_reviewing_true') && row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages) {
                                                 return false;
                                             }
-                                            else if ((row.review_the_data == 'is_reviewing_true') || !row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages || !row.accreditimages || !row.faceimages  || !row.informationimages) {
+                                            else if ((row.review_the_data == 'is_reviewing_true') || !row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages) {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
@@ -745,9 +754,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 //数据实时统计
                 newcarAudit.on('load-success.bs.table', function (e, data) {
                     $(".btn-newauditResult").data("area", ["95%", "95%"]);
+                    $(".btn-auditedit").data("area", ["95%", "95%"]);
                     $(".btn-bigData").data("area", ["95%", "95%"]);
                     $(".btn-newcardetails").data("area", ["95%", "95%"]);
-                    var newcarAudit = $('#badge_newcar_audit').text(data.total);
+                    // var newcarAudit = $('#badge_newcar_audit').text(data.total);
                     newcarAudit = parseInt($('#badge_newcar_audit').text());
                 })
 
@@ -796,6 +806,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {
                                 field: 'operate', title: __('Operate'), table: rentalcarAudit,
                                 buttons: [
+                                    {
+                                        name: 'rentalauditedit', 
+                                        text: '编辑资料', 
+                                        icon: 'fa fa-pencil', 
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('编辑资料'), 
+                                        classname: 'btn btn-xs btn-success btn-dialog btn-rentalauditedit',
+                                        url: 'riskcontrol/creditreview/rentalauditedit',
+                                    },
                                     {
                                         name: 'rentalauditResult', text: '审核', title: '审核征信', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-rentalauditResult btn-dialog',
                                         url: 'riskcontrol/creditreview/rentalauditResult',
@@ -963,8 +982,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     $(".btn-rentalauditResult").data("area", ["95%", "95%"]);
                     $(".btn-rentalcardetails").data("area", ["95%", "95%"]);
                     $(".btn-bigData").data("area", ["95%", "95%"]);
+                    $(".btn-rentalauditedit").data("area", ["95%", "95%"]);
                     $(".btn-signature").data("area", ["80%", "80%"]);
-                    var rentalcarAudit = $('#badge_rental_audit').text(data.total);
                 })
 
             },
@@ -1023,6 +1042,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {
                                 field: 'operate', title: __('Operate'), table: secondhandcarAudit,
                                 buttons: [
+                                    {
+                                        name: 'secondauditedit', 
+                                        text: '编辑资料', 
+                                        icon: 'fa fa-pencil', 
+                                        extend: 'data-toggle="tooltip"',
+                                        title: __('编辑资料'), 
+                                        classname: 'btn btn-xs btn-success btn-dialog btn-secondauditedit',
+                                        url: 'riskcontrol/creditreview/secondauditedit',
+                                    },
                                     {
                                         name: '', icon: 'fa fa-times', text: '审核资料还未完善，无法进行审核', classname: ' text-danger ',
                                         hidden: function (row) {  /**审核资料还未完善，无法进行审核 */
@@ -1243,7 +1271,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     $(".btn-secondhandcarResult").data("area", ["95%", "95%"]);
                     $(".btn-bigData").data("area", ["95%", "95%"]);
                     $(".btn-secondhandcardetails").data("area", ["95%", "95%"]);
-                    var secondhandcarAudit = $('#badge_secondhandcar_audit').text(data.total);
+                    $(".btn-secondauditedit").data("area", ["95%", "95%"]);
                     secondhandcarAudit = parseInt($('#badge_secondhandcar_audit').text());
                 })
 
@@ -1276,6 +1304,78 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 
             });
             // Controller.api.bindevent();
+
+        },
+        auditedit: function () {
+            
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            
+
+        },
+        rentalauditedit: function () {
+            
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            
+
+        },
+        secondauditedit: function () {
+            
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                // console.log(data);
+                // newAllocationNum = parseInt($('#badge_new_allocation').text());
+                // num = parseInt(data);
+                // $('#badge_new_allocation').text(num+newAllocationNum); 
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                // console.log(data);
+                
+                Toastr.success("失败");
+                
+            });
+            
 
         },
         secondchoosestock: function () {

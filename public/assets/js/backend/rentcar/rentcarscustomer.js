@@ -342,7 +342,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'rentcar/rentcarscustomer/rentaldetails';
+                        var url = 'Sharedetailsdatas/rental_car_share_data';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看详情'), $(this).data() || {});
                     },
                 }

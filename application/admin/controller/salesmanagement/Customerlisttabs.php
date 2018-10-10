@@ -705,7 +705,7 @@ class Customerlisttabs extends Backend
             $text = input("text");
             $id = json_decode($id, true);
 
-
+            
             $result = $this->model
                 ->where('id', 'in', $id)
                 ->update([
@@ -713,7 +713,18 @@ class Customerlisttabs extends Backend
                     'reason' => $text,
                     'giveup_time'=>time()
                 ]);
-            $feedback = Db::name('feedback_info')->insertAll(['feedbackcontent'=>$text,'feedbacktime'=>time(),'customerlevel'=>'已放弃','customer_id'=>$id]);
+            foreach ($id as $k=>$v) {
+                $data[] = [
+                    'feedbackcontent'=>$text,
+                    'feedbacktime'=>time(),
+                    'customerlevel'=>'已放弃',
+                    'customer_id'=> $v
+                ];
+            }
+            // pr($data);
+            // die;
+            $feedback = Db::name('feedback_info')->insertAll($data);
+
             if ($result && $feedback) {
                 $this->success();
             } else {
