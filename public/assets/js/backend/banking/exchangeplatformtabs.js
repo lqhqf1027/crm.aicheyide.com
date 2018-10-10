@@ -31,36 +31,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                // console.log(data);
-
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);
-                // console.log(data);
                 Toastr.success("成功");
             }, function (data, ret) {
                 Toastr.success("失败");
 
             });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
-
-
         },
         batch_change_platform: function () {
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                // console.log(data);
-
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 Fast.api.close(data);
-                // console.log(data);
                 Toastr.success("成功");
             }, function (data, ret) {
                 Toastr.success("失败");
 
             });
-            // Controller.api.bindevent();
-            // console.log(Config.id);
         },
 
         table: {
@@ -453,7 +441,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var nanchongDriver = $("#nanchongDriver");
                 nanchongDriver.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#total-nanchong').text(data.total);
 
                 });

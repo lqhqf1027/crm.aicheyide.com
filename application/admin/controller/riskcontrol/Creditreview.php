@@ -1661,19 +1661,19 @@ class Creditreview extends Backend
                 $this->error(__('You have no permission'));
             }
         }
-        if($row['admin_id']){
+        if ($row['admin_id']) {
             $row['sales_name'] = Db::name("admin")
-                ->where("id",$row['admin_id'])
+                ->where("id", $row['admin_id'])
                 ->value("nickname");
         }
         //身份证图片
-        $id_cardimages = $row['id_cardimages']==''? [] : explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         //驾照图片
-        $drivers_licenseimages = $row['drivers_licenseimages'] ==''? [] : explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         //户口簿图片
-        $residence_bookletimages = $row['residence_bookletimages']==''? [] : explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         //通话清单
-
+    }
 
     }
 
