@@ -51,9 +51,9 @@ class Sharedetailsdatas extends Backend
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.amount_collected,a.residence_bookletimages,a.bank_cardimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
                 a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,a.withholding_service,
-                a.undertakingimages,a.accreditimages,a.faceimages,a.informationimages,a.mate_id_cardimages,
+                a.undertakingimages,a.accreditimages,a.faceimages,a.informationimages,a.mate_id_cardimages,a.financial_monthly,
                 b.nickname as sales_name,
-                c.tail_section,c.note,c.nperlist,
+                c.tail_section,c.note,c.nperlist,c.payment,
                 d.archival_coding,d.contract_total,d.end_money,d.yearly_inspection,d.next_inspection,d.transferdate,d.hostdate,d.ticketdate,d.supplier,d.tax_amount,d.no_tax_amount,d.pay_taxesdate,d.house_fee,
                 d.luqiao_fee,d.insurance_buydate,d.car_boat_tax,d.insurance_policy,
                 d.commercial_insurance_policy,d.registry_remark,
@@ -62,14 +62,22 @@ class Sharedetailsdatas extends Backend
             ->where('a.id', $ids)
             ->find();
 
+        $row['total_insurance'] = null;
+        $row['service_charges'] = null;
+        $row['down_payment_service'] = null;
+        $row['first_money'] = null;
        //计算保险
        if($row['business_risks'] && $row['insurance'] && $row['car_boat_tax']){
           $insurance = floatval($row['business_risks']) + floatval($row['insurance']) + floatval($row['car_boat_tax']);
+
+          $row['total_insurance'] = $insurance;
        }
 
        //计算服务费
        if($row['contract_total'] && $row['invoice_monney'] && $insurance){
            $service_charge = floatval($row['contract_total']) - floatval($insurance) - floatval($row['invoice_monney']);
+
+           $row['service_charges'] = $service_charge;
        }
 
        //计算首期服务费
@@ -77,9 +85,26 @@ class Sharedetailsdatas extends Backend
          $down_payment =  floatval($service_charge) - (floatval($row['withholding_service']) * floatval($row['nperlist']));
 
          $down_payment = $down_payment<$row['payment']? $down_payment : $row['payment'];
+
+         $row['down_payment_service'] = $down_payment;
        }
-        // return;
-      //  pr($row['bank_card']);return;
+
+
+       //计算首期款
+        if($down_payment && $row['payment']){
+            $first_money = floatval($row['payment']) - floatval($down_payment);
+
+            $row['first_money'] = $first_money;
+
+            Db::name('sales_order')
+            ->where('id',$ids)
+            ->update([
+                'downpayment'=>$first_money,
+                'service_charge'=>$down_payment
+                ]);
+        }
+
+
 
         if ($row['new_car_marginimages'] == "") {
             $row['new_car_marginimages'] = null;
