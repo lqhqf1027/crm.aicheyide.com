@@ -1763,7 +1763,7 @@ class Orderlisttabs extends Backend
                 ->select();
             $newB = [];
             foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数' . $bValue['periods'] . '，' . '全款方案总价（元）' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
             }
             $newRes[] = array(

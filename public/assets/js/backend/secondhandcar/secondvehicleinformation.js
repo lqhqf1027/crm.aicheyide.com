@@ -53,7 +53,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'newpayment', title: __('Newpayment'),operate:false},
                         {field: 'monthlypaymen', title: __('Monthlypaymen'),operate:false},
                         {field: 'periods', title: __('Periods'),operate:false},
-                        {field: 'totalprices', title: __('Totalprices'),operate:false},
+                        {field: 'totalprices', title: __('全款方案总价（元）'),operate:false},
                         {field: 'drivinglicenseimages', title: __('Drivinglicenseimages'), formatter: Table.api.formatter.images,operate:false},
                         {field: 'vin', title: __('Vin')},
                         {field: 'engine_number', title: __('发动机号')},

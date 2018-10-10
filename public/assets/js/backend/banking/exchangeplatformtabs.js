@@ -102,6 +102,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.Loan,
                                 operate: false
                             },
+
                             {field: 'newinventory.household', title: __('开户公司名'),operate: false},
                             {
                                 field: 'createtime',
@@ -109,6 +110,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                formatter: Controller.api.formatter.datetime,
+                                operate: false
+                            },
+                            {field: 'financial_name', title: __('金融平台')},
+
                             {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号'),operate: false},
@@ -122,12 +131,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'mortgage.insurance', title: __('交强险(元)'),operate: false},
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
-                            {
-                                field: 'delivery_datetime',
-                                title: __('提车时间'),
-                                formatter: Controller.api.formatter.datetime,
-                                operate: false
-                            },
                             {field: 'planacar.payment', title: __('首付'),operate: false},
                             {field: 'planacar.monthly', title: __('月供'),operate: false},
                             {field: 'planacar.nperlist', title: __('期数'),operate: false},
@@ -242,6 +245,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                formatter: Controller.api.formatter.datetime,
+                                operate: false
+                            },
+                            {field: 'financial_name', title: __('金融平台')},
                             {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号'),operate: false},
@@ -255,12 +265,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'mortgage.insurance', title: __('交强险(元)'),operate: false},
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
-                            {
-                                field: 'delivery_datetime',
-                                title: __('提车时间'),
-                                formatter: Controller.api.formatter.datetime,
-                                operate: false
-                            },
+
                             {field: 'planacar.payment', title: __('首付'),operate: false},
                             {field: 'planacar.monthly', title: __('月供'),operate: false},
                             {field: 'planacar.nperlist', title: __('期数'),operate: false},
@@ -364,6 +369,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
+                            {
+                                field: 'delivery_datetime',
+                                title: __('提车时间'),
+                                formatter: Controller.api.formatter.datetime,
+                                operate: false
+                            },
+                            {field: 'financial_name', title: __('金融平台')},
+
                             {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号'),operate: false},
@@ -377,12 +390,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'mortgage.insurance', title: __('交强险(元)'),operate: false},
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
-                            {
-                                field: 'delivery_datetime',
-                                title: __('提车时间'),
-                                formatter: Controller.api.formatter.datetime,
-                                operate: false
-                            },
+
                             {field: 'planacar.payment', title: __('首付'),operate: false},
                             {field: 'planacar.monthly', title: __('月供'),operate: false},
                             {field: 'planacar.nperlist', title: __('期数'),operate: false},
