@@ -89,7 +89,7 @@
                 <strong>{:__('住房合同/房产证')}：</strong>
                 {foreach $housingimages as $k => $v}
                 <a href="{$cdn}{$v}" target="_blank">
-                    <img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">
+                    <img src="{$cdn}{$v}" alt="{:__('住房合同/房产证')}" style="width:80px;height:80px;">
                 </a> {/foreach}
             </div>
 
@@ -109,7 +109,7 @@
                     <strong>{:__('申请表')}：</strong>
                     {foreach $application_formimages as $k => $v}
                     <a href="{$cdn}{$v}" target="_blank">
-                        <img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">
+                        <img src="{$cdn}{$v}" alt="{:__('申请表')}" style="width:80px;height:80px;">
                     </a> {/foreach}
                 </div>
             </div>
@@ -121,7 +121,7 @@
                 <strong>{:__('定金合同')}：</strong>
                 {foreach $deposit_contractimages as $k => $v}
                 <a href="{$cdn}{$v}" target="_blank">
-                    <img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">
+                    <img src="{$cdn}{$v}" alt="{:__('定金合同')}" style="width:80px;height:80px;">
                 </a> {/foreach}
             </div>
 
@@ -129,16 +129,14 @@
                 <strong>{:__('定金收据')}：</strong>
                 {foreach $deposit_receiptimages as $k => $v}
                 <a href="{$cdn}{$v}" target="_blank">
-                    <img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">
+                    <img src="{$cdn}{$v}" alt="{:__('定金收据')}" style="width:80px;height:80px;">
                 </a> {/foreach}
             </div>
 
             <div class="col-xs-12 col-sm-8 col-md-4" style="line-height: 80px">
                 {empty name="$call_listfiles_arr"}
                 <p style="margin-top: 8%"><strong>{:__('通话清单')}：</strong><span class="text-info">暂无</span></p>
-
                 {else /}
-
                 {foreach $call_listfiles_arr as $k => $v}
                 <a href="{$v}" target="_blank">
                     <button type="button" class="btn btn-info">查看通话清单</button>

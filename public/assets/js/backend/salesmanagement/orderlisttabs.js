@@ -2920,7 +2920,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
 
             /**
-             * 全款单
+             * 全款单（新车）
              */
             order_full: function () {
                 var orderFull = $("#orderFull");
@@ -3193,6 +3193,286 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         shade: [0.3, '#393D49'],
                         area:['95%','95%'],
                         callback:function(value){ 
+
+                        }
+                    }
+                    Fast.api.open(url,'新增全款单',options)
+                })
+            },
+            /**
+             * 全款单（二手车）
+             */
+            second_order_full: function () {
+                var orderFull = $("#orderFull");
+
+                $(".btn-add").data("area", ["95%", "95%"]);
+                $(".btn-edit").data("area", ["95%", "95%"]);
+
+                // 初始化表格
+                orderFull.bootstrapTable({
+                    url: 'salesmanagement/Orderlisttabs/orderFull',
+                    extend: {
+                        fulladd_url: 'salesmanagement/Orderlisttabs/fulladd',
+                        fulledit_url: 'salesmanagement/Orderlisttabs/fulledit',
+                        del_url: 'salesmanagement/Orderlisttabs/fulldel',
+                        multi_url: 'salesmanagement/Orderlisttabs/multi',
+                        table: 'full_parment_order',
+                    },
+                    toolbar: '#toolbar4',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            { checkbox: true },
+                            { field: 'id', title: __('Id') ,operate:false},
+                            { field: 'order_no', title: __('Order_no') },
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime, datetimeFormat:"YYYY-MM-DD" },
+                            { field: 'models.name', title: __('销售车型') },
+                            {field: 'admin.nickname', title: __('销售员'),formatter:function (v,r,i) {
+                                    return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
+
+                                }},
+                            { field: 'planfull.full_total_price', title: __('全款总价（元）') },
+
+                            {
+                                field: 'id', title: __('查看详细资料'), table: orderFull, buttons: [
+                                    {
+                                        name: 'fulldetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-fulldetails',
+                                        url: 'salesmanagement/Orderlisttabs/fulldetails', callback: function (data) {
+
+                                        }
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
+
+                            {field: 'username', title: __('Username')},
+                            {field: 'phone', title: __('Phone')},
+                            { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
+
+                            {
+                                field: 'operate', title: __('Operate'), table: orderFull,
+                                buttons: [
+                                    /**
+                                     * 提交内勤
+                                     */
+                                    {
+                                        name: 'submitCar', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-info btn-submitCar',
+
+                                        hidden: function (row) { /**提交内勤 */
+                                            if (row.review_the_data == 'send_to_internal') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+
+                                        }
+                                    },
+                                    /**
+                                     * 删除
+                                     */
+                                    {
+                                        icon: 'fa fa-trash', name: 'fulldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+
+                                        hidden: function (row) {
+                                            if (row.review_the_data == 'send_to_internal') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+
+                                        },
+
+                                    },
+                                    /**
+                                     * 编辑
+                                     */
+                                    {
+                                        name: 'fulledit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-fulleditone',
+
+                                        hidden: function (row, value, index) {
+                                            if (row.review_the_data == 'send_to_internal') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                        },
+                                    },
+                                    /**
+                                     * 车管正在备车中
+                                     */
+                                    {
+                                        name: 'is_reviewing_true', icon: 'fa fa-check-circle', text: '车管正在备车中', classname: ' text-info ',
+                                        hidden: function (row) {  /**车管正在备车中 */
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+
+                                        }
+                                    },
+                                    /**
+                                     * 内勤正在处理
+                                     */
+                                    {
+                                        name: 'inhouse_handling', text: '内勤正在处理',
+                                        hidden: function (row) {  /**内勤正在处理 */
+                                            if (row.review_the_data == 'inhouse_handling') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    /**
+                                     * 车管备车成功，等待提车
+                                     */
+                                    {
+                                        name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '车管备车成功，等待提车', classname: ' text-info ',
+                                        hidden: function (row) {  /**车管备车成功，等待提车 */
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    /**
+                                     * 已提车
+                                     */
+                                    {
+                                        name: 'for_the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                        hidden: function (row) {  /**已提车 */
+                                            if (row.review_the_data == 'for_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_to_internal') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                ],
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate
+                            }
+                        ]
+                    ]
+                });
+
+                /**
+                 * 刷新表格渲染
+                 */
+                orderFull.on('load-success.bs.table', function (e, data) {
+
+                    $('#badge_order_full').text(data.total);
+                    $(".btn-fulldetails").data("area", ["95%", "95%"]);
+                })
+
+                /**
+                 * 为全款单表格绑定事件
+                 */
+                Table.api.bindevent(orderFull);
+
+                /**
+                 * 车管发送---销售接收----可以进行提车
+                 */
+                goeasy.subscribe({
+                    channel: 'demo-full_takecar',
+                    onMessage: function(message){
+                        message = split('|',message.content);
+                        if(Config.ADMIN_JS.id==message[1]){
+                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                                Layer.close(index);
+                                $(".btn-refresh").trigger("click");
+                            });
+                        }
+
+                    }
+                });
+
+                /**
+                 * 新增全款单
+                 */
+                $(document).on("click", ".btn-fulladd", function () {
+
+                    var url = 'salesmanagement/Orderlisttabs/fulladd';
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area:['95%','95%'],
+                        callback:function(value){
 
                         }
                     }
