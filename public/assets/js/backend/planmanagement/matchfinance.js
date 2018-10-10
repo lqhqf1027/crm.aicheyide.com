@@ -1040,7 +1040,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '查看订单详细资料',
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-primary btn-dialog btn-used',
-                                        url: 'planmanagement/Matchfinance/used_details',
+                                        url: 'Sharedetailsdatas/second_car_share_data',
                                         callback: function (data) {
 
                                         }

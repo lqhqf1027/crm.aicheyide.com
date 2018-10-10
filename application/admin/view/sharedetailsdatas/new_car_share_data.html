@@ -495,9 +495,9 @@
 
 
     </div>
-
+    <hr>
     <div class="row">
-        <div class="col-xs-12 col-sm-8 col-md-2">
+        <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$new_car_marginimages"}
             <p style="margin-top: 8%"><strong>{:__('保证金收据')}：</strong> <span class="text-info">暂无</span></p>
             {else /}
@@ -508,6 +508,37 @@
             {/empty}
 
         </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$car_authorizationimages"}
+            <p style="margin-top: 8%"><strong>{:__('滴滴授权承诺书')}：</strong> <span class="text-info">暂无</span></p>
+            {else /}
+            <strong class="imgClickTitle">{:__('滴滴授权承诺书')}：</strong>
+            {foreach $car_authorizationimages as $k => $v}
+            <img src="{$cdnurl}{$v}" alt="滴滴授权承诺书" class="imgBorder">
+            {/foreach}
+            {/empty}
+
+        </div>
+        
+
+        <div class="col-xs-12 col-sm-8 col-md-4" id="clear-div">
+
+            {empty name="$call_listfiles"}
+            <strong>{:__('通话清单')}：</strong><span class="text-info">暂无</span>
+
+            {else /}
+            <strong>{:__('通话清单')}：</strong>
+            {foreach $call_listfiles as $k => $v}
+            <a href="{$cdnurl}{$v}" target="_blank">
+                {$cdnurl}{$v}
+            </a>
+            {/foreach}
+            {/empty}
+        </div>
+
+    </div>
+    <hr>
+    <div class="row">
         <div class="col-xs-12 col-sm-8 col-md-6" >
 
             {empty name="$car_imgeas"}
@@ -526,22 +557,7 @@
 
 
         </div>
-
-        <div class="col-xs-12 col-sm-8 col-md-4" id="clear-div">
-
-            {empty name="$call_listfiles"}
-            <strong>{:__('通话清单')}：</strong><span class="text-info">暂无</span>
-
-            {else /}
-            <strong>{:__('通话清单')}：</strong>
-            {foreach $call_listfiles as $k => $v}
-            <a href="{$cdnurl}{$v}" target="_blank">
-                {$cdnurl}{$v}
-            </a>
-            {/foreach}
-            {/empty}
-        </div>
-
+        
     </div>
     <hr>
     <div class="row">

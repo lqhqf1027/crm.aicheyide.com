@@ -114,14 +114,6 @@ class Takesecondcar extends Backend
 
     }
 
-    /**查看二手车单详细资料 */
-    public function seconddetails($ids = null)
-    {
-        $secondCarDetailsDatas = new  Sharedetailsdatas();
-        pr($secondCarDetailsDatas->second_car_share_data($ids));die;
-    }
-
-
     /**确认提车
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException

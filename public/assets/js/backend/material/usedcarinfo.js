@@ -413,7 +413,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = "material/usedcarinfo/details";
+                        var url = 'Sharedetailsdatas/second_car_share_data';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
                     /**
