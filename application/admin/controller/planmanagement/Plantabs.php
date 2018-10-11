@@ -19,7 +19,7 @@ class Plantabs extends Backend
     protected $multiFields = 'ismenu';
 
     protected $noNeedRight = ['index', 'table1', 'table2', 'table3', 'firstedit', 'firstdel', 'fulledit', 'fulldel', 'working_insurance', 'getSales', 'getCategory', 'firstmulti', 'fullmulti'
-        , 'firstadd', 'fulladd'];
+        , 'firstadd', 'fulladd','matchingSalesOrder'];
 
     public function _initialize()
     {
@@ -77,31 +77,30 @@ class Plantabs extends Backend
                     $query->withField('name');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
-                },'schemecategory'=>function ($query){
+                }, 'schemecategory' => function ($query) {
                     $query->withField('name,category_note');
                 }])
                 ->order('category_id')
                 ->where($where)
                 ->order($sort, $order)
                 ->limit($offset, $limit)
-
                 ->select();
+            $sales_order_data = self::matchingSalesOrder();
 
-            foreach ($list as $key=>$row) {
+            foreach ($list as $key => $row) {
 
-                $row->visible(['id', 'payment', 'monthly', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance','category_id']);
+                $row->visible(['id', 'payment', 'monthly', 'brand_name', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance', 'category_id']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['schemecategory']);
-                $row->getRelation('schemecategory')->visible(['name','category_note']);
+                $row->getRelation('schemecategory')->visible(['name', 'category_note']);
+                $list[$key]['brand_name'] = self::getBrandName($row['id']); //获取品牌
+                $list[$key]['match_plan'] = in_array($row['id'], $sales_order_data) == $row['id'] ? 'match_success' : 'match_error'; //返回是否与方案id匹配
+
             }
             $list = collection($list)->toArray();
-
-            foreach ((array) $list as $key=>$value){
-                $list[$key]['brand_name'] =$this->getBrandName($value['id']);
-            }
             $result = array("total" => $total, "rows" => $list);
             return json($result);
         }
@@ -110,11 +109,24 @@ class Plantabs extends Backend
     }
 
     /**
+     * Notes:获取已签单的方案id
+     * User: glen9
+     * Date: 2018/10/11
+     * Time: 23:43
+     * @return array
+     */
+    public static function matchingSalesOrder()
+    {
+        return array_unique(Db::name('sales_order')->column('plan_acar_name'));
+
+    }
+
+    /**
      * 关联品牌名称
      * @param $plan_id 方案id
      * @return false|\PDOStatement|string|\think\Collection
      */
-    public function getBrandName($plan_id)
+    public static function getBrandName($plan_id = null)
     {
         return Db::name('plan_acar')->alias('a')
             ->join('models b', 'a.models_id = b.id')
@@ -174,8 +186,8 @@ class Plantabs extends Backend
                 $row->getRelation('models')->visible(['name']);
             }
             $list = collection($list)->toArray();
-            foreach ((array) $list as $key=>$value){
-                $list[$key]['brand_name'] =$this->getFullBrandName($value['id']);
+            foreach ((array)$list as $key => $value) {
+                $list[$key]['brand_name'] = $this->getFullBrandName($value['id']);
             }
             $result = array("total" => $total, "rows" => $list);
 
@@ -248,7 +260,6 @@ class Plantabs extends Backend
     }
 
 
-
     /**得到销售员信息
      * @return array
      * @throws \think\db\exception\DataNotFoundException
@@ -258,29 +269,27 @@ class Plantabs extends Backend
     public function getSales()
     {
         $sales = Db::name("admin")
-            ->where("rule_message", "in", ['message8', 'message9','message23'])
+            ->where("rule_message", "in", ['message8', 'message9', 'message23'])
             ->field("id,nickname,rule_message")
             ->select();
 
 
-        $arr = array(['id'=>1,'name'=>'销售1部','message'=>array()],['id'=>2,'name'=>'销售2部','message'=>array()],['id'=>3,'name'=>'销售3部','message'=>array()]);
+        $arr = array(['id' => 1, 'name' => '销售1部', 'message' => array()], ['id' => 2, 'name' => '销售2部', 'message' => array()], ['id' => 3, 'name' => '销售3部', 'message' => array()]);
 
 
-
-        foreach ($sales as $value){
-            if($value['rule_message']=='message8'){
-                array_push($arr[0]['message'],$value);
-            }else if($value['rule_message']=='message9'){
-                array_push($arr[1]['message'],$value);
-            }else if($value['rule_message']=='message23'){
-                array_push($arr[2]['message'],$value);
+        foreach ($sales as $value) {
+            if ($value['rule_message'] == 'message8') {
+                array_push($arr[0]['message'], $value);
+            } else if ($value['rule_message'] == 'message9') {
+                array_push($arr[1]['message'], $value);
+            } else if ($value['rule_message'] == 'message23') {
+                array_push($arr[2]['message'], $value);
             }
         }
 
         return $arr;
 
     }
-
 
 
     /**得到销售方案类别信息
@@ -536,22 +545,22 @@ class Plantabs extends Backend
                     if ($result !== false) {
 
                         $models_name = Db::name('models')
-                        ->where('id',$params['models_id'])
-                        ->value('name');
+                            ->where('id', $params['models_id'])
+                            ->value('name');
 
-                        if($params['liu']=='yes' && $params['sales_id']){
+                        if ($params['liu'] == 'yes' && $params['sales_id']) {
                             $channel = 'custom_model';
                             $results = array();
 
-                            $content = '定制方案审核结果通知:您需要的车型<span class="text-info">'.$models_name.',</span>首付<span class="text-info">'.$params['payment'].'</span>元,月供<span class="text-info">'.$params['monthly'].'</span>元已添加成功,请注意查看';
+                            $content = '定制方案审核结果通知:您需要的车型<span class="text-info">' . $models_name . ',</span>首付<span class="text-info">' . $params['payment'] . '</span>元,月供<span class="text-info">' . $params['monthly'] . '</span>元已添加成功,请注意查看';
 
-                            goeary_push($channel,$content.'|'.$params['sales_id']);
+                            goeary_push($channel, $content . '|' . $params['sales_id']);
 
-                            $datas = send_newmodels_to_sales($models_name,$params['payment'],$params['monthly']);
+                            $datas = send_newmodels_to_sales($models_name, $params['payment'], $params['monthly']);
 
                             $email = new Email;
 
-                            $receiver = Db::name('admin')->where('id',$params['sales_id'])->value('email');
+                            $receiver = Db::name('admin')->where('id', $params['sales_id'])->value('email');
 
                             $result_sss = $email
                                 ->to($receiver)
@@ -559,9 +568,9 @@ class Plantabs extends Backend
                                 ->message($datas['message'])
                                 ->send();
 
-                            if($result_sss){
+                            if ($result_sss) {
                                 $this->success();
-                            }else{
+                            } else {
                                 $this->error($this->model->getError());
                             }
                         }
@@ -617,5 +626,87 @@ class Plantabs extends Backend
         return $this->view->fetch();
     }
 
+    public function import_first_plan()
+    {
+
+        $this->model = model("PlanAcar");
+        $financial = Db::name("financial_platform")->where('status', 'normal')->select();
+
+        $this->view->assign([
+            'sales' => $this->getSales(),
+            'category' => $this->getCategory(),
+            'financial' => $financial,
+            'car_models' => $this->getInfo(),
+            'nperlistList' => $this->model->getNperlistList()
+        ]);
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if (empty($params['working_insurance'])) {
+                $params['working_insurance'] = "no";
+            }
+            if ($params['sales_id'] == " ") {
+                $params['sales_id'] = null;
+            }
+            if ($params) {
+                $params['acar_status'] = 1;
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+
+                        $models_name = Db::name('models')
+                            ->where('id', $params['models_id'])
+                            ->value('name');
+
+                        if ($params['liu'] == 'yes' && $params['sales_id']) {
+                            $channel = 'custom_model';
+                            $results = array();
+
+                            $content = '定制方案审核结果通知:您需要的车型<span class="text-info">' . $models_name . ',</span>首付<span class="text-info">' . $params['payment'] . '</span>元,月供<span class="text-info">' . $params['monthly'] . '</span>元已添加成功,请注意查看';
+
+                            goeary_push($channel, $content . '|' . $params['sales_id']);
+
+                            $datas = send_newmodels_to_sales($models_name, $params['payment'], $params['monthly']);
+
+                            $email = new Email;
+
+                            $receiver = Db::name('admin')->where('id', $params['sales_id'])->value('email');
+
+                            $result_sss = $email
+                                ->to($receiver)
+                                ->subject($datas['subject'])
+                                ->message($datas['message'])
+                                ->send();
+
+                            if ($result_sss) {
+                                $this->success();
+                            } else {
+                                $this->error($this->model->getError());
+                            }
+                        }
+
+                        $this->success();
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+        return $this->view->fetch();
+    }
 
 }

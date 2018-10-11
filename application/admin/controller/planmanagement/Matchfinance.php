@@ -17,7 +17,7 @@ class Matchfinance extends Backend
 {
     protected $model = null;
     protected $noNeedRight = ['index', 'newprepare_match', 'secondprepare_match', 'newedit', 'secondedit', 'newbatch', 'secondbatch', 'add_sales'
-        , 'used_details', 'new_details'];
+        , 'used_details', 'new_details','view_plan'];
 
     public function _initialize()
     {
@@ -369,5 +369,17 @@ class Matchfinance extends Backend
         return $data;
     }
 
+    /**
+     * Notes:对比方案
+     * User: glen9
+     * Date: 2018/10/12
+     * Time: 3:35
+     * @return string
+     * @throws \think\Exception
+     */
+    public function view_plan(){
+
+        return $this->view->fetch();
+    }
     
 }

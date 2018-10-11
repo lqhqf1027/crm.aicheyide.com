@@ -71,7 +71,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     "success": __('Monthly_data success')
                                 },
                                 formatter: function (v, r, i) {
-                                    if(v=='failure'&& r.monthly_supplementary !=null){
+                                    if(v==='failure'&& r.monthly_supplementary !=null){
                                         v = '<span class="text-danger">失败</span>';
                                         return v+' <span class="label label-success">'+r.monthly_supplementary+'</span>'
 
