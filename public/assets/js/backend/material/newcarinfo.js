@@ -77,7 +77,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
                             {field: 'username', title: __('Username'), formatter: Controller.api.formatter.inspection},
 
-                                field: 'mortgageregistration.next_inspection',
+                            { field: 'mortgageregistration.next_inspection',
                                 title: __('年检截止日期'),
                                 operate: 'RANGE',
                                 addclass: 'datetimerange',
@@ -488,8 +488,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * @returns {*}
                  */
                 inspection: function (value, row, index) {
-
-                    console.log(row);
 
                     var license_status = -1;
                     var status = -1;

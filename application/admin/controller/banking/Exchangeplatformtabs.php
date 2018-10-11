@@ -36,20 +36,20 @@ class Exchangeplatformtabs extends Backend
     {
 
         $mid = Db::name('sales_order')
-        ->where('review_the_data','the_car')
-        ->field('id,mortgage_id')
-        ->select();
+            ->where('review_the_data', 'the_car')
+            ->field('id,mortgage_id')
+            ->select();
 
 
-        foreach ($mid as $k=>$v){
-            if(!$v['mortgage_id']){
-                Db::name('mortgage')->insert(['mortgage_type'=>'new_car']);
+        foreach ($mid as $k => $v) {
+            if (!$v['mortgage_id']) {
+                Db::name('mortgage')->insert(['mortgage_type' => 'new_car']);
 
                 $last_id = Db::name('mortgage')->getLastInsID();
 
                 Db::name('sales_order')
-                ->where('id',$v['id'])
-                ->setField('mortgage_id',$last_id);
+                    ->where('id', $v['id'])
+                    ->setField('mortgage_id', $last_id);
             }
         }
 
@@ -78,10 +78,10 @@ class Exchangeplatformtabs extends Backend
                 }, 'planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist');
                 }])
-                ->where(function ($query){
+                ->where(function ($query) {
                     $query->where([
-                        'review_the_data'=>'the_car',
-                        'mortgage.mortgage_type'=> 'new_car'
+                        'review_the_data' => 'the_car',
+                        'mortgage.mortgage_type' => 'new_car'
                     ]);
                 })
                 ->where($where)
@@ -99,10 +99,10 @@ class Exchangeplatformtabs extends Backend
                 }, 'planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist');
                 }])
-                ->where(function ($query){
+                ->where(function ($query) {
                     $query->where([
-                        'review_the_data'=>'the_car',
-                        'mortgage.mortgage_type'=>'new_car'
+                        'review_the_data' => 'the_car',
+                        'mortgage.mortgage_type' => 'new_car'
                     ]);
                 })
                 ->where($where)
@@ -189,7 +189,7 @@ class Exchangeplatformtabs extends Backend
             }, 'planacar' => function ($query) {
                 $query->withField('payment,monthly,nperlist');
             }])
-            ->where('review_the_data','the_car')
+            ->where('review_the_data', 'the_car')
             ->where('mortgage_type', $condition)
             ->where($where)
             ->order("mortgage.lending_date desc")
@@ -206,7 +206,7 @@ class Exchangeplatformtabs extends Backend
             }, 'planacar' => function ($query) {
                 $query->withField('payment,monthly,nperlist');
             }])
-            ->where('review_the_data','the_car')
+            ->where('review_the_data', 'the_car')
             ->where('mortgage_type', $condition)
             ->where($where)
             ->order("mortgage.lending_date desc")
@@ -230,13 +230,13 @@ class Exchangeplatformtabs extends Backend
             ->where("id", $ids)
             ->field("mortgage_id,car_new_inventory_id")
             ->find();
-    
+
         $row = $this->model
-                ->where('id', $data['mortgage_id'])
-                ->find();
-        
+            ->where('id', $data['mortgage_id'])
+            ->find();
+
         if ($row) {
-            $row['licensenumber'] = Db::name('car_new_inventory')->where('id',$data['car_new_inventory_id'])->value('licensenumber');
+            $row['licensenumber'] = Db::name('car_new_inventory')->where('id', $data['car_new_inventory_id'])->value('licensenumber');
 
             $this->view->assign("row", $row);
         }
@@ -245,12 +245,17 @@ class Exchangeplatformtabs extends Backend
             $params = $this->request->post("row/a");
             $check_licensenumber = null;
 
-           if($data['car_new_inventory_id']){
-              $check_licensenumber = Db::name('car_new_inventory')->where('id',$data['car_new_inventory_id'])->value('licensenumber');
-           }
+            if ($data['car_new_inventory_id']) {
+                $check_licensenumber = Db::name('car_new_inventory')->where('id', $data['car_new_inventory_id'])->value('licensenumber');
+            }
+
+            foreach ($params as $k=>$v){
+                if(!$params[$k]){
+                    $params[$k] = null;
+                }
+            }
 
 
-            
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -277,7 +282,7 @@ class Exchangeplatformtabs extends Backend
                         ->where("id", $data['car_new_inventory_id'])
                         ->setField("licensenumber", $params['licensenumber']);
 
-                    if($data['car_new_inventory_id'] && !$check_licensenumber){
+                    if ($data['car_new_inventory_id'] && !$check_licensenumber) {
 
                         $peccancy = Db::name('sales_order')
                             ->alias('so')
@@ -286,13 +291,25 @@ class Exchangeplatformtabs extends Backend
                             ->where('so.id', $ids)
                             ->field('so.username,so.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
                             ->find();
-
                         $peccancy['car_type'] = 1;
 
-                        Db::name('violation_inquiry')->insert($peccancy);
+                        //检查是否存在
+                        $check_real = Db::name('violation_inquiry')
+                            ->where('license_plate_number', $peccancy['license_plate_number'])
+                            ->where('username', $peccancy['username'])
+                        ->find();
+
+                        if(!$check_real && $peccancy['license_plate_number'] != null){
+                            $last_id = Db::name('violation_inquiry')->insertGetId($peccancy);
+
+                            Db::name("sales_order")
+                                ->where('id', $ids)
+                                ->setField('violation_inquiry_id', $last_id);
+                        }
+
 
                     }
-                    
+
                     if ($result !== false) {
                         $this->success();
                     } else {
@@ -446,8 +463,8 @@ class Exchangeplatformtabs extends Backend
                             $last_id = Db::name("mortgage")->getLastInsID();
 
                             Db::name("sales_order")
-                            ->where("id",$v['id'])
-                            ->setField("mortgage_id",$last_id);
+                                ->where("id", $v['id'])
+                                ->setField("mortgage_id", $last_id);
                         }
 
                     }

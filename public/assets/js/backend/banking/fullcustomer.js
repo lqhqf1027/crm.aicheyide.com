@@ -60,11 +60,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var newCar = $("#newCar");
                 newCar.on('load-success.bs.table', function (e, data) {
-                    var arr = data.rows;
-
-                    Controller.merge(arr, $("#newCar"), $('#new_car'));
-
-
+                    // var arr = data.rows;
+                    //
+                    // Controller.merge(arr, $("#newCar"), $('#new_car'));
+                    //
+                    //
                     $('#total-new').text(data.total);
                 });
 
@@ -80,13 +80,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 // 初始化表格
                 newCar.bootstrapTable({
-                    url: "banking/Exchangeplatformtabs/new_car",
+                    url: "banking/Fullcustomer/new_car",
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
-                        edit_url: 'banking/exchangeplatformtabs/edit',
+                        edit_url: 'banking/Fullcustomer/edit',
                         multi_url: 'order/salesorder/multi',
-                        table: 'sales_order',
+                        table: 'full_parment_order',
                     },
                     toolbar: '#toolbar1',
                     pk: 'id',
@@ -103,12 +103,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false
                             },
                             {field: 'newinventory.household', title: __('开户公司名'),operate: false},
-                            {
-                                field: 'createtime',
-                                title: __('订车时间'),
-                                formatter: Controller.api.formatter.datetime,
-                                operate: false
-                            },
                             {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号'),operate: false},
@@ -123,14 +117,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
                             {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                formatter: Controller.api.formatter.datetime,
+                                operate: false
+                            },
+                            {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'planacar.payment', title: __('首付'),operate: false},
-                            {field: 'planacar.monthly', title: __('月供'),operate: false},
-                            {field: 'planacar.nperlist', title: __('期数'),operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -175,13 +172,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 $(document).on('click', '.btn-loan', function () {
 
-                    var url = "banking/exchangeplatformtabs/loan";
+                    var url = "banking/Fullcustomer/loan";
                     platform(newCar, url, '放款日期')
 
                 });
 
                 $(document).on('click', '.btn-platform', function () {
-                    var url = "banking/exchangeplatformtabs/batch_change_platform";
+                    var url = "banking/Fullcustomer/batch_change_platform";
+
+
 
                     platform(newCar, url, '更换平台')
 
@@ -196,10 +195,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var yueDaCar = $("#yueDaCar");
                 yueDaCar.on('load-success.bs.table', function (e, data) {
 
-                    var arr = data.rows;
-
-
-                    Controller.merge(arr, $("#yueDaCar"), $('#yue_da_car'))
+                    // var arr = data.rows;
+                    //
+                    //
+                    // Controller.merge(arr, $("#yueDaCar"), $('#yue_da_car'))
 
                     $('#total-yueda').text(data.total);
 
@@ -209,10 +208,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $(".btn-changePlatform").data("area", ["30%", "30%"]);
                     $(".btn-editone").data("area", ["80%", "80%"]);
                     $(".btn-edit").data("area", ["80%", "80%"]);
+                    $(".btn-showOrderAndStock").data("area", ["90%", "90%"]);
                 });
                 // 初始化表格
                 yueDaCar.bootstrapTable({
-                    url: "banking/Exchangeplatformtabs/yue_da_car",
+                    url: "banking/Fullcustomer/south_firm",
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
@@ -236,12 +236,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false
                             },
                             {field: 'newinventory.household', title: __('开户公司名'),operate: false},
-                            {
-                                field: 'createtime',
-                                title: __('订车时间'),
-                                formatter: Controller.api.formatter.datetime,
-                                operate: false
-                            },
                             {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号'),operate: false},
@@ -256,14 +250,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
                             {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                formatter: Controller.api.formatter.datetime,
+                                operate: false
+                            },
+                            {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'planacar.payment', title: __('首付'),operate: false},
-                            {field: 'planacar.monthly', title: __('月供'),operate: false},
-                            {field: 'planacar.nperlist', title: __('期数'),operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -287,6 +284,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
+                                    {
+
+                                        name: 'details',
+                                        text: '查看详细资料',
+                                        title: '查看订单详细资料',
+                                        icon: 'fa fa-eye',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-primary btn-dialog btn-showOrderAndStock',
+                                        url: 'fullcar/vehicleinformation/show_order_and_stock',
+                                    },
 
                                 ]
                             }
@@ -298,13 +305,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 $(document).on('click', '.btn-loan2', function () {
 
-                    var url = "banking/exchangeplatformtabs/loan";
+                    var url = "banking/Fullcustomer/loan";
                     platform(yueDaCar, url, '放款日期')
 
                 });
 
                 $(document).on('click', '.btn-platform2', function () {
-                    var url = "banking/exchangeplatformtabs/batch_change_platform";
+                    var url = "banking/Fullcustomer/batch_change_platform";
 
                     platform(yueDaCar, url, '更换平台')
 
@@ -318,11 +325,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格3
                 var otherCar = $("#otherCar");
                 otherCar.on('load-success.bs.table', function (e, data) {
-                    var arr = data.rows;
+                    // var arr = data.rows;
                     // merge(arr, $("#otherCar"));
                     $('#total-other').text(data.total);
 
-                    Controller.merge(arr, $("#otherCar"), $('#other_car'))
+                    // Controller.merge(arr, $("#otherCar"), $('#other_car'))
 
 
                 });
@@ -334,7 +341,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 // 初始化表格
                 otherCar.bootstrapTable({
-                    url: "banking/Exchangeplatformtabs/other_car",
+                    url: "banking/Fullcustomer/other_car",
                     extend: {
                         index_url: 'order/salesorder/index',
                         add_url: 'order/salesorder/add',
@@ -358,12 +365,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false
                             },
                             {field: 'newinventory.household', title: __('开户公司名'),operate: false},
-                            {
-                                field: 'createtime',
-                                title: __('订车时间'),
-                                formatter: Controller.api.formatter.datetime,
-                                operate: false
-                            },
                             {field: 'mortgage.bank_card', title: __('扣款卡号'),operate: false},
                             {field: 'username', title: __('Username')},
                             {field: 'id_card', title: __('身份证号'),operate: false},
@@ -378,14 +379,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'newinventory.licensenumber', title: __('车牌号')},
                             {field: 'newinventory.frame_number', title: __('车架号')},
                             {
+                                field: 'createtime',
+                                title: __('订车时间'),
+                                formatter: Controller.api.formatter.datetime,
+                                operate: false
+                            },
+                            {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
                                 formatter: Controller.api.formatter.datetime,
                                 operate: false
                             },
-                            {field: 'planacar.payment', title: __('首付'),operate: false},
-                            {field: 'planacar.monthly', title: __('月供'),operate: false},
-                            {field: 'planacar.nperlist', title: __('期数'),operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -409,6 +413,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-changePlatform',
                                     },
+                                    {
+
+                                        name: 'details',
+                                        text: '查看详细资料',
+                                        title: '查看订单详细资料',
+                                        icon: 'fa fa-eye',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-primary btn-dialog btn-showOrderAndStock',
+                                        url: 'fullcar/vehicleinformation/show_order_and_stock',
+                                    },
 
                                 ]
                             }
@@ -420,13 +434,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 $(document).on('click', '.btn-loan3', function () {
 
-                    var url = "banking/exchangeplatformtabs/loan";
+                    var url = "banking/Fullcustomer/loan";
                     platform(otherCar, url, '放款日期')
 
                 });
 
                 $(document).on('click', '.btn-platform3', function () {
-                    var url = "banking/exchangeplatformtabs/batch_change_platform";
+                    var url = "banking/Fullcustomer/batch_change_platform";
 
                     platform(otherCar, url, '更换平台')
 
@@ -554,7 +568,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'banking/exchangeplatformtabs/edit';
+                        var url = 'banking/Fullcustomer/edit';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('编辑'), $(this).data() || {});
 
                     },
@@ -572,7 +586,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'banking/exchangeplatformtabs/change_platform';
+                        var url = 'banking/Fullcustomer/change_platform';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('更改平台'), $(this).data() || {});
                     },
 
@@ -597,8 +611,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         row = {ids: ids};
 
+        var options = {
+            shadeClose: false,
+            shade: [0.3, '#393D49'],
+            area: ['40%', '40%'],
+            callback: function (value) {
 
-        Fast.api.open(Table.api.replaceurl(url, row, table), __(title));
+            }
+        };
+
+        Fast.api.open(Table.api.replaceurl(url, row, table), __(title),options);
     }
 
     return Controller;

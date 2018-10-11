@@ -2678,59 +2678,198 @@ class Orderlisttabs extends Backend
         if ($this->request->isAjax()) {
             $flag = input('flag');
             $id = input('id');
-            
+
             switch ($flag) {
+                //删除以租代购新车
                 case -1:
                     $del_table = Db::name('sales_order')
                         ->where('id', $id)
-                        ->field('mortgage_registration_id,registry_registration_id,mortgage_id,referee_id,customer_downpayment_id')
+                        ->field('mortgage_registration_id,registry_registration_id,mortgage_id,referee_id,customer_downpayment_id,violation_inquiry_id')
                         ->find();
 
 
-
-                    if($del_table['mortgage_registration_id']){
+                    if ($del_table['mortgage_registration_id']) {
                         Db::name('mortgage_registration')
-                        ->where('id',$del_table['mortgage_registration_id'])
-                        ->delete();
+                            ->where('id', $del_table['mortgage_registration_id'])
+                            ->delete();
                     }
 
-                    if($del_table['registry_registration_id']){
+                    if ($del_table['registry_registration_id']) {
                         Db::name('registry_registration')
-                        ->where('id',$del_table['registry_registration_id'])
-                        ->delete();
+                            ->where('id', $del_table['registry_registration_id'])
+                            ->delete();
                     }
 
-                    if($del_table['mortgage_id']){
+                    if ($del_table['mortgage_id']) {
                         Db::name('mortgage')
-                        ->where('id',$del_table['mortgage_id'])
-                        ->delete();
+                            ->where('id', $del_table['mortgage_id'])
+                            ->delete();
                     }
 
-                    if($del_table['referee_id']){
+                    if ($del_table['referee_id']) {
                         Db::name('referee')
-                        ->where('id',$del_table['referee_id'])
-                        ->delete();
+                            ->where('id', $del_table['referee_id'])
+                            ->delete();
                     }
 
-                    if($del_table['customer_downpayment_id']){
+                    if ($del_table['customer_downpayment_id']) {
                         Db::name('customer_downpayment')
-                        ->where('id',$del_table['customer_downpayment_id'])
-                        ->delete();
+                            ->where('id', $del_table['customer_downpayment_id'])
+                            ->delete();
                     }
+
+                    if ($del_table['violation_inquiry_id']) {
+                        Db::name('violation_inquiry')
+                            ->where('id', $del_table['violation_inquiry_id'])
+                            ->delete();
+                    }
+
 
                     $res = Db::name('sales_order')
-                    ->where('id',$id)
-                    ->delete();
+                        ->where('id', $id)
+                        ->delete();
+
+                    break;
+                //删除租车
                 case -2:
+                    $del_table = Db::name('rental_order')
+                        ->where('id', $id)
+                        ->field('referee_id,customer_downpayment_id,car_rental_models_info_id,violation_inquiry_id')
+                        ->find();
+
+                    if ($del_table['referee_id']) {
+                        Db::name('referee_id')
+                            ->where('id', $del_table['referee_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['customer_downpayment_id']) {
+                        Db::name('customer_downpayment')
+                            ->where('id', $del_table['customer_downpayment_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['car_rental_models_info_id']) {
+                        Db::name('car_rental_models_info')
+                            ->where('id', $del_table['car_rental_models_info_id'])
+                            ->setField('status_data', null);
+                    }
+
+                    if ($del_table['violation_inquiry_id']) {
+                        Db::name('violation_inquiry')
+                            ->where('id', $del_table['violation_inquiry_id'])
+                            ->delete();
+                    }
+
+                    $res = Db::name('rental_order')
+                        ->where('id', $id)
+                        ->delete();
+
+                    break;
+                //删除二手车
                 case -3:
+                    $del_table = Db::name('second_sales_order')
+                        ->where('id', $id)
+                        ->field('mortgage_registration_id,registry_registration_id,referee_id,customer_downpayment_id,plan_car_second_name,violation_inquiry_id')
+                        ->find();
+
+                    if ($del_table['plan_car_second_name']) {
+                        Db::name('secondcar_rental_models_info')
+                            ->where('id', $del_table['plan_car_second_name'])
+                            ->setField('status_data', null);
+                    }
+
+                    if ($del_table['mortgage_registration_id']) {
+                        Db::name('mortgage_registration')
+                            ->where('id', $del_table['mortgage_registration_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['registry_registration_id']) {
+                        Db::name('registry_registration')
+                            ->where('id', $del_table['registry_registration_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['referee_id']) {
+                        Db::name('referee')
+                            ->where('id', $del_table['referee_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['customer_downpayment_id']) {
+                        Db::name('customer_downpayment')
+                            ->where('id', $del_table['customer_downpayment_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['violation_inquiry_id']) {
+                        Db::name('violation_inquiry')
+                            ->where('id', $del_table['violation_inquiry_id'])
+                            ->delete();
+                    }
+
+                    $res = Db::name('second_sales_order')
+                        ->where('id', $id)
+                        ->delete();
+
+                    break;
+                //删除全款车
                 case -4:
 
+                    $del_table = Db::name('full_parment_order')
+                        ->where('id', $id)
+                        ->field('registry_registration_id,mortgage_registration_id,customer_downpayment_id,referee_id,violation_inquiry_id')
+                        ->find();
 
-                    if($res){
-                        $this->success('','','success');
-                    }else{
-                        $this->error('','','error');
+                    if ($del_table['registry_registration_id']) {
+                        Db::name('registry_registration')
+                            ->where('id', $del_table['registry_registration_id'])
+                            ->delete();
                     }
+
+                    if ($del_table['mortgage_registration_id']) {
+                        Db::name('mortgage_registration')
+                            ->where('id', $del_table['mortgage_registration_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['customer_downpayment_id']) {
+                        Db::name('customer_downpayment')
+                            ->where('id', $del_table['customer_downpayment_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['referee_id']) {
+                        Db::name('referee')
+                            ->where('id', $del_table['referee_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['violation_inquiry_id']) {
+                        Db::name('violation_inquiry')
+                            ->where('id', $del_table['violation_inquiry_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['mortgage_id']) {
+                        Db::name('mortgage')
+                            ->where('id', $del_table['mortgage_id'])
+                            ->delete();
+                    }
+
+                    $res = Db::name('full_parment_order')
+                        ->where('id', $id)
+                        ->delete();
+
+                    break;
+
+            }
+
+            if ($res) {
+                $this->success('', '', 'success');
+            } else {
+                $this->error('', '', 'error');
             }
         }
     }

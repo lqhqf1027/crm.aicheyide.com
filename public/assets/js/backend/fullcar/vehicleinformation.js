@@ -96,7 +96,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'createtime',
                                 title: __('订车时间'),
                                 formatter: Table.api.formatter.datetime,
-                                operate: false
+                                operate: false,
+                                datetimeFormat:'YYYY-MM-DD'
                             },
                             {
                                 field: 'operate',
@@ -200,13 +201,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'createtime',
                                 title: __('订车时间'),
                                 formatter: Table.api.formatter.datetime,
-                                operate: false
+                                operate: false,
+                                datetimeFormat:'YYYY-MM-DD'
                             },
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
                                 formatter: Table.api.formatter.datetime,
-                                operate: false
+                                operate: false,
+                                datetimeFormat:'YYYY-MM-DD'
                             },
                             {
                                 field: 'operate',

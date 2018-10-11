@@ -4419,7 +4419,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             top = left = undefined;
                         }
                         Layer.confirm(
-                            __('是否真的要删除该条订单?'),
+                            __('是否真的要删除该条订单(包括该条订单所有相关信息)?'),
                             {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
                             function (index) {
                                 var table = $(that).closest('table');
@@ -4441,15 +4441,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     if(value == 'aicheyide'){
 
                                         var flag = 1;
-                                        if(text.indexOf('新车')>-1){
+                                        if(text.indexOf('以租代购（新车）')>-1){
                                             flag = -1;
                                         }else if(text.indexOf('纯租')>-1){
                                             flag = -2;
-                                        }else if(text.indexOf('二手车')>-1){
+                                        }else if(text.indexOf('以租代购（二手车）')>-1){
                                             flag = -3;
-                                        }else if(text.indexOf('全款')>-1){
+                                        }else if(text.indexOf('全款（新车）')>-1){
+
                                             flag = -4;
                                         }
+
 
                                         Fast.api.ajax({
                                             url:'salesmanagement/Orderlisttabs/del_order',
@@ -4459,11 +4461,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         },function (data,ret) {
 
-                                            alert(data);
+                                            layer.msg('删除成功！');
 
-
-                                            // Layer.close(index);
-                                            // table.bootstrapTable('refresh');
+                                            Layer.close(indexs);
+                                            table.bootstrapTable('refresh');
                                         },function (data,ret) {
 
 
@@ -4472,7 +4473,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     }else{
                                         layer.msg('密码输入错误');
                                     }
-                                    // layer.close(index);
                                 });
 
 

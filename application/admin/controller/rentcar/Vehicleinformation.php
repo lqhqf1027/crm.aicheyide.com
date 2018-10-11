@@ -510,10 +510,22 @@ class Vehicleinformation extends Backend
 
                 $peccancy['car_type'] = 4;
 
-                $result_peccancy = Db::name('violation_inquiry')->insert($peccancy);
+                //检查是否存在
+                $check_real = Db::name('violation_inquiry')
+                    ->where('license_plate_number', $peccancy['license_plate_number'])
+                    ->where('username', $peccancy['username'])
+                    ->find();
+
+                if(!$check_real){
+                    $last_id = Db::name('violation_inquiry')->insertGetId($peccancy);
+
+                    Db::name("rental_order")
+                        ->where('id', $all_info['id'])
+                        ->setField('violation_inquiry_id', $last_id);
+                }
 
 
-                if ($result_peccancy) {
+                if ($last_id) {
                     $this->success();
                 } else {
                     $this->error('违章信息表添加失败');
