@@ -1,12 +1,11 @@
-<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
-    <!--<a href="javascript:;" class="btn btn-danger " title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入EXCEL</a>-->
+<form id="import_first_plan-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择销售方案类型')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]"
-            >
+            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]">
+
                 <option value="" style="display: none">未选择任何项</option>
                 {foreach name="$category" item="vo"}
                 <option value="{$vo.id}">{$vo.name}</option>
@@ -16,6 +15,8 @@
 
         </div>
     </div>
+    <a href="javascript:;" class="btn btn-danger btn-import-dialog" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入EXCEL</a>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择金融平台')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -179,6 +180,3 @@
         </div>
     </div>
 </form>
-{php}
-//dump($nperlistList);
-{/php}

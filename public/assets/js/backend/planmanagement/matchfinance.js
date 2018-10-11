@@ -122,6 +122,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'planacar.gps', title: __('GPS(服务费)'), operate: false},
                             {field: 'car_total_price', title: __('车款总价(元)'), operate: false},
                             {field: 'downpayment', title: __('首期款(元)'), operate: false},
+                            {
+                                field: '', title: __('原始方案'), table: newprepareMatch, buttons: [
+                                    {
+                                        name: 'details',
+                                        text: '查看/对比原始方案',
+                                        title: '查看/对比原始方案',
+                                        icon: 'fa fa-eye',
+                                        classname: 'btn btn-xs btn-info  btn-view-plan',
+                                        url: 'planmanagement/matchfinance/view_plan?pid=',
+                                        callback: function (data) {
+
+                                        }
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
                             {field: 'difference', title: __('差额(元)'), operate: false},
                             {
                                 field: 'id', title: __('查看详细资料'), table: newprepareMatch, buttons: [
@@ -141,13 +158,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
                             {field:'deposit_contractimages',title:'定金合同',operate:false,formatter:Table.api.formatter.image},
-
-                            // {field: 'engine_number', title: __('发动机号')},
-                            // {field: 'household', title: __('行驶证所有户')},
                             {field: 'newinventory.4s_shop', title: __('4S店')},
                             {field: 'amount_collected', title: __('实收定金金额'), operate: false},
                             {field: 'decorate', title: __('装饰'), operate: false},
-
                             {
                                 field: 'operate', title: __('Operate'), table: newprepareMatch,
                                 buttons: [
@@ -1523,8 +1536,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'planmanagement/Matchfinance/used_details';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('二手车匹配金融'), $(this).data() || {});
+                    },
+                    /**
+                     * 对比方案
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-view-plan': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'planmanagement/matchfinance/view_plan';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('对比方案'), $(this).data() || {});
                     }
-
                 }
             }
         }

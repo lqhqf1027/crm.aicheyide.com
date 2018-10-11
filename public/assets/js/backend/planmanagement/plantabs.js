@@ -51,6 +51,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     edit_url: 'planmanagement/plantabs/firstedit',
                     del_url: 'planmanagement/plantabs/firstdel',
                     multi_url: 'planmanagement/plantabs/firstmulti',
+
                     table: 'plan_acar',
                 },
                 toolbar: '#toolbar1',
@@ -59,7 +60,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 searchFormVisible: true,
                 columns: [
                     [
-                        {checkbox: true},
+                        {checkbox: true,formatter:function (v,r,i) {
+                                return r.match_plan==='match_success'?{disabled : true}:{disabled : false};
+                            }},
                         {field: 'id', title: __('Id'),operate:false},
                         {field: 'schemecategory.name', title: __('方案类型'),formatter:function (v,r,i) {
 
@@ -81,14 +84,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'gps', title: __('Gps'), operate:false},
                         {field: 'admin.nickname', title: __('销售定制方案')},
                         {field: 'working_insurance', title: __('是否营运险'), searchList:{"yes":'是',"no":"否"},formatter:function (v,r,i) {
-                            if(r.working_insurance=='yes'){
-                                  return '是'  ;
-                            }
-                            else{
-                                return '否';
-                            }
-
-
+                            return r.working_insurance=='yes'?'是':'否'
                             }},
 
                         {field: 'note', title: __('销售方案备注'),operate:false},
@@ -97,12 +93,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
                         {field: 'ismenu', title: __('Ismenu'), formatter: Controller.api.formatter.toggle,operate:false},
                       
-                        {field: 'operate', title: __('Operate'), table: table1, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table1,  events: Controller.api.events.operate,
+                            formatter: Controller.api.operate}
                     ]
                 ]
             });
                 // 为表格1绑定事件
                 Table.api.bindevent(table1);
+                $(document).on('click','.btn_import_dialog',function () {
+
+                    var url = 'planmanagement/plantabs/import_first_plan';
+                    var options = {
+                        shadeClose: false,
+                        shade: [0.3, '#393D49'],
+                        area: ['90%', '90%'],
+                        callback: function (value) {
+
+                        }
+                    }
+                    Fast.api.open(url, '批量分配', options)
+
+                })
             },
 
             /**
@@ -237,7 +248,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             
             Controller.api.bindevent();
         },
+        //导入以租代购（新车）方案
+        import_first_plan:function(){
+            require(['upload'], function (Upload) {
+                Upload.api.plupload($('.btn-import-dialog'), function (data, ret) {
+
+                    Fast.api.ajax({
+                        url: 'product/stock_import',
+                        data: {file: data.url},
+                    }, function (data, ret) {
+                        //table.bootstrapTable('refresh');
+                    });
+                });
+            });
+            Controller.api.bindevent(function () {
+                
+            });
+
+        },
         firstadd:function(){
+
+
             Controller.api.bindevent();
         },
         fulladd:function(){
@@ -248,17 +279,47 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 Form.api.bindevent($("form[role=form]"));
             },
+            events:{
+                  operate:{
+                      'click .btn-delone': function (e, value, row, index) {
+                          /**删除按钮 */
+
+                          e.stopPropagation();
+                          e.preventDefault();
+                          var that = this;
+                          var top = $(that).offset().top - $(window).scrollTop();
+                          var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                          if (top + 154 > $(window).height()) {
+                              top = top - 154;
+                          }
+                          if ($(window).width() < 480) {
+                              top = left = undefined;
+                          }
+                          Layer.confirm(
+                              __('Are you sure you want to delete this item?'),
+                              {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                              function (index) {
+                                  var table = $(that).closest('table');
+                                  var options = table.bootstrapTable('getOptions');
+                                  Table.api.multi("del", row[options.pk], table, that);
+                                  Layer.close(index);
+                              }
+                          );
+                      },
+                      'click .btn-editone': function (e, value, row, index) {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          var table = $(this).closest('table');
+                          var options = table.bootstrapTable('getOptions');
+                          var ids = row[options.pk];
+                          row = $.extend({}, row ? row : {}, {ids: ids});
+                          var url = options.extend.edit_url;
+                          Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                      },
+                  }
+            },
             formatter: {
-                operate: function (value, row, index) {
 
-                    var table = this.table;
-                    // 操作配置
-                    var options = table ? table.bootstrapTable('getOptions') : {};
-                    // 默认按钮组
-                    var buttons = $.extend([], this.buttons || []);
-
-                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
-                },
                 /**
                  * 是否销售
                  * @param value
@@ -271,12 +332,54 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var color = typeof this.color !== 'undefined' ? this.color : 'success';
                     var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                     var no = typeof this.no !== 'undefined' ? this.no : 0;
-                    return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                    return row.match_plan=='match_success'?'正在销售或已出售':"<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
                             + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
 
 
+                },
+
+            },
+            operate: function (value, row, index) {
+
+                var table = this.table;
+                // 操作配置
+                var options = table ? table.bootstrapTable('getOptions') : {};
+                // 默认按钮组
+                var buttons = $.extend([], this.buttons || []);
+                if(row.match_plan=='match_success'){
+                   return '<span class="text-danger">禁止编辑或删除</span>'
+                    // buttons.push(
+                    //     {
+                    //         name: 'edit',
+                    //         icon: 'fa fa-pencil',
+                    //         title: __('Edit'),
+                    //         extend: 'data-toggle="tooltip"',
+                    //         classname: 'btn btn-xs btn-success btn-editone',
+                    //         url: options.extend.edit_url
+                    //     }
+                    // )
                 }
-               
+                else{
+                    buttons.push(
+                        {
+                            name: 'del',
+                            icon: 'fa fa-trash',
+                            title: __('Del'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-danger btn-delone',
+                            url: options.extend.del_url
+                        },
+                        {
+                            name: 'edit',
+                            icon: 'fa fa-pencil',
+                            title: __('Edit'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-success btn-editone',
+                            url: options.extend.edit_url
+                        }
+                    )
+                }
+                return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
             }
         }
          
