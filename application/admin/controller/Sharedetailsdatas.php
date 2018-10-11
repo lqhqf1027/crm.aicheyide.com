@@ -51,7 +51,7 @@ class Sharedetailsdatas extends Backend
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.amount_collected,a.residence_bookletimages,a.bank_cardimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
                 a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,a.withholding_service,
-                a.undertakingimages,a.accreditimages,a.faceimages,a.informationimages,a.mate_id_cardimages,a.financial_monthly,a.credit_reviewimages,
+                a.undertakingimages,a.accreditimages,a.faceimages,a.informationimages,a.mate_id_cardimages,a.financial_monthly,a.credit_reportimages,
                 b.nickname as sales_name,
                 c.tail_section,c.note,c.nperlist,c.payment,
                 d.archival_coding,d.contract_total,d.end_money,d.yearly_inspection,d.next_inspection,d.transferdate,d.hostdate,d.ticketdate,d.supplier,d.tax_amount,d.no_tax_amount,d.pay_taxesdate,d.house_fee,
@@ -118,7 +118,7 @@ class Sharedetailsdatas extends Backend
         //面签照
         $faceimages = $row['faceimages'] == '' ? [] : explode(',', $row['faceimages']);
         //征信报告
-        $credit_reviewimages = $row['credit_reviewimages'] == '' ? [] : explode(',', $row['credit_reviewimages']);
+        $credit_reportimages = $row['credit_reportimages'] == '' ? [] : explode(',', $row['credit_reportimages']);
         //信息表
         $informationimages = $row['informationimages'] == '' ? [] : explode(',', $row['informationimages']);
         //配偶的身份证正反面（多图）
@@ -176,7 +176,7 @@ class Sharedetailsdatas extends Backend
             'guarantee_agreementimages' => $guarantee_agreementimages,
             'car_imgeas' => $car_imgeas,
             'car_authorizationimages' => $car_authorizationimages,
-            'credit_reviewimages' => $credit_reviewimages,
+            'credit_reportimages' => $credit_reportimages,
         ]);
         return $this->view->fetch();
     }
@@ -239,7 +239,7 @@ class Sharedetailsdatas extends Backend
         //担保协议（多图）
         $guarantee_agreementimages = $row['guarantee_agreementimages'] == '' ? [] : explode(',', $row['guarantee_agreementimages']);
         //征信审核图片(多图)
-        $credit_reviewimages = $row['credit_reviewimages'] == '' ? [] : explode(',', $row['credit_reviewimages']);
+        $credit_reportimages = $row['credit_reportimages'] == '' ? [] : explode(',', $row['credit_reportimages']);
         //行驶证照(多图)
         $drivinglicenseimages = $row['drivinglicenseimages'] == '' ? [] : explode(',', $row['drivinglicenseimages']);
         //车辆所有的扫描件 (多图)
@@ -265,7 +265,7 @@ class Sharedetailsdatas extends Backend
             'guarantee_id_cardimages' => $guarantee_id_cardimages,
             'crime_undertakingimages' => $crime_undertakingimages,
             'guarantee_agreementimages' => $guarantee_agreementimages,
-            'credit_reviewimages' => $credit_reviewimages,
+            'credit_reportimages' => $credit_reportimages,
             'drivinglicenseimages' => $drivinglicenseimages,
             'car_confirmationimages' => $car_confirmationimages,
             'car_imgeas' => $car_imgeas,

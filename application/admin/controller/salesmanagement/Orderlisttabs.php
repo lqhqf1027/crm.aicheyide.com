@@ -33,7 +33,8 @@ class Orderlisttabs extends Backend
         'add', 'edit', 'planacar', 'planname', 'reserve', 'rentalplanname', 'rentaladd', 'rentaledit', 'rentaldel', 'control', 'setAudit', 'secondadd',
 
         'secondedit', 'fulladd', 'fulledit', 'submitCar', 'del', 'fulldel', 'seconddel', 'newreserve', 'newreserveedit', 'newcontroladd', 'newinformation', 'newinformtube',
-        'secondreserve', 'secondaudit', 'page', 'new_car_share_data', 'secondinformation', 'rentalinformation', 'newinformation'];
+        'secondreserve', 'secondaudit', 'page', 'new_car_share_data', 'secondinformation', 'rentalinformation', 'newinformation', 'secondOrderFull', 'secondfulladd', 
+        'secondfullinternal', 'secondfulldel', 'secondfulledit'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -298,7 +299,14 @@ class Orderlisttabs extends Backend
 
     }
 
-    /**全款 */
+    /** 
+     * 全款(新车)
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function orderFull()
     {
         $this->model = new \app\admin\model\FullParmentOrder;
@@ -364,6 +372,83 @@ class Orderlisttabs extends Backend
         return $this->view->fetch();
 
     }
+
+    /** 
+     * 全款(二手车)
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function secondOrderFull()
+    {
+        $this->model = new \app\admin\model\SecondFullOrder;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
+        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+            $total = $this->model
+                ->with(['plansecondfull' => function ($query) {
+                    $query->withField('totalprices');
+                }, 'admin' => function ($query) {
+                    $query->withField(['id', 'nickname', 'avatar']);
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
+
+
+            $list = $this->model
+                ->with(['plansecondfull' => function ($query) {
+                    $query->withField('totalprices');
+                }, 'admin' => function ($query) {
+                    $query->withField(['id', 'nickname', 'avatar']);
+                }, 'models' => function ($query) {
+                    $query->withField('name');
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['plansecondfull']);
+                $row->getRelation('plansecondfull')->visible(['totalprices']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
+
+
+            $list = collection($list)->toArray();
+            foreach ($list as $k => $v) {
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+            }
+            $result = array('total' => $total, "rows" => $list);
+            return json($result);
+        }
+
+        return $this->view->fetch();
+
+    }
+
 
     /**
      * 根据方案id查询 车型名称，首付、月供等
@@ -2389,7 +2474,7 @@ class Orderlisttabs extends Backend
     }
 
     /**
-     *  全款车.
+     *  全款新车.
      */
     /**
      * 添加.
@@ -2494,7 +2579,7 @@ class Orderlisttabs extends Backend
     }
 
     /**
-     * 编辑.
+     * 全款新车编辑.
      */
     public function fulledit($ids = NULL)
     {
@@ -2590,7 +2675,7 @@ class Orderlisttabs extends Backend
 
 
     /**
-     * 提交内勤
+     * 全款新车提交内勤
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -2645,7 +2730,7 @@ class Orderlisttabs extends Backend
     }
 
     /**
-     * 全款删除
+     * 全款新车删除
      */
     public function fulldel($ids = "")
     {
@@ -2668,6 +2753,295 @@ class Orderlisttabs extends Backend
             }
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+
+    /**
+     *  全款二手车.
+     */
+    /**
+     * 全款二手车预定.
+     */
+    public function secondfulladd()
+    {
+        $this->model = new \app\admin\model\SecondFullOrder;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
+        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+        $newRes = array();
+        //品牌
+        $res = DB::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
+        // pr(Session::get('admin'));die;
+        foreach ((array)$res as $key => $value) {
+            $sql = Db::name('models')->alias('a')
+                ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
+                ->field('a.name as models_name,b.id,b.totalprices')
+                ->where(['a.brand_id' => $value['brandid'], 'b.status_data' => '', 'b.shelfismenu' => 1])
+                ->select();
+            $newB = [];
+            foreach ((array)$sql as $bValue) {
+                $bValue['models_name'] = $bValue['models_name'] . '【全款总价' . $bValue['totalprices'] . '】';
+                $newB[] = $bValue;
+            }
+
+            $newRes[] = array(
+                'brand_name' => $value['brand_name'],
+                // 'brand_logoimage'=>$value['brand_logoimage'],
+                'data' => $newB,
+            );
+        }
+        $this->view->assign('newRes', $newRes);
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post('row/a');
+
+            if ($params['customer_source'] == "straight") {
+                $params['introduce_name'] = null;
+                $params['introduce_phone'] = null;
+                $params['introduce_card'] = null;
+            }
+
+            $ex = explode(',', $params['plan_second_full_name']);
+
+            $result = Db::name('secondcar_rental_models_info')->where('id', $params['plan_second_full_name'])->field('models_id')->find();
+
+            $params['plan_second_full_name'] = reset($ex); //截取id
+            $params['plan_name'] = addslashes(end($ex)); //
+            //生成订单编号
+            $params['order_no'] = date('Ymdhis');
+
+            $params['models_id'] = $result['models_id'];
+            //把当前销售员所在的部门的内勤id 入库
+
+            //message8=>销售一部顾问，message13=>内勤一部
+            //message9=>销售二部顾问，message20=>内勤二部
+            $adminRule = Session::get('admin')['rule_message'];  //测试完后需要把注释放开
+            // $adminRule = 'message8'; //测试数据
+            if ($adminRule == 'message8') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message13'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message9') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message23') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
+                // return true;
+            }
+            if ($params) {
+                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
+                    $params[$this->dataLimitField] = $this->auth->id;
+                }
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
+                        $this->model->validate($validate);
+                    }
+                    $result = $this->model->allowField(true)->save($params);
+                    if ($result !== false) {
+                        //如果添加成功,将状态改为提交审核
+                        $result_s = $this->model->isUpdate(true)->save(['id' => $this->model->id, 'review_the_data' => 'send_to_internal']);
+                        if ($result_s) {
+                            $this->success();
+                        } else {
+                            $this->error('更新状态失败');
+                        }
+                    } else {
+                        $this->error($this->model->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+        return $this->view->fetch();
+    }
+
+    /**
+     * 全款二手车提交内勤
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function secondfullinternal()
+    {
+        $this->model = new \app\admin\model\SecondFullOrder;
+        if ($this->request->isAjax()) {
+            $id = $this->request->post('id');
+
+            $admin_nickname = Db::name('admin')->alias('a')->join('second_full_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
+
+            $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'inhouse_handling']);
+
+            if ($result !== false) {
+
+                $this->model = model('secondcar_rental_models_info');
+
+                $plan_second_full_name = Db::name('second_full_order')->where('id', $id)->value('plan_second_full_name');
+
+                $this->model->isUpdate(true)->save(['id' => $plan_second_full_name, 'status_data' => 'send_the_car']);
+
+                $channel = "demo-second_full_backoffice";
+                $content = "销售员" . $admin_nickname . "提交的全款二手车单，请尽快进行金额录入";
+                goeary_push($channel, $content);
+
+                $data = Db::name("second_full_order")->where('id', $id)->find();
+                //车型
+                $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $backoffice_id = $data['backoffice_id'];
+                $admin_name = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username = $data['username'];
+
+                $data = second_full_backoffice($models_name, $admin_name, $username);
+                
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('id', $backoffice_id)->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+            } else {
+                $this->error('提交失败', null, $result);
+
+            }
+        }
+    }
+
+    /**
+     * 全款二手车删除
+     */
+    public function secondfulldel($ids = "")
+    {
+        $this->model = new \app\admin\model\SecondFullOrder;
+
+        if ($ids) {
+            $pk = $this->model->getPk();
+            $adminIds = $this->getDataLimitAdminIds();
+            if (is_array($adminIds)) {
+                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
+            }
+            $list = $this->model->where($pk, 'in', $ids)->select();
+            $count = 0;
+            foreach ($list as $k => $v) {
+                $count += $v->delete();
+            }
+            if ($count) {
+                $this->success();
+            } else {
+                $this->error(__('No rows were deleted'));
+            }
+        }
+        $this->error(__('Parameter %s can not be empty', 'ids'));
+    }
+
+    /**
+     * 全款二手车编辑.
+     */
+    public function secondfulledit($ids = NULL)
+    {
+        $this->model = new \app\admin\model\SecondFullOrder;
+        $this->view->assign("genderdataList", $this->model->getGenderdataList());
+        $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
+        $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
+
+        $row = $this->model->get($ids);
+
+        //关联订单于方案
+        $result = Db::name('second_full_order')->alias('a')
+            ->join('secondcar_rental_models_info b', 'a.plan_second_full_name = b.id')
+            ->field('b.id as plan_id')
+            ->where(['a.id' => $row['id']])
+            ->find();
+
+        $newRes = array();
+        //品牌
+        $res = DB::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
+        // pr(Session::get('admin'));die;
+        foreach ((array)$res as $key => $value) {
+            $sql = Db::name('models')->alias('a')
+                ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
+                ->field('a.name as models_name,b.id,b.totalprices')
+                ->where(['a.brand_id' => $value['brandid'], 'b.status_data' => '', 'b.shelfismenu' => 1])
+                ->select();
+            $newB = [];
+            foreach ((array)$sql as $bValue) {
+                $bValue['models_name'] = $bValue['models_name'] . '【全款总价' . $bValue['totalprices'] . '】';
+                $newB[] = $bValue;
+            }
+
+            $newRes[] = array(
+                'brand_name' => $value['brand_name'],
+                // 'brand_logoimage'=>$value['brand_logoimage'],
+                'data' => $newB,
+            );
+        }
+
+        $this->view->assign(
+            [
+                "newRes" => $newRes,
+                "result" => $result
+            ]
+        );
+
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            $ex = explode(',', $params['plan_second_full_name']);
+
+            if ($params['customer_source'] == "straight") {
+                $params['introduce_name'] = null;
+                $params['introduce_phone'] = null;
+                $params['introduce_card'] = null;
+            }
+            $result = Db::name('secondcar_rental_models_info')->where('id', $params['plan_second_full_name'])->field('models_id')->find();
+
+            $params['plan_second_full_name'] = reset($ex); //截取id
+            $params['plan_name'] = addslashes(end($ex));
+            $params['models_id'] = $result['models_id'];
+
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
     }
 
     /**
@@ -2734,6 +3108,8 @@ class Orderlisttabs extends Backend
             }
         }
     }
+
+    
 
 
 }

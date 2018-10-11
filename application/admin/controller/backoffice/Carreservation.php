@@ -22,7 +22,8 @@ class Carreservation extends Backend
     protected $dataLimitField = "backoffice_id"; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
 
-    protected $noNeedRight = ['index', 'newcarEntry', 'secondcarEntry', 'fullcarEntry', 'newactual_amount', 'secondactual_amount', 'fullactual_amount', 'rentalcarEntry'];
+    protected $noNeedRight = ['index', 'newcarEntry', 'secondcarEntry', 'fullcarEntry', 'newactual_amount', 'secondactual_amount', 'fullactual_amount', 'rentalcarEntry',
+            'secondfullcarEntry', 'secondfullactual_amount'];
 
 
     public function _initialize()
@@ -519,6 +520,123 @@ class Carreservation extends Backend
     }
 
     /**
+     * 全款车录入实际订车金额
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function secondfullcarEntry()
+    {
+        $this->model = new \app\admin\model\SecondFullOrder;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+
+            $can_use_id = $this->getUserId();
+
+            if (in_array($this->auth->id, $can_use_id['admin'])) {
+                $total = $this->model
+                    ->with(['plansecondfull' => function ($query) {
+                        $query->withField('totalprices');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("backoffice_id", "not null")
+                    ->where("review_the_data", "NEQ", "send_to_internal")
+                    ->order($sort, $order)
+                    ->count();
+
+                $list = $this->model
+                    ->with(['plansecondfull' => function ($query) {
+                        $query->withField('totalprices');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where("backoffice_id", "not null")
+                    ->where("review_the_data", "NEQ", "send_to_internal")
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+
+
+            } else if (in_array($this->auth->id, $can_use_id['backoffice']) || in_array($this->auth->id, $can_use_id['manager'])) {
+
+                $total = $this->model
+                    ->with(['plansecondfull' => function ($query) {
+                        $query->withField('totalprices');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where(function ($query) use ($can_use_id){
+                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                            $query->where('backoffice_id',$this->auth->id);
+                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                            $all_sale = $this->sales_name();
+                            $query->where('backoffice_id','in',$all_sale);
+                        }
+                    })
+                    ->where("review_the_data", "NEQ", "send_to_internal")
+                    ->order($sort, $order)
+                    ->count();
+
+                $list = $this->model
+                    ->with(['plansecondfull' => function ($query) {
+                        $query->withField('totalprices');
+                    }, 'admin' => function ($query) {
+                        $query->withField('nickname');
+                    }, 'models' => function ($query) {
+                        $query->withField('name');
+                    }])
+                    ->where($where)
+                    ->where(function ($query) use ($can_use_id){
+                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                            $query->where('backoffice_id',$this->auth->id);
+                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                            $all_sale = $this->sales_name();
+                            $query->where('backoffice_id','in',$all_sale);
+                        }
+                    })
+                    ->where("review_the_data", "NEQ", "send_to_internal")
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+
+            }
+
+            foreach ($list as $k => $row) {
+                $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['plansecondfull']);
+                $row->getRelation('plansecondfull')->visible(['totalprices']);
+                $row->visible(['admin']);
+                $row->getRelation('admin')->visible(['nickname']);
+                $row->visible(['models']);
+                $row->getRelation('models')->visible(['name']);
+            }
+
+            $list = collection($list)->toArray();
+
+            $result = array('total' => $total, "rows" => $list);
+            return json($result);
+        }
+        return $this->view->fetch();
+    }
+
+    /**
      * 获取销售经理的全部内勤
      * @return array
      */
@@ -745,7 +863,7 @@ class Carreservation extends Backend
 
 
     /**
-     * 全款车编辑实际录入金额
+     * 全款新车编辑实际录入金额
      * @param null $ids
      * @return string
      * @throws \think\Exception
@@ -871,6 +989,72 @@ class Carreservation extends Backend
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('rule_message', "message14")->value('email');
+                $result_s = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+            } else {
+                $this->error();
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+
+        return $this->view->fetch();
+    }
+
+
+    /**
+     * 全款二手车编辑实际录入金额
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function secondfullactual_amount($ids = null)
+    {
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+
+            $result = Db::name("second_full_order")
+                ->where("id", $ids)
+                ->update([
+                    'amount_collected' => $params['amount_collected'],
+                    'decorate' => $params['decorate'],
+                    'review_the_data' => 'is_reviewing_true',
+
+                ]);
+
+
+            if ($result !== false) {
+
+                $channel = "demo-secondfullcar_amount";
+                $content = "内勤提交的全款二手车单，请及时进行车辆处理";
+                goeary_push($channel, $content);
+
+                $data = Db::name("second_full_order")->where('id', $ids)->find();
+                //车型
+                $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
+                //销售员
+                $admin_id = $data['admin_id'];
+                $admin_name = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
+                //客户姓名
+                $username = $data['username'];
+
+                $data = secondfullcar_amount($models_name, $admin_name, $username);
+                
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('rule_message', "message15")->value('email');
                 $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])

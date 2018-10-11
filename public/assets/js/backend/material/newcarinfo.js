@@ -76,7 +76,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             },
                             {field: 'username', title: __('Username'), formatter: Controller.api.formatter.inspection},
-
+                            {
                                 field: 'mortgageregistration.next_inspection',
                                 title: __('年检截止日期'),
                                 operate: 'RANGE',
