@@ -71,7 +71,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                 return v!=null?r.brand_name +'-'+v:v;
                             }},
-                        // {field: 'financialplatform.name', title: '所属金融平台'},
+                        {field: 'financialplatform.name', title: '所属金融平台'},
                         {field: 'payment', title: __('Payment'), operate:'BETWEEN',operate:false},
                         {field: 'monthly', title: __('NewcarMonthly'), operate:'BETWEEN',operate:false},
                         {field: 'nperlist', title: __('Nperlist'), visible:false, searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}},

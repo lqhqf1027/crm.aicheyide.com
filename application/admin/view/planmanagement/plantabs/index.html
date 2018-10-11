@@ -1,10 +1,23 @@
 <div class="panel panel-default panel-intro">
     <div class="panel-heading">
-        <div class="panel-lead"><em>以租代购&二手车&全款方案</em></div>
+        <div class="panel-lead">
+            <em>
+            <strong >以租代购（新车导入模板）注意事项：</strong>
+            <ul>
+                <li>金融字段：请填写方案管理-》金融平台  列表数据里金融名称对应的id,记住是id</li>
+                <li>销售车型字段：请填写方案管理-》车型列表  列表数据里车型名称对应的id,记住是id</li>
+                <li>销售方案类别id字段：请填写方案管理-》方案类型  列表数据里销售方案类别名称对应的id,记住是id，如无类型可增加</li>
+                <li>所属销售ID字段：如无对应的销售，</li>
+                <li>营运险:yes=是,no=否字段：请填写“是”或“否”</li>
+
+
+            </ul>
+            </em>
+        </div>
         <ul class="nav nav-tabs">
             <li class="active text-center" style="width: 150px;"><a href="#first" data-toggle="tab"
                                                                     style="color:coral;font-weight: bold"><i
-                    class="fa fa-flag-o"></i> 以租代购</a></li>
+                    class="fa fa-flag-o"></i> 以租代购(新车)</a></li>
             <!--<li><a href="#second" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold" class="text-center" ><i class="fa fa-flag-o"></i> 二手车</a></li>-->
             <li><a href="#planfull" data-toggle="tab" style="width: 150px;color:coral;font-weight: bold"
                    class="text-center"><i class="fa fa-flag-o"></i> 全款</a></li>
@@ -24,11 +37,12 @@
                     <!--<a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled " title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>-->
                     <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled "
                        title="{:__('Delete')}"><i class="fa fa-trash"></i> {:__('Delete')}</a>
-                    <!--<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('plan/planacar/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入EXCEL</a>-->
                     <a class="btn   btn-info btn-multi btn-disabled disabled" href="javascript:;"
                        data-params="ismenu=1"><i class="fa fa-eye"></i> 批量上架</a>
                     <a class="btn   btn-danger btn-multi btn-disabled disabled" href="javascript:;"
                        data-params="ismenu=0"><i class="fa fa-eye-slash"></i> 批量下架</a>
+                    <a href="javascript:;" class="btn btn-danger btn-import " title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入EXCEL</a>
+
                     <!--<div class="dropdown btn-group {:$auth->check('plan/planacar/multi')?'':'hide'}">-->
                     <!--<a class="btn btn-primary btn-more dropdown-toggle btn-disabled disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> {:__('More')}</a>-->
                     <!--<ul class="dropdown-menu text-left" role="menu">-->
