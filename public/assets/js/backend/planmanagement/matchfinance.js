@@ -113,10 +113,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
-
-                            // {field: 'id_card', title: __('身份证号')},
-                            // {field: 'detailed_address', title: __('地址')},
-                            // {field: 'phone', title: __('联系电话')},
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'planacar.payment', title: __('首付(元)'), operate: false},
                             {field: 'planacar.monthly', title: __('月供(元)'), operate: false},
@@ -144,6 +140,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
+                            {field:'deposit_contractimages',title:'定金合同',operate:false,formatter:Table.api.formatter.image},
+
                             // {field: 'engine_number', title: __('发动机号')},
                             // {field: 'household', title: __('行驶证所有户')},
                             {field: 'newinventory.4s_shop', title: __('4S店')},
