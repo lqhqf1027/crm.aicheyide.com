@@ -8,13 +8,7 @@
             <div class="radio" style="margin-left:35%;margin-top:5%;font-size: medium">
 
                 {foreach name="mortgage_type_list" id="vo"}
-
-                {empty name="$mortgage_type"}
-                {notin name="key" value="new_car"}<label><input name="mortgage_type" type="radio" value="{$key}"/> {$vo}</label>{/notin}
-                {else /}
-                {notin name="key" value="$mortgage_type"}<label><input name="mortgage_type" type="radio" value="{$key}"/> {$vo}</label>{/notin}
-                {/empty}
-
+                <label><input name="mortgage_type" type="radio" value="{$key}"/> {$vo}</label>
 
                 {/foreach}
 
@@ -31,8 +25,6 @@
         </div>
     </div>
 </form>
-{php}
-//dump($mortgage_type);
-{/php}
+
 
 

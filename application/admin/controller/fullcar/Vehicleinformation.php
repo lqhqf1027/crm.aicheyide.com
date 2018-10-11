@@ -180,7 +180,7 @@ class Vehicleinformation extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['id', 'order_no', 'username', 'createtime','delivery_datetime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
                 $row->visible(['planfull']);
                 $row->getRelation('planfull')->visible(['full_total_price']);
                 $row->visible(['admin']);
@@ -295,22 +295,22 @@ class Vehicleinformation extends Backend
                     ->send();
 
                 //添加到违章表
-                $peccancy = DB::name('full_parment_order')
-                    ->alias('po')
-                    ->join('models m', 'po.models_id = m.id')
-                    ->join('car_new_inventory ni', 'po.car_new_inventory_id = ni.id')
-                    ->where('po.id', $ids)
-                    ->field('po.username,po.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
-                    ->find();
-
-                $peccancy['car_type'] = 3;
-
-                $result_peccancy = DB::name('violation_inquiry')->insert($peccancy);
-                if ($result_peccancy) {
-                    $this->success('', '', $ids);
-                } else {
-                    $this->error('违章信息添加失败');
-                }
+//                $peccancy = DB::name('full_parment_order')
+//                    ->alias('po')
+//                    ->join('models m', 'po.models_id = m.id')
+//                    ->join('car_new_inventory ni', 'po.car_new_inventory_id = ni.id')
+//                    ->where('po.id', $ids)
+//                    ->field('po.username,po.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
+//                    ->find();
+//
+//                $peccancy['car_type'] = 3;
+//
+//                $result_peccancy = DB::name('violation_inquiry')->insert($peccancy);
+//                if ($result_peccancy) {
+//                    $this->success('', '', $ids);
+//                } else {
+//                    $this->error('违章信息添加失败');
+//                }
             }
 
 
@@ -436,6 +436,7 @@ class Vehicleinformation extends Backend
         foreach ($call_listfiles as $k => $v) {
             $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
         }
+
         $this->view->assign(
             [
                 'row' => $row,
@@ -522,8 +523,8 @@ class Vehicleinformation extends Backend
             ]
         );
 
-        $row['createtime'] = date("Y-m-d", $row['createtime']);
-        $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
+//        $row['createtime'] = date("Y-m-d", $row['createtime']);
+//        $row['delivery_datetime'] = date("Y-m-d", $row['delivery_datetime']);
 
         $this->view->assign($data);
         $this->view->assign("row", $row);

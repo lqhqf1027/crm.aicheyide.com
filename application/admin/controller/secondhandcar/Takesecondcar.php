@@ -21,7 +21,7 @@ class Takesecondcar extends Backend
      * @var \app\admin\model\Sms
      */
     protected $model = null;
-    protected $noNeedRight = ['index', 'secondtakecar', 'takecar', 'seconddetails'];
+    protected $noNeedRight = ['index', 'secondtakecar', 'takecar', 'seconddetails','edit'];
 
     public function _initialize()
     {
@@ -173,8 +173,22 @@ class Takesecondcar extends Backend
                         ->find();
 
                     $peccancy['car_type'] = 2;
-                    $result_peccancy = Db::name('violation_inquiry')->insert($peccancy);
-                    if ($result_peccancy) {
+
+                    //检查是否存在
+                    $check_real = Db::name('violation_inquiry')
+                        ->where('license_plate_number', $peccancy['license_plate_number'])
+                        ->where('username', $peccancy['username'])
+                        ->find();
+
+                    if(!$check_real){
+                        $last_id = Db::name('violation_inquiry')->insertGetId($peccancy);
+
+                        Db::name("second_sales_order")
+                            ->where('id', $id)
+                            ->setField('violation_inquiry_id', $last_id);
+                    }
+
+                    if ($last_id) {
                         $this->success();
                     } else {
                         $this->error('违章信息添加失败');
