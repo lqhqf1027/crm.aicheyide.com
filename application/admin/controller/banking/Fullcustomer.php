@@ -18,14 +18,14 @@ class Fullcustomer extends Backend
     protected $model = null;
     protected $dataLimit = false; //表示不启用，显示所有数据
     protected $searchFields = 'username,licensenumber,frame_number';
-    protected $noNeedRight = ['index', 'new_car', 'yue_da_car', 'other_car', 'edit', 'change_platform', 'batch_change_platform', 'details', 'loan'];
+    protected $noNeedRight = ['index', 'new_car', 'south_firm', 'other_car', 'edit', 'change_platform', 'batch_change_platform', 'details', 'loan'];
 
     public function _initialize()
     {
 
         parent::_initialize();
 
-        $this->model = new \app\admin\model\SalesOrder();
+        $this->model = new \app\admin\model\FullParmentOrder();
     }
 
 
@@ -35,21 +35,19 @@ class Fullcustomer extends Backend
     public function index()
     {
 
-        $mid = Db::name('sales_order')
-        ->where('review_the_data','the_car')
-        ->field('id,mortgage_id')
-        ->select();
+        $mid = Db::name('full_parment_order')
+            ->where('review_the_data', 'for_the_car')
+            ->field('id,mortgage_id')
+            ->select();
 
 
-        foreach ($mid as $k=>$v){
-            if(!$v['mortgage_id']){
-                Db::name('mortgage')->insert(['mortgage_type'=>'new_car']);
+        foreach ($mid as $k => $v) {
+            if (!$v['mortgage_id']) {
+                $last_id = Db::name('mortgage')->insertGetId(['mortgage_type' => 'full_car']);
 
-                $last_id = Db::name('mortgage')->getLastInsID();
-
-                Db::name('sales_order')
-                ->where('id',$v['id'])
-                ->setField('mortgage_id',$last_id);
+                Db::name('full_parment_order')
+                    ->where('id', $v['id'])
+                    ->setField('mortgage_id', $last_id);
             }
         }
 
@@ -62,7 +60,6 @@ class Fullcustomer extends Backend
      */
     public function new_car()
     {
-
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -75,13 +72,11 @@ class Fullcustomer extends Backend
                     $query->withField('household,licensenumber,frame_number');
                 }, 'models' => function ($query) {
                     $query->withField('name');
-                }, 'planacar' => function ($query) {
-                    $query->withField('payment,monthly,nperlist');
                 }])
-                ->where(function ($query){
+                ->where(function ($query) {
                     $query->where([
-                        'review_the_data'=>'the_car',
-                        'mortgage.mortgage_type'=> 'full_car'
+                        'review_the_data' => 'for_the_car',
+                        'mortgage.mortgage_type' => 'full_car'
                     ]);
                 })
                 ->where($where)
@@ -96,22 +91,20 @@ class Fullcustomer extends Backend
                     $query->withField('household,licensenumber,frame_number');
                 }, 'models' => function ($query) {
                     $query->withField('name');
-                }, 'planacar' => function ($query) {
-                    $query->withField('payment,monthly,nperlist');
                 }])
-                ->where(function ($query){
+                ->where(function ($query) {
                     $query->where([
-                        'review_the_data'=>'the_car',
-                        'mortgage.mortgage_type'=>'full_car'
+                        'review_the_data' => 'for_the_car',
+                        'mortgage.mortgage_type' => 'full_car'
                     ]);
                 })
                 ->where($where)
-                ->order("mortgage.lending_date desc")
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
 
             $result = array("total" => $total, "rows" => $list);
+
 
             return json($result);
         }
@@ -123,7 +116,7 @@ class Fullcustomer extends Backend
      * 南商行
      * @return bool|\think\response\Json
      */
-    public function yue_da_car()
+    public function south_firm()
     {
         if ($this->request->isAjax()) {
             $res = $this->getCar("south_firm");
@@ -143,7 +136,7 @@ class Fullcustomer extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $res = $this->getCar("other_car");
+            $res = $this->getCar("full_other");
 
             $result = array("total" => $res[0], "rows" => $res[1]);
 
@@ -167,13 +160,10 @@ class Fullcustomer extends Backend
                 $query->withField('household,licensenumber,frame_number');
             }, 'models' => function ($query) {
                 $query->withField('name');
-            }, 'planacar' => function ($query) {
-                $query->withField('payment,monthly,nperlist');
             }])
-            ->where('review_the_data','the_car')
+            ->where('review_the_data', 'for_the_car')
             ->where('mortgage_type', $condition)
             ->where($where)
-            ->order("mortgage.lending_date desc")
             ->order($sort, $order)
             ->count();
 
@@ -184,13 +174,10 @@ class Fullcustomer extends Backend
                 $query->withField('household,licensenumber,frame_number');
             }, 'models' => function ($query) {
                 $query->withField('name');
-            }, 'planacar' => function ($query) {
-                $query->withField('payment,monthly,nperlist');
             }])
-            ->where('review_the_data','the_car')
+            ->where('review_the_data', 'for_the_car')
             ->where('mortgage_type', $condition)
             ->where($where)
-            ->order("mortgage.lending_date desc")
             ->order($sort, $order)
             ->limit($offset, $limit)
             ->select();
@@ -207,60 +194,63 @@ class Fullcustomer extends Backend
         $this->model = new \app\admin\model\Mortgage();
 
 
-        $data = Db::name("sales_order")
+        $data = Db::name("full_parment_order")
             ->where("id", $ids)
             ->field("mortgage_id,car_new_inventory_id")
             ->find();
-    
+
+
         $row = $this->model
-                ->where('id', $data['mortgage_id'])
-                ->find();
-        
+            ->where('id', $data['mortgage_id'])
+            ->find();
+
         if ($row) {
-            $row['licensenumber'] = Db::name('car_new_inventory')->where('id',$data['car_new_inventory_id'])->value('licensenumber');
+            $row['licensenumber'] = Db::name('car_new_inventory')->where('id', $data['car_new_inventory_id'])->value('licensenumber');
 
             $this->view->assign("row", $row);
         }
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-            $check_licensenumber = null;
+            $inventory = $this->request->post("inventory/a");
 
-           if($data['car_new_inventory_id']){
-              $check_licensenumber = Db::name('car_new_inventory')->where('id',$data['car_new_inventory_id'])->value('licensenumber');
-           }
+            if(!$inventory['licensenumber']){
+                $inventory['licensenumber'] = null;
+            }
 
 
-            
+
+            foreach ($params as $k=>$v){
+                if(!$params[$k]){
+                    $params[$k] = null;
+                }
+            }
+
+            $check_number = Db::name("car_new_inventory")
+                ->where("id", $data['car_new_inventory_id'])
+                ->value('licensenumber');
+
             if ($params) {
                 try {
                     //是否采用模型验证
-                    if ($this->modelValidate) {
-                        $name = basename(str_replace('\\', '/', get_class($this->model)));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-                        $row->validate($validate);
-                    }
+//                    if ($this->modelValidate) {
+//                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+//                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+//                        $row->validate($validate);
+//                    }
 
-                    if ($row) {
-                        $result = $row->allowField(true)->save($params);
-                    } else {
-                        $params['mortgage_type'] = 'new_car';
 
-                        $this->model->data($params);
-                        $this->model->save();
+                    $result = $row->allowField(true)->save($params);
 
-                        $result = Db::name("sales_order")
-                            ->where("id", $ids)
-                            ->setField("mortgage_id", $this->model->id);
 
-                    }
+
                     Db::name("car_new_inventory")
                         ->where("id", $data['car_new_inventory_id'])
-                        ->setField("licensenumber", $params['licensenumber']);
+                        ->setField("licensenumber", $inventory['licensenumber']);
 
-                    if($data['car_new_inventory_id'] && !$check_licensenumber){
+                    if ($data['car_new_inventory_id'] && !$check_number) {
 
-                        $peccancy = Db::name('sales_order')
+                        $peccancy = Db::name('full_parment_order')
                             ->alias('so')
                             ->join('models m', 'so.models_id = m.id')
                             ->join('car_new_inventory ni', 'so.car_new_inventory_id = ni.id')
@@ -268,12 +258,25 @@ class Fullcustomer extends Backend
                             ->field('so.username,so.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
                             ->find();
 
-                        $peccancy['car_type'] = 1;
+                        $peccancy['car_type'] = 3;
 
-                        Db::name('violation_inquiry')->insert($peccancy);
+                        //检查是否存在
+                        $check_real = Db::name('violation_inquiry')
+                            ->where('license_plate_number', $peccancy['license_plate_number'])
+                            ->where('username', $peccancy['username'])
+                            ->find();
+
+                        if(!$check_real && $peccancy['license_plate_number'] != null){
+                            $last_id = Db::name('violation_inquiry')->insertGetId($peccancy);
+
+                            Db::name("full_parment_order")
+                                ->where('id', $ids)
+                                ->setField('violation_inquiry_id', $last_id);
+                        }
+
 
                     }
-                    
+
                     if ($result !== false) {
                         $this->success();
                     } else {
@@ -298,7 +301,7 @@ class Fullcustomer extends Backend
      */
     public function change_platform($ids = null)
     {
-        $motagage = Db::name("sales_order")
+        $motagage = Db::name("full_parment_order")
             ->where("id", $ids)
             ->field("mortgage_id")
             ->find()['mortgage_id'];
@@ -311,25 +314,15 @@ class Fullcustomer extends Backend
             $this->view->assign('my_type', $row['mortgage_type']);
         }
 
-        $this->view->assign('mortgage_type_list', ['full_car' => '新车', 'south_firm' => '悦达', 'other_car' => '其他']);
+        $this->view->assign('mortgage_type_list', ['full_car' => '全款(新车)', 'south_firm' => '南商行', 'full_other' => '其他']);
 
         if ($this->request->isPost()) {
             $params = $this->request->post("mortgage_type");
 
 
-            if ($motagage) {
-                $result = Db::name("mortgage")
-                    ->where("id", $motagage)
-                    ->setField("mortgage_type", $params);
-            } else {
-                Db::name("mortgage")->insert(['mortgage_type' => $params]);
-
-                $last_id = Db::name("mortgage")->getLastInsID();
-
-                $result = Db::name("sales_order")
-                    ->where("id", $ids)
-                    ->setField("mortgage_id", $last_id);
-            }
+            $result = Db::name("mortgage")
+                ->where("id", $motagage)
+                ->setField("mortgage_type", $params);
 
 
             if ($result !== false) {
@@ -349,41 +342,24 @@ class Fullcustomer extends Backend
      */
     public function batch_change_platform($ids = null)
     {
-        $change = Db::name("sales_order")
-            ->alias("so")
-            ->join("mortgage m", "so.mortgage_id = m.id")
-            ->where("so.id", "in", $ids)
-            ->field("m.mortgage_type")
-            ->find();
 
-        if ($change) {
-            $this->view->assign('mortgage_type', $change['mortgage_type']);
-        }
-
-        $this->view->assign('mortgage_type_list', ['new_car' => '新车', 'yueda_car' => '悦达', 'other_car' => '其他']);
+        $this->view->assign('mortgage_type_list', ['full_car' => '全款(新车)', 'south_firm' => '南商行', 'full_other' => '其他']);
 
         if ($this->request->isPost()) {
             $params = $this->request->post("mortgage_type");
 
-            $use_id = Db::name("sales_order")
+
+            $use_id = Db::name("full_parment_order")
                 ->where("id", "in", $ids)
                 ->field("mortgage_id,id")
                 ->select();
 
+
             foreach ($use_id as $k => $v) {
-                if ($v['mortgage_id']) {
-                    Db::name("mortgage")
-                        ->where("id", $v['mortgage_id'])
-                        ->setField("mortgage_type", $params);
-                } else {
-                    Db::name("mortgage")->insert(['mortgage_type' => $params]);
+                Db::name("mortgage")
+                    ->where("id", $v['mortgage_id'])
+                    ->setField("mortgage_type", $params);
 
-                    $last = Db::name("mortgage")->getLastInsID();
-
-                    Db::name("sales_order")
-                        ->where("id", $v['id'])
-                        ->setField("mortgage_id", $last);
-                }
             }
 
             $this->success();
@@ -427,8 +403,8 @@ class Fullcustomer extends Backend
                             $last_id = Db::name("mortgage")->getLastInsID();
 
                             Db::name("sales_order")
-                            ->where("id",$v['id'])
-                            ->setField("mortgage_id",$last_id);
+                                ->where("id", $v['id'])
+                                ->setField("mortgage_id", $last_id);
                         }
 
                     }
