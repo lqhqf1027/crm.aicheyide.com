@@ -1040,7 +1040,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: '编号',operate:false},
-                            {field: 'createtime', title: __('订车日期')},
+                            {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'admin.nickname', title: __('销售员')},
                             {field: 'plansecond.companyaccount', title: __('所属公司户')},
                             {field: 'username', title: __('客户姓名')},
@@ -1471,7 +1471,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: '编号',operate:false},
-                            {field: 'createtime', title: __('订车日期')},
+                            {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'admin.nickname', title: __('销售员')},
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'planfull.full_total_price', title: __('车款总价(元)'),operate:false},
@@ -1615,7 +1615,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: '编号',operate:false},
-                            {field: 'createtime', title: __('订车日期')},
+                            {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
                             {field: 'admin.nickname', title: __('销售员')},
                             {field: 'models.name', title: __('车型')},
                             {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
@@ -1933,6 +1933,150 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
             },
+            /**
+             * 全款二手车录入定金
+             */
+            secondfullcar_entry: function () {
+
+                var secondfullcarEntry = $("#secondfullcarEntry");
+               
+                // 初始化表格
+                secondfullcarEntry.bootstrapTable({
+                    url: 'backoffice/carreservation/secondfullcarEntry',
+                    extend: {
+                        table: 'second_full_order',
+                    },
+                    toolbar: '#toolbar5',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {field: 'id', title: '编号',operate:false},
+                            {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime},
+                            {field: 'admin.nickname', title: __('销售员')},
+                            {field: 'models.name', title: __('订车车型')},
+                            {field: 'plansecondfull.totalprices', title: __('车款总价(元)'),operate:false},
+                            {field: 'username', title: __('客户姓名')},
+                            {field: 'id_card', title: __('身份证号')},
+                            {field: 'phone', title: __('联系电话')},
+                            {field: 'city', title: __('居住地址'),operate:false},
+                            {field: 'detailed_address', title: __('详细地址'),operate:false},
+                           
+                            {
+                                field: 'operate', title: __('Operate'), table: secondfullcarEntry,
+                                buttons: [
+                                    {
+                                        name: 'is_reviewing_true', icon: 'fa fa-check-circle', text: '已录入实际订车金额,车管正在备车中', classname: ' text-info ',
+                                        hidden: function (row) {  /**已录入实际订车金额,车管正在备车中 */
+                                            if (row.review_the_data == 'is_reviewing_true') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                           
+                                        }
+                                    },
+                                    {
+                                        name: 'secondfullactual_amount', text: '录入实际订车金额', title: '录入实际订车金额', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-secondfullactual_amount',
+                                        url: 'backoffice/carreservation/secondfullactual_amount',
+                                       
+                                        hidden: function (row) { /**录入实际订车金额 */
+                                            if (row.review_the_data == 'inhouse_handling') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                           
+                                        }
+                                    },
+                                    {
+                                        name: 'is_reviewing_pass', icon: 'fa fa-check-circle', text: '车管备车成功，等待提车', classname: ' text-info ',
+                                        hidden: function (row) {  /**车管备车成功，等待提车 */
+                                            if (row.review_the_data == 'is_reviewing_pass') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                           
+                                        }
+                                    },
+                                    {
+
+                                        name: 'for_the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+                                        hidden: function (row) {  /**已提车 */
+                                            if (row.review_the_data == 'for_the_car') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inhouse_handling') {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                ],
+                                events: Controller.api.events.operate,
+
+                                formatter: Controller.api.formatter.operate
+
+                            }
+                        ]
+                    ]
+                });
+                // 为表格1绑定事件
+                Table.api.bindevent(secondfullcarEntry);
+
+                //数据实时统计
+                secondfullcarEntry.on('load-success.bs.table',function(e,data){ 
+
+                    $(".btn-secondfullactual_amount").data("area", ["50%", "40%"]);
+                    var secondfullcarEntry =  $('#badge_secondfullcar_entry').text(data.total); 
+                    secondfullcarEntry = parseInt($('#badge_fullcar_entry').text());
+                    
+                   
+                })
+
+                //销售推送
+                goeasy.subscribe({
+                    channel: 'demo-second_full_backoffice',
+                    onMessage: function (message) {
+                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
+                            Layer.close(index);
+                            $(".btn-refresh").trigger("click");
+                        });
+
+                    }
+                });
+
+
+            },
 
 
         },
@@ -1985,6 +2129,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         fullactual_amount: function () {
+            Controller.api.bindevent();
+            
+            // $(".btn-add").data("area", ["300px","200px"]);
+            Table.api.init({});
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+
+
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+                // console.log(data);
+                Toastr.success("成功");//这个可有可无
+            }, function (data, ret) {
+
+
+                Toastr.success("失败");
+
+            });
+            // Controller.api.bindevent();
+            // console.log(Config.id);
+
+        },
+        secondfullactual_amount: function () {
             Controller.api.bindevent();
             
             // $(".btn-add").data("area", ["300px","200px"]);
@@ -2143,7 +2309,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
 
                     /**
-                     * 全款车录入订车金额
+                     * 全款新车录入订车金额
                      * @param e
                      * @param value
                      * @param row
@@ -2158,6 +2324,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'backoffice/carreservation/fullactual_amount';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
+                    },
+
+                    /**
+                     * 全款二手车录入订车金额
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-secondfullactual_amount': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'backoffice/carreservation/secondfullactual_amount';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('录入实际订车金额'), $(this).data() || {});
                     },
                     

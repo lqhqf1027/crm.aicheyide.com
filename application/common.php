@@ -1458,15 +1458,12 @@ if (!function_exists('second_collection_data')) {
     }
 }
 
+/**
+ * 全款车 销售发送给内勤
+ */
 if (!function_exists('fullinternal_inform')) {
 
-    /**
-     * 全款车 销售发送给内勤
-     * @param null $models_name
-     * @param null $admin_name
-     * @param null $username
-     * @return array
-     */
+    
     function fullinternal_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
     {
         if ($models_name && $admin_name && $username) {
@@ -1513,6 +1510,46 @@ if (!function_exists('fullsales_inform')) {
             $arr = [
                 'subject' => "全款车待提车通知：",
                 'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 全款二手车 销售发送给内勤
+ */
+if (!function_exists('second_full_backoffice')) {
+
+    
+    function second_full_backoffice($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款二手车待录入金额通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，请及时登录后台进行金额录入 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
+ * 全款二手车 内勤发送给车管
+ */
+if (!function_exists('secondfullcar_amount')) {
+
+
+    function secondfullcar_amount($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款二手车待车管确认通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，待车管确认，请及时登录后台进行处理 . '</div>'
             ];
 
             return $arr;

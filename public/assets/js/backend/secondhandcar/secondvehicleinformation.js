@@ -91,6 +91,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.status_data == 'send_the_car'){
+                                      
+                                        return true;
+                                    } 
                                 }
                             },
                             {
@@ -110,10 +114,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.status_data == 'send_the_car'){
+                                      
+                                        return true;
+                                    } 
                                 }
                             },
                             {
-                                name: 'for_the_car', icon: 'fa fa-check-circle', text: '该车在签单流程中', classname: ' text-info ',
+                                name: 'for_the_car', icon: 'fa fa-check-circle', text: '该车在分期签单流程中', classname: ' text-info ',
                                 hidden: function (row) {  /**该车在签单流程中 */
                                     if(row.status_data == 'for_the_car'){
                                         return false; 
@@ -123,6 +131,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     } 
                                     else if(row.status_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'send_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                }
+                            },
+                            {
+                                name: 'send_the_car', icon: 'fa fa-check-circle', text: '该车在全款签单流程中', classname: ' text-info ',
+                                hidden: function (row) {  /**该车在签单流程中 */
+                                    if(row.status_data == 'send_the_car'){
+                                        return false; 
+                                    } 
+                                    else if(row.status_data == ''){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'for_the_car'){
                                       
                                         return true;
                                     } 
@@ -143,6 +175,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     } 
                                     else if(row.status_data == 'the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'send_the_car'){
                                       
                                         return true;
                                     } 
@@ -168,6 +204,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                       
                                         return true;
                                     } 
+                                    else if(row.status_data == 'send_the_car'){
+                                      
+                                        return true;
+                                    } 
                                 }, 
                             },
                             {
@@ -182,6 +222,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         return true;
                                     }
                                     else if(row.status_data == 'for_the_car'){
+                                      
+                                        return true;
+                                    } 
+                                    else if(row.status_data == 'send_the_car'){
                                       
                                         return true;
                                     } 

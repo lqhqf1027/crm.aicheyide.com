@@ -3204,22 +3204,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
              * 全款单（二手车）
              */
             second_order_full: function () {
-                var orderFull = $("#orderFull");
+                var secondOrderFull = $("#secondOrderFull");
 
                 $(".btn-add").data("area", ["95%", "95%"]);
                 $(".btn-edit").data("area", ["95%", "95%"]);
 
                 // 初始化表格
-                orderFull.bootstrapTable({
-                    url: 'salesmanagement/Orderlisttabs/orderFull',
+                secondOrderFull.bootstrapTable({
+                    url: 'salesmanagement/Orderlisttabs/secondOrderFull',
                     extend: {
                         fulladd_url: 'salesmanagement/Orderlisttabs/fulladd',
-                        fulledit_url: 'salesmanagement/Orderlisttabs/fulledit',
-                        del_url: 'salesmanagement/Orderlisttabs/fulldel',
+                        secondfulledit_url: 'salesmanagement/Orderlisttabs/secondfulledit',
+                        del_url: 'salesmanagement/Orderlisttabs/secondfulldel',
                         multi_url: 'salesmanagement/Orderlisttabs/multi',
                         table: 'full_parment_order',
                     },
-                    toolbar: '#toolbar4',
+                    toolbar: '#toolbar5',
                     pk: 'id',
                     sortName: 'id',
                     searchFormVisible: true,
@@ -3234,10 +3234,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     return v != null ? "<img src=" + Config.cdn_url + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
 
                                 }},
-                            { field: 'planfull.full_total_price', title: __('全款总价（元）') },
+                            { field: 'plansecondfull.totalprices', title: __('全款总价（元）') },
 
                             {
-                                field: 'id', title: __('查看详细资料'), table: orderFull, buttons: [
+                                field: 'id', title: __('查看详细资料'), table: secondOrderFull, buttons: [
                                     {
                                         name: 'fulldetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-fulldetails',
                                         url: 'salesmanagement/Orderlisttabs/fulldetails', callback: function (data) {
@@ -3254,13 +3254,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
 
                             {
-                                field: 'operate', title: __('Operate'), table: orderFull,
+                                field: 'operate', title: __('Operate'), table: secondOrderFull,
                                 buttons: [
                                     /**
                                      * 提交内勤
                                      */
                                     {
-                                        name: 'submitCar', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-info btn-submitCar',
+                                        name: 'secondfullinternal', text: '提交内勤', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', title: __('提交内勤'), classname: 'btn btn-xs btn-info btn-secondfullinternal',
 
                                         hidden: function (row) { /**提交内勤 */
                                             if (row.review_the_data == 'send_to_internal') {
@@ -3285,7 +3285,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                      * 删除
                                      */
                                     {
-                                        icon: 'fa fa-trash', name: 'fulldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
+                                        icon: 'fa fa-trash', name: 'secondfulldel', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
 
                                         hidden: function (row) {
                                             if (row.review_the_data == 'send_to_internal') {
@@ -3311,7 +3311,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                      * 编辑
                                      */
                                     {
-                                        name: 'fulledit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-fulleditone',
+                                        name: 'secondfulledit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-secondfulledit',
 
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'send_to_internal') {
@@ -3435,16 +3435,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 刷新表格渲染
                  */
-                orderFull.on('load-success.bs.table', function (e, data) {
+                secondOrderFull.on('load-success.bs.table', function (e, data) {
 
-                    $('#badge_order_full').text(data.total);
+                    $('#badge_second_order_full').text(data.total);
                     $(".btn-fulldetails").data("area", ["95%", "95%"]);
                 })
 
                 /**
                  * 为全款单表格绑定事件
                  */
-                Table.api.bindevent(orderFull);
+                Table.api.bindevent(secondOrderFull);
 
                 /**
                  * 车管发送---销售接收----可以进行提车
@@ -3466,9 +3466,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 新增全款单
                  */
-                $(document).on("click", ".btn-fulladd", function () {
+                $(document).on("click", ".btn-secondfulladd", function () {
 
-                    var url = 'salesmanagement/Orderlisttabs/fulladd';
+                    var url = 'salesmanagement/Orderlisttabs/secondfulladd';
                     var options = {
                         shadeClose: false,
                         shade: [0.3, '#393D49'],
@@ -3477,7 +3477,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         }
                     }
-                    Fast.api.open(url,'新增全款单',options)
+                    Fast.api.open(url,'新增全款（二手车）预定',options)
                 })
             },
         },
@@ -3683,6 +3683,50 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
          * 全款车资料修改
          */
         fulledit:function(){
+            
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                
+                Toastr.success("失败");
+                
+            });
+            // Controller.api.bindevent();
+ 
+        },
+        /**
+         * 全款二手车资料添加
+         */
+        secondfulladd:function(){
+            
+            Table.api.init({
+               
+            });
+            Form.api.bindevent($("form[role=form]"), function(data, ret){
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
+            }, function(data, ret){
+                
+                Toastr.success("失败");
+                
+            });
+            // Controller.api.bindevent();
+ 
+        },
+        /**
+         * 全款二手车资料编辑
+         */
+        secondfulledit:function(){
             
             Table.api.init({
                
@@ -4037,7 +4081,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
 
                     /**
-                     * 全款车提交内勤
+                     * 全款新车提交内勤
                      * @param e
                      * @param value
                      * @param row
@@ -4068,6 +4112,56 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 Fast.api.ajax({
 
                                     url: 'salesmanagement/orderlisttabs/submitCar',
+                                    data: {id: row[options.pk]}
+ 
+                                }, function (data, ret) {
+
+                                    Toastr.success('操作成功');
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    Toastr.success(ret.msg);
+
+                                    return false;
+                                });
+                            }
+                        );
+                    },
+
+                    /**
+                     * 全款二手车提交内勤
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-secondfullinternal': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+ 
+                            __('请确认资料完整并发送给内勤生成提车单?'),
+ 
+                            { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Fast.api.ajax({
+
+                                    url: 'salesmanagement/orderlisttabs/secondfullinternal',
                                     data: {id: row[options.pk]}
  
                                 }, function (data, ret) {
@@ -4316,7 +4410,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     },
 
                     /**
-                     * 全款车编辑按钮
+                     * 全款新车编辑按钮
                      * @param e
                      * @param value
                      * @param row
@@ -4332,6 +4426,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, { ids: ids });
                         var url = options.extend.fulledit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+
+                    /**
+                     * 全款二手车编辑按钮
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-secondfulledit': function (e, value, row, index) { /**二手车编辑按钮 */
+                        $(".btn-secondfulledit").data("area", ["95%", "95%"]);
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, { ids: ids });
+                        var url = options.extend.secondfulledit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
 

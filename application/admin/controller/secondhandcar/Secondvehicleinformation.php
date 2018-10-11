@@ -52,39 +52,46 @@ class Secondvehicleinformation extends Backend
             $total = $this->model
                 ->with(['models'])
                 ->where($where)
-                ->where('status_data', 'NEQ', 'the_car')
+                ->where('status_data', 'not in', ['the_car', 'take_the_car'])
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
                 ->with(['models'])
                 ->where($where)
-                ->where('status_data', 'NEQ', 'the_car')
+                ->where('status_data', 'not in', ['the_car', 'take_the_car'])
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
             
             foreach ($list as $k=>$row){
-                $data = Db::name('second_sales_order')->alias('a')
-                    ->join('secondcar_rental_models_info b','a.plan_car_second_name = b.id')
-                    ->field('a.plan_car_second_name, a.admin_id')
-                    ->select();
+                $data = [
+                    Db::name('second_sales_order')->alias('a')
+                        ->join('secondcar_rental_models_info b','a.plan_car_second_name = b.id')
+                        ->field('b.licenseplatenumber, a.admin_id')
+                        ->select(),
+                    Db::name('second_full_order')->alias('a')
+                        ->join('secondcar_rental_models_info b','a.plan_second_full_name = b.id')
+                        ->field('b.licenseplatenumber, a.admin_id')
+                        ->select()
+                ];
                 $row->visible(['id', 'licenseplatenumber', 'kilometres', 'companyaccount', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'drivinglicenseimages', 'vin',
                     'engine_number', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
                     'createtime', 'updatetime', 'status_data', 'department', 'admin_name']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 foreach ((array)$data as $key => $value){
-                    if($value['plan_car_second_name'] == $row['id']){
-                        $department = Db::name('auth_group_access')
-                            ->alias('a')
-                            ->join('auth_group b','a.group_id = b.id')
-                            ->where('a.uid',$value['admin_id'])
-                            ->value('b.name');
-                        $admin_name = Db::name('admin')->where('id', $value['admin_id'])->value('nickname');
-                        $list[$k]['department'] = $department;
-                        $list[$k]['admin_name'] = $admin_name;
-                    }
+                    foreach ($value as $v){
+                        if($v['licenseplatenumber'] == $row['licenseplatenumber']){
+                            $department = Db::name('auth_group_access')->alias('a')
+                                ->join('auth_group b','a.group_id = b.id')
+                                ->where('a.uid',$v['admin_id'])
+                                ->value('b.name');
+                            $admin_name = Db::name('admin')->where('id', $v['admin_id'])->value('nickname');
+                            $list[$k]['department'] = $department;
+                            $list[$k]['admin_name'] = $admin_name;
+                        }
+                    }   
                 }
             }
 

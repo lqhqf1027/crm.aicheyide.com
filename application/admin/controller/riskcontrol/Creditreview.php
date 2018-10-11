@@ -32,7 +32,7 @@ class Creditreview extends Backend
     protected $searchFields = 'username';
     protected $noNeedRight = ['index', 'newcarAudit', 'rentalcarAudit', 'secondhandcarAudit', 'newauditResult', 'newpass', 'newdata', 'newnopass', 'rentalauditResult', 'rentalpass', 'rentalnopass', 'secondhandcarResult', 'secondpass', 'seconddata'
         , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata','getPlanAcarData','getPlanSecondCarData','toViewBigData','getBigData','newsales','newtube','choosestock','newtubefinance','secondchoosestock', 
-        'secondinformation', 'newinformation', 'rentalinformation'];
+        'secondinformation', 'newinformation', 'rentalinformation', 'auditedit', 'rentalauditedit', 'secondauditedit'];
 
     public function _initialize()
     {
