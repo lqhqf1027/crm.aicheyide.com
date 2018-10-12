@@ -131,6 +131,18 @@ class Plantabs extends Backend
     }
 
     /**
+     * Notes:获取已签单的全款方案id
+     * User: glen9
+     * Date: 2018/10/11
+     * Time: 23:43
+     * @return array
+     */
+    public static function matchingFullParmentOrder()
+    {
+        return array_unique(Db::name('full_parment_order')->column('plan_plan_full_name'));
+    }
+
+    /**
      * 关联品牌名称
      * @param $plan_id 方案id
      * @return false|\PDOStatement|string|\think\Collection
@@ -195,10 +207,14 @@ class Plantabs extends Backend
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
+            $full_order_data = self::matchingFullParmentOrder();
             $list = collection($list)->toArray();
             foreach ((array)$list as $key => $value) {
                 $list[$key]['brand_name'] = $this->getFullBrandName($value['id']);
+
+                   $list[$key]['match_plan'] = in_array($value['id'], $full_order_data) == $value['id'] ? 'match_success' : 'match_error'; //返回是否与方案id匹配
             }
+
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
