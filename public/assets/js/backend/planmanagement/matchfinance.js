@@ -57,16 +57,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $('.btn-neweditone').data('area',['50%','50%']);
 
 
-                    newprepareMatch.find('tbody').find('.bs-checkbox').each(function () {
-
-                        var text = $(this).siblings('td').eq(3).text();
-
-
-                        if(text||text!=''){
-                           $(this).find('input[type=checkbox]').attr('disabled','disabled');
-                        }
-
-                    });
+                    // newprepareMatch.find('tbody').find('.bs-checkbox').each(function () {
+                    //
+                    //     var text = $(this).siblings('td').eq(3).text();
+                    //
+                    //
+                    //     if(text||text!=''){
+                    //        $(this).find('input[type=checkbox]').attr('disabled','disabled');
+                    //     }
+                    //
+                    // });
 
                 });
                 newprepareMatch.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -93,7 +93,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     searchFormVisible: true,
                     columns: [
                         [
-                            {checkbox: true},
+                            {checkbox: true,formatter:function (v, r, i) {
+
+                                return r.financial_name ==null || r.financial_name == ''?{disabled:false}:{disabled:true}
+                            }
+                            },
                             {field: 'id', title: '编号', operate: false},
                             {
                                 field: 'createtime',
@@ -984,15 +988,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 secondprepareMatch.on('load-success.bs.table', function (e, data) {
                     $('#badge_secondprepare_match').text(data.total);
 
-                    secondprepareMatch.find('tbody').find('.bs-checkbox').each(function () {
-
-                        var text = $(this).siblings('td').eq(5).text();
-
-                        if(text || text!=''){
-                            $(this).find('input[type=checkbox]').attr('disabled','disabled');
-                        }
-
-                    });
+                    // secondprepareMatch.find('tbody').find('.bs-checkbox').each(function () {
+                    //
+                    //     var text = $(this).siblings('td').eq(5).text();
+                    //
+                    //     if(text || text!=''){
+                    //         $(this).find('input[type=checkbox]').attr('disabled','disabled');
+                    //     }
+                    //
+                    // });
 
                 });
                 secondprepareMatch.on('post-body.bs.table', function (e, settings, json, xhr) {
@@ -1018,7 +1022,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     searchFormVisible: true,
                     columns: [
                         [
-                            {checkbox: true},
+                            {checkbox: true,formatter:function (v, r, i) {
+                                    return r.financial_name ==null || r.financial_name == ''?{disabled:false}:{disabled:true}
+                                }},
                             {field: 'id', title: '编号', operate: false},
                             {
                                 field: 'createtime',
@@ -1060,6 +1066,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
+                            {field:'deposit_contractimages',title:'定金合同',operate:false,formatter:Table.api.formatter.image},
                             {field: 'amount_collected', title: __('实收定金金额'), operate: false},
                             {field: 'decorate', title: __('装饰'), operate: false},
 

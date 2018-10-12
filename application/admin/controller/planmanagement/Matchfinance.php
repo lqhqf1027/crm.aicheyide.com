@@ -167,7 +167,7 @@ class Matchfinance extends Backend
                 ->select();
             foreach ($list as $k => $row) {
 
-                $row->visible(['id', 'financial_name', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data']);
+                $row->visible(['id', 'financial_name', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data','deposit_contractimages']);
                 $row->visible(['plansecond']);
                 $row->getRelation('plansecond')->visible(['companyaccount', 'licenseplatenumber', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney']);
                 $row->visible(['admin']);
@@ -175,6 +175,7 @@ class Matchfinance extends Backend
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
 
+                $list[$k]['deposit_contractimages']=Config::get('upload')['cdnurl'].$row['deposit_contractimages'];
             }
 
 

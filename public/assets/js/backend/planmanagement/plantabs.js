@@ -183,7 +183,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     sortName: 'id',
                     columns: [
                         [
-                            {checkbox: true},
+                            {checkbox: true, formatter: function (v, r, i) {
+                                    return r.match_plan === 'match_success' ? {disabled: true} : {disabled: false};
+                                }},
                             {field: 'id', title: __('Id')},
                             {
                                 field: 'models.name', title: '销售车型', formatter: function (v, r, i) {
@@ -215,7 +217,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('Operate'),
                                 table: table3,
                                 events: Table.api.events.operate,
-                                formatter: Table.api.formatter.operate
+                                formatter: Controller.api.operate
                             }
                         ]
                     ]
