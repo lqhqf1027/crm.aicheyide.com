@@ -270,6 +270,61 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     },
                                     {
+                                        name: 'del_sales_order',
+                                        text: '方案不一致，驳回订单',
+                                        title: '方案不一致，驳回订单',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-danger btn-sales_editone',
+                                        hidden: function (row) {  /**删除订单 */
+                                            if (row.review_the_data == 'is_reviewing') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'the_financial') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_true') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'conclude_the_contract') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'tube_into_stock') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'take_the_data') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'send_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'inform_the_tube') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
                                         name: 'for_the_car',
                                         icon: 'fa fa-check-circle',
                                         text: '征信已通过',
@@ -1130,6 +1185,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     },
                                     {
+                                        name: 'del_sales_order',
+                                        text: '方案不一致，驳回订单',
+                                        title: '方案不一致，驳回订单',
+                                        icon: 'fa fa-trash',
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-danger btn-second_sales_editone',
+                                        hidden: function (row) {  /**正在匹配金融 */
+                                            if (row.review_the_data == 'is_reviewing_finance') {
+                                                return false;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_control') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'for_the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'not_through') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_guarantor') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'the_car') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'is_reviewing_pass') {
+                                                return true;
+                                            }
+                                            else if (row.review_the_data == 'collection_data') {
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
                                         name: 'is_reviewing_pass',
                                         icon: 'fa fa-check-circle',
                                         text: '风控正在匹配车辆',
@@ -1553,6 +1642,92 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'planmanagement/matchfinance/view_plan';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('对比方案'), $(this).data() || {});
+                    },
+                    /**
+                     * 新车方案不一致，驳回订单
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-sales_editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('是否真的要删除该条订单(包括该条订单所有相关信息)?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+                                Fast.api.ajax({
+                                    url:'planmanagement/matchfinance/del_sales_order',
+                                    data:{
+                                        id:row[options.pk]
+                                    }
+                                },function (data,ret) {
+
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                },function (data,ret) {
+
+
+                                })
+
+                            }
+                        );
+                    },
+                    /**
+                     * 二手车方案不一致，驳回订单
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-second_sales_editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('是否真的要删除该条订单(包括该条订单所有相关信息)?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+
+                                Fast.api.ajax({
+                                    url:'planmanagement/matchfinance/del_second_sales_order',
+                                    data:{
+                                        id:row[options.pk]
+                                    }
+                                },function (data,ret) {
+
+                                    Layer.close(index);
+                                    table.bootstrapTable('refresh');
+                                },function (data,ret) {
+
+
+                                })
+
+                            }
+                        );
                     }
                 }
             }

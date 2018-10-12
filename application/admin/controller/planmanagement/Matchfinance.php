@@ -17,7 +17,7 @@ class Matchfinance extends Backend
 {
     protected $model = null;
     protected $noNeedRight = ['index', 'newprepare_match', 'secondprepare_match', 'newedit', 'secondedit', 'newbatch', 'secondbatch', 'add_sales'
-        , 'used_details', 'new_details','view_plan'];
+        , 'used_details', 'new_details','view_plan', 'del_sales_order', 'del_second_sales_order'];
 
     public function _initialize()
     {
@@ -386,6 +386,55 @@ class Matchfinance extends Backend
         $result = Db::name('plan_acar')->where(['id'=>$plan_id])->field('monthly,payment,nperlist,margin,tail_section,gps')->find();
 
         return $this->view->fetch();
+    }
+
+    /**
+     * 删除新车订单
+     */
+    public function del_sales_order()
+    {
+        if ($this->request->isAjax()) {
+           
+            $id = input('id');
+           
+            //删除以租代购新车    
+            $res = Db::name('sales_order')
+                ->where('id', $id)
+                ->delete();
+
+            if ($res) {
+                $this->success('', '', 'success');
+            } else {
+                $this->error('', '', 'error');
+            }
+        }
+    }
+
+    /**
+     * 删除二手车订单
+     */
+    public function del_second_sales_order()
+    {
+        if ($this->request->isAjax()) {
+           
+            $id = input('id');
+
+            $plan_car_second_name = Db::name('second_sales_order')->where('id', $id)->value('plan_car_second_name');
+
+            //删除以租代购二手车    
+            $res = Db::name('second_sales_order')
+                ->where('id', $id)
+                ->delete();
+
+            //车辆状态变化
+            $result = Db::name('secondcar_rental_models_info')->where('id', $plan_car_second_name)->setfield('status_data', '');
+
+            if ($res && $result) {
+                $this->success('', '', 'success');
+            } else {
+                $this->error('', '', 'error');
+            }
+        }
     }
 
     

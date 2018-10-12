@@ -40,7 +40,9 @@
                     <a class="btn   btn-danger btn-multi btn-disabled disabled" href="javascript:;"
                        data-params="ismenu=0"><i class="fa fa-eye-slash"></i> 批量下架</a>
                     <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> 导入EXCEL</a>
-
+                    
+                    <a href="{$config['upload']['cdnurl']}/planAcar/方案模板.xlsx" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
+                        <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
                     <!--<a href="javascript:;" class="btn btn-danger btn_import_dialog " title="{:__('Import')}" ><i class="fa fa-upload"></i> 导入EXCEL</a>-->
 
                     <!--<div class="dropdown btn-group {:$auth->check('plan/planacar/multi')?'':'hide'}">-->
