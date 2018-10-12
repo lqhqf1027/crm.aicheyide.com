@@ -215,6 +215,17 @@ class Vehicleinformation extends Backend
      */
     public function choose_stock($ids = null)
     {
+        $stock = Db::name("car_new_inventory")
+            ->alias("i")
+            ->join("crm_models m", "i.models_id=m.id")
+            ->where("statuss", 1)
+            ->field("i.id,m.name,i.licensenumber,i.frame_number,i.engine_number,i.household,i.4s_shop,i.note")
+            ->select();
+
+        $this->view->assign([
+            'stock' => $stock
+        ]);
+
         if ($this->request->isPost()) {
 
             $id = input("post.id");
@@ -229,7 +240,7 @@ class Vehicleinformation extends Backend
 
             if($result){
                 $source = Db::name('full_parment_order')
-                    ->where('id', $id)
+                    ->where('id', $ids)
                     ->value('customer_source');
 
                 if($source == 'introduce'){
@@ -244,144 +255,134 @@ class Vehicleinformation extends Backend
                     $last_id = Db::name('referee')->getLastInsID();
 
                     Db::name('full_parment_order')
-                        ->where('id', $id)
+                        ->where('id', $ids)
                         ->setField('referee_id', $last_id);
                 }
-            }
 
-            Db::name("car_new_inventory")
-                ->where("id", $id)
-                ->setField("statuss", 0);
+                Db::name("car_new_inventory")
+                    ->where("id", $id)
+                    ->setField("statuss", 0);
 
-            $full_info = Db::name("full_parment_order")
-                ->where("id", $ids)
-                ->field("admin_id,models_id,username,phone,customer_source,introduce_name,introduce_phone,introduce_card")
-                ->find();
+                $seventtime = \fast\Date::unixtime('month', -6);
+                $fullonesales = $fulltwosales = $fullthreesales = [];
 
-            //如果是转介绍,到介绍人表
-            if ($full_info['customer_source'] == "introduce") {
-                $insert_data = [
-                    'models_id' => $full_info['models_id'],
-                    'admin_id' => $full_info['admin_id'],
-                    'referee_name' => $full_info['introduce_name'],
-                    'referee_phone' => $full_info['introduce_phone'],
-                    'referee_idcard' => $full_info['introduce_card'],
-                    'customer_name' => $full_info['username'],
-                    'customer_phone' => $full_info['phone'],
-                    'buy_way' => "全款车"
-                ];
+                $month = date("Y-m", $seventtime);
+                $day = date('t', strtotime("$month +1 month -1 day"));
+                for ($i = 0; $i < 8; $i++)
+                {
+                    $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                    $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                    $secondday = strtotime(date('Y-m-01', strtotime($months)));
+                    //销售一部
+                    $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+                    foreach ($one_sales as $k => $v) {
+                        $one_admin[] = $v['uid'];
+                    }
+                    $fullonetake = Db::name('full_parment_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $one_admin)
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                        ->count();
+                    //销售二部
+                    $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+                    foreach ($two_sales as $k => $v) {
+                        $two_admin[] = $v['uid'];
+                    }
+                    $fulltwotake = Db::name('full_parment_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $two_admin)
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                        ->count();
+                    //销售三部
+                    $three_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+                    foreach ($three_sales as $k => $v) {
+                        $three_admin[] = $v['uid'];
+                    }
+                    $fullthreetake = Db::name('full_parment_order')
+                        ->where('review_the_data', 'for_the_car')
+                        ->where('admin_id', 'in', $three_admin)
+                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                        ->count();
+                    //销售一部
+                    $fullonesales[$month] = $fullonetake;
+                    //销售二部
+                    $fulltwosales[$month] = $fulltwotake;
+                    //销售三部
+                    $fullthreesales[$month] = $fullthreetake;
 
-                Db::name("referee")->insert($insert_data);
+                    $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                        
+                    $day = date('t', strtotime("$months +1 month -1 day"));
 
-                $last_id = Db::name("referee")->getLastInsID();
 
-                Db::name("full_parment_order")
-                    ->where("id", $ids)
-                    ->setField("referee_id", $last_id);
-            }
+                }
+                Cache::set('fullonesales', $fullonesales);
+                Cache::set('fulltwosales', $fulltwosales);
+                Cache::set('fullthreesales', $fullthreesales);
 
-            if ($result) {
+                Db::name("car_new_inventory")
+                    ->where("id", $id)
+                    ->setField("statuss", 0);
 
-                $data = sales_inform($full_info['username']);
+                // 添加到违章表
+                // $peccancy = DB::name('full_parment_order')
+                //     ->alias('po')
+                //     ->join('models m', 'po.models_id = m.id')
+                //     ->join('car_new_inventory ni', 'po.car_new_inventory_id = ni.id')
+                //     ->where('po.id', $ids)
+                //     ->field('po.username,po.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
+                //     ->find();
+
+                // $peccancy['car_type'] = 3;
+
+                // $result_peccancy = DB::name('violation_inquiry')->insert($peccancy);
+                // if ($result_peccancy) {
+                //     $this->success('', '', $ids);
+                // } else {
+                //     $this->error('违章信息添加失败');
+                // }
+
+                $full_info = Db::name('full_parment_order')->where('id', $ids)->find();
+
+                $models_name = Db::name('models')->where('id', $full_info['models_id'])->value('name');
+                $admin_name = Db::name('admin')->where('id', $full_info['admin_id'])->value('nickname');
+                
+                //goeasy推送
+                $channel = "demo-full_takecar";
+                $content = "你发起的客户：" . $full_info['username'] . "对车型：" . $models_name . "的购买，已经提车";
+                goeary_push($channel, $content. "|" . $admin_id);
+                
+                //邮箱通知
+                $data = fullsales_inform($models_name, $admin_name, $full_info['usename']);
 
                 $email = new Email();
 
                 $receiver = Db::name('admin')->where('id', $full_info['admin_id'])->value('email');
 
-                $email
+                $result_s = $email
                     ->to($receiver)
                     ->subject($data['subject'])
                     ->message($data['message'])
                     ->send();
 
-                //添加到违章表
-//                $peccancy = DB::name('full_parment_order')
-//                    ->alias('po')
-//                    ->join('models m', 'po.models_id = m.id')
-//                    ->join('car_new_inventory ni', 'po.car_new_inventory_id = ni.id')
-//                    ->where('po.id', $ids)
-//                    ->field('po.username,po.phone,m.name as models,ni.licensenumber as license_plate_number,ni.frame_number,ni.engine_number')
-//                    ->find();
-//
-//                $peccancy['car_type'] = 3;
-//
-//                $result_peccancy = DB::name('violation_inquiry')->insert($peccancy);
-//                if ($result_peccancy) {
-//                    $this->success('', '', $ids);
-//                } else {
-//                    $this->error('违章信息添加失败');
-//                }
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
             }
 
+            
 
-        }
-        $stock = Db::name("car_new_inventory")
-            ->alias("i")
-            ->join("crm_models m", "i.models_id=m.id")
-            ->where("statuss", 1)
-            ->field("i.id,m.name,i.licensenumber,i.frame_number,i.engine_number,i.household,i.4s_shop,i.note")
-            ->select();
+            if ($result) {
 
-        $this->view->assign([
-            'stock' => $stock
-        ]);
-
-        $seventtime = \fast\Date::unixtime('month', -6);
-        $fullonesales = $fulltwosales = $fullthreesales = [];
-
-        $month = date("Y-m", $seventtime);
-        $day = date('t', strtotime("$month +1 month -1 day"));
-        for ($i = 0; $i < 8; $i++)
-        {
-            $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
-            $firstday = strtotime(date('Y-m-01', strtotime($month)));
-            $secondday = strtotime(date('Y-m-01', strtotime($months)));
-            //销售一部
-            $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-            foreach ($one_sales as $k => $v) {
-                $one_admin[] = $v['uid'];
-            }
-            $fullonetake = Db::name('full_parment_order')
-                ->where('review_the_data', 'for_the_car')
-                ->where('admin_id', 'in', $one_admin)
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-            //销售二部
-            $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-            foreach ($two_sales as $k => $v) {
-                $two_admin[] = $v['uid'];
-            }
-            $fulltwotake = Db::name('full_parment_order')
-                ->where('review_the_data', 'for_the_car')
-                ->where('admin_id', 'in', $two_admin)
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-            //销售三部
-            $three_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-            foreach ($three_sales as $k => $v) {
-                $three_admin[] = $v['uid'];
-            }
-            $fullthreetake = Db::name('full_parment_order')
-                ->where('review_the_data', 'for_the_car')
-                ->where('admin_id', 'in', $three_admin)
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-            //销售一部
-            $fullonesales[$month] = $fullonetake;
-            //销售二部
-            $fulltwosales[$month] = $fulltwotake;
-            //销售三部
-            $fullthreesales[$month] = $fullthreetake;
-
-            $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
                 
-            $day = date('t', strtotime("$months +1 month -1 day"));
+            }
 
 
         }
-        Cache::set('fullonesales', $fullonesales);
-        Cache::set('fulltwosales', $fulltwosales);
-        Cache::set('fullthreesales', $fullthreesales);
+
+        
 
 
         return $this->view->fetch();

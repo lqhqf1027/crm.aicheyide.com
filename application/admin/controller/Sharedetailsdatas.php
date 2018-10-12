@@ -19,7 +19,7 @@ class Sharedetailsdatas extends Backend
      */
     protected $model = null;
     protected $noNeedRight  = [
-        'new_car_share_data', 'second_car_share_data', 'rental_car_share_data'
+        'new_car_share_data', 'second_car_share_data', 'rental_car_share_data', 'secondfull_car_share_data', 'full_car_share_data'
     ];
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
     protected $dataLimit = 'auth'; //表示显示当前自己和所有子级管理员的所有数据
@@ -327,4 +327,102 @@ class Sharedetailsdatas extends Backend
         );
         return $this->view->fetch();
     }
+
+    /**
+     * 全款（二手车）详细资料
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     */
+    public function secondfull_car_share_data($ids = null)
+    {
+        $row = Db::name('second_full_order')->alias('a')
+            ->join('admin b', 'b.id=a.admin_id', 'LEFT')
+            ->join('secondcar_rental_models_info c', 'c.id = a.plan_second_full_name', 'LEFT')
+            ->join('mortgage d', 'd.id = a.mortgage_id', 'LEFT')
+            ->field('a.order_no,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.customer_source,a.introduce_name,a.introduce_phone,
+                a.introduce_card,a.id_cardimages,a.drivers_licenseimages,a.bank_cardimages,a.application_formimages,a.call_listfiles,
+                b.nickname as sales_name,
+                c.licenseplatenumber,c.vin,c.kilometres,c.companyaccount,c.totalprices,c.drivinglicenseimages,c.engine_number,c.expirydate,c.annualverificationdate,c.carcolor,
+                c.Parkingposition,
+                d.car_imgeas,d.bank_card,d.invoice_monney,d.registration_code,d.tax,d.business_risks,d.insurance,d.lending_date,d.mortgage_type')
+            ->where('a.id', $ids)
+            ->find();
+        
+        //身份证正反面（多图）
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
+        //驾照正副页（多图）
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
+        //申请表（多图）
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
+        /**不必填 */
+        //银行卡照（可多图）
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
+        //通话清单（文件上传）
+        $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
+        //车辆所有的扫描件
+        $car_imgeas = $row['car_imgeas'] == '' ? [] : explode(',', $row['car_imgeas']);
+        $this->view->assign(
+            [
+                'row' => $row,
+                'cdnurl' => Config::get('upload')['cdnurl'],
+                'id_cardimages' => $id_cardimages,
+                'drivers_licenseimages' => $drivers_licenseimages,
+                'application_formimages' => $application_formimages,
+                'bank_cardimages' => $bank_cardimages,
+                'call_listfiles' => $call_listfiles,
+                'car_imgeas' => $car_imgeas,
+            ]
+        );
+        return $this->view->fetch();
+    }
+
+    /**
+     * 全款（新车）详细资料
+     * @param null $ids
+     * @return string
+     * @throws \think\Exception
+     */
+    public function full_car_share_data($ids = null)
+    {
+        $row = Db::name('full_parment_order')->alias('a')
+            ->join('admin b', 'b.id=a.admin_id', 'LEFT')
+            ->join('plan_full c', 'c.id = a.plan_plan_full_name', 'LEFT')
+            ->join('mortgage d', 'd.id = a.mortgage_id', 'LEFT')
+            ->field('a.order_no,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.customer_source,a.introduce_name,a.introduce_phone,
+                a.introduce_card,a.id_cardimages,a.drivers_licenseimages,a.bank_cardimages,a.application_formimages,a.call_listfiles,
+                b.nickname as sales_name,
+                c.full_total_price,
+                d.car_imgeas,d.bank_card,d.invoice_monney,d.registration_code,d.tax,d.business_risks,d.insurance,d.lending_date,d.mortgage_type')
+            ->where('a.id', $ids)
+            ->find();
+        
+        //身份证正反面（多图）
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
+        //驾照正副页（多图）
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
+        //申请表（多图）
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
+        /**不必填 */
+        //银行卡照（可多图）
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
+        //通话清单（文件上传）
+        $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
+        //车辆所有的扫描件
+        $car_imgeas = $row['car_imgeas'] == '' ? [] : explode(',', $row['car_imgeas']);
+        $this->view->assign(
+            [
+                'row' => $row,
+                'cdnurl' => Config::get('upload')['cdnurl'],
+                'id_cardimages' => $id_cardimages,
+                'drivers_licenseimages' => $drivers_licenseimages,
+                'application_formimages' => $application_formimages,
+                'bank_cardimages' => $bank_cardimages,
+                'call_listfiles' => $call_listfiles,
+                'car_imgeas' => $car_imgeas,
+            ]
+        );
+        return $this->view->fetch();
+    }
+
 }

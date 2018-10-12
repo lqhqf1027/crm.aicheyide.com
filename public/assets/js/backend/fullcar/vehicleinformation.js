@@ -120,7 +120,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '查看客户详细资料',
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-showOrder',
-                                        url: 'fullcar/vehicleinformation/show_order',
+                                        url: 'Sharedetailsdatas/full_car_share_data',
                                     }
                                 ]
                             }
@@ -224,7 +224,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '查看客户详细资料',
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-showOrderAndStock',
-                                        url: 'fullcar/vehicleinformation/show_order_and_stock',
+                                        url: 'Sharedetailsdatas/full_car_share_data',
                                     }
                                 ]
                             }
@@ -240,7 +240,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             }
-
 
         },
         add: function () {

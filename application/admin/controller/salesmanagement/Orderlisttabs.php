@@ -585,69 +585,6 @@ class Orderlisttabs extends Backend
 
     }
 
-    /**查看全款单详细资料 */
-    public function fulldetails($ids = null)
-    {
-        $this->model = new \app\admin\model\FullParmentOrder;
-        $row = $this->model->get($ids);
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
-        if ($row['admin_id']) {
-            $row['sales_name'] = Db::name("admin")
-                ->where("id", $row['admin_id'])
-                ->value("nickname");
-
-        }
-
-
-        //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
-        foreach ($id_cardimages as $k => $v) {
-            $id_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-
-
-        //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
-        foreach ($drivers_licenseimages as $k => $v) {
-            $drivers_licenseimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //申请表（多图）
-        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
-        foreach ($application_formimages as $k => $v) {
-            $application_formimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        /**不必填 */
-        //银行卡照（可多图）
-        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
-        foreach ($bank_cardimages as $k => $v) {
-            $bank_cardimages[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        //通话清单（文件上传）
-        $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
-        foreach ($call_listfiles as $k => $v) {
-            $call_listfiles[$k] = Config::get('upload')['cdnurl'] . $v;
-        }
-        $this->view->assign(
-            [
-                'row' => $row,
-                'cdn' => Config::get('upload')['cdnurl'],
-                'id_cardimages_arr' => $id_cardimages,
-                'drivers_licenseimages_arr' => $drivers_licenseimages,
-                'application_formimages_arr' => $application_formimages,
-                'bank_cardimages_arr' => $bank_cardimages,
-                'call_listfiles_arr' => $call_listfiles,
-            ]
-        );
-        return $this->view->fetch();
-    }
-
     /**
      * 以租代购（新车）订车
      */
