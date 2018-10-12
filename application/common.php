@@ -1559,6 +1559,26 @@ if (!function_exists('secondfullcar_amount')) {
     }
 }
 /**
+ * 全款车 车管发送给销售， 可以提车
+ */
+if (!function_exists('secondfullsales_inform')) {
+
+
+    function secondfullsales_inform($models_name = NULL, $admin_name = NULL, $username = NULL)
+    {
+        if ($models_name && $admin_name && $username) {
+            $arr = [
+                'subject' => "全款二手车待提车通知：",
+                'message' => '<div style="min-height:550px; padding: 100px 55px 200px;">' . 销售员： . $admin_name . 发起了客户： . $username . 对车型： . $models_name . 的购买，内勤已录入金额，车管也已确认，请及时登录后台进行处理 . '</div>'
+            ];
+
+            return $arr;
+        }
+        exit('参数错误');
+
+    }
+}
+/**
  * 新车月供扣款不成功通知 ，财务出纳发送给风控
  */
 if (!function_exists('send_monthly_to_risk')) {

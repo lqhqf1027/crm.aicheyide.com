@@ -120,7 +120,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '查看客户详细资料',
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-showOrder',
-                                        url: 'fullcar/vehicleinformation/show_order',
+                                        url: 'Sharedetailsdatas/secondfull_car_share_data',
                                     }
                                 ]
                             }
@@ -188,6 +188,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: __('Id'),operate:false},
                             {field: 'order_no', title: __('订单编号')},
                             {field: 'models.name', title: __('销售车型')},
+                            {field: 'plansecondfull.licenseplatenumber', title: __('车牌号')},
                             {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('电话号码')},
@@ -219,7 +220,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         title: '查看客户详细资料',
                                         icon: 'fa fa-eye',
                                         classname: 'btn btn-xs btn-info btn-dialog btn-showOrderAndStock',
-                                        url: 'fullcar/vehicleinformation/show_order_and_stock',
+                                        url: 'Sharedetailsdatas/secondfull_car_share_data',
                                     }
                                 ]
                             }
@@ -235,7 +236,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
             }
-
 
         },
         add: function () {

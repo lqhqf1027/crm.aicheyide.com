@@ -2960,7 +2960,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'id', title: __('查看详细资料'), table: orderFull, buttons: [
                                     {
                                         name: 'fulldetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-fulldetails',
-                                        url: 'salesmanagement/Orderlisttabs/fulldetails', callback: function (data) {
+                                        url: 'Sharedetailsdatas/full_car_share_data', callback: function (data) {
 
                                         }
                                     }
@@ -3239,8 +3239,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'id', title: __('查看详细资料'), table: secondOrderFull, buttons: [
                                     {
-                                        name: 'fulldetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-fulldetails',
-                                        url: 'salesmanagement/Orderlisttabs/fulldetails', callback: function (data) {
+                                        name: 'fulldetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-secondfulldetails',
+                                        url: 'Sharedetailsdatas/secondfull_car_share_data', callback: function (data) {
 
                                         }
                                     }
@@ -3438,7 +3438,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 secondOrderFull.on('load-success.bs.table', function (e, data) {
 
                     $('#badge_second_order_full').text(data.total);
-                    $(".btn-fulldetails").data("area", ["95%", "95%"]);
+                    $(".btn-secondfulldetails").data("area", ["95%", "95%"]);
                 })
 
                 /**
@@ -3450,7 +3450,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * 车管发送---销售接收----可以进行提车
                  */
                 goeasy.subscribe({
-                    channel: 'demo-full_takecar',
+                    channel: 'demo-secondfull_takecar',
                     onMessage: function(message){
                         message = split('|',message.content);
                         if(Config.ADMIN_JS.id==message[1]){
