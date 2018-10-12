@@ -125,12 +125,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: '', title: __('原始方案'), table: newprepareMatch, buttons: [
                                     {
-                                        name: 'details',
+                                        name: 'btn_view_plan',
                                         text: '查看/对比原始方案',
                                         title: '查看/对比原始方案',
                                         icon: 'fa fa-eye',
-                                        classname: 'btn btn-xs btn-info  btn-view-plan',
-                                        url: 'planmanagement/matchfinance/view_plan?pid=',
+                                        classname: 'btn btn-xs btn-info btn-dialog btn-view-plan',
+                                        url: 'planmanagement/matchfinance/view_plan',
                                         callback: function (data) {
 
                                         }

@@ -4,6 +4,8 @@ namespace app\admin\controller\planmanagement;
 
 use app\common\controller\Backend;
 use app\common\library\Email;
+//use app\common\model\Config;
+use think\Config;
 use think\Db;
 
 /**
@@ -66,6 +68,8 @@ class Plantabs extends Backend
                     $query->withField('name');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
+                },'financialplatform'=>function($query){
+                    $query->withField('name');
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -79,6 +83,8 @@ class Plantabs extends Backend
                     $query->withField('nickname');
                 }, 'schemecategory' => function ($query) {
                     $query->withField('name,category_note');
+                },'financialplatform'=>function($query){
+                    $query->withField('name');
                 }])
                 ->order('category_id')
                 ->where($where)
@@ -89,14 +95,17 @@ class Plantabs extends Backend
 
             foreach ($list as $key => $row) {
 
-                $row->visible(['id', 'payment', 'monthly', 'brand_name', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance', 'category_id']);
+                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance', 'category_id']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['schemecategory']);
                 $row->getRelation('schemecategory')->visible(['name', 'category_note']);
-                $list[$key]['brand_name'] = self::getBrandName($row['id']); //获取品牌
+                $row->visible(['financialplatform']);
+                $row->getRelation('financialplatform')->visible(['name']);
+                $list[$key]['brand_name'] = array_keys(self::getBrandName($row['id'])); //获取品牌
+                $list[$key]['brand_log'] =Config::get('upload')['cdnurl'].array_values(self::getBrandName($row['id']))[0]; //获取logo图片
                 $list[$key]['match_plan'] = in_array($row['id'], $sales_order_data) == $row['id'] ? 'match_success' : 'match_error'; //返回是否与方案id匹配
 
             }
@@ -132,7 +141,8 @@ class Plantabs extends Backend
             ->join('models b', 'a.models_id = b.id')
             ->join('brand c', 'b.brand_id=c.id')
             ->where('a.id', $plan_id)
-            ->value('c.name');
+//            ->field('c.name,c.brand_logoimage')
+            ->column('c.name,c.brand_logoimage');
     }
 
 

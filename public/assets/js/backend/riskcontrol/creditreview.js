@@ -1869,7 +1869,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
      * 新车审核不通过,待补录资料
      */
     $('#newinformation').click(function () {
-        
+
         var id = $('#hidden1').val();
        
         var prompt = Layer.prompt(

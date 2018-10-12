@@ -3,10 +3,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     var Controller = {
         index: function () {
             // 初始化表格参数配置
-            Table.api.init({
-               
-            });
-          
+            Table.api.init({});
+
             //绑定事件
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var panel = $($(this).attr("href"));
@@ -19,7 +17,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //移除绑定的事件
                 $(this).unbind('shown.bs.tab');
             });
-            
+
             //必须默认触发shown.bs.tab事件
             $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
         },
@@ -33,7 +31,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 table1.on('load-success.bs.table', function (e, data) {
                     var arr = data.rows;
-                   // console.log(arr);
+                    // console.log(arr);
                     Controller.merge(arr, table1);
 
                 });
@@ -42,65 +40,113 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return "快速搜索车型";
                 };
                 $(".btn-add").data("area", ["80%", "80%"]);
-                 // 初始化表格
-            table1.bootstrapTable({
-                url: 'planmanagement/plantabs/table1',
-                extend: {
-                    index_url: 'plan/planacar/index',
-                    add_url: 'planmanagement/plantabs/firstadd',
-                    edit_url: 'planmanagement/plantabs/firstedit',
-                    del_url: 'planmanagement/plantabs/firstdel',
-                    multi_url: 'planmanagement/plantabs/firstmulti',
+                // 初始化表格
+                table1.bootstrapTable({
+                    url: 'planmanagement/plantabs/table1',
+                    extend: {
+                        index_url: 'plan/planacar/index',
+                        add_url: 'planmanagement/plantabs/firstadd',
+                        edit_url: 'planmanagement/plantabs/firstedit',
+                        del_url: 'planmanagement/plantabs/firstdel',
+                        multi_url: 'planmanagement/plantabs/firstmulti',
 
-                    table: 'plan_acar',
-                },
-                toolbar: '#toolbar1',
-                pk: 'id',
-                sortName: 'id',
-                searchFormVisible: true,
-                columns: [
-                    [
-                        {checkbox: true,formatter:function (v,r,i) {
-                                return r.match_plan==='match_success'?{disabled : true}:{disabled : false};
-                            }},
-                        {field: 'id', title: __('Id'),operate:false},
-                        {field: 'schemecategory.name', title: __('方案类型'),formatter:function (v,r,i) {
+                        table: 'plan_acar',
+                    },
+                    toolbar: '#toolbar1',
+                    pk: 'id',
+                    sortName: 'id',
+                    searchFormVisible: true,
+                    columns: [
+                        [
+                            {
+                                checkbox: true, formatter: function (v, r, i) {
+                                    return r.match_plan === 'match_success' ? {disabled: true} : {disabled: false};
+                                }
+                            },
+                            {field: 'id', title: __('Id'), operate: false},
+                            {
+                                field: 'schemecategory.name', title: __('方案类型'), formatter: function (v, r, i) {
+                                    // console.log( r.schemecategory.category_note.length);
+                                    return r.schemecategory.category_note != null ? v + "<br />" + '<u>' +Controller.substrPlanTyleNode(r.schemecategory.category_note,16)  + '</u>' : v;
+                                }
+                            },
+                            // {field: 'schemecategory.category_note', title: __('方案类型备注'),operate:false},
+                            {
+                                field: 'models.name', title: '销售车型', operate: false, formatter: function (v, r, i) {
+                                    return v != null ? "<img src="+r.brand_log+" alt='品牌logo' width='30' height='30'>" +r.brand_name + '-' + v : v;
+                                }
+                            },
+                            {field: 'financialplatform.name', title: '所属金融平台'},
+                            {field: 'payment', title: __('Payment'), operate: 'BETWEEN', operate: false},
+                            {field: 'monthly', title: __('NewcarMonthly'), operate: 'BETWEEN', operate: false},
+                            {
+                                field: 'nperlist',
+                                title: __('Nperlist'),
+                                visible: false,
+                                searchList: {
+                                    "12": __('Nperlist 12'),
+                                    "24": __('Nperlist 24'),
+                                    "36": __('Nperlist 36'),
+                                    "48": __('Nperlist 48'),
+                                    "60": __('Nperlist 60')
+                                }
+                            },
+                            {field: 'nperlist_text', title: __('Nperlist'), operate: false},
+                            {field: 'margin', title: __('Margin'), operate: 'BETWEEN', operate: false},
+                            {field: 'tail_section', title: __('Tail_section'), operate: 'BETWEEN', operate: false},
+                            {field: 'gps', title: __('Gps'), operate: false},
+                            {field: 'admin.nickname', title: __('销售定制方案')},
+                            {
+                                field: 'working_insurance',
+                                title: __('是否营运险'),
+                                searchList: {"yes": '是', "no": "否"},
+                                formatter: function (v, r, i) {
+                                    return r.working_insurance == 'yes' ? '是' : '否'
+                                }
+                            },
 
-                                return r.schemecategory.category_note!=null?v+"<br />"+'<u>'+r.schemecategory.category_note+'</u>':v;
+                            {field: 'note', title: __('销售方案备注'), operate: false,formatter:function (v,r,i) {
 
-                            }},
-                        // {field: 'schemecategory.category_note', title: __('方案类型备注'),operate:false},
-                        {field: 'models.name', title: '销售车型',operate:false,formatter:function (v,r,i) {
+                                    return v != null ?'<u>' +Controller.substrPlanTyleNode(v,16)  + '</u>' : v;
 
-                                return v!=null?r.brand_name +'-'+v:v;
-                            }},
-                        {field: 'financialplatform.name', title: '所属金融平台'},
-                        {field: 'payment', title: __('Payment'), operate:'BETWEEN',operate:false},
-                        {field: 'monthly', title: __('NewcarMonthly'), operate:'BETWEEN',operate:false},
-                        {field: 'nperlist', title: __('Nperlist'), visible:false, searchList: {"12":__('Nperlist 12'),"24":__('Nperlist 24'),"36":__('Nperlist 36'),"48":__('Nperlist 48'),"60":__('Nperlist 60')}},
-                        {field: 'nperlist_text', title: __('Nperlist'), operate:false},
-                        {field: 'margin', title: __('Margin'), operate:'BETWEEN',operate:false},
-                        {field: 'tail_section', title: __('Tail_section'), operate:'BETWEEN',operate:false},
-                        {field: 'gps', title: __('Gps'), operate:false},
-                        {field: 'admin.nickname', title: __('销售定制方案')},
-                        {field: 'working_insurance', title: __('是否营运险'), searchList:{"yes":'是',"no":"否"},formatter:function (v,r,i) {
-                            return r.working_insurance=='yes'?'是':'否'
-                            }},
+                                }},
 
-                        {field: 'note', title: __('销售方案备注'),operate:false},
-                      
-                        {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
-                        {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
-                        {field: 'ismenu', title: __('Ismenu'), formatter: Controller.api.formatter.toggle,operate:false},
-                      
-                        {field: 'operate', title: __('Operate'), table: table1,  events: Controller.api.events.operate,
-                            formatter: Controller.api.operate}
+                            {
+                                field: 'createtime',
+                                title: __('Createtime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {
+                                field: 'updatetime',
+                                title: __('Updatetime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: 'YYYY-MM-DD'
+                            },
+                            {
+                                field: 'ismenu',
+                                title: __('Ismenu'),
+                                formatter: Controller.api.formatter.toggle,
+                                operate: false
+                            },
+
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: table1,
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.operate
+                            }
+                        ]
                     ]
-                ]
-            });
+                });
                 // 为表格1绑定事件
                 Table.api.bindevent(table1);
-                $(document).on('click','.btn_import_dialog',function () {
+                $(document).on('click', '.btn_import_dialog', function () {
 
                     var url = 'planmanagement/plantabs/import_first_plan';
                     var options = {
@@ -139,18 +185,38 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: __('Id')},
-                            {field: 'models.name', title: '销售车型',formatter:function (v,r,i) {
+                            {
+                                field: 'models.name', title: '销售车型', formatter: function (v, r, i) {
 
-                                    return v!=null?r.brand_name +'-'+v:v;
-                                }},
-                            
-                            {field: 'full_total_price', title: __('Full_total_price'), operate:'BETWEEN'},
-                        
-                            {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                            {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                                    return v != null ? r.brand_name + '-' + v : v;
+                                }
+                            },
+
+                            {field: 'full_total_price', title: __('Full_total_price'), operate: 'BETWEEN'},
+
+                            {
+                                field: 'createtime',
+                                title: __('Createtime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
+                            {
+                                field: 'updatetime',
+                                title: __('Updatetime'),
+                                operate: 'RANGE',
+                                addclass: 'datetimerange',
+                                formatter: Table.api.formatter.datetime
+                            },
                             {field: 'ismenu', title: __('Ismenu'), formatter: Controller.api.formatter.toggle},
-                            
-                            {field: 'operate', title: __('Operate'), table: table3, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+
+                            {
+                                field: 'operate',
+                                title: __('Operate'),
+                                table: table3,
+                                events: Table.api.events.operate,
+                                formatter: Table.api.formatter.operate
+                            }
                         ]
                     ]
                 });
@@ -177,8 +243,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             for (var i in arr) {
 
 
-
-                if (hash.indexOf(arr[i]['schemecategory']['name']) == -1 ) {
+                if (hash.indexOf(arr[i]['schemecategory']['name']) == -1) {
 
                     hash.push(arr[i]['schemecategory']['name']);
 
@@ -208,7 +273,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var td = $(obj).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
 
-                if(data_arr[i][1]!=null){
+                if (data_arr[i][1] != null) {
                     i % 2 == 0 ? td.eq(2).css({"background-color": "#fff"}) : td.eq(2).css({"background-color": "#ddd"});
                 }
 
@@ -229,7 +294,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // console.log(data);
                 Toastr.success("失败");
             });
-            
+
             Controller.api.bindevent();
         },
         fulledit: function () {
@@ -245,11 +310,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // console.log(data);
                 Toastr.success("失败");
             });
-            
+
             Controller.api.bindevent();
         },
         //导入以租代购（新车）方案
-        import_first_plan:function(){
+        import_first_plan: function () {
             require(['upload'], function (Upload) {
                 Upload.api.plupload($('.btn-import-dialog'), function (data, ret) {
 
@@ -262,61 +327,81 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
             });
             Controller.api.bindevent(function () {
-                
+
             });
 
         },
-        firstadd:function(){
+        firstadd: function () {
 
 
             Controller.api.bindevent();
         },
-        fulladd:function(){
+        fulladd: function () {
             Controller.api.bindevent();
         },
+        /**
+         *   字符串按照指定长度换行
+         * @param s   字符串
+         * @param $length   长度
+         * @returns { string}  返回新的数组
+         */
+        substrPlanTyleNode:function (s,$length) {
+            ++$length;
+            var re= '';
+            var length = s.length;
+            for (var i = 0,j=1; i < length; i++,j++) {
+                if (j&&j % $length == 0) {
+                    re += '<br />';
+                } else {
+                    re += s[i];
+                }
+            }
+            return re;
+        },
+
         api: {
             bindevent: function () {
 
                 Form.api.bindevent($("form[role=form]"));
             },
-            events:{
-                  operate:{
-                      'click .btn-delone': function (e, value, row, index) {
-                          /**删除按钮 */
+            events: {
+                operate: {
+                    'click .btn-delone': function (e, value, row, index) {
+                        /**删除按钮 */
 
-                          e.stopPropagation();
-                          e.preventDefault();
-                          var that = this;
-                          var top = $(that).offset().top - $(window).scrollTop();
-                          var left = $(that).offset().left - $(window).scrollLeft() - 260;
-                          if (top + 154 > $(window).height()) {
-                              top = top - 154;
-                          }
-                          if ($(window).width() < 480) {
-                              top = left = undefined;
-                          }
-                          Layer.confirm(
-                              __('Are you sure you want to delete this item?'),
-                              {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
-                              function (index) {
-                                  var table = $(that).closest('table');
-                                  var options = table.bootstrapTable('getOptions');
-                                  Table.api.multi("del", row[options.pk], table, that);
-                                  Layer.close(index);
-                              }
-                          );
-                      },
-                      'click .btn-editone': function (e, value, row, index) {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          var table = $(this).closest('table');
-                          var options = table.bootstrapTable('getOptions');
-                          var ids = row[options.pk];
-                          row = $.extend({}, row ? row : {}, {ids: ids});
-                          var url = options.extend.edit_url;
-                          Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
-                      },
-                  }
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        var top = $(that).offset().top - $(window).scrollTop();
+                        var left = $(that).offset().left - $(window).scrollLeft() - 260;
+                        if (top + 154 > $(window).height()) {
+                            top = top - 154;
+                        }
+                        if ($(window).width() < 480) {
+                            top = left = undefined;
+                        }
+                        Layer.confirm(
+                            __('Are you sure you want to delete this item?'),
+                            {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                Table.api.multi("del", row[options.pk], table, that);
+                                Layer.close(index);
+                            }
+                        );
+                    },
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = options.extend.edit_url;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+                }
             },
             formatter: {
 
@@ -332,8 +417,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var color = typeof this.color !== 'undefined' ? this.color : 'success';
                     var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                     var no = typeof this.no !== 'undefined' ? this.no : 0;
-                    return row.match_plan=='match_success'?'正在销售或已出售':"<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
-                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+                    return row.match_plan == 'match_success' ? '正在销售或已出售' : "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                        + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
 
 
                 },
@@ -346,8 +431,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var options = table ? table.bootstrapTable('getOptions') : {};
                 // 默认按钮组
                 var buttons = $.extend([], this.buttons || []);
-                if(row.match_plan=='match_success'){
-                   return '<span class="text-danger">禁止编辑或删除</span>'
+                if (row.match_plan == 'match_success') {
+                    return '<span class="text-danger">禁止编辑或删除</span>'
                     // buttons.push(
                     //     {
                     //         name: 'edit',
@@ -359,7 +444,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     //     }
                     // )
                 }
-                else{
+                else {
                     buttons.push(
                         {
                             name: 'del',
@@ -382,7 +467,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
             }
         }
-         
+
     };
     return Controller;
 });
