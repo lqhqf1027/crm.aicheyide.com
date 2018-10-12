@@ -650,14 +650,17 @@ class Carreservation extends Backend
             case 'message3':
                 return Db::name('admin')
                     ->where('rule_message','message13')
+                    ->where('status','normal')
                     ->column('id');
             case 'message4':
                 return Db::name('admin')
                     ->where('rule_message','message20')
+                    ->where('status','normal')
                     ->column('id');
             case 'message22':
                 return Db::name('admin')
                     ->where('rule_message','message24')
+                    ->where('status','normal')
                     ->column('id');
         }
     }

@@ -703,16 +703,19 @@ class Depositmanage extends Backend
             case 'message13':
                 return Db::name('admin')
                     ->where('rule_message', 'message8')
+                    ->where('status','normal')
                     ->column('id');
             case 'message4':
             case 'message20':
                 return Db::name('admin')
                     ->where('rule_message', 'message9')
+                    ->where('status','normal')
                     ->column('id');
             case 'message22':
             case 'message24':
                 return Db::name('admin')
                     ->where('rule_message', 'message23')
+                    ->where('status','normal')
                     ->column('id');
         }
 
