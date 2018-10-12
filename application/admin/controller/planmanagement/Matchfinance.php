@@ -12,7 +12,7 @@ use app\common\controller\Backend;
 use think\Db;
 use app\common\library\Email;
 use think\Config;
-
+use app\admin\model\SalesOrder;
 class Matchfinance extends Backend
 {
     protected $model = null;
@@ -59,7 +59,7 @@ class Matchfinance extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['planacar' => function ($query) {
-                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps,id');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
@@ -75,7 +75,7 @@ class Matchfinance extends Backend
 
             $list = $this->model
                 ->with(['planacar' => function ($query) {
-                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps,id');
                 }, 'admin' => function ($query) {
                     $query->withField(['nickname', 'id', 'avatar']);
                 }, 'models' => function ($query) {
@@ -92,7 +92,7 @@ class Matchfinance extends Backend
 
                 $row->visible(['id', 'order_no', 'username', 'createtime', 'deposit_contractimages','phone', 'id_card', 'amount_collected', 'downpayment', 'difference', 'amount_collected', 'decorate', 'financial_name', 'review_the_data']);
                 $row->visible(['planacar']);
-                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
+                $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps','id']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
                 $row->visible(['models']);
@@ -374,12 +374,19 @@ class Matchfinance extends Backend
      * User: glen9
      * Date: 2018/10/12
      * Time: 3:35
+     * @param null $ids
      * @return string
      * @throws \think\Exception
      */
-    public function view_plan(){
+    public function view_plan($ids=null)
+    {
+        $result  = SalesOrder::with(['planacarNew'])->select(['id'=>$ids]);
+        dump(collection($result)->toArray());die;
+        $plan_id = model('SalesOrder')->get(['id',$ids])->value('plan_acar_name');
+        $result = Db::name('plan_acar')->where(['id'=>$plan_id])->field('monthly,payment,nperlist,margin,tail_section,gps')->find();
 
         return $this->view->fetch();
     }
+
     
 }

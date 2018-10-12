@@ -85,6 +85,11 @@ class SalesOrder extends Model
         return $this->belongsTo('PlanAcar', 'plan_acar_name', 'id', [], 'LEFT')->setEagerlyType(0);
         //    return $this->hasOne('PlanAcar','id','plan_acar_name');
     }
+    public function planacarNew()
+    {
+        return $this->hasOne('PlanAcar', 'id', 'plan_acar_name');
+        //    return $this->hasOne('PlanAcar','id','plan_acar_name');
+    }
 
     /**查询销售id的昵称
      * @return \think\model\relation\BelongsTo

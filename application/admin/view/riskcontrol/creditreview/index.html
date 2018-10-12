@@ -19,11 +19,12 @@
             <li class="active text-center"><a href="#newcar_audit" data-toggle="tab">审核新车单 &nbsp;<span class="pull-right-container">
                 {if $total eq 0}
                 {else /}
-                <small class="badge pull-right bg-red" id="badge_newcar_audit">{$total}</small>
+                <small class="badge pull-right bg-red" id="badge_newcar_audit">{$total} </small>&nbsp;
                 {/if}
                 {if $total3 eq 0}
                 {else /}
-                <small class="badge pull-right bg-green" id="badge_newtakecar_audit">{$total3}</small>
+
+                 <small class="badge pull-right bg-green" id="badge_newtakecar_audit"> {$total3}</small>
                 {/if}
                 </span></a>
             </li>
@@ -34,7 +35,7 @@
                 {/if}
                 {if $total4 eq 0}
                 {else /}
-                <small class="badge pull-right bg-green" id="badge_rentaltake_audit">{$total4}</small>
+                <small class="badge pull-right bg-green" id="badge_rentaltake_audit"> {$total4}</small>
                 {/if}
                 </span></a>
             </li>
@@ -45,7 +46,7 @@
                 {/if}
                 {if $total5 eq 0}
                 {else /}
-                <small class="badge pull-right bg-green" id="badge_secondhandtakecar_audit">{$total5}</small>
+                <small class="badge pull-right bg-green" id="badge_secondhandtakecar_audit"> {$total5}</small>
                 </span></a>
                 {/if}
             </li>
