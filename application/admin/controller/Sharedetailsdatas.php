@@ -11,6 +11,7 @@ namespace app\admin\controller;
 use app\common\controller\Backend;
 use think\Config;
 use think\Db;
+
 class Sharedetailsdatas extends Backend
 {
     /**
@@ -18,7 +19,7 @@ class Sharedetailsdatas extends Backend
      * @var \app\admin\model\Ordertabs
      */
     protected $model = null;
-    protected $noNeedRight  = [
+    protected $noNeedRight = [
         'new_car_share_data', 'second_car_share_data', 'rental_car_share_data'
     ];
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -66,44 +67,43 @@ class Sharedetailsdatas extends Backend
         $row['service_charges'] = null;
         $row['down_payment_service'] = null;
         $row['first_money'] = null;
-       //计算保险
-       if($row['business_risks'] && $row['insurance'] && $row['car_boat_tax']){
-          $insurance = floatval($row['business_risks']) + floatval($row['insurance']) + floatval($row['car_boat_tax']);
+        //计算保险
+        if ($row['business_risks'] && $row['insurance'] && $row['car_boat_tax']) {
+            $insurance = floatval($row['business_risks']) + floatval($row['insurance']) + floatval($row['car_boat_tax']);
 
-          $row['total_insurance'] = $insurance;
-       }
+            $row['total_insurance'] = $insurance;
+        }
 
-       //计算服务费
-       if($row['contract_total'] && $row['invoice_monney'] && $insurance){
-           $service_charge = floatval($row['contract_total']) - floatval($insurance) - floatval($row['invoice_monney']);
+        //计算服务费
+        if ($row['contract_total'] && $row['invoice_monney'] && $insurance) {
+            $service_charge = floatval($row['contract_total']) - floatval($insurance) - floatval($row['invoice_monney']);
 
-           $row['service_charges'] = $service_charge;
-       }
+            $row['service_charges'] = $service_charge;
+        }
 
-       //计算首期服务费
-       if($service_charge && $row['withholding_service'] && $row['nperlist'] && $row['payment']){
-         $down_payment =  floatval($service_charge) - (floatval($row['withholding_service']) * floatval($row['nperlist']));
+        //计算首期服务费
+        if ($service_charge && $row['withholding_service'] && $row['nperlist'] && $row['payment']) {
+            $down_payment = floatval($service_charge) - (floatval($row['withholding_service']) * floatval($row['nperlist']));
 
-         $down_payment = $down_payment<$row['payment']? $down_payment : $row['payment'];
+            $down_payment = $down_payment < $row['payment'] ? $down_payment : $row['payment'];
 
-         $row['down_payment_service'] = $down_payment;
-       }
+            $row['down_payment_service'] = $down_payment;
+        }
 
 
-       //计算首期款
-        if($down_payment && $row['payment']){
+        //计算首期款
+        if ($down_payment && $row['payment']) {
             $first_money = floatval($row['payment']) - floatval($down_payment);
 
             $row['first_money'] = $first_money;
 
             Db::name('sales_order')
-            ->where('id',$ids)
-            ->update([
-                'downpayment'=>$first_money,
-                'service_charge'=>$down_payment
+                ->where('id', $ids)
+                ->update([
+                    'downpayment' => $first_money,
+                    'service_charge' => $down_payment
                 ]);
         }
-
 
 
         if ($row['new_car_marginimages'] == "") {
@@ -295,11 +295,11 @@ class Sharedetailsdatas extends Backend
             ->find();
 
         //身份证正反面（多图）
-        $id_cardimages = $row['id_cardimages'] == ''? [] : explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         //驾照正副页（多图）
-        $drivers_licenseimages = $row['drivers_licenseimages'] == ''? [] : explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         //户口簿【首页、主人页、本人页】
-        $residence_bookletimages = $row['residence_bookletimages'] == ''? [] : explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         //通话清单（文件上传）
         $call_listfilesimages = explode(',', $row['call_listfilesimages']);
         //定金收据上传
@@ -327,4 +327,5 @@ class Sharedetailsdatas extends Backend
         );
         return $this->view->fetch();
     }
+
 }

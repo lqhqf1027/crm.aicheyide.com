@@ -1,0 +1,100 @@
+<style>
+    .change {
+        border: 2px solid red;
+    }
+    .imgBorder{
+        width:80px;height:80px;border-radius: 5px;
+    }
+</style>
+
+<h3>
+    <center>
+        <span style="float: left;font-size: medium"><strong>{:__('订单编号')}：</strong> {$row.order_no}</span>
+        <h2><span style="margin-left: -20%">资料详情</span></h2> <span
+            style="float: right;margin-top: -35px;font-size: medium"><strong>{:__('提车日期')}：</strong>  {empty name="$row.delivery_datetime"} <span class="text-info">暂无</span>{else /}{$row.delivery_datetime|date="Y-m-d",###}{/empty}</span>
+        <span style="float: right;margin-top: -35px;margin-right: 15%;font-size: medium"><strong>{:__('订车日期')}：</strong>  {empty name="$row.createtime"} <span class="text-info">暂无</span>{else /}{$row.createtime|date="Y-m-d",###}{/empty}</span>
+    </center>
+</h3>
+
+<div class="container-fulid" style="background-color: #ddd">
+
+    <br>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-offset-3 col-md-6">
+            <strong>{:__('销售车型/方案')}：</strong> {$row.plan_name}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('销售员')}：</strong> {$row.sales_name|default="<span class='text-info'>暂无</span>"}
+        </div>
+    </div>
+    <br>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('姓名')}：</strong>
+            {:__($row.username)}
+            {eq name="$row.genderdata" value="male"}
+            <span class="fa fa-male text-info"></span>
+            {else /}
+            <span class="fa fa-female" style="color:palevioletred"></span>
+            {/eq}
+
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('联系电话')}：</strong> {$row.phone|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('身份证号')}：</strong> {$row.id_card|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('金融平台')}：</strong> {empty name="$row.financial_name"}<span class='text-info'>暂无</span>{else /}{$row.financial_name}{/empty}
+        </div>
+
+    </div>
+    <hr>
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('实收订车金额（元）')}：</strong>{empty name="$row.amount_collected"} <span class="text-info">暂无</span>{else /}{$row.amount_collected}{/empty}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('装饰')}：</strong>{empty name="$row.decorate"} <span class="text-info">暂无</span>{else /}{$row.decorate}{/empty}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('全款车保证金（元）')}：</strong>{empty name="$row.bond"} <span class="text-info">暂无</span>{else /}{$row.bond}{/empty}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('开票金额（元）')}：</strong>{empty name="$row.invoice_monney"} <span class="text-info">暂无</span>{else /}{$row.invoice_monney}{/empty}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('放款日期')}：</strong>{$row.lending_date|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('扣款卡号')}：</strong>{$row.bank_card|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('登记编码')}：</strong>{$row.registration_code|default="<span class='text-info'>暂无</span>"}
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('购置税（元）')}：</strong>{empty name="$row.tax"} <span class="text-info">暂无</span>{else /}{$row.tax}{/empty}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('商业险（元）')}：</strong>{empty name="$row.business_risks"} <span class="text-info">暂无</span>{else /}{$row.business_risks}{/empty}
+        </div>
+
+        <div class="col-xs-12 col-sm-8 col-md-3">
+            <strong>{:__('交强险（元）')}：</strong>{empty name="$row.insurance"} <span class="text-info">暂无</span>{else /}{$row.insurance}{/empty}
+        </div>
+
+
+    </div>
+    <hr>
+</div>

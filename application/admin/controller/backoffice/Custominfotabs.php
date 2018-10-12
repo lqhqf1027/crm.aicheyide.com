@@ -338,6 +338,7 @@ class Custominfotabs extends Backend
 
         $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
             $query->where('rule_message','in',['message8','message9','message23']);
+            $query->where('status','normal');
         })->select();
         $saleList = array();
 
@@ -447,7 +448,8 @@ class Custominfotabs extends Backend
 
 
         $sale = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where(['rule_message'=>['in',['message8','message9','message23']]]);
+            $query->where(['rule_message'=>['in',['message8','message9','message23']]])
+            ->where('status','normal');
         })->select();
         $saleList = array();
 
@@ -548,14 +550,17 @@ class Custominfotabs extends Backend
              case 'message3':
                  return Db::name('admin')
                      ->where('rule_message','message13')
+                     ->where('status','normal')
                      ->column('id');
              case 'message4':
                  return Db::name('admin')
                      ->where('rule_message','message20')
+                     ->where('status','normal')
                      ->column('id');
              case 'message22':
                  return Db::name('admin')
                      ->where('rule_message','message24')
+                     ->where('status','normal')
                      ->column('id');
          }
     }

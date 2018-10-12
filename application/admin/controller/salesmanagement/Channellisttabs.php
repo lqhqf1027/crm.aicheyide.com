@@ -67,6 +67,7 @@ class Channellisttabs extends Backend
         //得到该部门所有销售
         $all_sales = Db::name('admin')
             ->where('rule_message', $message)
+            ->where('status','normal')
             ->column('id');
 
 
