@@ -20,7 +20,7 @@
                         <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('banking/mortgagecommissioner/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a>
                         <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('banking/mortgagecommissioner/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a>
                         <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('banking/mortgagecommissioner/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a>
-                        <a href="javascript:;" class="btn btn-danger btn-import {:$auth->check('banking/mortgagecommissioner/import')?'':'hide'}" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>
+                        <a href="javascript:;" class="btn btn-danger btn-import" title="{:__('Import')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__('Import')}</a>
                         <a href="{$config['upload']['cdnurl']}/mortgage/按揭信息表（以往）.xlsx" class="btn btn-embossed btn-primary btn-download" title="{:__('下载导入模板')}">
                             <i class="fa fa-download"></i> {:__('下载导入模板')}</a>
 

@@ -49,7 +49,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         edit_url: 'planmanagement/plantabs/firstedit',
                         del_url: 'planmanagement/plantabs/firstdel',
                         multi_url: 'planmanagement/plantabs/firstmulti',
-
+                        import_url: 'planmanagement/plantabs/import',
                         table: 'plan_acar',
                     },
                     toolbar: '#toolbar1',

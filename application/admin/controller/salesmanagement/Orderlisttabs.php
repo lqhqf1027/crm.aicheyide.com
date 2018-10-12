@@ -591,8 +591,17 @@ class Orderlisttabs extends Backend
     public function newreserve()
     {
         $this->model = model('SalesOrder');
+
+        $plan_acar = Db::name('plan_acar')->field('category_id')->select();
+        foreach($plan_acar as $k => $v){
+            foreach($v as $value){
+                $ids[] = $value;
+            }
+        }
+        // pr($ids);
+        // die;
         //销售方案类别
-        $category = DB::name('scheme_category')->field('id,name')->select();
+        $category = Db::name('scheme_category')->where('id', 'in', $ids)->field('id,name')->select();
         // pr($category);
         // die;
 
@@ -609,7 +618,7 @@ class Orderlisttabs extends Backend
             //生成订单编号
             $params['order_no'] = date('Ymdhis');
             //pr($params);die();
-            $data = DB::name('plan_acar')->where('id', $params['plan_acar_name'])->field('payment,monthly,nperlist,gps,margin,tail_section')->find();
+            $data = Db::name('plan_acar')->where('id', $params['plan_acar_name'])->field('payment,monthly,nperlist,gps,margin,tail_section')->find();
 
             $params['car_total_price'] = $data['payment'] + $data['monthly'] * $data['nperlist'];
             $params['downpayment'] = $data['payment'] + $data['monthly'] + $data['margin'] + $data['gps'];

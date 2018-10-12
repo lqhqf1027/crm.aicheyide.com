@@ -385,10 +385,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         
                                         hidden: function (row, value, index) {
                                            
-                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages || !row.accreditimages || !row.faceimages  || !row.informationimages) {
+                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages) {
                                                 return false;
                                             }
-                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages && row.accreditimages && row.faceimages  && row.informationimages) {
+                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages) {
                                                 return true;
                                             }
                                         },
