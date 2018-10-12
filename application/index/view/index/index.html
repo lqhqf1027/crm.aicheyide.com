@@ -168,16 +168,18 @@
         <fieldset>
             <input placeholder="请输入你的真实姓名" type="text" tabindex="1" required autofocus name="name"  lay-verify="required"  >
         </fieldset>
-        选择地区 <span class="text-danger" style="color: red;">（暂只支持成都地区员工注册）</span>
+        选择地区 <span class="text-danger" style="color: red;"></span>
 
         <fieldset>
             <select name="city" lay-verify="required" required>
                 <option value=""></option>
                 <option selected>成都</option>
-                <option  disabled>西安</option>
-                <option  disabled>昆明</option>
-                <option  disabled> 南充</option>
-                <option  disabled>银川</option>
+                <option  >西安</option>
+                <option  >昆明</option>
+                <option  > 南充</option>
+                <option  >银川</option>
+                <option  >渠道</option>
+
             </select>
         </fieldset>
         选择部门
@@ -204,21 +206,64 @@
             </select>
         </fieldset>
         <p style="font-weight: bold;text-align: center;"><strong >选择角色</strong> <u>（如下方无你的角色，请暂时不要注册）</u></p>
-        <fieldset>
+        <fieldset >
+            <div class="layui-fluid">
+                <div class="layui-row " align="center">
+                    <div class="layui-col-md2 layui-col-xs12 layui-bg-gray" >
+                        <strong>成都总部</strong>
+                        <p>
+                            <input type="radio" name="rule" value="总经理（成都）" title="总经理" lay-filter="rule">
+                        </p>
+                        <p>销售一部（成都）</p>
+                        <input type="radio" name="rule" value="销售一部经理" title="销售一部经理" lay-filter="rule">
+                        <input type="radio" name="rule" value="销售一部顾问" title="销售一部顾问" lay-filter="rule">
+                        <input type="radio" name="rule" value="销售一部内勤" title="销售一部内勤" lay-filter="rule">
+                        <p>销售二部（成都）</p>
+                        <input type="radio" name="rule" value="销售二部经理" title="销售二部经理" lay-filter="rule">
+                        <input type="radio" name="rule" value="销售二部顾问" title="销售二部顾问" lay-filter="rule">
+                        <input type="radio" name="rule" value="销售二部内勤" title="销售二部内勤" lay-filter="rule">
+                        <p>销售三部（成都）</p>
+                        <input type="radio" name="rule" value="销售三部经理" title="销售三部经理" lay-filter="rule">
+                        <input type="radio" name="rule" value="销售三部顾问" title="销售三部顾问" lay-filter="rule">
+
+                    </div>
+                    <div class="layui-col-md2 layui-col-xs12 ">
+                        <strong>昆明分公司</strong>
+                        <p>
+                            <input type="radio" name="rule" value="总经理（昆明）" title="总经理" lay-filter="rule">
+                        </p>
+                        <p>
+                            <input type="radio" name="rule" value="销售经理（昆明）" title="销售经理（昆明）" lay-filter="rule">
+
+                        </p>
+                        <p>
+                            <input type="radio" name="rule" value="销售顾问（昆明）" title="销售顾问（昆明）" lay-filter="rule">
+
+                        </p>
+                        <p>
+                            <input type="radio" name="rule" value="内勤（昆明）" title="内勤（昆明）" lay-filter="rule">
+
+                        </p>
+
+                    </div>
+                    <div class="layui-col-md2 layui-col-xs12 layui-bg-gray">
+                        你的内容 3/12
+                    </div>
+                    <div class="layui-col-md2 layui-col-xs12 ">
+                        你的内容 3/12
+                    </div>
+                    <div class="layui-col-md2 layui-col-xs12 layui-bg-gray">
+                        你的内容 3/12
+                    </div>
+                    <div class="layui-col-md2 layui-col-xs12 ">
+                        你的内容 3/12
+                    </div>
+                </div>
+            </div>
 
 
-            <input type="radio" name="rule" value="总经理" title="总经理" lay-filter="rule">
-            <p>销售一部</p>
-            <input type="radio" name="rule" value="销售一部经理" title="销售一部经理" lay-filter="rule">
-            <input type="radio" name="rule" value="销售一部顾问" title="销售一部顾问" lay-filter="rule">
-            <input type="radio" name="rule" value="销售一部内勤" title="销售一部内勤" lay-filter="rule">
-            <p>销售二部</p>
-            <input type="radio" name="rule" value="销售二部经理" title="销售二部经理" lay-filter="rule">
-            <input type="radio" name="rule" value="销售二部顾问" title="销售二部顾问" lay-filter="rule">
-            <input type="radio" name="rule" value="销售二部内勤" title="销售二部内勤" lay-filter="rule">
-            <p>销售三部</p>
-            <input type="radio" name="rule" value="销售三部经理" title="销售三部经理" lay-filter="rule">
-            <input type="radio" name="rule" value="销售三部顾问" title="销售三部顾问" lay-filter="rule">
+
+
             <p>风控综合&车管</p>
             <input type="radio" name="rule" value="风控审核" title="风控审核" lay-filter="rule">
             <input type="radio" name="rule" value="金融按揭专员" title="金融按揭专员" lay-filter="rule">
