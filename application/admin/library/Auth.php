@@ -43,6 +43,13 @@ class Auth extends \fast\Auth
             $this->setError('Username is incorrect');
             return false;
         }
+
+        $admin = Admin::get(['username' => $username, 'status' => 'normal']);
+        if (!$admin) {
+            $this->setError('该账户已被停用');
+            return false;
+        }
+
         if (Config::get('fastadmin.login_failure_retry') && $admin->loginfailure >= 10 && time() - $admin->updatetime < 86400) {
             $this->setError('Please try again after 1 day');
             return false;

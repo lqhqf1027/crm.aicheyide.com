@@ -186,6 +186,7 @@ class Referee extends Backend
             case 'message13':
                 $sales_id = Db::name("Admin")
                     ->where("rule_message", "message8")
+                    ->where('status','normal')
                     ->column("id");
 
                 return $sales_id;
@@ -193,12 +194,14 @@ class Referee extends Backend
             case 'message20':
                 $sales_id = Db::name("Admin")
                     ->where("rule_message", "message9")
+                    ->where('status','normal')
                     ->column("id");
 
                 return $sales_id;
             case 'message24':
                 $sales_id = Db::name("Admin")
                     ->where("rule_message", "message23")
+                    ->where('status','normal')
                     ->column("id");
 
                 return $sales_id;
@@ -206,18 +209,21 @@ class Referee extends Backend
             case 'message3':
                 $sales_id = Db::name("Admin")
                     ->where("rule_message", "message8")
+                    ->where('status','normal')
                     ->column("id");
 
                 return $sales_id;
             case 'message4':
                 $sales_id = Db::name("Admin")
                     ->where("rule_message", "message9")
+                    ->where('status','normal')
                     ->column("id");
 
                 return $sales_id;
             case 'message22':
                 $sales_id = Db::name("Admin")
                     ->where("rule_message", "message23")
+                    ->where('status','normal')
                     ->column("id");
 
                 return $sales_id;

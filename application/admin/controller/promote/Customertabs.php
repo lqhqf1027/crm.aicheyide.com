@@ -403,7 +403,8 @@ class Customertabs extends Backend
 
         $id = $this->model->get(['id' => $ids]);
         $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24');
+            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24')
+            ->where('status','normal');
         })->select();
 
         $backofficeList = array();
@@ -484,7 +485,8 @@ class Customertabs extends Backend
         $this->model = model('CustomerResource');
 
         $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24');
+            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24')
+            ->where('status','normal');
         })->select();
         $backofficeList = array();
         foreach ($backoffice as $k => $v) {
