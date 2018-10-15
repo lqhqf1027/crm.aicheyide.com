@@ -170,6 +170,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 alreadyLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
+                    $(".btn-editone").data("area", ["40%", "40%"]);
                 });
                 // 初始化表格
                 alreadyLiftCar.bootstrapTable({
@@ -215,9 +216,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'operate',
                                 title: __('Operate'),
                                 table: alreadyLiftCar,
-                                events: Table.api.events.operate,
-                                formatter: Table.api.formatter.operate,
+                                events: Controller.api.events.operate,
+                                formatter: Controller.api.formatter.operate,
                                 buttons: [
+
                                     {
                                         name: 'look',
                                         text: '查看客户详细资料',
@@ -268,13 +270,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var buttons = $.extend([], this.buttons || []);
 
 
+                    if(!row.delivery_datetime){
+                       buttons.push(
+                           {
+                               name: 'edits',
+                               icon: 'fa fa-pencil',
+                               text:'编辑实际提车日期',
+                               title: __('编辑实际提车日期'),
+                               extend: 'data-toggle="tooltip"',
+                               classname: 'btn btn-xs btn-danger btn-editone',
+                           }
+                       )
+                    }
+
+
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
                 sales:function (value, row, index) {
 
                     return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
-            }
+            },
+            events: {
+                operate: {
+                    'click .btn-editone': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'fullcar/vehicleinformation/edit';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+
+                }
+            },
+
         }
 
     };

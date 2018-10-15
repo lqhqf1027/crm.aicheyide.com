@@ -295,6 +295,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 events: Controller.api.events.operate,
                                 formatter: Table.api.formatter.operate,
                                 buttons: [
+
+
                                     {
                                         name: 'data_dock',
                                         icon: 'fa pencil',
@@ -343,6 +345,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+        delivery: function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
@@ -362,6 +367,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param row
                      * @param index
                      */
+
                     'click .btn-editone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -443,27 +449,42 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
 
                             function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
+
+                                layer.close(index);
+
+                                layer.prompt({
+                                    formType:0,
+                                    title:'请输入实际提车日期(<span class="text-danger">格式为：2018-05-08</span>)',
+                                }, function(value, indexs, elem){
+
+                                    var table = $(that).closest('table');
+                                    var options = table.bootstrapTable('getOptions');
 
 
-                                Fast.api.ajax({
+                                    Fast.api.ajax({
 
-                                    url: 'newcars/newcarscustomer/sendcar',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
+                                        url: 'newcars/newcarscustomer/sendcar',
+                                        data: {
+                                            id: row[options.pk],
+                                            delivery:value
+                                        }
 
-                                    Toastr.success('操作成功');
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
+                                    }, function (data, ret) {
 
-                                    return false;
+                                        Toastr.success('操作成功');
+                                        Layer.close(indexs);
+                                        table.bootstrapTable('refresh');
+                                        return false;
+                                    }, function (data, ret) {
+                                        //失败的回调
+                                        Toastr.success(ret.msg);
+
+                                        return false;
+                                    });
+
                                 });
+
+
 
 
                             }

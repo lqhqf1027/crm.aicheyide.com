@@ -4606,6 +4606,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if(Config.ADMIN_JS.rule_message == 'message21'){
                         buttons.push({
                             name: 'del',
+                            text: '管理员删除',
                             icon: 'fa fa-trash',
                             title: __('Del'),
                             extend: 'data-toggle="tooltip"',

@@ -79,6 +79,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'operate', title: __('Operate'), table: secondcarWaitconfirm,
                                 buttons: [
+
                                     {
                                         name: 'data_dock', icon: 'fa pencil', text: '资料对接', extend: 'data-toggle="tooltip"', title: __('资料对接'), classname: ' btn btn-xs btn-info btn-editone ',
                                         hidden: function (row) {  /**已提车 */
@@ -169,6 +170,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
             Controller.api.bindevent();
         },
+        delivery: function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
@@ -197,13 +201,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
-                    /**
-                     * 确认提车
-                     * @param e
-                     * @param value
-                     * @param row
-                     * @param index
-                     */
+
                     'click .btn-editone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -230,26 +228,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             __('确定进行提车吗?'),
                             {icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true},
                             function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
 
-                                Fast.api.ajax({
-                                        url: "secondhandcar/takesecondcar/takecar",
-                                        data: {id: row[options.pk]},
+                                Layer.close(index);
+                                layer.prompt({
+                                    formType:0,
+                                    title:'请输入实际提车日期(<span class="text-danger">格式为：2018-05-08</span>)',
+                                }, function(value, indexs, elem){
 
-                                    }, function (data, ret) {
-                                        // console.log(data);
+                                    var table = $(that).closest('table');
+                                    var options = table.bootstrapTable('getOptions');
 
-                                        // Toastr.success("成功");
-                                        Layer.close(index);
-                                        table.bootstrapTable('refresh');
+                                    Fast.api.ajax({
+                                            url: "secondhandcar/takesecondcar/takecar",
+                                            data: {
+                                                id: row[options.pk],
+                                                delivery:value
+                                            },
 
-                                    }, function (data, ret) {
+                                        }, function (data, ret) {
+                                            // console.log(data);
 
-                                        console.log(ret);
+                                            // Toastr.success("成功");
+                                            // Layer.close(index);
+                                            table.bootstrapTable('refresh');
 
-                                    },
-                                )
+                                        }, function (data, ret) {
+
+                                            console.log(ret);
+
+                                        },
+                                    )
+                                    layer.close(indexs);
+                                })
+
+
                             }
                         );
                     }

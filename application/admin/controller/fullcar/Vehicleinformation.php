@@ -21,12 +21,13 @@ class Vehicleinformation extends Backend
      * @var \app\admin\model\Fullpeople
      */
     protected $model = null;
-    protected $noNeedRight = ['index', 'prepare_lift_car', 'already_lift_car', 'choose_stock', 'show_order', 'show_order_and_stock'];
+    protected $noNeedRight = ['index', 'prepare_lift_car', 'already_lift_car', 'choose_stock', 'show_order', 'show_order_and_stock','edit'];
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\Fullpeople;
+
+        $this->model = model('full_parment_order');
 
     }
 
@@ -37,7 +38,6 @@ class Vehicleinformation extends Backend
     {
 
         $this->loadlang('order/fullparmentorder');
-
         return $this->view->fetch();
     }
 
@@ -235,7 +235,6 @@ class Vehicleinformation extends Backend
                 ->update([
                     'car_new_inventory_id' => $id,
                     'review_the_data' => "for_the_car",
-                    'delivery_datetime' => time()
                 ]);
 
             if($result){
@@ -531,5 +530,48 @@ class Vehicleinformation extends Backend
         $this->view->assign("row", $row);
         return $this->view->fetch();
     }
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL)
+    {
+        $row = $this->model->get($ids);
+
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        return $this->view->fetch();
+    }
+
 
 }

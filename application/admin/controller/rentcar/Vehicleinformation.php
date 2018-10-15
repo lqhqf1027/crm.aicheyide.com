@@ -381,6 +381,9 @@ class Vehicleinformation extends Backend
     {
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
+            $delivery = $this->request->post('delivery');
+
+            $delivery = strtotime($delivery);
 
             $result = $this->model->isUpdate(true)->save(['id' => $id, 'status_data' => 'the_car']);
 
@@ -422,7 +425,10 @@ class Vehicleinformation extends Backend
 
             $rental_order_id = DB::name('rental_order')->where('plan_car_rental_name', $id)->value('id');
 
-            $result_s = DB::name('rental_order')->where('id', $rental_order_id)->setField('review_the_data', 'for_the_car');
+            $result_s = DB::name('rental_order')->where('id', $rental_order_id)->update([
+                'review_the_data'=> 'for_the_car',
+                'delivery_datetime'=>$delivery
+            ]);
 
             $seventtime = \fast\Date::unixtime('day', -6);
             $rentalonesales = $rentaltwosales = $rentalthreesales = [];

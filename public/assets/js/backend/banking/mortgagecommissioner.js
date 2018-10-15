@@ -55,7 +55,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             table.on('load-success.bs.table', function (e, data) {
-               console.log(data.total);
             });
 
             // 绑定TAB事件

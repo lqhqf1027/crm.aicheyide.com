@@ -289,8 +289,11 @@ class Newcarscustomer extends Backend
 
         if ($this->request->isAjax()) {
             $id = $this->request->post('id');
+            $delivery = $this->request->post('delivery');
 
-            $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'the_car']);
+            $delivery = strtotime($delivery);
+
+            $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'the_car','delivery_datetime'=>$delivery]);
 
             if ($result !== false) {
 
@@ -507,5 +510,7 @@ class Newcarscustomer extends Backend
 
         return $this->view->fetch();
     }
+
+
 
 }
