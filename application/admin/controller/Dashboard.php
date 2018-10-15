@@ -270,12 +270,12 @@ class Dashboard extends Backend
         $seventtime = \fast\Date::unixtime('month', -6);
         // pr($seventtime);
         // die;
-        $newonesales = $newtwosales = $newthreesales = $rentalonesales = $rentaltwosales = $rentalthreesales = $secondonesales = $secondtwosales = $secondthreesales = $fullonesales = $fulltwosales = $fullthreesales = [];
+        // $newonesales = $newtwosales = $newthreesales = $rentalonesales = $rentaltwosales = $rentalthreesales = $secondonesales = $secondtwosales = $secondthreesales = $fullonesales = $fulltwosales = $fullthreesales = [];
         //新车销售情况
         $newonesales = Cache::get('newonesales');
         $newtwosales = Cache::get('newtwosales');
         $newthreesales = Cache::get('newthreesales');
-        if(!$newonesales && !$newtwosales && !$newthreesales){
+        if(!$newonesales || !$newtwosales || !$newthreesales){
                 
             $month = date("Y-m", $seventtime);
             $day = date('t', strtotime("$month +1 month -1 day"));
@@ -337,7 +337,7 @@ class Dashboard extends Backend
         $rentalonesales = Cache::get('rentalonesales');
         $rentaltwosales = Cache::get('rentaltwosales');
         $rentalthreesales = Cache::get('rentalthreesales');
-        if(!$rentalonesales && !$rentaltwosales && !$rentalthreesales){
+        if(!$rentalonesales || !$rentaltwosales || !$rentalthreesales){
             
             $month = date("Y-m", $seventtime);
             $day = date('t', strtotime("$month +1 month -1 day"));
@@ -397,7 +397,7 @@ class Dashboard extends Backend
         $secondonesales = Cache::get('secondonesales');
         $secondtwosales = Cache::get('secondtwosales');
         $secondthreesales = Cache::get('secondthreesales');
-        if(!$secondonesales && !$secondtwosales && !$secondthreesales){
+        if(!$secondonesales || !$secondtwosales || !$secondthreesales){
            
             $month = date("Y-m", $seventtime);
             $day = date('t', strtotime("$month +1 month -1 day"));
@@ -457,7 +457,7 @@ class Dashboard extends Backend
         $fullonesales = Cache::get('fullonesales');
         $fulltwosales = Cache::get('fulltwosales');
         $fullthreesales = Cache::get('fullthreesales');
-        if(!$fullonesales && !$fulltwosales && !$fullthreesales){
+        if(!$fullonesales || !$fulltwosales || !$fullthreesales){
            
             $month = date("Y-m", $seventtime);
             $day = date('t', strtotime("$month +1 month -1 day"));

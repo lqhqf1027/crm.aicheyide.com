@@ -288,7 +288,7 @@ class Sharedetailsdatas extends Backend
             ->join('car_rental_models_info c', 'c.id = a.plan_car_rental_name', 'LEFT')
             ->field('a.order_no,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.down_payment,a.bond,a.car_backtime,a.cash_pledge,
                 a.rental_price,a.tenancy_term,a.customer_source,a.turn_to_introduce_name,a.turn_to_introduce_phone,a.turn_to_introduce_card,a.id_cardimages,
-                a.residence_bookletimages,a.drivers_licenseimages,a.deposit_receiptimages,a.call_listfilesimages,a.customer_information_note,
+                a.residence_bookletimages,a.drivers_licenseimages,a.deposit_receiptimages,a.call_listfilesimages,a.customer_information_note,a.genderdata,
                 b.nickname as sales_name,
                 c.licenseplatenumber,c.engine_no,c.vin,c.kilometres,c.companyaccount,c.drivinglicenseimages,c.expirydate,c.annualverificationdate,c.carcolor,c.note,
                 c.actual_backtime,c.car_loss,c.back_kilometre,c.check_list')
@@ -343,7 +343,7 @@ class Sharedetailsdatas extends Backend
             ->join('secondcar_rental_models_info c', 'c.id = a.plan_second_full_name', 'LEFT')
             ->join('mortgage d', 'd.id = a.mortgage_id', 'LEFT')
             ->field('a.order_no,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.customer_source,a.introduce_name,a.introduce_phone,
-                a.introduce_card,a.id_cardimages,a.drivers_licenseimages,a.bank_cardimages,a.application_formimages,a.call_listfiles,
+                a.introduce_card,a.id_cardimages,a.drivers_licenseimages,a.bank_cardimages,a.application_formimages,a.call_listfiles,a.genderdata,
                 b.nickname as sales_name,
                 c.licenseplatenumber,c.vin,c.kilometres,c.companyaccount,c.totalprices,c.drivinglicenseimages,c.engine_number,c.expirydate,c.annualverificationdate,c.carcolor,
                 c.Parkingposition,
@@ -392,7 +392,7 @@ class Sharedetailsdatas extends Backend
             ->join('plan_full c', 'c.id = a.plan_plan_full_name', 'LEFT')
             ->join('mortgage d', 'd.id = a.mortgage_id', 'LEFT')
             ->field('a.order_no,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.customer_source,a.introduce_name,a.introduce_phone,
-                a.introduce_card,a.id_cardimages,a.drivers_licenseimages,a.bank_cardimages,a.application_formimages,a.call_listfiles,
+                a.introduce_card,a.id_cardimages,a.drivers_licenseimages,a.bank_cardimages,a.application_formimages,a.call_listfiles,a.genderdata,
                 b.nickname as sales_name,
                 c.full_total_price,
                 d.car_imgeas,d.bank_card,d.invoice_monney,d.registration_code,d.tax,d.business_risks,d.insurance,d.lending_date,d.mortgage_type')
