@@ -170,7 +170,7 @@ class Secondfullcustomer extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
+                $row->visible(['id', 'order_no', 'username', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data','delivery_datetime']);
                 $row->visible(['plansecondfull']);
                 $row->getRelation('plansecondfull')->visible(['totalprices', 'licenseplatenumber']);
                 $row->visible(['admin']);
@@ -230,7 +230,7 @@ class Secondfullcustomer extends Backend
                 ->update([
                     'second_car_id' => $id,
                     'review_the_data' => "for_the_car",
-                    'delivery_datetime' => time()
+//                    'delivery_datetime' => time()
                 ]);
 
             if($result){
@@ -366,6 +366,41 @@ class Secondfullcustomer extends Backend
             }
         }
         
+        return $this->view->fetch();
+    }
+
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL)
+    {
+
+
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    $params['delivery_datetime'] = strtotime($params['delivery_datetime']);
+
+//                    pr($params);die();
+                    $result = DB::name('second_full_order')
+                    ->where('id',$ids)
+                    ->update($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
         return $this->view->fetch();
     }
 

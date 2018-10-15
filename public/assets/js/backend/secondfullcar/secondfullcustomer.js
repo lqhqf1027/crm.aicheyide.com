@@ -42,6 +42,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Fast.api.close(data);
                 // console.log(data);
                 Toastr.success("成功");
+
+
             }, function (data, ret) {
                 Toastr.success("失败");
 
@@ -61,7 +63,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var prepareLiftCar = $("#prepareLiftCar");
                 prepareLiftCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#badge_prepare').text(data.total);
 
                 });
@@ -164,18 +165,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格2
                 var alreadyLiftCar = $("#alreadyLiftCar");
                 alreadyLiftCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#badge_already').text(data.total);
 
                 });
                 alreadyLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
+                    $(".btn-editone").data("area", ["35%", "35%"]);
                 });
                 // 初始化表格
                 alreadyLiftCar.bootstrapTable({
                     url: 'secondfullcar/secondfullcustomer/already_lift_car',
                     extend: {
-
+                        // edit_url:'secondfullcar/secondfullcustomer/edit',
                         table: 'second_full_order',
                     },
                     toolbar: '#toolbar2',
@@ -199,21 +200,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 field: 'createtime',
                                 title: __('订车时间'),
                                 formatter: Table.api.formatter.datetime,
+                                datetimeFormat:"YYYY-MM-DD",
                                 operate: false
                             },
                             {
                                 field: 'delivery_datetime',
                                 title: __('提车时间'),
                                 formatter: Table.api.formatter.datetime,
+                                datetimeFormat:"YYYY-MM-DD",
                                 operate: false
                             },
                             {
                                 field: 'operate',
                                 title: __('Operate'),
                                 table: alreadyLiftCar,
-                                events: Table.api.events.operate,
+                                events: Controller.api.events.operate,
                                 formatter: Table.api.formatter.operate,
                                 buttons: [
+                                    {
+                                        name: 'edits',
+                                        icon: 'fa fa-pencil',
+                                        text:'编辑实际提车日期',
+                                        title: __('编辑实际提车日期'),
+                                        extend: 'data-toggle="tooltip"',
+                                        classname: 'btn btn-xs btn-success btn-editone',
+
+                                    },
                                     {
                                         name: 'look',
                                         text: '查看客户详细资料',
@@ -270,7 +282,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
-            }
+            },
+            events: {
+                operate: {
+                    'click .btn-editone': function (e, value, row, index) {
+                        // alert(1);return;
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+                        var options = table.bootstrapTable('getOptions');
+                        var ids = row[options.pk];
+                        row = $.extend({}, row ? row : {}, {ids: ids});
+                        var url = 'secondfullcar/secondfullcustomer/edit';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
+                    },
+
+                }
+            },
         }
 
     };

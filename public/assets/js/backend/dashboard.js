@@ -132,6 +132,8 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // todayEchart.setOption(option);
 
 
+
+
             //新车表
             // 基于准备好的dom，初始化echarts实例
             var newEchart = Echarts.init(document.getElementById('newechart'), 'walden');

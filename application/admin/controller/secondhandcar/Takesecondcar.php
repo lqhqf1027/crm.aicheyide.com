@@ -125,7 +125,14 @@ class Takesecondcar extends Backend
 
             $id = $this->request->post('id');
 
-            $result = Db::name('second_sales_order')->where('id', $id)->setField('review_the_data', 'the_car');
+            $delivery = $this->request->post('delivery');
+
+            $delivery = strtotime($delivery);
+
+            $result = Db::name('second_sales_order')->where('id', $id)->setField([
+                'review_the_data'=> 'the_car',
+                'delivery_datetime'=>$delivery
+            ]);
 
             $second_car_id = Db::name('second_sales_order')->where('id', $id)->value('second_car_id');
 
@@ -365,5 +372,6 @@ class Takesecondcar extends Backend
         ]);
         return $this->view->fetch();
     }
+
 
 }

@@ -578,33 +578,44 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { icon: 3, title: __('Warning'), offset: [top, left], shadeClose: true },
 
                             function (index) {
-                                var table = $(that).closest('table');
-                                var options = table.bootstrapTable('getOptions');
+                            layer.close(index);
+                                layer.prompt({
+                                    formType:0,
+                                    title:'请输入实际提车日期(<span class="text-danger">格式为：2018-05-08</span>)',
+                                }, function(value, indexs, elem){
+
+                                    var table = $(that).closest('table');
+                                    var options = table.bootstrapTable('getOptions');
 
 
-                                Fast.api.ajax({
+                                    Fast.api.ajax({
 
-                                    url: 'rentcar/vehicleinformation/takecar',
-                                    data: {id: row[options.pk]}
- 
-                                }, function (data, ret) {
+                                        url: 'rentcar/vehicleinformation/takecar',
+                                        data: {
+                                            id: row[options.pk],
+                                            delivery:value
+                                        }
 
-                                    Toastr.success('操作成功');
-                                    Layer.close(index);
-                                    table.bootstrapTable('refresh');
+                                    }, function (data, ret) {
 
-                                    Layer.alert('提车成功后，可到租车客户信息查看客户信息',{ icon:0},function(index){
-                                        Layer.close(index);
-                                        $(".btn-refresh").trigger("click");
+                                        Toastr.success('操作成功');
+                                        Layer.close(indexs);
+                                        table.bootstrapTable('refresh');
+
+                                        Layer.alert('提车成功后，可到租车客户信息查看客户信息',{ icon:0},function(indexss){
+                                            Layer.close(indexss);
+                                            $(".btn-refresh").trigger("click");
+                                        });
+
+                                        return false;
+                                    }, function (data, ret) {
+                                        //失败的回调
+                                        Toastr.success(ret.msg);
+
+                                        return false;
                                     });
-                                    
-                                    return false;
-                                }, function (data, ret) {
-                                    //失败的回调
-                                    Toastr.success(ret.msg);
-
-                                    return false;
                                 });
+
 
 
                             }

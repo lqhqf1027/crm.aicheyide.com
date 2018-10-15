@@ -272,4 +272,6 @@ class Rentcarscustomer extends Backend
         return $this->view->fetch();
     }
 
+
+
 }

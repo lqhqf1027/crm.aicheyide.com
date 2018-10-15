@@ -215,6 +215,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         back_car: function () {
             Controller.api.bindevent();
         },
+        delivery: function () {
+            Controller.api.bindevent();
+        },
         api: {
             bindevent: function () {
                 $(document).on('click', "input[name='row[ismenu]']", function () {
@@ -257,8 +260,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         buttons.push(
                             {
                                 name: 'edits',
-                                text: '编辑',
-                                icon: 'fa fa-pencil',
+                                text: '编辑退租信息',
+                                icon: 'fa fa-pencil-square-o',
                                 title: __('编辑'),
                                 classname: 'btn btn-xs btn-success btn-editone',
                                 url: 'rentcar/Rentcarscustomer/edit'
@@ -297,6 +300,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             },
             events: {
                 operate: {
+
                     'click .btn-editone': function (e, value, row, index) {
                         e.stopPropagation();
                         e.preventDefault();
