@@ -150,7 +150,7 @@
                 <!-- 新车 -->
                 <div class="row">
                     <div class="col-lg-8">
-                        <div id="newechart" style="height:200px;width:100%;"></div>
+                        <div id="newechart" style="height:300px;width:100%;"></div>
                     </div>
                     <div class="col-lg-4">
                         <div class="card sameheight-item stats">
@@ -673,47 +673,11 @@
     </ul>
 </script>
 <script>
-    var Ordernewdata = {
-            column: {:json_encode(array_keys($newonesales))},
-            newonesales: {:json_encode(array_values($newonesales))},
-            newtwosales: {:json_encode(array_values($newtwosales))},
-            newthreesales: {:json_encode(array_values($newthreesales))},
+    var Orderdata = {
+            column: {:json_encode(array_keys($onesales))},
+            onesales: {:json_encode(array_values($onesales))},
+            twosales: {:json_encode(array_values($twosales))},
+            threesales: {:json_encode(array_values($threesales))},
     };
-    var Orderrentaldata = {
-            column: {:json_encode(array_keys($rentalonesales))},
-            rentalonesales: {:json_encode(array_values($rentalonesales))},
-            rentaltwosales: {:json_encode(array_values($rentaltwosales))},
-            rentalthreesales: {:json_encode(array_values($rentalthreesales))},
-    };
-    var Orderseconddata = {
-            column: {:json_encode(array_keys($secondonesales))},
-            secondonesales: {:json_encode(array_values($secondonesales))},
-            secondtwosales: {:json_encode(array_values($secondtwosales))},
-            secondthreesales: {:json_encode(array_values($secondthreesales))},
-    };
-    var Orderfulldata = {
-            column: {:json_encode(array_keys($fullonesales))},
-            fullonesales: {:json_encode(array_values($fullonesales))},
-            fulltwosales: {:json_encode(array_values($fulltwosales))},
-            fullthreesales: {:json_encode(array_values($fullthreesales))},
-    };
-    // console.log(Orderrentaldata);
-    var Citydata = {
-        num: {:json_encode($num)},
-        newpeoplecity: {:json_encode($newpeoplecity)},
-        relationcity: {:json_encode($relationcity)},
-        intentioncity: {:json_encode($intentioncity)},
-        nointentioncity: {:json_encode($nointentioncity)},
-        giveupcity: {:json_encode($giveupcity)},
-        overduecity: {:json_encode($overduecity)},
-    };
-    var Todaydata = {
-        num: {:json_encode($num)},
-        newpeopletoday: {:json_encode($newpeopletoday)},
-        relationtoday: {:json_encode($relationtoday)},
-        intentiontoday: {:json_encode($intentiontoday)},
-        nointentiontoday: {:json_encode($nointentiontoday)},
-        giveuptoday: {:json_encode($giveuptoday)},
-        overduetoday: {:json_encode($overduetoday)},
-    };
+    console.log(Orderdata.column);
 </script>
