@@ -14,6 +14,20 @@ Page(Object.assign({}, Tab, {
       scroll: true,
       height: 44
     },
+
+
+    items: [{
+      id: '001',
+      text: '房间',
+      value: 1,
+    },
+    {
+      id: '002',
+      text: '成人',
+      value: 2,
+    },
+    ],
+    value: 1,
   },
   channel: 0,
   page: 1,
@@ -86,5 +100,12 @@ Page(Object.assign({}, Tab, {
       desc: '基于ThinkPHP5和Bootstrap的极速后台框架',
       path: '/page/index/index'
     }
-  }
+  },
+
+  onChange(e) {
+    console.log(e)
+    this.setData({
+      value: e.detail.value,
+    })
+  },
 }))
