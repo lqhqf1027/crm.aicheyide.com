@@ -33,13 +33,13 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Constract_total')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-constract_total" class="form-control form-control" step="0.01" name="row[constract_total]" type="number" value="{$row.constract_total}">
+            <input id="c-constract_total" class="form-control form-control" name="row[constract_total]" type="text" value="{$row.constract_total}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Payment')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-payment" class="form-control form-control" step="0.01" name="row[payment]" type="number" value="{$row.payment}">
+            <input id="c-payment" class="form-control form-control" name="row[payment]" type="text" value="{$row.payment}">
         </div>
     </div>
     <div class="form-group">
@@ -123,7 +123,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('No_tax')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-no_tax" class="form-control form-control" step="0.01" name="row[no_tax]" type="number" value="{$row.no_tax}">
+            <input id="c-no_tax" class="form-control form-control" name="row[no_tax]" type="text" value="{$row.no_tax}">
         </div>
     </div>
     <div class="form-group">
@@ -135,7 +135,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Purchase_tax')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-purchase_tax" class="form-control form-control" step="0.01" name="row[purchase_tax]" type="number" value="{$row.purchase_tax}">
+            <input id="c-purchase_tax" class="form-control form-control" name="row[purchase_tax]" type="text" value="{$row.purchase_tax}">
         </div>
     </div>
     <div class="form-group">
@@ -147,7 +147,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Road_fee')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-road_fee" class="form-control form-control" step="0.01" name="row[road_fee]" type="number" value="{$row.road_fee}">
+            <input id="c-road_fee" class="form-control form-control" name="row[road_fee]" type="text" value="{$row.road_fee}">
         </div>
     </div>
     <div class="form-group">
@@ -183,7 +183,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Commercial_insurance_money')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-commercial_insurance_money" class="form-control form-control" step="0.01" name="row[commercial_insurance_money]" type="number" value="{$row.commercial_insurance_money}">
+            <input id="c-commercial_insurance_money" class="form-control form-control" name="row[commercial_insurance_money]" type="text" value="{$row.commercial_insurance_money}">
         </div>
     </div>
     <div class="form-group">
@@ -193,9 +193,69 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Branch_office')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-branch_office" class="form-control form-control" name="row[branch_office]" type="text" value="{$row.branch_office}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sales')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sales" class="form-control form-control" name="row[sales]" type="text" value="{$row.sales}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Rent_month')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-rent_month" class="form-control form-control" name="row[rent_month]" type="text" value="{$row.rent_month}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_line')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_line" class="form-control form-control" name="row[car_line]" type="text" value="{$row.car_line}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Deposit')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-deposit" class="form-control form-control" name="row[deposit]" type="text" value="{$row.deposit}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Rent_money_month')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-rent_money_month" class="form-control form-control" name="row[rent_money_month]" type="text" value="{$row.rent_money_month}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Renttime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-renttime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[renttime]" type="text" value="{$row.renttime|datetime}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Backtime')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-backtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[backtime]" type="text" value="{$row.backtime|datetime}">
+        </div>
+    </div>
+    <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Note')}:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-note" class="form-control form-control" name="row[note]" type="text" value="{$row.note}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Types')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-types" class="form-control selectpicker" name="row[types]">
+                {foreach name="typesList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.types"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
         </div>
     </div>
     <div class="form-group layer-footer">

@@ -23,12 +23,18 @@ class PastInformation extends Model
         'tickettime_text',
         'paymenttime_text',
         'buytime_text',
-        'transfertime_text'
+        'transfertime_text',
+        'renttime_text',
+        'backtime_text',
+        'types_text'
     ];
     
 
     
-
+    public function getTypesList()
+    {
+        return ['full' => __('Types full'),'rent' => __('Types rent'),'mortgage' => __('Types mortgage')];
+    }     
 
 
     public function getSigntimeTextAttr($value, $data)
@@ -72,6 +78,28 @@ class PastInformation extends Model
         return is_numeric($value) ? date("Y-m-d H:i:s", $value) : $value;
     }
 
+
+    public function getRenttimeTextAttr($value, $data)
+    {
+        $value = $value ? $value : (isset($data['renttime']) ? $data['renttime'] : '');
+        return is_numeric($value) ? date("Y-m-d H:i:s", $value) : $value;
+    }
+
+
+    public function getBacktimeTextAttr($value, $data)
+    {
+        $value = $value ? $value : (isset($data['backtime']) ? $data['backtime'] : '');
+        return is_numeric($value) ? date("Y-m-d H:i:s", $value) : $value;
+    }
+
+
+    public function getTypesTextAttr($value, $data)
+    {        
+        $value = $value ? $value : (isset($data['types']) ? $data['types'] : '');
+        $list = $this->getTypesList();
+        return isset($list[$value]) ? $list[$value] : '';
+    }
+
     protected function setSigntimeAttr($value)
     {
         return $value && !is_numeric($value) ? strtotime($value) : $value;
@@ -98,6 +126,16 @@ class PastInformation extends Model
     }
 
     protected function setTransfertimeAttr($value)
+    {
+        return $value && !is_numeric($value) ? strtotime($value) : $value;
+    }
+
+    protected function setRenttimeAttr($value)
+    {
+        return $value && !is_numeric($value) ? strtotime($value) : $value;
+    }
+
+    protected function setBacktimeAttr($value)
     {
         return $value && !is_numeric($value) ? strtotime($value) : $value;
     }

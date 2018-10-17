@@ -34,5 +34,17 @@ return [
     'Commercial_insurance_list'  =>  '商业险保单',
     'Commercial_insurance_money'  =>  '商业险金额',
     'Transfertime'  =>  '过户时间',
-    'Note'  =>  '备注'
+    'Branch_office'  =>  '所属分公司',
+    'Sales'  =>  '销售员',
+    'Rent_month'  =>  '租期',
+    'Car_line'  =>  '车行',
+    'Deposit'  =>  '押金/元',
+    'Rent_money_month'  =>  '租金/元/月',
+    'Renttime'  =>  '租车时间',
+    'Backtime'  =>  '还车时间',
+    'Note'  =>  '备注',
+    'Types'  =>  '类型',
+    'Types full'  =>  '全款车',
+    'Types rent'  =>  '租车',
+    'Types mortgage'  =>  '按揭'
 ];
