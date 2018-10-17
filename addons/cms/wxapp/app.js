@@ -14,7 +14,7 @@ App({
       that.globalData.productTabList = data.productTabList;
       
       //如果需要一进入小程序就要求授权登录,可在这里发起调用
-      that.check(function (ret) { });
+      // that.check(function (ret) { });
     }, function (data, ret) {
       that.error(ret.msg);
     });

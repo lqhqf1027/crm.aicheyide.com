@@ -351,24 +351,6 @@
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-4">
-            {empty name="$mate_id_cardimages"}
-            <p style="margin-top: 8%"><strong>{:__('配偶的身份证正反面（多图）')}：</strong><span class="text-info">暂无</span></p>
-
-            {else /}
-            <strong class="imgClickTitle">{:__('配偶的身份证正反面(多图)')}：</strong>
-            {foreach $mate_id_cardimages as $k => $v}
-
-            <img src="{$cdnurl}{$v}" alt="配偶的身份证正反面" class="imgBorder">
-            {/foreach}
-            {/empty}
-
-        </div>
-
-
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$drivinglicenseimages"}
             <p style="margin-top: 8%"><strong>{:__('行驶证照(多图)')}：</strong><span class="text-info">暂无</span></p>
 
@@ -380,32 +362,11 @@
             {/foreach}
             {/empty}
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            {empty name="$marriedimages"}
-            <p style="margin-top: 8%"><strong>{:__('结婚证复印件（非必须）')}：</strong><span class="text-info">暂无</span></p>
 
-            {else /}
-            <strong class="imgClickTitle">{:__('结婚证复印件（非必须）')}：</strong>
-            {foreach $marriedimages as $k => $v}
 
-            <img src="{$cdnurl}{$v}" alt="结婚证复印件（非必须）" class="imgBorder">
-            {/foreach}
-            {/empty}
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            {empty name="$crime_undertakingimages"}
-            <p style="margin-top: 8%"><strong>{:__('无犯罪记录承诺书')}：</strong><span class="text-info">暂无</span></p>
-
-            {else /}
-            <strong class="imgClickTitle">{:__('无犯罪记录承诺书')}：</strong>
-            {foreach $crime_undertakingimages as $k => $v}
-
-            <img src="{$cdnurl}{$v}" alt="无犯罪记录承诺书" class="imgBorder">
-            {/foreach}
-            {/empty}
-        </div>
     </div>
     <hr>
+
     <div class="row">
         <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$car_confirmationimages"}
@@ -436,23 +397,17 @@
 
         <div class="col-xs-12 col-sm-8 col-md-4">
             {empty name="$deposit_contractimages"}
-            <p style="margin-top: 8%"><strong>{:__('定金合同(多图)')}：</strong><span class="text-info">暂无</span></p>
+            <p style="margin-top: 8%"><strong>{:__('定金合同')}：</strong><span class="text-info">暂无</span></p>
 
             {else /}
-            <strong class="imgClickTitle">{:__('定金合同(多图)')}：</strong>
+            <strong class="imgClickTitle">{:__('定金合同')}：</strong>
             {foreach $deposit_contractimages as $k => $v}
 
             <img src="{$cdnurl}{$v}" alt="定金合同" class="imgBorder">
             {/foreach}
             {/empty}
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-xs-12 col-sm-8 col-md-4">
-
             {empty name="$deposit_receiptimages"}
-            <p style="margin-top: 8%"><strong>{:__('定金收据上传')}：</strong><span class="text-info">暂无</span></p>
+            <p style="margin-top: 8%"><strong>{:__('定金收据')}：</strong><span class="text-info">暂无</span></p>
             {else /}
             <strong class="imgClickTitle">{:__('定金收据上传')}：</strong>
             {foreach $deposit_receiptimages as $k => $v}
@@ -460,38 +415,48 @@
             <img src="{$cdnurl}{$v}" alt="定金收据上传" class="imgBorder">
             {/foreach}
             {/empty}
-
-
         </div>
+    </div>
+    <hr>
+    <div class="row">
         <div class="col-xs-12 col-sm-8 col-md-4">
-            {empty name="$guarantee_id_cardimages"}
-            <p style="margin-top: 8%"><strong>{:__('担保人身份证正反面(多图)')}：</strong><span class="text-info">暂无</span></p>
-
+            {empty name="$credit_reportimages"}
+            <p style="margin-top: 8%"><strong>{:__('征信审核图片(多图)')}：</strong> <span class="text-info">暂无</span></p>
             {else /}
-            <strong class="imgClickTitle">{:__('担保人身份证正反面(多图)')}：</strong>
-            {foreach $guarantee_id_cardimages as $k => $v}
-
-            <img src="{$cdnurl}{$v}" alt="担保人身份证正反面" class="imgBorder">
+            <strong class="imgClickTitle">{:__('征信审核图片(多图)')}：</strong>
+            {foreach $credit_reportimages as $k => $v}
+            <img src="{$cdnurl}{$v}" alt="征信审核图片(多图)" class="imgBorder">
             {/foreach}
             {/empty}
 
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-4">
-
-            {empty name="$guarantee_agreementimages"}
-            <p style="margin-top: 8%"><strong>{:__('担保协议(多图)')}：</strong><span class="text-info">暂无</span></p>
+            {empty name="$crime_undertakingimages"}
+            <p style="margin-top: 8%"><strong>{:__('无犯罪记录承诺书')}：</strong><span class="text-info">暂无</span></p>
 
             {else /}
-            <strong class="imgClickTitle">{:__('担保协议(多图)')}：</strong>
-            {foreach $guarantee_agreementimages as $k => $v}
-            <img src="{$cdnurl}{$v}" alt="担保协议" class="imgBorder">
+            <strong class="imgClickTitle">{:__('无犯罪记录承诺书')}：</strong>
+            {foreach $crime_undertakingimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="无犯罪记录承诺书" class="imgBorder">
             {/foreach}
             {/empty}
-
-
         </div>
+        <div class="col-xs-12 col-sm-8 col-md-4" id="clear-div">
 
+            {empty name="$call_listfiles"}
+            <strong>{:__('通话清单')}：</strong><span class="text-info">暂无</span>
+
+            {else /}
+            <strong>{:__('通话清单')}：</strong>
+            {foreach $call_listfiles as $k => $v}
+            <a href="{$cdnurl}{$v}" target="_blank">
+                {$cdnurl}{$v}
+            </a>
+            {/foreach}
+            {/empty}
+        </div>
 
 
     </div>
@@ -519,23 +484,68 @@
             {/empty}
 
         </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
 
-        <div class="col-xs-12 col-sm-8 col-md-4" id="clear-div">
-
-            {empty name="$call_listfiles"}
-            <strong>{:__('通话清单')}：</strong><span class="text-info">暂无</span>
+            {empty name="$guarantee_agreementimages"}
+            <p style="margin-top: 8%"><strong>{:__('担保协议(多图)')}：</strong><span class="text-info">暂无</span></p>
 
             {else /}
-            <strong>{:__('通话清单')}：</strong>
-            {foreach $call_listfiles as $k => $v}
-            <a href="{$cdnurl}{$v}" target="_blank">
-                {$cdnurl}{$v}
-            </a>
+            <strong class="imgClickTitle">{:__('担保协议(多图)')}：</strong>
+            {foreach $guarantee_agreementimages as $k => $v}
+            <img src="{$cdnurl}{$v}" alt="担保协议" class="imgBorder">
+            {/foreach}
+            {/empty}
+
+
+        </div>
+
+
+
+
+    </div>
+    <hr>
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$mate_id_cardimages"}
+            <p style="margin-top: 8%"><strong>{:__('配偶的身份证正反面（多图）')}：</strong><span class="text-info">暂无</span></p>
+
+            {else /}
+            <strong class="imgClickTitle">{:__('配偶的身份证正反面(多图)')}：</strong>
+            {foreach $mate_id_cardimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="配偶的身份证正反面" class="imgBorder">
+            {/foreach}
+            {/empty}
+
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$marriedimages"}
+            <p style="margin-top: 8%"><strong>{:__('结婚证复印件（非必须）')}：</strong><span class="text-info">暂无</span></p>
+
+            {else /}
+            <strong class="imgClickTitle">{:__('结婚证复印件（非必须）')}：</strong>
+            {foreach $marriedimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="结婚证复印件（非必须）" class="imgBorder">
             {/foreach}
             {/empty}
         </div>
+        <div class="col-xs-12 col-sm-8 col-md-4">
+            {empty name="$guarantee_id_cardimages"}
+            <p style="margin-top: 8%"><strong>{:__('担保人身份证正反面(多图)')}：</strong><span class="text-info">暂无</span></p>
 
+            {else /}
+            <strong class="imgClickTitle">{:__('担保人身份证正反面(多图)')}：</strong>
+            {foreach $guarantee_id_cardimages as $k => $v}
+
+            <img src="{$cdnurl}{$v}" alt="担保人身份证正反面" class="imgBorder">
+            {/foreach}
+            {/empty}
+
+        </div>
     </div>
+
     <hr>
     <div class="row">
         
@@ -558,17 +568,7 @@
 
         </div>
 
-        <div class="col-xs-12 col-sm-8 col-md-4">
-            {empty name="$credit_reportimages"}
-            <p style="margin-top: 8%"><strong>{:__('征信审核图片(多图)')}：</strong> <span class="text-info">暂无</span></p>
-            {else /}
-            <strong class="imgClickTitle">{:__('征信审核图片(多图)')}：</strong>
-            {foreach $credit_reportimages as $k => $v}
-            <img src="{$cdnurl}{$v}" alt="征信审核图片(多图)" class="imgBorder">
-            {/foreach}
-            {/empty}
 
-        </div>
         
     </div>
     <hr>

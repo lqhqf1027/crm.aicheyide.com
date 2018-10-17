@@ -2425,7 +2425,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                      * 补录资料
                                      */
                                     {
-                                        name: 'secondinformation', text: '补录资料', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('补录资料'), classname: 'btn btn-xs btn-success btn-secondinformation',
+                                        name: 'secondinformation', text: '补录提车资料', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('补录提车资料'), classname: 'btn btn-xs btn-success btn-secondinformation',
                                         
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'collection_data') {
