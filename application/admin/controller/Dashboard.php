@@ -197,123 +197,86 @@ class Dashboard extends Backend
                 ->where('createtime', 'between', [$time, ($time + 86400 * 31)])
                 ->count();
         
+
+        $newsales = Cache::get('newsales');
+        $rentalsales = Cache::get('rentalsales');
+        $secondsales = Cache::get('secondsales');
+        $fullsales = Cache::get('fullsales');
+        $fullsecondsales = Cache::get('fullsecondsales');
        
-        $seventtime = \fast\Date::unixtime('month', -18);
+        if(!$newsales || !$rentalosales || !$secondsales || !$fullesales || !$fullsecondsales){
+
+                $seventtime = \fast\Date::unixtime('month', -2);
         
-        $month = date("Y-m", $seventtime);
-        
-        $day = date('t', strtotime("$month +1 month -1 day"));
-        for ($i = 0; $i < 20; $i++)
-        {
-                $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
-                $firstday = strtotime(date('Y-m-01', strtotime($month)));
-                $secondday = strtotime(date('Y-m-01', strtotime($months)));
-                //销售一部
-                $one_sales = Db::name('auth_group_access')->where('group_id', '18')->select();
-                foreach($one_sales as $k => $v){
-                    $one_admin[] = $v['uid'];
-                } 
-                //新车销售情况
-                $newonetake = Db::name('sales_order')
-                        ->where('review_the_data', 'the_car')
-                        ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //租车出租情况
-                $rentalonetake = Db::name('rental_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //二手车销售情况      
-                $secondonetake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'the_car')
-                        ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //全款车销售情况      
-                $fullonetake = Db::name('full_parment_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $one_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
+                $month = date("Y-m", $seventtime);
                 
-                //销售二部
-                $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                foreach($two_sales as $k => $v){
-                    $two_admin[] = $v['uid'];
+                $day = date('t', strtotime("$month +1 month -1 day"));
+                for ($i = 0; $i < 4; $i++)
+                {
+                        $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                        $firstday = strtotime(date('Y-m-01', strtotime($month)));
+                        $secondday = strtotime(date('Y-m-01', strtotime($months)));
+
+                        //新车销售情况
+                        $newtake = Db::name('sales_order')
+                                ->where('review_the_data', 'the_car')
+                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                                ->count();
+                        //租车出租情况
+                        $rentaltake = Db::name('rental_order')
+                                ->where('review_the_data', 'for_the_car')
+                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                                ->count();
+                        //二手车销售情况      
+                        $secondtake = Db::name('second_sales_order')
+                                ->where('review_the_data', 'the_car')
+                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                                ->count();
+                        //全款车销售情况      
+                        $fulltake = Db::name('full_parment_order')
+                                ->where('review_the_data', 'for_the_car')
+                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                                ->count();
+                        //全款车销售情况      
+                        $fullsecondtake = Db::name('second_full_order')
+                                ->where('review_the_data', 'for_the_car')
+                                ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                                ->count();
+                        
+                        
+                        //新车销售情况
+                        $newsales[$month . '(月)'] = $newtake;
+                        //租车出租情况
+                        $rentalsales[$month . '(月)'] = $rentaltake ;
+                        //二手车销售情况
+                        $secondsales[$month . '(月)'] = $secondtake;
+                        //全款新车销售情况
+                        $fullsales[$month . '(月)'] = $fulltake;
+                        //全款二手车销售情况
+                        $fullsecondsales[$month . '(月)'] = $fullsecondtake;
+
+                        $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
+                        
+                        $day = date('t', strtotime("$months +1 month -1 day"));
+
                 }
-                //新车销售情况
-                $newtwotake = Db::name('sales_order')
-                        ->where('review_the_data', 'the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //租车出租情况
-                $rentaltwotake = Db::name('rental_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //二手车销售情况      
-                $secondtwotake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //全款车销售情况      
-                $fulltwotake = Db::name('full_parment_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $two_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
 
-                //销售三部
-                $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                foreach($three_sales as $k => $v){
-                    $three_admin[] = $v['uid'];
-                }
-                //新车销售情况
-                $newthreetake = Db::name('sales_order')
-                        ->where('review_the_data', 'the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //租车出租情况
-                $rentalthreetake = Db::name('rental_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //二手车销售情况      
-                $secondthreetake = Db::name('second_sales_order')
-                        ->where('review_the_data', 'the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
-                //全款车销售情况      
-                $fullthreetake = Db::name('full_parment_order')
-                        ->where('review_the_data', 'for_the_car')
-                        ->where('admin_id', 'in', $three_admin)
-                        ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                        ->count();
+                Cache::set('newsales', $newsales);
+                Cache::set('rentalsales', $rentalsales);
+                Cache::set('secondsales', $secondsales);
+                Cache::set('fullsales', $fullsales);
+                Cache::set('fullsecondsales', $fullsecondsales);
 
 
-                //销售一部总销售量
-                $onesales[$month . '(月)'] = $newonetake + $rentalonetake + $secondonetake + $fullonetake;
-                //销售二部总销售量
-                $twosales[$month . '(月)'] = $newtwotake + $rentaltwotake + $secondtwotake + $fulltwotake;
-                //销售三部总销售量
-                $threesales[$month . '(月)'] = $newthreetake + $rentalthreetake + $secondthreetake + $fullthreetake;
-
-                $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
-                
-                $day = date('t', strtotime("$months +1 month -1 day"));
         }
-        // pr($onesales);
-        // pr($twosales);
-        // pr($threesales);
+        
+
+        // pr($newsales);
+        // pr($rentalsales);
+        // pr($secondsales);
+        // pr($fullsales);
         // die;
+
         $this->view->assign([
             //新车数据
             'newcount'            => $newcount,
@@ -344,10 +307,13 @@ class Dashboard extends Backend
             'fullintroduce'       => $fullintroduce,
 
             
-            //销售情况 --- 一部与二部和三部
-            'onesales'           => $onesales,
-            'twosales'           => $twosales,
-            'threesales'         => $threesales
+            //销售情况
+            'newsales'            => $newsales,
+            'rentalsales'         => $rentalsales,
+            'secondsales'         => $secondsales,
+            'fullsales'           => $fullsales,
+            'fullsecondsales'     => $fullsecondsales
+            
         ]);
 
         return $this->view->fetch();

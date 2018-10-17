@@ -635,6 +635,26 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('方案保证金收据')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-plan_marginimages"  class="form-control" size="50" name="row[plan_marginimages]" value="{$row.plan_marginimages}" type="text" disabled>
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-plan_marginimages" class="btn btn-danger plupload" data-input-id="c-plan_marginimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                            data-multiple="true" data-preview-id="p-plan_marginimages" disabled>
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-plan_marginimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-plan_marginimages"></ul>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfiles')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-6">
             <div class="input-group">
