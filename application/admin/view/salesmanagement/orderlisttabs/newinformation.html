@@ -19,9 +19,9 @@
     #p-new_car_marginimages .btn-trash {
         display: block !important;
     }
-    #p-id_cardimages .btn-trash {
+    /* #p-id_cardimages .btn-trash {
         display: block !important;
-    }
+    } */
     #p-informationimages .btn-trash {
         display: block !important;
     }
@@ -94,7 +94,7 @@
                     <td class="col-xs-12 col-sm-1 ">{$result.monthly}</td>
                     <td class="col-xs-12 col-sm-1 ">{$result.nperlist}</td>
                     <td class="col-xs-12 col-sm-1 ">{$result.tail_section}</td>
-                    <td class="col-xs-12 col-sm-1 ">{$result.margin}</td>
+                    <td class="col-xs-12 col-sm-1 " id="margin">{$result.margin}</td>
                     <td class="col-xs-12 col-sm-1 ">{$result.gps}</td>
                     <td class="col-xs-12 col-sm-1 ">{$result.downpayment}</td>
                     <td class="col-xs-12 col-sm-1 ">
@@ -157,6 +157,7 @@
                     }
                     
                     $('.plan_acar').html(html);
+
 
                     $("input[type='button']").each(function() {
                         // console.log(123);
@@ -342,7 +343,7 @@
 
     </div>
     <h3>
-        <center>审核资料上传（不必填）</center>
+        <center>审核资料上传（必填）</center>
     </h3>
     <br>
     <div class="form-group">
@@ -642,7 +643,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('征信报告')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-credit_reportimages"  class="form-control" size="50" name="row[credit_reportimages]" value="{$row.credit_reportimages}" type="text">
+                <input id="c-credit_reportimages"  data-rule="required"  class="form-control" size="50" name="row[credit_reportimages]" value="{$row.credit_reportimages}" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-credit_reportimages" class="btn btn-danger plupload" data-input-id="c-credit_reportimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -658,6 +659,45 @@
             <ul class="row list-inline plupload-preview" id="p-credit_reportimages"></ul>
         </div>
     </div>
+    <div id="plan_marginimages" style="display: none">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('方案保证金收据')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <div class="input-group">
+                    <input id="c-plan_marginimages" data-rule="required"  class="form-control" size="50" name="row[plan_marginimages]" value="{$row.plan_marginimages}" type="text">
+                    <div class="input-group-addon no-border no-padding">
+                        <span>
+                            <button type="button" id="plupload-plan_marginimages" class="btn btn-danger plupload" data-input-id="c-plan_marginimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
+                                data-multiple="true" data-preview-id="p-plan_marginimages">
+                                <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                        </span>
+                        <span>
+
+                        </span>
+                    </div>
+                    <span class="msg-box n-right" for="c-plan_marginimages"></span>
+                </div>
+                <ul class="row list-inline plupload-preview" id="p-plan_marginimages"></ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        var plan_marginimages = document.getElementById('plan_marginimages');
+        var margin = document.getElementById('margin').innerHTML;
+        console.log(margin);
+
+        if (margin > 0) {
+
+            plan_marginimages.style.setProperty('display', 'block', 'important');
+
+
+            } else {
+
+            plan_marginimages.style.setProperty('display', 'none', 'important');
+
+        }
+    </script>
+    
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfiles')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-6">

@@ -260,62 +260,34 @@ class Secondfullcustomer extends Backend
                     ->where("id", $id)
                     ->setField("status_data", 'the_car');
 
-                $seventtime = \fast\Date::unixtime('month', -6);
-                $fullonesales = $fulltwosales = $fullthreesales = [];
+                $seventtime = \fast\Date::unixtime('month', -2);
+                $fullsecondsales = [];
                 
                 $month = date("Y-m", $seventtime);
                 $day = date('t', strtotime("$month +1 month -1 day"));
-                for ($i = 0; $i < 8; $i++)
+                for ($i = 0; $i < 4; $i++)
                 {
                         $months = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
                         $firstday = strtotime(date('Y-m-01', strtotime($month)));
                         $secondday = strtotime(date('Y-m-01', strtotime($months)));
+                        
+                        $fullsecondtake = Db::name('second_full_order')
+                            ->where('review_the_data', 'for_the_car')
+                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
+                            ->count();
+                        
                         //销售一部
-                        $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-                        foreach ($one_sales as $k => $v) {
-                            $one_admin[] = $v['uid'];
-                        }
-                        $fullonetake = Db::name('full_parment_order')
-                            ->where('review_the_data', 'for_the_car')
-                            ->where('admin_id', 'in', $one_admin)
-                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                            ->count();
+                        $fullsecondsales[$month] = $fullsecondtake;
                         //销售二部
-                        $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                        foreach ($two_sales as $k => $v) {
-                            $two_admin[] = $v['uid'];
-                        }
-                        $fulltwotake = Db::name('full_parment_order')
-                            ->where('review_the_data', 'for_the_car')
-                            ->where('admin_id', 'in', $two_admin)
-                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                            ->count();
-                        //销售三部
-                        $three_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                        foreach ($three_sales as $k => $v) {
-                            $three_admin[] = $v['uid'];
-                        }
-                        $fullthreetake = Db::name('full_parment_order')
-                            ->where('review_the_data', 'for_the_car')
-                            ->where('admin_id', 'in', $three_admin)
-                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                            ->count();
-                        //销售一部
-                        $fullonesales[$month] = $fullonetake;
-                        //销售二部
-                        $fulltwosales[$month] = $fulltwotake;
-                        //销售三部
-                        $fullthreesales[$month] = $fullthreetake;
-                
+                        
                         $month = date("Y-m", $seventtime + (($i+1) * 86400 * $day));
                                 
                         $day = date('t', strtotime("$months +1 month -1 day"));
                 
                 
                 }
-                Cache::set('fullonesales', $fullonesales);
-                Cache::set('fulltwosales', $fulltwosales);
-                Cache::set('fullthreesales', $fullthreesales);
+                Cache::set('fullsecondsales', $fullsecondsales);
+                
 
                 //添加到违章表
                 $peccancy = Db::name('second_full_order')

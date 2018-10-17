@@ -1566,6 +1566,7 @@ class Creditreview extends Backend
             ->alias("i")
             ->join("models m", "i.models_id=m.id")
             ->where("status_data", 'NEQ', "the_car")
+            ->where('shelfismenu', '=', '1')
             ->field("i.id,m.name,i.licenseplatenumber,i.vin,i.engine_number,i.companyaccount,i.Parkingposition,i.note")
             ->select();
         
