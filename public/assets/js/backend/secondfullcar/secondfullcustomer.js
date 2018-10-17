@@ -170,7 +170,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 alreadyLiftCar.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-showOrderAndStock").data("area", ["95%", "95%"]);
-                    $(".btn-editone").data("area", ["35%", "35%"]);
+                    $(".btn-editone").data("area", ["50%", "50%"]);
                 });
                 // 初始化表格
                 alreadyLiftCar.bootstrapTable({
@@ -218,12 +218,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Table.api.formatter.operate,
                                 buttons: [
                                     {
+                                        name: 'the_car', icon: 'fa fa-automobile', text: '已提车', extend: 'data-toggle="tooltip"', title: __('订单已完成，客户已提车'), classname: ' text-success ',
+
+                                    },
+                                    {
                                         name: 'edits',
                                         icon: 'fa fa-pencil',
                                         text:'编辑实际提车日期',
                                         title: __('编辑实际提车日期'),
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-success btn-editone',
+                                        hidden:function (r) { 
+                                            if(r.delivery_datetime!=null) return true;
+                                        }
 
                                     },
                                     {
@@ -280,7 +287,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
                 sales:function (value, row, index) {
 
-                    return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
+                    return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
             },
             events: {

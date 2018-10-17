@@ -103,7 +103,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { checkbox: true },
                             { field: 'id', title: __('Id'),operate:false},
                             { field: 'order_no', title: __('Order_no') },
-                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
+                            { field: 'createtime', title: __('Createtime'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime ,datetimeFormat: 'YYYY-MM-DD'},
 
                             { field: 'financial_name', title: __('金融平台') },
                             { field: 'models.name', title: __('销售车型') },
@@ -126,12 +126,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
 
-                            { field: 'planacar.payment', title: __('首付（元）'),operate:false },
-                            { field: 'planacar.monthly', title: __('月供（元）'),operate:false },
-                            { field: 'planacar.nperlist', title: __('期数'),operate:false },
-                            { field: 'planacar.margin', title: __('保证金（元）'),operate:false },
-                            { field: 'planacar.tail_section', title: __('尾款（元）'),operate:false },
-                            { field: 'planacar.gps', title: __('GPS（元）'),operate:false },
+                            // { field: 'planacar.payment', title: __('首付（元）'),operate:false },
+                            // { field: 'planacar.monthly', title: __('月供（元）'),operate:false },
+                            // { field: 'planacar.nperlist', title: __('期数'),operate:false },
+                            // { field: 'planacar.margin', title: __('保证金（元）'),operate:false },
+                            // { field: 'planacar.tail_section', title: __('尾款（元）'),operate:false },
+                            // { field: 'planacar.gps', title: __('GPS（元）'),operate:false },
                             {
                                 field: 'operate', title: __('Operate'), table: newcarAudit,
                                 buttons: [
@@ -141,7 +141,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         icon: 'fa fa-pencil', 
                                         extend: 'data-toggle="tooltip"',
                                         title: __('编辑资料'), 
-                                        classname: 'btn btn-xs btn-success btn-dialog btn-auditedit',
+                                        classname: 'btn btn-xs btn-info btn-dialog btn-auditedit',
                                         url: 'riskcontrol/creditreview/auditedit',
                                     },
                                     {
@@ -781,7 +781,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             {checkbox: true},
                             {field: 'id', title: __('Id'),operate:false},
                             {field: 'order_no', title: __('Order_no')}, 
-                            {field: 'createtime', title: __('提交时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                            {field: 'createtime', title: __('提交时间'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD'},
                             {field: 'models.name', title: __('租车车型') },
                             {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales },
 
@@ -812,7 +812,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         icon: 'fa fa-pencil', 
                                         extend: 'data-toggle="tooltip"',
                                         title: __('编辑资料'), 
-                                        classname: 'btn btn-xs btn-success btn-dialog btn-rentalauditedit',
+                                        classname: 'btn btn-xs btn-info btn-dialog btn-rentalauditedit',
                                         url: 'riskcontrol/creditreview/rentalauditedit',
                                     },
                                     {
@@ -1013,7 +1013,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
                             { field: 'models.name', title: __('销售车型') },
 
-                            { field: 'models.name', title: __('销售车型') },
                             { field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales },
                             {
                                 field: 'id', title: __('查看详细资料'), table: secondhandcarAudit, buttons: [
@@ -1033,12 +1032,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
 
-                            { field: 'plansecond.newpayment', title: __('新首付（元）'),operate:false },
-                            { field: 'plansecond.monthlypaymen', title: __('月供（元）'),operate:false },
-                            { field: 'plansecond.periods', title: __('期数（月）'),operate:false },
-                            { field: 'plansecond.totalprices', title: __('总价（元）'),operate:false },
-                            { field: 'plansecond.bond', title: __('保证金（元）'),operate:false },
-                            { field: 'plansecond.tailmoney', title: __('尾款（元）'),operate:false },
+                            // { field: 'plansecond.newpayment', title: __('新首付（元）'),operate:false },
+                            // { field: 'plansecond.monthlypaymen', title: __('月供（元）'),operate:false },
+                            // { field: 'plansecond.periods', title: __('期数（月）'),operate:false },
+                            // { field: 'plansecond.totalprices', title: __('总价（元）'),operate:false },
+                            // { field: 'plansecond.bond', title: __('保证金（元）'),operate:false },
+                            // { field: 'plansecond.tailmoney', title: __('尾款（元）'),operate:false },
                             {
                                 field: 'operate', title: __('Operate'), table: secondhandcarAudit,
                                 buttons: [
@@ -1048,7 +1047,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         icon: 'fa fa-pencil', 
                                         extend: 'data-toggle="tooltip"',
                                         title: __('编辑资料'), 
-                                        classname: 'btn btn-xs btn-success btn-dialog btn-secondauditedit',
+                                        classname: 'btn btn-xs btn-info btn-dialog btn-secondauditedit',
                                         url: 'riskcontrol/creditreview/secondauditedit',
                                     },
                                     {
@@ -1732,7 +1731,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 sales:function (value, row, index) {
                     // console.log(row);
 
-                   return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
+                   return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 }
 
             }

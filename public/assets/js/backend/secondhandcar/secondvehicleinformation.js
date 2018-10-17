@@ -38,13 +38,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id'),operate:false},
                         // {field: 'sales_id', title: __('Sales_id')},
                         {field: 'licenseplatenumber', title: __('Licenseplatenumber'), formatter:function(value,row,index){
-                            if(row.status_data !=  ""){
-                                return row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中, 销售员：' + row.department + '--' + row.admin_name + '</span>';
+                            return row.status_data!=''?row.licenseplatenumber+' <span class="text-danger">签单流程中</span> <span class="label label-info"> <i class="fa fa-user"></i> ' + row.department + '--' + row.admin_name + '</span>':row.licenseplatenumber;
 
-                            }
-                            else{
-                                return row.licenseplatenumber
-                            }
                         }},
                         // {field: 'models_id', title: __('Models_id')},
                         {field: 'models.name', title: __('Models.name')},
