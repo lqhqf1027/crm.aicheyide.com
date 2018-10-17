@@ -211,59 +211,29 @@ class Takesecondcar extends Backend
                         ->message($data['message'])
                         ->send();
 
-                    $seventtime = \fast\Date::unixtime('day', -6);
-                    $secondonesales = $secondtwosales = $secondthreesales = [];
+                    $seventtime = \fast\Date::unixtime('day', -2);
+                    $secondsales = [];
                     $month = date("Y-m", $seventtime);
                     $day = date('t', strtotime("$month +1 month -1 day"));
-                    for ($i = 0; $i < 8; $i++) {
+                    for ($i = 0; $i < 4; $i++) {
                         $months = date("Y-m", $seventtime + (($i + 1) * 86400 * $day));
                         $firstday = strtotime(date('Y-m-01', strtotime($month)));
                         $secondday = strtotime(date('Y-m-01', strtotime($months)));
-                        //销售一部
-                        $one_sales = Db::name('auth_group_access')->where('group_id', '18')->select();
-                        foreach ($one_sales as $k => $v) {
-                            $one_admin[] = $v['uid'];
-                        }
-                        $secondonetake = Db::name('second_sales_order')
+                        
+                        $secondtake = Db::name('second_sales_order')
                             ->where('review_the_data', 'the_car')
-                            ->where('admin_id', 'in', $one_admin)
                             ->where('delivery_datetime', 'between', [$firstday, $secondday])
                             ->count();
-                        //销售二部
-                        $two_sales = Db::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-                        foreach ($two_sales as $k => $v) {
-                            $two_admin[] = $v['uid'];
-                        }
-                        $secondtwotake = Db::name('second_sales_order')
-                            ->where('review_the_data', 'the_car')
-                            ->where('admin_id', 'in', $two_admin)
-                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                            ->count();
-                        //销售二部
-                        $three_sales = Db::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-                        foreach ($three_sales as $k => $v) {
-                            $three_admin[] = $v['uid'];
-                        }
-                        $secondthreetake = Db::name('second_sales_order')
-                            ->where('review_the_data', 'the_car')
-                            ->where('admin_id', 'in', $three_admin)
-                            ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                            ->count();
-                        //销售一部
-                        $secondonesales[$month . '(月)'] = $secondonetake;
-                        //销售二部
-                        $secondtwosales[$month . '(月)'] = $secondtwotake;
-                        //销售三部
-                        $secondthreesales[$month . '(月)'] = $secondthreetake;
+                        
+                        //二手车销售情况
+                        $secondsales[$month . '(月)'] = $secondtake;
 
                         $month = date("Y-m", $seventtime + (($i + 1) * 86400 * $day));
 
                         $day = date('t', strtotime("$months +1 month -1 day"));
 
                     }
-                    Cache::set('secondonesales', $secondonesales);
-                    Cache::set('secondtwosales', $secondtwosales);
-                    Cache::set('secondthreesales', $secondthreesales);
+                    Cache::set('secondsales', $secondsales);
 
 
                 } else {

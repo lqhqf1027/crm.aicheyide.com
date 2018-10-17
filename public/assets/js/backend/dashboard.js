@@ -10,35 +10,42 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '销售情况（单位：月）'
+                    text: '车辆销售情况（单位：月）',
+                    subtext: ''
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ["销售一部","销售二部","销售三部"]
+                    data: ["以租代购（新车）","租车","以租代购（二手车）","全款（新车）","全款（二手车）"]
                 },
-                xAxis: {
-                    data: Orderdata.column
-                },
-                yAxis: {
-                    splitLine: {
-                        show: false
+                toolbox: {
+                    show: false,
+                    feature: {
+                        magicType: {show: true, type: ['stack', 'tiled']},
+                        saveAsImage: {show: true}
                     }
                 },
-                dataZoom: [{
-                    startValue: Orderdata.column['10']
-                }, {
-                    type: 'inside'
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: Orderdata.column
+                },
+                yAxis: {},
+                grid: [{
+                    left: 'left',
+                    top: 'top',
+                    right: '10',
+                    bottom: 30
                 }],
                 series: [
                     {
-                        name: "销售一部",
+                        name: "以租代购（新车）",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
                             normal: {
-                                color: 'yellow'
+                                color: 'rgb(132,215,251)'
                             }
                         },
                         lineStyle: {
@@ -46,15 +53,15 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderdata.onesales
+                        data: Orderdata.newsales
                     },
                     {
-                        name: "销售二部",
+                        name: "租车",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
                             normal: {
-                                color: 'pink'
+                                color: 'rgb(133,253,217)'
                             }
                         },
                         lineStyle: {
@@ -62,15 +69,15 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderdata.twosales
+                        data: Orderdata.rentalsales 
                     },
                     {
-                        name: "销售三部",
+                        name: "以租代购（二手车）",
                         type: 'line',
                         smooth: true,
                         areaStyle: {
                             normal: {
-                                color: 'cyan'
+                                color: 'rgb(146,153,179)'
                             }
                         },
                         lineStyle: {
@@ -78,10 +85,43 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                                 width: 1.5
                             }
                         },
-                        data: Orderdata.threesales
+                        data: Orderdata.secondsales
+                    },
+                    {
+                        name: "全款（新车）",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                color: 'rgb(188,195,253)'
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Orderdata.fullsales
+                    },
+                    {
+                        name: "全款（二手车）",
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                color: 'rgb(202,226,189)'
+                            }
+                        },
+                        lineStyle: {
+                            normal: {
+                                width: 1.5
+                            }
+                        },
+                        data: Orderdata.fullsecondsales
                     }
                 ]
             };
+                                
 
             // 使用刚指定的配置项和数据显示图表。
             newEchart.setOption(option);

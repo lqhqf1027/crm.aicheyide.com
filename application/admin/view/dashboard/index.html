@@ -137,20 +137,10 @@
     <div class="panel-body">
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active in" id="one">
-
-                <!--<div class="row">-->
-                    <!--<div class="col-lg-6">-->
-                        <!--<div id="city" style="height:300px;width:100%;"></div>-->
-                    <!--</div>-->
-                    <!--<div class="col-lg-6">-->
-                        <!--<div id="today" style="height:300px;width:100%;"></div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<br><br><br>-->
                 <!-- 新车 -->
                 <div class="row">
                     <div class="col-lg-8">
-                        <div id="newechart" style="height:300px;width:100%;"></div>
+                        <div id="newechart" style="height:200px;width:100%;"></div>
                     </div>
                     <div class="col-lg-4">
                         <div class="card sameheight-item stats">
@@ -674,10 +664,13 @@
 </script>
 <script>
     var Orderdata = {
-            column: {:json_encode(array_keys($onesales))},
-            onesales: {:json_encode(array_values($onesales))},
-            twosales: {:json_encode(array_values($twosales))},
-            threesales: {:json_encode(array_values($threesales))},
+            column: {:json_encode(array_keys($newsales))},
+            newsales: {:json_encode(array_values($newsales))},
+            rentalsales: {:json_encode(array_values($rentalsales))},
+            secondsales: {:json_encode(array_values($secondsales))},
+            fullsales: {:json_encode(array_values($fullsales))},
+            fullsecondsales: {:json_encode(array_values($fullsecondsales))},
+          
     };
-    console.log(Orderdata.column);
+    console.log(Orderdata);
 </script>
