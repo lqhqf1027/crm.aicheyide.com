@@ -459,27 +459,7 @@
             <ul class="row list-inline plupload-preview" id="p-bank_cardimages"></ul>
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('承诺书')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <div class="input-group">
-                <input id="c-undertakingimages" data-rule="required" class="form-control" size="50" name="row[undertakingimages]"
-                    type="text" value="{$row.undertakingimages}" disabled>
-                <div class="input-group-addon no-border no-padding">
-                    <span>
-                        <button type="button" id="plupload-undertakingimages" class="btn btn-danger plupload" data-input-id="c-undertakingimages"
-                            data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-undertakingimages" disabled>
-                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
-                    </span>
-                    <span>
-                        
-                    </span>
-                </div>
-                <span class="msg-box n-right" for="c-undertakingimages"></span>
-            </div>
-            <ul class="row list-inline plupload-preview" id="p-undertakingimages"></ul>
-        </div>
-    </div>
+    
     
     <h3>
         <center>客户提车资料补全</center>
@@ -514,6 +494,27 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Family_members')}:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-family_members" data-rule="required" class="form-control" name="row[family_members]" type="text" placeholder="格式如：张某某-18066668888-父亲">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('承诺书')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-undertakingimages" data-rule="required" class="form-control" size="50" name="row[undertakingimages]"
+                    type="text" value="{$row.undertakingimages}" disabled>
+                <div class="input-group-addon no-border no-padding">
+                    <span>
+                        <button type="button" id="plupload-undertakingimages" class="btn btn-danger plupload" data-input-id="c-undertakingimages"
+                            data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-undertakingimages" disabled>
+                            <i class="fa fa-upload"></i> {:__('Upload')}</button>
+                    </span>
+                    <span>
+                        
+                    </span>
+                </div>
+                <span class="msg-box n-right" for="c-undertakingimages"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-undertakingimages"></ul>
         </div>
     </div>
     <div class="form-group">

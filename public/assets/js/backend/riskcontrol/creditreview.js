@@ -148,10 +148,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         name: '', icon: 'fa fa-times', text: '审核资料还未完善，无法进行审核', classname: ' text-danger ',
                                         hidden: function (row) {  /**审核资料还未完善，无法进行审核 */
                                            
-                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages) {
+                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages) {
                                                 return false;
                                             }
-                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages) {
+                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages) {
                                                 return true;
                                             }
                                         },
@@ -163,10 +163,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
                                         //....
                                         hidden: function (row) { /**审核 */
-                                            if ((row.review_the_data == 'is_reviewing_true') && row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages) {
+                                            if ((row.review_the_data == 'is_reviewing_true') && row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages) {
                                                 return false;
                                             }
-                                            else if ((row.review_the_data == 'is_reviewing_true') || !row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages) {
+                                            else if ((row.review_the_data == 'is_reviewing_true') || !row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages) {
                                                 return true;
                                             }
                                             else if (row.review_the_data == 'for_the_car') {
