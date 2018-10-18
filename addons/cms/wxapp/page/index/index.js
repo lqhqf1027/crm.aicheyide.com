@@ -15,26 +15,7 @@ Page(Object.assign({}, Tab, {
       scroll: true,
       height: 44
     },
-    items: [
-      'fadeIn',
-      'fadeInDown',
-      'fadeInLeft',
-      'fadeInRight',
-      'fadeInUp',
-      'slideInUp',
-      'slideInDown',
-      'slideInLeft',
-      'slideInRight',
-    ],
-    index: 0,
-    example: {
-      classNames: 'wux-animate--fadeIn',
-      enter: true,
-      exit: true,
-      in: false,
-    },
-    show: false,
-    status: '',
+
   },
   channel: 0,
   page: 1,
@@ -138,14 +119,7 @@ Page(Object.assign({}, Tab, {
     })
   },
 
-  onChange(e) {
-    console.log(e)
-    this.setData({
-      value: e.detail.value,
-    })
-    const { animateStatus } = e.detail
 
-    switch (animateStatus) {
       case 'entering':
         this.setData({ status: 'Entering…' })
         break
@@ -161,4 +135,4 @@ Page(Object.assign({}, Tab, {
     }
   } 
     
-}))
+

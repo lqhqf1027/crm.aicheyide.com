@@ -145,6 +145,32 @@ class Usedcarinfo extends Backend
 
             $info = $this->request->post("info/a");
 
+            if(!$params['hostdate']){
+                $params['hostdate'] = null;
+            }
+
+            if(!$params['ticketdate']){
+                $params['ticketdate'] = null;
+            }
+
+
+            if(!$info['lending_date']){
+                $info['lending_date'] = null;
+            }
+
+            if(!$params['pay_taxesdate']){
+                $params['pay_taxesdate'] = null;
+            }
+
+            if(!$params['insurance_buydate']){
+                $params['insurance_buydate'] = null;
+            }
+
+            if(!$params['next_inspection']){
+                $params['next_inspection'] = null;
+            }
+
+
 
             Db::name("second_sales_order")
                 ->where("id", $ids)

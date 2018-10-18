@@ -3,13 +3,8 @@
   "enablePullDownRefresh": true,
 
   "usingComponents": {
-    "wux-badge": "../../dist/badge/index",
-    "wux-icon": "../../dist/icon/index",
-    "wux-button": "../../dist/button/index",
-    "wux-checkbox-group": "../../dist/checkbox-group/index",
-    "wux-checkbox": "../../dist/checkbox/index",
     "wux-cell-group": "../../dist/cell-group/index",
     "wux-cell": "../../dist/cell/index",
-    "wux-input-number": "../../dist/input-number/index"
+    "wux-calendar": "../../dist/calendar/index"
   }
 }

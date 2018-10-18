@@ -192,9 +192,9 @@ class Carreservation extends Backend
 
                 $data = Db::name("full_parment_order")->where('id', $id)->find();
                 
-                $channel = "demo-full_takecar";
-                $content = "销售提交的全款车单，可以进行提车处理";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-full_takecar";
+//                $content = "销售提交的全款车单，可以进行提车处理";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
                
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');

@@ -509,9 +509,9 @@ class Orderlisttabs extends Backend
                 //     $this->error('微信推送失败',null,$sedResult);
                 // }
 
-                $channel = "demo-sales";
-                $content = "销售员" . $admin_name . "发出新车销售请求，请处理";
-                goeary_push($channel, $content);
+//                $channel = "demo-sales";
+//                $content = "销售员" . $admin_name . "发出新车销售请求，请处理";
+//                goeary_push($channel, $content);
 
                 $data = newinternal_inform($models_name, $admin_name, $username);
                 // var_dump($data);
@@ -910,9 +910,9 @@ class Orderlisttabs extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-newsend_car";
-                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，资料已经补全，可以进行提车，请及时登陆后台进行处理 ";
-                goeary_push($channel, $content);
+//                $channel = "demo-newsend_car";
+//                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，资料已经补全，可以进行提车，请及时登陆后台进行处理 ";
+//                goeary_push($channel, $content);
 
                 $data = newsend_car($models_name, $username);
                 // var_dump($data);
@@ -1105,9 +1105,9 @@ class Orderlisttabs extends Backend
 
                             $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
-                            $channel = "demo-newdata_cash";
-                            $content = "客户：" . $row['username'] . "对车型：" . $models_name . "的购买，保证金收据已上传，请及时登陆后台进行处理 ";
-                            goeary_push($channel, $content);
+//                            $channel = "demo-newdata_cash";
+//                            $content = "客户：" . $row['username'] . "对车型：" . $models_name . "的购买，保证金收据已上传，请及时登陆后台进行处理 ";
+//                            goeary_push($channel, $content);
 
                             $data = newdata_cash($models_name, $row['username']);
                             // var_dump($data);
@@ -1253,9 +1253,9 @@ class Orderlisttabs extends Backend
                         //车型
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
-                        $channel = "demo-new_collection_data";
-                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
-                        goeary_push($channel, $content);
+//                        $channel = "demo-new_collection_data";
+//                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
+//                        goeary_push($channel, $content);
 
                         $data = new_collection_data($models_name, $row['username'], $row['text']);
 
@@ -1380,9 +1380,9 @@ class Orderlisttabs extends Backend
 
                         if ($result_s) {
 
-                            $channel = "demo-reserve";
-                            $content = "销售员" . $admin_nickname . "提交的租车单，请及时处理";
-                            goeary_push($channel, $content);
+//                            $channel = "demo-reserve";
+//                            $content = "销售员" . $admin_nickname . "提交的租车单，请及时处理";
+//                            goeary_push($channel, $content);
 
                             $data = Db::name("rental_order")->where('id', Session::get('rental_id'))->find();
 
@@ -1622,9 +1622,9 @@ class Orderlisttabs extends Backend
                         //车型
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
-                        $channel = "demo-rental_collection_data";
-                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
-                        goeary_push($channel, $content);
+//                        $channel = "demo-rental_collection_data";
+//                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
+//                        goeary_push($channel, $content);
 
                         $data = rental_collection_data($models_name, $row['username'], $row['text']);
 
@@ -1705,9 +1705,9 @@ class Orderlisttabs extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-rental_control";
-                $content = "销售员" . $admin_nickname . "提交的租车单，请及时进行审核处理";
-                goeary_push($channel, $content);
+//                $channel = "demo-rental_control";
+//                $content = "销售员" . $admin_nickname . "提交的租车单，请及时进行审核处理";
+//                goeary_push($channel, $content);
 
 
                 $data = Db::name("rental_order")->where('id', $id)->find();
@@ -1973,9 +1973,9 @@ class Orderlisttabs extends Backend
 
                 $this->model->isUpdate(true)->save(['id' => $plan_car_second_name, 'status_data' => 'for_the_car']);
 
-                $channel = "demo-second_backoffice";
-                $content = "提交的二手车单，请尽快进行处理";
-                goeary_push($channel, $content);
+//                $channel = "demo-second_backoffice";
+//                $content = "提交的二手车单，请尽快进行处理";
+//                goeary_push($channel, $content);
 
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
@@ -2270,9 +2270,9 @@ class Orderlisttabs extends Backend
                         //车型
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
-                        $channel = "demo-second_collection_data";
-                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
-                        goeary_push($channel, $content);
+//                        $channel = "demo-second_collection_data";
+//                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
+//                        goeary_push($channel, $content);
 
                         $data = second_collection_data($models_name, $row['username'], $row['text']);
 
@@ -2655,9 +2655,9 @@ class Orderlisttabs extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-full_backoffice";
-                $content = "销售员" . $admin_nickname . "提交的全款车单，请尽快进行金额录入";
-                goeary_push($channel, $content);
+//                $channel = "demo-full_backoffice";
+//                $content = "销售员" . $admin_nickname . "提交的全款车单，请尽快进行金额录入";
+//                goeary_push($channel, $content);
 
                 $data = Db::name("full_parment_order")->where('id', $id)->find();
                 //车型
@@ -2852,9 +2852,9 @@ class Orderlisttabs extends Backend
 
                 $this->model->isUpdate(true)->save(['id' => $plan_second_full_name, 'status_data' => 'send_the_car']);
 
-                $channel = "demo-second_full_backoffice";
-                $content = "销售员" . $admin_nickname . "提交的全款二手车单，请尽快进行金额录入";
-                goeary_push($channel, $content);
+//                $channel = "demo-second_full_backoffice";
+//                $content = "销售员" . $admin_nickname . "提交的全款二手车单，请尽快进行金额录入";
+//                goeary_push($channel, $content);
 
                 $data = Db::name("second_full_order")->where('id', $id)->find();
                 //车型

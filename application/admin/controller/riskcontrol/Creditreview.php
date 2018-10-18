@@ -469,9 +469,9 @@ class Creditreview extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-newpass_finance";
-                $content = "你发起的客户：" . $username . "对车型：" . $models_name . "的购买，已经通过风控审核，请及时通知客户进行签订金融合同";
-                goeary_push($channel, $content. "|" . $admin_id);
+//                $channel = "demo-newpass_finance";
+//                $content = "你发起的客户：" . $username . "对车型：" . $models_name . "的购买，已经通过风控审核，请及时通知客户进行签订金融合同";
+//                goeary_push($channel, $content. "|" . $admin_id);
 
                 $data = newpass_finance($models_name, $username);
                 // var_dump($data);
@@ -522,9 +522,9 @@ class Creditreview extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-newcontrol_tube";
-                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，已经签订金融合同，可以进行录入库存";
-                goeary_push($channel, $content);
+//                $channel = "demo-newcontrol_tube";
+//                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，已经签订金融合同，可以进行录入库存";
+//                goeary_push($channel, $content);
 
                 $data = newcontrol_tube($models_name, $username);
                 // var_dump($data);
@@ -575,9 +575,9 @@ class Creditreview extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-newcontrol_tube_finance";
-                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，审核已通过，可以进行录入库存";
-                goeary_push($channel, $content);
+//                $channel = "demo-newcontrol_tube_finance";
+//                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，审核已通过，可以进行录入库存";
+//                goeary_push($channel, $content);
 
                 $data = newcontrol_tube_finance($models_name, $username);
                 // var_dump($data);
@@ -638,9 +638,9 @@ class Creditreview extends Backend
 
             $models_name = Db::name('models')->where('id', $result['models_id'])->value('name');
   
-            $channel = "demo-newchoose_stock";  
-            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经匹配完库存车";
-            goeary_push($channel, $content);
+//            $channel = "demo-newchoose_stock";
+//            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经匹配完库存车";
+//            goeary_push($channel, $content);
 
             $data = newchoose_stock($models_name, $result['username']);
             // var_dump($data);
@@ -815,9 +815,9 @@ class Creditreview extends Backend
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
 
-                $channel = "demo-newcar_data";
-                $content = "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-newcar_data";
+//                $content = "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
 
 
                 
@@ -1071,9 +1071,9 @@ class Creditreview extends Backend
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
 
-                $channel = "demo-newcar_nopass";
-                $content = "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-newcar_nopass";
+//                $content = "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
 
                 
                 //车型
@@ -1133,9 +1133,9 @@ class Creditreview extends Backend
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 $admin_nickname = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
 
-                $channel = "demo-new_information";
-                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-new_information";
+//                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
                 
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
@@ -1235,9 +1235,9 @@ class Creditreview extends Backend
 
                 $data = Db::name("rental_order")->where('id', $id)->find();
 
-                $channel = "demo-rental_pass";
-                $content = "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-rental_pass";
+//                $content = "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
 
                 
                 //车型
@@ -1298,9 +1298,9 @@ class Creditreview extends Backend
 
                 $data = Db::name("rental_order")->where('id', $id)->find();
 
-                $channel = "demo-rental_nopass";
-                $content = "销售员" . $admin_nickname . "提交的租车单没有通过风控审核";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-rental_nopass";
+//                $content = "销售员" . $admin_nickname . "提交的租车单没有通过风控审核";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
 
                
                 //车型
@@ -1359,9 +1359,9 @@ class Creditreview extends Backend
                 $data = Db::name("rental_order")->where('id', $id)->find();
                 $admin_nickname = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
 
-                $channel = "demo-rental_information";
-                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-rental_information";
+//                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
                 
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
@@ -1513,9 +1513,9 @@ class Creditreview extends Backend
             $models_name = Db::name('models')->where('id', $result['models_id'])->value('name');
             
             //发送销售
-            $channel = "demo-secondpass_inform";
-            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核，匹配完车辆，通知客户进行提车";
-            goeary_push($channel, $content . "|" . $result['admin_id']);
+//            $channel = "demo-secondpass_inform";
+//            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核，匹配完车辆，通知客户进行提车";
+//            goeary_push($channel, $content . "|" . $result['admin_id']);
 
             $data = secondpass_inform($models_name, $result['username']);
             // var_dump($data);
@@ -1537,9 +1537,9 @@ class Creditreview extends Backend
 
 
             //发送车管
-            $channel = "demo-secondpass_tubeinform";
-            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核，匹配完车辆";
-            goeary_push($channel, $content);
+//            $channel = "demo-secondpass_tubeinform";
+//            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核，匹配完车辆";
+//            goeary_push($channel, $content);
 
             $data = secondpass_tubeinform($models_name, $result['username']);
             // var_dump($data);
@@ -1650,9 +1650,9 @@ class Creditreview extends Backend
 
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
 
-                $channel = "demo-second_data";
-                $content = "销售员" . $admin_nickname . "提交的二手车单需要提交保证金";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-second_data";
+//                $content = "销售员" . $admin_nickname . "提交的二手车单需要提交保证金";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
 
                 
                 //车型
@@ -1715,9 +1715,9 @@ class Creditreview extends Backend
 
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
 
-                $channel = "demo-second_nopass";
-                $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-second_nopass";
+//                $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
 
                 
                 //车型
@@ -1781,9 +1781,9 @@ class Creditreview extends Backend
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 $admin_nickname = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
 
-                $channel = "demo-second_information";
-                $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核,需要补录：" . $text ."资料";
-                goeary_push($channel, $content . "|" . $data['admin_id']);
+//                $channel = "demo-second_information";
+//                $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核,需要补录：" . $text ."资料";
+//                goeary_push($channel, $content . "|" . $data['admin_id']);
                 
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');

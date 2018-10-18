@@ -745,9 +745,9 @@ class Carreservation extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-new_amount";
-                $content = "内勤提交的新车单，请及时进行车辆处理";
-                goeary_push($channel, $content);
+//                $channel = "demo-new_amount";
+//                $content = "内勤提交的新车单，请及时进行车辆处理";
+//                goeary_push($channel, $content);
 
                 $data = Db::name("sales_order")->where('id', $ids)->find();
                 //车型
@@ -825,9 +825,9 @@ class Carreservation extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-second_amount";
-                $content = "内勤提交的二手车单，请及时进行车辆处理";
-                goeary_push($channel, $content);
+//                $channel = "demo-second_amount";
+//                $content = "内勤提交的二手车单，请及时进行车辆处理";
+//                goeary_push($channel, $content);
 
                 $data = Db::name("second_sales_order")->where('id', $ids)->find();
                 //车型
@@ -892,9 +892,9 @@ class Carreservation extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-fullcar_amount";
-                $content = "内勤提交的全款车单，请及时进行车辆处理";
-                goeary_push($channel, $content);
+//                $channel = "demo-fullcar_amount";
+//                $content = "内勤提交的全款车单，请及时进行车辆处理";
+//                goeary_push($channel, $content);
 
                 $data = Db::name("full_parment_order")->where('id', $ids)->find();
                 //车型
@@ -973,9 +973,9 @@ class Carreservation extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-second_amount";
-                $content = "内勤提交的二手车单，请及时进行车辆处理";
-                goeary_push($channel, $content);
+//                $channel = "demo-second_amount";
+//                $content = "内勤提交的二手车单，请及时进行车辆处理";
+//                goeary_push($channel, $content);
 
                 $data = Db::name("second_sales_order")->where('id', $ids)->find();
                 //车型
@@ -1040,9 +1040,9 @@ class Carreservation extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-secondfullcar_amount";
-                $content = "内勤提交的全款二手车单，请及时进行车辆处理";
-                goeary_push($channel, $content);
+//                $channel = "demo-secondfullcar_amount";
+//                $content = "内勤提交的全款二手车单，请及时进行车辆处理";
+//                goeary_push($channel, $content);
 
                 $data = Db::name("second_full_order")->where('id', $ids)->find();
                 //车型

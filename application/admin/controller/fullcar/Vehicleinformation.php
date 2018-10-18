@@ -317,9 +317,9 @@ class Vehicleinformation extends Backend
                 $admin_name = Db::name('admin')->where('id', $full_info['admin_id'])->value('nickname');
                 
                 //goeasy推送
-                $channel = "demo-full_takecar";
-                $content = "你发起的客户：" . $full_info['username'] . "对车型：" . $models_name . "的购买，已经提车";
-                goeary_push($channel, $content. "|" . $admin_id);
+//                $channel = "demo-full_takecar";
+//                $content = "你发起的客户：" . $full_info['username'] . "对车型：" . $models_name . "的购买，已经提车";
+//                goeary_push($channel, $content. "|" . $admin_id);
                 
                 //邮箱通知
                 $data = fullsales_inform($models_name, $admin_name, $full_info['usename']);
