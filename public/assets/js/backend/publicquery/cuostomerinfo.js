@@ -10,6 +10,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     edit_url: 'publicquery/cuostomerinfo/edit',
                     del_url: 'publicquery/cuostomerinfo/del',
                     multi_url: 'publicquery/cuostomerinfo/multi',
+                    import_url: 'publicquery/cuostomerinfo/import',
                     table: 'past_information',
                 }
             });

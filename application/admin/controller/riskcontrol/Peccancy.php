@@ -293,9 +293,9 @@ class Peccancy extends Backend
 
             if ($res) {
 
-                $channel = 'send_peccancy';
-                $content = '有新的客户违章信息进入，请注意查看';
-                goeary_push($channel, $content);
+//                $channel = 'send_peccancy';
+//                $content = '有新的客户违章信息进入，请注意查看';
+//                goeary_push($channel, $content);
 
                 $data = send_peccancy();
 

@@ -14,20 +14,8 @@ Page(Object.assign({}, Tab, {
       scroll: true,
       height: 44
     },
+      great: 15
 
-
-    items: [{
-      id: '001',
-      text: '房间',
-      value: 1,
-    },
-    {
-      id: '002',
-      text: '成人',
-      value: 2,
-    },
-    ],
-    value: 1,
   },
   channel: 0,
   page: 1,
@@ -102,10 +90,11 @@ Page(Object.assign({}, Tab, {
     }
   },
 
-  onChange(e) {
-    console.log(e)
-    this.setData({
-      value: e.detail.value,
-    })
-  },
+
+  tophp:function (){
+    console.log(5);
+  }
+
+
+  
 }))

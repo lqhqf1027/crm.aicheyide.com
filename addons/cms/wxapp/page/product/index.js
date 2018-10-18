@@ -14,6 +14,13 @@ Page(Object.assign({}, Tab, {
       scroll: true,
       height: 44
     },
+    
+
+    value1: [],
+    value2: [],
+    value3: [],
+    value4: [],
+
   },
   //模型的ID,这里使用产品的模型
   model: 2,
@@ -73,5 +80,61 @@ Page(Object.assign({}, Tab, {
     });
     wx.pageScrollTo({ scrollTop: 0 });
     this.loadArchives();
-  }
+  },
+
+
+  openCalendar1() {
+    $wuxCalendar().open({
+      value: this.data.value1,
+      onChange: (values, displayValues) => {
+        console.log('onChange', values, displayValues)
+        this.setData({
+          value1: displayValues,
+        })
+      },
+    })
+  },
+  openCalendar2() {
+    $wuxCalendar().open({
+      value: this.data.value2,
+      multiple: true,
+      onChange: (values, displayValues) => {
+        console.log('onChange', values, displayValues)
+        this.setData({
+          value2: displayValues,
+        })
+      },
+    })
+  },
+  openCalendar3() {
+    $wuxCalendar().open({
+      value: this.data.value3,
+      direction: 'vertical',
+      onChange: (values, displayValues) => {
+        console.log('onChange', values, displayValues)
+        this.setData({
+          value3: displayValues,
+        })
+      },
+    })
+  },
+  openCalendar4() {
+    const now = new Date()
+    const minDate = now.getTime()
+    const maxDate = now.setDate(now.getDate() + 7)
+
+    $wuxCalendar().open({
+      value: this.data.value4,
+      minDate,
+      maxDate,
+      onChange: (values, displayValues) => {
+        console.log('onChange', values, displayValues)
+        this.setData({
+          value4: displayValues,
+        })
+      },
+    })
+  },
+
+
 }))

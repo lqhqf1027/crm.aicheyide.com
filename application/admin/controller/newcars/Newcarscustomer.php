@@ -248,9 +248,9 @@ class Newcarscustomer extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-newtake_car";
-                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，已经可以进行提车，请补全提车资料";
-                goeary_push($channel, $content . "|" . $admin_id);
+//                $channel = "demo-newtake_car";
+//                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，已经可以进行提车，请补全提车资料";
+//                goeary_push($channel, $content . "|" . $admin_id);
 
                 $data = newtake_car($models_name, $username);
                 // var_dump($data);
@@ -297,9 +297,9 @@ class Newcarscustomer extends Backend
 
             if ($result !== false) {
 
-                $channel = "demo-sales_takecar";
-                $content = "客户已经提车，请悉知！";
-                goeary_push($channel, $content . '|' . $id);
+//                $channel = "demo-sales_takecar";
+//                $content = "客户已经提车，请悉知！";
+//                goeary_push($channel, $content . '|' . $id);
 
                 $new_info = Db::name('sales_order')
                     ->where('id', $id)

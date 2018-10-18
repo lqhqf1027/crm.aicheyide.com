@@ -208,9 +208,9 @@ class Carreservation extends Backend
 
             if($result!==false){
 
-                $channel = "demo-second_finance";
-                $content =  "车管提交的二手车单，请及时进行匹配金融";
-                goeary_push($channel, $content);
+//                $channel = "demo-second_finance";
+//                $content =  "车管提交的二手车单，请及时进行匹配金融";
+//                goeary_push($channel, $content);
 
                 // //推送模板消息给风控
                 // $sedArr = array(

@@ -313,9 +313,9 @@ class Secondfullcustomer extends Backend
                 $admin_name = Db::name('admin')->where('id', $secondfull_info['admin_id'])->value('nickname');
 
                 //goeasy推送
-                $channel = "demo-secondfull_takecar";
-                $content = "你发起的客户：" . $secondfull_info['username'] . "对车型：" . $models_name . "的购买，已经提车";
-                goeary_push($channel, $content. "|" . $admin_id);
+//                $channel = "demo-secondfull_takecar";
+//                $content = "你发起的客户：" . $secondfull_info['username'] . "对车型：" . $models_name . "的购买，已经提车";
+//                goeary_push($channel, $content. "|" . $admin_id);
 
                 //邮箱通知
                 $data = secondfullsales_inform($models_name, $admin_name, $secondfull_info['username']);
