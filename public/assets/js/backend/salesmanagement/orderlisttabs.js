@@ -385,10 +385,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         
                                         hidden: function (row, value, index) {
                                            
-                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages || !row.undertakingimages) {
+                                            if (!row.id_cardimages || !row.drivers_licenseimages || !row.bank_cardimages) {
                                                 return false;
                                             }
-                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages && row.undertakingimages) {
+                                            else if (row.id_cardimages && row.drivers_licenseimages && row.bank_cardimages) {
                                                 return true;
                                             }
                                         },

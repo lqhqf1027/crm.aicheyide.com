@@ -1,4 +1,11 @@
 {
   "navigationBarTitleText": "友车友家",
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+
+  "usingComponents": {
+    
+    "wux-animation-group": "../../dist/animation-group/index",
+    "wux-cell-group": "../../dist/cell-group/index"
+    
+  }
 }
