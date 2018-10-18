@@ -642,6 +642,10 @@ class Orderlisttabs extends Backend
                 $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
                 // return true;
             }
+            if ($adminRule == 'message33') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
+                // return true;
+            }
             if ($params) {
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -1302,10 +1306,11 @@ class Orderlisttabs extends Backend
     {
         $this->model = new \app\admin\model\RentalOrder;
 
-        $result = DB::name('car_rental_models_info')->alias('a')
+        $result = Db::name('car_rental_models_info')->alias('a')
             ->join('models b', 'b.id=a.models_id')
             ->field('a.id,a.licenseplatenumber,a.kilometres,a.Parkingposition,a.companyaccount,a.cashpledge,a.threemonths,a.sixmonths,a.manysixmonths,a.note,b.name as models_name')
             ->where('a.status_data', '')
+            ->where('a.shelfismenu', '=', '1')
             ->select();
 
         $this->view->assign('result', $result);
@@ -1343,6 +1348,10 @@ class Orderlisttabs extends Backend
             }
             if ($adminRule == 'message23') {
                 $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message33') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
                 // return true;
             }
             if ($params) {
@@ -1822,6 +1831,10 @@ class Orderlisttabs extends Backend
             }
             if ($adminRule == 'message23') {
                 $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message33') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
                 // return true;
             }
             if ($params) {
@@ -2491,6 +2504,10 @@ class Orderlisttabs extends Backend
                 $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
                 // return true;
             }
+            if ($adminRule == 'message33') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
+                // return true;
+            }
             if ($params) {
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -2772,6 +2789,10 @@ class Orderlisttabs extends Backend
             }
             if ($adminRule == 'message23') {
                 $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message24'])->find()['id'];
+                // return true;
+            }
+            if ($adminRule == 'message33') {
+                $params['backoffice_id'] = Db::name('admin')->where(['rule_message' => 'message20'])->find()['id'];
                 // return true;
             }
             if ($params) {
