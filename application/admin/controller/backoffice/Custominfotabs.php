@@ -296,13 +296,6 @@ class Custominfotabs extends Backend
             }
 
 
-//            foreach ($list as $row) {
-//
-//                $row->getRelation('platform')->visible(['name']);
-//                $row->getRelation('backoffice')->visible(['nickname','avatar']);
-//                $row->getRelation('admin')->visible(['nickname','avatar']);
-//            }
-
             $list = collection($list)->toArray();
 
             foreach ($list as $k=>$v){

@@ -49,7 +49,7 @@ class Sharedetailsdatas extends Backend
             ->join('mortgage_registration d', 'd.id = a.mortgage_registration_id', 'LEFT')
             ->join('car_new_inventory e', 'e.id=a.car_new_inventory_id', 'LEFT')
             ->join('mortgage f', 'f.id=a.mortgage_id', 'LEFT')
-            ->field('a.order_no,a.genderdata,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
+            ->field('a.order_no,a.genderdata,a.models_id,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.amount_collected,a.residence_bookletimages,a.bank_cardimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
                 a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,a.withholding_service,

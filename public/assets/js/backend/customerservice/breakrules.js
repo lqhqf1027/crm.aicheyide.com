@@ -29,17 +29,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(this).trigger("shown.bs.tab");
             });
 
-            goeasy.subscribe({
-                channel: 'send_peccancy',
-                onMessage: function(message){
-
-                        Layer.alert(message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-
-                }
-            });
+            // goeasy.subscribe({
+            //     channel: 'send_peccancy',
+            //     onMessage: function(message){
+            //
+            //             Layer.alert(message.content,{ icon:0},function(index){
+            //                 Layer.close(index);
+            //                 $(".btn-refresh").trigger("click");
+            //             });
+            //
+            //     }
+            // });
 
         },
         table:{

@@ -42,9 +42,9 @@ class Channellisttabs extends Backend
 
         //得到当前销售所在部门
         if (in_array($this->auth->id, $canUseId['sales'])) {
-            $message = Db::name('admin')
-                ->where('id', $this->auth->id)
-                ->value('rule_message');
+
+
+            $all_sales = [$this->auth->id];
         } else if (in_array($this->auth->id, $canUseId['manager'])) {
 
             $manager = Db::name('admin')
@@ -62,13 +62,15 @@ class Channellisttabs extends Backend
                     $message = 'message23';
                     break;
             }
+
+            //得到该部门所有销售
+            $all_sales = Db::name('admin')
+                ->where('rule_message', $message)
+                ->where('status','normal')
+                ->column('id');
         }
 
-        //得到该部门所有销售
-        $all_sales = Db::name('admin')
-            ->where('rule_message', $message)
-            ->where('status','normal')
-            ->column('id');
+
 
 
         $new_car = Db::name("sales_order")
@@ -87,6 +89,7 @@ class Channellisttabs extends Backend
             ->column("referee_id");
 
         $satisfy = array_merge($new_car, $used_car, $full_car);
+
 
         return $satisfy;
 

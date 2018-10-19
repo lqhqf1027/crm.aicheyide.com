@@ -1,8 +1,8 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
+    // var goeasy = new GoEasy({
+    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    // });
 
     /**
      * 车辆管理库存
@@ -107,29 +107,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //实时消息
             //通过---录入库存通知
-            goeasy.subscribe({
-                channel: 'demo-newcontrol_tube',
-                onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
-                        
-                }
-            });
+            // goeasy.subscribe({
+            //     channel: 'demo-newcontrol_tube',
+            //     onMessage: function(message){
+            //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+            //             Layer.close(index);
+            //             $(".btn-refresh").trigger("click");
+            //         });
+            //
+            //     }
+            // });
 
             //实时消息----其他金融
             //通过---录入库存通知
-            goeasy.subscribe({
-                channel: 'demo-newcontrol_tube_finance',
-                onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
-                        
-                }
-            });
+            // goeasy.subscribe({
+            //     channel: 'demo-newcontrol_tube_finance',
+            //     onMessage: function(message){
+            //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+            //             Layer.close(index);
+            //             $(".btn-refresh").trigger("click");
+            //         });
+            //
+            //     }
+            // });
 
 
         },

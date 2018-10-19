@@ -598,12 +598,23 @@ class Orderlisttabs extends Backend
                 $ids[] = $value;
             }
         }
-        // pr($ids);
-        // die;
+
         //销售方案类别
-        $category = Db::name('scheme_category')->where('id', 'in', $ids)->field('id,name')->select();
-        // pr($category);
-        // die;
+
+        $rules = Db::name('admin')
+        ->where('id',$this->auth->id)
+        ->value('rule_message');
+
+        if($rules =='message8' || $rules == 'message9'){
+            $category = Db::name('scheme_category')
+                ->where('id', 'in', $ids)
+                ->where('status',0)
+                ->field('id,name')
+                ->select();
+        }else{
+            $category = Db::name('scheme_category')->where('id', 'in', $ids)->field('id,name')->select();
+        }
+
 
         $this->view->assign('category', $category);
 
@@ -3160,7 +3171,7 @@ class Orderlisttabs extends Backend
 
                     $del_table = Db::name('full_parment_order')
                         ->where('id', $id)
-                        ->field('registry_registration_id,mortgage_registration_id,customer_downpayment_id,referee_id,violation_inquiry_id')
+                        ->field('registry_registration_id,mortgage_registration_id,customer_downpayment_id,referee_id,violation_inquiry_id,mortgage_id')
                         ->find();
 
                     if ($del_table['registry_registration_id']) {
@@ -3205,6 +3216,48 @@ class Orderlisttabs extends Backend
 
                     break;
 
+                case  -5:
+                    $del_table = Db::name('second_full_order')
+                        ->where('id', $id)
+                        ->field('registry_registration_id,mortgage_registration_id,customer_downpayment_id,referee_id,violation_inquiry_id')
+                        ->find();
+
+
+                    if ($del_table['registry_registration_id']) {
+                        Db::name('registry_registration')
+                            ->where('id', $del_table['registry_registration_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['mortgage_registration_id']) {
+                        Db::name('mortgage_registration')
+                            ->where('id', $del_table['mortgage_registration_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['customer_downpayment_id']) {
+                        Db::name('customer_downpayment')
+                            ->where('id', $del_table['customer_downpayment_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['referee_id']) {
+                        Db::name('referee')
+                            ->where('id', $del_table['referee_id'])
+                            ->delete();
+                    }
+
+                    if ($del_table['violation_inquiry_id']) {
+                        Db::name('violation_inquiry')
+                            ->where('id', $del_table['violation_inquiry_id'])
+                            ->delete();
+                    }
+
+                    $res = Db::name('second_full_order')
+                        ->where('id', $id)
+                        ->delete();
+
+                    break;
             }
 
             if ($res) {

@@ -1,8 +1,8 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
+    // var goeasy = new GoEasy({
+    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    // });
 
     /**
      * 二手车车辆信息
@@ -239,16 +239,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //实时消息
             //风控通过---可以提车
-            goeasy.subscribe({
-                channel: 'demo-second_pass',
-                onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
-                    
-                }
-            });
+            // goeasy.subscribe({
+            //     channel: 'demo-second_pass',
+            //     onMessage: function(message){
+            //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+            //             Layer.close(index);
+            //             $(".btn-refresh").trigger("click");
+            //         });
+            //
+            //     }
+            // });
 
             // 为表格绑定事件
             Table.api.bindevent(table);

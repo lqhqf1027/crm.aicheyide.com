@@ -24,6 +24,7 @@ class Financialplatform extends Backend
         $this->model = model('FinancialPlatform');
         $this->view->assign("statusList", $this->model->getStatusList());
     }
+
     
 
 
