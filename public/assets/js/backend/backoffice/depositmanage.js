@@ -42,7 +42,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var newCar = $("#newCar");
                 newCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#new-customer').text(data.total);
 
                 })
@@ -119,7 +118,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var usedCar = $("#usedCar");
                 usedCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#new-customer').text(data.total);
 
                 })
@@ -194,7 +192,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var rentCar = $("#rentCar");
                 rentCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#new-customer').text(data.total);
 
                 })
@@ -266,7 +263,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 表格1
                 var fullCar = $("#fullCar");
                 fullCar.on('load-success.bs.table', function (e, data) {
-                    console.log(data.total);
                     $('#new-customer').text(data.total);
 
                 })
