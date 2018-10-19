@@ -158,25 +158,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //实时消息
                 //推广平台分配给内勤
-                goeasy.subscribe({
-                    channel: 'demo-platform',
-                    onMessage: function(message){
-
-                        var contents = message.content;
-
-                        contents = contents.split('|');
-
-                        if(Config.ADMIN_JS.id == contents[1]){
-                            Layer.alert('新消息：'+contents[0],{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-
-
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-platform',
+                //     onMessage: function(message){
+                //
+                //         var contents = message.content;
+                //
+                //         contents = contents.split('|');
+                //
+                //         if(Config.ADMIN_JS.id == contents[1]){
+                //             Layer.alert('新消息：'+contents[0],{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //
+                //
+                //     }
+                // });
 
 
                 /**

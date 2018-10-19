@@ -3,9 +3,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     /**
      * goeasy推送的key
      */
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
+    // var goeasy = new GoEasy({
+    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    // });
 
     var Controller = {
 
@@ -1418,103 +1418,103 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 通过---签订金融合同
                  */
-                goeasy.subscribe({
-                    channel: 'demo-newpass_finance',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-newpass_finance',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 车管通知销售，客户已提车
                  */
-                goeasy.subscribe({
-                    channel: 'demo-sales_takecar',
-                    onMessage: function (message) {
-                        messageCont = split('|',message.content);
-                        if(Config.ADMIN_JS.id==messageCont[1]){
-                            Layer.alert('新消息：' + messageCont[0], {icon: 0}, function (index) {
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-sales_takecar',
+                //     onMessage: function (message) {
+                //         messageCont = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==messageCont[1]){
+                //             Layer.alert('新消息：' + messageCont[0], {icon: 0}, function (index) {
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //     }
+                // });
                 
                 /**
                  * 提供保证金
                  */
-                goeasy.subscribe({
-                    channel: 'demo-newcar_data',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-newcar_data',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 不通过
                  */
-                goeasy.subscribe({
-                    channel: 'demo-newcar_nopass',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                            
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-newcar_nopass',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 不通过---待补录资料
                  */
-                goeasy.subscribe({
-                    channel: 'demo-new_information',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-new_information',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                  /**
                  * 补全提车资料
                  */
-                 goeasy.subscribe({
-                    channel: 'demo-newtake_car',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                //  goeasy.subscribe({
+                //     channel: 'demo-newtake_car',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 销售预定新车
@@ -2074,81 +2074,81 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     
                 });
 
-                goeasy.subscribe({
-                    channel: 'demo3',
-                    onMessage: function(message){
-                    
-                        $(".btn-refresh").trigger("click");
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo3',
+                //     onMessage: function(message){
+                //
+                //         $(".btn-refresh").trigger("click");
+                //     }
+                // });
 
                 /**
                  * 车管同意预定---销售接受消息
                  */
-                goeasy.subscribe({
-                    channel: 'demo-rental_argee',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-rental_argee',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //     }
+                // });
 
                 //
                 /**
                  * 风控通过---可以提车
                  */
-                goeasy.subscribe({
-                    channel: 'demo-rental_pass',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-rental_pass',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 不通过
                  */
-                goeasy.subscribe({
-                    channel: 'demo-rental_nopass',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-rental_nopass',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 不通过---待补录资料
                  */
-                goeasy.subscribe({
-                    channel: 'demo-rental_information',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-rental_information',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 表格刷新渲染
@@ -2839,68 +2839,68 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 风控通过---通知客户可以提车
                  */
-                goeasy.subscribe({
-                    channel: 'demo-secondpass_inform',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-secondpass_inform',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 提供保证金
                  */
-                goeasy.subscribe({
-                    channel: 'demo-second_data',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-second_data',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 不通过
                  */
-                goeasy.subscribe({
-                    channel: 'demo-second_nopass',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-second_nopass',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //     }
+                // });
 
                 /**
                  * 不通过,待补录资料
                  */
-                goeasy.subscribe({
-                    channel: 'demo-second_information',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-second_information',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //     }
+                // });
 
                 /**
                  * 销售预定二手车
@@ -3169,19 +3169,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 车管发送---销售接收----可以进行提车
                  */
-                goeasy.subscribe({
-                    channel: 'demo-full_takecar',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-full_takecar',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 新增全款单
@@ -3449,19 +3449,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 /**
                  * 车管发送---销售接收----可以进行提车
                  */
-                goeasy.subscribe({
-                    channel: 'demo-secondfull_takecar',
-                    onMessage: function(message){
-                        message = split('|',message.content);
-                        if(Config.ADMIN_JS.id==message[1]){
-                            Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
-                                Layer.close(index);
-                                $(".btn-refresh").trigger("click");
-                            });
-                        }
-
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-secondfull_takecar',
+                //     onMessage: function(message){
+                //         message = split('|',message.content);
+                //         if(Config.ADMIN_JS.id==message[1]){
+                //             Layer.alert('新消息：'+message[0].content,{ icon:0},function(index){
+                //                 Layer.close(index);
+                //                 $(".btn-refresh").trigger("click");
+                //             });
+                //         }
+                //
+                //     }
+                // });
 
                 /**
                  * 新增全款单
@@ -4539,10 +4539,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
 
-
                                var text = $('ul.nav-tabs li.active a[data-toggle="tab"]').text();
-
-
 
                                 Layer.close(index);
 
@@ -4564,8 +4561,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }else if(text.indexOf('全款（新车）')>-1){
 
                                             flag = -4;
+                                        }else{
+                                            flag = -5;
                                         }
-
 
                                         Fast.api.ajax({
                                             url:'salesmanagement/Orderlisttabs/del_order',

@@ -1,8 +1,8 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
+    // var goeasy = new GoEasy({
+    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    // });
 
     var Controller = {
         index: function () {
@@ -132,28 +132,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Table.api.bindevent(prepareLiftCar);
 
                 //销售推送
-                goeasy.subscribe({
-                    channel: 'demo-second_full_backoffice',
-                    onMessage: function (message) {
-                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-second_full_backoffice',
+                //     onMessage: function (message) {
+                //         Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
                 //内勤推送 --- 是否可以提车
-                goeasy.subscribe({
-                    channel: 'demo-secondfullcar_amount',
-                    onMessage: function (message) {
-                        Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-secondfullcar_amount',
+                //     onMessage: function (message) {
+                //         Layer.alert('新消息：' + message.content, {icon: 0}, function (index) {
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
 
             },

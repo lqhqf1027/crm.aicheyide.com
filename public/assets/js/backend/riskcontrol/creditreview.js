@@ -1,9 +1,9 @@
 
 define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-theme','addtabs'], function ($, undefined, Backend, Table, Form,Echarts, undefined, Template) {
 
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
+    // var goeasy = new GoEasy({
+    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    // });
     var Controller = {
         index: function () {
 
@@ -686,50 +686,50 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
 
                 //实时消息
                 //金融发送给风控
-                goeasy.subscribe({
-                    channel: 'demo-newcar_control',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-newcar_control',
+                //     onMessage: function(message){
+                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
-                goeasy.subscribe({
-                    channel: 'demo4',
-                    onMessage: function(message){
-                       
-                        $(".btn-refresh").trigger("click");
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo4',
+                //     onMessage: function(message){
+                //
+                //         $(".btn-refresh").trigger("click");
+                //     }
+                // });
                 
                 //保证金上传通知
-                goeasy.subscribe({
-                    channel: 'demo-newdata_cash',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-newdata_cash',
+                //     onMessage: function(message){
+                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
                 /**
                  * 补录资料完成
                  */
-                goeasy.subscribe({
-                    channel: 'demo-new_collection_data',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-new_collection_data',
+                //     onMessage: function(message){
+                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
                  //指定搜索条件
             $(document).on("click", ".btn-singlesearch", function () {
@@ -942,40 +942,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 Table.api.bindevent(rentalcarAudit);
 
                 //实时推送 -- 关闭弹窗
-                goeasy.subscribe({
-                    channel: 'demo5',
-                    onMessage: function(message){
-                       
-                        $(".btn-refresh").trigger("click");
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo5',
+                //     onMessage: function(message){
+                //
+                //         $(".btn-refresh").trigger("click");
+                //     }
+                // });
 
                 //实时消息
                 //租车销售发送给风控
-                goeasy.subscribe({
-                    channel: 'demo-rental_control',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-rental_control',
+                //     onMessage: function(message){
+                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
                 /**
                  * 补录资料完成
                  */
-                goeasy.subscribe({
-                    channel: 'demo-rental_collection_data',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-rental_collection_data',
+                //     onMessage: function(message){
+                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
                 //数据实时统计
                 rentalcarAudit.on('load-success.bs.table', function (e, data) {
@@ -1230,40 +1230,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 /**
                  * 审核刷新页面
                  */
-                goeasy.subscribe({
-                    channel: 'demo6',
-                    onMessage: function(message){
-                       
-                        $(".btn-refresh").trigger("click");
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo6',
+                //     onMessage: function(message){
+                //
+                //         $(".btn-refresh").trigger("click");
+                //     }
+                // });
 
                 //实时消息
                 //金融发给风控
-                goeasy.subscribe({
-                    channel: 'demo-second_control',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-second_control',
+                //     onMessage: function(message){
+                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
                 /**
                  * 补录资料完成
                  */
-                goeasy.subscribe({
-                    channel: 'demo-second_collection_data',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-second_collection_data',
+                //     onMessage: function(message){
+                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
                 //数据实时统计
                 secondhandcarAudit.on('load-success.bs.table', function (e, data) {

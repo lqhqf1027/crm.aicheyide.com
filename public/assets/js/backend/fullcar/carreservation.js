@@ -102,16 +102,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 })
 
                 //通过
-                goeasy.subscribe({
-                    channel: 'demo-fullcar_amount',
-                    onMessage: function(message){
-                        Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                            Layer.close(index);
-                            $(".btn-refresh").trigger("click");
-                        });
-                        
-                    }
-                });
+                // goeasy.subscribe({
+                //     channel: 'demo-fullcar_amount',
+                //     onMessage: function(message){
+                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+                //             Layer.close(index);
+                //             $(".btn-refresh").trigger("click");
+                //         });
+                //
+                //     }
+                // });
 
             },
             /**

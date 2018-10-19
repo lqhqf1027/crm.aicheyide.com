@@ -156,8 +156,6 @@ class Carreservation extends Backend
 
             $list = collection($list)->toArray();
 
-            // pr($list);die;
-
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);

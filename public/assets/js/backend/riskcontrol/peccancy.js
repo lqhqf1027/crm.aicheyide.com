@@ -35,6 +35,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             prepare_send: function () {
 
                 var table = $("#prepareSend");
+
+
+
                 table.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-detail").data("area", ["90%", "90%"]);
                     $(".btn-editone").data("area", ["70%", "70%"]);
@@ -434,39 +437,52 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      */
                     'click .btn-search': function (e, value, row, index) {
                         e.stopPropagation();
-
-                        if(!row['license_plate_number'] || row['license_plate_number']==''){
-                            layer.msg('请补全车牌号');
-                            return
-                        }
-
-                        if(!row['engine_number'] || row['engine_number']==''){
-                            layer.msg('请补全发动机号');
-                            return
-                        }
-
-                        if(!row['frame_number'] ||row['frame_number']==''){
-                            layer.msg('请补全车架号');
-                            return
-                        }
-
                         e.preventDefault();
-                        var table = $(this).closest('table');
-                        var ids = [{
-                            hphm: row['license_plate_number'].substr(0, 2),
-                            hphms: row['license_plate_number'],
-                            engineno: row['engine_number'],
-                            classno: row['frame_number']
-                        }];
+                        var that = this;
+                        Layer.confirm('是否查询违章?', {icon: 3, title:'提示'}, function(index){
 
-                        Fast.api.ajax({
-                            url: 'riskcontrol/Peccancy/sendMessage',
-                            data: {ids}
 
-                        }, function (data, ret) {
-                            console.log(data);
-                            table.bootstrapTable('refresh');
-                        })
+
+                            if(!row['license_plate_number'] || row['license_plate_number']==''){
+                                Layer.msg('请补全车牌号');
+                                return
+                            }
+
+                            if(!row['engine_number'] || row['engine_number']==''){
+                                Layer.msg('请补全发动机号');
+                                return
+                            }
+
+                            if(!row['frame_number'] ||row['frame_number']==''){
+                                Layer.msg('请补全车架号');
+                                return
+                            }
+
+
+                            var table = $(that).closest('table');
+                            var ids = [{
+                                hphm: row['license_plate_number'].substr(0, 2),
+                                hphms: row['license_plate_number'],
+                                engineno: row['engine_number'],
+                                classno: row['frame_number']
+                            }];
+
+                            Fast.api.ajax({
+                                url: 'riskcontrol/Peccancy/sendMessage',
+                                data: {ids}
+
+                            }, function (data, ret) {
+
+                                Layer.close(index);
+                                table.bootstrapTable('refresh');
+
+
+                            })
+
+
+                        });
+
+
 
                     },
                     'click .btn-editone': function (e, value, row, index) {

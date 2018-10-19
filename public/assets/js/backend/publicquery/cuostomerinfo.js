@@ -20,6 +20,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                 return "快速搜索：客户姓名，车牌号";
             };
+
+
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
@@ -150,6 +152,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 table.bootstrapTable('refresh', {});
                 return false;
             });
+
+
 
             // 为表格绑定事件
             Table.api.bindevent(table);

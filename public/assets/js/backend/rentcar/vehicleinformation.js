@@ -1,8 +1,8 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
+    // var goeasy = new GoEasy({
+    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    // });
 
     /**
      * 租车车辆信息
@@ -23,28 +23,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
             //实时消息
            
-            goeasy.subscribe({
-                channel: 'demo',
-                onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
-                    
-                }
-            });
+            // goeasy.subscribe({
+            //     channel: 'demo',
+            //     onMessage: function(message){
+            //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+            //             Layer.close(index);
+            //             $(".btn-refresh").trigger("click");
+            //         });
+            //
+            //     }
+            // });
 
             //预定
-            goeasy.subscribe({
-                channel: 'demo-reserve',
-                onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
-                    
-                }
-            });
+            // goeasy.subscribe({
+            //     channel: 'demo-reserve',
+            //     onMessage: function(message){
+            //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+            //             Layer.close(index);
+            //             $(".btn-refresh").trigger("click");
+            //         });
+            //
+            //     }
+            // });
             
             var table = $("#table");
 
@@ -387,28 +387,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             //实时消息
             //风控通过---可以提车
-            goeasy.subscribe({
-                channel: 'demo-rental_pass',
-                onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
-                    
-                }
-            });
+            // goeasy.subscribe({
+            //     channel: 'demo-rental_pass',
+            //     onMessage: function(message){
+            //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+            //             Layer.close(index);
+            //             $(".btn-refresh").trigger("click");
+            //         });
+            //
+            //     }
+            // });
 
             //销售预定---发送车管
-            goeasy.subscribe({
-                channel: 'demo-reserve',
-                onMessage: function(message){
-                    Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                        Layer.close(index);
-                        $(".btn-refresh").trigger("click");
-                    });
-                    
-                }
-            });
+            // goeasy.subscribe({
+            //     channel: 'demo-reserve',
+            //     onMessage: function(message){
+            //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
+            //             Layer.close(index);
+            //             $(".btn-refresh").trigger("click");
+            //         });
+            //
+            //     }
+            // });
 
             //数据实时统计
             table.on('load-success.bs.table', function (e, data) {
