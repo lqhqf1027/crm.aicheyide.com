@@ -35,6 +35,10 @@ class Brand extends Model
         $list = $this->getStatusList();
         return isset($list[$value]) ? $list[$value] : '';
     }
+    public  function models(){
+        return $this->hasMany('Models','brand_id','id');
+    }
+
 
 
 

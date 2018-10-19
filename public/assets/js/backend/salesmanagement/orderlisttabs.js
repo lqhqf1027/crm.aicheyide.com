@@ -2230,7 +2230,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'seconddetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-seconddetails',
                                         url: 'Sharedetailsdatas/second_car_share_data', callback: function (data) {
-                                            console.log(data)
+
                                         }
                                     }
                                 ],
@@ -3550,10 +3550,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
          * 二手车预定
          */
         secondreserve:function(){
-            
-            Table.api.init({
-               
-            });
+
+            $("button[type='submit']").on('click',function (v) {
+                if($("#c-customer_source").val()=='turn_to_introduce'){
+                    //||$("#c-turn_to_introduce_phone").val()
+                    if($("#c-turn_to_introduce_name").val()==''){
+                        Layer.msg('介绍人姓名不能为空',{icon:5});
+
+                        $("#c-turn_to_introduce_name").css({'border-color':'red'})
+                        return false;
+                    }
+                    if($("#c-turn_to_introduce_phone").val()==''){
+                        Layer.msg('介绍人电话不能为空',{icon:5});
+
+                        $("#c-turn_to_introduce_phone").css({'border-color':'red'})
+                        return false;
+                    }
+                }
+            })
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
                 
@@ -3749,21 +3763,38 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
          * 新车预定
          */
         newreserve:function(){
-            
-            Table.api.init({
-               
-            });
+            // return;
+            $("button[type='submit']").on('click',function (v) {
+               if($("#c-customer_source").val()=='turn_to_introduce'){
+                   //||$("#c-turn_to_introduce_phone").val()
+                   if($("#c-turn_to_introduce_name").val()==''){
+                       Layer.msg('介绍人姓名不能为空',{icon:5});
+
+                       $("#c-turn_to_introduce_name").css({'border-color':'red'})
+                       return false;
+                   }
+                   if($("#c-turn_to_introduce_phone").val()==''){
+                       Layer.msg('介绍人电话不能为空',{icon:5});
+
+                       $("#c-turn_to_introduce_phone").css({'border-color':'red'})
+                       return false;
+                   }
+               }
+            })
             Form.api.bindevent($("form[role=form]"), function(data, ret){
                 //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-                
+
                 Fast.api.close(data);//这里是重点
-                
+
                 Toastr.success("成功");//这个可有可无
             }, function(data, ret){
-                
-                Toastr.success("失败");
-                
+
+                Toastr.error("失败");
+
             });
+
+
+
             // Controller.api.bindevent();
  
         },
