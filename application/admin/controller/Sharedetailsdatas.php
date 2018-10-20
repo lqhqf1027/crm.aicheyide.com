@@ -64,6 +64,12 @@ class Sharedetailsdatas extends Backend
             ->where('a.id', $ids)
             ->find();
 
+        if($row['models_id']){
+            $row['models_name'] = Db::name('models')
+            ->where('id',$row['models_id'])
+            ->value('name');
+        }
+
         $row['total_insurance'] = null;
         $row['service_charges'] = null;
         $row['down_payment_service'] = null;
@@ -194,7 +200,7 @@ class Sharedetailsdatas extends Backend
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
             ->join('secondcar_rental_models_info c', 'c.id = a.plan_car_second_name', 'LEFT')
             ->join('mortgage_registration d', 'd.id = a.mortgage_registration_id', 'LEFT')
-            ->field('a.genderdata,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
+            ->field('a.genderdata,a.username,a.models_id,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.residence_bookletimages,a.bank_cardimages,a.marriedimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
                 a.deposit_contractimages,a.deposit_receiptimages,a.guarantee_id_cardimages,a.guarantee_agreementimages,a.new_car_marginimages,a.call_listfiles,a.bond,
@@ -206,6 +212,12 @@ class Sharedetailsdatas extends Backend
                 d.commercial_insurance_policy,d.registry_remark')
             ->where('a.id', $ids)
             ->find();
+
+        if($row['models_id']){
+            $row['models_name'] = Db::name('models')
+                ->where('id',$row['models_id'])
+                ->value('name');
+        }
 
         //无犯罪记录承诺书
         $crime_undertakingimages = $row['crime_undertakingimages'] == '' ? [] : explode(',', $row['crime_undertakingimages']);
@@ -286,7 +298,7 @@ class Sharedetailsdatas extends Backend
         $row = Db::name('rental_order')->alias('a')
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
             ->join('car_rental_models_info c', 'c.id = a.plan_car_rental_name', 'LEFT')
-            ->field('a.order_no,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.down_payment,a.bond,a.car_backtime,a.cash_pledge,
+            ->field('a.order_no,a.username,a.models_id,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.down_payment,a.bond,a.car_backtime,a.cash_pledge,
                 a.rental_price,a.tenancy_term,a.customer_source,a.turn_to_introduce_name,a.turn_to_introduce_phone,a.turn_to_introduce_card,a.id_cardimages,
                 a.residence_bookletimages,a.drivers_licenseimages,a.deposit_receiptimages,a.call_listfilesimages,a.customer_information_note,a.genderdata,
                 b.nickname as sales_name,
@@ -294,6 +306,12 @@ class Sharedetailsdatas extends Backend
                 c.actual_backtime,c.car_loss,c.back_kilometre,c.check_list')
             ->where('a.id', $ids)
             ->find();
+
+        if($row['models_id']){
+            $row['models_name'] = Db::name('models')
+                ->where('id',$row['models_id'])
+                ->value('name');
+        }
 
         //身份证正反面（多图）
         $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
@@ -342,7 +360,7 @@ class Sharedetailsdatas extends Backend
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
             ->join('secondcar_rental_models_info c', 'c.id = a.plan_second_full_name', 'LEFT')
             ->join('mortgage d', 'd.id = a.mortgage_id', 'LEFT')
-            ->field('a.order_no,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.customer_source,a.introduce_name,a.introduce_phone,
+            ->field('a.order_no,a.models_id,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.customer_source,a.introduce_name,a.introduce_phone,
                 a.introduce_card,a.id_cardimages,a.drivers_licenseimages,a.bank_cardimages,a.application_formimages,a.call_listfiles,a.genderdata,
                 b.nickname as sales_name,
                 c.licenseplatenumber,c.vin,c.kilometres,c.companyaccount,c.totalprices,c.drivinglicenseimages,c.engine_number,c.expirydate,c.annualverificationdate,c.carcolor,
@@ -350,6 +368,12 @@ class Sharedetailsdatas extends Backend
                 d.car_imgeas,d.bank_card,d.invoice_monney,d.registration_code,d.tax,d.business_risks,d.insurance,d.lending_date,d.mortgage_type')
             ->where('a.id', $ids)
             ->find();
+
+        if($row['models_id']){
+            $row['models_name'] = Db::name('models')
+                ->where('id',$row['models_id'])
+                ->value('name');
+        }
         
         //身份证正反面（多图）
         $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
