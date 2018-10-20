@@ -10,7 +10,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: '车辆销售情况',
+                    text: '车辆销售情况（总共历史成交数：' + Orderdata.count + '）',
                     subtext: ''
                 },
                 tooltip: {
