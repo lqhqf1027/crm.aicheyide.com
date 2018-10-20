@@ -141,7 +141,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         icon: 'fa fa-pencil', 
                                         extend: 'data-toggle="tooltip"',
                                         title: __('编辑资料'), 
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-auditedit',
+                                        classname: 'btn btn-xs btn-default btn-dialog btn-auditedit',
                                         url: 'riskcontrol/creditreview/auditedit',
                                     },
                                     {
@@ -812,7 +812,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         icon: 'fa fa-pencil', 
                                         extend: 'data-toggle="tooltip"',
                                         title: __('编辑资料'), 
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-rentalauditedit',
+                                        classname: 'btn btn-xs btn-default btn-dialog btn-rentalauditedit',
                                         url: 'riskcontrol/creditreview/rentalauditedit',
                                     },
                                     {
@@ -1047,7 +1047,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         icon: 'fa fa-pencil', 
                                         extend: 'data-toggle="tooltip"',
                                         title: __('编辑资料'), 
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-secondauditedit',
+                                        classname: 'btn btn-xs btn-default btn-dialog btn-secondauditedit',
                                         url: 'riskcontrol/creditreview/secondauditedit',
                                     },
                                     {
