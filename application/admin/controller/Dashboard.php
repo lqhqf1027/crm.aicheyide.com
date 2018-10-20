@@ -8,7 +8,7 @@ use think\Config;
 use think\Db;
 use think\Cache;
 
-
+use app\admin\model\Dashboard as DashboardModel;
 
 
 
@@ -39,163 +39,102 @@ class Dashboard extends Backend
 
         $secondday = strtotime(date('Y-m-01', strtotime($months)));
 
+       
+
         //新车历史成交数
-        $newcount = Db::name('sales_order')
-                ->where('review_the_data', "the_car")
-                ->count();
-        
+        $newcount = DashboardModel::getOrderCount('sales_order','the_car',null,null,null);
+ 
         //新车本月成交数
-        $todaynewtake = Db::name('sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //直客成交数
-        $new_direct_the_guest = Db::name('sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //转介绍成交数
-        $new_turn_to_introduce = Db::name('sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
+        $todaynewtake = DashboardModel::getOrderCount('sales_order','the_car',null,"[$firstday, $secondday]",null);
+
         //新车本月订车数
-        $todayneworder = Db::name('sales_order')
-                ->where('review_the_data', 'NEQ', "the_car")
-                ->where('createtime', 'between', [$firstday, $secondday])
-                ->count();
-
-
-
-
-        //租车历史出租数
-        $rentalcount = Db::name('rental_order')
-                ->where('review_the_data', "for_the_car")
-                ->count();
-        //租车本月成交数
-        $todayrentaltake = Db::name('rental_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-
+        $todayneworder = DashboardModel::getOrderCount('sales_order','the_car',null,null,"[$firstday, $secondday]");
+ 
         //直客成交数
-        $rental_direct_the_guest = Db::name('rental_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
+        $new_direct_the_guest =  DashboardModel::getOrderCount('sales_order','the_car','direct_the_guest',"[$firstday, $secondday]",null);
+  
+                
         //转介绍成交数
-        $rental_turn_to_introduce = Db::name('rental_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //租车本月订车数
-        $todayrentalorder = Db::name('rental_order')
-                ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$firstday, $secondday])
-                ->count();
+        $new_turn_to_introduce = DashboardModel::getOrderCount('sales_order','the_car','turn_to_introduce',"[$firstday, $secondday]",null);
+     
+
+
+         //新车历史成交数
+         $rentalcount = DashboardModel::getOrderCount('rental_order','for_the_car',null,null,null);
+
+         //新车本月成交数
+         $todayrentaltake = DashboardModel::getOrderCount('rental_order','for_the_car',null,"[$firstday, $secondday]",null);
+
+         //新车本月订车数
+         $todayrentalorder = DashboardModel::getOrderCount('rental_order','for_the_car',null,null,"[$firstday, $secondday]");
+
+         //直客成交数
+         $rental_direct_the_guest =  DashboardModel::getOrderCount('rental_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);
+
+                 
+         //转介绍成交数
+         $rental_turn_to_introduce = DashboardModel::getOrderCount('rental_order','for_the_car','turn_to_introduce',"[$firstday, $secondday]",null);
+
+
+
+         //新车历史成交数
+         $secondcount = DashboardModel::getOrderCount('second_sales_order','the_car',null,null,null);
+
+         //新车本月成交数
+         $todaysecondtake = DashboardModel::getOrderCount('second_sales_order','the_car',null,"[$firstday, $secondday]",null);
+
+         //新车本月订车数
+         $todaysecondorder = DashboardModel::getOrderCount('second_sales_order','the_car',null,null,"[$firstday, $secondday]");
+
+         //直客成交数
+         $second_direct_the_guest =  DashboardModel::getOrderCount('second_sales_order','the_car','direct_the_guest',"[$firstday, $secondday]",null);
+
+                 
+         //转介绍成交数
+         $second_turn_to_introduce = DashboardModel::getOrderCount('second_sales_order','the_car','turn_to_introduce',"[$firstday, $secondday]",null);
+      
+      
+         //新车历史成交数
+         $fullcount = DashboardModel::getOrderCount('full_parment_order','for_the_car',null,null,null);
+    
+         //新车本月成交数
+         $todayfulltake = DashboardModel::getOrderCount('full_parment_order','for_the_car',null,"[$firstday, $secondday]",null);
+     
+         //新车本月订车数
+         $todayfullorder = DashboardModel::getOrderCount('full_parment_order','for_the_car',null,null,"[$firstday, $secondday]");
+    
+         //直客成交数
+         $full_direct_the_guest =  DashboardModel::getOrderCount('full_parment_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);
+     
+                 
+         //转介绍成交数
+         $full_turn_to_introduce = DashboardModel::getOrderCount('full_parment_order','for_the_car','turn_to_introduce',"[$firstday, $secondday]",null);
 
 
 
 
+         //新车历史成交数
+         $fullsecondcount = DashboardModel::getOrderCount('second_full_order','for_the_car',null,null,null);
 
-        //二手车历史成交数
-        $secondcount = Db::name('second_sales_order')
-                 ->where('review_the_data', "the_car")
-                ->count();
-        //二手车本月成交数
-        $todaysecondtake = Db::name('second_sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
+         //新车本月成交数
+         $todayfullsecondtake = DashboardModel::getOrderCount('second_full_order','for_the_car',null,"[$firstday, $secondday]",null);
+       
+         //新车本月订车数
+         $todayfullsecondorder = DashboardModel::getOrderCount('second_full_order','for_the_car',null,null,"[$firstday, $secondday]");
+         
+         //直客成交数
+         $fullsecond_direct_the_guest =  DashboardModel::getOrderCount('second_full_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);
+     
+                 
+         //转介绍成交数
+         $fullsecond_turn_to_introduce = DashboardModel::getOrderCount('second_full_order','for_the_car','turn_to_introduce',"[$firstday, $secondday]",null);
+
+
         
-        //直客成交数
-        $second_direct_the_guest = Db::name('second_sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('customer_source', 'direct_the_guest')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //转介绍成交数
-        $second_turn_to_introduce = Db::name('second_sales_order')
-                ->where('review_the_data', "the_car")
-                ->where('customer_source', 'turn_to_introduce')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //二手车本月订车数
-        $todaysecondorder = Db::name('second_sales_order')
-                ->where('review_the_data', 'NEQ', "the_car")
-                ->where('createtime', 'between', [$firstday, $secondday])
-                ->count();
-
-
-
-
-        //全款历史成交数
-        $fullcount = Db::name('full_parment_order')
-                ->where('review_the_data', "for_the_car")
-                ->count();
-        //全款车本月成交数
-        $todayfulltake = Db::name('full_parment_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        
-        //直客成交数
-        $full_direct_the_guest = Db::name('full_parment_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'straight')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //转介绍成交数
-        $full_turn_to_introduce = Db::name('full_parment_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'introduce')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //全款车本月订车数
-        $todayfullorder = Db::name('full_parment_order')
-                ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$firstday, $secondday])
-                ->count();
-        
-
-
-
-        //全款二手车历史成交数
-        $fullsecondcount = Db::name('second_full_order')
-                ->where('review_the_data', "for_the_car")
-                ->count();
-        //全款二手车本月成交数
-        $todayfullsecondtake = Db::name('second_full_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-
-        //直客成交数
-        $fullsecond_direct_the_guest = Db::name('second_full_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'straight')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //转介绍成交数
-        $fullsecond_turn_to_introduce = Db::name('second_full_order')
-                ->where('review_the_data', "for_the_car")
-                ->where('customer_source', 'introduce')
-                ->where('delivery_datetime', 'between', [$firstday, $secondday])
-                ->count();
-        //全款二手车本月订车数
-        $todayfullsecondorder = Db::name('second_full_order')
-                ->where('review_the_data', 'NEQ', "for_the_car")
-                ->where('createtime', 'between', [$firstday, $secondday])
-                ->count();
-
 
 
         //总共成交数
-        $count = $newcount + $secondcount + $rentalcount + $fullcount + $fullsecondcount;
+        $count[] = $newcount + $secondcount + $rentalcount + $fullcount + $fullsecondcount;
         //总共订车数
         $todayorder = $todayneworder + $todayrentalorder + $todaysecondorder + $todayfullorder + $todayfullsecondorder;
         //本月成交总数
@@ -292,54 +231,30 @@ class Dashboard extends Backend
         }
         
 
-        // pr($newsales);
-        // pr($rentalsales);
-        // pr($secondsales);
-        // pr($fullsales);
-        // die;
-
-        
+        //租车已租车辆
+        $rentaltakecar = Db::name('car_rental_models_info')->where('status_data', 'the_car')->count();
+        //租车待租车辆
+        $rentalcar = Db::name('car_rental_models_info')->where('status_data', '')->where('shelfismenu', '1')->count();
+        //二手车可买车辆
+        $secondcar = Db::name('secondcar_rental_models_info')->where('status_data', 'NEQ', 'the_car')->where('shelfismenu', '1')->count();
 
         $this->view->assign([
-        //     //新车数据
-        //     'newcount'            => $newcount,
-        //     'todaynewtake'        => $todaynewtake,
-        //     'todayneworder'       => $todayneworder,
-        //     'newguest'            => $newguest,
-        //     'newintroduce'        => $newintroduce,
 
-        //      //租车数据
-        //     'rentalcount'         => $rentalcount,
-        //     'todayrentaltake'     => $todayrentaltake,
-        //     'todayrentalorder'    => $todayrentalorder,
-        //     'rentalguest'         => $rentalguest,
-        //     'rentalintroduce'     => $rentalintroduce,
+                'count'        => $count,
+                'todayorder'   => $todayorder,
+                'todaytake'    => $todaytake,
+                'guest'       => $guest,
+                'introduce'   => $introduce,
 
-        //     //二手车数据
-        //     'secondcount'         => $secondcount,
-        //     'todaysecondtake'     => $todaysecondtake,
-        //     'todaysecondorder'    => $todaysecondorder,
-        //     'secondguest'         => $secondguest,
-        //     'secondintroduce'     => $secondintroduce,
-
-        //     //全款数据
-        //     'fullcount'           => $fullcount,
-        //     'todayfulltake'       => $todayfulltake,
-        //     'todayfullorder'      => $todayfullorder,
-        //     'fullguest'           => $fullguest,
-        //     'fullintroduce'       => $fullintroduce,
-
-            'count'        => $count,
-            'todayorder'   => $todayorder,
-            'todaytake'    => $todaytake,
-             'guest'       => $guest,
-             'introduce'   => $introduce,
-            //销售情况
-            'newsales'            => $newsales,
-            'rentalsales'         => $rentalsales,
-            'secondsales'         => $secondsales,
-            'fullsales'           => $fullsales,
-            'fullsecondsales'     => $fullsecondsales
+                'rentaltakecar'   => $rentaltakecar,
+                'rentalcar'       => $rentalcar,
+                'secondcar'       => $secondcar,
+                //销售情况
+                'newsales'            => $newsales,
+                'rentalsales'         => $rentalsales,
+                'secondsales'         => $secondsales,
+                'fullsales'           => $fullsales,
+                'fullsecondsales'     => $fullsecondsales
             
         ]);
 
