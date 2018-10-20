@@ -76,8 +76,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'license_plate_number', title: __('License_plate_number')},
                             {field: 'frame_number', title: __('Frame_number')},
                             {field: 'engine_number', title: __('Engine_number')},
-                            {field: 'total_deduction', title: __('Total_deduction'), operate: 'BETWEEN'},
-                            {field: 'total_fine', title: __('Total_fine'), operate: false},
+                            {field: 'total_deduction', title: __('Total_deduction'), operate: 'BETWEEN',formatter:Controller.api.formatter.fen},
+                            {field: 'total_fine', title: __('Total_fine'), operate: false,formatter:Controller.api.formatter.fen},
                             {field: 'query_times', title: __('Query_times'), operate: false},
                             {
                                 field: 'car_type',
@@ -108,6 +108,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             },
                             {
+                                field:'strong_deadtime',
+                                title:'交强险截止时间',
+                                operate: false,
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: "YYYY-MM-DD",
+                            },
+                            {
+                                field:'business_deadtime',
+                                title:'商业险截止时间',
+                                operate: false,
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: "YYYY-MM-DD",
+                            },
+                            {
                                 field: 'peccancy_status',
                                 title: __('Peccancy_status'),
                                 formatter: Controller.api.formatter.status,
@@ -121,7 +135,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('Final_time'),
                                 operate: false,
                                 addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
+                                formatter: function (v, r, i) {
+                                    if (v != null) {
+                                        return Controller.getDateDiff(v) + '<br>' + '(' + Controller.getLocalTime(v) + ')';
+                                    }
+
+                                },
                                 datetimeFormat: "YYYY-MM-DD H:m",
 
                             },
@@ -318,6 +337,36 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
 
+        /**
+         * 格式化时间 几天前 时 分 秒
+         * @param dateTimeStamp
+         * @returns {*|string}
+         */
+        getDateDiff: function (timestamp) {
+            var mistiming = Math.round(new Date() / 1000) - timestamp;
+            var postfix = mistiming > 0 ? '前' : '后'
+            mistiming = Math.abs(mistiming)
+            var arrr = ['年', '个月', '星期', '天', '小时', '分钟', '秒'];
+            var arrn = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+
+            for (var i = 0; i < 7; i++) {
+                var inm = Math.floor(mistiming / arrn[i])
+                if (inm != 0) {
+                    return inm + arrr[i] + postfix
+                }
+            }
+        },
+
+        /**
+         * 时间戳格式化日期
+         * @param Ns
+         * @returns {string}
+         */
+        getLocalTime: function (nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+
+        },
+
 
         api: {
             bindevent: function () {
@@ -359,6 +408,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     } else {
                         return value ? Moment(parseInt(value) * 1000).format(datetimeFormat) : __('None');
                     }
+                },
+
+                fen: function (value, row, index) {
+
+                    if(value){
+                        return "<span class='text-danger'>"+value+"</span>";
+                    }
+                   return value == null ? '-' : "<span class='text-success'><strong>"+value+"</strong></span>";
+
                 },
 
                 operate: function (value, row, index) {
@@ -468,7 +526,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }];
 
                             Fast.api.ajax({
-                                url: 'riskcontrol/Peccancy/sendMessage',
+                                url: 'riskcontrol/Peccancy/sendMessagePerson',
                                 data: {ids}
 
                             }, function (data, ret) {

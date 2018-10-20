@@ -21,6 +21,8 @@ class Peccancy extends Backend
 
     protected $noNeedRight = ['index', 'prepare_send', 'already_send', 'sendMessage', 'details', 'sendCustomer'];
 
+    protected static $keys = '217fb8552303cb6074f88dbbb5329be7';
+
     public function _initialize()
     {
         parent::_initialize();
@@ -71,7 +73,27 @@ class Peccancy extends Backend
                 ->select();
 
             $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
+
+            $real_list = array();
+
+            foreach ($list as $k=>$v){
+                if($v['car_type'] == 4){
+                      $retiring = Db::name('rental_order')
+                       ->where('violation_inquiry_id',$v['id'])
+                       ->value('review_the_data');
+
+                      if($retiring && $retiring == 'retiring'){
+                          continue;
+                      }
+                }
+
+                $real_list[] = $v;
+            }
+
+
+
+
+            $result = array("total" => count($real_list), "rows" => $real_list);
 
             return json($result);
         }
@@ -112,7 +134,26 @@ class Peccancy extends Backend
                 ->select();
 
             $list = collection($list)->toArray();
-            $result = array("total" => $total, "rows" => $list);
+            $real_list = array();
+
+            foreach ($list as $k=>$v){
+                if($v['car_type'] == 4){
+                    $retiring = Db::name('rental_order')
+                        ->where('violation_inquiry_id',$v['id'])
+                        ->value('review_the_data');
+
+                    if($retiring && $retiring == 'retiring'){
+                        continue;
+                    }
+                }
+
+                $real_list[] = $v;
+            }
+
+
+
+
+            $result = array("total" => count($real_list), "rows" => $real_list);
 
             return json($result);
         }
@@ -130,9 +171,10 @@ class Peccancy extends Backend
     {
         if ($this->request->isAjax()) {
 
-            $params = input('post.')['ids'];
+            $params = $this->request->post()['ids'];
+
             $finals = [];
-            $keys = '217fb8552303cb6074f88dbbb5329be7';
+            $keys = self::$keys;
             foreach ($params as $k => $v) {
                 //获取城市前缀接口
                 $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($v['hphm']));
@@ -144,6 +186,7 @@ class Peccancy extends Backend
                     $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($v['hphms']) . "&engineno=" . $v['engineno'] . "&classno=" . $v['classno'] . "&key=" . $keys);
 
                     if ($data['error_code'] == 0) {
+
                         $total_fraction = 0;     //总扣分
                         $total_money = 0;        //总罚款
                         $flag = -1;
@@ -176,20 +219,10 @@ class Peccancy extends Backend
                         $field['final_time'] = time();
 
 
-                        $query = Db::name('violation_inquiry')
+                        Db::name('violation_inquiry')
                             ->where('license_plate_number', $v['hphms'])
-                            ->field('query_times')
-                            ->find()['query_times'];
+                            ->setInc('query_times');
 
-                        if (!$query) {
-                            $query = 0;
-                        }
-
-                        $query = intval($query);
-
-                        $query++;
-
-                        $field['query_times'] = $query;
 
 
                         Db::name('violation_inquiry')
@@ -197,10 +230,99 @@ class Peccancy extends Backend
                             ->update($field);
 
                         array_push($finals, $data);
+                    }else{
+                        $this->error('查询违章接口失败','',$data);
                     }
+                }else{
+                    $this->error('查询城市接口失败','',$result);
                 }
 
             }
+
+            $this->success('', '', $finals);
+        }
+    }
+
+
+
+    /**
+     * 单个请求第三方接口获取违章信息
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
+    public function sendMessagePerson()
+    {
+        if ($this->request->isAjax()) {
+
+            $params = $this->request->post()['ids'];
+            $finals = [];
+            $keys = self::$keys;
+
+                //获取城市前缀接口
+                $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($params['hphm']));
+
+                if ($result['error_code'] == 0) {
+
+                    $field = array();
+
+                    $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($params['hphms']) . "&engineno=" . $params['engineno'] . "&classno=" . $params['classno'] . "&key=" . $keys);
+
+                    if ($data['error_code'] == 0) {
+
+                        $total_fraction = 0;     //总扣分
+                        $total_money = 0;        //总罚款
+                        $flag = -1;
+                        if ($data['result']['lists']) {
+                            foreach ($data['result']['lists'] as $key => $value) {
+                                if ($value['fen']) {
+                                    $value['fen'] = floatval($value['fen']);
+
+                                    $total_fraction += $value['fen'];
+                                }
+
+                                if ($value['money']) {
+                                    $value['money'] = floatval($value['money']);
+
+                                    $total_money += $value['money'];
+                                }
+
+                                if ($value['handled'] == 0) {
+                                    $flag = -2;
+                                }
+
+                            }
+                            $field['peccancy_detail'] = json_encode($data['result']['lists']);
+                        }
+
+                        $flag == -2 ? $field['peccancy_status'] = 2 : $field['peccancy_status'] = 1;
+
+                        $field['total_deduction'] = $total_fraction;
+                        $field['total_fine'] = $total_money;
+                        $field['final_time'] = time();
+
+
+                        Db::name('violation_inquiry')
+                            ->where('license_plate_number', $params['hphms'])
+                            ->setInc('query_times');
+
+
+
+                        Db::name('violation_inquiry')
+                            ->where('license_plate_number', $params['hphms'])
+                            ->update($field);
+
+                        array_push($finals, $data);
+                    }else{
+                        $this->error('查询违章接口失败','',$data);
+                    }
+                }else{
+                    $this->error('查询城市接口失败','',$result);
+                }
+
+
 
             $this->success('', '', $finals);
         }
@@ -324,6 +446,58 @@ class Peccancy extends Backend
             }
 
         }
+    }
+
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL)
+    {
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+
+            if($params['strong_deadtime']){
+               $params['strong_deadtime'] = strtotime($params['strong_deadtime']);
+            }
+
+            if($params['business_deadtime']){
+                $params['business_deadtime'] = strtotime($params['business_deadtime']);
+            }
+
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
     }
 
 }
