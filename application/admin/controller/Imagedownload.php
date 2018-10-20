@@ -63,7 +63,7 @@ class Imagedownload extends Backend
 
 
 //----------------------
-        $filename = $username . '的电子档资料.zip'; //下载的默认文件名
+        $filename = $username . '.zip'; //下载的默认文件名
         $filename = $filename;
         $host = 'http://test.love11.com';
 
