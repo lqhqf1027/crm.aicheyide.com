@@ -33,7 +33,7 @@ class SecondFullOrder extends Model
 
     public function getCustomerSourceList()
     {
-        return ['straight' => __('直客'), 'introduce' => __('转介绍')];
+        return ['direct_the_guest' => __('直客'), 'turn_to_introduce' => __('转介绍')];
     }     
 
     public function getReviewTheDataList()

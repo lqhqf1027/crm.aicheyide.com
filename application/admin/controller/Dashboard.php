@@ -43,10 +43,10 @@ class Dashboard extends Backend
 
         //新车历史成交数
         $newcount = DashboardModel::getOrderCount('sales_order','the_car',null,null,null);
- 
+       
         //新车本月成交数
         $todaynewtake = DashboardModel::getOrderCount('sales_order','the_car',null,"[$firstday, $secondday]",null);
-
+        
         //新车本月订车数
         $todayneworder = DashboardModel::getOrderCount('sales_order','the_car',null,null,"[$firstday, $secondday]");
  
@@ -143,8 +143,7 @@ class Dashboard extends Backend
         $direct_the_guest = $new_direct_the_guest + $rental_direct_the_guest + $second_direct_the_guest + $full_direct_the_guest + $fullsecond_direct_the_guest;
         //本月转介绍成交总数
         $turn_to_introduce = $new_turn_to_introduce + $rental_turn_to_introduce + $second_turn_to_introduce + $full_turn_to_introduce + $fullsecond_turn_to_introduce;
-
-
+        
         if($todaytake !== 0){
                 $guest = round(($direct_the_guest / $todaytake) * 10000)  / 10000 * 100 . '%';
         }
