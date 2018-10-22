@@ -121,6 +121,13 @@
     .item {
         padding:30px 0;
     }
+    .carStatus{
+        border-right: 2px solid black;
+        /* border-radius: 5px; */
+    }
+    .carStatus h3{
+        font-weight:600;
+    }
 </style>
 <div class="panel panel-default panel-intro">
 
@@ -183,9 +190,75 @@
                         <div id="newechart" style="height:350px;width:100%;"></div>
                     </div>
                 </div>
-                <br><br><br>
-                
-                <div class="row">
+              
+
+                <div class="row" style="margin-top:15px;">
+
+                    <div class="col-xs-6 col-md-4 carStatus">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="panel-title">
+                                    <span class="label label-success pull-right">{:__('Real time')}</span>
+                                    <h3>{:__('车辆状态（年检）')}</h3>
+                                </div>
+                                <div class="panel-content">
+                                    
+                                    <div class="col-md-4">
+                                        <h1 class="no-margins text-warning">{$year_status}</h1>
+                                        <div class="font-bold text-warning"><i class="fa fa-heart"></i> <small>{:__('需年检车辆')}</small></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h1 class="no-margins text-danger">{$year_status_past}</h1>
+                                        <div class="font-bold text-danger"><i class="fa fa-heart"></i> <small>{:__('年检已过期车辆')}</small></div>
+                                    </div>
+                                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-md-4 carStatus">
+                        <div class="panel ">
+                            <div class="panel-body">
+                                <div class="ibox-title">
+                                    <span class="label label-success pull-right">{:__('Real time')}</span>
+                                    <h3>{:__('车辆状态（保险）')}</h3>
+                                </div>
+                                <div class="ibox-content">
+
+                                    <div class="col-md-6">
+                                        <h1 class="no-margins text-warning">{$strong_status}</h1>
+                                        <div class="font-bold text-warning"><i class="fa fa-heart"></i> <small>{:__('需续保车辆')}</small></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h1 class="no-margins text-danger">{$strong_status_past}</h1>
+                                        <div class="font-bold text-danger"><i class="fa fa-heart"></i> <small>{:__('保险已过期车辆')}</small></div>
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-md-4 carStatus">
+                        <div class="panel ">
+                            <div class="panel-body">
+                                <div class="ibox-title">
+                                    <span class="label label-success pull-right">{:__('Real time')}</span>
+                                    <h3>{:__('车辆状态（违章）')}</h3>
+                                </div>
+                                <div class="ibox-content">
+
+                                    <div class="col-md-4">
+                                        <h1 class="no-margins text-warning">{$violation_inquiry}</h1>
+                                        <div class="font-bold text-warning"><i class="fa fa-heart"></i> <small>{:__('违章车辆')}</small></div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="row">
                     <div class="col-lg-4">
                         <div class="box box-danger">
                             <div class="box-header">
@@ -404,7 +477,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="tab-pane fade" id="xi-an">
                 <div class="row">

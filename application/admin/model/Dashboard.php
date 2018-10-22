@@ -31,5 +31,56 @@ class Dashboard extends MOdel{
         })->count();
     }
 
+    //违章查询
+    public  static function getViolationCount($table,$peccancy_status)
+    {
+
+        return Db::name($table)->where(function($query) use ($table,$peccancy_status){
+           
+            $query->where(['peccancy_status' => $peccancy_status]);
+            
+        })->count();
+    }
+
+    //需续保查询或已过期
+    public  static function getStrongCount($table,$strong_status)
+    {
+
+        return Db::name($table)->where(function($query) use ($table,$strong_status){
+           
+            $query->where(['strong_status' => $strong_status]);
+            
+        })->count();
+    }
+
+    //需年检查询或已过期
+    public  static function getYearCount($table,$year_status)
+    {
+
+        return Db::name($table)->where(function($query) use ($table,$year_status){
+           
+            $query->where(['year_status' => $year_status]);
+            
+        })->count();
+    }
+
+    //车辆情况
+    public  static function getCarCount($table,$status_data,$shelfismenu=null)
+    {
+
+        return Db::name($table)->where(function($query) use ($table,$status_data,$shelfismenu){
+           
+            //租车已租车辆
+            if($status_data && !$shelfismenu){
+                $query->where(['status_data' => $status_data]);
+            }
+            //租车待租车辆或二手车可卖车辆
+            if($status_data && $shelfismenu){
+                $query->where(['status_data' => $status_data, 'shelfismenu' => $shelfismenu]);
+            }
+            
+        })->count();
+    }
+
 
 }
