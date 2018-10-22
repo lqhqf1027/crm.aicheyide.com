@@ -13,6 +13,8 @@ use think\Db;
 use app\common\library\Email;
 use think\Config;
 use app\admin\model\SalesOrder;
+use app\admin\model\BigData as bigDataModel;
+
 class Matchfinance extends Backend
 {
     protected $model = null;
@@ -204,12 +206,17 @@ class Matchfinance extends Backend
 
 
         $row = Db::name('financial_platform')->select();
-
-
         $this->view->assign('row', $row);
-
         if ($this->request->isPost()) {
-            $id = input("ids");
+          /*  $data = SalesOrder::with(['bigdata'=>function($query){
+                //
+                $query->withField('id')->save(['sales_order_id'=>11]);
+            }])->select(['id'=>18]);
+
+            dump(collection($data)->toArray());die;
+*/
+
+
             $params = $this->request->post('row/a');
 
             $plan_acar = Db::name('sales_order')
@@ -227,6 +234,11 @@ class Matchfinance extends Backend
             $fields['financial_name'] = $financial_name;
             $fields['financial_monthly'] = $params['financial_monthly'];
             $fields['review_the_data'] = 'is_reviewing_true';
+            //如果匹配成功，修改大数据  6.审批结果approvalStatusCode  为201 审核中
+            // 201 审核中
+            //202 批贷已放款
+            //203 拒贷
+            //204 客户放弃
 
             if ($params['financial_monthly'] && $monthly){
                $money = floatval($monthly) - floatval($params['financial_monthly']);
@@ -239,17 +251,15 @@ class Matchfinance extends Backend
 
 
             $res = Db::name("sales_order")
-                ->where("id", $id)
+                ->where("id", $ids)
                 ->update($fields);
 
 
             if ($res) {
 
-//                $channel = "demo-newcar_control";
-//                $content = "金融已经匹配，请尽快进行风控审核处理";
-//                goeary_push($channel, $content);
 
-                $data = Db::name("sales_order")->where('id', $id)->find();
+
+                $data = Db::name("sales_order")->where('id', $ids)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
