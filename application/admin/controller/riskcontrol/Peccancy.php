@@ -5,6 +5,7 @@ namespace app\admin\controller\riskcontrol;
 use app\common\controller\Backend;
 use think\Db;
 use app\common\library\Email;
+
 /**
  * 违章信息管理
  *
@@ -76,21 +77,19 @@ class Peccancy extends Backend
 
             $real_list = array();
 
-            foreach ($list as $k=>$v){
-                if($v['car_type'] == 4){
-                      $retiring = Db::name('rental_order')
-                       ->where('violation_inquiry_id',$v['id'])
-                       ->value('review_the_data');
+            foreach ($list as $k => $v) {
+                if ($v['car_type'] == 4) {
+                    $retiring = Db::name('rental_order')
+                        ->where('violation_inquiry_id', $v['id'])
+                        ->value('review_the_data');
 
-                      if($retiring && $retiring == 'retiring'){
-                          continue;
-                      }
+                    if ($retiring && $retiring == 'retiring') {
+                        continue;
+                    }
                 }
 
                 $real_list[] = $v;
             }
-
-
 
 
             $result = array("total" => count($real_list), "rows" => $real_list);
@@ -136,21 +135,19 @@ class Peccancy extends Backend
             $list = collection($list)->toArray();
             $real_list = array();
 
-            foreach ($list as $k=>$v){
-                if($v['car_type'] == 4){
+            foreach ($list as $k => $v) {
+                if ($v['car_type'] == 4) {
                     $retiring = Db::name('rental_order')
-                        ->where('violation_inquiry_id',$v['id'])
+                        ->where('violation_inquiry_id', $v['id'])
                         ->value('review_the_data');
 
-                    if($retiring && $retiring == 'retiring'){
+                    if ($retiring && $retiring == 'retiring') {
                         continue;
                     }
                 }
 
                 $real_list[] = $v;
             }
-
-
 
 
             $result = array("total" => count($real_list), "rows" => $real_list);
@@ -224,17 +221,16 @@ class Peccancy extends Backend
                             ->setInc('query_times');
 
 
-
                         Db::name('violation_inquiry')
                             ->where('license_plate_number', $v['hphms'])
                             ->update($field);
 
                         array_push($finals, $data);
-                    }else{
-                        $this->error('查询违章接口失败','',$data);
+                    } else {
+                        $this->error('查询违章接口失败', '', $data);
                     }
-                }else{
-                    $this->error('查询城市接口失败','',$result);
+                } else {
+                    $this->error('查询城市接口失败', '', $result);
                 }
 
             }
@@ -242,7 +238,6 @@ class Peccancy extends Backend
             $this->success('', '', $finals);
         }
     }
-
 
 
     /**
@@ -261,67 +256,65 @@ class Peccancy extends Backend
             $finals = [];
             $keys = self::$keys;
 
-                //获取城市前缀接口
-                $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($params['hphm']));
+            //获取城市前缀接口
+            $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($params['hphm']));
 
-                if ($result['error_code'] == 0) {
+            if ($result['error_code'] == 0) {
 
-                    $field = array();
+                $field = array();
 
-                    $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($params['hphms']) . "&engineno=" . $params['engineno'] . "&classno=" . $params['classno'] . "&key=" . $keys);
+                $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($params['hphms']) . "&engineno=" . $params['engineno'] . "&classno=" . $params['classno'] . "&key=" . $keys);
 
-                    if ($data['error_code'] == 0) {
+                if ($data['error_code'] == 0) {
 
-                        $total_fraction = 0;     //总扣分
-                        $total_money = 0;        //总罚款
-                        $flag = -1;
-                        if ($data['result']['lists']) {
-                            foreach ($data['result']['lists'] as $key => $value) {
-                                if ($value['fen']) {
-                                    $value['fen'] = floatval($value['fen']);
+                    $total_fraction = 0;     //总扣分
+                    $total_money = 0;        //总罚款
+                    $flag = -1;
+                    if ($data['result']['lists']) {
+                        foreach ($data['result']['lists'] as $key => $value) {
+                            if ($value['fen']) {
+                                $value['fen'] = floatval($value['fen']);
 
-                                    $total_fraction += $value['fen'];
-                                }
-
-                                if ($value['money']) {
-                                    $value['money'] = floatval($value['money']);
-
-                                    $total_money += $value['money'];
-                                }
-
-                                if ($value['handled'] == 0) {
-                                    $flag = -2;
-                                }
-
+                                $total_fraction += $value['fen'];
                             }
-                            $field['peccancy_detail'] = json_encode($data['result']['lists']);
+
+                            if ($value['money']) {
+                                $value['money'] = floatval($value['money']);
+
+                                $total_money += $value['money'];
+                            }
+
+                            if ($value['handled'] == 0) {
+                                $flag = -2;
+                            }
+
                         }
-
-                        $flag == -2 ? $field['peccancy_status'] = 2 : $field['peccancy_status'] = 1;
-
-                        $field['total_deduction'] = $total_fraction;
-                        $field['total_fine'] = $total_money;
-                        $field['final_time'] = time();
-
-
-                        Db::name('violation_inquiry')
-                            ->where('license_plate_number', $params['hphms'])
-                            ->setInc('query_times');
-
-
-
-                        Db::name('violation_inquiry')
-                            ->where('license_plate_number', $params['hphms'])
-                            ->update($field);
-
-                        array_push($finals, $data);
-                    }else{
-                        $this->error('查询违章接口失败','',$data);
+                        $field['peccancy_detail'] = json_encode($data['result']['lists']);
                     }
-                }else{
-                    $this->error('查询城市接口失败','',$result);
-                }
 
+                    $flag == -2 ? $field['peccancy_status'] = 2 : $field['peccancy_status'] = 1;
+
+                    $field['total_deduction'] = $total_fraction;
+                    $field['total_fine'] = $total_money;
+                    $field['final_time'] = time();
+
+
+                    Db::name('violation_inquiry')
+                        ->where('license_plate_number', $params['hphms'])
+                        ->setInc('query_times');
+
+
+                    Db::name('violation_inquiry')
+                        ->where('license_plate_number', $params['hphms'])
+                        ->update($field);
+
+                    array_push($finals, $data);
+                } else {
+                    $this->error('查询违章接口失败', '', $data);
+                }
+            } else {
+                $this->error('查询城市接口失败', '', $result);
+            }
 
 
             $this->success('', '', $finals);
@@ -346,7 +339,6 @@ class Peccancy extends Backend
 
         $details = json_decode($detail['peccancy_detail'], true);
 
-//        pr($details);die();
 
         $score = 0;
         $money = 0;
@@ -378,17 +370,17 @@ class Peccancy extends Backend
 
     public function note()
     {
-        if($this->request->isAjax()){
+        if ($this->request->isAjax()) {
             $content = input('content');
             $ids = input('ids');
 
             $res = Db::name('violation_inquiry')
-            ->where('id',$ids)
-            ->setField('inquiry_note',$content);
+                ->where('id', $ids)
+                ->setField('inquiry_note', $content);
 
-            if($res){
-                $this->success('','','success');
-            }else{
+            if ($res) {
+                $this->success('', '', 'success');
+            } else {
                 $this->error('备注失败');
             }
         }
@@ -433,10 +425,10 @@ class Peccancy extends Backend
                     ->message($data['message'])
                     ->send();
 
-                if($send){
+                if ($send) {
                     $this->success('', '', $res);
 
-                }else{
+                } else {
                     $this->error('邮箱发送失败');
                 }
 
@@ -466,11 +458,12 @@ class Peccancy extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
 
-            if($params['strong_deadtime']){
-               $params['strong_deadtime'] = strtotime($params['strong_deadtime']);
+            if ($params['strong_deadtime']) {
+
+                $params['strong_deadtime'] = strtotime($params['strong_deadtime']);
             }
 
-            if($params['business_deadtime']){
+            if ($params['business_deadtime']) {
                 $params['business_deadtime'] = strtotime($params['business_deadtime']);
             }
 
@@ -498,6 +491,100 @@ class Peccancy extends Backend
         }
         $this->view->assign("row", $row);
         return $this->view->fetch();
+    }
+
+
+    /**
+     * 更改保险状态
+     */
+    public function insurance()
+    {
+
+        if ($this->request->isAjax()) {
+
+            $status = $this->request->post('status');
+
+            $ids = $this->request->post('id');
+
+            $status = json_decode($status, true);
+
+
+            if ($status[0] == -1 && $status[1] == -1) {
+                $this->modify($ids, [0, 0]);
+            } else if ($status[0] == -1 && $status[1] == -2) {
+                $this->modify($ids, [0, 1]);
+            } else if ($status[0] == -2 && $status[1] == -2) {
+                $this->modify($ids, [1, 1]);
+            } else if ($status[0] == -2 && $status[1] == -1) {
+                $this->modify($ids, [1, 0]);
+            } else if ($status[0] == -3 && $status[1] == -1) {
+                $this->modify($ids, [2, 0]);
+            } else if ($status[0] == -3 && $status[1] == -2) {
+                $this->modify($ids, [2, 1]);
+            } else if ($status[0] == -3 && $status[1] == -3) {
+                $this->modify($ids, [2, 2]);
+            } else if ($status[0] == -1 && $status[1] == -3) {
+                $this->modify($ids, [0, 2]);
+            } else if ($status[0] == -2 && $status[1] == -3) {
+                $this->modify($ids, [1, 2]);
+            }
+
+
+        }
+    }
+
+    /**
+     * 更改
+     * @param $id
+     * @param $num
+     */
+    public function modify($id, $num = array())
+    {
+        Db::name('violation_inquiry')
+            ->where('id', $id)
+            ->update([
+                'strong_status' => $num[0],
+                'business_status' => $num[1]
+            ]);
+    }
+
+
+    public function check_year()
+    {
+        if ($this->request->isAjax()) {
+            $date = input('date');
+
+            $id = input('id');
+
+            $date = strtotime($date);
+
+
+            $res = Db::name('violation_inquiry')
+                ->where('id', $id)
+                ->setField('year_checktime', $date);
+
+            if ($res) {
+                $this->success();
+            } else {
+                $this->error('年检更新失败');
+
+            }
+
+        }
+    }
+
+    public function year_status()
+    {
+        if ($this->request->isAjax()) {
+            $status = $this->request->post('status');
+
+            $ids = $this->request->post('id');
+
+            Db::name('violation_inquiry')
+                ->where('id', $ids)
+                ->setField('year_status', $status);
+
+        }
     }
 
 }

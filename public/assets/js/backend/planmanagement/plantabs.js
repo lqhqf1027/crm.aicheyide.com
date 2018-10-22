@@ -264,6 +264,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             }
 
+            console.log(data_arr);
 
             for (var i in data_arr) {
 
@@ -274,6 +275,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
 
                 var td = $(obj).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
+
+
 
                 if (data_arr[i][1] != null) {
                     i % 2 == 0 ? td.eq(2).css({"background-color": "#fff"}) : td.eq(2).css({"background-color": "#ddd"});
