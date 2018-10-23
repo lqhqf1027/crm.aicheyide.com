@@ -125,13 +125,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             // { field: 'genderdata_text', title: __('Genderdata'), operate: false },
                             { field: 'phone', title: __('Phone') },
                             { field: 'id_card', title: __('Id_card') },
-
-                            // { field: 'planacar.payment', title: __('首付（元）'),operate:false },
-                            // { field: 'planacar.monthly', title: __('月供（元）'),operate:false },
-                            // { field: 'planacar.nperlist', title: __('期数'),operate:false },
-                            // { field: 'planacar.margin', title: __('保证金（元）'),operate:false },
-                            // { field: 'planacar.tail_section', title: __('尾款（元）'),operate:false },
-                            // { field: 'planacar.gps', title: __('GPS（元）'),operate:false },
                             {
                                 field: 'operate', title: __('Operate'), table: newcarAudit,
                                 buttons: [
@@ -157,8 +150,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                         },
                                     },
                                     {
-                                        name: 'newauditResult', text: '审核', title: '审核征信', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-newauditResult btn-dialog',
-                                        url: 'riskcontrol/creditreview/newauditResult',
+                                        name: 'newauditResult', text: '审核', title: '审核征信', icon: 'fa fa-check-square-o', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-newauditResult ',
+                                        // url: 'riskcontrol/creditreview/newauditResult',
+
                                         //等于is_reviewing_true 的时候操作栏显示的是正在审核四个字，隐藏编辑和删除
                                         //等于is_reviewing 的时候操作栏显示的是提交审核按钮 四个字，显示编辑和删除 
                                         //....
@@ -206,8 +200,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     },
                                     {
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
-                                        url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
-                                        
+                                        url: 'riskcontrol/creditreview/toViewBigData',
+                                        /**查看大数据 */
+                                        hidden:function (row) {
+                                            if(row.bigdata){
+                                                 return true;
+                                            }
+                                        }
+
                                     },
                                     {
                                         name: 'for_the_car', text: '提交给销售，通知客户签订金融合同', title: '提交到销售，通知客户签订金融合同', icon: 'fa fa-share', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-info btn-submit_newsales',
@@ -1424,7 +1424,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                      * @param index
                      */
                     'click .btn-newauditResult': function (e, value, row, index) {
-
+                        if(row.bigdata==null){
+                            layer.msg('请先查看大数据，至少一次');
+                            return false;
+                        }
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -1466,15 +1469,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                             function (index) {
                                 var table = $(that).closest('table');
                                 var options = table.bootstrapTable('getOptions');
-
-
                                 Fast.api.ajax({
 
                                     url: 'riskcontrol/creditreview/newsales',
                                     data: {id: row[options.pk]}
  
                                 }, function (data, ret) {
-
                                     Toastr.success('操作成功');
                                     Layer.close(index);
                                     table.bootstrapTable('refresh');

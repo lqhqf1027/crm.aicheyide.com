@@ -155,6 +155,15 @@ class SalesOrder extends Model
         return $this->belongsTo('CustomerDownpayment','customer_downpayment_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * 关联大数据，跟新审批结果 字段
+     * @return \think\model\relation\hasOne
+     */
+    public  function bigdata(){
+        return $this->hasOne('BigData','sales_order_id','id')->setEagerlyType(0);
+    }
+
+
 
     
 }

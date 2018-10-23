@@ -133,7 +133,6 @@ class Creditreview extends Backend
                 $row->getRelation('models')->visible(['name']);
             }
 
-
             $list = collection($list)->toArray();
 
             foreach ($list as $k=>$v){
@@ -143,6 +142,8 @@ class Creditreview extends Backend
                     ->where('a.uid',$v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
+                //是否又有da数据
+                $list[$k]['bigdata'] = self::matchBigData($v['id']);
             }
             $result = array('total' => $total, "rows" => $list);
             return json($result);
@@ -151,14 +152,19 @@ class Creditreview extends Backend
         return $this->view->fetch("index");
 
     }
+    public static function matchBigData($orderId){
+        $data =  salesOrderModel::with(['bigdata'=>function($query){
+              $query->withField('id');
+          }])->select(['id'=>$orderId]);
+        return collection($data)->toArray()[0]['bigdata']['id'] ;
+  }
 
 
 
-
-    /**展示需要审核的租车单
-     * @return string|\think\response\Json
-     * @throws \think\Exception
-     */
+  /**展示需要审核的租车单
+   * @return string|\think\response\Json
+   * @throws \think\Exception
+   */
     public function rentalcarAudit()
     {
         $this->model = model('RentalOrder');
@@ -333,20 +339,16 @@ class Creditreview extends Backend
     public function newauditResult($ids = null)
 
     {
+//
+//        $data = salesOrderModel::with(['bigdata'=>function($query){
+//           $query->withField('id');
+//        }])->select(['id'=>$ids]);  
         $this->model = model('SalesOrder');
         $row = $this->model->get($ids);
         if (!$row) {
             $this->error(__('No Results were found'));
         }
         $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
-        // $list = collection($row)->toArray();
-        // pr($row);die;
-
         //身份证图片
 
         $id_cardimages = explode(',', $row['id_cardimages']);
