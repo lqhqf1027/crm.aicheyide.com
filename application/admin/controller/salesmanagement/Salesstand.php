@@ -203,6 +203,7 @@ class Salesstand extends Backend
                 $month = date("Y-m", $seventtime);
                 $day = date('t', strtotime("$month +1 month -1 day"));
 
+
                 //销售三部的销售情况 
                 for ($i = 0; $i < 8; $i++)
                 {
