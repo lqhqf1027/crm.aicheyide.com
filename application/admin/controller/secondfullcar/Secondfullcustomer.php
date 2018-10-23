@@ -298,9 +298,22 @@ class Secondfullcustomer extends Backend
                     ->field('po.username,po.phone,m.name as models,ni.licenseplatenumber as license_plate_number,ni.vin as frame_number,ni.engine_number')
                     ->find();
 
-                $peccancy['car_type'] = 3;
+                $peccancy['car_type'] = 5;
 
-                $result_peccancy = Db::name('violation_inquiry')->insert($peccancy);
+                //检查是否存在
+                $check_real = Db::name('violation_inquiry')
+                    ->where('license_plate_number', $peccancy['license_plate_number'])
+                    ->where('username', $peccancy['username'])
+                    ->find();
+
+                if(!$check_real){
+                    $last_id = Db::name('violation_inquiry')->insertGetId($peccancy);
+
+                    $result_peccancy = Db::name("second_full_order")
+                        ->where('id', $ids)
+                        ->setField('violation_inquiry_id', $last_id);
+                }
+
                 if ($result_peccancy) {
                     $this->success('', '', $ids);
                 } else {

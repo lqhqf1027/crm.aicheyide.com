@@ -40,6 +40,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 table.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-detail").data("area", ["90%", "90%"]);
                     $(".btn-editone").data("area", ["70%", "70%"]);
+                    $(".btn-details-customer").data("area", ["90%", "90%"]);
 
                 });
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
@@ -73,6 +74,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
+                            {
+                                field: 'operate', title: __('查看详细资料'), table: table, buttons: [
+                                    {
+                                        name: 'details-customer',
+                                        text: '查看详细资料',
+                                        title: '查看订单详细资料',
+                                        icon: 'fa fa-eye',
+                                        classname: 'btn btn-xs btn-primary btn-details-customer',
+                                    }
+                                ],
+
+                                operate: false, formatter: Table.api.formatter.buttons
+                            },
                             {
                                 field: 'peccancy_status',
                                 title: '违章状态',
@@ -179,7 +193,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     "1": __('Car_type 1'),
                                     "2": __('Car_type 2'),
                                     "3": __('Car_type 3'),
-                                    "4": __('Car_type 4')
+                                    "4": __('Car_type 4'),
+                                    "5": __('全款二手车'),
                                 },
                                 formatter: Controller.api.formatter.normal
                             },
@@ -546,9 +561,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         case 2:
                             return "二手车";
                         case 3:
-                            return "全款车";
+                            return "全款新车";
                         case 4:
                             return "租车";
+                        case 5:
+                            return '全款二手车';
                     }
                 },
 
@@ -631,20 +648,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
 
 
+                    $.ajax({
+                        url: 'riskcontrol/peccancy/insurance',
+                        dataType: "json",
+                        type: "post",
+                        data: {
+                            status: JSON.stringify([flag1, flag2]),
+                            id: row.id
+                        }, success: function (data) {
 
-                $.ajax({
-                    url: 'riskcontrol/peccancy/insurance',
-                    dataType: "json",
-                    type: "post",
-                    data: {
-                        status: JSON.stringify([flag1, flag2]),
-                        id: row.id
-                    }, success: function (data) {
-
-                    }, error: function (type) {
-                    }
-                });
-
+                        }, error: function (type) {
+                        }
+                    });
 
 
                     if (!row.strong_deadtime) {
@@ -741,6 +756,46 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
                         var url = 'riskcontrol/Peccancy/details';
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('查看违章详情'), $(this).data() || {});
+                    },
+
+                    /**
+                     * 查看客户信息
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-details-customer': function (e, value, row, index) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+
+                        var url = '';
+
+                        console.log(row);
+
+                        row = $.extend({}, row ? row : {}, {ids: row.order_id});
+
+                        switch (row.car_type) {
+                            case 1:
+                                url = 'Sharedetailsdatas/new_car_share_data'+'/order_id/'+row.order_id;
+                                break;
+                            case 2:
+                                url = 'Sharedetailsdatas/second_car_share_data'+'/order_id/'+row.order_id;
+                                break;
+                            case 3:
+                                url = 'Sharedetailsdatas/full_car_share_data'+'/order_id/'+row.order_id;
+                                break;
+                            case 4:
+                                url = 'Sharedetailsdatas/rental_car_share_data'+'/order_id/'+row.order_id;
+                                break;
+                            case 5:
+                                url = 'Sharedetailsdatas/secondfull_car_share_data'+'/order_id/'+row.order_id;
+                                break;
+                        }
+
+
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看违章详情'), $(this).data() || {});
                     },
                     /**

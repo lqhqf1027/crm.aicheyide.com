@@ -9,6 +9,11 @@
 namespace app\admin\controller;
 
 use app\common\controller\Backend;
+use app\admin\model\SalesOrder as salesOrderModel;
+use app\admin\model\SecondSalesOrder as secondSalesOrderModel;
+use app\admin\model\RentalOrder as rentalOrderModel;
+use app\admin\model\FullParmentOrder as fullParmentOrderModel;
+use app\admin\model\SecondFullOrder as secondFullOrderModel;
 use think\Config;
 use think\Db;
 
@@ -20,7 +25,7 @@ class Sharedetailsdatas extends Backend
      */
     protected $model = null;
 
-    protected $noNeedRight  = [
+    protected $noNeedRight = [
         'new_car_share_data', 'second_car_share_data', 'rental_car_share_data', 'secondfull_car_share_data', 'full_car_share_data'
     ];
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -41,8 +46,24 @@ class Sharedetailsdatas extends Backend
      * @return string
      * @throws \think\Exception
      */
-    public function new_car_share_data($ids = null)
+    public function new_car_share_data($ids = null, $order_id = null)
     {
+        /*$data  = salesOrderModel::with(
+            [
+                'admin'=>function($query){$query->withField('nickname');},
+                'planacar'=>function($query){$query->withField(['tail_section','note','nperlist','payment']);},
+                'mortgageregistration'=>function($query){$query->withField(['archival_coding','contract_total','end_money',
+                    'yearly_inspection','next_inspection']);},
+                'newinventory'=>function($query){$query->withField('licensenumber');},
+
+            ]
+
+
+
+        )->select(['ids'=>$ids]);
+
+        pr(collection($data)->toArray());die;*/
+
         $row = Db::name('sales_order')->alias('a')
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
             ->join('plan_acar c', 'c.id = a.plan_acar_name', 'LEFT')
@@ -61,13 +82,19 @@ class Sharedetailsdatas extends Backend
                 d.commercial_insurance_policy,d.registry_remark,
                 e.licensenumber,e.engine_number,e.frame_number,e.household,e.note as nnote,
                 f.car_imgeas,f.lending_date,f.bank_card,f.invoice_monney,f.registration_code,f.tax,f.business_risks,f.insurance,f.mortgage_type')
-            ->where('a.id', $ids)
+            ->where(function ($query) use($ids,$order_id) {
+                 if($order_id){
+                     $query->where('a.id',$order_id);
+                 }else{
+                     $query->where('a.id',$ids);
+                 }
+            })
             ->find();
 
-        if($row['models_id']){
+        if ($row['models_id']) {
             $row['models_name'] = Db::name('models')
-            ->where('id',$row['models_id'])
-            ->value('name');
+                ->where('id', $row['models_id'])
+                ->value('name');
         }
 
         $row['total_insurance'] = null;
@@ -213,9 +240,9 @@ class Sharedetailsdatas extends Backend
             ->where('a.id', $ids)
             ->find();
 
-        if($row['models_id']){
+        if ($row['models_id']) {
             $row['models_name'] = Db::name('models')
-                ->where('id',$row['models_id'])
+                ->where('id', $row['models_id'])
                 ->value('name');
         }
 
@@ -307,9 +334,9 @@ class Sharedetailsdatas extends Backend
             ->where('a.id', $ids)
             ->find();
 
-        if($row['models_id']){
+        if ($row['models_id']) {
             $row['models_name'] = Db::name('models')
-                ->where('id',$row['models_id'])
+                ->where('id', $row['models_id'])
                 ->value('name');
         }
 
@@ -369,12 +396,12 @@ class Sharedetailsdatas extends Backend
             ->where('a.id', $ids)
             ->find();
 
-        if($row['models_id']){
+        if ($row['models_id']) {
             $row['models_name'] = Db::name('models')
-                ->where('id',$row['models_id'])
+                ->where('id', $row['models_id'])
                 ->value('name');
         }
-        
+
         //身份证正反面（多图）
         $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         //驾照正副页（多图）
@@ -422,7 +449,7 @@ class Sharedetailsdatas extends Backend
                 d.car_imgeas,d.bank_card,d.invoice_monney,d.registration_code,d.tax,d.business_risks,d.insurance,d.lending_date,d.mortgage_type')
             ->where('a.id', $ids)
             ->find();
-        
+
         //身份证正反面（多图）
         $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         //驾照正副页（多图）
@@ -450,7 +477,6 @@ class Sharedetailsdatas extends Backend
         );
         return $this->view->fetch();
     }
-
 
 
 }
