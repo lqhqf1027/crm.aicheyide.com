@@ -154,4 +154,13 @@ class SecondSalesOrder extends Model
     }
 
 
+    /**
+     * 关联二手车大数据，跟新审批结果 字段
+     * @return \think\model\relation\hasOne
+     */
+    public  function bigdata(){
+        return $this->hasOne('BigData','second_sales_order_id','id')->setEagerlyType(0);
+    }
+
+
 }

@@ -1,9 +1,5 @@
 
 define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-theme','addtabs'], function ($, undefined, Backend, Table, Form,Echarts, undefined, Template) {
-
-    // var goeasy = new GoEasy({
-    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    // });
     var Controller = {
         index: function () {
 
@@ -84,8 +80,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
             /**新车 */
             newcar_audit: function () {
                 // 待审核
-                var newcarAudit = $("#newcarAudit"); 
-                console.log($('.fixed-table-toolbar').attr('class'));
+                var newcarAudit = $("#newcarAudit");
                 // 初始化表格 
                 newcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/newcarAudit',
@@ -683,54 +678,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     ]
                 });
                 Table.api.bindevent(newcarAudit);
-
-                //实时消息
-                //金融发送给风控
-                // goeasy.subscribe({
-                //     channel: 'demo-newcar_control',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
-
-                // goeasy.subscribe({
-                //     channel: 'demo4',
-                //     onMessage: function(message){
-                //
-                //         $(".btn-refresh").trigger("click");
-                //     }
-                // });
-                
-                //保证金上传通知
-                // goeasy.subscribe({
-                //     channel: 'demo-newdata_cash',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
-
-                /**
-                 * 补录资料完成
-                 */
-                // goeasy.subscribe({
-                //     channel: 'demo-new_collection_data',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
-
                  //指定搜索条件
             $(document).on("click", ".btn-singlesearch", function () {
                
@@ -796,7 +743,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     {
                                         name: 'rentalcardetails', text: '查看详细资料', title: '查看订单详细资料', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-rentalcardetails',
                                         url: 'Sharedetailsdatas/rental_car_share_data', callback: function (data) {
-                                            console.log(data)
                                         }
                                     }
                                 ],
@@ -841,7 +787,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     },
                                     {
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
-                                        url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
+                                        url: 'riskcontrol/creditreview/toViewBigData',
+                                        /**查看大数据 */
+                                        hidden:function (row) {
+                                            if(row.bigdata){
+                                                return true;
+                                            }
+                                        }
                                         
                                     },
                                     {
@@ -940,43 +892,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 });
 
                 Table.api.bindevent(rentalcarAudit);
-
-                //实时推送 -- 关闭弹窗
-                // goeasy.subscribe({
-                //     channel: 'demo5',
-                //     onMessage: function(message){
-                //
-                //         $(".btn-refresh").trigger("click");
-                //     }
-                // });
-
-                //实时消息
-                //租车销售发送给风控
-                // goeasy.subscribe({
-                //     channel: 'demo-rental_control',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
-
-                /**
-                 * 补录资料完成
-                 */
-                // goeasy.subscribe({
-                //     channel: 'demo-rental_collection_data',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
-
                 //数据实时统计
                 rentalcarAudit.on('load-success.bs.table', function (e, data) {
                     $(".btn-rentalauditResult").data("area", ["95%", "95%"]);
@@ -1095,6 +1010,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                                     {
                                         name: 'bigData', text: '查看大数据', title: '查看大数据征信', icon: 'fa fa-eye', extend: 'data-toggle="tooltip"', classname: 'btn btn-xs btn-success btn-bigData btn-dialog',
                                         url: 'riskcontrol/creditreview/toViewBigData',/**查看大数据 */
+                                        /**查看大数据 */
+                                        hidden:function (row) {
+                                            if(row.bigdata){
+                                                return true;
+                                            }
+                                        }
 
                                     },
                                     {
@@ -1230,40 +1151,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                 /**
                  * 审核刷新页面
                  */
-                // goeasy.subscribe({
-                //     channel: 'demo6',
-                //     onMessage: function(message){
-                //
-                //         $(".btn-refresh").trigger("click");
-                //     }
-                // });
 
-                //实时消息
-                //金融发给风控
-                // goeasy.subscribe({
-                //     channel: 'demo-second_control',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
 
                 /**
                  * 补录资料完成
                  */
-                // goeasy.subscribe({
-                //     channel: 'demo-second_collection_data',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
 
                 //数据实时统计
                 secondhandcarAudit.on('load-success.bs.table', function (e, data) {
@@ -1629,7 +1521,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                      * @param index
                      */
                     'click .btn-rentalauditResult': function (e, value, row, index) {
-
+                        if(row.bigdata==null){
+                            layer.msg('请先查看大数据，至少一次');
+                            return false;
+                        }
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -1653,7 +1548,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                      * @param index
                      */
                     'click .btn-secondhandcarResult': function (e, value, row, index) {
-
+                        if(row.bigdata==null){
+                            layer.msg('请先查看大数据，至少一次');
+                            return false;
+                        }
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -1711,7 +1609,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
                             callback: function (value) {
                             },success:function(ret){
-                                console.log(ret);
                             }
                         })
                     },
@@ -1760,16 +1657,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo4', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调
-
                     return false;
                 });
 
@@ -1802,12 +1692,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo4', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调
@@ -1844,12 +1728,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo4', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调
@@ -1885,12 +1763,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     Layer.close(prompt);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo4', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调
@@ -1928,16 +1800,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','echarts', 'echarts-th
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo5', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
-                    //失败的回调
-console.log(ret);
                     return false;
                 });
 
@@ -1968,12 +1832,6 @@ console.log(ret);
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo5', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调
@@ -2009,12 +1867,6 @@ console.log(ret);
                     Layer.close(prompt);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo5', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调
@@ -2050,12 +1902,6 @@ console.log(ret);
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo6', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调
@@ -2091,12 +1937,6 @@ console.log(ret);
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo6', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调
@@ -2133,11 +1973,6 @@ console.log(ret);
                     Layer.close(confirm);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo6', 
-                        message: '123'
-                    });
                     
                     return false;
                 }, function (data, ret) {
@@ -2174,12 +2009,6 @@ console.log(ret);
                     Layer.close(prompt);
                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                     parent.layer.close(index);
-
-                    goeasy.publish ({
-                        channel: 'demo6', 
-                        message: '123'
-                    });
-                    
                     return false;
                 }, function (data, ret) {
                     //失败的回调

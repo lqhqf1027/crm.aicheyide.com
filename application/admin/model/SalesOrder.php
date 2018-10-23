@@ -156,7 +156,7 @@ class SalesOrder extends Model
     }
 
     /**
-     * 关联大数据，跟新审批结果 字段
+     * 关联新车大数据，跟新审批结果 字段
      * @return \think\model\relation\hasOne
      */
     public  function bigdata(){

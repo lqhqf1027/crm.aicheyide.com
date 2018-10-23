@@ -65,8 +65,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
-                            {field: 'city', title: __('居住地址'),operate:false},
-                            {field: 'detailed_address', title: __('详细地址'),operate:false},
+                            // {field: 'city', title: __('居住地址'),operate:false},
+                            // {field: 'detailed_address', title: __('详细地址'),operate:false},
                             {field: 'phone', title: __('联系电话')},
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'plansecond.newpayment', title: __('首付(元)'),operate:false},
@@ -76,8 +76,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'plansecond.tailmoney', title: __('尾款(元)'),operate:false},
                             {field: 'plansecond.totalprices', title: __('车款总价(元)'),operate:false},
                             {field: 'downpayment', title: __('首期款(元)'),operate:false},
-                            
-
                             {
                                 field: 'operate', title: __('Operate'), table: secondcarWaitconfirm,
                                 buttons: [
@@ -109,19 +107,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     
                    
                 })
-
-                //实时消息
-                //内勤发送---车管
-                // goeasy.subscribe({
-                //     channel: 'demo-second_amount',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
 
             },
             /**
@@ -157,8 +142,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},
                             {field: 'username', title: __('客户姓名')},
                             {field: 'id_card', title: __('身份证号')},
-                            {field: 'city', title: __('居住地址'),operate:false},
-                            {field: 'detailed_address', title: __('详细地址'),operate:false},
+                            // {field: 'city', title: __('居住地址'),operate:false},
+                            // {field: 'detailed_address', title: __('详细地址'),operate:false},
                             {field: 'phone', title: __('联系电话')},
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'plansecond.newpayment', title: __('首付(元)'),operate:false},

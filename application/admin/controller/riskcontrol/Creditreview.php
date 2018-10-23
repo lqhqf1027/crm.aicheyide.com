@@ -7,6 +7,9 @@ use think\Db;
 use think\Config;
 use think\db\exception\DataNotFoundException;
 use app\admin\model\SalesOrder as salesOrderModel;
+use app\admin\model\SecondSalesOrder as secondSalesOrderModel;
+use app\admin\model\RentalOrder as rentalOrderModel;
+
 use app\admin\controller\Bigdata as bg;
 use app\common\library\Email;
 use think\Cache;
@@ -79,7 +82,8 @@ class Creditreview extends Backend
 
 
 
-    /**展示需要审核的新车销售单
+    /**
+     * 展示需要审核的新车销售单
      * @return string|\think\response\Json
      * @throws \think\Exception
      */
@@ -142,7 +146,7 @@ class Creditreview extends Backend
                     ->where('a.uid',$v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
-                //是否又有da数据
+                //是否有da数据
                 $list[$k]['bigdata'] = self::matchBigData($v['id']);
             }
             $result = array('total' => $total, "rows" => $list);
@@ -152,8 +156,19 @@ class Creditreview extends Backend
         return $this->view->fetch("index");
 
     }
-    public static function matchBigData($orderId){
-        $data =  salesOrderModel::with(['bigdata'=>function($query){
+
+    /**
+     *匹配新车是否有大数据结果集
+     * @param $orderId 订单Id
+     * @param $orderType  订单类型
+     * @return mixed  Id
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public static function matchBigData($orderId ){
+
+        $data =  salesOrderModel::with(['bigdata'=>function($query)  {
               $query->withField('id');
           }])->select(['id'=>$orderId]);
         return collection($data)->toArray()[0]['bigdata']['id'] ;
@@ -161,7 +176,8 @@ class Creditreview extends Backend
 
 
 
-  /**展示需要审核的租车单
+  /**
+   * 展示需要审核的租车单
    * @return string|\think\response\Json
    * @throws \think\Exception
    */
@@ -217,6 +233,9 @@ class Creditreview extends Backend
                     ->where('a.uid',$v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
+                //是否有da数据
+
+                $list[$k]['bigdata'] = self::matchBigData2($v['id']);
             }
             $result = array("total" => $total, "rows" => $list);
             return json($result);
@@ -226,10 +245,25 @@ class Creditreview extends Backend
 
     }
 
+    /**
+     *匹配租车是否有大数据结果集
+     * @param $orderId 订单Id
+     * @return mixed  Id
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public static function matchBigData2($orderId){
+
+        $data =  rentalOrderModel::with(['bigdata'=>function($query)  {
+            $query->withField('id');
+        }])->select(['id'=>$orderId]);
+        return collection($data)->toArray()[0]['bigdata']['id'] ;
+    }
 
 
-
-    /**展示需要审核的二手车单
+    /**
+     * 展示需要审核的二手车单
      * @return string|\think\response\Json
      * @throws DataNotFoundException
      * @throws \think\Exception
@@ -297,6 +331,8 @@ class Creditreview extends Backend
                     ->where('a.uid',$v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
+                //是否有da数据
+                $list[$k]['bigdata'] = self::matchBigData3($v['id']);
             }
             $result = array('total' => $total, "rows" => $list);
             return json($result);
@@ -304,6 +340,23 @@ class Creditreview extends Backend
 
         return $this->view->fetch();
 
+    }
+
+    /**
+     *匹配二手车是否有大数据结果集
+     * @param $orderId 订单Id
+     * @param $orderType  订单类型
+     * @return mixed  Id
+     * @throws DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public static function matchBigData3($orderId ){
+
+        $data =  secondSalesOrderModel::with(['bigdata'=>function($query)  {
+            $query->withField('id');
+        }])->select(['id'=>$orderId]);
+        return collection($data)->toArray()[0]['bigdata']['id'] ;
     }
 
     /**
@@ -351,23 +404,23 @@ class Creditreview extends Backend
         $this->getDataLimitAdminIds();
         //身份证图片
 
-        $id_cardimages = explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] :explode(',', $row['id_cardimages']);
         //驾照图片
-        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] :explode(',', $row['drivers_licenseimages']);
         //户口簿图片
-        $residence_bookletimages = explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages =$row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         //住房合同/房产证图片
-        $housingimages = explode(',', $row['housingimages']);
+        $housingimages =$row['housingimages'] == '' ? [] : explode(',', $row['housingimages']);
         //银行卡图片
-        $bank_cardimages = explode(',', $row['bank_cardimages']);
+        $bank_cardimages =$row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
         //申请表图片
-        $application_formimages = explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] == '' ? [] :explode(',', $row['application_formimages']);
         //定金合同
-        $deposit_contractimages = explode(',', $row['deposit_contractimages']);
+        $deposit_contractimages = $row['deposit_contractimages'] == '' ? [] :explode(',', $row['deposit_contractimages']);
         //定金收据
-        $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] :explode(',', $row['deposit_receiptimages']);
         //通话清单
-        $call_listfiles = explode(',', $row['call_listfiles']);
+        $call_listfiles =$row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
         /**不必填 */
         //保证金收据
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
@@ -401,7 +454,8 @@ class Creditreview extends Backend
     public function newpass()
     {
         if ($this->request->isAjax()) {
-
+//            pr($this->setBigDataSuccess());
+//            die;
             $this->model = model('SalesOrder');
 
             $id = input("id");
@@ -446,6 +500,39 @@ class Creditreview extends Backend
 
         }
     }
+
+    public  function setBigDataSuccess(){
+      /*  $data = $this->getBigData(12,'sales_order');
+
+        $data['share_data']['params']['data']['loanRecords'][] =[
+            'overdueAmount'=>'(10000,50000]',
+            'orgName'=>25467,
+            'overdueTotal'=>'',
+            'name'=>$data['name'],
+            'certNo'=>$data['id_card'],
+            'overdueM6'=>'',
+            'loanStatusCode'=>'',
+            'overdueM3'=>$data['name'],
+            //借款金额 =
+            'loanAmount'=>'',
+            'overdueM3'=>$data['name'],
+            'overdueM3'=>$data['name'],
+*/
+
+//        ] ;
+//        $data['share_data']['params']['data']['loanRecords'][]['orgName'] = 25467;
+//                $data['share_data']['params']['data']['loanRecords'][]['overdueTotal'] = $data['name'];
+//
+//        $data['share_data']['params']['data']['loanRecords'][]['name'] = $data['name'];
+//        $data['share_data']['params']['data']['loanRecords'][]['certNo'] = $data['id_card'];
+////        $data['share_data']['params']['data']['loanRecords'][]['overdueAmount'] = '(10000,50000]';
+////        $data['share_data']['params']['data']['loanRecords'][]['overdueAmount'] = '(10000,50000]';
+////        $data['share_data']['params']['data']['loanRecords'][]['overdueAmount'] = '(10000,50000]';
+////        $data['share_data']['params']['data']['loanRecords'][]['overdueAmount'] = '(10000,50000]';
+
+//        return  $data;
+    }
+
 
 
 
@@ -608,7 +695,8 @@ class Creditreview extends Backend
 
 
 
-    /**选择库存车
+    /**
+     * 选择库存车
      * @param null $ids
      * @return string
      * @throws DataNotFoundException
@@ -792,7 +880,8 @@ class Creditreview extends Backend
 
 
 
-    /**新车单----需提供保证金
+    /**
+     * 新车单----需提供保证金
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -1047,7 +1136,8 @@ class Creditreview extends Backend
     }
 
 
-    /**新车单----审核不通过
+    /**
+     * 新车单----审核不通过
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -1111,7 +1201,8 @@ class Creditreview extends Backend
         }
     }
 
-    /**新车单----审核不通过，待补录资料
+    /**
+     * 新车单----审核不通过，待补录资料
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -1174,22 +1265,18 @@ class Creditreview extends Backend
         if (!$row)
             $this->error(__('No Results were found'));
         $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
+
         // $list = collection($row)->toArray();
         // pr($row);die;
 
         //身份证图片
-        $id_cardimages = explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] :explode(',', $row['id_cardimages']);
         //驾照图片 
-        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] :explode(',', $row['drivers_licenseimages']);
         //户口簿图片 
-        $residence_bookletimages = explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages =$row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         //通话清单
-        $call_listfilesimages = explode(',', $row['call_listfilesimages']);
+        $call_listfilesimages =$row['call_listfilesimages'] == '' ? [] : explode(',', $row['call_listfilesimages']);
         $this->view->assign(
             [
                 'row' => $row,
@@ -1208,7 +1295,8 @@ class Creditreview extends Backend
 
 
 
-    /**租车单----审核通过
+    /**
+     * 租车单----审核通过
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -1275,7 +1363,8 @@ class Creditreview extends Backend
 
 
 
-    /**租车单----审核不通过
+    /**
+     * 租车单----审核不通过
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -1337,7 +1426,8 @@ class Creditreview extends Backend
         }
     }
 
-    /**租车单----审核不通过，待补录资料
+    /**
+     * 租车单----审核不通过，待补录资料
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -1400,33 +1490,29 @@ class Creditreview extends Backend
             $this->error(__('No Results were found'));
         }
         $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
+
         // $list = collection($row)->toArray();
         // pr($row);die;
 
         //身份证图片
 
-        $id_cardimages = explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] :explode(',', $row['id_cardimages']);
         //驾照图片
-        $drivers_licenseimages = explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] :explode(',', $row['drivers_licenseimages']);
         //户口簿图片
-        $residence_bookletimages = explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] :explode(',', $row['residence_bookletimages']);
         //住房合同/房产证图片
-        $housingimages = explode(',', $row['housingimages']);
+        $housingimages = $row['housingimages'] == '' ? [] :explode(',', $row['housingimages']);
         //银行卡图片
-        $bank_cardimages = explode(',', $row['bank_cardimages']);
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] :explode(',', $row['bank_cardimages']);
         //申请表图片
-        $application_formimages = explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] == '' ? [] :explode(',', $row['application_formimages']);
         //定金合同
-        $deposit_contractimages = explode(',', $row['deposit_contractimages']);
+        $deposit_contractimages =$row['deposit_contractimages'] == '' ? [] : explode(',', $row['deposit_contractimages']);
         //定金收据
-        $deposit_receiptimages = explode(',', $row['deposit_receiptimages']);
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] :explode(',', $row['deposit_receiptimages']);
         //通话清单
-        $call_listfiles = explode(',', $row['call_listfiles']);
+        $call_listfiles =$row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
         /**不必填 */
         //保证金收据
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
@@ -1486,7 +1572,8 @@ class Creditreview extends Backend
 
 
 
-    /**二手车单-----选择库存车
+    /**
+     * 二手车单-----选择库存车
      * @param null $ids
      * @return string
      * @throws DataNotFoundException
@@ -1627,7 +1714,8 @@ class Creditreview extends Backend
 
 
 
-    /**二手车单----需提供担保人
+    /**
+     * 二手车单----需提供担保人
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -1692,7 +1780,8 @@ class Creditreview extends Backend
 
 
 
-    /**二手车单----审核不通过
+    /**
+     * 二手车单----审核不通过
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -1758,7 +1847,8 @@ class Creditreview extends Backend
 
 
 
-    /**二手车单----审核不通过，待补录资料
+    /**
+     * 二手车单----审核不通过，待补录资料
      * @throws DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
