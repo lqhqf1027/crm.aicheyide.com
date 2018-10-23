@@ -71,10 +71,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'id', title: 'ID', operate: false},
                             {field: 'models', title: __('Models')},
 
-                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.renew},
+                            {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            {field: 'peccancy_status',title:'违章状态',formatter:Controller.api.formatter.peccancy_state},
-                            {field: 'year_status',title:'年检状态',formatter:Controller.api.formatter.year_status},
+                            {
+                                field: 'peccancy_status',
+                                title: '违章状态',
+                                formatter: Controller.api.formatter.peccancy_state,
+                                searchList: {
+                                    "1": __('正常'),
+                                    "2": __('有违章'),
+                                },
+                            },
+                            {
+                                field: 'year_status',
+                                title: '年检状态',
+                                formatter: Controller.api.formatter.year_status,
+                                searchList: {'-2': '即将年检', '-3': '年检已过期'}
+                            },
+                            {
+                                field: 'strong_status',
+                                title: '交强险续保状态',
+                                formatter: Controller.api.formatter.renew,
+                                searchList: {"1": __('即需续保'), "2": __('已过期')},
+                            },
+                            {
+                                field: 'business_status',
+                                title: '商业险续保状态',
+                                formatter: Controller.api.formatter.business_status,
+                                searchList: {'1': '即需续保', "2": __('已过期')},
+                            },
                             {
                                 field: 'license_plate_number',
                                 title: __('License_plate_number'),
@@ -132,28 +157,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD",
                             },
-                            {
-                                field: 'peccancy_status',
-                                title: __('违章状态'),
-                                formatter: Controller.api.formatter.status,
-                                searchList: {
-                                    "1": __('正常'),
-                                    "2": __('有违章'),
-                                },
-                                visible: false
-                            },
-                            {
-                                field: 'strong_status',
-                                title: '交强险即需续保',
-                                searchList: {"1": __('即需续保'), "2": __('已过期')},
-                                visible: false
-                            },
-                            {
-                                field: 'business_status',
-                                title: '商业险即需续保',
-                                searchList: {'1': '即需续保', "2": __('已过期')},
-                                visible: false
-                            },
+
                             {
                                 field: 'final_time',
                                 title: __('最后查询违章时间'),
@@ -402,11 +406,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
 
         },
+        /**
+         *
+         * @param timestamp
+         * @returns {string}
+         */
         timestampToTime: function (timestamp) {
             var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
             var Y = date.getFullYear() + '-';
             var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-            var D = date.getDate() <10? '0' + date.getDate() : date.getDate();
+            var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
 
             return Y + M + D;
         },
@@ -417,7 +426,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Form.api.bindevent($("form[role=form]"));
             },
             formatter: {
-                year_status:function (value, row, index) {
+                /**
+                 * 商业险状态
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
+                business_status: function (value, row, index) {
+
+                    if (!row.business_deadtime) {
+                        return '-';
+                    }
 
                     var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 
@@ -425,17 +445,59 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     var flag = -1;
 
-                    if(row.year_checktime){
-                       var pre = parseInt(row.year_checktime) - 86400 * 30;
+                    if (row.business_deadtime) {
 
-                       if(now>=pre && now<=row.year_checktime){
-                           flag = -2;
-                       }else if(now>row.year_checktime){
-                           flag = -3;
-                       }
+                        var business = row.business_deadtime;
+
+                        var pres = parseInt(business) - 86400 * 30;
 
 
-                    }else{
+                        if (now >= pres && now <= business) {
+                            flag = -2;
+                        } else if (now > business) {
+                            flag = -3;
+                        }
+
+                    }
+
+
+                    switch (flag) {
+                        case -1:
+                            return "<span class='label label-success' style='cursor: pointer'>正常</span>";
+                        case -2:
+                            return "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
+                        case -3:
+                            return "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
+
+                    }
+                },
+
+                /**
+                 * 年检状态
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
+                year_status: function (value, row, index) {
+
+                    var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+
+                    now = parseInt(now) / 1000;
+
+                    var flag = -1;
+
+                    if (row.year_checktime) {
+                        var pre = parseInt(row.year_checktime) - 86400 * 30;
+
+                        if (now >= pre && now <= row.year_checktime) {
+                            flag = -2;
+                        } else if (now > row.year_checktime) {
+                            flag = -3;
+                        }
+
+
+                    } else {
                         return '-';
                     }
 
@@ -462,13 +524,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             return "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>"
                     }
                 },
-                peccancy_state:function (value, row, index) {
+                /**
+                 * 违章状态
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
+                peccancy_state: function (value, row, index) {
 
-                    if(!value){
+                    if (!value) {
                         return '-';
                     }
 
-                  return row.peccancy_status ==1? "<span class='label label-success' style='cursor: pointer'>正常</span>":"<span class='label label-danger' style='cursor: pointer'>有违章</span>"
+                    return row.peccancy_status == 1 ? "<span class='label label-success' style='cursor: pointer'>正常</span>" : "<span class='label label-danger' style='cursor: pointer'>有违章</span>"
                 },
                 normal: function (value, row, index) {
                     switch (value) {
@@ -509,7 +578,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
 
                 /**
-                 * 姓名栏显示保险状态
+                 * 请求ajax和交强险
                  * @param value
                  * @param row
                  * @param index
@@ -562,62 +631,39 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
 
 
-                    $.ajax({
-                        url: 'riskcontrol/peccancy/insurance',
-                        dataType: "json",
-                        type: "post",
-                        data: {
-                            status: JSON.stringify([flag1, flag2]),
-                            id: row.id
-                        }, success: function (data) {
-                            console.log(data);
 
-                        }, error: function (type) {
-                        }
-                    });
+                $.ajax({
+                    url: 'riskcontrol/peccancy/insurance',
+                    dataType: "json",
+                    type: "post",
+                    data: {
+                        status: JSON.stringify([flag1, flag2]),
+                        id: row.id
+                    }, success: function (data) {
+
+                    }, error: function (type) {
+                    }
+                });
+
+
+
+                    if (!row.strong_deadtime) {
+                        return '-';
+                    }
+
 
                     switch (flag1) {
                         case -1:
-                            switch (flag2) {
-                                case -1:
-                                    return value;
-                                    break;
-                                case -2:
-                                    return value + "  " + "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
-                                    break;
-                                case -3:
-                                    return value + "  " + "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
-                                    break;
-                            }
+                            return "<span class='label label-success' style='cursor: pointer'>正常</span>";
                         case -2:
-                            switch (flag2) {
-                                case -1:
-                                    return value + "  " + "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>";
-                                    break;
-                                case -2:
-                                    return value + "  " + "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>" + "  " + "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
-                                    break;
-                                case -3:
-                                    return value + "  " + "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>" + "  " + "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
-                                    break;
-                            }
+                            return "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>";
                         case -3:
-                            switch (flag2) {
-                                case -1:
-                                    return value + "  " + "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>";
-                                    break;
-                                case -2:
-                                    return value + "  " + "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>" + "  " + "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
-                                    break;
-                                case -3:
-                                    return value + "  " + "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>" + "  " + "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
-                                    break;
-                            }
+                            return "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>";
+
                     }
 
 
                 },
-
 
 
                 operate: function (value, row, index) {
@@ -697,8 +743,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'riskcontrol/Peccancy/details';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看违章详情'), $(this).data() || {});
                     },
+                    /**
+                     * 编辑年检
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
                     'click .btn-year': function (e, value, row, index) {
-                        alert(1);
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
@@ -709,17 +761,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             title: '输入年检日期，格式如：<span class="text-danger">2018-05-06</span>'
                         }, function (value, index, elem) {
 
-                            if(value){
+                            if (value && value != '空') {
                                 var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
                                 var regExp = new RegExp(reg);
                                 if (!regExp.test(value)) {
-                                    layer.msg("<span class='text-danger'>日期格式不正确，正确格式为：2018-05-06</span>");
+                                    layer.msg("日期格式不正确，正确格式为：2018-05-06");
                                     layer.close(index);
                                     return;
                                 }
                             }
 
-
+                            value = value == '空' ? '' : value;
 
                             Fast.api.ajax({
                                 url: 'riskcontrol/Peccancy/check_year',
@@ -844,10 +896,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         //选中项
                         yes: function (index, layero) {
 
-                            // var sendTemplte = Layer.confirm('请选择发送类型',{
-                            //     title:'选择要发送的模板类型',
-                            //     btn:['①提醒']
-                            // })
+
                             if (tableRow.length < 1) {
                                 Layer.alert('数据不能为空!', {icon: 5});
                                 return false;
