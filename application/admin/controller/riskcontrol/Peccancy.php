@@ -3,6 +3,8 @@
 namespace app\admin\controller\riskcontrol;
 
 use app\common\controller\Backend;
+use app\common\model\Config;
+use think\Cache;
 use think\Db;
 use app\common\library\Email;
 
@@ -36,6 +38,31 @@ class Peccancy extends Backend
      */
     public function index()
     {
+       $peccancy = $this->model->where('peccancy_status',2)->count();    //有违章
+
+       $year_inspect = $this->model->where('year_status',-2)->count();   //即将年检
+
+       $year_overdue = $this->model->where('year_status',-3)->count();   //年检已过期
+
+       $strong = $this->model->where('strong_status',1)->count();        //交强险即需续保
+
+       $strong_overdue = $this->model->where('strong_status',2)->count();//交强险续保过期
+
+       $business = $this->model->where('business_status',1)->count();    //商业险即需续保
+
+       $business_overdue = $this->model->where('business_status',2)->count();//商业险续保过期
+
+       $this->view->assign([
+           'peccancy' => $peccancy,
+           'year_inspect' =>$year_inspect,
+           'strong' => $strong,
+           'business' => $business,
+           'year_overdue' =>$year_overdue,
+           'strong_overdue' => $strong_overdue,
+           'business_overdue' => $business_overdue
+
+       ]);
+
         return $this->view->fetch();
     }
 
@@ -227,10 +254,10 @@ class Peccancy extends Backend
 
                         array_push($finals, $data);
                     } else {
-                        $this->error('查询违章接口失败', '', $data);
+                        $this->error($data['reason'], '', $data);
                     }
                 } else {
-                    $this->error('查询城市接口失败', '', $result);
+                    $this->error($result['reason'], '', $result);
                 }
 
             }
@@ -253,8 +280,10 @@ class Peccancy extends Backend
         if ($this->request->isAjax()) {
 
             $params = $this->request->post()['ids'];
+            $params = $params[0];
             $finals = [];
             $keys = self::$keys;
+
 
             //获取城市前缀接口
             $result = gets("http://v.juhe.cn/sweizhang/carPre.php?key=" . $keys . "&hphm=" . urlencode($params['hphm']));
@@ -263,7 +292,9 @@ class Peccancy extends Backend
 
                 $field = array();
 
+
                 $data = gets("http://v.juhe.cn/sweizhang/query?city=" . $result['result']['city_code'] . "&hphm=" . urlencode($params['hphms']) . "&engineno=" . $params['engineno'] . "&classno=" . $params['classno'] . "&key=" . $keys);
+
 
                 if ($data['error_code'] == 0) {
 
@@ -310,10 +341,10 @@ class Peccancy extends Backend
 
                     array_push($finals, $data);
                 } else {
-                    $this->error('查询违章接口失败', '', $data);
+                    $this->error($data['reason'], '', $data);
                 }
             } else {
-                $this->error('查询城市接口失败', '', $result);
+                $this->error($result['reason'], '', $result);
             }
 
 
@@ -458,6 +489,8 @@ class Peccancy extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
 
+
+
             if ($params['strong_deadtime']) {
 
                 $params['strong_deadtime'] = strtotime($params['strong_deadtime']);
@@ -502,9 +535,16 @@ class Peccancy extends Backend
 
         if ($this->request->isAjax()) {
 
+
             $status = $this->request->post('status');
 
             $ids = $this->request->post('id');
+
+            if(Cache::get('insurance_flag'.$ids)){
+                return;
+            }else{
+                Cache::set('insurance_flag'.$ids,1,3600*6);
+            }
 
             $status = json_decode($status, true);
 
@@ -529,7 +569,6 @@ class Peccancy extends Backend
                 $this->modify($ids, [1, 2]);
             }
 
-
         }
     }
 
@@ -549,6 +588,9 @@ class Peccancy extends Backend
     }
 
 
+    /**
+     * 编辑年检时间
+     */
     public function check_year()
     {
         if ($this->request->isAjax()) {
@@ -573,12 +615,21 @@ class Peccancy extends Backend
         }
     }
 
+    /**
+     * 存入年检状态
+     */
     public function year_status()
     {
         if ($this->request->isAjax()) {
             $status = $this->request->post('status');
 
             $ids = $this->request->post('id');
+
+            if(Cache::get('year'.$ids)){
+                return;
+            }else{
+                Cache::set('year'.$ids,'1',3600*6);
+            }
 
             Db::name('violation_inquiry')
                 ->where('id', $ids)
