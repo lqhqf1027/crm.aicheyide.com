@@ -1,8 +1,8 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    var goeasy = new GoEasy({
-        appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    });
+    // var goeasy = new GoEasy({
+    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
+    // });
 
     var Controller = {
         index: function () {

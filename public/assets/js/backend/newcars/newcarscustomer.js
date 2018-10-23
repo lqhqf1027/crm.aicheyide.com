@@ -293,34 +293,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 title: __('Operate'),
                                 table: alreadyLiftCar,
                                 events: Controller.api.events.operate,
-                                formatter: Table.api.formatter.operate,
+                                formatter: Controller.api.formatter.operate,
                                 buttons: [
 
 
-                                    {
-                                        name: 'data_dock',
-                                        icon: 'fa pencil',
-                                        text: '资料对接',
-                                        extend: 'data-toggle="tooltip"',
-                                        title: __('资料对接'),
-                                        classname: ' btn btn-xs btn-success btn-editone '
-                                    },
-                                    {
-                                        name: 'look',
-                                        text: '查看客户详细资料',
-                                        title: '查看客户详细资料',
-                                        icon: 'fa fa-eye',
-                                        classname: 'btn btn-xs btn-info btn-dialog btn-showOrderAndStock',
-                                        url: 'Sharedetailsdatas/new_car_share_data',
-                                    },
-                                    {
-                                        name: 'the_car',
-                                        icon: 'fa fa-automobile',
-                                        text: '已提车',
-                                        extend: 'data-toggle="tooltip"',
-                                        title: __('订单已完成，客户已提车'),
-                                        classname: ' text-success ',
-                                    }
+
+
                                 ]
                             }
                         ]
@@ -501,6 +479,49 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = table ? table.bootstrapTable('getOptions') : {};
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
+
+                    if(row.review_the_data == 'the_car'){
+
+                        if(row.mortgage_registration_id){
+                            buttons.push({
+                                name: 'data_dock',
+                                    icon: 'fa check',
+                                text: '已对接资料',
+                                extend: 'data-toggle="tooltip"',
+                                title: __('资料对接'),
+                                classname: ' text-info'
+
+                            })
+                        }else{
+                            buttons.push({
+                                name: 'data_dock',
+                                icon: 'fa pencil',
+                                text: '资料对接',
+                                extend: 'data-toggle="tooltip"',
+                                title: __('资料对接'),
+                                classname: ' btn btn-xs btn-success btn-editone '
+                            })
+                        }
+
+                        buttons.push(
+                            {
+                                name: 'look',
+                                text: '查看客户详细资料',
+                                title: '查看客户详细资料',
+                                icon: 'fa fa-eye',
+                                classname: 'btn btn-xs btn-info btn-dialog btn-showOrderAndStock',
+                                url: 'Sharedetailsdatas/new_car_share_data',
+                            },
+                            {
+                                name: 'the_car',
+                                icon: 'fa fa-automobile',
+                                text: '已提车',
+                                extend: 'data-toggle="tooltip"',
+                                title: __('订单已完成，客户已提车'),
+                                classname: ' text-success ',
+                            }
+                        )
+                    }
 
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');

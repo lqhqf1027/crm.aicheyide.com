@@ -37,7 +37,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var table = $("#prepareSend");
 
 
-
                 table.on('post-body.bs.table', function (e, settings, json, xhr) {
                     $(".btn-detail").data("area", ["90%", "90%"]);
                     $(".btn-editone").data("area", ["70%", "70%"]);
@@ -70,25 +69,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         [
                             {checkbox: true},
                             {field: 'id', title: 'ID', operate: false},
-                            {field: 'username', title: __('Username')},
-                            {field: 'phone', title: __('Phone')},
                             {field: 'models', title: __('Models')},
-                            {field: 'license_plate_number', title: __('License_plate_number')},
+
+                            {field: 'username', title: __('Username'), formatter: Controller.api.formatter.renew},
+                            {field: 'phone', title: __('Phone')},
+                            {field: 'peccancy_status',title:'违章状态',formatter:Controller.api.formatter.peccancy_state},
+                            {field: 'year_status',title:'年检状态',formatter:Controller.api.formatter.year_status},
+                            {
+                                field: 'license_plate_number',
+                                title: __('License_plate_number'),
+
+                            },
                             {field: 'frame_number', title: __('Frame_number')},
                             {field: 'engine_number', title: __('Engine_number')},
-                            {field: 'total_deduction', title: __('Total_deduction'), operate: 'BETWEEN',formatter:Controller.api.formatter.fen},
-                            {field: 'total_fine', title: __('Total_fine'), operate: false,formatter:Controller.api.formatter.fen},
-                            {field: 'query_times', title: __('Query_times'), operate: false},
                             {
-                                field: 'car_type',
-                                title: __('Car_type'),
-                                searchList: {
-                                    "1": __('Car_type 1'),
-                                    "2": __('Car_type 2'),
-                                    "3": __('Car_type 3'),
-                                    "4": __('Car_type 4')
-                                },
-                                formatter: Controller.api.formatter.normal
+                                field: 'total_deduction',
+                                title: __('Total_deduction'),
+                                operate: 'BETWEEN',
+                                formatter: Controller.api.formatter.fen
+                            },
+                            {
+                                field: 'total_fine',
+                                title: __('Total_fine'),
+                                operate: false,
+                                formatter: Controller.api.formatter.fen
                             },
                             {
                                 field: 'start_renttime',
@@ -108,31 +112,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             },
                             {
-                                field:'strong_deadtime',
-                                title:'交强险截止时间',
+                                field: 'strong_deadtime',
+                                title: '交强险截止时间',
                                 operate: false,
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD",
                             },
                             {
-                                field:'business_deadtime',
-                                title:'商业险截止时间',
+                                field: 'business_deadtime',
+                                title: '商业险截止时间',
+                                operate: false,
+                                formatter: Table.api.formatter.datetime,
+                                datetimeFormat: "YYYY-MM-DD",
+                            },
+                            {
+                                field: 'year_checktime',
+                                title: '年检险截止时间',
                                 operate: false,
                                 formatter: Table.api.formatter.datetime,
                                 datetimeFormat: "YYYY-MM-DD",
                             },
                             {
                                 field: 'peccancy_status',
-                                title: __('Peccancy_status'),
+                                title: __('违章状态'),
                                 formatter: Controller.api.formatter.status,
                                 searchList: {
-                                    "1": __('已处理'),
-                                    "2": __('未处理'),
+                                    "1": __('正常'),
+                                    "2": __('有违章'),
                                 },
+                                visible: false
+                            },
+                            {
+                                field: 'strong_status',
+                                title: '交强险即需续保',
+                                searchList: {"1": __('即需续保'), "2": __('已过期')},
+                                visible: false
+                            },
+                            {
+                                field: 'business_status',
+                                title: '商业险即需续保',
+                                searchList: {'1': '即需续保', "2": __('已过期')},
+                                visible: false
                             },
                             {
                                 field: 'final_time',
-                                title: __('Final_time'),
+                                title: __('最后查询违章时间'),
                                 operate: false,
                                 addclass: 'datetimerange',
                                 formatter: function (v, r, i) {
@@ -144,7 +168,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD H:m",
 
                             },
-                            {field: 'inquiry_note', title: __('违章备注'),operate:false},
+                            {
+                                field: 'car_type',
+                                title: __('Car_type'),
+                                searchList: {
+                                    "1": __('Car_type 1'),
+                                    "2": __('Car_type 2'),
+                                    "3": __('Car_type 3'),
+                                    "4": __('Car_type 4')
+                                },
+                                formatter: Controller.api.formatter.normal
+                            },
+                            {field: 'inquiry_note', title: __('违章备注'), operate: false},
+                            {field: 'query_times', title: __('Query_times'), operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -171,14 +207,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         function (index) {
                             Fast.api.ajax({
                                 url: 'riskcontrol/Peccancy/sendCustomer',
-                                data: {ids:ids}
+                                data: {ids: ids}
 
                             }, function (data, ret) {
 
-                               var pre = $('#already_send_total').text();
-                               pre = parseInt(pre);
+                                var pre = $('#already_send_total').text();
+                                pre = parseInt(pre);
 
-                                $('#already_send_total').text(pre+parseInt(data));
+                                $('#already_send_total').text(pre + parseInt(data));
                                 Layer.close(index);
                                 table.bootstrapTable('refresh');
 
@@ -309,7 +345,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD",
 
                             },
-                            {field: 'inquiry_note', title: __('违章备注'),operate:false},
+                            {field: 'inquiry_note', title: __('违章备注'), operate: false},
                             {
                                 field: 'operate',
                                 title: __('Operate'),
@@ -366,6 +402,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
 
         },
+        timestampToTime: function (timestamp) {
+            var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+            var D = date.getDate() <10? '0' + date.getDate() : date.getDate();
+
+            return Y + M + D;
+        },
 
 
         api: {
@@ -373,6 +417,59 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Form.api.bindevent($("form[role=form]"));
             },
             formatter: {
+                year_status:function (value, row, index) {
+
+                    var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+
+                    now = parseInt(now) / 1000;
+
+                    var flag = -1;
+
+                    if(row.year_checktime){
+                       var pre = parseInt(row.year_checktime) - 86400 * 30;
+
+                       if(now>=pre && now<=row.year_checktime){
+                           flag = -2;
+                       }else if(now>row.year_checktime){
+                           flag = -3;
+                       }
+
+
+                    }else{
+                        return '-';
+                    }
+
+                    $.ajax({
+                        url: 'riskcontrol/peccancy/year_status',
+                        dataType: "json",
+                        type: "post",
+                        data: {
+                            status: flag,
+                            id: row.id
+                        }, success: function (data) {
+
+                        }, error: function (type) {
+                        }
+                    });
+
+
+                    switch (flag) {
+                        case -1:
+                            return "<span class='label label-success' style='cursor: pointer'>正常</span>";
+                        case -2:
+                            return "<span class='label label-warning' style='cursor: pointer'>即将年检</span>"
+                        case -3:
+                            return "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>"
+                    }
+                },
+                peccancy_state:function (value, row, index) {
+
+                    if(!value){
+                        return '-';
+                    }
+
+                  return row.peccancy_status ==1? "<span class='label label-success' style='cursor: pointer'>正常</span>":"<span class='label label-danger' style='cursor: pointer'>有违章</span>"
+                },
                 normal: function (value, row, index) {
                     switch (value) {
                         case 1:
@@ -385,21 +482,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             return "租车";
                     }
                 },
-                status: function (value, row, index) {
-                    if (!value) {
-                        return '-';
-                    }
-
-                    value == 1 ? value = '已处理' : value = '未处理';
-                    var custom = {'已处理': 'success', '未处理': 'danger'};
-                    if (typeof this.custom !== 'undefined') {
-                        custom = $.extend(custom, this.custom);
-                    }
-                    this.custom = custom;
-
-                    this.icon = 'fa fa-circle';
-                    return Table.api.formatter.normal.call(this, value, row, index);
-                },
 
                 datetime: function (value, row, index) {
                     var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
@@ -410,14 +492,133 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 },
 
+                /**
+                 * 0分标记
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
                 fen: function (value, row, index) {
 
-                    if(value){
-                        return "<span class='text-danger'>"+value+"</span>";
+                    if (value) {
+                        return "<span class='text-danger'>" + value + "</span>";
                     }
-                   return value == null ? '-' : "<span class='text-success'><strong>"+value+"</strong></span>";
+                    return value == null ? '-' : "<span class='text-success'><strong>" + value + "</strong></span>";
 
                 },
+
+                /**
+                 * 姓名栏显示保险状态
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {*}
+                 */
+                renew: function (value, row, index) {
+
+                    var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime()
+
+                    now = parseInt(now) / 1000;
+
+
+                    if (!value) {
+                        return '-';
+                    }
+
+                    var flag1 = -1;
+
+                    var flag2 = -1;
+
+                    if (row.strong_deadtime) {
+
+                        var strong = row.strong_deadtime;
+
+                        var pre = parseInt(strong) - 86400 * 30;
+
+
+                        if (now >= pre && now <= strong) {
+                            flag1 = -2;
+                        } else if (now > strong) {
+                            flag1 = -3;
+                        }
+
+
+                    }
+
+                    if (row.business_deadtime) {
+
+                        var business = row.business_deadtime;
+
+                        var pres = parseInt(business) - 86400 * 30;
+
+
+                        if (now >= pres && now <= business) {
+                            flag2 = -2;
+                        } else if (now > business) {
+                            flag2 = -3;
+                        }
+
+                    }
+
+
+                    $.ajax({
+                        url: 'riskcontrol/peccancy/insurance',
+                        dataType: "json",
+                        type: "post",
+                        data: {
+                            status: JSON.stringify([flag1, flag2]),
+                            id: row.id
+                        }, success: function (data) {
+                            console.log(data);
+
+                        }, error: function (type) {
+                        }
+                    });
+
+                    switch (flag1) {
+                        case -1:
+                            switch (flag2) {
+                                case -1:
+                                    return value;
+                                    break;
+                                case -2:
+                                    return value + "  " + "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
+                                    break;
+                                case -3:
+                                    return value + "  " + "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
+                                    break;
+                            }
+                        case -2:
+                            switch (flag2) {
+                                case -1:
+                                    return value + "  " + "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>";
+                                    break;
+                                case -2:
+                                    return value + "  " + "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>" + "  " + "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
+                                    break;
+                                case -3:
+                                    return value + "  " + "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>" + "  " + "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
+                                    break;
+                            }
+                        case -3:
+                            switch (flag2) {
+                                case -1:
+                                    return value + "  " + "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>";
+                                    break;
+                                case -2:
+                                    return value + "  " + "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>" + "  " + "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
+                                    break;
+                                case -3:
+                                    return value + "  " + "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>" + "  " + "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
+                                    break;
+                            }
+                    }
+
+
+                },
+
+
 
                 operate: function (value, row, index) {
                     var table = this.table;
@@ -426,24 +627,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
 
-                    buttons.push({
-                        name: 'edit',
-                        text:'编辑',
-                        icon: 'fa fa-pencil',
-                        title: __('Edit'),
-                        extend: 'data-toggle="tooltip"',
-                        classname: 'btn btn-xs btn-success btn-editone',
-                        url: 'riskcontrol/peccancy/edit'
-                    });
+                    buttons.push(
+                        {
+                            name: 'edit',
+                            text: '编辑保险',
+                            icon: 'fa fa-pencil',
+                            title: __('Edit'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-success btn-editone',
+                            url: 'riskcontrol/peccancy/edit'
+                        },
+                        {
+                            name: 'edits',
+                            text: '编辑年检日期',
+                            icon: 'fa fa-stethoscope',
+                            title: __('年检'),
+                            extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-warning btn-year',
+                        },
+                        {
+                            name: '查询违章',
+                            text: '查询违章',
+                            icon: 'fa fa-search',
+                            title: __('查看违章详情'),
+                            // extend: 'data-toggle="tooltip"',
+                            classname: 'btn btn-xs btn-info btn-search',
+                        }
+                    );
 
-                    buttons.push({
-                        name: '查询违章',
-                        text: '查询违章',
-                        icon: 'fa fa-search',
-                        title: __('查看违章详情'),
-                        // extend: 'data-toggle="tooltip"',
-                        classname: 'btn btn-xs btn-info btn-search',
-                    });
 
                     if (row && row.total_fine == 0 && row.total_deduction == 0) {
 
@@ -486,6 +697,44 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = 'riskcontrol/Peccancy/details';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('查看违章详情'), $(this).data() || {});
                     },
+                    'click .btn-year': function (e, value, row, index) {
+                        alert(1);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var table = $(this).closest('table');
+
+                        Layer.prompt({
+                            formType: 0,
+                            value: row.year_checktime ? Controller.timestampToTime(row.year_checktime) : '',
+                            title: '输入年检日期，格式如：<span class="text-danger">2018-05-06</span>'
+                        }, function (value, index, elem) {
+
+                            if(value){
+                                var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+                                var regExp = new RegExp(reg);
+                                if (!regExp.test(value)) {
+                                    layer.msg("<span class='text-danger'>日期格式不正确，正确格式为：2018-05-06</span>");
+                                    layer.close(index);
+                                    return;
+                                }
+                            }
+
+
+
+                            Fast.api.ajax({
+                                url: 'riskcontrol/Peccancy/check_year',
+                                data: {
+                                    date: value,
+                                    id: row.id
+                                }
+                            }, function (data, ret) {
+                                table.bootstrapTable('refresh');
+                                layer.close(index);
+                            })
+
+
+                        })
+                    },
                     /**
                      * 查询违章
                      * @param e
@@ -497,21 +746,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         e.stopPropagation();
                         e.preventDefault();
                         var that = this;
-                        Layer.confirm('是否查询违章?', {icon: 3, title:'提示'}, function(index){
+                        Layer.confirm('是否查询违章?', {icon: 3, title: '提示'}, function (index) {
 
 
-
-                            if(!row['license_plate_number'] || row['license_plate_number']==''){
+                            if (!row['license_plate_number'] || row['license_plate_number'] == '') {
                                 Layer.msg('请补全车牌号');
                                 return
                             }
 
-                            if(!row['engine_number'] || row['engine_number']==''){
+                            if (!row['engine_number'] || row['engine_number'] == '') {
                                 Layer.msg('请补全发动机号');
                                 return
                             }
 
-                            if(!row['frame_number'] ||row['frame_number']==''){
+                            if (!row['frame_number'] || row['frame_number'] == '') {
                                 Layer.msg('请补全车架号');
                                 return
                             }
@@ -539,7 +787,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
 
                         });
-
 
 
                     },
@@ -608,17 +855,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             ids = [];
                             for (var i in tableRow) {
 
-                                if(!tableRow[i]['license_plate_number'] || tableRow[i]['license_plate_number']==''){
+                                if (!tableRow[i]['license_plate_number'] || tableRow[i]['license_plate_number'] == '') {
                                     flag = -2;
                                     break;
                                 }
 
-                                if(!tableRow[i]['engine_number'] || tableRow[i]['engine_number']==''){
+                                if (!tableRow[i]['engine_number'] || tableRow[i]['engine_number'] == '') {
                                     flag = -3;
                                     break;
                                 }
 
-                                if(!tableRow[i]['frame_number'] || tableRow[i]['frame_number']==''){
+                                if (!tableRow[i]['frame_number'] || tableRow[i]['frame_number'] == '') {
                                     flag = -4;
                                     break;
                                 }
@@ -631,17 +878,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 })
                             }
 
-                            if(flag==-2){
+                            if (flag == -2) {
                                 layer.msg('选中行中有数据没有车牌号，请添加后查询');
                                 return;
                             }
 
-                            if(flag==-3){
+                            if (flag == -3) {
                                 layer.msg('选中行中有数据没有发动机号，请添加后查询');
                                 return;
                             }
 
-                            if(flag==-4){
+                            if (flag == -4) {
                                 layer.msg('选中行中有数据没有车架号，请添加后查询');
                                 return;
                             }
@@ -663,17 +910,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             ids = [];
                             for (var i in page) {
 
-                                if(!page[i]['license_plate_number'] || page[i]['license_plate_number']==''){
+                                if (!page[i]['license_plate_number'] || page[i]['license_plate_number'] == '') {
                                     flag = -2;
                                     break;
                                 }
 
-                                if(!page[i]['engine_number'] || page[i]['engine_number']==''){
+                                if (!page[i]['engine_number'] || page[i]['engine_number'] == '') {
                                     flag = -3;
                                     break;
                                 }
 
-                                if(!page[i]['frame_number'] || page[i]['frame_number']==''){
+                                if (!page[i]['frame_number'] || page[i]['frame_number'] == '') {
                                     flag = -4;
                                     break;
                                 }
@@ -687,17 +934,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 });
                             }
 
-                            if(flag==-2){
+                            if (flag == -2) {
                                 layer.msg('本页中有数据没有车牌号，请添加后查询');
                                 return;
                             }
 
-                            if(flag==-3){
+                            if (flag == -3) {
                                 layer.msg('本页中有数据没有发动机号，请添加后查询');
                                 return;
                             }
 
-                            if(flag==-4){
+                            if (flag == -4) {
                                 layer.msg('本页中有数据没有车架号，请添加后查询');
                                 return;
                             }

@@ -195,7 +195,7 @@ class Newcarscustomer extends Backend
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'financial_name', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data', 'delivery_datetime']);
+                $row->visible(['id', 'order_no', 'username', 'detailed_address', 'createtime', 'phone', 'financial_name', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 'review_the_data', 'delivery_datetime','mortgage_registration_id']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps']);
                 $row->visible(['admin']);

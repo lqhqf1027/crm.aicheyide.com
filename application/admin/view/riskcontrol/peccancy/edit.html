@@ -24,17 +24,25 @@
             {empty name="$row.strong_deadtime"}
             <input id="c-strong_deadtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[strong_deadtime]" type="text">
             {else /}
+            {eq name="$row.strong_deadtime" value="0"}
+            <input id="c-strong_deadtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[strong_deadtime]" type="text">
+            {else /}
             <input id="c-strong_deadtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[strong_deadtime]" type="text" value="{$row.strong_deadtime|datetime}">
+            {/eq}
             {/empty}
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('商业险截止日期')}:</label>
         <div class="col-xs-12 col-sm-8">
-            {empty name="$row.strong_deadtime"}
+            {empty name="$row.business_deadtime"}
+            <input id="c-business_deadtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[business_deadtime]" type="text">
+            {else /}
+            {eq name="$row.business_deadtime" value="0"}
             <input id="c-business_deadtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[business_deadtime]" type="text">
             {else /}
             <input id="c-business_deadtime" class="form-control datetimepicker form-control" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[business_deadtime]" type="text" value="{$row.business_deadtime|datetime}">
+            {/eq}
             {/empty}        </div>
     </div>
     <div class="form-group">

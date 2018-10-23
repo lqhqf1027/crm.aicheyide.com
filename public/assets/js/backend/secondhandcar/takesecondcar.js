@@ -83,8 +83,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     {
                                         name: 'data_dock', icon: 'fa pencil', text: '资料对接', extend: 'data-toggle="tooltip"', title: __('资料对接'), classname: ' btn btn-xs btn-info btn-editone ',
                                         hidden: function (row) {  /**已提车 */
-                                            if(row.review_the_data == 'the_car'){
+                                            if(row.review_the_data == 'the_car' && !row.mortgage_registration_id){
                                                 return false;
+                                            }else if(row.review_the_data == 'the_car' && row.mortgage_registration_id){
+                                                return true;
+                                            }
+                                            else if(row.review_the_data == 'for_the_car'){
+
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    {
+                                        name: 'data_dockk', icon: 'fa fa-check', text: '已对接资料', title: __('资料对接'), classname: 'text-info ',
+                                        hidden: function (row) {  /**已提车 */
+                                            if(row.review_the_data == 'the_car' && row.mortgage_registration_id){
+                                                return false;
+                                            }else if(row.review_the_data == 'the_car' && !row.mortgage_registration_id){
+                                                return true;
                                             }
                                             else if(row.review_the_data == 'for_the_car'){
 
