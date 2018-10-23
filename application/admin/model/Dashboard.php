@@ -32,24 +32,15 @@ class Dashboard extends MOdel{
     }
 
     //违章查询
-    public  static function getViolationCount($table,$peccancy_status,$total_deduction=null)
+    public  static function getViolationCount($table,$peccancy_status)
     {
 
-        return Db::name($table)->where(function($query) use ($table,$peccancy_status,$total_deduction){
-
-            //违章总车辆
-            if($peccancy_status && !$total_deduction){
-                $query->where(['peccancy_status' => $peccancy_status]);
-            }
-            //违章扣分查询
-            if($peccancy_status && $total_deduction){
-                $query->where(['peccancy_status' => $peccancy_status, 'total_deduction' => ['between', $total_deduction]]);
-            }
-        
+        return Db::name($table)->where(function($query) use ($table,$peccancy_status){
+           
+            $query->where(['peccancy_status' => $peccancy_status]);
             
         })->count();
     }
-
 
     //需续保查询或已过期
     public  static function getStrongCount($table,$strong_status)
