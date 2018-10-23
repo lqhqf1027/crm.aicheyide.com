@@ -82,7 +82,7 @@
 
             <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)">
                 {foreach name="customerSourceList" item="vo"}
-                <option value="{$key}" {in name="key" value="straight" }selected{/in}>{$vo}</option>
+                <option value="{$key}" {in name="key" value="direct_the_guest" }selected{/in}>{$vo}</option>
                 {/foreach}
             </select>
 

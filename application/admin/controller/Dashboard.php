@@ -39,100 +39,67 @@ class Dashboard extends Backend
 
         $secondday = strtotime(date('Y-m-01', strtotime($months)));
 
-       
-
         //新车历史成交数
-        $newcount = DashboardModel::getOrderCount('sales_order','the_car',null,null,null);
-       
+        $newcount = DashboardModel::getOrderCount('sales_order','the_car');  
         //新车本月成交数
-        $todaynewtake = DashboardModel::getOrderCount('sales_order','the_car',null,"[$firstday, $secondday]",null);
-        
+        $todaynewtake = DashboardModel::getOrderCount('sales_order','the_car',null,"[$firstday, $secondday]");
+        // pr($todaynewtake);
         //新车本月订车数
         $todayneworder = DashboardModel::getOrderCount('sales_order','the_car',null,null,"[$firstday, $secondday]");
- 
         //直客成交数
-        $new_direct_the_guest =  DashboardModel::getOrderCount('sales_order','the_car','direct_the_guest',"[$firstday, $secondday]",null);
-  
-                
+        $new_direct_the_guest =  DashboardModel::getOrderCount('sales_order','the_car','direct_the_guest',"[$firstday, $secondday]",null);         
         //转介绍成交数
         $new_turn_to_introduce = DashboardModel::getOrderCount('sales_order','the_car','turn_to_introduce',"[$firstday, $secondday]",null);
      
-
-
-         //新车历史成交数
+         //租车历史成交数
          $rentalcount = DashboardModel::getOrderCount('rental_order','for_the_car',null,null,null);
-
-         //新车本月成交数
+         //租车本月成交数
          $todayrentaltake = DashboardModel::getOrderCount('rental_order','for_the_car',null,"[$firstday, $secondday]",null);
-
-         //新车本月订车数
+        //  pr($todayrentaltake);
+         //租车本月订车数
          $todayrentalorder = DashboardModel::getOrderCount('rental_order','for_the_car',null,null,"[$firstday, $secondday]");
-
          //直客成交数
-         $rental_direct_the_guest =  DashboardModel::getOrderCount('rental_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);
-
-                 
+         $rental_direct_the_guest =  DashboardModel::getOrderCount('rental_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);           
          //转介绍成交数
          $rental_turn_to_introduce = DashboardModel::getOrderCount('rental_order','for_the_car','turn_to_introduce',"[$firstday, $secondday]",null);
 
-
-
-         //新车历史成交数
+         //二手车历史成交数
          $secondcount = DashboardModel::getOrderCount('second_sales_order','the_car',null,null,null);
-
-         //新车本月成交数
+         //二手车本月成交数
          $todaysecondtake = DashboardModel::getOrderCount('second_sales_order','the_car',null,"[$firstday, $secondday]",null);
-
-         //新车本月订车数
+        //  pr($todaysecondtake);
+         //二手车本月订车数
          $todaysecondorder = DashboardModel::getOrderCount('second_sales_order','the_car',null,null,"[$firstday, $secondday]");
-
          //直客成交数
-         $second_direct_the_guest =  DashboardModel::getOrderCount('second_sales_order','the_car','direct_the_guest',"[$firstday, $secondday]",null);
-
-                 
+         $second_direct_the_guest =  DashboardModel::getOrderCount('second_sales_order','the_car','direct_the_guest',"[$firstday, $secondday]",null);           
          //转介绍成交数
          $second_turn_to_introduce = DashboardModel::getOrderCount('second_sales_order','the_car','turn_to_introduce',"[$firstday, $secondday]",null);
       
-      
-         //新车历史成交数
+         //全款车历史成交数
          $fullcount = DashboardModel::getOrderCount('full_parment_order','for_the_car',null,null,null);
-    
-         //新车本月成交数
+         //全款车本月成交数
          $todayfulltake = DashboardModel::getOrderCount('full_parment_order','for_the_car',null,"[$firstday, $secondday]",null);
-     
-         //新车本月订车数
+        //  pr($todayfulltake);
+         //全款车本月订车数
          $todayfullorder = DashboardModel::getOrderCount('full_parment_order','for_the_car',null,null,"[$firstday, $secondday]");
-    
          //直客成交数
-         $full_direct_the_guest =  DashboardModel::getOrderCount('full_parment_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);
-     
-                 
+         $full_direct_the_guest =  DashboardModel::getOrderCount('full_parment_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);       
          //转介绍成交数
          $full_turn_to_introduce = DashboardModel::getOrderCount('full_parment_order','for_the_car','turn_to_introduce',"[$firstday, $secondday]",null);
 
-
-
-
-         //新车历史成交数
+         //全款二手车历史成交数
          $fullsecondcount = DashboardModel::getOrderCount('second_full_order','for_the_car',null,null,null);
-
-         //新车本月成交数
+         //全款二手车本月成交数
          $todayfullsecondtake = DashboardModel::getOrderCount('second_full_order','for_the_car',null,"[$firstday, $secondday]",null);
-       
-         //新车本月订车数
+        //  pr($todayfullsecondtake);
+         //全款二手车本月订车数
          $todayfullsecondorder = DashboardModel::getOrderCount('second_full_order','for_the_car',null,null,"[$firstday, $secondday]");
-         
          //直客成交数
-         $fullsecond_direct_the_guest =  DashboardModel::getOrderCount('second_full_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);
-     
-                 
+         $fullsecond_direct_the_guest =  DashboardModel::getOrderCount('second_full_order','for_the_car','direct_the_guest',"[$firstday, $secondday]",null);     
          //转介绍成交数
          $fullsecond_turn_to_introduce = DashboardModel::getOrderCount('second_full_order','for_the_car','turn_to_introduce',"[$firstday, $secondday]",null);
 
-
         
-
-
         //总共成交数
         $count[] = $newcount + $secondcount + $rentalcount + $fullcount + $fullsecondcount;
         //总共订车数
@@ -228,14 +195,30 @@ class Dashboard extends Backend
 
 
         }
-        
 
+        //违章车辆
+        $violation_inquiry = DashboardModel::getViolationCount('violation_inquiry','2');
+       
+        //需续保
+        $strong_status = DashboardModel::getStrongCount('violation_inquiry','1');
+        //保险已过期
+        $strong_status_past = DashboardModel::getStrongCount('violation_inquiry','2');
+
+        //需年检
+        $year_status = DashboardModel::getYearCount('violation_inquiry','-2');
+        //年检已过期
+        $year_status_past = DashboardModel::getYearCount('violation_inquiry','-3');
+
+       
         //租车已租车辆
-        $rentaltakecar = Db::name('car_rental_models_info')->where('status_data', 'the_car')->count();
+        $rentaltakecar = DashboardModel::getCarCount('car_rental_models_info','the_car',null);
         //租车待租车辆
-        $rentalcar = Db::name('car_rental_models_info')->where('status_data', '')->where('shelfismenu', '1')->count();
+        $rentalcar = DashboardModel::getCarCount('car_rental_models_info',' ','1');
         //二手车可买车辆
-        $secondcar = Db::name('secondcar_rental_models_info')->where('status_data', 'NEQ', 'the_car')->where('shelfismenu', '1')->count();
+        $secondcar = Db::name('secondcar_rental_models_info')
+                ->where('status_data', 'NEQ', 'the_car')
+                ->where('shelfismenu', '1')
+                ->count();
 
         $this->view->assign([
 
@@ -253,8 +236,14 @@ class Dashboard extends Backend
                 'rentalsales'         => $rentalsales,
                 'secondsales'         => $secondsales,
                 'fullsales'           => $fullsales,
-                'fullsecondsales'     => $fullsecondsales
-            
+                'fullsecondsales'     => $fullsecondsales,
+
+                'violation_inquiry'   => $violation_inquiry,
+                'strong_status'       => $strong_status,
+                'strong_status_past'  => $strong_status_past,
+                'year_status'         => $year_status,
+                'year_status_past'    => $year_status_past 
+             
         ]);
 
         return $this->view->fetch();
