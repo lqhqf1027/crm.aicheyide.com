@@ -26,7 +26,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'), operate: false},
-                        {field: 'order_no', title: __('订单编号')},
+                        // {field: 'order_no', title: __('订单编号')},
                         {field: 'username', title: __('客户姓名')},
                         {field: 'financial_name', title: __('金融平台')},
                         {field: 'admin.nickname', title: __('销售员'),formatter:Controller.api.formatter.sales},

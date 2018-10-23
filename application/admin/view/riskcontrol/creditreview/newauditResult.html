@@ -118,21 +118,28 @@
         <div class="form-group">
 
             <div class="col-xs-12 col-sm-8 col-md-4">
-                <strong>{:__('定金合同')}：</strong>
-                {foreach $deposit_contractimages as $k => $v}
 
-                    <img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">
-                {/foreach}
+                    {empty name="$deposit_contractimages"}
+                    <p ><strong>{:__('定金合同')}：</strong><span class="text-info">暂无</span></p>
+                    {else /}
+                     <strong>{:__('定金合同')}：</strong>
+                    {foreach $deposit_contractimages as $k => $v}
+
+                        <img src="{$cdn}{$v}" alt="{:__('定金合同')}" style="width:80px;height:80px;">
+                    {/foreach}
+                    {/empty}
             </div>
 
             <div class="col-xs-12 col-sm-8 col-md-4">
-                <strong>{:__('定金收据')}：</strong>
+                {empty name="$deposit_receiptimages"}
+                <p ><strong>{:__('定金收据')}：</strong><span class="text-info">暂无</span></p>
+                {else /}
+                <strong>{:__('定金合同')}：</strong>
                 {foreach $deposit_receiptimages as $k => $v}
 
-                    <img src="{$cdn}{$v}" alt="{:__('户口簿【首页、主人页、本人页】')}" style="width:80px;height:80px;">
-
-
+                <img src="{$cdn}{$v}" alt="{:__('定金收据')}" style="width:80px;height:80px;">
                 {/foreach}
+                {/empty}
             </div>
 
             <!--<div class="col-xs-12 col-sm-8 col-md-4" style="line-height: 80px">-->

@@ -146,4 +146,12 @@ class RentalOrder extends Model
     {
         return $this->belongsTo('CustomerDownpayment','customer_downpayment_id','id',[],'LEFT')->setEagerlyType(0);
     }
+
+    /**
+     * 关联租车大数据，跟新审批结果 字段
+     * @return \think\model\relation\hasOne
+     */
+    public  function bigdata(){
+        return $this->hasOne('BigData','rental_order_id','id')->setEagerlyType(0);
+    }
 }
