@@ -146,7 +146,7 @@ class Salesstand extends Backend
                 $month = date("Y-m", $seventtime);
                 $day = date('t', strtotime("$month +1 month -1 day"));
 
-                //销售三部
+                //销售三部。。。l
                 $three_sales = SalesstandModel::getAdmin('auth_group_access','37');
                 foreach($three_sales as $k => $v){
                         $three_admin[] = $v['uid'];
