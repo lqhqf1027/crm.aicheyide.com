@@ -485,7 +485,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         if(row.mortgage_registration_id){
                             buttons.push({
                                 name: 'data_dock',
-                                    icon: 'fa check',
+                                    icon: 'fa fa-check',
                                 text: '已对接资料',
                                 extend: 'data-toggle="tooltip"',
                                 title: __('资料对接'),
@@ -495,7 +495,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }else{
                             buttons.push({
                                 name: 'data_dock',
-                                icon: 'fa pencil',
+                                icon: 'fa fa-pencil',
                                 text: '资料对接',
                                 extend: 'data-toggle="tooltip"',
                                 title: __('资料对接'),
