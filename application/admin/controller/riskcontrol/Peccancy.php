@@ -22,7 +22,8 @@ class Peccancy extends Backend
      */
     protected $model = null;
 
-    protected $noNeedRight = ['index', 'prepare_send', 'already_send', 'sendMessage', 'details', 'sendCustomer'];
+    protected $noNeedRight = ['index', 'prepare_send', 'already_send', 'sendMessage', 'sendMessagePerson','details', 'sendCustomer',
+        'note','edit','insurance','modify','check_year','year_status'];
 
     protected static $keys = '217fb8552303cb6074f88dbbb5329be7';
 
