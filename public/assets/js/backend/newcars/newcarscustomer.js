@@ -1,9 +1,5 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
-    // var goeasy = new GoEasy({
-    //     appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-    // });
-
     var Controller = {
         index: function () {
 
@@ -193,29 +189,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 为表格1绑定事件
                 Table.api.bindevent(prepareLiftCar);
 
-                //风控选完库存推送---车管
-                // goeasy.subscribe({
-                //     channel: 'demo-newchoose_stock',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
-
-                //销售补全资料推送---车管----提车
-                // goeasy.subscribe({
-                //     channel: 'demo-newsend_car',
-                //     onMessage: function(message){
-                //         Layer.alert('新消息：'+message.content,{ icon:0},function(index){
-                //             Layer.close(index);
-                //             $(".btn-refresh").trigger("click");
-                //         });
-                //
-                //     }
-                // });
+                
             },
             /**
              * 已提车
