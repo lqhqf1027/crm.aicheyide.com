@@ -208,9 +208,7 @@ class Carreservation extends Backend
 
             if ($res) {
 
-//                $channel = "demo-newcar_finance";
-//                $content =  "车管已同意，请尽快进行金融匹配";
-//                goeary_push($channel, $content);
+
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
@@ -268,9 +266,6 @@ class Carreservation extends Backend
 
             if ($res) {
 
-//                $channel = "demo-newcar_finance";
-//                $content =  "车管已同意，请尽快进行金融匹配";
-//                goeary_push($channel, $content);
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 //车型
@@ -303,31 +298,6 @@ class Carreservation extends Backend
             }
 
         }
-    }
-
-
-    /**
-     * 订单提醒
-     */
-    public function sendOrderNotice()
-    {
-        //请求地址
-        $uri = "http://goeasy.io/goeasy/publish";
-        // 参数数组
-        $data = [
-            'appkey' => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-            'channel' => "pushFinance",
-            'content' => "您有新的订单"
-        ];
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $uri);//地址
-        curl_setopt($ch, CURLOPT_POST, 1);//请求方式为post
-        curl_setopt($ch, CURLOPT_HEADER, 0);//不打印header信息
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//返回结果转成字符串
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//post传输的数据。
-        $return = curl_exec($ch);
-        curl_close($ch);
-        print_r($return);
     }
 
     /**增加销售信息
