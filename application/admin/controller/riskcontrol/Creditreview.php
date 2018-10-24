@@ -1065,6 +1065,7 @@ class Creditreview extends Backend
         $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
         $row = $this->model->get($ids);
+//        pr($row);die;
             if ($row) {
                 //关联订单于方案
                 $result = Db::name('second_sales_order')->alias('a')

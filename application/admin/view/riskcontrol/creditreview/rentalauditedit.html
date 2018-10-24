@@ -52,31 +52,31 @@
             <div class="form-group">
                     <label class="control-label col-xs-12 col-sm-2">{:__('实付定金（元）')}:</label>
                     <div class="col-xs-12 col-sm-8">
-                        <input id="c-down_payment" data-rule="required" class="form-control form-control" name="row[down_payment]" type="number" value="{$row.down_payment}" disabled>
+                        <input id="c-down_payment"   class="form-control form-control" name="row[down_payment]" type="number" value="{$row.down_payment}" disabled>
                     </div>
                 </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('实付押金（元）')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-cash_pledge" data-rule="required" class="form-control form-control" name="row[cash_pledge]" type="number" value="{$row.cash_pledge}" disabled>
+            <input id="c-cash_pledge"   class="form-control form-control" name="row[cash_pledge]" type="number" value="{$row.cash_pledge}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('实付租金（元）')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-rental_price" data-rule="required" class="form-control form-control" name="row[rental_price]" type="number" value="{$row.rental_price}" disabled>
+            <input id="c-rental_price"   class="form-control form-control" name="row[rental_price]" type="number" value="{$row.rental_price}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('实际租期（月）')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-tenancy_term" data-rule="required" class="form-control form-control" name="row[tenancy_term]" type="number" value="{$row.tenancy_term}" disabled>
+            <input id="c-tenancy_term"   class="form-control form-control" name="row[tenancy_term]" type="number" value="{$row.tenancy_term}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-username" data-rule="required" class="form-control form-control" name="row[username]" type="text" value="{$row.username}" disabled>
+            <input id="c-username"   class="form-control form-control" name="row[username]" type="text" value="{$row.username}" disabled>
         </div>
     </div>
     <div class="form-group">
@@ -106,20 +106,20 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_1')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-emergency_contact_1" data-rule="required" class="form-control form-control" name="row[emergency_contact_1]" type="text" value="{$row.emergency_contact_1}">
+            <input id="c-emergency_contact_1"   class="form-control form-control" name="row[emergency_contact_1]" type="text" value="{$row.emergency_contact_1}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_2')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-emergency_contact_2" data-rule="required" class="form-control form-control" name="row[emergency_contact_2]" type="text" value="{$row.emergency_contact_2}">
+            <input id="c-emergency_contact_2"   class="form-control form-control" name="row[emergency_contact_2]" type="text" value="{$row.emergency_contact_2}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-id_cardimages" data-rule="required" class="form-control form-control" size="50" name="row[id_cardimages]" type="text" value="{$row.id_cardimages}">
+                <input id="c-id_cardimages"   class="form-control form-control" size="50" name="row[id_cardimages]" type="text" value="{$row.id_cardimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload" data-input-id="c-id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-id_cardimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                 </div>
@@ -132,7 +132,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-drivers_licenseimages" data-rule="required" class="form-control form-control" size="50" name="row[drivers_licenseimages]" type="text" value="{$row.drivers_licenseimages}">
+                <input id="c-drivers_licenseimages"   class="form-control form-control" size="50" name="row[drivers_licenseimages]" type="text" value="{$row.drivers_licenseimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-drivers_licenseimages" class="btn btn-danger plupload" data-input-id="c-drivers_licenseimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-drivers_licenseimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                 </div>
@@ -145,7 +145,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Residence_bookletimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-residence_bookletimages" data-rule="required" class="form-control form-control" size="50" name="row[residence_bookletimages]" type="text" value="{$row.residence_bookletimages}">
+                <input id="c-residence_bookletimages"   class="form-control form-control" size="50" name="row[residence_bookletimages]" type="text" value="{$row.residence_bookletimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-residence_bookletimages" class="btn btn-danger plupload" data-input-id="c-residence_bookletimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-residence_bookletimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                 </div>
@@ -158,7 +158,7 @@
             <label class="control-label col-xs-12 col-sm-2">{:__('定金收据上传')}:</label>
             <div class="col-xs-12 col-sm-8">
                 <div class="input-group">
-                    <input id="c-deposit_receiptimages" data-rule="required" class="form-control" size="50" name="row[deposit_receiptimages]"
+                    <input id="c-deposit_receiptimages"   class="form-control" size="50" name="row[deposit_receiptimages]"
                         type="text" value="{$row.deposit_receiptimages}">
                     <div class="input-group-addon no-border no-padding">
                         <span>
@@ -177,7 +177,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('通话清单')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-call_listfilesimages" data-rule="required" class="form-control form-control" size="50" name="row[call_listfilesimages]" type="text" value="{$row.call_listfilesimages}">
+                <input id="c-call_listfilesimages"   class="form-control form-control" size="50" name="row[call_listfilesimages]" type="text" value="{$row.call_listfilesimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-call_listfilesimages" class="btn btn-danger plupload" data-input-id="c-call_listfilesimages" data-multiple="true"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                 </div>

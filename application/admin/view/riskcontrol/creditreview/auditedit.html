@@ -30,7 +30,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('销售方案类别')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]" onchange="changePlan(this)" disabled>
+            <select id="c-category_id"    class="form-control selectpicker" name="row[category_id]" onchange="changePlan(this)" disabled>
                 <option value=" " style='display: none'>未选中任何项</option>
 
                 {foreach $category as $k => $v}
@@ -181,7 +181,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="{$row.username}" disabled>
+            <input id="c-username"    class="form-control" name="row[username]" type="text" value="{$row.username}" disabled>
         </div>
 
 
@@ -190,13 +190,13 @@
 
         <label class="control-label col-xs-12 col-sm-2">{:__('Phone')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-phone" data-rule="required" class="form-control" name="row[phone]" type="text" value="{$row.phone}" disabled>
+            <input id="c-phone"    class="form-control" name="row[phone]" type="text" value="{$row.phone}" disabled>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_card')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-id_card" data-rule="required" class="form-control" name="row[id_card]" type="text" value="{$row.id_card}" disabled>
+            <input id="c-id_card"    class="form-control" name="row[id_card]" type="text" value="{$row.id_card}" disabled>
         </div>
     </div>
     <div class="form-group">
@@ -263,7 +263,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Customer_source')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)" disabled>
+            <select id="c-customer_source"    class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)" disabled>
                 {foreach name="customerSourceList" item="vo"}
                 <option value="{$key}" {in name="key" value="$row.customer_source" }selected{/in}>{$vo}</option>
                 {/foreach}
@@ -373,7 +373,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-id_cardimages" data-rule="required" class="form-control" size="50" name="row[id_cardimages]" type="text" value="{$row.id_cardimages}" >
+                <input id="c-id_cardimages"    class="form-control" size="50" name="row[id_cardimages]" type="text" value="{$row.id_cardimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload" data-input-id="c-id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -393,7 +393,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-drivers_licenseimages" data-rule="required" class="form-control" size="50" name="row[drivers_licenseimages]"
+                <input id="c-drivers_licenseimages"    class="form-control" size="50" name="row[drivers_licenseimages]"
                     type="text" value="{$row.drivers_licenseimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -414,7 +414,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Bank_cardimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-bank_cardimages" data-rule="required" class="form-control" size="50" name="row[bank_cardimages]" type="text"
+                <input id="c-bank_cardimages"    class="form-control" size="50" name="row[bank_cardimages]" type="text"
                     value="{$row.bank_cardimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -440,11 +440,11 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('City')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
             <div class='control-relative'>
-                <input id="c-city" data-rule="required" class="form-control" data-toggle="city-picker" name="row[city]" type="text" value="{$row.city}">
+                <input id="c-city"    class="form-control" data-toggle="city-picker" name="row[city]" type="text" value="{$row.city}">
             </div>
         </div>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-detailed_address" data-rule="required" class="form-control" name="row[detailed_address]" type="text" placeholder="详细地址" value="{$row.detailed_address}">
+            <input id="c-detailed_address"    class="form-control" name="row[detailed_address]" type="text" placeholder="详细地址" value="{$row.detailed_address}">
 
         </div>
 
@@ -453,12 +453,12 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_1')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-emergency_contact_1" data-rule="required" class="form-control" name="row[emergency_contact_1]" type="text" placeholder="格式如：李某某-18066668888-朋友" 
+            <input id="c-emergency_contact_1"    class="form-control" name="row[emergency_contact_1]" type="text" placeholder="格式如：李某某-18066668888-朋友" 
                 value="{$row.emergency_contact_1}">
         </div>
         <label class="control-label col-xs-12 col-sm-2">{:__('Emergency_contact_2')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <input id="c-emergency_contact_2" data-rule="required" class="form-control" name="row[emergency_contact_2]" type="text" placeholder="格式如：王某某-18066668888-亲戚"
+            <input id="c-emergency_contact_2"    class="form-control" name="row[emergency_contact_2]" type="text" placeholder="格式如：王某某-18066668888-亲戚"
                 value="{$row.emergency_contact_2}">
         </div>
     </div>
@@ -466,7 +466,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Family_members')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-family_members" data-rule="required" class="form-control" name="row[family_members]" type="text" placeholder="格式如：张某某-18066668888-父亲"
+            <input id="c-family_members"    class="form-control" name="row[family_members]" type="text" placeholder="格式如：张某某-18066668888-父亲"
                 value="{$row.family_members}">
         </div>
     </div>
@@ -474,7 +474,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('承诺书')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-undertakingimages" data-rule="required" class="form-control" size="50" name="row[undertakingimages]"
+                <input id="c-undertakingimages"    class="form-control" size="50" name="row[undertakingimages]"
                     type="text" value="{$row.undertakingimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -495,7 +495,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('授权书')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-accreditimages" data-rule="required" class="form-control" size="50" name="row[accreditimages]" type="text" value="{$row.accreditimages}" >
+                <input id="c-accreditimages"    class="form-control" size="50" name="row[accreditimages]" type="text" value="{$row.accreditimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-accreditimages" class="btn btn-danger plupload" data-input-id="c-accreditimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -516,7 +516,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('信息表')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-informationimages" data-rule="required" class="form-control" size="50" name="row[informationimages]"
+                <input id="c-informationimages"    class="form-control" size="50" name="row[informationimages]"
                     type="text" value="{$row.informationimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -537,7 +537,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('面签照')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-faceimages" data-rule="required" class="form-control" size="50" name="row[faceimages]" type="text" value="{$row.faceimages}" >
+                <input id="c-faceimages"    class="form-control" size="50" name="row[faceimages]" type="text" value="{$row.faceimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-faceimages" class="btn btn-danger plupload" data-input-id="c-faceimages" data-multiple="true" >
@@ -556,7 +556,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Residence_bookletimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-residence_bookletimages" data-rule="required" class="form-control" size="50" name="row[residence_bookletimages]"
+                <input id="c-residence_bookletimages"    class="form-control" size="50" name="row[residence_bookletimages]"
                     type="text" value="{$row.residence_bookletimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -577,7 +577,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Housingimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-housingimages" data-rule="required" class="form-control" size="50" name="row[housingimages]" type="text" value="{$row.housingimages}">
+                <input id="c-housingimages"    class="form-control" size="50" name="row[housingimages]" type="text" value="{$row.housingimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-housingimages" class="btn btn-danger plupload" data-input-id="c-housingimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -597,7 +597,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Application_formimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-application_formimages" data-rule="required" class="form-control" size="50" name="row[application_formimages]"
+                <input id="c-application_formimages"    class="form-control" size="50" name="row[application_formimages]"
                     type="text" value="{$row.application_formimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -618,7 +618,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('征信审核报告')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-credit_reportimages" data-rule="required" class="form-control" size="50" name="row[credit_reportimages]"
+                <input id="c-credit_reportimages"    class="form-control" size="50" name="row[credit_reportimages]"
                     type="text" value="{$row.credit_reportimages}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
@@ -639,7 +639,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfiles')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-6">
             <div class="input-group">
-                <input id="c-call_listfiles" data-rule="required" class="form-control" size="50" name="row[call_listfiles]" type="text" placeholder="请上传PDF格式！！！" value="{$row.call_listfiles}">
+                <input id="c-call_listfiles"    class="form-control" size="50" name="row[call_listfiles]" type="text" placeholder="请上传PDF格式！！！" value="{$row.call_listfiles}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-call_listfiles" class="btn btn-danger plupload" data-input-id="c-call_listfiles" data-multiple="true">

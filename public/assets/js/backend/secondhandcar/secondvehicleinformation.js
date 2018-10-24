@@ -47,6 +47,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'companyaccount', title: __('Companyaccount')},
                         {field: 'newpayment', title: __('Newpayment'),operate:false},
                         {field: 'monthlypaymen', title: __('Monthlypaymen'),operate:false},
+                        {field: 'bond', title: __('保证金（元）'),operate:false},
                         {field: 'periods', title: __('Periods'),operate:false},
                         {field: 'totalprices', title: __('全款方案总价（元）'),operate:false},
                         {field: 'drivinglicenseimages', title: __('Drivinglicenseimages'), formatter: Table.api.formatter.images,operate:false},
