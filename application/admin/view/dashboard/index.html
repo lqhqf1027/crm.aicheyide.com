@@ -122,12 +122,13 @@
         padding:30px 0;
     }
     .carStatus{
-        border-right: 2px solid black;
+        border-right: 2px solid grey;
         /* border-radius: 5px; */
     }
-    .carStatus h3{
+    .carStatus h3,.carStatus_last h3{
         font-weight:600;
     }
+
     small .font_little{
         font-size: 20%;
     }
@@ -208,7 +209,7 @@
                                     
                                     <div class="col-md-4">
                                         <h1 class="no-margins">{$year_status}</h1>
-                                        <div class="font-bold text-gray"><i class="fa fa-"></i> <small>{:__('需年检车辆')}</small></div>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('需年检车辆（台）')}</small></div>
                                     </div>
                                     <div class="col-md-6">
                                         {if $year_status_past == 0}
@@ -216,7 +217,7 @@
                                         {else /}
                                         <h1 class="no-margins text-danger">{$year_status_past}</h1>
                                         {/if}
-                                        <div class="font-bold text-gray"><i class="fa fa-"></i> <small>{:__('年检已过期车辆')}</small></div>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('年检已过期车辆')}</small></div>
                                     </div>
                                         
                                 </div>
@@ -234,7 +235,7 @@
 
                                     <div class="col-md-6">
                                         <h1 class="no-margins">{$strong_status}</h1>
-                                        <div class="font-bold text-gray"><i class="fa fa-"></i> <small>{:__('需续保车辆')}</small></div>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('需续保车辆（台）')}</small></div>
                                     </div>
                                     <div class="col-md-6">
                                         {if $strong_status_past == 0}
@@ -242,14 +243,14 @@
                                         {else /}
                                         <h1 class="no-margins text-danger">{$strong_status_past}</h1>
                                         {/if}  
-                                        <div class="font-bold text-gray"><i class="fa fa-"></i> <small>{:__('保险已过期车辆')}</small></div>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('保险已过期车辆')}</small></div>
                                     </div>
                                        
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-md-4">
+                    <div class="col-xs-6 col-md-4 carStatus_last">
                         <div class="panel ">
                             <div class="panel-body">
                                 <div class="ibox-title">
@@ -264,7 +265,7 @@
                                         {else /}
                                         <h1 class="no-margins text-danger">{$violation_inquiry}</h1>
                                         {/if}  
-                                        <div class="font-bold text-gray"><i class="fa fa-"></i> <small>{:__('违章车辆')}</small></div>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('总违章车辆（台）')}</small></div>
                                     </div>
                                     <div class="col-md-3">
                                         {if $total_deduction_little == 0}
@@ -272,7 +273,7 @@
                                         {else /}
                                         <h1 class="no-margins text-danger">{$total_deduction_little}</h1>
                                         {/if}  
-                                        <div class="font-bold text-gray"><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分1~20')}</small></div>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分1~20')}</small></div>
                                     </div>
                                     <div class="col-md-3">
                                         {if $total_deduction_more == 0}
@@ -280,7 +281,7 @@
                                         {else /}
                                         <h1 class="no-margins text-danger">{$total_deduction_more}</h1>
                                         {/if}  
-                                        <div class="font-bold text-gray"><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分21~50')}</small></div>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分21~50')}</small></div>
                                     </div>
                                     <div class="col-md-3">
                                         {if $total_deduction_many == 0}
@@ -288,7 +289,7 @@
                                         {else /}
                                         <h1 class="no-margins text-danger">{$total_deduction_many}</h1>
                                         {/if}  
-                                        <div class="font-bold text-gray" ><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分51以上')}</small></div>
+                                        <div class="font-bold " ><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分51以上')}</small></div>
                                     </div>
                                 
                                 </div>
