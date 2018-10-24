@@ -48,21 +48,26 @@ class Sharedetailsdatas extends Backend
      */
     public function new_car_share_data($ids = null, $order_id = null)
     {
-        /*$data  = salesOrderModel::with(
-            [
-                'admin'=>function($query){$query->withField('nickname');},
-                'planacar'=>function($query){$query->withField(['tail_section','note','nperlist','payment']);},
-                'mortgageregistration'=>function($query){$query->withField(['archival_coding','contract_total','end_money',
-                    'yearly_inspection','next_inspection']);},
-                'newinventory'=>function($query){$query->withField('licensenumber');},
+      /*  $row  = salesOrderModel::with(
 
-            ]
+            ['admin', 'planacar', 'mortgageregistration', 'newinventory', 'mortgage']
+
+        )->select(['ids'=>$order_id == null?$ids:$order_id]);
+
+        foreach ($row as $k=>$v){
+             $v->hidden(['plan_acar_name','sales_id','admin_id','backoffice_id','control_id','new_car_id','car_new_inventory_id',
+                 'mortgage_registration_id','registry_registration_id','mortgage_id','referee_id','customer_downpayment_id','violation_inquiry_id']);
+            $v->getRelation('admin')->visible(['nickname']);
+             $v->getRelation('planacar')->visible(['tail_section','note','nperlist','payment']);
+             $v->getRelation('mortgageregistration')->hidden(['id']);
+             $v->getRelation('newinventory')->visible(['licensenumber','engine_number','frame_number','household','note']);
+             $v->getRelation('mortgage')->hidden(['id']);
+        }
 
 
+$row = collection($row)->toArray()[0];
 
-        )->select(['ids'=>$ids]);
-
-        pr(collection($data)->toArray());die;*/
+        pr($row);die;*/
 
         $row = Db::name('sales_order')->alias('a')
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
@@ -82,13 +87,7 @@ class Sharedetailsdatas extends Backend
                 d.commercial_insurance_policy,d.registry_remark,
                 e.licensenumber,e.engine_number,e.frame_number,e.household,e.note as nnote,
                 f.car_imgeas,f.lending_date,f.bank_card,f.invoice_monney,f.registration_code,f.tax,f.business_risks,f.insurance,f.mortgage_type')
-            ->where(function ($query) use($ids,$order_id) {
-                 if($order_id){
-                     $query->where('a.id',$order_id);
-                 }else{
-                     $query->where('a.id',$ids);
-                 }
-            })
+            ->where('a.id',$order_id==null?$ids:$order_id)
             ->find();
 
         if ($row['models_id']) {
@@ -221,7 +220,7 @@ class Sharedetailsdatas extends Backend
      * @return string
      * @throws \think\Exception
      */
-    public function second_car_share_data($ids = null)
+    public function second_car_share_data($ids = null,$order_id = null)
     {
         $row = Db::name('second_sales_order')->alias('a')
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
@@ -237,7 +236,7 @@ class Sharedetailsdatas extends Backend
                 d.contract_total,d.mortgage_people,d.end_money,d.yearly_inspection,d.next_inspection,d.transferdate,d.hostdate,d.ticketdate,d.supplier,d.tax_amount,d.no_tax_amount,
                 d.pay_taxesdate,d.house_fee,d.luqiao_fee,d.insurance_buydate,d.car_boat_tax,d.insurance_policy,d.insurance,d.business_risks,
                 d.commercial_insurance_policy,d.registry_remark')
-            ->where('a.id', $ids)
+            ->where('a.id', $order_id==null?$ids:$order_id)
             ->find();
 
         if ($row['models_id']) {
@@ -320,7 +319,7 @@ class Sharedetailsdatas extends Backend
      * @return string
      * @throws \think\Exception
      */
-    public function rental_car_share_data($ids = null)
+    public function rental_car_share_data($ids = null, $order_id = null)
     {
         $row = Db::name('rental_order')->alias('a')
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
@@ -331,7 +330,7 @@ class Sharedetailsdatas extends Backend
                 b.nickname as sales_name,
                 c.licenseplatenumber,c.engine_no,c.vin,c.kilometres,c.companyaccount,c.drivinglicenseimages,c.expirydate,c.annualverificationdate,c.carcolor,c.note,
                 c.actual_backtime,c.car_loss,c.back_kilometre,c.check_list')
-            ->where('a.id', $ids)
+            ->where('a.id', $order_id==null?$ids:$order_id)
             ->find();
 
         if ($row['models_id']) {
@@ -381,7 +380,7 @@ class Sharedetailsdatas extends Backend
      * @return string
      * @throws \think\Exception
      */
-    public function secondfull_car_share_data($ids = null)
+    public function secondfull_car_share_data($ids = null,$order_id = null)
     {
         $row = Db::name('second_full_order')->alias('a')
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
@@ -393,7 +392,7 @@ class Sharedetailsdatas extends Backend
                 c.licenseplatenumber,c.vin,c.kilometres,c.companyaccount,c.totalprices,c.drivinglicenseimages,c.engine_number,c.expirydate,c.annualverificationdate,c.carcolor,
                 c.Parkingposition,
                 d.car_imgeas,d.bank_card,d.invoice_monney,d.registration_code,d.tax,d.business_risks,d.insurance,d.lending_date,d.mortgage_type')
-            ->where('a.id', $ids)
+            ->where('a.id', $order_id==null?$ids:$order_id)
             ->find();
 
         if ($row['models_id']) {
@@ -436,7 +435,7 @@ class Sharedetailsdatas extends Backend
      * @return string
      * @throws \think\Exception
      */
-    public function full_car_share_data($ids = null)
+    public function full_car_share_data($ids = null ,$order_id = null)
     {
         $row = Db::name('full_parment_order')->alias('a')
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
@@ -447,7 +446,7 @@ class Sharedetailsdatas extends Backend
                 b.nickname as sales_name,
                 c.full_total_price,
                 d.car_imgeas,d.bank_card,d.invoice_monney,d.registration_code,d.tax,d.business_risks,d.insurance,d.lending_date,d.mortgage_type')
-            ->where('a.id', $ids)
+            ->where('a.id', $order_id==null?$ids:$order_id)
             ->find();
 
         //身份证正反面（多图）
