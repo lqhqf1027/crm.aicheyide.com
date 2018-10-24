@@ -1795,13 +1795,13 @@ class Orderlisttabs extends Backend
         foreach ((array)$res as $key => $value) {
             $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.id,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.licenseplatenumber')
+                ->field('a.id,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.licenseplatenumber,b.bond')
                 ->where(['a.brand_id' => $value['brandid'], 'b.status_data' => '', 'b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
             $newB = [];
             foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数' . $bValue['periods'] . '，' . '全款方案总价（元）' . $bValue['totalprices'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . '---车牌号：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数' . $bValue['periods'] . '，' .'保证金'.$bValue['bond'].'，'. '全款方案总价（元）' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
             }
             $newRes[] = array(

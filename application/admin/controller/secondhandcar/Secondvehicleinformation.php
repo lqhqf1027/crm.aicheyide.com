@@ -75,7 +75,7 @@ class Secondvehicleinformation extends Backend
                         ->field('b.licenseplatenumber, a.admin_id')
                         ->select()
                 ];
-                $row->visible(['id', 'licenseplatenumber', 'kilometres', 'companyaccount', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'drivinglicenseimages', 'vin',
+                $row->visible(['id', 'licenseplatenumber','bond', 'kilometres', 'companyaccount', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'drivinglicenseimages', 'vin',
                     'engine_number', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
                     'createtime', 'updatetime', 'status_data', 'department', 'admin_name']);
                 $row->visible(['models']);

@@ -52,7 +52,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('销售二手车型/方案')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-plan_car_second_name" data-rule="required" class="form-control selectpicker" name="row[plan_car_second_name]" disabled>
+            <select id="c-plan_car_second_name"  class="form-control selectpicker" name="row[plan_car_second_name]" disabled>
                 <option value=" " style='display: none'>未选中任何项</option>
                 {volist name="newRes" id="vo"}
 
@@ -70,7 +70,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-username" data-rule="required" class="form-control form-control" name="row[username]" type="text" value="{$row.username}" disabled>
+            <input id="c-username"   class="form-control form-control" name="row[username]" type="text" value="{$row.username}" disabled>
         </div>
     </div>
     <div class="form-group">
@@ -128,7 +128,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_contractimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-deposit_contractimages" data-rule="required" class="form-control form-control" size="50" name="row[deposit_contractimages]" type="text" value="{$row.deposit_contractimages}" >
+                <input id="c-deposit_contractimages"   class="form-control form-control" size="50" name="row[deposit_contractimages]" type="text" value="{$row.deposit_contractimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-deposit_contractimages" class="btn btn-danger plupload" data-input-id="c-deposit_contractimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-deposit_contractimages" ><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                     
@@ -142,7 +142,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Deposit_receiptimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-deposit_receiptimages" data-rule="required" class="form-control form-control" size="50" name="row[deposit_receiptimages]" type="text" value="{$row.deposit_receiptimages}" >
+                <input id="c-deposit_receiptimages"   class="form-control form-control" size="50" name="row[deposit_receiptimages]" type="text" value="{$row.deposit_receiptimages}" >
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-deposit_receiptimages" class="btn btn-danger plupload" data-input-id="c-deposit_receiptimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-deposit_receiptimages" ><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                    
@@ -161,7 +161,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Customer_source')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-customer_source" data-rule="required" class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)" disabled>
+            <select id="c-customer_source"   class="form-control selectpicker" name="row[customer_source]" onchange="changeFun(this)" disabled>
                 {foreach name="customerSourceList" item="vo"}
                 <option value="{$key}" {in name="key" value="$row.customer_source" }selected{/in}>{$vo}</option>
                 {/foreach}
@@ -222,7 +222,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Id_cardimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-id_cardimages" data-rule="required" class="form-control" size="50" name="row[id_cardimages]" value="{$row.id_cardimages}" type="text" >
+                <input id="c-id_cardimages"   class="form-control" size="50" name="row[id_cardimages]" value="{$row.id_cardimages}" type="text" >
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-id_cardimages" class="btn btn-danger plupload" data-input-id="c-id_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -242,7 +242,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Drivers_licenseimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-drivers_licenseimages" data-rule="required" class="form-control form-control" size="50" name="row[drivers_licenseimages]" value="{$row.drivers_licenseimages}" type="text" >
+                <input id="c-drivers_licenseimages"   class="form-control form-control" size="50" name="row[drivers_licenseimages]" value="{$row.drivers_licenseimages}" type="text" >
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-drivers_licenseimages" class="btn btn-danger plupload" data-input-id="c-drivers_licenseimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-drivers_licenseimages" ><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                     
@@ -260,7 +260,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Bank_cardimages')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-bank_cardimages" data-rule="required"  class="form-control form-control" size="50" name="row[bank_cardimages]"  value="{$row.bank_cardimages}" type="text">
+                <input id="c-bank_cardimages"    class="form-control form-control" size="50" name="row[bank_cardimages]"  value="{$row.bank_cardimages}" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span><button type="button" id="plupload-bank_cardimages" class="btn btn-danger plupload" data-input-id="c-bank_cardimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp" data-multiple="true" data-preview-id="p-bank_cardimages"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
                     
@@ -274,7 +274,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('户口簿【首页、主人页、本人页】')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-residence_bookletimages" data-rule="required"  class="form-control" size="50" name="row[residence_bookletimages]" value="{$row.residence_bookletimages}" type="text">
+                <input id="c-residence_bookletimages"    class="form-control" size="50" name="row[residence_bookletimages]" value="{$row.residence_bookletimages}" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-residence_bookletimages" class="btn btn-danger plupload" data-input-id="c-residence_bookletimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -345,7 +345,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('住房合同/房产证（多图）')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-housingimages" data-rule="required"  class="form-control" size="50" name="row[housingimages]" value="{$row.housingimages}" type="text">
+                <input id="c-housingimages"    class="form-control" size="50" name="row[housingimages]" value="{$row.housingimages}" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-housingimages" class="btn btn-danger plupload" data-input-id="c-housingimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -365,7 +365,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('无犯罪记录承诺书')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-crime_undertakingimages" data-rule="required" class="form-control" size="50" name="row[crime_undertakingimages]" value="{$row.crime_undertakingimages}" type="text">
+                <input id="c-crime_undertakingimages"   class="form-control" size="50" name="row[crime_undertakingimages]" value="{$row.crime_undertakingimages}" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-crime_undertakingimages" class="btn btn-danger plupload" data-input-id="c-crime_undertakingimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -385,7 +385,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('购车确认书')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-car_confirmationimages" data-rule="required" class="form-control" size="50" name="row[car_confirmationimages]" value="{$row.car_confirmationimages}" type="text">
+                <input id="c-car_confirmationimages"   class="form-control" size="50" name="row[car_confirmationimages]" value="{$row.car_confirmationimages}" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-car_confirmationimages" class="btn btn-danger plupload" data-input-id="c-car_confirmationimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -405,7 +405,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('征信报告')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-credit_reportimages" data-rule="required" class="form-control" size="50" name="row[credit_reportimages]" value="{$row.credit_reportimages}" type="text">
+                <input id="c-credit_reportimages"   class="form-control" size="50" name="row[credit_reportimages]" value="{$row.credit_reportimages}" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-credit_reportimages" class="btn btn-danger plupload" data-input-id="c-credit_reportimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -425,7 +425,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('申请表（多图）')}:</label>
         <div class="col-xs-12 col-sm-8">
             <div class="input-group">
-                <input id="c-application_formimages" data-rule="required" class="form-control" size="50" name="row[application_formimages]" value="{$row.application_formimages}" type="text">
+                <input id="c-application_formimages"   class="form-control" size="50" name="row[application_formimages]" value="{$row.application_formimages}" type="text">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-application_formimages" class="btn btn-danger plupload" data-input-id="c-application_formimages" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp"
@@ -445,7 +445,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Call_listfiles')}:</label>
         <div class="col-xs-12 col-sm-8 col-md-6">
             <div class="input-group">
-                <input id="c-call_listfiles" data-rule="required" class="form-control" size="50" name="row[call_listfiles]" type="text" placeholder="请上传PDF格式！！！" value="{$row.call_listfiles}">
+                <input id="c-call_listfiles"   class="form-control" size="50" name="row[call_listfiles]" type="text" placeholder="请上传PDF格式！！！" value="{$row.call_listfiles}">
                 <div class="input-group-addon no-border no-padding">
                     <span>
                         <button type="button" id="plupload-call_listfiles" class="btn btn-danger plupload" data-input-id="c-call_listfiles" data-multiple="true">
