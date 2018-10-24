@@ -74,19 +74,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {field: 'username', title: __('Username')},
                             {field: 'phone', title: __('Phone')},
-                            {
-                                field: 'operate', title: __('查看详细资料'), table: table, buttons: [
-                                    {
-                                        name: 'details-customer',
-                                        text: '查看详细资料',
-                                        title: '查看订单详细资料',
-                                        icon: 'fa fa-eye',
-                                        classname: 'btn btn-xs btn-primary btn-details-customer',
-                                    }
-                                ],
-
-                                operate: false, formatter: Table.api.formatter.buttons
-                            },
+                            // {
+                            //     field: 'id', title: __('查看详细资料'), table: table, buttons: [
+                            //         {
+                            //             name: 'details-customer',
+                            //             text: '查看详细资料',
+                            //             title: '查看订单详细资料',
+                            //             icon: 'fa fa-eye',
+                            //             classname: 'btn btn-xs btn-primary btn-details-customer',
+                            //
+                            //         }
+                            //     ],
+                            //
+                            //     operate: false, formatter: Table.api.formatter.buttons
+                            // },
                             {
                                 field: 'peccancy_status',
                                 title: '违章状态',
@@ -713,6 +714,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             title: __('查看违章详情'),
                             // extend: 'data-toggle="tooltip"',
                             classname: 'btn btn-xs btn-info btn-search',
+                        },
+                        {
+                            name: 'details-customer',
+                            text: '查看客户详细资料',
+                            title: '查看订单详细资料',
+                            icon: 'fa fa-address-book',
+                            classname: 'btn btn-xs btn-danger btn-details-customer',
+
                         }
                     );
 
@@ -779,19 +788,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         switch (row.car_type) {
                             case 1:
-                                url = 'Sharedetailsdatas/new_car_share_data'+'/order_id/'+row.order_id;
+                                url = 'Sharedetailsdatas/new_car_share_data' + '/order_id/' + row.order_id;
                                 break;
                             case 2:
-                                url = 'Sharedetailsdatas/second_car_share_data'+'/order_id/'+row.order_id;
+                                url = 'Sharedetailsdatas/second_car_share_data' + '/order_id/' + row.order_id;
                                 break;
                             case 3:
-                                url = 'Sharedetailsdatas/full_car_share_data'+'/order_id/'+row.order_id;
+                                url = 'Sharedetailsdatas/full_car_share_data' + '/order_id/' + row.order_id;
                                 break;
                             case 4:
-                                url = 'Sharedetailsdatas/rental_car_share_data'+'/order_id/'+row.order_id;
+                                url = 'Sharedetailsdatas/rental_car_share_data' + '/order_id/' + row.order_id;
                                 break;
                             case 5:
-                                url = 'Sharedetailsdatas/secondfull_car_share_data'+'/order_id/'+row.order_id;
+                                url = 'Sharedetailsdatas/secondfull_car_share_data' + '/order_id/' + row.order_id;
                                 break;
                         }
 
