@@ -4,7 +4,7 @@ return array (
   'name' => '爱车易得CRM',
   'beian' => ' 蜀 ICP备 17036095号',
   'cdnurl' => '',
-  'version' => '1.3.7',
+  'version' => '1.4.8',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
@@ -71,6 +71,7 @@ return array (
     'message30' => '西安分公司',
     'message31' => '银川分公司',
     'message32' => '昆明分公司',
+    'message33' => '（渠道）',
   ),
   'push' => 
   array (
