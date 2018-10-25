@@ -188,23 +188,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { 
                                 name: 'edit',text: '',icon: 'fa fa-pencil',extend: 'data-toggle="tooltip"',text:'编辑', title: __('编辑'),classname: 'btn btn-xs btn-success btn-editone',
                                 // url:'rencar/vehicleinformation/edit',/**编辑信息 */
-                                hidden:function(row,value,index){ 
-                                    if(row.status_data == ''){
-                                        return false; 
-                                    } 
-                                    else if(row.status_data == 'for_the_car'){
+                                // hidden:function(row,value,index){ 
+                                //     if(row.status_data == ''){
+                                //         return false; 
+                                //     } 
+                                //     else if(row.status_data == 'for_the_car'){
                                       
-                                        return true;
-                                    } 
-                                    else if(row.status_data == 'the_car'){
+                                //         return true;
+                                //     } 
+                                //     else if(row.status_data == 'the_car'){
                                       
-                                        return true;
-                                    } 
-                                    else if(row.status_data == 'send_the_car'){
+                                //         return true;
+                                //     } 
+                                //     else if(row.status_data == 'send_the_car'){
                                       
-                                        return true;
-                                    } 
-                                }, 
+                                //         return true;
+                                //     } 
+                                // }, 
                             },
                             {
 
