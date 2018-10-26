@@ -655,7 +655,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if (value) {
                         row.backoffice.avatar = "https://static.aicheyide.com" + row.backoffice.avatar;
                     }
-                    return value != null ? "<img src=" + row.backoffice.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
+                    return value != null ? "<img src=" + row.backoffice.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value : value;
 
                 },
                 //销售头像
@@ -664,14 +664,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     switch (row.admin.rule_message){
                         case 'message8':
 
-                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + '销售一部 - '+value;
+                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + '销售一部 - '+value;
                             break;
                         case 'message9':
-                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + '销售二部 - '+value;
+                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + '销售二部 - '+value;
 
                             break;
                         case 'message23':
-                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + '销售三部 - '+value;
+                            return  "<img src=" + row.admin.avatar_url + row.admin.avatar+" style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + '销售三部 - '+value;
 
                             break;
                         default:

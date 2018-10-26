@@ -88,7 +88,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {field: 'platform.name', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
-                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
                                 }
                             },
                             {field: 'username', title: __('客户姓名')},
@@ -230,7 +230,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {field: 'platform.name', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
-                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;
                                 }
                             },
                             {field: 'username', title: __('客户姓名')},
@@ -365,7 +365,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {field: 'platform.name', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
-                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
@@ -495,7 +495,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {field: 'platform.name', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
-                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
                             },
                             {field: 'username', title: __('客户姓名')},
                             {field: 'phone', title: __('Phone')},
@@ -635,7 +635,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {field: 'phone', title: __('Phone')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
-                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
                             },
                             {field: 'giveup_time', title: __('放弃时间'),operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:'YYYY-MM-DD' },
 
@@ -695,7 +695,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form','bootstrap-datetimepic
                             {field: 'platform.name', title: __('客户来源')},
                             {
                                 field: 'admin.nickname', title: __('Sales_id'), formatter: function (v, r, i) {
-                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
+                                    return v != null ? "<img src=" + r.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + r.admin.department+' - '+v : v;                                }
                             },
                             // {field: 'sales_id', title: __('Sales_id')},
                             {field: 'username', title: __('客户姓名')},

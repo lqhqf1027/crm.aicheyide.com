@@ -324,7 +324,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         row.backoffice.avatar = "https://static.aicheyide.com" + row.backoffice.avatar;
                     }
 
-                    return value != null ? "<img src=" + row.backoffice.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
+                    return value != null ? "<img src=" + row.backoffice.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value : value;
 
                 },
                 sales: function (value, row, index) {
@@ -332,7 +332,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if (value) {
                         row.admin.avatar = "https://static.aicheyide.com" + row.admin.avatar;
                     }
-                    return value != null ? "<img src=" + row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+ value : value;
+                    return value != null ? "<img src=" + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+ value : value;
 
                 }
             }
