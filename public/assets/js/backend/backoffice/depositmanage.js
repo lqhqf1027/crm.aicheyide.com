@@ -380,7 +380,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     if (value) {
                         row.admin.avatar = "https://static.aicheyide.com" + row.admin.avatar;
                     }
-                    return value != null ? "<img src=" + row.admin.avatar + " style='height:40px;width:40px;border-radius:50%'></img>" + '&nbsp;' + value : value;
+                    return value != null ? "<img src=" + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + value : value;
 
                 },
                 status: function (value, row, index) {
