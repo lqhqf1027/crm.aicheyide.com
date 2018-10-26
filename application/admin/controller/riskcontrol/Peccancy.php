@@ -162,10 +162,10 @@ class Peccancy extends Backend
                   }
             }
 
-//            pr($real_list);
 
 
-            $result = array("total" => count($real_list), "rows" => $real_list);
+//            $result = array("total" => count($real_list), "rows" => $real_list);
+            $result = array("total" => $total, "rows" => $real_list);
 
             return json($result);
         }
