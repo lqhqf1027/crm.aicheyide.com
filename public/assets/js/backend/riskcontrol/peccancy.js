@@ -782,8 +782,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         var url = '';
 
-                        console.log(row);
-
                         row = $.extend({}, row ? row : {}, {ids: row.order_id});
 
                         switch (row.car_type) {
