@@ -31,18 +31,25 @@ class Index extends Base
             $bannerList[] = ['image' => cdnurl($item['image'], true), 'url' => '/', 'title' => $item['title']];
         }
 
-        $tabList = [
-            ['id' => 0, 'title' => '全部'],
-        ];
+        // $tabList = [
+        //     ['id' => 0, 'title' => '全部'],
+        // ];
         $channelList = Channel::where('status', 'normal')
             ->where('type', 'in', ['list'])
             ->field('id,parent_id,name,diyname')
             ->order('weigh desc,id desc')
             ->cache(false)
             ->select();
-        foreach ($channelList as $index => $item) {
-            $tabList[] = ['id' => $item['id'], 'title' => $item['name']];
-        }
+        // foreach ($channelList as $index => $item) {
+        //     $tabList[] = ['id' => $item['id'], 'title' => $item['name']];
+        // }
+        $tabList = [
+            ['id' => 0, 'title' => '全部'],
+            ['id' => 1, 'title' => '新车'],
+            ['id' => 2, 'title' => '二手车'],
+            ['id' => 3, 'title' => '租车'],
+            ['id' => 4, 'title' => '全款'],
+        ];
         $archivesList = Archives::getArchivesList([]);
         $data = [
             'bannerList'   => $bannerList,

@@ -24,7 +24,7 @@
   <!-- E 焦点图 -->
 
   <!-- S 首页列表 -->
-  <view class="archives-list">
+  <!-- <view class="archives-list">
     <view class="zan-panel">
       <block wx:for="{{ archivesList }}" wx:key="key">
         <navigator url="{{ $item.model_id==2 ? '../product/detail?id='+item.id : '../news/detail?id='+item.id }}">
@@ -50,10 +50,30 @@
         </navigator>
       </block>
     </view>
-  </view>
+  </view> -->
   <!-- E 首页列表 -->
 
-
+  <view class="text-list">
+    <view class="zan-panel">
+      <block wx:for="{{ text }}" wx:key="key">
+        
+          <view class="zan-card">
+            <view class="zan-card__thumb">
+              <view class="image" style="background-image:url('{{ item.drivinglicenseimages }}')"></view>
+            </view>
+            <view class="zan-card__detail">
+              <view class="zan-card__detail-row">
+                <view class="zan-card__left-col zan-ellipsis--l2">
+                    停放位置：{{ item.Parkingposition }} ------ 车牌号：{{item.licenseplatenumber}}
+                </view>
+              </view>
+            </view>
+          </view>
+        
+      </block>
+    </view>
+  </view>
+  
   <view class="page">
     <view class="page__hd">
         <view class="page__title">AnimationGroup</view>
