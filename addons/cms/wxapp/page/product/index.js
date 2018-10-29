@@ -135,6 +135,31 @@ Page(Object.assign({}, Tab, {
       },
     })
   },
+  requests:function (){
+    wx.request({
+      url:'https://crm.aicheyide.com/admin/planmanagement/plantabs/getInfo',
+      success:function (res){
+          console.log(res);
+      },
+      complete:function (){
+        console.log(11);
+      }
+    });
 
+    // wx.downloadFile({
+    //   url: 'C:/Users/EDZ/Desktop/images/img1', //仅为示例，并非真实的资源
+    //   success(res) {
+    //     // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
+    //     console.log(res);
+    //   },
+    //   fail:function (res){
+    //     console.log(res);
+    //   }
+    // })
+
+  },
+
+ 
+  
 
 }))

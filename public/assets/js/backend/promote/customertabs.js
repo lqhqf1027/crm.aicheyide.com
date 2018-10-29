@@ -97,8 +97,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     pk: 'id',
                     // sortName: 'id',
                     searchFormVisible: true,
-                    fixedColumns:true,
-                    fixedNumber:1,
+                    // fixedColumns:true,
+                    // fixedNumber:1,
                     columns: [
                         [
                             {checkbox: true},
@@ -758,7 +758,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             var options = {
                 shadeClose: false,
                 shade: [0.3, '#393D49'],
-                area: ['50%', '50%'],
+                area: ['30%', '30%'],
                 callback: function (value) {
 
                 }
