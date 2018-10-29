@@ -60,10 +60,9 @@
             
             <div class="tab-pane fade active in" id="newcar_audit">
                 <div id="toolbar1" class="toolbar" >
-                   
-                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a> 
+                    <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}"  ><i class="fa fa-refresh"></i> 刷新 </a>
                   
-                     
+
                              
                     <!-- <div class="input-group">
                             <span class="input-group-addon">$</span>
@@ -127,7 +126,7 @@
 
             <div class="tab-pane fade" id="secondhandcar_audit">
                     <div id="toolbar3" class="toolbar">
-                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" ><i class="fa fa-refresh"></i> </a>
+                        <a href="javascript:;" class="btn btn-primary btn-refresh" title="{:__('Refresh')}" id="re"><i class="fa fa-refresh"></i> </a>
                         <!-- <a href="javascript:;" class="btn btn-success btn-add {:$auth->check('order/secondsalesorder/add')?'':'hide'}" title="{:__('Add')}" ><i class="fa fa-plus"></i> {:__('Add')}</a> -->
                         <!-- <a href="javascript:;" class="btn btn-success btn-edit btn-disabled disabled {:$auth->check('order/secondsalesorder/edit')?'':'hide'}" title="{:__('Edit')}" ><i class="fa fa-pencil"></i> {:__('Edit')}</a> -->
                         <!-- <a href="javascript:;" class="btn btn-danger btn-del btn-disabled disabled {:$auth->check('order/secondsalesorder/del')?'':'hide'}" title="{:__('Delete')}" ><i class="fa fa-trash"></i> {:__('Delete')}</a> -->
@@ -156,5 +155,8 @@
 <script>
     function examine(type){
         document.getElementById("hidden1").value=type;
+    }
+    function  reCli() {
+        $('ul.nav-tabs li.active a[data-toggle="tab"]').parents('.panel').find('#myTabContent').find('#newcar_audit .btn-refresh').click();
     }
 </script>

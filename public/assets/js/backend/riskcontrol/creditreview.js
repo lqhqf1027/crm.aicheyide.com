@@ -78,9 +78,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
             newcar_audit: function () {
                 // 待审核
                 var newcarAudit = $("#newcarAudit");
+                console.log(newcarAudit);
                 // 初始化表格 
                 newcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/newcarAudit',
+
                     extend: {
 
                         table: 'sales_order',
@@ -1452,20 +1454,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                      * @param index
                      */
                     'click .btn-newauditResult': function (e, value, row, index) {
-                        if (row.bigdata == null) {
-                            layer.msg('请先查看大数据，至少一次');
-                            return false;
-                        }
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'riskcontrol/creditreview/newauditResult';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+                        var bigdatatype = row.plan_acar_name ? 'sales_order' : row.plan_car_rental_name ? 'rental_order' : row.plan_car_second_name ? 'second_sales_order' : 0;
+                        var url = 'riskcontrol/creditreview/newauditResult' + '/bigdatatype/' + bigdatatype;
+                        // console.log(row);return;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
                             callback: function (value) {
-                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+
+                            }, success: function (ret) {
                             }
                         })
                     },
@@ -1657,20 +1658,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                      * @param index
                      */
                     'click .btn-rentalauditResult': function (e, value, row, index) {
-                        if (row.bigdata == null) {
-                            layer.msg('请先查看大数据，至少一次');
-                            return false;
-                        }
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'riskcontrol/creditreview/rentalauditResult';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+                        var bigdatatype = row.plan_acar_name ? 'sales_order' : row.plan_car_rental_name ? 'rental_order' : row.plan_car_second_name ? 'second_sales_order' : 0;
+                        var url = 'riskcontrol/creditreview/rentalauditResult' + '/bigdatatype/' + bigdatatype;
+                        // console.log(row);return;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
                             callback: function (value) {
-                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            }, success: function (ret) {
                             }
                         })
                     },
@@ -1684,26 +1683,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                      * @param index
                      */
                     'click .btn-secondhandcarResult': function (e, value, row, index) {
-                        if (row.bigdata == null) {
-                            layer.msg('请先查看大数据，至少一次');
-                            return false;
-                        }
+
                         e.stopPropagation();
                         e.preventDefault();
                         var table = $(this).closest('table');
                         var options = table.bootstrapTable('getOptions');
                         var ids = row[options.pk];
                         row = $.extend({}, row ? row : {}, {ids: ids});
-                        var url = 'riskcontrol/creditreview/secondhandcarResult';
-                        Fast.api.open(Table.api.replaceurl(url, row, table), __('审核'), $(this).data() || {
+                        var bigdatatype = row.plan_acar_name ? 'sales_order' : row.plan_car_rental_name ? 'rental_order' : row.plan_car_second_name ? 'second_sales_order' : 0;
+                        var url = 'riskcontrol/creditreview/secondhandcarResult' + '/bigdatatype/' + bigdatatype;
+                        // console.log(row);return;
+                        Fast.api.open(Table.api.replaceurl(url, row, table), __('大数据'), $(this).data() || {
                             callback: function (value) {
-                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+                            }, success: function (ret) {
                             }
                         })
+
                     },
 
                     /**
-                     * 选择库存车
+                     * 选择二手车库存车
                      * @param e
                      * @param value
                      * @param row
@@ -1726,7 +1725,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                     },
 
                     /**
-                     * 查看大数据
+                     * 查看大数据  （封装）
                      * @param e
                      * @param value
                      * @param row
@@ -1761,57 +1760,39 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
+                /**
+                 * 销售员头像
+                 * @param value
+                 * @param row
+                 * @param index
+                 * @returns {string}
+                 */
                 sales: function (value, row, index) {
                     // console.log(row);
 
                     return value == null ? value : "<img src=" + Config.cdn_url + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + row.admin.department + ' - ' + value;
-                }
+                },
+
+                /**
+                 * 点击审核按钮之前，判断是否有查看大数据
+                 * @param e
+                 * @param value
+                 * @param row
+                 * @param index
+                 */
 
             }
+
         }
+    }
 
-    };
-
-    //新车审核
-
-    $('#newpass').click(function () {
-        // alert(123);
-        // return false;   
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('确定通过征信审核吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/newpass',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-                    return false;
-                });
-
-
-            }
-        );
-
-
-    });
-
+ 
     /**
      * 提供担保人
      */
     $('#newdata').click(function () {
         // alert(123);
-        // return false;   
+        // return false;
         var id = $('#hidden1').val();
         var confirm = Layer.confirm(
             __('是否需要提供担保人吗?'),
@@ -1847,7 +1828,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
      */
     $('#newnopass').click(function () {
         // alert(123);
-        // return false;   
+        // return false;
         var id = $('#hidden1').val();
         var confirm = Layer.confirm(
             __('确定不通过征信审核吗?'),
@@ -1919,7 +1900,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
      */
     $('#rentalpass').click(function () {
         // alert(123);
-        // return false;   
+        // return false;
         var id = $('#hidden1').val();
         var confirm = Layer.confirm(
             __('确定通过征信审核吗?'),
@@ -1951,7 +1932,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
      */
     $('#rentalnopass').click(function () {
         // alert(123);
-        // return false;   
+        // return false;
         var id = $('#hidden1').val();
         var confirm = Layer.confirm(
             __('确定不通过征信审核吗?'),
@@ -2021,7 +2002,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
      */
     $('#secondpass').click(function () {
         // alert(123);
-        // return false;   
+        // return false;
         var id = $('#hidden1').val();
         var confirm = Layer.confirm(
             __('确定通过征信审核吗?'),
@@ -2056,7 +2037,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
      */
     $('#seconddata').click(function () {
         // alert(123);
-        // return false;   
+        // return false;
         var id = $('#hidden1').val();
         var confirm = Layer.confirm(
             __('是否需要提供担保人吗?'),
@@ -2092,7 +2073,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
      */
     $('#secondnopass').click(function () {
         // alert(123);
-        // return false;   
+        // return false;
         var id = $('#hidden1').val();
         var confirm = Layer.confirm(
             __('确定不通过征信审核吗?'),
@@ -2161,4 +2142,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
 
 
     return Controller;
-});
+
+})
+;
