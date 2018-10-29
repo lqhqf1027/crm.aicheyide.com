@@ -34,8 +34,8 @@ class Creditreview extends Backend
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
     protected $noNeedRight = ['index', 'newcarAudit', 'rentalcarAudit', 'secondhandcarAudit', 'newauditResult', 'newpass', 'newdata', 'newnopass', 'rentalauditResult', 'rentalpass', 'rentalnopass', 'secondhandcarResult', 'secondpass', 'seconddata'
-        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata','getPlanAcarData','getPlanSecondCarData','toViewBigData','getBigData','newsales','newtube','choosestock','newtubefinance','secondchoosestock', 
-        'secondinformation', 'newinformation', 'rentalinformation', 'auditedit', 'rentalauditedit', 'secondauditedit'];
+        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata', 'getPlanAcarData', 'getPlanSecondCarData', 'toViewBigData', 'getBigData', 'newsales', 'newtube', 'choosestock', 'newtubefinance', 'secondchoosestock',
+        'secondinformation', 'newinformation', 'rentalinformation', 'auditedit', 'rentalauditedit', 'secondauditedit', 'match_bigdata'];
 
     public function _initialize()
     {
@@ -55,8 +55,8 @@ class Creditreview extends Backend
 
         $this->view->assign([
             'total' => $this->model
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'conclude_the_contract'], 
-                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'conclude_the_contract'],
+                    ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], 'or')
                 ->count(),
 
             'total1' => Db::name('rental_order')
@@ -80,8 +80,6 @@ class Creditreview extends Backend
     }
 
 
-
-
     /**
      * 展示需要审核的新车销售单
      * @return string|\think\response\Json
@@ -101,13 +99,13 @@ class Creditreview extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','avatar','nickname']);
+                    $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], 
-                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], ['=', 'collection_data'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'],
+                    ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], ['=', 'collection_data'], 'or')
                 ->order($sort, $order)
                 ->count();
 
@@ -116,34 +114,34 @@ class Creditreview extends Backend
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','avatar','nickname']);
+                    $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
                 ->where($where)
-                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'], 
-                        ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], ['=', 'collection_data'], 'or')
+                ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'],
+                    ['=', 'tube_into_stock'], ['=', 'take_the_car'], ['=', 'take_the_data'], ['=', 'inform_the_tube'], ['=', 'send_the_car'], ['=', 'collection_data'], 'or')
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
             foreach ($list as $k => $row) {
-                $row->visible(['id', 'plan_acar_name', 'order_no', 'username', 'financial_name', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment', 
-                        'review_the_data', 'id_cardimages', 'drivers_licenseimages', 'bank_cardimages', 'undertakingimages', 'accreditimages', 'faceimages', 'informationimages']);
+                $row->visible(['id', 'plan_acar_name', 'order_no', 'username', 'financial_name', 'detailed_address', 'createtime', 'phone', 'difference', 'decorate', 'car_total_price', 'id_card', 'amount_collected', 'downpayment',
+                    'review_the_data', 'id_cardimages', 'drivers_licenseimages', 'bank_cardimages', 'undertakingimages', 'accreditimages', 'faceimages', 'informationimages']);
                 $row->visible(['planacar']);
                 $row->getRelation('planacar')->visible(['payment', 'monthly', 'margin', 'nperlist', 'tail_section', 'gps',]);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['id','avatar','nickname']);
+                $row->getRelation('admin')->visible(['id', 'avatar', 'nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
 
             $list = collection($list)->toArray();
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
                 //是否有da数据
@@ -166,21 +164,21 @@ class Creditreview extends Backend
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public static function matchBigData($orderId ){
+    public static function matchBigData($orderId)
+    {
 
-        $data =  salesOrderModel::with(['bigdata'=>function($query)  {
-              $query->withField('id');
-          }])->select(['id'=>$orderId]);
-        return collection($data)->toArray()[0]['bigdata']['id'] ;
-  }
+        $data = salesOrderModel::with(['bigdata' => function ($query) {
+            $query->withField('id');
+        }])->select(['id' => $orderId]);
+        return collection($data)->toArray()[0]['bigdata']['id'];
+    }
 
 
-
-  /**
-   * 展示需要审核的租车单
-   * @return string|\think\response\Json
-   * @throws \think\Exception
-   */
+    /**
+     * 展示需要审核的租车单
+     * @return string|\think\response\Json
+     * @throws \think\Exception
+     */
     public function rentalcarAudit()
     {
         $this->model = model('RentalOrder');
@@ -194,7 +192,7 @@ class Creditreview extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['admin' => function ($query) {
-                    $query->withField(['id','avatar','nickname']);
+                    $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -207,7 +205,7 @@ class Creditreview extends Backend
 
             $list = $this->model
                 ->with(['admin' => function ($query) {
-                    $query->withField(['id','avatar','nickname']);
+                    $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -220,17 +218,17 @@ class Creditreview extends Backend
             foreach ($list as $row) {
                 $row->visible(['id', 'plan_car_rental_name', 'order_no', 'createtime', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'review_the_data']);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['id','avatar','nickname']);
+                $row->getRelation('admin')->visible(['id', 'avatar', 'nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
             $list = collection($list)->toArray();
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
                 //是否有da数据
@@ -253,12 +251,13 @@ class Creditreview extends Backend
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public static function matchBigData2($orderId){
+    public static function matchBigData2($orderId)
+    {
 
-        $data =  rentalOrderModel::with(['bigdata'=>function($query)  {
+        $data = rentalOrderModel::with(['bigdata' => function ($query) {
             $query->withField('id');
-        }])->select(['id'=>$orderId]);
-        return collection($data)->toArray()[0]['bigdata']['id'] ;
+        }])->select(['id' => $orderId]);
+        return collection($data)->toArray()[0]['bigdata']['id'];
     }
 
 
@@ -287,7 +286,7 @@ class Creditreview extends Backend
                 ->with(['plansecond' => function ($query) {
                     $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','avatar','nickname']);
+                    $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -301,7 +300,7 @@ class Creditreview extends Backend
                 ->with(['plansecond' => function ($query) {
                     $query->withField('companyaccount,licenseplatenumber,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
                 }, 'admin' => function ($query) {
-                    $query->withField(['id','avatar','nickname']);
+                    $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
                     $query->withField('name');
                 }])
@@ -312,11 +311,11 @@ class Creditreview extends Backend
                 ->select();
             foreach ($list as $k => $row) {
                 $row->visible(['id', 'plan_car_second_name', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data',
-                'id_cardimages', 'drivers_licenseimages',]);
+                    'id_cardimages', 'drivers_licenseimages',]);
                 $row->visible(['plansecond']);
                 $row->getRelation('plansecond')->visible(['newpayment', 'licenseplatenumber', 'companyaccount', 'monthlypaymen', 'periods', 'totalprices', 'bond', 'tailmoney',]);
                 $row->visible(['admin']);
-                $row->getRelation('admin')->visible(['id','avatar','nickname']);
+                $row->getRelation('admin')->visible(['id', 'avatar', 'nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
 
@@ -324,11 +323,11 @@ class Creditreview extends Backend
 
             $list = collection($list)->toArray();
 
-            foreach ($list as $k=>$v){
+            foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
-                    ->join('auth_group b','a.group_id = b.id')
-                    ->where('a.uid',$v['admin']['id'])
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
                 //是否有da数据
@@ -351,12 +350,13 @@ class Creditreview extends Backend
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public static function matchBigData3($orderId ){
+    public static function matchBigData3($orderId)
+    {
 
-        $data =  secondSalesOrderModel::with(['bigdata'=>function($query)  {
+        $data = secondSalesOrderModel::with(['bigdata' => function ($query) {
             $query->withField('id');
-        }])->select(['id'=>$orderId]);
-        return collection($data)->toArray()[0]['bigdata']['id'] ;
+        }])->select(['id' => $orderId]);
+        return collection($data)->toArray()[0]['bigdata']['id'];
     }
 
     /**
@@ -389,38 +389,40 @@ class Creditreview extends Backend
 
     /** 审核销售提交过来的销售新车单*/
 
-    public function newauditResult($ids = null)
+    public function newauditResult($ids = null, $bigdatatype = null)
 
     {
-//
-//        $data = salesOrderModel::with(['bigdata'=>function($query){
-//           $query->withField('id');
-//        }])->select(['id'=>$ids]);  
-        $this->model = model('SalesOrder');
-        $row = $this->model->get($ids);
+
+
+        if ($bigdatatype == 'sales_order') $bigdatatype = 'sales_order_id';
+        if ($bigdatatype == 'rental_order') $bigdatatype = 'rental_order_id';
+        if ($bigdatatype == 'second_sales_order') $bigdatatype = 'second_sales_order_id';
+        $result = model('BigData')->get([$bigdatatype => $ids]);
+        if (empty($result)) $this->error('请先查看一次大数据', '', $result);
+        $row = model('SalesOrder')->get($ids);
         if (!$row) {
             $this->error(__('No Results were found'));
         }
         $this->getDataLimitAdminIds();
         //身份证图片
 
-        $id_cardimages = $row['id_cardimages'] == '' ? [] :explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         //驾照图片
-        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] :explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         //户口簿图片
-        $residence_bookletimages =$row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         //住房合同/房产证图片
-        $housingimages =$row['housingimages'] == '' ? [] : explode(',', $row['housingimages']);
+        $housingimages = $row['housingimages'] == '' ? [] : explode(',', $row['housingimages']);
         //银行卡图片
-        $bank_cardimages =$row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
         //申请表图片
-        $application_formimages = $row['application_formimages'] == '' ? [] :explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
         //定金合同
-        $deposit_contractimages = $row['deposit_contractimages'] == '' ? [] :explode(',', $row['deposit_contractimages']);
+        $deposit_contractimages = $row['deposit_contractimages'] == '' ? [] : explode(',', $row['deposit_contractimages']);
         //定金收据
-        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] :explode(',', $row['deposit_receiptimages']);
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] : explode(',', $row['deposit_receiptimages']);
         //通话清单
-        $call_listfiles =$row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
+        $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
         /**不必填 */
         //保证金收据
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
@@ -447,7 +449,6 @@ class Creditreview extends Backend
     }
 
 
-
     /**
      * 新车单----审核通过
      */
@@ -463,7 +464,7 @@ class Creditreview extends Backend
             $id = json_decode($id, true);
             //金融平台
             $financial_name = $this->model->where('id', $id)->value('financial_name');
-            if($financial_name == "一汽租赁"){
+            if ($financial_name == "一汽租赁") {
 
                 $admin_nickname = DB::name('admin')->alias('a')->join('sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
@@ -474,13 +475,12 @@ class Creditreview extends Backend
                 if ($result) {
 
                     $this->success();
-                    
+
                 } else {
                     $this->error();
                 }
 
-            }
-            else{
+            } else {
 
                 $admin_nickname = DB::name('admin')->alias('a')->join('sales_order b', 'b.admin_id=a.id')->where('b.id', $id)->value('a.nickname');
 
@@ -489,9 +489,9 @@ class Creditreview extends Backend
                 });
 
                 if ($result) {
-                   
+
                     $this->success();
-                    
+
                 } else {
                     $this->error();
                 }
@@ -501,23 +501,24 @@ class Creditreview extends Backend
         }
     }
 
-    public  function setBigDataSuccess(){
-      /*  $data = $this->getBigData(12,'sales_order');
+    public function setBigDataSuccess()
+    {
+        /*  $data = $this->getBigData(12,'sales_order');
 
-        $data['share_data']['params']['data']['loanRecords'][] =[
-            'overdueAmount'=>'(10000,50000]',
-            'orgName'=>25467,
-            'overdueTotal'=>'',
-            'name'=>$data['name'],
-            'certNo'=>$data['id_card'],
-            'overdueM6'=>'',
-            'loanStatusCode'=>'',
-            'overdueM3'=>$data['name'],
-            //借款金额 =
-            'loanAmount'=>'',
-            'overdueM3'=>$data['name'],
-            'overdueM3'=>$data['name'],
-*/
+          $data['share_data']['params']['data']['loanRecords'][] =[
+              'overdueAmount'=>'(10000,50000]',
+              'orgName'=>25467,
+              'overdueTotal'=>'',
+              'name'=>$data['name'],
+              'certNo'=>$data['id_card'],
+              'overdueM6'=>'',
+              'loanStatusCode'=>'',
+              'overdueM3'=>$data['name'],
+              //借款金额 =
+              'loanAmount'=>'',
+              'overdueM3'=>$data['name'],
+              'overdueM3'=>$data['name'],
+  */
 
 //        ] ;
 //        $data['share_data']['params']['data']['loanRecords'][]['orgName'] = 25467;
@@ -532,8 +533,6 @@ class Creditreview extends Backend
 
 //        return  $data;
     }
-
-
 
 
     /**
@@ -586,7 +585,6 @@ class Creditreview extends Backend
             }
         }
     }
-
 
 
     /**
@@ -694,7 +692,6 @@ class Creditreview extends Backend
     }
 
 
-
     /**
      * 选择库存车
      * @param null $ids
@@ -727,7 +724,7 @@ class Creditreview extends Backend
             $result = Db::name('sales_order')->where('id', $ids)->find();
 
             $models_name = Db::name('models')->where('id', $result['models_id'])->value('name');
-  
+
 //            $channel = "demo-newchoose_stock";
 //            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经匹配完库存车";
 //            goeary_push($channel, $content);
@@ -744,19 +741,18 @@ class Creditreview extends Backend
                 ->message($data['message'])
                 ->send();
 
-             //金融平台
-             $financial_name = $result['financial_name'];
+            //金融平台
+            $financial_name = $result['financial_name'];
 
-             if($financial_name == "一汽租赁"){
+            if ($financial_name == "一汽租赁") {
 
                 if ($result_s) {
                     $this->success();
                 } else {
                     $this->error('邮箱发送失败');
                 }
-                
-             }
-             else{
+
+            } else {
 
                 $channel = "demo-newpass_finance";
                 $content = "你发起的客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核和车辆匹配，请及时通知客户进行签订金融合同";
@@ -779,10 +775,9 @@ class Creditreview extends Backend
                     $this->error('邮箱发送失败');
                 }
 
-             }
+            }
 
-            
-            
+
             //介绍人
 
             $order_info = Db::name("sales_order")
@@ -827,42 +822,41 @@ class Creditreview extends Backend
         $this->view->assign([
             'stock' => $stock
         ]);
-        
+
         $seventtime = \fast\Date::unixtime('month', -6);
         $newonesales = $newtwosales = $newthreesales = [];
-        for ($i = 0; $i < 8; $i++)
-        {
+        for ($i = 0; $i < 8; $i++) {
             $month = date("Y-m", $seventtime + ($i * 86400 * 30));
             //销售一部
             $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-            foreach($one_sales as $k => $v){
+            foreach ($one_sales as $k => $v) {
                 $one_admin[] = $v['uid'];
             }
             $newonetake = Db::name('sales_order')
-                    ->where('review_the_data', 'the_car')
-                    ->where('admin_id', 'in', $one_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
+                ->where('review_the_data', 'the_car')
+                ->where('admin_id', 'in', $one_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
             //销售二部
             $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-            foreach($two_sales as $k => $v){
+            foreach ($two_sales as $k => $v) {
                 $two_admin[] = $v['uid'];
             }
             $newtwotake = Db::name('sales_order')
-                    ->where('review_the_data', 'the_car')
-                    ->where('admin_id', 'in', $two_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
+                ->where('review_the_data', 'the_car')
+                ->where('admin_id', 'in', $two_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
             //销售三部
             $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-            foreach($three_sales as $k => $v){
+            foreach ($three_sales as $k => $v) {
                 $three_admin[] = $v['uid'];
             }
             $newthreetake = Db::name('sales_order')
-                    ->where('review_the_data', 'the_car')
-                    ->where('admin_id', 'in', $three_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
+                ->where('review_the_data', 'the_car')
+                ->where('admin_id', 'in', $three_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
             //销售一部
             $newonesales[$month] = $newonetake;
             //销售二部
@@ -877,7 +871,6 @@ class Creditreview extends Backend
 
         return $this->view->fetch();
     }
-
 
 
     /**
@@ -911,7 +904,6 @@ class Creditreview extends Backend
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
 
 
-                
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
@@ -951,62 +943,62 @@ class Creditreview extends Backend
      */
     public function auditedit($ids = null)
     {
-            $row = $this->model->get($ids);
-            if ($row) {
-                //关联订单于方案
-                $result = Db::name('sales_order')->alias('a')
-                    ->join('plan_acar b', 'a.plan_acar_name = b.id')
-                    ->join('models c', 'c.id=b.models_id')
-                    ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.name as models_name')
-                    ->where(['a.id' => $row['id']])
-                    ->find();
+        $row = $this->model->get($ids);
+        if ($row) {
+            //关联订单于方案
+            $result = Db::name('sales_order')->alias('a')
+                ->join('plan_acar b', 'a.plan_acar_name = b.id')
+                ->join('models c', 'c.id=b.models_id')
+                ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.name as models_name')
+                ->where(['a.id' => $row['id']])
+                ->find();
+        }
+
+        $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
+
+        $category = DB::name('scheme_category')->field('id,name')->select();
+
+        $this->view->assign('category', $category);
+
+        $this->view->assign('result', $result);
+
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
             }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post('row/a');
+            // pr($params);
+            // die;
 
-            $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
-
-            $category = DB::name('scheme_category')->field('id,name')->select();
-
-            $this->view->assign('category', $category);
-
-            $this->view->assign('result', $result);
-
-            if (!$row) {
-                $this->error(__('No Results were found'));
-            }
-            $adminIds = $this->getDataLimitAdminIds();
-            if (is_array($adminIds)) {
-                if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                    $this->error(__('You have no permission'));
-                }
-            }
-            if ($this->request->isPost()) {
-                $params = $this->request->post('row/a');
-                // pr($params);
-                // die;
-
-                if ($params) {
-                    try {
-                        //是否采用模型验证
-                        if ($this->modelValidate) {
-                            $name = basename(str_replace('\\', '/', get_class($this->model)));
-                            $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-                            $row->validate($validate);
-                        }
-                        $result = $row->allowField(true)->save($params);
-                        if ($result !== false) {
-                            $this->success();
-                        } else {
-                            $this->error($row->getError());
-                        }
-                    } catch (\think\exception\PDOException $e) {
-                        $this->error($e->getMessage());
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
                     }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
                 }
-                $this->error(__('Parameter %s can not be empty', ''));
             }
-            $this->view->assign('row', $row);
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign('row', $row);
 
-            return $this->view->fetch('auditedit');
+        return $this->view->fetch('auditedit');
     }
 
     /**
@@ -1066,74 +1058,74 @@ class Creditreview extends Backend
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
         $row = $this->model->get($ids);
 //        pr($row);die;
-            if ($row) {
-                //关联订单于方案
-                $result = Db::name('second_sales_order')->alias('a')
-                    ->join('secondcar_rental_models_info b', 'a.plan_car_second_name = b.id')
-                    ->field('b.id as plan_id')
-                    ->where(['a.id' => $row['id']])
-                    ->find();
+        if ($row) {
+            //关联订单于方案
+            $result = Db::name('second_sales_order')->alias('a')
+                ->join('secondcar_rental_models_info b', 'a.plan_car_second_name = b.id')
+                ->field('b.id as plan_id')
+                ->where(['a.id' => $row['id']])
+                ->find();
+        }
+        $newRes = array();
+        //品牌
+        $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
+        // pr(Session::get('admin'));die;
+        foreach ((array)$res as $key => $value) {
+            $sql = Db::name('models')->alias('a')
+                ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
+                ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices')
+                ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
+                ->whereOr('sales_id', $this->auth->id)
+                ->select();
+            $newB = [];
+            foreach ((array)$sql as $bValue) {
+                $bValue['models_name'] = $bValue['models_name'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
+                $newB[] = $bValue;
             }
-            $newRes = array();
-            //品牌
-            $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-            // pr(Session::get('admin'));die;
-            foreach ((array)$res as $key => $value) {
-                $sql = Db::name('models')->alias('a')
-                    ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                    ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices')
-                    ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
-                    ->whereOr('sales_id', $this->auth->id)
-                    ->select();
-                $newB = [];
-                foreach ((array)$sql as $bValue) {
-                    $bValue['models_name'] = $bValue['models_name'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
-                    $newB[] = $bValue;
-                }
-                $newRes[] = array(
-                    'brand_name' => $value['brand_name'],
-                    // 'brand_logoimage'=>$value['brand_logoimage'],
-                    'data' => $newB,
-                );
-            }
-            // pr($newRes);die;
-            $this->view->assign('newRes', $newRes);
-            $this->view->assign('result', $result);
+            $newRes[] = array(
+                'brand_name' => $value['brand_name'],
+                // 'brand_logoimage'=>$value['brand_logoimage'],
+                'data' => $newB,
+            );
+        }
+        // pr($newRes);die;
+        $this->view->assign('newRes', $newRes);
+        $this->view->assign('result', $result);
 
-            if (!$row) {
-                $this->error(__('No Results were found'));
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
             }
-            $adminIds = $this->getDataLimitAdminIds();
-            if (is_array($adminIds)) {
-                if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                    $this->error(__('You have no permission'));
-                }
-            }
-            if ($this->request->isPost()) {
-                $params = $this->request->post('row/a');
-                if ($params) {
-                    try {
-                        //是否采用模型验证
-                        if ($this->modelValidate) {
-                            $name = basename(str_replace('\\', '/', get_class($this->model)));
-                            $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-                            $row->validate($validate);
-                        }
-                        $result = $row->allowField(true)->save($params);
-                        if ($result !== false) {
-                            $this->success();
-                        } else {
-                            $this->error($row->getError());
-                        }
-                    } catch (\think\exception\PDOException $e) {
-                        $this->error($e->getMessage());
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post('row/a');
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
                     }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
                 }
-                $this->error(__('Parameter %s can not be empty', ''));
             }
-            $this->view->assign('row', $row);
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign('row', $row);
 
-            return $this->view->fetch('secondauditedit');
+        return $this->view->fetch('secondauditedit');
     }
 
 
@@ -1168,7 +1160,7 @@ class Creditreview extends Backend
 //                $content = "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核";
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
 
-                
+
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
@@ -1230,12 +1222,12 @@ class Creditreview extends Backend
 //                $channel = "demo-new_information";
 //                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
-                
+
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
 
-                $data_s = new_information($models_name, $data['username'],$text);
-                
+                $data_s = new_information($models_name, $data['username'], $text);
+
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = Db::name('admin')->where('id', $data['admin_id'])->value('email');
@@ -1271,13 +1263,13 @@ class Creditreview extends Backend
         // pr($row);die;
 
         //身份证图片
-        $id_cardimages = $row['id_cardimages'] == '' ? [] :explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         //驾照图片 
-        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] :explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         //户口簿图片 
-        $residence_bookletimages =$row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         //通话清单
-        $call_listfilesimages =$row['call_listfilesimages'] == '' ? [] : explode(',', $row['call_listfilesimages']);
+        $call_listfilesimages = $row['call_listfilesimages'] == '' ? [] : explode(',', $row['call_listfilesimages']);
         $this->view->assign(
             [
                 'row' => $row,
@@ -1293,7 +1285,6 @@ class Creditreview extends Backend
         return $this->view->fetch('rentalauditResult');
 
     }
-
 
 
     /**
@@ -1330,7 +1321,7 @@ class Creditreview extends Backend
 //                $content = "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！";
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
 
-                
+
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
@@ -1363,7 +1354,6 @@ class Creditreview extends Backend
     }
 
 
-
     /**
      * 租车单----审核不通过
      * @throws DataNotFoundException
@@ -1394,7 +1384,7 @@ class Creditreview extends Backend
 //                $content = "销售员" . $admin_nickname . "提交的租车单没有通过风控审核";
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
 
-               
+
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售员
@@ -1455,12 +1445,12 @@ class Creditreview extends Backend
 //                $channel = "demo-rental_information";
 //                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
-                
+
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
 
-                $data_s = rental_information($models_name, $data['username'],$text);
-                
+                $data_s = rental_information($models_name, $data['username'], $text);
+
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = Db::name('admin')->where('id', $data['admin_id'])->value('email');
@@ -1497,23 +1487,23 @@ class Creditreview extends Backend
 
         //身份证图片
 
-        $id_cardimages = $row['id_cardimages'] == '' ? [] :explode(',', $row['id_cardimages']);
+        $id_cardimages = $row['id_cardimages'] == '' ? [] : explode(',', $row['id_cardimages']);
         //驾照图片
-        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] :explode(',', $row['drivers_licenseimages']);
+        $drivers_licenseimages = $row['drivers_licenseimages'] == '' ? [] : explode(',', $row['drivers_licenseimages']);
         //户口簿图片
-        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] :explode(',', $row['residence_bookletimages']);
+        $residence_bookletimages = $row['residence_bookletimages'] == '' ? [] : explode(',', $row['residence_bookletimages']);
         //住房合同/房产证图片
-        $housingimages = $row['housingimages'] == '' ? [] :explode(',', $row['housingimages']);
+        $housingimages = $row['housingimages'] == '' ? [] : explode(',', $row['housingimages']);
         //银行卡图片
-        $bank_cardimages = $row['bank_cardimages'] == '' ? [] :explode(',', $row['bank_cardimages']);
+        $bank_cardimages = $row['bank_cardimages'] == '' ? [] : explode(',', $row['bank_cardimages']);
         //申请表图片
-        $application_formimages = $row['application_formimages'] == '' ? [] :explode(',', $row['application_formimages']);
+        $application_formimages = $row['application_formimages'] == '' ? [] : explode(',', $row['application_formimages']);
         //定金合同
-        $deposit_contractimages =$row['deposit_contractimages'] == '' ? [] : explode(',', $row['deposit_contractimages']);
+        $deposit_contractimages = $row['deposit_contractimages'] == '' ? [] : explode(',', $row['deposit_contractimages']);
         //定金收据
-        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] :explode(',', $row['deposit_receiptimages']);
+        $deposit_receiptimages = $row['deposit_receiptimages'] == '' ? [] : explode(',', $row['deposit_receiptimages']);
         //通话清单
-        $call_listfiles =$row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
+        $call_listfiles = $row['call_listfiles'] == '' ? [] : explode(',', $row['call_listfiles']);
         /**不必填 */
         //保证金收据
         $new_car_marginimages = $row['new_car_marginimages'] == '' ? [] : explode(',', $row['new_car_marginimages']);
@@ -1538,7 +1528,6 @@ class Creditreview extends Backend
         return $this->view->fetch('secondhandcarResult');
 
     }
-
 
 
     /**
@@ -1572,7 +1561,6 @@ class Creditreview extends Backend
     }
 
 
-
     /**
      * 二手车单-----选择库存车
      * @param null $ids
@@ -1593,7 +1581,7 @@ class Creditreview extends Backend
             Db::name("second_sales_order")
                 ->where("id", $ids)
                 ->update([
-                    'second_car_id'   => $id,
+                    'second_car_id' => $id,
                     'review_the_data' => "for_the_car",
                     'delivery_datetime' => time()
                 ]);
@@ -1601,7 +1589,7 @@ class Creditreview extends Backend
             $result = Db::name('second_sales_order')->where('id', $ids)->find();
             //车型
             $models_name = Db::name('models')->where('id', $result['models_id'])->value('name');
-            
+
             //发送销售
 //            $channel = "demo-secondpass_inform";
 //            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经通过风控审核，匹配完车辆，通知客户进行提车";
@@ -1648,7 +1636,7 @@ class Creditreview extends Backend
             } else {
                 $this->error('邮箱发送失败');
             }
-            
+
         }
 
         //展示的信息
@@ -1659,46 +1647,45 @@ class Creditreview extends Backend
             ->where('shelfismenu', '=', '1')
             ->field("i.id,m.name,i.licenseplatenumber,i.vin,i.engine_number,i.companyaccount,i.Parkingposition,i.note")
             ->select();
-        
+
         $this->view->assign([
             'stock' => $stock
         ]);
-        
+
         $seventtime = \fast\Date::unixtime('month', -6);
         $secondonesales = $secondtwosales = $secondthreesales = [];
-        for ($i = 0; $i < 8; $i++)
-        {
+        for ($i = 0; $i < 8; $i++) {
             $month = date("Y-m", $seventtime + ($i * 86400 * 30));
             //销售一部
             $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
-            foreach($one_sales as $k => $v){
+            foreach ($one_sales as $k => $v) {
                 $one_admin[] = $v['uid'];
             }
             $secondonetake = Db::name('second_sales_order')
-                    ->where('review_the_data', 'for_the_car')
-                    ->where('admin_id', 'in', $one_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
+                ->where('review_the_data', 'for_the_car')
+                ->where('admin_id', 'in', $one_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
             //销售二部
             $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
-            foreach($two_sales as $k => $v){
+            foreach ($two_sales as $k => $v) {
                 $two_admin[] = $v['uid'];
             }
             $secondtwotake = Db::name('second_sales_order')
-                    ->where('review_the_data', 'for_the_car')
-                    ->where('admin_id', 'in', $two_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
+                ->where('review_the_data', 'for_the_car')
+                ->where('admin_id', 'in', $two_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
             //销售三部
             $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
-            foreach($three_sales as $k => $v){
+            foreach ($three_sales as $k => $v) {
                 $three_admin[] = $v['uid'];
             }
             $secondthreetake = Db::name('second_sales_order')
-                    ->where('review_the_data', 'for_the_car')
-                    ->where('admin_id', 'in', $three_admin)
-                    ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
-                    ->count();
+                ->where('review_the_data', 'for_the_car')
+                ->where('admin_id', 'in', $three_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
             //销售一部
             $secondonesales[$month] = $secondonetake;
             //销售二部
@@ -1712,7 +1699,6 @@ class Creditreview extends Backend
 
         return $this->view->fetch();
     }
-
 
 
     /**
@@ -1745,7 +1731,7 @@ class Creditreview extends Backend
 //                $content = "销售员" . $admin_nickname . "提交的二手车单需要提交保证金";
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
 
-                
+
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
@@ -1780,7 +1766,6 @@ class Creditreview extends Backend
     }
 
 
-
     /**
      * 二手车单----审核不通过
      * @throws DataNotFoundException
@@ -1811,7 +1796,7 @@ class Creditreview extends Backend
 //                $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核";
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
 
-                
+
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
@@ -1846,8 +1831,6 @@ class Creditreview extends Backend
     }
 
 
-
-
     /**
      * 二手车单----审核不通过，待补录资料
      * @throws DataNotFoundException
@@ -1862,7 +1845,7 @@ class Creditreview extends Backend
 
             $id = input("id");
             $text = input("text");
-            
+
             $id = json_decode($id, true);
 
             $result = $this->model->save(['review_the_data' => 'collection_data', 'text' => $text], function ($query) use ($id) {
@@ -1877,12 +1860,12 @@ class Creditreview extends Backend
 //                $channel = "demo-second_information";
 //                $content = "销售员" . $admin_nickname . "提交的二手车单没有通过风控审核,需要补录：" . $text ."资料";
 //                goeary_push($channel, $content . "|" . $data['admin_id']);
-                
+
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
 
-                $data_s = second_information($models_name, $data['username'],$text);
-                
+                $data_s = second_information($models_name, $data['username'], $text);
+
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = Db::name('admin')->where('id', $data['admin_id'])->value('email');
@@ -1904,12 +1887,41 @@ class Creditreview extends Backend
         }
     }
 
+    /**
+     * 点击审核按钮之前，判断是否有查看大数据
+     * @param null $ids
+     * @param null $bigdatatype
+     */
+    public function match_bigdata($ids = null, $bigdatatype = null)
+    {
+        if ($this->request->isAjax()) {
+            if ($this->request->isPost()) {
+                if ($bigdatatype == 'sales_order') $bigdatatype = 'sales_order_id';
+                if ($bigdatatype == 'rental_order') $bigdatatype = 'rental_order_id';
+                if ($bigdatatype == 'second_sales_order') $bigdatatype = 'second_sales_order_id';
+                $result = Db::name('big_data')->where(function ($query) use ($ids, $bigdatatype) {
+                    $query->where(
+                        [
+                            $bigdatatype => $ids
+                        ]);
+                })->find();
+                if (empty($result)) $this->error('请先查看一次大数据', '', $result);
+                else $this->success('返回成功', '', $result);
+
+            } else {
+                $this->error('非法请求');
+            }
+
+        } else {
+            $this->error('非法请求');
+        }
+    }
 
 
     /**
      * 查看大数据  新车、二手车、租车
      * @param null $ids
-     * @param null $bigdatatype  数据表区分
+     * @param null $bigdatatype 数据表区分
      * @return null|string
      * @throws \think\Exception
      */
@@ -1917,8 +1929,10 @@ class Creditreview extends Backend
     {
 
         //$bigdatatype为表名
-    //唐玉全	15828604423	510623196501259219  +aXoOaVsOaNriIsInBhcmFtcyI6eyJ0eCI6IjEwMiIsImRhdGEiOnsibG9hblJlY29yZHMiOltdLCJyaXNrUmVzdWx0cyI6W10sImZsb3dJZCI6IjcxNmFkOTk1N2MwNTQ0NWU4ZmVmNDE1OTIxMWFmYTBiIn19fQ==
+        //唐玉全	15828604423	510623196501259219  +aXoOaVsOaNriIsInBhcmFtcyI6eyJ0eCI6IjEwMiIsImRhdGEiOnsibG9hblJlY29yZHMiOltdLCJyaXNrUmVzdWx0cyI6W10sImZsb3dJZCI6IjcxNmFkOTk1N2MwNTQ0NWU4ZmVmNDE1OTIxMWFmYTBiIn19fQ==
         $bigdata = $this->toViewBigData($ids, $bigdatatype);
+
+
         $this->assignconfig([
             'zcFraudScore' => $bigdata['risk_data']['data']['zcFraudScore']
         ]);
@@ -1926,12 +1940,13 @@ class Creditreview extends Backend
         return $this->view->fetch();
     }
 
-    public function toViewBigData($ids,$table)
+    public function toViewBigData($ids, $table)
     {
 
         $row = Db::name($table)->find(function ($query) use ($ids) {
             $query->field('id,username,id_card,phone')->where('id', $ids);
         });
+
         // $row = $this->getTabledata();
 
         $params = array();
@@ -1949,17 +1964,17 @@ class Creditreview extends Backend
         );
         // return $this->bigDataHtml();
         //判断数据库里是否有当前用户的大数据
-        $data = $this->getBigData($row['id'],$table);
+        $data = $this->getBigData($row['id'], $table);
         if (empty($data)) {
             //如果数据为空，调取大数据接口
-            $result[$table.'_id'] = $row['id'];
+            $result[$table . '_id'] = $row['id'];
             $result['name'] = $row['username'];
             $result['phone'] = $row['phone'];
             $result['id_card'] = $row['id_card'];
             $result['createtime'] = time();
             // pr($result);die;
             $result['share_data'] = posts('https://www.zhichengcredit.com/echo-center/api/echoApi/v3', $params);
-
+//            pr($result);die;
             /**共享数据接口 */
             //只有errorCode返回 '0000'  '0001'  '0005' 时为正确查询
             if ($result['share_data']['errorCode'] == '0000' || $result['share_data']['errorCode'] == '0001' || $result['share_data']['errorCode'] == '0005') {
@@ -2004,14 +2019,14 @@ class Creditreview extends Backend
                     $writeDatabases = Db::name('big_data')->insert($result);
                     if ($writeDatabases) {
 
-                        return $this->getBigData($row['id'],$table);
+                        return $this->getBigData($row['id'], $table);
                         // $this->view->assign('bigdata', $this->getBigData($row['id']));
 
                     } else {
-                        die('<h1><center>数据写入失败</center></h1>') ;
+                        die('<h1><center>数据写入失败</center></h1>');
                     }
                 } else {
-                    die("<h1><center>风险接口-》{$result['risk_data']['message']}</center></h1>") ;
+                    die("<h1><center>风险接口-》{$result['risk_data']['message']}</center></h1>");
 
                 }
 
@@ -2023,12 +2038,13 @@ class Creditreview extends Backend
             return $data;
         }
     }
+
     /**
      * 查询大数据表
      * @param int $order_id
      * @return data
      */
-    public function getBigData($order_id,$table)
+    public function getBigData($order_id, $table)
     {
         $bigData = Db::name('big_data')->alias('a')
             ->join("{$table} b", "a.{$table}_id = b.id")
@@ -2045,7 +2061,6 @@ class Creditreview extends Backend
             return [];
         }
     }
-
 
 
 }
