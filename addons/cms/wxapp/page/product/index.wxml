@@ -24,6 +24,8 @@
   <!-- E 产品列表 -->
 
 
+<view bindtap='requests'>123</view>
+
 
 
   <!-- S 加载更多 -->
