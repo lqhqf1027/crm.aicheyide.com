@@ -40,7 +40,7 @@
         "pagePath": "page/product/index",
         "iconPath": "assets/images/tabbar/addon.png",
         "selectedIconPath": "assets/images/tabbar/addon-hl.png",
-        "text": "新能源"
+        "text": "小视频"
       },
       {
         "pagePath": "page/my/index",

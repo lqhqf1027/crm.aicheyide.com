@@ -34,7 +34,7 @@ class Orderlisttabs extends Backend
 
         'secondedit', 'fulladd', 'fulledit', 'submitCar', 'del', 'fulldel', 'seconddel', 'newreserve', 'newreserveedit', 'newcontroladd', 'newinformation', 'newinformtube',
         'secondreserve', 'secondaudit', 'page', 'new_car_share_data', 'secondinformation', 'rentalinformation', 'newinformation', 'secondOrderFull', 'secondfulladd', 
-        'secondfullinternal', 'secondfulldel', 'secondfulledit'];
+        'secondfullinternal', 'secondfulldel', 'secondfulledit', 'newcollectioninformation'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段

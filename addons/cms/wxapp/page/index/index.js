@@ -6,6 +6,7 @@ Page(Object.assign({}, Tab, {
   data: {
     bannerList: [],
     archivesList: [],
+    text: [],
     loading: false,
     nodata: false,
     nomore: false,
@@ -46,6 +47,7 @@ Page(Object.assign({}, Tab, {
     this.page = 1;
     this.setData({ ["tab.list"]: app.globalData.indexTabList });
     app.request('/index/index', {}, function (data, ret) {
+      console.log(data.tabList);
       that.setData({
         bannerList: data.bannerList,
         archivesList: data.archivesList,
@@ -158,4 +160,27 @@ Page(Object.assign({}, Tab, {
         break
     }
   },
+  onShow: function () {
+    var that = this;
+    app.request('/text/index', {}, function (data, ret) {
+      that.setData({
+        text: data.plan,
+      });
+      console.log(data.plan);
+    }, function (data, ret) {
+      app.error(ret.msg);
+    });
+  },
 }))
+
+
+
+
+
+
+
+
+
+
+
+
