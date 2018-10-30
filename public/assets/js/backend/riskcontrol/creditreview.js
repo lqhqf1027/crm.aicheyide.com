@@ -90,7 +90,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
-                    search: false,
+                    // search: false,
                     searchFormVisible: true,
                     columns: [
                         [
@@ -230,7 +230,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                                     },
                                     {
                                         name: 'for_the_car',
-                                        text: '提交给销售，通知客户签订金融合同',
+                                        text: '金融已通过，提交给销售，通知客户签订金融合同',
                                         title: '提交到销售，通知客户签订金融合同',
                                         icon: 'fa fa-share',
                                         extend: 'data-toggle="tooltip"',
@@ -274,9 +274,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                                             }
                                         }
                                     },
+                                    /**
+                                     * 一汽租赁
+                                     */
                                     {
                                         name: 'conclude_the_contract',
-                                        text: '提交车管，进行录入库存',
+                                        text: '已签金融合同，通知车管 采购车辆入库',
                                         title: '提交车管，进行录入库存',
                                         icon: 'fa fa-share',
                                         extend: 'data-toggle="tooltip"',
@@ -321,10 +324,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                                             }
                                         }
                                     },
+                                    /**
+                                     * 其他金融
+                                     */
                                     {
                                         name: 'is_reviewing_pass',
-                                        text: '提交车管，进行录入库存',
-                                        title: '提交车管，进行录入库存',
+                                        text: '通知车管 采购车辆入库',
+                                        title: '通知车管 采购车辆入库',
                                         icon: 'fa fa-share',
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-info btn-submit_newtube_finance',
@@ -1768,379 +1774,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                  * @returns {string}
                  */
                 sales: function (value, row, index) {
-                    // console.log(row);
-
                     return value == null ? value : "<img src=" + Config.cdn_url + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + row.admin.department + ' - ' + value;
                 },
 
-                /**
-                 * 点击审核按钮之前，判断是否有查看大数据
-                 * @param e
-                 * @param value
-                 * @param row
-                 * @param index
-                 */
 
             }
 
         }
     }
-
- 
-    /**
-     * 提供担保人
-     */
-    $('#newdata').click(function () {
-        // alert(123);
-        // return false;
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('是否需要提供担保人吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/newdata',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-
-    });
-
-    /**
-     * 不通过审核
-     */
-    $('#newnopass').click(function () {
-        // alert(123);
-        // return false;
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('确定不通过征信审核吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/newnopass',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-
-    });
-
-    /**
-     * 新车审核不通过,待补录资料
-     */
-    $('#newinformation').click(function () {
-
-        var id = $('#hidden1').val();
-
-        var prompt = Layer.prompt(
-            {title: '输入需要补录的资料，并确认', shadeClose: true},
-
-            function (text, index) {
-                // console.log(text);
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/newinformation',
-                    data: {id: JSON.stringify(id), text: text}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(prompt);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-
-    });
-
-
-    /**
-     * 租车审核通过
-     */
-    $('#rentalpass').click(function () {
-        // alert(123);
-        // return false;
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('确定通过征信审核吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/rentalpass',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-                    // console.log(data);
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    return false;
-                });
-
-            }
-        );
-
-    });
-
-    /**
-     * 租车审核不通过
-     */
-    $('#rentalnopass').click(function () {
-        // alert(123);
-        // return false;
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('确定不通过征信审核吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/rentalnopass',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-
-    });
-
-    /**
-     * 租车审核不通过,待补录资料
-     */
-    $('#rentalinformation').click(function () {
-
-        var id = $('#hidden1').val();
-
-        var prompt = Layer.prompt(
-            {title: '输入需要补录的资料，并确认', shadeClose: true},
-
-            function (text, index) {
-                // console.log(text);
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/rentalinformation',
-                    data: {id: JSON.stringify(id), text: text}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(prompt);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-    });
-
-    /**
-     * 二手车审核通过
-     */
-    $('#secondpass').click(function () {
-        // alert(123);
-        // return false;
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('确定通过征信审核吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/secondpass',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-    });
-
-    /**
-     * 二手车提供担保人
-     */
-    $('#seconddata').click(function () {
-        // alert(123);
-        // return false;
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('是否需要提供担保人吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/seconddata',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-
-    });
-
-    /**
-     * 二手车审核不通过
-     */
-    $('#secondnopass').click(function () {
-        // alert(123);
-        // return false;
-        var id = $('#hidden1').val();
-        var confirm = Layer.confirm(
-            __('确定不通过征信审核吗?'),
-            {icon: 3, title: __('Warning'), shadeClose: true},
-
-            function (index) {
-
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/secondnopass',
-                    data: {id: JSON.stringify(id)}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(confirm);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-
-    });
-
-    /**
-     * 二手车审核不通过,待补录资料
-     */
-    $('#secondinformation').click(function () {
-
-        var id = $('#hidden1').val();
-
-        var prompt = Layer.prompt(
-            {title: '输入需要补录的资料，并确认', shadeClose: true},
-
-            function (text, index) {
-                // console.log(text);
-                Fast.api.ajax({
-                    url: 'riskcontrol/creditreview/secondinformation',
-                    data: {id: JSON.stringify(id), text: text}
-                }, function (data, ret) {
-
-                    Toastr.success("成功");
-                    Layer.close(prompt);
-                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                    parent.layer.close(index);
-                    return false;
-                }, function (data, ret) {
-                    //失败的回调
-
-                    return false;
-                });
-
-
-            }
-        );
-
-
-    });
-
-
     return Controller;
 
 })
