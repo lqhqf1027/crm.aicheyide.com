@@ -50,7 +50,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     $('#prepare_send_total').text(data.total);
 
-                })
+                    $.get('riskcontrol/Peccancy/totals',function (data) {
+                            $('#peccancy').text(data.peccancy);
+                            $('#year_inspect').text(data.year_inspect);
+                            $('#year_overdue').text(data.year_overdue);
+                            $('#strong').text(data.strong);
+                            $('#strong_overdue').text(data.strong_overdue);
+                            $('#business').text(data.business);
+                            $('#business_overdue').text(data.business_overdue);
+                    });
+
+                });
                 // 初始化表格
                 table.bootstrapTable({
                     url: 'riskcontrol/Peccancy/prepare_send',
@@ -98,22 +108,45 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 },
                             },
                             {
+                                field: 'strong_deadtime',
+                                title: '交强险截止时间',
+                                operate: false,
+                                formatter: Controller.api.formatter.renew,
+                                datetimeFormat: "YYYY-MM-DD",
+                            },
+                            {
+                                field: 'business_deadtime',
+                                title: '商业险截止时间',
+                                operate: false,
+                                formatter: Controller.api.formatter.business_status,
+                                datetimeFormat: "YYYY-MM-DD",
+                            },
+                            {
+                                field: 'year_checktime',
+                                title: '年检险截止时间',
+                                operate: false,
+                                formatter: Controller.api.formatter.datetime,
+                                datetimeFormat: "YYYY-MM-DD",
+                            },
+                            {
                                 field: 'year_status',
                                 title: '年检状态',
-                                formatter: Controller.api.formatter.year_status,
-                                searchList: {'-2': '即将年检', '-3': '年检已过期'}
+                                // formatter: Controller.api.formatter.year_status,
+                                searchList: {'-2': '即将年检', '-3': '年检已过期'},
+                                visible: false
                             },
                             {
                                 field: 'strong_status',
                                 title: '交强险续保状态',
-                                formatter: Controller.api.formatter.renew,
+                                // formatter: Controller.api.formatter.renew,
                                 searchList: {"1": __('即需续保'), "2": __('已过期')},
+                                visible: false
                             },
                             {
                                 field: 'business_status',
                                 title: '商业险续保状态',
-                                formatter: Controller.api.formatter.business_status,
                                 searchList: {'1': '即需续保', "2": __('已过期')},
+                                visible: false
                             },
                             {
                                 field: 'license_plate_number',
@@ -151,27 +184,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 datetimeFormat: "YYYY-MM-DD",
 
                             },
-                            {
-                                field: 'strong_deadtime',
-                                title: '交强险截止时间',
-                                operate: false,
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD",
-                            },
-                            {
-                                field: 'business_deadtime',
-                                title: '商业险截止时间',
-                                operate: false,
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD",
-                            },
-                            {
-                                field: 'year_checktime',
-                                title: '年检险截止时间',
-                                operate: false,
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD",
-                            },
+
 
                             {
                                 field: 'final_time',
@@ -391,6 +404,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         edit: function () {
             Controller.api.bindevent();
+
+            Form.api.bindevent($("form[role=form]"), function (data, ret) {
+
+
+
+
+
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+                Fast.api.close(data);//这里是重点
+
+            }, function (data, ret) {
+
+
+            });
         },
 
         /**
@@ -450,20 +477,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * @returns {string}
                  */
                 business_status: function (value, row, index) {
-
-                    if (!row.business_deadtime) {
+                    if (!value) {
                         return '-';
                     }
 
-                    var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+                    var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
+                    if (isNaN(value)) {
+                        return value ? Moment(value).format(datetimeFormat) : __('None');
+                    } else {
 
-                    now = parseInt(now) / 1000;
+                        var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 
-                    var flag = -1;
+                        now = parseInt(now) / 1000;
 
-                    if (row.business_deadtime) {
+                        var flag = -1;
 
-                        var business = row.business_deadtime;
+
+                        var business = value;
 
                         var pres = parseInt(business) - 86400 * 30;
 
@@ -474,18 +504,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             flag = -3;
                         }
 
+
+                        switch (flag) {
+                            case -1:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-success' style='cursor: pointer'>正常</span>";
+                            case -2:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
+                            case -3:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
+
+                        }
+
                     }
 
 
-                    switch (flag) {
-                        case -1:
-                            return "<span class='label label-success' style='cursor: pointer'>正常</span>";
-                        case -2:
-                            return "<span class='label label-warning' style='cursor: pointer'>商业险即需续保</span>";
-                        case -3:
-                            return "<span class='label label-danger' style='cursor: pointer'>商业险已过期</span>";
-
-                    }
                 },
 
                 /**
@@ -571,11 +603,58 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 },
 
                 datetime: function (value, row, index) {
+                    if (!value) {
+                        return '-';
+                    }
                     var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
                     if (isNaN(value)) {
                         return value ? Moment(value).format(datetimeFormat) : __('None');
                     } else {
-                        return value ? Moment(parseInt(value) * 1000).format(datetimeFormat) : __('None');
+
+                        var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+
+                        now = parseInt(now) / 1000;
+
+                        var flag = -1;
+
+                        if (row.year_checktime) {
+                            var pre = parseInt(row.year_checktime) - 86400 * 30;
+
+                            if (now >= pre && now <= row.year_checktime) {
+                                flag = -2;
+                            } else if (now > row.year_checktime) {
+                                flag = -3;
+                            }
+
+
+                        } else {
+                            return '-';
+                        }
+
+                        $.ajax({
+                            url: 'riskcontrol/peccancy/year_status',
+                            dataType: "json",
+                            type: "post",
+                            data: {
+                                status: flag,
+                                id: row.id
+                            }, success: function (data) {
+
+                            }, error: function (type) {
+                            }
+                        });
+
+
+                        switch (flag) {
+                            case -1:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-success' style='cursor: pointer'>正常</span>";
+                            case -2:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-warning' style='cursor: pointer'>即将年检</span>"
+                            case -3:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-danger' style='cursor: pointer'>年检已过期</span>"
+                        }
+
+
                     }
                 },
 
@@ -604,32 +683,26 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  */
                 renew: function (value, row, index) {
 
-                    var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime()
+
+                    var now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 
                     now = parseInt(now) / 1000;
-
-
-                    if (!value) {
-                        return '-';
-                    }
 
                     var flag1 = -1;
 
                     var flag2 = -1;
 
-                    if (row.strong_deadtime) {
+                    if (value) {
 
-                        var strong = row.strong_deadtime;
+                        var strong = value;
 
                         var pre = parseInt(strong) - 86400 * 30;
-
 
                         if (now >= pre && now <= strong) {
                             flag1 = -2;
                         } else if (now > strong) {
                             flag1 = -3;
                         }
-
 
                     }
 
@@ -663,18 +736,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     });
 
 
-                    if (!row.strong_deadtime) {
+                    if (!value) {
                         return '-';
                     }
 
+                    var datetimeFormat = typeof this.datetimeFormat === 'undefined' ? 'YYYY-MM-DD HH:mm:ss' : this.datetimeFormat;
+                    if (isNaN(value)) {
+                        return value ? Moment(value).format(datetimeFormat) : __('None');
+                    } else {
 
-                    switch (flag1) {
-                        case -1:
-                            return "<span class='label label-success' style='cursor: pointer'>正常</span>";
-                        case -2:
-                            return "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>";
-                        case -3:
-                            return "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>";
+                        switch (flag1) {
+                            case -1:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-success' style='cursor: pointer'>正常</span>";
+                            case -2:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-warning' style='cursor: pointer'>交强险即需续保</span>";
+                            case -3:
+                                return Moment(parseInt(value) * 1000).format(datetimeFormat) + ' ' + "<span class='label label-danger' style='cursor: pointer'>交强险已过期</span>";
+
+                        }
+
 
                     }
 

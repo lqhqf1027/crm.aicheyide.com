@@ -39,30 +39,6 @@ class Peccancy extends Backend
      */
     public function index()
     {
-        $peccancy = $this->model->where('peccancy_status', 2)->count();    //有违章
-
-        $year_inspect = $this->model->where('year_status', -2)->count();   //即将年检
-
-        $year_overdue = $this->model->where('year_status', -3)->count();   //年检已过期
-
-        $strong = $this->model->where('strong_status', 1)->count();        //交强险即需续保
-
-        $strong_overdue = $this->model->where('strong_status', 2)->count();//交强险续保过期
-
-        $business = $this->model->where('business_status', 1)->count();    //商业险即需续保
-
-        $business_overdue = $this->model->where('business_status', 2)->count();//商业险续保过期
-
-        $this->view->assign([
-            'peccancy' => $peccancy,
-            'year_inspect' => $year_inspect,
-            'strong' => $strong,
-            'business' => $business,
-            'year_overdue' => $year_overdue,
-            'strong_overdue' => $strong_overdue,
-            'business_overdue' => $business_overdue
-
-        ]);
 
         return $this->view->fetch();
     }
@@ -555,7 +531,7 @@ class Peccancy extends Backend
                     }
                     $result = $row->allowField(true)->save($params);
                     if ($result !== false) {
-                        $this->success();
+                        $this->success('','',5);
                     } else {
                         $this->error($row->getError());
                     }
@@ -585,11 +561,11 @@ class Peccancy extends Backend
 
             $ids = $this->request->post('id');
 
-            if (Cache::get('insurance_flag' . $ids)) {
-                return;
-            } else {
-                Cache::set('insurance_flag' . $ids, 1, 3600 * 6);
-            }
+//            if (Cache::get('insurance_flag' . $ids)) {
+//                return;
+//            } else {
+//                Cache::set('insurance_flag' . $ids, 1, 3600 * 6);
+//            }
 
             $status = json_decode($status, true);
 
@@ -670,17 +646,50 @@ class Peccancy extends Backend
 
             $ids = $this->request->post('id');
 
-            if (Cache::get('year' . $ids)) {
-                return;
-            } else {
-                Cache::set('year' . $ids, '1', 3600 * 6);
-            }
+//            if (Cache::get('year' . $ids)) {
+//                return;
+//            } else {
+//                Cache::set('year' . $ids, '1', 3600 * 6);
+//            }
 
             Db::name('violation_inquiry')
                 ->where('id', $ids)
                 ->setField('year_status', $status);
 
         }
+    }
+
+    /**
+     * 统计
+     * @return array
+     */
+    public function totals()
+    {
+
+            $peccancy = $this->model->where('peccancy_status', 2)->count();    //有违章
+
+            $year_inspect = $this->model->where('year_status', -2)->count();   //即将年检
+
+            $year_overdue = $this->model->where('year_status', -3)->count();   //年检已过期
+
+            $strong = $this->model->where('strong_status', 1)->count();        //交强险即需续保
+
+            $strong_overdue = $this->model->where('strong_status', 2)->count();//交强险续保过期
+
+            $business = $this->model->where('business_status', 1)->count();    //商业险即需续保
+
+            $business_overdue = $this->model->where('business_status', 2)->count();//商业险续保过期
+
+            return [
+                'peccancy'=>$peccancy,
+                'year_inspect'=>$year_inspect,
+                'year_overdue'=>$year_overdue,
+                'strong'=>$strong,
+                'strong_overdue'=>$strong_overdue,
+                'business'=>$business,
+                'business_overdue'=>$business_overdue
+            ];
+
     }
 
 }
