@@ -19,15 +19,15 @@
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
-    "color": "#aaaaaa",
-    "selectedColor": "#28ba9c",
-    "borderStyle": "black",
-    "backgroundColor": "#000000",
+    "color": "#000",
+    "selectedColor": "#000",
+    "borderStyle": "white",
+    "backgroundColor": "#fff",
     "list": [
       {
         "pagePath": "page/index/index",
-        "iconPath": "assets/images/tabbar/index.png",
-        "selectedIconPath": "assets/images/tabbar/index-hl.png",
+        "iconPath": "assets/images/tabbar/home2.png",
+        "selectedIconPath": "assets/images/tabbar/home2-hl.png",
         "text": "首页"
       },
       {

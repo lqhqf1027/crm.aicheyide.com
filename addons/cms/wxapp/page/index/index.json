@@ -1,11 +1,15 @@
 {
   "navigationBarTitleText": "友车友家",
   "enablePullDownRefresh": true,
+ 
 
   "usingComponents": {
-    
-    "wux-animation-group": "../../dist/animation-group/index",
-    "wux-cell-group": "../../dist/cell-group/index"
+    "wux-icon": "../../dist/dist/icon/index",
+    "wux-badge": "../../dist/dist/badge/index",
+    "wux-tabbar": "../../dist/dist/tabbar/index",
+    "wux-tabbar-item": "../../dist/dist/tabbar-item/index",
+    "wux-animation-group": "../../dist/dist/animation-group/index",
+    "wux-cell-group": "../../dist/dist/cell-group/index"
     
   }
 }

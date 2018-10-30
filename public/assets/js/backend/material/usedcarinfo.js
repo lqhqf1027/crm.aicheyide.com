@@ -79,14 +79,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             },
                             {field: 'username', title: __('客户姓名'),formatter:Controller.api.formatter.inspection},
-                            {
-                                field: 'mortgageregistration.next_inspection',
-                                title: __('年检截止日期'),
-                                operate: 'RANGE',
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime,
-                                datetimeFormat: "YYYY-MM-DD"
-                            },
+                            // {
+                            //     field: 'mortgageregistration.next_inspection',
+                            //     title: __('年检截止日期'),
+                            //     operate: 'RANGE',
+                            //     addclass: 'datetimerange',
+                            //     formatter: Table.api.formatter.datetime,
+                            //     datetimeFormat: "YYYY-MM-DD"
+                            // },
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
                             {field: 'mortgageregistration.totalprices', title: __('合同总价'), operate: false},
