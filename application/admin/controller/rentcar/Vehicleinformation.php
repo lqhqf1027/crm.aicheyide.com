@@ -78,7 +78,13 @@ class Vehicleinformation extends Backend
                     ->join('car_rental_models_info b', 'a.plan_car_rental_name = b.id')
                     ->field('a.plan_car_rental_name, a.admin_id')
                     ->select();
-
+                //二手车已卖车辆
+                $second_car = Db::name('secondcar_rental_models_info')
+                    ->where('status_data', 'NEQ', ' ')
+                    ->field('licenseplatenumber')
+                    ->select();
+                // pr($second_car);
+                // die;
                 $row->visible(['id', 'licenseplatenumber', 'kilometres', 'companyaccount', 'cashpledge', 'threemonths', 'sixmonths', 'manysixmonths', 'drivinglicenseimages', 'vin',
                     'engine_no', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
                     'status_data', 'department', 'admin_name']);
@@ -97,6 +103,13 @@ class Vehicleinformation extends Backend
                         $list[$k]['department'] = $department;
                         $list[$k]['admin_name'] = $admin_name;
 
+                    }
+                }
+                //二手车已卖车辆   在租车里下架
+                foreach ((array)$second_car as $key => $value) {
+                    if ($value['licenseplatenumber'] == $row['licenseplatenumber']) {
+                        
+                        $this->model->where('licenseplatenumber', $value['licenseplatenumber'])->setField(["shelfismenu"=>'0','vehiclestate'=>'已卖掉，不可租','note'=>'车辆已经当作二手车卖掉，不可以出租']);
                     }
                 }
             }
