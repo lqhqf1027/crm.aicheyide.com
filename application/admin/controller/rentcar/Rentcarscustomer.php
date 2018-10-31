@@ -200,6 +200,16 @@ class Rentcarscustomer extends Backend
             $params = $this->request->post("row/a");
 
             $params['car_backtime'] = strtotime($params['car_backtime']);
+
+            if(!$row['renewal_month']){
+               $params['renewal_month'] = json_encode([$params['renewal_month']]);
+            }else{
+               $pre = json_decode($row['renewal_month'],true);
+
+               $pre[count($pre)] = $params['renewal_month'];
+
+                $params['renewal_month'] = json_encode($pre);
+            }
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -242,10 +252,14 @@ class Rentcarscustomer extends Backend
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $order = $this->request->post("order/a");
 
-            $params['actual_backtime'] = strtotime($params['actual_backtime']);
+            $order['actual_backtime'] = strtotime($order['actual_backtime']);
+
+
             if ($params) {
                 try {
+                    $params['status_data'] = null;
 
                     $result = DB::name('car_rental_models_info')
                         ->where('id', $info_id)
@@ -255,7 +269,10 @@ class Rentcarscustomer extends Backend
 
                         DB::name('rental_order')
                             ->where('id', $ids)
-                            ->setField('review_the_data', 'retiring');
+                            ->update([
+                                'review_the_data'=> 'retiring',
+                                'actual_backtime'=>$order['actual_backtime']
+                            ]);
 
                         $this->success();
                     } else {

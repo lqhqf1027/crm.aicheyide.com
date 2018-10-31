@@ -385,12 +385,14 @@ class Exchangeplatformtabs extends Backend
      */
     public function batch_change_platform($ids = null)
     {
+
         $change = Db::name("sales_order")
             ->alias("so")
             ->join("mortgage m", "so.mortgage_id = m.id")
             ->where("so.id", "in", $ids)
             ->field("m.mortgage_type")
             ->find();
+
 
         if ($change) {
             $this->view->assign('mortgage_type', $change['mortgage_type']);

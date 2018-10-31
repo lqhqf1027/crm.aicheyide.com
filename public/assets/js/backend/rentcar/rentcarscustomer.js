@@ -64,10 +64,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             {field: 'cash_pledge', title: __('押金（元）'), operate: false},
                             {field: 'rental_price', title: __('租金（元）'), operate: false},
-                            {field: 'tenancy_term', title: __('租期（月）'), operate: false},
+                            {field: 'tenancy_term', title: __('租期（月）'), operate: false,formatter:Controller.api.formatter.tenancy_term},
                             {
                                 field: 'car_backtime',
-                                title: __('退租时间'),
+                                title: __('应退租时间'),
                                 operate: 'RANGE',
                                 addclass: 'datetimerange',
                                 formatter: Controller.api.formatter.datetime,
@@ -157,25 +157,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'phone', title: __('手机号')},
                             {field: 'id_card', title: __('身份证号')},
 
-                            // {
-                            //     field: 'genderdata',
-                            //     title: __('性别'),
-                            //     searchList: {"male": __('男'), "female": __('女')},
-                            //     formatter: Table.api.formatter.normal
-                            // },
-                            // {field: 'cash_pledge', title: __('押金（元）'), operate: false},
-                            // {field: 'rental_price', title: __('租金（元）'), operate: false},
-                            // {field: 'tenancy_term', title: __('租期（月）'), operate: false},
                             {
                                 field: 'car_backtime',
-                                title: __('退租时间'),
+                                title: __('应退租时间'),
                                 operate: false,
                                 addclass: 'datetimerange',
                                 formatter: Controller.api.formatter.datetime,
                                 datetimeFormat: 'YYYY-MM-DD'
                             },
                             {
-                                field: 'carrentalmodelsinfo.actual_backtime',
+                                field: 'actual_backtime',
                                 title: __('实际退租时间'),
                                 operate: false,
                                 addclass: 'datetimerange',
@@ -228,6 +219,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Form.api.bindevent($("form[role=form]"));
             },
             formatter: {
+                tenancy_term:function (value, row, index) {
+                  if(!value){
+                      return '-';
+                  }
+
+                  if(!row.renewal_month){
+                      return value;
+                  }else{
+                      row.renewal_month = JSON.parse(row.renewal_month);
+
+                      for (var i in row.renewal_month){
+                          value+='+<span class="text-warning">'+row.renewal_month[i]+'</span>';
+                      }
+
+                      return value;
+                  }
+
+
+                },
                 datetime: function (value, row, index) {
 
                     if (value) {
@@ -245,7 +255,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 },
                 sales:function (value, row, index) {
-                    // console.log(row);
 
                     return value==null?value : "<img src=" + Config.cdn_url+row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' +row.admin.department+' - '+value;
                 },
@@ -254,13 +263,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // 操作配置
                     var options = table ? table.bootstrapTable('getOptions') : {};
                     // 默认按钮组
-                    console.log(row.car_backtime);
                     var buttons = $.extend([], this.buttons || []);
                     if (row.review_the_data == 'for_the_car') {
                         buttons.push(
                             {
                                 name: 'edits',
-                                text: '编辑退租信息',
+                                text: '续租',
                                 icon: 'fa fa-pencil-square-o',
                                 title: __('编辑'),
                                 classname: 'btn btn-xs btn-success btn-editone',
