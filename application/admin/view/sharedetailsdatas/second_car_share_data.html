@@ -144,10 +144,7 @@
     <hr>
     <div class="row">
         <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('上次年检日期')}：</strong>{$row.yearly_inspection|default="<span class='text-info'>暂无</span>"}
-        </div>
-        <div class="col-xs-12 col-sm-8 col-md-3">
-            <strong>{:__('下次年检日期')}：</strong>{$row.next_inspection|default="<span class='text-info'>暂无</span>"}
+            <strong>{:__('年检截止日期')}：</strong>{empty name="$row.year_checktime"} <span class="text-info">暂无</span>{else /}{$row.year_checktime|date="Y-m-d",###}{/empty}
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-3">

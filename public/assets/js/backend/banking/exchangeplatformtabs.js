@@ -703,10 +703,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         var ids = Table.api.selectedids(tab);
 
-        row = {ids: ids};
+        var options = {
+            shadeClose: false,
+            shade: [0.3, '#393D49'],
+            area: ['30%', '30%'],
+            callback: function (value) {
+
+            }
+        };
+
+        url = url+'/ids/'+ids;
 
 
-        Fast.api.open(Table.api.replaceurl(url, row, table), __(title));
+        Fast.api.open(url,'批量更改平台',options);
     }
 
     return Controller;

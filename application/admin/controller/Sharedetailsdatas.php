@@ -75,6 +75,7 @@ $row = collection($row)->toArray()[0];
             ->join('mortgage_registration d', 'd.id = a.mortgage_registration_id', 'LEFT')
             ->join('car_new_inventory e', 'e.id=a.car_new_inventory_id', 'LEFT')
             ->join('mortgage f', 'f.id=a.mortgage_id', 'LEFT')
+            ->join('violation_inquiry g','a.violation_inquiry_id = g.id')
             ->field('a.order_no,a.genderdata,a.models_id,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.amount_collected,a.residence_bookletimages,a.bank_cardimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
@@ -86,7 +87,8 @@ $row = collection($row)->toArray()[0];
                 d.luqiao_fee,d.insurance_buydate,d.car_boat_tax,d.insurance_policy,
                 d.commercial_insurance_policy,d.registry_remark,
                 e.licensenumber,e.engine_number,e.frame_number,e.household,e.note as nnote,
-                f.car_imgeas,f.lending_date,f.bank_card,f.invoice_monney,f.registration_code,f.tax,f.business_risks,f.insurance,f.mortgage_type')
+                f.car_imgeas,f.lending_date,f.bank_card,f.invoice_monney,f.registration_code,f.tax,f.business_risks,f.insurance,f.mortgage_type,
+                g.year_checktime')
             ->where('a.id',$order_id==null?$ids:$order_id)
             ->find();
 
@@ -226,6 +228,7 @@ $row = collection($row)->toArray()[0];
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
             ->join('secondcar_rental_models_info c', 'c.id = a.plan_car_second_name', 'LEFT')
             ->join('mortgage_registration d', 'd.id = a.mortgage_registration_id', 'LEFT')
+            ->join('violation_inquiry e','a.violation_inquiry_id = e.id')
             ->field('a.genderdata,a.username,a.models_id,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.residence_bookletimages,a.bank_cardimages,a.marriedimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
@@ -235,7 +238,8 @@ $row = collection($row)->toArray()[0];
                 c.licenseplatenumber,c.engine_number,c.vin,c.kilometres,c.companyaccount,c.tailmoney,c.drivinglicenseimages,
                 d.contract_total,d.mortgage_people,d.end_money,d.yearly_inspection,d.next_inspection,d.transferdate,d.hostdate,d.ticketdate,d.supplier,d.tax_amount,d.no_tax_amount,
                 d.pay_taxesdate,d.house_fee,d.luqiao_fee,d.insurance_buydate,d.car_boat_tax,d.insurance_policy,d.insurance,d.business_risks,
-                d.commercial_insurance_policy,d.registry_remark')
+                d.commercial_insurance_policy,d.registry_remark,
+                e.year_checktime')
             ->where('a.id', $order_id==null?$ids:$order_id)
             ->find();
 
