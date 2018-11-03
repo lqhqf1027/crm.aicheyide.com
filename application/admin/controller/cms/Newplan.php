@@ -18,13 +18,14 @@ class Newplan extends Backend
 {
 
     protected $model = null;
-    protected $multiFields = 'flashviewismenu';
+    protected $multiFields = ['recommendismenu','flashviewismenu','specialismenu'];
 
-    protected $noNeedRight = ['index', 'firstedit','getBrandName'];
+    protected $noNeedRight = ['index', 'firstedit','getBrandName','dragsort'];
 
     public function _initialize()
     {
         parent::_initialize();
+        $this->model = model('PlanAcar');
     }
 
     /**
@@ -61,6 +62,10 @@ class Newplan extends Backend
                     $query->withField('name');
                 },'subject'=>function($query){
                     $query->withField('title');
+                },'label'=>function($query){
+                    $query->withField('name,lableimages');
+                },'companystore'=>function($query){
+                    $query->withField('store_name');
                 }])
                 ->where($where)
                 ->where('category_id', 'NEQ', '10')
@@ -78,6 +83,10 @@ class Newplan extends Backend
                     $query->withField('name');
                 },'subject'=>function($query){
                     $query->withField('title');
+                },'label'=>function($query){
+                    $query->withField('name,lableimages');
+                },'companystore'=>function($query){
+                    $query->withField('store_name');
                 }])
                 ->where($where)
                 ->where('category_id', 'NEQ', '10')
@@ -88,7 +97,8 @@ class Newplan extends Backend
 
             foreach ($list as $key => $row) {
 
-                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'category_id', 'recommend', 'flashview']);
+                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'createtime', 
+                                'updatetime', 'category_id', 'recommendismenu', 'flashviewismenu','specialismenu','specialimages','models_main_images','modelsimages','weigh']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['admin']);
@@ -99,6 +109,10 @@ class Newplan extends Backend
                 $row->getRelation('financialplatform')->visible(['name']);
                 $row->visible(['subject']);
                 $row->getRelation('subject')->visible(['title']);
+                $row->visible(['label']);
+                $row->getRelation('label')->visible(['name', 'lableimages']);
+                $row->visible(['companystore']);
+                $row->getRelation('companystore')->visible(['store_name']);
                 $list[$key]['brand_name'] = array_keys(self::getBrandName($row['id'])); //获取品牌
                 $list[$key]['brand_log'] =Config::get('upload')['cdnurl'].array_values(self::getBrandName($row['id']))[0]; //获取logo图片
 
@@ -127,9 +141,9 @@ class Newplan extends Backend
     }
 
     /**
-     * 新车编辑
+     * 新车方案编辑
      */
-    public function firstedit($ids = NULL)
+    public function edit($ids = NULL)
     {
         $this->model = model('PlanAcar');
         $row = $this->model->get($ids);
@@ -168,7 +182,9 @@ class Newplan extends Backend
         }
         $this->view->assign([
             "row" => $row,
-            'subject' => $this->getSubject()
+            'subject' => $this->getSubject(),
+            'label'  => $this->getLabel(),
+            'store'  => $this->getStore()
         ]);
 
         return $this->view->fetch();
@@ -180,6 +196,30 @@ class Newplan extends Backend
         $result = Db::name('cms_subject')->select();
 
         return $result;
+    }
+
+    //标签名称
+    public function getLabel()
+    {
+        $result = Db::name('cms_label')->select();
+
+        return $result;
+    }
+
+    //门店名称
+    public function getStore()
+    {
+        $result = Db::name('cms_company_store')->select();
+
+        return $result;
+    }
+    
+    //拖拽排序---改变权重
+    public function dragsort($ids = NULL)
+    {
+        pr($ids);
+        die;
+        $row = $this->model->get($ids);
     }
     
 }
