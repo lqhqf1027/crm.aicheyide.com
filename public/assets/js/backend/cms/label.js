@@ -5,12 +5,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'cms/store/index',
-                    add_url: 'cms/store/add',
-                    edit_url: 'cms/store/edit',
-                    del_url: 'cms/store/del',
-                    multi_url: 'cms/store/multi',
-                    table: 'cms_company_store',
+                    index_url: 'cms/label/index',
+                    add_url: 'cms/label/add',
+                    edit_url: 'cms/label/edit',
+                    del_url: 'cms/label/del',
+                    multi_url: 'cms/label/multi',
+                    table: 'cms_label',
                 }
             });
 
@@ -24,15 +24,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {checkbox: true},
-                        {field: 'id', title: __('ID')},
-                        {field: 'store_name', title: __('Store_name')},
-                        {field: 'store_address', title: __('Store_address')},
-                        {field: 'city.name', title: __('City.name')},
-                        {field: 'company_name', title: __('Company_name')},
-                        {field: 'phone', title: __('Phone')},
+                        {field: 'id', title: __('Id')},
+                        {field: 'name', title: __('Name')},
+                        {field: 'lableimages', title: __('Lableimages'), formatter: Table.api.formatter.images},
+                        {field: 'rotation_angle', title: __('Rotation_angle'), operate:'BETWEEN'},
+                        {field: 'status', title: __('Status'), searchList: {"normal":__('Normal'),"hidden":__('Hidden')}, formatter: Table.api.formatter.status},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
-                        {field: 'status', title: __('Status'), searchList: {"normal":__('Normal'),"hidden":__('Hidden')}, formatter: Table.api.formatter.status},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

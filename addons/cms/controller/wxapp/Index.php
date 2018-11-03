@@ -7,6 +7,8 @@ use addons\cms\model\Block;
 use addons\cms\model\Channel;
 use app\common\model\Addon;
 
+use addons\cms\model\Newplan;
+
 /**
  * 首页
  */

@@ -1,10 +1,10 @@
 <?php
 
-namespace app\admin\model;
+namespace addons\cms\model;
 
 use think\Model;
 
-class PlanAcar extends Model
+class Newplan extends Model
 {
     // 表名
     protected $name = 'plan_acar';
