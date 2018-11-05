@@ -203,7 +203,7 @@
                             <div class="panel-body">
                                 <div class="panel-title">
                                     <span class="label label-success pull-right">{:__('Real time')}</span>
-                                    <h3>{:__('车辆状态（年检）')}</h3>
+                                    <h3>{:__('年检')}</h3>
                                 </div>
                                 <div class="panel-content">
                                     
@@ -229,21 +229,21 @@
                             <div class="panel-body">
                                 <div class="ibox-title">
                                     <span class="label label-success pull-right">{:__('Real time')}</span>
-                                    <h3>{:__('车辆状态（保险）')}</h3>
+                                    <h3>{:__('保险')}</h3>
                                 </div>
                                 <div class="ibox-content">
 
                                     <div class="col-md-6">
-                                        <h1 class="no-margins">{$strong_status}</h1>
-                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('需续保车辆（台）')}</small></div>
+                                        <h1 class="no-margins"><span class="text-warning">{$strong_status}</span> / <span class="text-danger">{$business_status}</span></h1>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="text-warning">交强</span> / <span class="text-danger">商业险</span>需续保车辆（台）')}</small></div>
                                     </div>
                                     <div class="col-md-6">
                                         {if $strong_status_past == 0}
-                                        <h1 class="no-margins">{$strong_status_past}</h1>
+                                        <h1 class="no-margins"><span class="text-warning">{$strong_status_past}</span> / <span class="text-danger">{$business_status_past}</span></h1>
                                         {else /}
                                         <h1 class="no-margins text-danger">{$strong_status_past}</h1>
                                         {/if}  
-                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('保险已过期车辆')}</small></div>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="text-warning">交强</span> / <span class="text-danger">商业险</span>需续保过期车辆（台）')}</small></div>
                                     </div>
                                        
                                 </div>
@@ -255,7 +255,7 @@
                             <div class="panel-body">
                                 <div class="ibox-title">
                                     <span class="label label-success pull-right">{:__('Real time')}</span>
-                                    <h3>{:__('车辆状态（违章）')}</h3>
+                                    <h3>{:__('违章')}</h3>
                                 </div>
                                 <div class="ibox-content">
 
