@@ -89,7 +89,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             // },
                             {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系方式')},
-                            {field: 'mortgageregistration.totalprices', title: __('合同总价'), operate: false},
+                            {field: 'mortgageregistration.contract_total', title: __('合同总价'), operate: false},
                             {field: 'secondcarrentalmodelsinfo.newpayment', title: __('首付(元)'), operate: false},
                             {field: 'secondcarrentalmodelsinfo.monthlypaymen', title: __('月供(元)'), operate: false},
                             {field: 'secondcarrentalmodelsinfo.periods', title: __('期数'), operate: false},
