@@ -8,9 +8,13 @@ use addons\cms\model\Channel;
 use app\common\model\Addon;
 use think\Db;
 
+
 use app\admin\model\Brand;
 use app\admin\model\PlanAcar;
 use app\admin\model\Models;
+use addons\cms\model\Newplan;
+
+
 /**
  * 首页
  */
