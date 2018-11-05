@@ -51,10 +51,12 @@ class Usedcarinfo extends Backend
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
+
             //如果发送的来源是Selectpage，则转发到Selectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
+
             list($where, $sort, $order, $offset, $limit) = $this->buildparams("secondcarrentalmodelsinfo.vin", true);
             $total = $this->model
                 ->with(['mortgageregistration',
@@ -111,6 +113,7 @@ class Usedcarinfo extends Backend
      */
     public function edit($ids = NULL)
     {
+
         $helpful = Db::name("second_sales_order")
             ->where("id", $ids)
             ->field("mortgage_registration_id,credit_reviewimages,plan_car_second_name")

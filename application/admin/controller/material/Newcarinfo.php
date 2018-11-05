@@ -26,6 +26,15 @@ class Newcarinfo extends Backend
 
     public function _initialize()
     {
+        $data = array(
+            'aa车型'=>['shoufu 000','月供 111'],
+            'bb车型'=>['shoufu 000','月供 111','额外方案'=>[
+                ['a'=>'月供 111','b'=>'shoufu 111']
+            ]]
+            
+        );
+
+
         parent::_initialize();
 
         $this->loadlang('material/mortgageregistration');
