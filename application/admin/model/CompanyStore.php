@@ -41,4 +41,17 @@ class CompanyStore extends Model
     {
         return $this->belongsTo('City', 'city_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+    public function planacar()
+    {
+        return $this->hasOne('PlanAcar','store_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+
+    public function models()
+    {
+        return $this->belongsToMany('Models', 'plan_acar', 'models_id', 'store_id');
+    }
+
+
 }

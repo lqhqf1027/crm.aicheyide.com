@@ -22,11 +22,11 @@ Page(Object.assign({}, Tab, {
     this.setData({ ["tab.list"]: app.globalData.indexTabList });
     app.request('/index/index', {}, function (data, ret) {
       console.log(data);
-      that.setData({
-        bannerList: data.bannerList,
-        archivesList: data.archivesList,
-        ["tab.list"]: data.tabList
-      });
+      // that.setData({
+      //   bannerList: data.bannerList,
+      //   archivesList: data.archivesList,
+      //   ["tab.list"]: data.tabList
+      // });
     }, function (data, ret) {
       app.error(ret.msg);
     });

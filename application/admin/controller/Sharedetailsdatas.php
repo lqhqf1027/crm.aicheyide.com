@@ -75,7 +75,7 @@ $row = collection($row)->toArray()[0];
             ->join('mortgage_registration d', 'd.id = a.mortgage_registration_id', 'LEFT')
             ->join('car_new_inventory e', 'e.id=a.car_new_inventory_id', 'LEFT')
             ->join('mortgage f', 'f.id=a.mortgage_id', 'LEFT')
-            ->join('violation_inquiry g','a.violation_inquiry_id = g.id')
+            ->join('violation_inquiry g','a.violation_inquiry_id = g.id','LEFT')
             ->field('a.order_no,a.genderdata,a.models_id,a.username,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.amount_collected,a.residence_bookletimages,a.bank_cardimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
@@ -228,7 +228,7 @@ $row = collection($row)->toArray()[0];
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
             ->join('secondcar_rental_models_info c', 'c.id = a.plan_car_second_name', 'LEFT')
             ->join('mortgage_registration d', 'd.id = a.mortgage_registration_id', 'LEFT')
-            ->join('violation_inquiry e','a.violation_inquiry_id = e.id')
+            ->join('violation_inquiry e','a.violation_inquiry_id = e.id','LEFT')
             ->field('a.genderdata,a.username,a.models_id,a.delivery_datetime,a.createtime,a.plan_name,a.phone,a.id_card,a.financial_name,a.downpayment,a.difference,a.decorate,
                 a.customer_source,a.detailed_address,a.city,a.emergency_contact_1,a.emergency_contact_2,a.family_members,a.turn_to_introduce_name,a.turn_to_introduce_phone,
                 a.turn_to_introduce_card,a.id_cardimages,a.residence_bookletimages,a.bank_cardimages,a.marriedimages,a.drivers_licenseimages,a.housingimages,a.application_formimages,
@@ -333,7 +333,7 @@ $row = collection($row)->toArray()[0];
                 a.residence_bookletimages,a.drivers_licenseimages,a.deposit_receiptimages,a.call_listfilesimages,a.customer_information_note,a.genderdata,
                 b.nickname as sales_name,
                 c.licenseplatenumber,c.engine_no,c.vin,c.kilometres,c.companyaccount,c.drivinglicenseimages,c.expirydate,c.annualverificationdate,c.carcolor,c.note,
-                c.actual_backtime,c.car_loss,c.back_kilometre,c.check_list')
+                c.car_loss,c.back_kilometre,c.check_list')
             ->where('a.id', $order_id==null?$ids:$order_id)
             ->find();
 

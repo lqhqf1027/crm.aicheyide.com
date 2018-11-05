@@ -185,10 +185,15 @@ class Dashboard extends Backend
         //年检已过期
         $year_status_past = DashboardModel::getYearCount('violation_inquiry','-3');
         
-        //需续保
+        //交强险需续保
         $strong_status = DashboardModel::getStrongCount('violation_inquiry','1');
-        //保险已过期
+        //交强险已过期
         $strong_status_past = DashboardModel::getStrongCount('violation_inquiry','2');
+
+        //交强险需续保
+        $business_status = DashboardModel::getBusinessCount('violation_inquiry','1');
+        //交强险已过期
+        $business_status_past = DashboardModel::getBusinessCount('violation_inquiry','2');
         
         //违章车辆
         $violation_inquiry = DashboardModel::getViolationCount('violation_inquiry','2',null);
@@ -230,6 +235,8 @@ class Dashboard extends Backend
                 'violation_inquiry'   => $violation_inquiry,
                 'strong_status'       => $strong_status,
                 'strong_status_past'  => $strong_status_past,
+                'business_status'     => $business_status,
+                'business_status_past'=> $business_status_past,
                 'year_status'         => $year_status,
                 'year_status_past'    => $year_status_past,
                 'total_deduction_little'   => $total_deduction_little,

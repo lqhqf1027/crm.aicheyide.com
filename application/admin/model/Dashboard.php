@@ -51,19 +51,34 @@ class Dashboard extends MOdel{
     }
 
 
-    //需续保查询或已过期
-    public  static function getStrongCount($table,$strong_status)
+    //交强险需续保查询或已过期
+    public static function getStrongCount($table,$status)
     {
 
-        return Db::name($table)->where(function($query) use ($table,$strong_status){
+        return Db::name($table)->where(function($query) use ($table,$status){
            
-            $query->where(['strong_status' => $strong_status]);
+            $query->where(['strong_status' => $status]);
             
         })->count();
+
+
     }
 
-    //需年检查询或已过期
-    public  static function getYearCount($table,$year_status)
+    //商业险需续保查询或已过期
+    public static function getBusinessCount($table,$status)
+    {
+
+        return Db::name($table)->where(function($query) use ($table,$status){
+
+            $query->where(['business_status' => $status]);
+
+        })->count();
+
+
+    }
+
+    //交强险和商业险需年检查询或已过期
+    public static function getYearCount($table,$year_status)
     {
 
         return Db::name($table)->where(function($query) use ($table,$year_status){
