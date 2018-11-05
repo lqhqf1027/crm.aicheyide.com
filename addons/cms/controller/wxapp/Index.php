@@ -6,8 +6,14 @@ use addons\cms\model\Archives;
 use addons\cms\model\Block;
 use addons\cms\model\Channel;
 use app\common\model\Addon;
+use think\Db;
 
+
+use app\admin\model\Brand;
+use app\admin\model\PlanAcar;
+use app\admin\model\Models;
 use addons\cms\model\Newplan;
+
 
 /**
  * 首页
@@ -53,14 +59,43 @@ class Index extends Base
             ['id' => 4, 'title' => '全款'],
         ];
         $archivesList = Archives::getArchivesList([]);
+
+        //获取推荐专题内容
+        $recommendList = PlanAcar::with(['models'=>function ($query){
+            $query->where('status','normal');
+        }])->select();
+
+        foreach ($recommendList as $k => $v){
+            $v->getRelation('models')->visible(['id','name']);
+        }
+
+
+
+
+        //获取品牌信息
+        $brandList = Brand::where(function ($query) {
+            $query->where([
+                'status' => 'normal',
+                'name' => ['neq', '二手车专用车型']
+            ]);
+        })
+            ->field('id,name,brand_logoimage')
+            ->select();
+
+
+
         $data = [
-            'bannerList'   => $bannerList,
-            'tabList'      => $tabList,
+            'bannerList' => $bannerList,
+            'tabList' => $tabList,
             'archivesList' => $archivesList,
+            'brandList' => $brandList,
+            'recommendList' => $recommendList
         ];
         $this->success('', $data);
 
     }
+
+
 
 
 }

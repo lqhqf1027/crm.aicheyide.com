@@ -14,9 +14,9 @@
   ],
   "window": {
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#DE3639",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "友车友家",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#000",
