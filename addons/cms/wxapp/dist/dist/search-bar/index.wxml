@@ -1,6 +1,8 @@
 <view class="wux-class wux-search-bar {{ inputFocus ? 'wux-search-bar--focus' : '' }} {{ disabled ? 'wux-search-bar--disabled' : '' }}">
     <view class="wux-search-bar__form">
+     
         <view class="wux-search-bar__box">
+         
             <icon class="wux-search-bar__search" type="search" color="#B2B2B2" size="14" />
             <input
             	type="text"

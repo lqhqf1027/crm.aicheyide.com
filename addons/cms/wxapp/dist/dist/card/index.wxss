@@ -23,12 +23,12 @@
           transform-origin: 0 0;
   pointer-events: none;
   box-sizing: border-box;
-  border: 0 solid #D9D9D9;
+  /* border: 0 solid #D9D9D9;
   border-radius: 20rpx;
   border-top-width: 2rpx;
   border-right-width: 2rpx;
   border-bottom-width: 2rpx;
-  border-left-width: 2rpx;
+  border-left-width: 2rpx; */
 }
 .wux-card--full:before {
   border-radius: 0;

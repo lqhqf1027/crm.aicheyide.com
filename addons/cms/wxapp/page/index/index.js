@@ -4,39 +4,13 @@ var app = getApp();
 Page(Object.assign({}, Tab, {
 
   data: {
-    bannerList: [],
-    archivesList: [],
-    text: [],
-    loading: false,
-    nodata: false,
-    nomore: false,
-    tab: {
-      list: [],
-      selectedId: '0',
-      scroll: true,
-      height: 44
-    },
-
-    items: [
-      'fadeIn',
-      'fadeInDown',
-      'fadeInLeft',
-      'fadeInRight',
-      'fadeInUp',
-      'slideInUp',
-      'slideInDown',
-      'slideInLeft',
-      'slideInRight',
+    imgUrls: [
+      '/assets/images/avatar.png',
+      '/assets/images/avatar.png',
+      '/assets/images/avatar.png',
+      '/assets/images/avatar.png'
     ],
-    index: 0,
-    example: {
-      classNames: 'wux-animate--fadeIn',
-      enter: true,
-      exit: true,
-      in: false,
-    },
-    show: false,
-    status: '',
+    swiperIndex:'index'
 
   },
   channel: 0,
@@ -47,7 +21,7 @@ Page(Object.assign({}, Tab, {
     this.page = 1;
     this.setData({ ["tab.list"]: app.globalData.indexTabList });
     app.request('/index/index', {}, function (data, ret) {
-      console.log(data.tabList);
+      console.log(data);
       that.setData({
         bannerList: data.bannerList,
         archivesList: data.archivesList,
@@ -56,6 +30,7 @@ Page(Object.assign({}, Tab, {
     }, function (data, ret) {
       app.error(ret.msg);
     });
+
   },
   onPullDownRefresh: function () {
     this.setData({ nodata: false, nomore: false });
