@@ -75,10 +75,7 @@ class PlanAcar extends Model
     {
         return $this->belongsTo('FinancialPlatform', 'financial_platform_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
-    public function financialplatform_ss()
-    {
-        return $this->belongsTo('FinancialPlatform',  'id','financial_platform_id');
-    }
+
 
     public function schemecategory()
     {
@@ -103,8 +100,8 @@ class PlanAcar extends Model
         return $this->belongsToMany('City','cms_company_store','city_id','plan_acar_id');
     }
 
-//    public function models()
-//    {
-//        return $this->belongsToMany('Models', 'plan_acar', 'models_id', 'store_id');
-//    }
+    public function brand()
+    {
+        return $this->belongsToMany('Brand','models','brand_id','plan_acar_id');
+    }
 }

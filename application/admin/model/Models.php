@@ -24,4 +24,11 @@ class Models extends Model
     {
         return $this->belongsTo('Brand', 'brand_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+
+    public function planacar()
+    {
+        return $this->hasOne('PlanAcar','models_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
 }
