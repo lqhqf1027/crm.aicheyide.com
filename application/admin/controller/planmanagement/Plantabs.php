@@ -20,6 +20,8 @@ class Plantabs extends Backend
     protected $model = null;
     protected $multiFields = 'ismenu';
 
+    protected static $keys = '723d926ce76f411dab7836aeb5b33a76';
+
     protected $noNeedRight = ['index', 'table1', 'table2', 'table3', 'firstedit', 'firstdel', 'fulledit', 'fulldel', 'working_insurance', 'getSales', 'getCategory', 'firstmulti', 'fullmulti'
         , 'firstadd', 'fulladd','matchingSalesOrder', 'import'];
 
@@ -505,6 +507,31 @@ class Plantabs extends Backend
      */
     public function getInfo()
     {
+        $keys = self::$keys;
+        //获取城市前缀接口
+        $data = gets("http://apis.haoservice.com/lifeservice/car/GetSeries?key=" . $keys);
+        // pr($data);
+        // die;
+        if ($data['error_code'] == 0) {
+            pr($data['result']);
+            
+            foreach ($data['result'] as $key => $value) {
+
+                $brand[$key]['id'] = $value['I'];
+                $brand[$key]['brand_name'] = $value['N'];
+            }
+            pr($brand);
+            die;
+
+            $result = gets("http://apis.haoservice.com/lifeservice/car/GetSeries?id=" . $id . "&keys" . $keys);
+            pr($result);
+            die;
+        } 
+        else {
+            $this->error($data['reason'], '', $data);
+        }
+
+
 
         $brand = Db::name("brand")
             ->field("id,name")
@@ -576,12 +603,8 @@ class Plantabs extends Backend
                             ->value('name');
 
                         if ($params['liu'] == 'yes' && $params['sales_id']) {
-//                            $channel = 'custom_model';
-                            $results = array();
 
-//                            $content = '定制方案审核结果通知:您需要的车型<span class="text-info">' . $models_name . ',</span>首付<span class="text-info">' . $params['payment'] . '</span>元,月供<span class="text-info">' . $params['monthly'] . '</span>元已添加成功,请注意查看';
-//
-//                            goeary_push($channel, $content . '|' . $params['sales_id']);
+                            $results = array();
 
                             $datas = send_newmodels_to_sales($models_name, $params['payment'], $params['monthly']);
 

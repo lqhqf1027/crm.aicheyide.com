@@ -37,8 +37,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {
                             field: 'subject.title', title: __('专题标题'), 
                         },
+                        {field: 'subject.coverimages', title: __('专题代表图片'), formatter: Table.api.formatter.images},
                         {
-                            field: 'label.name', title: __('标签名称'), 
+                            field: 'subjectismenu',
+                            title: __('是否为专题'),
+                            events: Controller.api.events.operate,
+                            formatter: Controller.api.formatter.toggle3,searchList:{"1":"是","0":"否"},
+                        },
+                        {
+                            field: 'label.name', title: __('标签名称'), searchList: {"1":__('新能源'),"2":__('低首付')}, operate:'FIND_IN_SET', formatter: Table.api.formatter.label
                         },
                         {field: 'label.lableimages', title: __('标签图片'), formatter: Table.api.formatter.images},
                         {
@@ -162,6 +169,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         api: {
             bindevent: function (value, row, index) {
+                //专题
+                $(document).on('click', "input[name='row[subjectismenu]']", function () {
+                    var name = $("input[name='row[name]']");
+                    name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
+                });
+                $("input[name='row[subjectismenu]']:checked").trigger("click");
                 //推荐
                 $(document).on('click', "input[name='row[recommendismenu]']", function () {
                     var name = $("input[name='row[name]']");
@@ -180,6 +193,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
                 });
                 $("input[name='row[specialismenu]']:checked").trigger("click");
+
                 Form.api.bindevent($("form[role=form]"));
             },
             events: {
@@ -222,6 +236,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * @param index
                  * @returns {string}
                  */
+                //专题
+                toggle3: function (value, row, index) {
+
+                   if(row.subject.coverimages){
+
+                        var color = typeof this.color !== 'undefined' ? this.color : 'success';
+                        var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
+                        var no = typeof this.no !== 'undefined' ? this.no : 0;
+                        return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                                + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+                    
+                    }
+                    else{
+                       return "<span style='color:red'>上传专题图片,就可以点击</span>"
+                    }
+
+                },
                 //推荐
                 toggle: function (value, row, index) {
 
