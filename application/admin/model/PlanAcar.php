@@ -98,6 +98,13 @@ class PlanAcar extends Model
     }
 
     //关联门店
+    public function companystore()
+    {
+        return $this->belongsTo('CompanyStore','store_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+
+    //关联门店
     public function city()
     {
         return $this->belongsToMany('City','cms_company_store','city_id','plan_acar_id');

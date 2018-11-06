@@ -7,7 +7,8 @@ use app\common\library\Email;
 //use app\common\model\Config;
 use think\Config;
 use think\Db;
-
+use think\Session;
+use think\Cache;
 /**
  * 多表格示例
  *
@@ -507,29 +508,48 @@ class Plantabs extends Backend
      */
     public function getInfo()
     {
-        $keys = self::$keys;
-        //获取城市前缀接口
-        $data = gets("http://apis.haoservice.com/lifeservice/car/GetSeries?key=" . $keys);
-        // pr($data);
-        // die;
-        if ($data['error_code'] == 0) {
-            pr($data['result']);
-            
-            foreach ($data['result'] as $key => $value) {
+        // $keys = self::$keys;
+        
+        // $data = Cache::get('data123');
+        // // dump($data);
+        // // die;
+        
+        // if ($data['error_code'] == 0) {
+        //     // pr($data['result']);
+        //     // die;
+        //     foreach ($data['result'] as $key => $value) {
+                
+                
 
-                $brand[$key]['id'] = $value['I'];
-                $brand[$key]['brand_name'] = $value['N'];
-            }
-            pr($brand);
-            die;
+        //             $brand[$key]['id'] = $value['I'];
+        //             $brand[$key]['brand_name'] = $value['N'];
 
-            $result = gets("http://apis.haoservice.com/lifeservice/car/GetSeries?id=" . $id . "&keys" . $keys);
-            pr($result);
-            die;
-        } 
-        else {
-            $this->error($data['reason'], '', $data);
-        }
+        //             // Db::name('brand_model')->insert(['pid' => '0', 'level' => '0', 'name' =>$value['N']]);
+        //             // $userId = Db::name('brand_model')->getLastInsID();
+        //             foreach ($value['List'] as $k => $v) {
+                        
+        //                 $brand[$key]['category_list'][$k]['category_id'] = $v['I'];
+        //                 $brand[$key]['category_list'][$k]['category_name'] = $v['N'];
+
+        //                 // Db::name('brand_model')->insert(['pid' => $userId, 'level' => '1', 'name' =>$v['N']]);
+        //                 // $userId = Db::name('brand_model')->getLastInsID();
+        //                 foreach ($v['List'] as $kk => $vv) {
+                            
+        //                     $brand[$key]['category_list'][$k]['car_series'][$kk]['series_id'] = $vv['I'];
+        //                     $brand[$key]['category_list'][$k]['car_series'][$kk]['series_name'] = $vv['N'];
+        //                     // Db::name('brand_model')->insert(['pid' => $userId, 'level' => '2', 'name' => $vv['N'], 'series_id' => $vv['I']]);
+                            
+        //                 }
+        //             }
+        //         }                          
+        //     }
+        //     pr($brand);
+        //     die;
+
+        // } 
+        // else {
+        //     $this->error($data['reason'], '', $data);
+        // }
 
 
 
