@@ -1,21 +1,11 @@
 <?php
 
 namespace addons\cms\controller\wxapp;
-
-use addons\cms\model\Archives;
-use addons\cms\model\Block;
-use addons\cms\model\Channel;
 use app\common\model\Addon;
 use think\Db;
-
-
-use app\admin\model\PlanAcar;
-use app\admin\model\CompanyStore;
-use app\admin\model\City;
-use app\admin\model\Models;
-use addons\cms\model\Newplan;
-use think\Model;
-
+use addons\cms\model\CompanyStore;
+use addons\cms\model\Models;
+use addons\cms\model\City;
 
 /**
  * 首页
@@ -31,34 +21,46 @@ class Index extends Base
     }
 
     /**
-     * 城市 和 品牌 接口
+     * 品牌丶城市和分享配置接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function index()
     {
         //品牌
         $brand = Models::with(['brand' => function ($brand) {
+            $brand->where('brand.status','normal');
             $brand->withField('id,name,brand_logoimage');
         }, 'planacar' => function ($planacar) {
             $planacar->where('acar_status', 1);
             $planacar->withField('id');
-        }])->select();
+        }])->where('models.status','normal')->select();
 
-        $brand_list = [];
+        $brandList = [];
         foreach ($brand as $k => $v) {
 
-            $brand_list[] = $v['brand'];
+            $brandList[] = $v['brand'];
 
         }
 
-        $brand_list = array_values(array_unique($brand_list));
+        $brandList = array_values(array_unique($brandList));
 
 
         //城市
-        $city = City::where('status', 'normal')->field('id,name')->select();
+        $cityList = City::where('status', 'normal')->field('id,name')->select();
+
+        //小程序分享配置
+        $shares = Db::name('config')
+        ->where('group','share')
+        ->value('value');
+
+        $shares = json_decode($shares,true);
 
         $data = [
-            'brandList' => $brand_list,
-            'cityList' => $city
+            'brandList' => $brandList,
+            'cityList' => $cityList,
+            'shares' => $shares
         ];
 
         $this->success('', $data);
@@ -72,20 +74,125 @@ class Index extends Base
      */
     public function getInformation()
     {
-        $city_id = $this->request->post('city');
+        $city_id = $this->request->post('city');                              //参数：城市ID
 
-        $info = CompanyStore::field('id,store_name')->with(['city' => function ($city) use ($city_id) {
-            $city->where('id', $city_id);
+        if (!$city_id) {
+            $this->error('缺少参数');
+        }
+
+        $info = CompanyStore::field('id,store_name')->with(['city' => function ($city){
             $city->withField('id');
-        }, 'planacar' => function ($planacar) {
-            $planacar->where('acar_status', 1);
+        }, 'planacar' => function ($planacar){
+            $planacar->where([
+                'acar_status'=> 1
+            ]);
             $planacar->withField(['id', 'models_id', 'payment', 'monthly', 'subjectismenu', 'popularity', 'specialimages', 'specialismenu', 'models_main_images',
-                'guide_price', 'flashviewismenu', 'recommendismenu', 'subject_id']);
-        }])->where('statuss', 'normal')->select();
+                'guide_price', 'flashviewismenu', 'recommendismenu', 'subject_id', 'label_id']);
+        }])->where(function ($query){
+            $query->where([
+                'statuss'=>'normal',
+            ]);
+        })->select();
 
+        $info = collection($info)->toArray();
 
-        $this->success('', $info);
+        $newcarList = [];                //所有方案（新车）
+        $recommendList = [];             //为你推荐（新车）
+        $specialList = [];               //专题推荐（新车）
+        $specialfieldList = [];          //专场（新车）
+
+        if ($info) {
+            foreach ($info as $k => $v) {
+                if ($v['planacar']) {
+                    if ($v['planacar']['models_id']) {        //根据车型ID获取车型
+                        $models_name = Db::name('models')
+                            ->where([
+                                'id' => $v['planacar']['models_id'],
+                                'status' => 'normal'
+                            ])
+                            ->value('name');
+                        if ($models_name) {
+                            $info[$k]['planacar']['models_name'] = $models_name;
+                        }
+
+                    }
+
+                    if ($v['planacar']['label_id']) {           //根据标签ID获取标签
+                        $label_name = Db::name('cms_label')
+                            ->where([
+                                'status' => 'normal',
+                                'id' => $v['planacar']['label_id']
+                            ])
+                            ->field('name,lableimages')
+                            ->find();
+
+                        if ($label_name) {
+                            $info[$k]['planacar']['labels'] = $label_name;
+                        }
+                    }
+                }
+
+                $newcarList[] = $info[$k]['planacar'];
+
+            }
+
+            if ($newcarList) {
+                foreach ($newcarList as $k => $v) {
+                    if ($v['recommendismenu']) {
+                        $recommendList[] = $v;
+                    }
+                    if ($v['subjectismenu']) {
+                        $specialList[] = $v;
+                    }
+                    if ($v['specialismenu']) {
+                        $specialfieldList[] = $v;
+                    }
+                }
+            }
+
+        }
+
+        $data = ['carType' => [
+            'new' => ['newcarList' => $newcarList,
+                'recommendList' => $recommendList,
+                'specialList' => $specialList,
+                'specialfieldList' => $specialfieldList],
+            'used' => []
+        ]];
+
+        $this->success('', $data);
     }
+
+
+    /**
+     * 增加积分接口
+     * @throws \think\Exception
+     */
+    public function integral()
+    {
+        $style = $this->request->post('style');                         //添加积分方式
+
+        $user_id = $this->request->post('user_id');                     //用户ID
+
+
+        if (!$style || !$user_id) {
+            $this->error('缺少参数');
+        }
+
+        $rule = Db::name('config')
+            ->where('group', 'integral')
+            ->value('value');
+
+        $rule = json_decode($rule, true);
+
+        $res = Db::name('user')
+            ->where('id', $user_id)
+            ->setInc('score', intval($rule[$style]));
+
+        $res? $this->success('', 'success') : $this->error('fail');
+
+    }
+
 
 
 }

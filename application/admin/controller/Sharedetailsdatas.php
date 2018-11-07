@@ -48,26 +48,6 @@ class Sharedetailsdatas extends Backend
      */
     public function new_car_share_data($ids = null, $order_id = null)
     {
-      /*  $row  = salesOrderModel::with(
-
-            ['admin', 'planacar', 'mortgageregistration', 'newinventory', 'mortgage']
-
-        )->select(['ids'=>$order_id == null?$ids:$order_id]);
-
-        foreach ($row as $k=>$v){
-             $v->hidden(['plan_acar_name','sales_id','admin_id','backoffice_id','control_id','new_car_id','car_new_inventory_id',
-                 'mortgage_registration_id','registry_registration_id','mortgage_id','referee_id','customer_downpayment_id','violation_inquiry_id']);
-            $v->getRelation('admin')->visible(['nickname']);
-             $v->getRelation('planacar')->visible(['tail_section','note','nperlist','payment']);
-             $v->getRelation('mortgageregistration')->hidden(['id']);
-             $v->getRelation('newinventory')->visible(['licensenumber','engine_number','frame_number','household','note']);
-             $v->getRelation('mortgage')->hidden(['id']);
-        }
-
-
-$row = collection($row)->toArray()[0];
-
-        pr($row);die;*/
 
         $row = Db::name('sales_order')->alias('a')
             ->join('admin b', 'b.id=a.admin_id', 'LEFT')
