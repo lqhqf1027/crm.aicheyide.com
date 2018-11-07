@@ -36,6 +36,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
 
+                table1.on('common-search.bs.table', function (event,table,params, query) {
+                   
+
+                });
+
+                table1.on('post-common-search.bs.table', function (event, table) {
+
+                   Form.events.cxselect($("form", table.$commonsearch));
+
+                });
+
+                table1.on('post-body.bs.table', function (e, settings, json, xhr) {
+                   
+
+                });
+
+
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
                     return "快速搜索车型";
                 };
@@ -159,7 +176,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                     Fast.api.open(url, '批量分配', options)
 
-                })
+                });
+
+                
             },
 
             /**
@@ -336,8 +355,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
         },
-        firstadd: function () {
+        getBrand: function () {
+            
+            $("#c-series_name").data("params", function (obj) {
+                return {custom: {pid: $("#c-brand_name").val()}};
+            });
 
+        },
+        firstadd: function () {
 
             Controller.api.bindevent();
         },

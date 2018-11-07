@@ -9,6 +9,7 @@ use think\Cache;
 use think\Config;
 use think\Db;
 use think\Lang;
+use think\Session;
 
 /**
  * Ajax异步请求接口
@@ -20,8 +21,6 @@ class Ajax extends Backend
     protected $noNeedLogin = ['lang'];
     protected $noNeedRight = ['*'];
     protected $layout = '';
-
-    protected static $keys = '723d926ce76f411dab7836aeb5b33a76';
 
     public function _initialize()
     {
@@ -266,43 +265,6 @@ class Ajax extends Backend
         $this->success('', null, $provincelist);
     }
 
-    /**
-     * 读取省市区数据,联动列表
-     */
-    public function brand()
-    {
-        $keys = self::$keys;
-        
-        $brand = $this->request->get('brand');
-        $category = $this->request->get('category');
-        $series = $this->request->get('series');
-        $where = ['pid' => 0, 'level' => 0];
-        $provincelist = null;
-        if ($brand !== '') {
-            if ($brand) {
-                $where['pid'] = $brand;
-                $where['level'] = 1;
-            }
-            if ($category !== '') {
-                if ($category) {
-                    $where['pid'] = $category;
-                    $where['level'] = 2;
-                }
-                if ($series !== '') {
-                    if ($series) {
-                       
-                       $series_id = Db::name('brand_model')->where('id', $series)->value('series_id');
-                       pr($series_id);
-                       die;
-                       $data = gets("http://apis.haoservice.com/lifeservice/car/GetModel/?id=" . $series_id . "&key=" . $keys);
-                       pr($data);
-                       die;
-                    }
-                }
-                $provincelist = Db::name('brand_model')->where($where)->field('id as value,name')->select();
-            }
-        }
-        $this->success('', null, $provincelist);
-    }
+    
 
 }
