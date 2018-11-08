@@ -21,8 +21,6 @@ class Plantabs extends Backend
     protected $model = null;
     protected $multiFields = 'ismenu';
 
-    protected static $keys = '723d926ce76f411dab7836aeb5b33a76';
-
     protected $noNeedRight = ['index', 'table1', 'table2', 'table3', 'firstedit', 'firstdel', 'fulledit', 'fulldel', 'working_insurance', 'getSales', 'getCategory', 'firstmulti', 'fullmulti'
         , 'firstadd', 'fulladd','matchingSalesOrder', 'import'];
 
@@ -525,8 +523,8 @@ class Plantabs extends Backend
         //             $brand[$key]['id'] = $value['I'];
         //             $brand[$key]['brand_name'] = $value['N'];
 
-        //             Db::name('brand_model')->insert(['pid' => '0', 'level' => '0', 'name' =>$value['N']]);
-        //             $userId = Db::name('brand_model')->getLastInsID();
+        //             Db::name('brand')->insert(['pid' => '0', 'level' => '0', 'name' =>$value['N'], 'brand_initials' => $value['L']]);
+        //             $userId = Db::name('brand')->getLastInsID();
         //             foreach ($value['List'] as $k => $v) {
                         
         //                 $brand[$key]['category_list'][$k]['category_id'] = $v['I'];
@@ -537,7 +535,7 @@ class Plantabs extends Backend
                             
         //                     $brand[$key]['category_list'][$k]['car_series'][$kk]['series_id'] = $vv['I'];
         //                     $brand[$key]['category_list'][$k]['car_series'][$kk]['series_name'] = $vv['N'];
-        //                     Db::name('brand_model')->insert(['pid' => $userId, 'level' => '2', 'name' => $vv['N'], 'series_id' => $vv['I']]);
+        //                     Db::name('brand')->insert(['pid' => $userId, 'level' => '1', 'name' => $vv['N'], 'series_id' => $vv['I']]);
                             
         //                 }
         //             }
@@ -547,16 +545,23 @@ class Plantabs extends Backend
         //     pr($brand);
         //     die;
 
-
-        $brand = Db::name("brand")
-            ->field("id,name")
-            ->select();
-
-
         $models = Db::name("models")
             ->field("id as models_id,name as models_name,brand_id")
             ->select();
+            
+        //品牌下没有车型，就不显示在下拉列表
+        foreach ($models as $key => $value) {
+            $ids[] = $value['brand_id'];
+        }
+        
+        $brand = Db::name("brand")
+            ->where('pid', '0')
+            ->where('id', 'in', $ids)
+            ->field("id,name")
+            ->select();
 
+        // pr($brand);
+        // die;
 
         foreach ($brand as $k => $v) {
             $brand[$k]['models'] = array();
@@ -579,7 +584,6 @@ class Plantabs extends Backend
      */
     public function firstadd()
     {
-
         $this->model = model("PlanAcar");
         $financial = Db::name("financial_platform")->where('status', 'normal')->select();
 
@@ -865,94 +869,5 @@ class Plantabs extends Backend
         $this->success();
     }
 
-
-     /**
-     * 查看
-     */
-    public function getBrand()
-    {
-        $this->model = model('BrandModel');
-        // //当前是否为关联查询
-        // $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
-                return $this->selectpage();
-            }
-            
-        }
-        
-    }
-
-
-    /**
-     * 读取省市区数据,联动列表
-     */
-    public function brand()
-    {
-        $keys = self::$keys;
-        
-        $brand = $this->request->get('brand');
-        $series = $this->request->get('series');
-        $where = ['pid' => 0, 'level' => 0];
-        $provincelist = null;
-        if ($brand !== '') {
-            if ($brand) {
-                $where['pid'] = $brand;
-                $where['level'] = 2;
-            }
-
-            $provincelist = Db::name('brand_model')->where($where)->field('id as value,name')->select();
-
-            if ($series !== '') {
-                if ($series) {
-                       
-                    $series_id = Db::name('brand_model')->where('id', $series)->value('series_id');
-                    // pr($series_id);
-                    // die;
-                    // $data_series = gets("http://apis.haoservice.com/lifeservice/car/GetModel/?id=" . $series_id . "&key=" . $keys);
-                    // Session::set('data_series', $data_series);
-                    $data_series = Session::get('data_series'); 
-                    // pr($data_series);
-                   
-                    if ($data_series['error_code'] == 0) {
-                        // pr($data_series['result']['List']);
-                        // die;
-                        foreach ($data_series['result']['List'] as $key => $value) {
-                                
-                            foreach ($value['List'] as $k => $v) {
-                                        
-                                foreach ($v['List'] as $kk => $vv) {
-                                        
-                                    $brand = [];  
-                                    $brand[$kk]['value'] = $vv['I'];
-                                    $brand[$kk]['name'] = $vv['N'];
-                                    $brand[$kk]['price'] = $vv['P'];
-                                    
-                                    // $data_type = gets("http://apis.haoservice.com/lifeservice/car?id=" . $vv['I'] . "&key=" . $keys);
-
-                                    // Session::set('data_type', $data_type);
-                                    $data_type = Session::get('data_type');
-
-                                }
-                            }
-                        }
-                        $provincelist = $brand;  
-                        pr($data_type);
-                        die;                        
-                    }
-                    else {
-
-                        $this->error($data['reason'], '', $data_series);
-                    }
-                }
-            }
-        }
-        $this->success('', null, $provincelist);
-    }
 
 }
