@@ -2122,7 +2122,7 @@ class Orderlisttabs extends Backend
                     $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                     $newB[] = $bValue;
             }
-            $data = $bewB;    
+            $data = $newB;    
             
             $this->view->assign('data', $data);
             $this->view->assign('result', $result);
