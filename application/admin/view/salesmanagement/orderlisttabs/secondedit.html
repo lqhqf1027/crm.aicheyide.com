@@ -57,15 +57,15 @@
 
             <select id="c-plan_car_second_name" data-rule="required" class="form-control selectpicker" name="row[plan_car_second_name]" disabled>
                 <option value=" " style='display: none'>未选中任何项</option>
-                {volist name="newRes" id="vo"}
+                {volist name="data" id="vo"}
 
-                <option disabled>{$vo['brand_name']}</option>
-                {volist name="vo.data" id="vo_s"} {if condition="$result['plan_id'] eq $vo_s['id']"}
-                <option value="{$vo_s['id']}" selected>{$vo_s['models_name']}</option>
+               
+                {if condition="$result['plan_id'] eq $vo['id']"}
+                <option value="{$vo['id']}" selected>{$vo['models_name']}</option>
                 {else /}
-                <option value="{$vo_s['id']}">{$vo_s['models_name']}</option>
+                <option value="{$vo['id']}">{$vo['models_name']}</option>
 
-                {/if} {/volist} {/volist}
+                {/if} {/volist} 
             </select>
 
         </div>

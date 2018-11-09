@@ -21,7 +21,7 @@ class Models extends Backend
 
     protected static $keys = '723d926ce76f411dab7836aeb5b33a76';
 
-    protected $noNeedRight = ['index','getBrand','getSeries','getModel','add'];
+    protected $noNeedRight = ['index','getBrand','getSeries','getModel','add','edit'];
 
     public function _initialize()
     {
@@ -51,13 +51,13 @@ class Models extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                    ->with(['brand'])
+                    ->with(['brand','series','model'])
                     ->where($where)
                     ->order($sort, $order)
                     ->count();
 
             $list = $this->model
-                    ->with(['brand'])
+                    ->with(['brand','series','model'])
                     ->where($where)
                     ->order($sort, $order)
                     ->limit($offset, $limit)
@@ -66,7 +66,11 @@ class Models extends Backend
             foreach ($list as $row) {
                 $row->visible(['id','name','standard_price','status','createtime','updatetime']);
                 $row->visible(['brand']);
-				$row->getRelation('brand')->visible(['name']);
+                $row->getRelation('brand')->visible(['name']);
+                $row->visible(['series']);
+                $row->getRelation('series')->visible(['name']);
+                $row->visible(['model']);
+				$row->getRelation('model')->visible(['name']);
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
@@ -120,6 +124,27 @@ class Models extends Backend
     }
 
     /**
+     * 编辑----查询车辆车系
+     */
+    public function getSeries1()
+    {
+        $this->model = model('Brand');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+             //如果发送的来源是Selectpage，则转发到Selectpage
+             if ($this->request->request('keyField'))
+             {
+                 return $this->selectpage();
+             }
+        }
+        
+    }
+
+    /**
      * 查询车辆车型
      */
     public function getModel()
@@ -162,7 +187,7 @@ class Models extends Backend
                         foreach ($data_series['result']['List'] as $key => $value) {
                                             
                             foreach ($value['List'] as $k => $v) {
-                                                    
+
                                 foreach ($v['List'] as $kk => $vv) {
                                                     
                                     $brand = [];  
@@ -175,6 +200,7 @@ class Models extends Backend
                                     // $data_type = Session::get('data_type');
                                     // pr($data_type['result']);
                                     // die;
+
                                     if ($data_type['error_code'] == 0) {
 
                                         $vehicle_configuration = json_encode($data_type['result']);
@@ -207,6 +233,27 @@ class Models extends Backend
     }
 
     /**
+     * 编辑----查询车辆车系
+     */
+    public function getModel1()
+    {
+        $this->model = model('ModelsDetails');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+             //如果发送的来源是Selectpage，则转发到Selectpage
+             if ($this->request->request('keyField'))
+             {
+                 return $this->selectpage();
+             }
+        }
+        
+    }
+
+    /**
      * 添加
      */
     public function add()
@@ -214,9 +261,16 @@ class Models extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
+                // pr($params);die;
                 $series_name = Db::name('brand')->where('id', $params['series_name'])->value('name');
                 $models_name = Db::name('models_details')->where('id', $params['model_name'])->value('name');
+                //去掉（停售）
+                $series_name = explode('(停售)',$series_name);
+                $series_name = implode($series_name);
+                
+                $vehicle_configuration = Db::name('models_details')->where('id', $params['model_name'])->value('vehicle_configuration');
                 $params['name'] = $series_name . " " .  $models_name;
+                $params['vehicle_configuration'] = $vehicle_configuration;
                 // pr($params);
                 // die;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
@@ -243,6 +297,48 @@ class Models extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
+        return $this->view->fetch();
+    }
+
+    /**
+     * 编辑
+     */
+    public function edit($ids = NULL)
+    {
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    $result = $row->allowField(true)->save($params);
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $this->view->assign("row", $row);
         return $this->view->fetch();
     }
 

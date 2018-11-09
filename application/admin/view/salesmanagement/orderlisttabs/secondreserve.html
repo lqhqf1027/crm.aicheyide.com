@@ -20,12 +20,9 @@
 
             <select id="c-plan_car_second_name" data-rule="required" class="form-control selectpicker" name="row[plan_car_second_name]">
                 <option value=" " style='display: none'>未选中任何项</option>
-                {volist name="newRes" id="vo"}
-
-                <option value="{$vo['brand_logoimage']}" disabled>{$vo['brand_name']}</option>
-                {volist name="vo.data" id="vo_s"}
-                <option value="{$vo_s['id']},{$vo_s['models_name']}">{$vo_s['models_name']}</option>
-                {/volist} {/volist}
+                {volist name="data" id="vo"}
+                <option value="{$vo['id']},{$vo['models_name']}">{$vo['models_name']}</option>
+                {/volist}
             </select>
 
         </div>
