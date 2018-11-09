@@ -1,0 +1,70 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Coupon_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-coupon_name" data-rule="required" class="form-control form-control" name="row[coupon_name]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Circulation')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-circulation" data-rule="required" class="form-control form-control" name="row[circulation]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('City_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-city_id" data-rule="required" data-source="city/index" class="form-control selectpage form-control" name="row[city_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Display_diagram')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-display_diagram" data-rule="required" class="form-control form-control" name="row[display_diagram]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Threshold')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-threshold" data-rule="required" class="form-control selectpicker" name="row[threshold]">
+                {foreach name="thresholdList" item="vo"}
+                    <option value="{$key}" {in name="key" value="full_use_reduction"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Membership_grade')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-membership_grade" class="form-control form-control" name="row[membership_grade]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Limit_collar')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-limit_collar" class="form-control selectpicker" name="row[limit_collar]">
+                {foreach name="limitCollarList" item="vo"}
+                    <option value="{$key}" {in name="key" value="limit"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Term_validity')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-term_validity" class="form-control form-control" name="row[term_validity]" type="text">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
