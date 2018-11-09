@@ -4,12 +4,14 @@ namespace addons\cms\controller\wxapp;
 
 use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
+use think\console\command\make\Model;
 use think\Db;
 use think\Config;
 use addons\cms\model\CompanyStore;
 use addons\cms\model\Models;
 use addons\cms\model\City;
 use addons\cms\model\Subject;
+use addons\cms\model\ModelsDetails;
 
 /**
  * 首页
@@ -100,6 +102,112 @@ class Index extends Base
     }
 
 
+
+
+    /**
+     * 方案详情页面接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function plan_details()
+    {
+
+        $plan_id = $this->request->post('plan_id');                   //参数：方案ID
+        $city_id = $this->request->post('city_id');                   //参数：城市ID
+        $user_id = $this->request->post('user_id');                   //参数：用户ID
+
+        if (!$plan_id ||!$city_id ||!$user_id) {
+            $this->error('缺少参数');
+        }
+
+        //获取该方案的详细信息
+        $plans = PlanAcar::field('id,models_id,payment,monthly,nperlist,modelsimages,guide_price,models_main_images,
+        specialimages,popularity')
+            ->with(['models' => function ($models) {
+                $models->withField('name,vehicle_configuration');
+            }, 'label' => function ($label) {
+                $label->withField('name,lableimages,rotation_angle');
+            }, 'companystore' => function ($companystore) {
+                $companystore->withField('store_name,store_address,company_name,phone');
+            }])->find([$plan_id]);
+
+        $plans['models']['vehicle_configuration'] = json_decode($plans['models']['vehicle_configuration'], true);
+
+        //查看同城市同车型不同的方案
+        $different_schemes = $this->getPlans($plans['models_id'], $city_id, $plan_id);
+
+        //查看其它方案的属性名
+        if ($different_schemes) {
+            $plans['different_schemes'] = $different_schemes;
+        } else {
+            $plans['different_schemes'] = null;
+        }
+
+        //获取其他方案
+        $allModel = $this->getPlans('', $city_id, $plan_id);
+
+        $reallyOther = null;
+
+        //如果有其他方案，随机得到其他的方案
+        if ($allModel) {
+            $reallyOther = [];
+            $keys = array_keys($allModel);
+
+            shuffle($keys);
+
+
+            foreach ($keys as $k => $v) {
+                if ($k > 7) {
+                    break;
+                }
+
+                $reallyOther[] = $allModel[$v];
+            }
+        }
+
+        $collection = $this->getCollection('cms_collection',$plan_id,$user_id);         //判断用户是否收藏该方案
+
+        $fabulous = $this->getCollection('cms_fabulous',$plan_id,$user_id);             //判断用户是否点赞该方案
+
+        $plans['collection'] = $collection? 1:0;
+        $plans['fabulous'] = $fabulous? 1:0;
+
+
+        $this->success('', [
+            'plan' => $plans,
+            'other_plan' => $reallyOther
+        ]);
+
+    }
+
+    /**
+     * 得到满足条件的方案
+     * @param null $models_id
+     * @param $city_id
+     * @param $plan_id
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getPlans($models_id = null, $city_id, $plan_id)
+    {
+        return Db::name('models')
+            ->alias('a')
+            ->join('plan_acar b', 'b.models_id = a.id')
+            ->join('cms_company_store c', 'b.store_id = c.id')
+            ->where([
+                'a.id' => $models_id == null ? ['neq', 'null'] : $models_id,
+                'c.city_id' => $city_id,
+                'b.id' => ['neq', $plan_id]
+            ])
+            ->field('b.id,b.payment,b.monthly,b.guide_price,b.models_main_images,a.name as models_name')
+            ->select();
+    }
+
+
+
     /**
      * 获取品牌信息
      * @return array
@@ -160,7 +268,7 @@ class Index extends Base
         $recommendList = [];             //为你推荐（新车）
         $specialfieldList = [];          //专场（新车）
 
-        if(!$info){
+        if (!$info) {
             return false;
         }
         foreach ($info as $k => $v) {
@@ -221,7 +329,7 @@ class Index extends Base
                 }
 
                 if ($v['specialismenu']) {
-                    $needData = [$v['id'], $v['specialimages']];
+                    $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages']];
                     $specialfieldList[] = $needData;
                 }
             }
@@ -281,9 +389,9 @@ class Index extends Base
      */
     public function getConfigShare()
     {
-       return json_decode(Db::name('config')
+        return json_decode(Db::name('config')
             ->where('name', 'share')
-            ->value('value'),true);
+            ->value('value'), true);
 
     }
 
@@ -300,21 +408,22 @@ class Index extends Base
         return City::where('status', 'normal')->field('id,name')->select();
     }
 
-
-
-    public function details()
+    /**
+     * 得到是否有点赞或者收藏
+     * @param $plan_id
+     * @param $user_id
+     * @return array|false|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getCollection($tableName,$plan_id,$user_id)
     {
-
-        $plan_id = $this->request->post('plan_id');                   //参数：方案ID
-
-        if(!$plan_id){
-            $this->error('缺少参数');
-        }
-
-        PlanAcar::field('id,models_id,payment,monthly,nperlist');
-
-
+       return Db::name($tableName)
+            ->where([
+                'planacar_id' =>$plan_id,
+                'user_id' => $user_id
+            ])
+            ->find();
     }
-
-
 }
