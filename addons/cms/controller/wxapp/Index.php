@@ -2,6 +2,7 @@
 
 namespace addons\cms\controller\wxapp;
 
+use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
 use think\Db;
 use think\Config;
@@ -123,19 +124,9 @@ class Index extends Base
 
         }
 
-        $brandList = array_values(array_unique($brandList));
+        return array_values(array_unique($brandList));
 
-        $show = [];//显示的品牌
-        $hidden = [];//隐藏的品牌
-        foreach ($brandList as $k => $v) {
-            if ($k <= 8) {
-                $show[] = $v;
-            } else {
-                $hidden[] = $v;
-            }
-        }
 
-        return ['show' => $show, 'hidden' => $hidden];
     }
 
 
@@ -307,6 +298,22 @@ class Index extends Base
     public function getCity()
     {
         return City::where('status', 'normal')->field('id,name')->select();
+    }
+
+
+
+    public function details()
+    {
+
+        $plan_id = $this->request->post('plan_id');                   //参数：方案ID
+
+        if(!$plan_id){
+            $this->error('缺少参数');
+        }
+
+        PlanAcar::field('id,models_id,payment,monthly,nperlist');
+
+
     }
 
 
