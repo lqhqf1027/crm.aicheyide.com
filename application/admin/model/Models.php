@@ -25,6 +25,16 @@ class Models extends Model
         return $this->belongsTo('Brand', 'brand_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    public function series()
+    {
+        return $this->belongsTo('Brand', 'series_name', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
+    public function model()
+    {
+        return $this->belongsTo('ModelsDetails', 'model_name', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
 
     public function planacar()
     {

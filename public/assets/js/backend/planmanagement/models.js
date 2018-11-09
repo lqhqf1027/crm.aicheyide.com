@@ -77,6 +77,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
+
+            //车系
+            $(document).on("change", "#c-brand_id", function () {
+
+                $.post("planmanagement/models/getSeries",{
+
+                    id: $('#c-brand_id').val(),
+
+                    },function(result){
+                    // console.log(result);
+                    $('#c-series_name').selectPageData(result.list);
+                });
+            });
+            //车型
+            $(document).on("change", "#c-series_name", function () {
+
+                $.post("planmanagement/models/getModel",{
+
+                    id: $('#c-series_name').val(),
+
+                    },function(result){
+                    // console.log(result);
+                    $('#c-model_name').selectPageData(result.list);
+                });
+            });
+
+            
             Controller.api.bindevent();
         },
         api: {

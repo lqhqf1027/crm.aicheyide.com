@@ -1633,10 +1633,6 @@ class Orderlisttabs extends Backend
                         //车型
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
 
-//                        $channel = "demo-rental_collection_data";
-//                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
-//                        goeary_push($channel, $content);
-
                         $data = rental_collection_data($models_name, $row['username'], $row['text']);
 
                         $email = new Email();
@@ -1716,11 +1712,6 @@ class Orderlisttabs extends Backend
 
             if ($result !== false) {
 
-//                $channel = "demo-rental_control";
-//                $content = "销售员" . $admin_nickname . "提交的租车单，请及时进行审核处理";
-//                goeary_push($channel, $content);
-
-
                 $data = Db::name("rental_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -1789,28 +1780,20 @@ class Orderlisttabs extends Backend
         $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
         $newRes = array();
-        //品牌
-        $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key => $value) {
-            $sql = Db::name('models')->alias('a')
+
+        $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                 ->field('a.id,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.licenseplatenumber,b.bond')
-                ->where(['a.brand_id' => $value['brandid'], 'b.status_data' => '', 'b.shelfismenu' => 1])
+                ->where(['b.status_data' => '', 'b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
-            $newB = [];
-            foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '---车牌号：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数' . $bValue['periods'] . '，' .'保证金'.$bValue['bond'].'，'. '全款方案总价（元）' . $bValue['totalprices'] . '】';
-                $newB[] = $bValue;
-            }
-            $newRes[] = array(
-                'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data' => $newB,
-            );
+        foreach ((array)$sql as $bValue) {
+            $bValue['models_name'] = $bValue['models_name'] . '---车牌号：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数' . $bValue['periods'] . '，' .'保证金'.$bValue['bond'].'，'. '全款方案总价（元）' . $bValue['totalprices'] . '】';
+            $newB[] = $bValue;
         }
-        $this->view->assign('newRes', $newRes);
+        $data  =  $newB;
+        
+        $this->view->assign('data', $data);
 
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
@@ -1900,30 +1883,22 @@ class Orderlisttabs extends Backend
                 ->where(['a.id' => $row['id']])
                 ->find();
         }
-        $newRes = array();
-        //品牌
-        $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key => $value) {
-            $sql = Db::name('models')->alias('a')
+        
+        $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                 ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
-                ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
+                ->where(['b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
-            $newB = [];
-            foreach ((array)$sql as $bValue) {
+           
+        foreach ((array)$sql as $bValue) {
                 $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
-            }
-            $newRes[] = array(
-                'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data' => $newB,
-            );
         }
-        // pr($newRes);die;
-        $this->view->assign('newRes', $newRes);
+           
+        $data = $newB;
+
+        $this->view->assign('data', $data);
         $this->view->assign('result', $result);
 
         if (!$row) {
@@ -1984,10 +1959,6 @@ class Orderlisttabs extends Backend
 
                 $this->model->isUpdate(true)->save(['id' => $plan_car_second_name, 'status_data' => 'for_the_car']);
 
-//                $channel = "demo-second_backoffice";
-//                $content = "提交的二手车单，请尽快进行处理";
-//                goeary_push($channel, $content);
-
                 $data = Db::name("second_sales_order")->where('id', $id)->find();
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -2045,30 +2016,22 @@ class Orderlisttabs extends Backend
                     ->where(['a.id' => $row['id']])
                     ->find();
             }
-            $newRes = array();
-            //品牌
-            $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-            // pr(Session::get('admin'));die;
-            foreach ((array)$res as $key => $value) {
-                $sql = Db::name('models')->alias('a')
+            
+            $sql = Db::name('models')->alias('a')
                     ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                     ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
-                    ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
+                    ->where(['b.shelfismenu' => 1])
                     ->whereOr('sales_id', $this->auth->id)
                     ->select();
-                $newB = [];
-                foreach ((array)$sql as $bValue) {
+               
+            foreach ((array)$sql as $bValue) {
                     $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                     $newB[] = $bValue;
-                }
-                $newRes[] = array(
-                    'brand_name' => $value['brand_name'],
-                    // 'brand_logoimage'=>$value['brand_logoimage'],
-                    'data' => $newB,
-                );
             }
-            // pr($newRes);die;
-            $this->view->assign('newRes', $newRes);
+            
+            $data = $newB;
+            
+            $this->view->assign('data', $data);
             $this->view->assign('result', $result);
 
             if (!$row) {
@@ -2147,30 +2110,21 @@ class Orderlisttabs extends Backend
                     ->where(['a.id' => $row['id']])
                     ->find();
             }
-            $newRes = array();
-            //品牌
-            $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-            // pr(Session::get('admin'));die;
-            foreach ((array)$res as $key => $value) {
-                $sql = Db::name('models')->alias('a')
+            
+            $sql = Db::name('models')->alias('a')
                     ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                     ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
-                    ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
+                    ->where(['b.shelfismenu' => 1])
                     ->whereOr('sales_id', $this->auth->id)
                     ->select();
-                $newB = [];
-                foreach ((array)$sql as $bValue) {
+                
+            foreach ((array)$sql as $bValue) {
                     $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                     $newB[] = $bValue;
-                }
-                $newRes[] = array(
-                    'brand_name' => $value['brand_name'],
-                    // 'brand_logoimage'=>$value['brand_logoimage'],
-                    'data' => $newB,
-                );
             }
-            // pr($newRes);die;
-            $this->view->assign('newRes', $newRes);
+            $data = $bewB;    
+            
+            $this->view->assign('data', $data);
             $this->view->assign('result', $result);
 
             if (!$row) {
@@ -2230,30 +2184,21 @@ class Orderlisttabs extends Backend
                 ->where(['a.id' => $row['id']])
                 ->find();
         }
-        $newRes = array();
-        //品牌
-        $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key => $value) {
-            $sql = Db::name('models')->alias('a')
+        
+        $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                 ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
-                ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
+                ->where(['b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
-            $newB = [];
-            foreach ((array)$sql as $bValue) {
+           
+        foreach ((array)$sql as $bValue) {
                 $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
-            }
-            $newRes[] = array(
-                'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data' => $newB,
-            );
         }
-        // pr($newRes);die;
-        $this->view->assign('newRes', $newRes);
+        $data = $newB;
+        
+        $this->view->assign('data', $data);
         $this->view->assign('result', $result);
 
         if (!$row) {
@@ -2280,10 +2225,6 @@ class Orderlisttabs extends Backend
                     if ($result !== false) {
                         //车型
                         $models_name = Db::name('models')->where('id', $row['models_id'])->value('name');
-
-//                        $channel = "demo-second_collection_data";
-//                        $content = "客户： " . $row['usename'] . "对车型： " . $models_name . "的购买，补录：" . $row['text'] . "资料已完成";
-//                        goeary_push($channel, $content);
 
                         $data = second_collection_data($models_name, $row['username'], $row['text']);
 
@@ -2329,28 +2270,20 @@ class Orderlisttabs extends Backend
         $this->view->assign("buyInsurancedataList", $this->model->getBuyInsurancedataList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
         $newRes = array();
-        //品牌
-        $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key => $value) {
-            $sql = Db::name('models')->alias('a')
+        
+        $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                 ->field('a.id,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.licenseplatenumber')
-                ->where(['a.brand_id' => $value['brandid'], 'b.shelfismenu' => 1])
+                ->where(['b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
-            $newB = [];
-            foreach ((array)$sql as $bValue) {
+           
+        foreach ((array)$sql as $bValue) {
                 $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
-            }
-            $newRes[] = array(
-                'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data' => $newB,
-            );
         }
-        $this->view->assign('newRes', $newRes);
+        $data = $newB;
+        $this->view->assign('data', $data);
 
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
@@ -2455,28 +2388,20 @@ class Orderlisttabs extends Backend
         $this->view->assign("genderdataList", $this->model->getGenderdataList());
         $this->view->assign('customerSourceList', $this->model->getCustomerSourceList());
         $newRes = array();
-        //品牌
-        $res = DB::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key => $value) {
-            $sql = Db::name('models')->alias('a')
+       
+        $sql = Db::name('models')->alias('a')
                 ->join('plan_full b', 'b.models_id=a.id')
                 ->field('a.name as models_name,b.id,b.full_total_price')
-                ->where(['a.brand_id' => $value['brandid'], 'b.ismenu' => 1])
+                ->where(['b.ismenu' => 1])
                 ->select();
-            $newB = [];
-            foreach ((array)$sql as $bValue) {
+           
+        foreach ((array)$sql as $bValue) {
                 $bValue['models_name'] = $bValue['models_name'] . '【全款总价' . $bValue['full_total_price'] . '】';
                 $newB[] = $bValue;
-            }
-
-            $newRes[] = array(
-                'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data' => $newB,
-            );
         }
-        $this->view->assign('newRes', $newRes);
+        $data = $newB;
+           
+        $this->view->assign('data', $data);
 
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
@@ -2570,32 +2495,23 @@ class Orderlisttabs extends Backend
             ->where(['a.id' => $row['id']])
             ->find();
 
-        $newRes = array();
-        //品牌
-        $res = DB::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key => $value) {
-            $sql = Db::name('models')->alias('a')
+       
+        $sql = Db::name('models')->alias('a')
                 ->join('plan_full b', 'b.models_id=a.id')
                 ->field('a.name as models_name,b.id,b.full_total_price')
-                ->where(['a.brand_id' => $value['brandid'], 'b.ismenu' => 1])
+                ->where(['b.ismenu' => 1])
                 ->select();
-            $newB = [];
-            foreach ((array)$sql as $bValue) {
+            
+        foreach ((array)$sql as $bValue) {
                 $bValue['models_name'] = $bValue['models_name'] . '【全款总价' . $bValue['full_total_price'] . '】';
                 $newB[] = $bValue;
-            }
-
-            $newRes[] = array(
-                'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data' => $newB,
-            );
         }
+
+        $data = $newB;
 
         $this->view->assign(
             [
-                "newRes" => $newRes,
+                "data" => $data,
                 "result" => $result
             ]
         );
@@ -2665,10 +2581,6 @@ class Orderlisttabs extends Backend
             $result = $this->model->isUpdate(true)->save(['id' => $id, 'review_the_data' => 'inhouse_handling']);
 
             if ($result !== false) {
-
-//                $channel = "demo-full_backoffice";
-//                $content = "销售员" . $admin_nickname . "提交的全款车单，请尽快进行金额录入";
-//                goeary_push($channel, $content);
 
                 $data = Db::name("full_parment_order")->where('id', $id)->find();
                 //车型
@@ -2742,28 +2654,21 @@ class Orderlisttabs extends Backend
         $this->view->assign("customerSourceList", $this->model->getCustomerSourceList());
         $this->view->assign("reviewTheDataList", $this->model->getReviewTheDataList());
         $newRes = array();
-        //品牌
-        $res = DB::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key => $value) {
-            $sql = Db::name('models')->alias('a')
+        
+        
+        $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                 ->field('a.name as models_name,b.id,b.totalprices,b.licenseplatenumber')
-                ->where(['a.brand_id' => $value['brandid'], 'b.status_data' => '', 'b.shelfismenu' => 1])
+                ->where(['b.status_data' => '', 'b.shelfismenu' => 1])
                 ->select();
-            $newB = [];
-            foreach ((array)$sql as $bValue) {
+            
+        foreach ((array)$sql as $bValue) {
                 $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【全款总价' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
-            }
-
-            $newRes[] = array(
-                'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data' => $newB,
-            );
         }
-        $this->view->assign('newRes', $newRes);
+
+        $data = $newB;
+        $this->view->assign('data', $data);
 
         if ($this->request->isPost()) {
             $params = $this->request->post('row/a');
@@ -2863,10 +2768,6 @@ class Orderlisttabs extends Backend
 
                 $this->model->isUpdate(true)->save(['id' => $plan_second_full_name, 'status_data' => 'send_the_car']);
 
-//                $channel = "demo-second_full_backoffice";
-//                $content = "销售员" . $admin_nickname . "提交的全款二手车单，请尽快进行金额录入";
-//                goeary_push($channel, $content);
-
                 $data = Db::name("second_full_order")->where('id', $id)->find();
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
@@ -2945,32 +2846,23 @@ class Orderlisttabs extends Backend
             ->where(['a.id' => $row['id']])
             ->find();
 
-        $newRes = array();
-        //品牌
-        $res = DB::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
-        // pr(Session::get('admin'));die;
-        foreach ((array)$res as $key => $value) {
-            $sql = Db::name('models')->alias('a')
+
+        $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
                 ->field('a.name as models_name,b.id,b.totalprices,b.licenseplatenumber')
-                ->where(['a.brand_id' => $value['brandid'], 'b.status_data' => '', 'b.shelfismenu' => 1])
+                ->where(['b.status_data' => '', 'b.shelfismenu' => 1])
                 ->select();
-            $newB = [];
-            foreach ((array)$sql as $bValue) {
+            
+        foreach ((array)$sql as $bValue) {
                 $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【全款总价' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
-            }
-
-            $newRes[] = array(
-                'brand_name' => $value['brand_name'],
-                // 'brand_logoimage'=>$value['brand_logoimage'],
-                'data' => $newB,
-            );
         }
+
+        $data = $newB;
 
         $this->view->assign(
             [
-                "newRes" => $newRes,
+                "data" => $data,
                 "result" => $result
             ]
         );
