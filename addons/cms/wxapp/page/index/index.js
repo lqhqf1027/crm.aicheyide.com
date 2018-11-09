@@ -22,24 +22,26 @@ Page(Object.assign({}, Tab, {
     this.channel = 0;
     this.page = 1;
     this.setData({ ["tab.list"]: app.globalData.indexTabList });
-    // app.request('/index/index', {
-      
-    // }, function (data, ret) {
-    //   console.log(data);
-     
-    // }, function (data, ret) {
-    //   app.error(ret.msg);
-    // });
-
-
-    app.request('/index/index', {
-      city:this.data.city
+    app.request('/index/plan_details', {
+      plan_id:149,
+      city_id:1,
+      user_id:5
     }, function (data, ret) {
       console.log(data);
-
+     
     }, function (data, ret) {
       app.error(ret.msg);
     });
+
+
+    // app.request('/index/index', {
+    //   city:this.data.city
+    // }, function (data, ret) {
+    //   console.log(data);
+
+    // }, function (data, ret) {
+    //   app.error(ret.msg);
+    // });
 
   },
   onPullDownRefresh: function () {

@@ -111,4 +111,6 @@ class PlanAcar extends Model
     {
         return $this->belongsToMany('Brand','models','brand_id','plan_acar_id');
     }
+
+
 }
