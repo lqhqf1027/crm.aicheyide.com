@@ -94,6 +94,7 @@ class Salesorder extends Backend
                     ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.name as models_name')
                     ->where(['a.id' => $row['id']])
                     ->find();
+<<<<<<< Updated upstream
             }   
 
             $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
@@ -102,6 +103,33 @@ class Salesorder extends Backend
 
             $this->view->assign('category', $category);
             
+=======
+            }
+            $newRes = array();
+            //品牌
+            $res = Db::name('brand')->field('id as brandid,name as brand_name,brand_logoimage')->select();
+            // pr(Session::get('admin'));die;
+            foreach ((array) $res as $key => $value) {
+                $sql = Db::name('models')->alias('a')
+                    ->join('plan_acar b', 'b.models_id=a.id')
+                    ->join('financial_platform c', 'b.financial_platform_id=c.id')
+                    ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,c.name as financial_platform_name')
+                    ->where(['a.brand_id' => $value['brandid'], 'b.ismenu' => 1])
+                    ->select();
+                $newB = [];
+                foreach ((array) $sql as $bValue) {
+                    $bValue['models_name'] = $bValue['models_name'].'【首付'.$bValue['payment'].'，'.'月供'.$bValue['monthly'].'，'.'GPS '.$bValue['gps'].'，'.'尾款 '.$bValue['tail_section'].'】'.'---'.$bValue['financial_platform_name'];
+                    $newB[] = $bValue;
+                }
+                $newRes[] = array(
+                    'brand_name' => $value['brand_name'],
+
+                    'data' => $newB,
+                );
+            }
+
+            $this->view->assign('newRes', $newRes);
+>>>>>>> Stashed changes
             $this->view->assign('result', $result);
 
             if (!$row) {
@@ -126,6 +154,7 @@ class Salesorder extends Backend
                         $result = $row->allowField(true)->save($params);
                         if ($result !== false) {
                             //如果添加成功,将状态改为提交审核
+<<<<<<< Updated upstream
                             $result_s = $this->model->isUpdate(true)->save(['id' => $row['id'], 'review_the_data' => 'is_reviewing_true']);
 
                             $admin_nickname = DB::name('admin')->alias('a')->join('sales_order b', 'b.admin_id=a.id')->where('b.id', $row['id'])->value('a.nickname');
@@ -154,6 +183,15 @@ class Salesorder extends Backend
                             } else {
                                 $this->error('更新状态失败');
                             }
+=======
+                            $result_s = $this->model->isUpdate(true)->save(['id' => $row['id'], 'review_the_data' => 'is_reviewing']);
+                            if ($result_s) {
+                                $this->success();
+                            } else {
+                                $this->error('状态更新失败');
+                            }
+                            $this->success();
+>>>>>>> Stashed changes
                         } else {
                             $this->error($this->model->getError());
                         }
@@ -311,6 +349,7 @@ class Salesorder extends Backend
         return $this->view->fetch();
     }
 
+<<<<<<< Updated upstream
     //方案组装
     public function planname()
     {
@@ -336,6 +375,9 @@ class Salesorder extends Backend
     public function planacar()
     {
         if ($this->request->isAjax()) {
+=======
+    // }
+>>>>>>> Stashed changes
 
         
             $category_id = input("category_id");
