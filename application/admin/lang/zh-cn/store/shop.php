@@ -9,7 +9,7 @@ return [
     'Phone'  =>  '联系电话',
     'Createtime'  =>  '创建时间',
     'Updatetime'  =>  '更新时间',
-    'Status'  =>  '状态',
+    'Statuss'  =>  '状态',
     'City.id'  =>  'ID',
     'City.name'  =>  '城市名称',
     'City.createtime'  =>  '创建时间',
