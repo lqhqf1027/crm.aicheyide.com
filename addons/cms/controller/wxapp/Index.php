@@ -102,8 +102,6 @@ class Index extends Base
     }
 
 
-
-
     /**
      * 方案详情页面接口
      * @throws \think\db\exception\DataNotFoundException
@@ -117,7 +115,7 @@ class Index extends Base
         $city_id = $this->request->post('city_id');                   //参数：城市ID
         $user_id = $this->request->post('user_id');                   //参数：用户ID
 
-        if (!$plan_id ||!$city_id ||!$user_id) {
+        if (!$plan_id || !$city_id || !$user_id) {
             $this->error('缺少参数');
         }
 
@@ -166,12 +164,12 @@ class Index extends Base
             }
         }
 
-        $collection = $this->getCollection('cms_collection',$plan_id,$user_id);         //判断用户是否收藏该方案
+        $collection = $this->getCollection('cms_collection', $plan_id, $user_id);         //判断用户是否收藏该方案
 
-        $fabulous = $this->getCollection('cms_fabulous',$plan_id,$user_id);             //判断用户是否点赞该方案
+        $fabulous = $this->getCollection('cms_fabulous', $plan_id, $user_id);             //判断用户是否点赞该方案
 
-        $plans['collection'] = $collection? 1:0;
-        $plans['fabulous'] = $fabulous? 1:0;
+        $plans['collection'] = $collection ? 1 : 0;
+        $plans['fabulous'] = $fabulous ? 1 : 0;
 
 
         $this->success('', [
@@ -205,7 +203,6 @@ class Index extends Base
             ->field('b.id,b.payment,b.monthly,b.guide_price,b.models_main_images,a.name as models_name')
             ->select();
     }
-
 
 
     /**
@@ -417,18 +414,47 @@ class Index extends Base
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getCollection($tableName,$plan_id,$user_id)
+    public function getCollection($tableName, $plan_id, $user_id)
     {
-       return Db::name($tableName)
+        return Db::name($tableName)
             ->where([
-                'planacar_id' =>$plan_id,
+                'planacar_id' => $plan_id,
                 'user_id' => $user_id
             ])
             ->find();
     }
 
+    /**
+     * 点赞接口
+     */
     public function fabulousInterface()
     {
+        $user_id = $this->request->post('user_id');
+        $plan_id = $this->request->post('plan_id');
+
+        if (!$user_id || !$plan_id) {
+            $this->error('缺少参数');
+        }
+        $res = Db::name('cms_fabulous')->insert(['planacar_id' => $plan_id, 'user_id' => $user_id, 'fabuloustime' => time()]);
+
+        $res ? $this->success('', 'success') : $this->error('', 'error');
+
+    }
+
+    /**
+     * 收藏接口
+     */
+    public function collectionInterface()
+    {
+        $user_id = $this->request->post('user_id');
+        $plan_id = $this->request->post('plan_id');
+
+        if (!$user_id || !$plan_id) {
+            $this->error('缺少参数');
+        }
+        $res = Db::name('cms_collection')->insert(['planacar_id' => $plan_id, 'user_id' => $user_id, 'collectiontime' => time()]);
+
+        $res ? $this->success('', 'success') : $this->error('', 'error');
 
     }
 }
