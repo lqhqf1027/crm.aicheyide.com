@@ -67,7 +67,7 @@ class City extends Backend
     public function edit($ids = NULL)
     {
         $CITY = db('cms_city_copy')->where('status','normal')->field(['id','name'])->select();
-        $this->assign('city',$CITY);
+        $this->assign('city',$CITY); 
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
