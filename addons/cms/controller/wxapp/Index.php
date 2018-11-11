@@ -426,4 +426,9 @@ class Index extends Base
             ])
             ->find();
     }
+
+    public function fabulousInterface()
+    {
+
+    }
 }
