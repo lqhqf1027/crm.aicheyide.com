@@ -96,6 +96,11 @@ class Cities extends Backend
     public function edit($ids = NULL)
     {
         $row = $this->model->get($ids)->toArray();
+        //获取子级所属城市
+        $dataCities = collection(citiesModel::all(function ($q) use($ids){
+            $q->field('id,cities_name')->where('pid',$ids);
+        }))->toArray();
+
         $cities=$this->model->where(['status'=>'normal'])->column('id,name');
 
         if (!$row)
@@ -108,6 +113,7 @@ class Cities extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            pr($params);die;
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -131,7 +137,7 @@ class Cities extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
 
-        $this->view->assign(["row"=>$row,'cities'=>$cities]);
+        $this->view->assign(["row"=>$row,'dataCities'=>$dataCities,'cities'=>$cities]);
 
         return $this->view->fetch();
     }
@@ -142,18 +148,13 @@ class Cities extends Backend
     {
 
         $cities= collection(citiesModel::all(function($q){
-            $q->field('id,name,province_letter')->where(['status'=>'normal']);
+            $q->field('id,name,province_letter')->where(['status'=>'normal','pid'=>0]);
         }))->toArray();
-        $ch = explode(',','A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z');
-
+        $newArrays=[];
         foreach ($cities as $key=>$value){
-
-            if(in_array($value['province_letter'],$ch)){
-                    $cities[$key]['name'] = ['id'=>$value['id'],'chir_name'=>$value['name']];
-            }
+            $newArrays[$value['province_letter']][] = ['id'=>$value['id'],'cities_name'=>$value['name']];
         }
-        pr($cities);die;
-        $this->view->assign(['cities'=>$cities]);
+        $this->view->assign(['newArrays'=>$newArrays]);
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             $params['pid'] = $params['id'];

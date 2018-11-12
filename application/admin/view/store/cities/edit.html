@@ -4,7 +4,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <select  id="c-id" data-rule="required" class="form-control selectpicker" name="row[id]">
+            <select  id="c-id" data-rule="required" class="form-control selectpicker" name="row[id]" disabled>
                 {foreach name="cities" item="vo"}
                 <option value="{$key}" {in name="key" value="$row.id"}selected{/in}>{$vo}</option>
                 {/foreach}
@@ -12,12 +12,17 @@
 
         </div>
     </div>
+    {foreach $dataCities as $key=>$value}
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Cities_name')}:</label>
+
         <div class="col-xs-12 col-sm-8">
-            <input id="c-cities_name" class="form-control form-control" name="row[cities_name]" type="text" value="{$row.cities_name}">
+            <input id="c-cities_name" class="form-control form-control" name="row[cities_name]"  type="text" value="{$value.cities_name}" style="width: 90%;">
+            <span class="btn btn-sm btn-danger btn-remove pull-right"><i class="fa fa-times"></i></span>
         </div>
+        <input type="hidden" value="{$value.id}" name="row[id]">
     </div>
+    {/foreach}
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
         <div class="col-xs-12 col-sm-8">

@@ -5,9 +5,11 @@
         <div class="col-xs-12 col-sm-8">
             <select  id="c-id" data-rule="required" class="form-control selectpicker" name="row[id]" >
                 <option value="" style="display: none"></option>
-
-                {foreach name="cities" item="vo"}
-                <option value="{$key}" {in name="key" value="$row.id"}selected{/in}>{$vo}</option>
+                {foreach name='newArrays' item='vo'}
+                <option disabled >{$key}</option>
+                    {foreach name="vo" item="vos" }
+                    <option value="{$key}" {in name="key" value="$row.id"}selected{/in}>{$vos[cities_name]}</option>
+                    {/foreach}
                 {/foreach}
             </select>
 
