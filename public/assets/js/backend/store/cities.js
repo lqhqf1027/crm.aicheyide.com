@@ -86,8 +86,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
-            $('.btn-remove').on('click',function () {
+            $('.btn-remove').on('click',function (e) {
+                // console.log($(this).val());
+                var check = $(this).parent('span').siblings('input[type="checkbox"]');
+                if(check.prop('checked')){
+                    check.prop('checked',false)&&$(this).siblings('span').text('')
+                    // check.parent('div').siblings('input[type="hidden"]').val('');
 
+                }
+                else{
+                    // console.log(check.val());
+                    check.parent('div').siblings('input[type="hidden"]').val(check.val());
+                    check.prop('checked',true)&&$(this).siblings('span').text('已选中删除');
+                    // $(this).parent('span').siblings('input[type="text"]').val();
+                }
             })
             Form.api.bindevent("form[role=form]");
             Controller.api.bindevent();
