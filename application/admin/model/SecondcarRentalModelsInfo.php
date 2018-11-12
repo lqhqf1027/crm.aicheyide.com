@@ -43,4 +43,16 @@ class SecondcarRentalModelsInfo extends Model
     {
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+    //关联标签
+    public function label()
+    {
+        return $this->belongsTo('Label','label_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+    //关联门店
+    public function companystore()
+    {
+        return $this->belongsTo('CompanyStore','store_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }
