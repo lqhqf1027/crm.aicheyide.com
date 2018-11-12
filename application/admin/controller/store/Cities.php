@@ -24,7 +24,12 @@ class Cities extends Backend
     {
         parent::_initialize();
         $this->model = new \app\admin\model\Cities;
-        $this->view->assign("statusList", $this->model->getStatusList());
+        $this->view->assign(
+            [
+                "statusList"=>$this->model->getStatusList(),
+                'citiesNum'=>citiesModel::where(function ($q){
+                    $q->where(['pid'=>['neq',0],'status'=>'normal']);})->count()
+            ]);
     }
     /**
      * 查看
@@ -113,7 +118,15 @@ class Cities extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
-            pr($params);die;
+//            pr($params['id']);die;
+            if($params['id']){
+                $ids = array_keys($params['id']);
+                foreach ($ids as $key=>$value){
+                    $ids_new[] = ['id'=>$value,'status'=>'normal'];
+
+                }
+            }
+
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -122,7 +135,7 @@ class Cities extends Backend
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
                         $row->validate($validate);
                     }
-                    $result = $row->allowField(true)->save($params);
+                    $result = citiesModel::where('id','in',$ids)->update(['status'=>'normal']);
                     if ($result !== false) {
                         $this->success();
                     } else {
