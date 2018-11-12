@@ -1,7 +1,7 @@
 <?php
 
 namespace addons\cms\controller\wxapp;
-
+use app\common\library\Auth;
 use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
 use think\console\command\make\Model;
@@ -21,6 +21,7 @@ class Index extends Base
 
     protected $noNeedLogin = '*';
 
+
     public function _initialize()
     {
         parent::_initialize();
@@ -36,24 +37,33 @@ class Index extends Base
     public function index()
     {
         $city_id = $this->request->post('city');                              //参数：城市ID
+//        $user_id = $this->request->post('user_id');                              //参数：用户ID
+
+//        if($user_id){
+//            Db::name('user')
+//            ->where('id',$user_id)
+//            ->setField('city_id',$city_id);
+//        }
 
         if (!$city_id) {
             $this->error('缺少参数');
         }
 
-        //品牌
+//品牌
         $brandList = $this->getBrand();                                            //获取品牌数据
 
 
-        //城市
+//城市
         $cityList = $this->getCity();
 
 
-        //小程序分享配置
+//小程序分享配置
         $shares = $this->getConfigShare();
 
-        //返回所有类型的方案
+//返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
+
+        $this->success('', $useful);
 
 
         $data = ['carType' => [
@@ -110,7 +120,6 @@ class Index extends Base
      */
     public function plan_details()
     {
-
         $plan_id = $this->request->post('plan_id');                   //参数：方案ID
         $city_id = $this->request->post('city_id');                   //参数：城市ID
         $user_id = $this->request->post('user_id');                   //参数：用户ID
@@ -119,9 +128,9 @@ class Index extends Base
             $this->error('缺少参数');
         }
 
-        //获取该方案的详细信息
+//获取该方案的详细信息
         $plans = PlanAcar::field('id,models_id,payment,monthly,nperlist,modelsimages,guide_price,models_main_images,
-        specialimages,popularity')
+specialimages,popularity')
             ->with(['models' => function ($models) {
                 $models->withField('name,vehicle_configuration');
             }, 'label' => function ($label) {
@@ -132,22 +141,22 @@ class Index extends Base
 
         $plans['models']['vehicle_configuration'] = json_decode($plans['models']['vehicle_configuration'], true);
 
-        //查看同城市同车型不同的方案
+//查看同城市同车型不同的方案
         $different_schemes = $this->getPlans($plans['models_id'], $city_id, $plan_id);
 
-        //查看其它方案的属性名
+//查看其它方案的属性名
         if ($different_schemes) {
             $plans['different_schemes'] = $different_schemes;
         } else {
             $plans['different_schemes'] = null;
         }
 
-        //获取其他方案
+//获取其他方案
         $allModel = $this->getPlans('', $city_id, $plan_id);
 
         $reallyOther = null;
 
-        //如果有其他方案，随机得到其他的方案
+//如果有其他方案，随机得到其他的方案
         if ($allModel) {
             $reallyOther = [];
             $keys = array_keys($allModel);
@@ -180,7 +189,7 @@ class Index extends Base
     }
 
     /**
-     * 得到满足条件的方案
+     * 详情方案
      * @param null $models_id
      * @param $city_id
      * @param $plan_id
@@ -202,6 +211,104 @@ class Index extends Base
             ])
             ->field('b.id,b.payment,b.monthly,b.guide_price,b.models_main_images,a.name as models_name')
             ->select();
+    }
+
+    /**
+     * 满足条件的所有方案
+     * @param $city
+     * @param null $limit
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function plans($city, $limit = null,$Duplicate=false)
+    {
+        $check = [];                     //检查方案车型是否重复
+        $info = CompanyStore::field('id,store_name')->with(['city' => function ($query) use ($city) {
+            $query->where('city.id', $city);
+            $query->withField('id');
+        }, 'planacar' => function ($planacar) {
+            $planacar->where([
+                'acar_status' => 1,
+            ]);
+            $planacar->withField(['id', 'models_id', 'payment', 'monthly', 'subjectismenu', 'popularity', 'specialimages', 'specialismenu', 'models_main_images',
+                'guide_price', 'flashviewismenu', 'recommendismenu', 'subject_id', 'label_id']);
+        }])->where(function ($query) {
+            $query->where([
+                'statuss' => 'normal',
+            ]);
+        })->limit(!$limit ? '' : $limit)->select();
+
+        $info = collection($info)->toArray();
+
+        $planList = [];
+        foreach ($info as $k => $v) {
+
+            if ($v['planacar']['models_main_images']) {
+                $v['planacar']['models_main_images'] = Config::get('upload')['cdnurl'] . $v['planacar']['models_main_images'];
+            }
+
+            if ($v['planacar']['specialimages']) {
+                $v['planacar']['specialimages'] = Config::get('upload')['cdnurl'] . $v['planacar']['specialimages'];
+            }
+
+            if ($v['planacar']) {
+                if($Duplicate){
+                    if (in_array($v['planacar']['models_id'], $check)) {              //根据方案的车型名去重
+                        continue;
+                    } else {
+                        array_push($check, $v['planacar']['models_id']);
+                    }
+                }
+
+
+                if ($v['planacar']['models_id']) {        //根据车型ID获取车型
+                    $models_name = Db::name('models')
+                        ->where([
+                            'id' => $v['planacar']['models_id'],
+                            'status' => 'normal'
+                        ])
+                        ->value('name');
+                    if ($models_name) {
+                        $v['planacar']['models_name'] = $models_name;
+                    }
+
+                }
+
+
+                if ($v['planacar']['label_id']) {           //根据标签ID获取标签
+                    $label_name = Db::name('cms_label')
+                        ->where([
+                            'status' => 'normal',
+                            'id' => $v['planacar']['label_id']
+                        ])
+                        ->field('name,lableimages')
+                        ->find();
+
+                    if ($label_name) {
+                        $v['planacar']['labels'] = $label_name;
+                    }
+                }
+
+
+
+                $planList[] = $v['planacar'];
+            }
+
+
+        }
+        return $planList;
+    }
+
+    public function LazyLoad()
+    {
+        $city_id = $this->request->post('city_id');
+
+        $page = $this->request->post('page');
+
+        $this->success('', $this->plans($city_id));
+
     }
 
 
@@ -245,23 +352,11 @@ class Index extends Base
      */
     public function getAllStylePlan($city_id)
     {
-        $info = CompanyStore::field('id,store_name')->with(['city' => function ($city) use ($city_id) {
-            $city->where('city.id', $city_id);
-            $city->withField('id');
-        }, 'planacar' => function ($planacar) {
-            $planacar->where([
-                'acar_status' => 1,
-            ]);
-            $planacar->withField(['id', 'models_id', 'payment', 'monthly', 'subjectismenu', 'popularity', 'specialimages', 'specialismenu', 'models_main_images',
-                'guide_price', 'flashviewismenu', 'recommendismenu', 'subject_id', 'label_id']);
-        }])->where(function ($query) {
-            $query->where([
-                'statuss' => 'normal',
-            ]);
-        })->select();
 
+        $info = $this->plans($city_id,'',true);
+
+        return $info;
         $check = [];                     //检查方案车型是否重复
-        $newcarList = [];                //所有方案（新车）
         $recommendList = [];             //为你推荐（新车）
         $specialfieldList = [];          //专场（新车）
 
@@ -294,7 +389,7 @@ class Index extends Base
                         ])
                         ->value('name');
                     if ($models_name) {
-                        $info[$k]['planacar']['models_name'] = $models_name;
+                        $v['planacar']['models_name'] = $models_name;
                     }
 
                 }
@@ -310,28 +405,23 @@ class Index extends Base
                         ->find();
 
                     if ($label_name) {
-                        $info[$k]['planacar']['labels'] = $label_name;
+                        $v['planacar']['labels'] = $label_name;
                     }
                 }
-            }
 
-            $newcarList[] = $info[$k]['planacar'];
-
-        }
-
-        if ($newcarList) {
-            foreach ($newcarList as $k => $v) {
-                if ($v['recommendismenu']) {
-                    $recommendList[] = $v;
+                if ($v['planacar']['recommendismenu']) {
+                    $recommendList[] = $v['planacar'];
                 }
 
-                if ($v['specialismenu']) {
-                    $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages']];
+                if ($v['planacar']['specialismenu']) {
+                    $needData = ['id' => $v['planacar']['id'], 'specialimages' => $v['planacar']['specialimages']];
                     $specialfieldList[] = $needData;
                 }
-            }
-        }
 
+            }
+
+
+        }
         $specialList = Subject::field('id,title,coverimages,plan_id')//获取专题表信息
         ->where([
             'shelfismenu' => 1,
@@ -373,7 +463,6 @@ class Index extends Base
         }
 
         return [
-            'newcarList' => $newcarList,
             'recommendList' => $recommendList,
             'specialList' => $specialList,
             'specialfieldList' => $specialfieldList
