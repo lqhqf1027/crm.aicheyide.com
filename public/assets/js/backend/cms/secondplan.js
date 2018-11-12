@@ -246,7 +246,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 operate: {
                     /**编辑按钮 */
                     'click .btn-editone': function (e, value, row, index) {
-                    $(".btn-editone").data("area", ["95%","95%"]); 
+                    $(".btn-editone").data("area", ["70%","70%"]); 
 
                         e.stopPropagation();
                         e.preventDefault();

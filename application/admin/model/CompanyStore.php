@@ -38,7 +38,7 @@ class CompanyStore extends Model
 
     public function city()
     {
-        return $this->belongsTo('City', 'city_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->belongsTo('Cities', 'city_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
     public function planacar()
