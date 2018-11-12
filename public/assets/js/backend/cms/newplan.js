@@ -49,7 +49,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         },
                         {field: 'label.lableimages', title: __('标签图片'), formatter: Table.api.formatter.images},
                         {
-                            field: 'companyStore.store_name', title: __('门店名称'), 
+                            field: 'companystore.store_name', title: __('门店名称'), 
                         },
                         {field: 'specialimages', title: __('专场车型代表图片'), formatter: Table.api.formatter.images},
                         {field: 'models_main_images', title: __('封面图片'), formatter: Table.api.formatter.images},

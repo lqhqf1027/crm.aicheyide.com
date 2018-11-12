@@ -248,15 +248,20 @@ class Newnventory extends Backend
     public function getInfo()
     {
 
-        $brand = Db::name("brand")
-            ->field("id,name")
-            ->select();
-
-
         $models = Db::name("models")
             ->field("id as models_id,name as models_name,brand_id")
             ->select();
-
+            
+        //品牌下没有车型，就不显示在下拉列表
+        foreach ($models as $key => $value) {
+            $ids[] = $value['brand_id'];
+        }
+        
+        $brand = Db::name("brand")
+            ->where('pid', '0')
+            ->where('id', 'in', $ids)
+            ->field("id,name")
+            ->select();
 
         foreach ($brand as $k => $v) {
             $brand[$k]['models'] = array();

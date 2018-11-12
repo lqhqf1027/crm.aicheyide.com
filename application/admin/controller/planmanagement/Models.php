@@ -112,6 +112,11 @@ class Models extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax())
         {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
             $id = $this->request->post('id');
             //父级id
             $list = $this->model->where('pid', $id)->field('id,name')->select();
@@ -123,27 +128,7 @@ class Models extends Backend
         
     }
 
-    /**
-     * 编辑----查询车辆车系
-     */
-    public function getSeries1()
-    {
-        $this->model = model('Brand');
-        // //当前是否为关联查询
-        // $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
-             //如果发送的来源是Selectpage，则转发到Selectpage
-             if ($this->request->request('keyField'))
-             {
-                 return $this->selectpage();
-             }
-        }
-        
-    }
-
+    
     /**
      * 查询车辆车型
      */
@@ -158,6 +143,12 @@ class Models extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax())
         {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                $this->model = model('ModelsDetails');
+                return $this->selectpage();
+            }
             $id = $this->request->post('id');
             //车系id
             $series_id = $this->model->where('id', $id)->value('series_id');
@@ -207,6 +198,7 @@ class Models extends Backend
 
                                         Db::name('models_details')->insert([
                                             'series_id' => $series_id, 
+                                            'brnad_id' => $id,
                                             'models_id' => $vv['I'], 
                                             'name' => $v['I'] . "款 " . $vv['N'], 
                                             'price' => $vv['P'],
@@ -316,7 +308,19 @@ class Models extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+
             if ($params) {
+
+                $series_name = Db::name('brand')->where('id', $params['series_name'])->value('name');
+                $models_name = Db::name('models_details')->where('id', $params['model_name'])->value('name');
+                //去掉（停售）
+                $series_name = explode('(停售)',$series_name);
+                $series_name = implode($series_name);
+                    
+                $vehicle_configuration = Db::name('models_details')->where('id', $params['model_name'])->value('vehicle_configuration');
+                $params['name'] = $series_name . " " .  $models_name;
+                $params['vehicle_configuration'] = $vehicle_configuration;
+
                 try {
                     //是否采用模型验证
                     if ($this->modelValidate) {

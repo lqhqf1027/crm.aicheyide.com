@@ -20,7 +20,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择车辆车系')}:</label>
         <div class="col-xs-12 col-sm-8">
                
-            <input id="c-series_name" data-rule="required" data-source="planmanagement/models/getSeries1" class="form-control selectpage" name="row[series_name]" type="text" value="{$row.series_name}">
+            <input id="c-series_name" data-rule="required" data-source="planmanagement/models/getSeries" data-params='{"custom[pid]":"{$row.brand_id}"}' class="form-control selectpage" name="row[series_name]" type="text" value="{$row.series_name}">
                 
         </div>
     </div>
@@ -29,7 +29,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择车辆车型')}:</label>
         <div class="col-xs-12 col-sm-8">
                
-            <input id="c-model_name" data-rule="required" data-source="planmanagement/models/getModel1" class="form-control selectpage" name="row[model_name]" type="text" value="{$row.model_name}">
+            <input id="c-model_name" data-rule="required" data-source="planmanagement/models/getModel1" data-params='{"custom[brnad_id]":"{$row.series_name}"}' class="form-control selectpage" name="row[model_name]" type="text" value="{$row.model_name}">
                 
         </div>
     </div>
