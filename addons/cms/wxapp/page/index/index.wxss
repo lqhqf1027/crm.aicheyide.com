@@ -1,95 +1,106 @@
 .page {
-  width: 750rpx;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  background-color: #EFEFF4;
-  font-size: 16px;
-  font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+    /* width: 750rpx; */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* background-color: #EFEFF4; */
+    font-size: 16px;
+    font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
 }
 
 .page .page_hd {
-  padding: 0rpx 20rpx 15rpx 20rpx;
-  display: flex;
-  flex-direction: row;
-  background: #fff;
+    padding: 0rpx 20rpx 15rpx 20rpx;
+    display: flex;
+    flex-direction: row;
+    background: #fff;
 }
 
 .page .page_hd .page_hd_position {
-  box-sizing: border-box;
-  width: 22%;
-  height: 60rpx;
-  line-height: 60rpx;
-  position: relative;
-  padding-left: 30rpx;
+    box-sizing: border-box;
+    width: 16%;
+    height: 60rpx;
+    line-height: 60rpx;
+    position: relative;
+    top: -2px;
 }
 
-.page .page_hd .page_hd_position .fa-angle-down {
-  position: absolute;
-  right: 30rpx;
-  top: -5rpx;
-}
+
+/* .page .page_hd .page_hd_position .fa-angle-down {
+    position: absolute;
+    right: 30rpx;
+    top: -5rpx;
+} */
 
 .page .page_hd .page_hd_search {
-  width: 68%;
-  height: 60rpx;
+    width: 74%;
+    height: 60rpx;
 }
 
 .page .page_hd .page_hd_phone {
-  width: 10%;
-  height: 100%;
-  text-align: center;
-
-  position: relative;
+    width: 10%;
+    height: 100%;
+    text-align: center;
+    position: relative;
 }
 
-.page .page_hd .page_hd_phone .fa-volume-control-phone{
-  position: absolute;
-  top: -6rpx;
+.page .page_hd .page_hd_phone .fa-volume-control-phone {
+    position: absolute;
+    top: -6rpx;
 }
 
-.page .page_broadcast{
-  
-  /* height: 290rpx; */
-}
-.page .newcar_optimization{
-  margin-top: 15rpx;
-  position: relative;
-  align-items:center;
+.page .page_broadcast {
+    /* height: 290rpx; */
 }
 
-.page .newcar_optimization .fa-chevron-right{
-  position: absolute;
-  right: 200rpx;
-  top: 12rpx;
-  z-index: 20;
-  color: #888;
+.page .newcar_optimization {
+    margin-top: 15rpx;
+    position: relative;
+    align-items: center;
 }
+
+.page .newcar_optimization .fa-chevron-right {
+    position: absolute;
+    right: 200rpx;
+    top: 12rpx;
+    z-index: 20;
+    color: #888;
+}
+
 
 /* 轮播 */
 
-
 .swiperClass {
-  margin: 0;
-  padding: 0;
-  background: #EFEFF4;
+    height: 356rpx;
+    margin: 0;
+    padding: 0;
+    /* background: #EFEFF4; */
 }
 
 .slide-image {
-  width: 100%; 
-  /* height: 300rpx; */
-  height: 100%;
-  border-radius: 10px;
-  position: relative;
-  
+    width: 100%;
+    /* height: 300rpx; */
+    height: 100%;
+    border-radius: 10px;
+    position: relative;
 }
 
-image.active {
-  transform: none;
-  transition: all 0.2s ease-in 0s;
-} 
+
+/* image.active {
+    transform: none;
+    transition: all 0.2s ease-in 0s;
+}
 
 image.quiet {
-  transform: scale(0.8333333);
-  transition: all 0.2s ease-in 0s;
+    transform: scale(0.8333333);
+    transition: all 0.2s ease-in 0s;
+} */
+
+.searchbar {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.searchbar:before,
+.searchbar:after {
+    display: none !important;
 }
