@@ -1,19 +1,7 @@
 {
-  "navigationBarTitleText": "友车友家",
-  "enablePullDownRefresh": true,
-  "usingComponents": {
-    "wux-icon": "../../dist/dist/icon/index",
-    "wux-badge": "../../dist/dist/badge/index",
-    "wux-tabbar": "../../dist/dist/tabbar/index",
-    "wux-tabbar-item": "../../dist/dist/tabbar-item/index",
-    "wux-animation-group": "../../dist/dist/animation-group/index",
-    "wux-cell-group": "../../dist/dist/cell-group/index",
-
-    
-    "wux-search-bar": "../../dist/dist/search-bar/index",
-
-    
-    "wux-card": "../../dist/dist/card/index",
-    "wux-wing-blank": "../../dist/dist/wing-blank/index"
-  }
+    "navigationBarTitleText": "友车友家",
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+        "wux-search-bar": "../../assets/libs/wux/search-bar/index"
+    }
 }

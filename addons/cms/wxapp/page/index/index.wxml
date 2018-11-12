@@ -1,45 +1,26 @@
 <view class="page">
-  <!-- 顶部搜索行 -->
-  <view class="page_hd">
-    <view class="page_hd_position">
-      成都
-      <icon class='fa fa-angle-down'></icon>
-    </view>
-    <view class="page_hd_search">
-      <wux-search-bar maxlength="8" />
-    </view>
-    <view class="page_hd_phone">
-      <icon class='fa fa-volume-control-phone'></icon>
-    </view>
-
-
-  </view>
-  <!-- 导航栏 -->
-  <view class='page_broadcast'>
-    <swiper class='swiperClass' autoplay indicator-color="#a39f99" indicator-active-color="#f49641" interval="2000" duration="1000" previous-margin="40px" next-margin="40px" circular bindchange="bindchange">
-      <block wx:for="{{imgUrls}}" wx:key="{{index}}">
-        <swiper-item>
-          <image src="{{item}}" class="slide-image {{swiperIndex == index ? 'active' : 'quiet'}}" mode='aspectFill'>
-          </image>
-        </swiper-item>
-      </block>
-    </swiper>
-  </view>
-  <!-- 卡片栏 -->
-  <view class='newcar_optimization'>
-    <wux-wing-blank size="default">
-      <icon class='fa fa-chevron-right'></icon>
-      <wux-card title="快速选车" extra="查看更多">
-        <view slot="body">
-          <view class='newcar_optimization_item'>大众</view>
+    <!-- 顶部搜索行 -->
+    <view class="page_hd">
+        <view class="page_hd_position">
+            成都
+            <icon class="fa fa-angle-down"></icon>
         </view>
-        <view slot="footer">
-          <view>日产</view>
+        <view class="page_hd_search">
+            <wux-search-bar wux-class="searchbar" />
         </view>
-      </wux-card>
-    </wux-wing-blank>
-  </view>
+        <view class="page_hd_phone" bindtap="makePhoneCall">
+            <icon class="fa fa-volume-control-phone"></icon>
+        </view>
+    </view>
+    <!-- 导航栏 -->
+    <view class="page_broadcast">
+        <swiper class="swiperClass" autoplay indicator-color="#a39f99" indicator-active-color="#f49641" interval="2000" duration="1000" circular bindchange="bindchange">
+            <block wx:for="{{imgUrls}}" wx:key="{{index}}">
+                <swiper-item>
+                    <image src="{{item}}" class="slide-image" mode="aspectFill">
+                    </image>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
 </view>
-
-
-
