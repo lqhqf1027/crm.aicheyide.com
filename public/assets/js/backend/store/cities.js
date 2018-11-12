@@ -86,6 +86,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
+            $('.btn-remove').on('click',function () {
+
+            })
             Form.api.bindevent("form[role=form]");
             Controller.api.bindevent();
 
@@ -98,7 +101,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 operate:{
                     //编辑按钮
                     'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */
-                    $(".btn-editone").data("area", ["50%", "50%"]);
+                    $(".btn-editone").data("area", ["50%", "80%"]);
 
                         e.stopPropagation();
                         e.preventDefault();
