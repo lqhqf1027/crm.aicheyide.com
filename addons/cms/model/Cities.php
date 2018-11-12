@@ -4,10 +4,10 @@ namespace addons\cms\model;
 
 use think\Model;
 
-class City extends Model
+class Cities extends Model
 {
     // 表名
-    protected $name = 'cms_city';
+    protected $name = 'cms_cities';
     
     // 自动写入时间戳字段
     protected $autoWriteTimestamp = 'int';

@@ -104,7 +104,7 @@ class PlanAcar extends Model
     //关联门店
     public function city()
     {
-        return $this->belongsToMany('City','cms_company_store','city_id','plan_acar_id');
+        return $this->belongsToMany('Cities','cms_company_store','city_id','plan_acar_id');
     }
 
     public function brand()
