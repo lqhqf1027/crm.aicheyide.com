@@ -1,6 +1,7 @@
 <?php
 
 namespace addons\cms\controller\wxapp;
+
 use app\common\library\Auth;
 use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
@@ -9,7 +10,7 @@ use think\Db;
 use think\Config;
 use addons\cms\model\CompanyStore;
 use addons\cms\model\Models;
-use addons\cms\model\City;
+use addons\cms\model\Cities;
 use addons\cms\model\Subject;
 use addons\cms\model\ModelsDetails;
 
@@ -56,15 +57,10 @@ class Index extends Base
 //城市
         $cityList = $this->getCity();
 
-
 //小程序分享配置
         $shares = $this->getConfigShare();
-
 //返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
-
-        $this->success('', $useful);
-
 
         $data = ['carType' => [
 
@@ -128,7 +124,7 @@ class Index extends Base
             $this->error('缺少参数');
         }
 
-//获取该方案的详细信息
+        //获取该方案的详细信息
         $plans = PlanAcar::field('id,models_id,payment,monthly,nperlist,modelsimages,guide_price,models_main_images,
 specialimages,popularity')
             ->with(['models' => function ($models) {
@@ -141,22 +137,22 @@ specialimages,popularity')
 
         $plans['models']['vehicle_configuration'] = json_decode($plans['models']['vehicle_configuration'], true);
 
-//查看同城市同车型不同的方案
+        //查看同城市同车型不同的方案
         $different_schemes = $this->getPlans($plans['models_id'], $city_id, $plan_id);
 
-//查看其它方案的属性名
+        //查看其它方案的属性名
         if ($different_schemes) {
             $plans['different_schemes'] = $different_schemes;
         } else {
             $plans['different_schemes'] = null;
         }
 
-//获取其他方案
+        //获取其他方案
         $allModel = $this->getPlans('', $city_id, $plan_id);
 
         $reallyOther = null;
 
-//如果有其他方案，随机得到其他的方案
+        //如果有其他方案，随机得到其他的方案
         if ($allModel) {
             $reallyOther = [];
             $keys = array_keys($allModel);
@@ -190,9 +186,9 @@ specialimages,popularity')
 
     /**
      * 详情方案
-     * @param null $models_id
-     * @param $city_id
-     * @param $plan_id
+     * @param null $models_id   车型ID
+     * @param $city_id          城市ID
+     * @param $plan_id          方案ID
      * @return false|\PDOStatement|string|\think\Collection
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -214,15 +210,14 @@ specialimages,popularity')
     }
 
     /**
-     * 满足条件的所有方案
-     * @param $city
-     * @param null $limit
-     * @return false|\PDOStatement|string|\think\Collection
+     * @param $city                城市ID
+     * @param null $limit 查询范围
+     * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function plans($city, $limit = null,$Duplicate=false)
+    public function plans($city, $limit = null,$duplicate = false)
     {
         $check = [];                     //检查方案车型是否重复
         $info = CompanyStore::field('id,store_name')->with(['city' => function ($query) use ($city) {
@@ -242,6 +237,7 @@ specialimages,popularity')
 
         $info = collection($info)->toArray();
 
+
         $planList = [];
         foreach ($info as $k => $v) {
 
@@ -254,14 +250,14 @@ specialimages,popularity')
             }
 
             if ($v['planacar']) {
-                if($Duplicate){
+
+                if($duplicate){
                     if (in_array($v['planacar']['models_id'], $check)) {              //根据方案的车型名去重
                         continue;
                     } else {
                         array_push($check, $v['planacar']['models_id']);
                     }
                 }
-
 
                 if ($v['planacar']['models_id']) {        //根据车型ID获取车型
                     $models_name = Db::name('models')
@@ -292,7 +288,6 @@ specialimages,popularity')
                 }
 
 
-
                 $planList[] = $v['planacar'];
             }
 
@@ -301,13 +296,21 @@ specialimages,popularity')
         return $planList;
     }
 
+    /**
+     * 懒加载新车数据
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function LazyLoad()
     {
         $city_id = $this->request->post('city_id');
 
         $page = $this->request->post('page');
 
-        $this->success('', $this->plans($city_id));
+        $page = ((intval($page)-1) * 6).',6';
+
+        $this->success('', ['newcarList' =>$this->plans($city_id,$page)]);
 
     }
 
@@ -353,84 +356,39 @@ specialimages,popularity')
     public function getAllStylePlan($city_id)
     {
 
-        $info = $this->plans($city_id,'',true);
+        //获取该城市所有满足条件的方案
+        $info = $this->plans($city_id, '',true);
 
-        return $info;
-        $check = [];                     //检查方案车型是否重复
         $recommendList = [];             //为你推荐（新车）
         $specialfieldList = [];          //专场（新车）
 
         if (!$info) {
             return false;
         }
+
+        //将返回的方案根据类别划分
         foreach ($info as $k => $v) {
 
-            if ($v['planacar']['models_main_images']) {
-                $info[$k]['planacar']['models_main_images'] = Config::get('upload')['cdnurl'] . $v['planacar']['models_main_images'];
-            }
-
-            if ($v['planacar']['specialimages']) {
-                $info[$k]['planacar']['specialimages'] = Config::get('upload')['cdnurl'] . $v['planacar']['specialimages'];
-            }
-
-            if ($v['planacar']) {
-
-                if (in_array($v['planacar']['models_id'], $check)) {              //根据方案的车型名去重
-                    continue;
-                } else {
-                    array_push($check, $v['planacar']['models_id']);
-                }
-
-                if ($v['planacar']['models_id']) {        //根据车型ID获取车型
-                    $models_name = Db::name('models')
-                        ->where([
-                            'id' => $v['planacar']['models_id'],
-                            'status' => 'normal'
-                        ])
-                        ->value('name');
-                    if ($models_name) {
-                        $v['planacar']['models_name'] = $models_name;
-                    }
-
-                }
-
-
-                if ($v['planacar']['label_id']) {           //根据标签ID获取标签
-                    $label_name = Db::name('cms_label')
-                        ->where([
-                            'status' => 'normal',
-                            'id' => $v['planacar']['label_id']
-                        ])
-                        ->field('name,lableimages')
-                        ->find();
-
-                    if ($label_name) {
-                        $v['planacar']['labels'] = $label_name;
-                    }
-                }
-
-                if ($v['planacar']['recommendismenu']) {
-                    $recommendList[] = $v['planacar'];
-                }
-
-                if ($v['planacar']['specialismenu']) {
-                    $needData = ['id' => $v['planacar']['id'], 'specialimages' => $v['planacar']['specialimages']];
-                    $specialfieldList[] = $needData;
-                }
-
+            if ($v['recommendismenu']) {
+                $recommendList[] = $v;
+            } else if ($v['specialismenu']) {
+                $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages']];
+                $specialfieldList[] = $needData;
             }
 
 
         }
-        $specialList = Subject::field('id,title,coverimages,plan_id')//获取专题表信息
-        ->where([
-            'shelfismenu' => 1,
-            'city_id' => 1
-        ])
+
+        //获取专题表信息
+        $specialList = Subject::field('id,title,coverimages,plan_id')
+            ->where([
+                'shelfismenu' => 1,
+                'city_id' => 1
+            ])
             ->select();
 
-
-        foreach ($specialList as $k => $v) {                              //根据专题获取方案
+        //根据专题获取方案
+        foreach ($specialList as $k => $v) {
             $specialList[$k]['plan_id'] = json_decode($v['plan_id'], true);
 
             $specialList[$k]['coverimages'] = Config::get('upload')['cdnurl'] . $specialList[$k]['coverimages'];
@@ -491,7 +449,10 @@ specialimages,popularity')
      */
     public function getCity()
     {
-        return City::where('status', 'normal')->field('id,name')->select();
+        return Cities::where([
+            'status' => 'normal',
+            'pid' => ['neq', 'null']
+        ])->field('id,cities_name')->select();
     }
 
     /**
