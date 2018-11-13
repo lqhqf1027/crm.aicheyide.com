@@ -139,16 +139,20 @@
     
     <div class="panel-heading">
         <div class="row">
-            <div class="col-sm-3 col-xs-6">
+            <div class="col-sm-3 col-xs-6 col-md-6">
                 <div class="sm-st clearfix">
                     <span class="sm-st-icon st-green"><i class="fa fa-check"></i></span>
                     <div class="row">
-                        <div class="col-sm-12 col-xs-6 col-md-4" >
+                        <div class="col-sm-12 col-xs-6 col-md-10" >
 
 
                             <div class="sm-st-info">
-                                <span class="text-danger" id="peccancy">{$citiesNum}</span>
-                                 <strong> {:__('已开通城市')}</strong>
+                                <span class="text-danger" id="peccancy">
+                                    {php}
+                                        echo(count(explode('，',$citiesNum)))
+                                    {/php}
+                                </span>
+                                <strong class="text-success"> {:__('已开通城市：')} {$citiesNum} </strong>
                             </div>
 
                         </div>
