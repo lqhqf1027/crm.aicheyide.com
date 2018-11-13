@@ -8,7 +8,7 @@
                 {foreach name='newArrays' item='vo'}
                 <option disabled >{$key}</option>
                     {foreach name="vo" item="vos" }
-                    <option value="{$key}" {in name="key" value="$row.id"}selected{/in}>{$vos[cities_name]}</option>
+                    <option value="{$vos[id]}" {in name="key" value="$row.id"}selected{/in}>{$vos[cities_name]}</option>
                     {/foreach}
                 {/foreach}
             </select>

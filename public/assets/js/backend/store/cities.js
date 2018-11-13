@@ -7,8 +7,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 extend: {
                     index_url: 'store/cities/index',
                     add_url: 'store/cities/add',
-                    edit_url: 'store/cities/edit',
-                    del_url: 'store/cities/del',
+                    // edit_url: 'store/cities/edit',
+                    // del_url: 'store/cities/del',
                     multi_url: 'store/cities/multi',
                     table: 'cms_cities',
                 }
@@ -41,7 +41,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
                                     url: 'monthly/newcarmonthly/del',/**删除 */
                                     hidden:function (v,r,i) {
-                                        if(r.pi==null){
+                                        if(r.pid==null){
                                             return true;
                                         }
                                     }
@@ -87,18 +87,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         edit: function () {
             $('.btn-remove').on('click',function (e) {
-                // console.log($(this).val());
                 var check = $(this).parent('span').siblings('input[type="checkbox"]');
                 if(check.prop('checked')){
                     check.prop('checked',false)&&$(this).siblings('span').text('')
-                    // check.parent('div').siblings('input[type="hidden"]').val('');
-
                 }
                 else{
-                    // console.log(check.val());
-                    check.parent('div').siblings('input[type="hidden"]').val(check.val());
                     check.prop('checked',true)&&$(this).siblings('span').text('已选中删除');
-                    // $(this).parent('span').siblings('input[type="text"]').val();
                 }
             })
             Form.api.bindevent("form[role=form]");
