@@ -5,6 +5,7 @@ namespace addons\cms\controller\wxapp;
 use app\common\library\Auth;
 use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
+use think\Cache;
 use think\console\command\make\Model;
 use think\Db;
 use think\Config;
@@ -12,7 +13,7 @@ use addons\cms\model\CompanyStore;
 use addons\cms\model\Models;
 use addons\cms\model\Cities;
 use addons\cms\model\Subject;
-use addons\cms\model\ModelsDetails;
+use addons\cms\model\SecondcarRentalModelsInfo;
 
 /**
  * 首页
@@ -21,7 +22,6 @@ class Index extends Base
 {
 
     protected $noNeedLogin = '*';
-
 
     public function _initialize()
     {
@@ -37,29 +37,19 @@ class Index extends Base
      */
     public function index()
     {
-        $city_id = $this->request->post('city');                              //参数：城市ID
-//        $user_id = $this->request->post('user_id');                              //参数：用户ID
-
-//        if($user_id){
-//            Db::name('user')
-//            ->where('id',$user_id)
-//            ->setField('city_id',$city_id);
-//        }
+        $city_id = $this->request->post('city_id');                              //参数：城市ID
 
         if (!$city_id) {
             $this->error('缺少参数');
         }
 
-//品牌
+        //品牌
         $brandList = $this->getBrand();                                            //获取品牌数据
 
-
-//城市
-        $cityList = $this->getCity();
-
-//小程序分享配置
+        //小程序分享配置
         $shares = $this->getConfigShare();
-//返回所有类型的方案
+
+        //返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
 
         $data = ['carType' => [
@@ -71,7 +61,6 @@ class Index extends Base
             'used' => []
         ],
             'brandList' => $brandList,
-            'cityList' => $cityList,
             'shares' => $shares];
 
         $this->success('', $data);
@@ -79,6 +68,7 @@ class Index extends Base
 
 
     /**
+     * style仅限：fabulous点赞,share分享,sign签到
      * 增加积分接口
      * @throws \think\Exception
      */
@@ -159,7 +149,6 @@ specialimages,popularity')
 
             shuffle($keys);
 
-
             foreach ($keys as $k => $v) {
                 if ($k > 7) {
                     break;
@@ -186,7 +175,7 @@ specialimages,popularity')
 
     /**
      * 详情方案
-     * @param null $models_id   车型ID
+     * @param null $models_id 车型ID
      * @param $city_id          城市ID
      * @param $plan_id          方案ID
      * @return false|\PDOStatement|string|\think\Collection
@@ -217,7 +206,7 @@ specialimages,popularity')
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function plans($city, $limit = null,$duplicate = false)
+    public function plans($city, $limit = null, $duplicate = false)
     {
         $check = [];                     //检查方案车型是否重复
         $info = CompanyStore::field('id,store_name')->with(['city' => function ($query) use ($city) {
@@ -251,7 +240,7 @@ specialimages,popularity')
 
             if ($v['planacar']) {
 
-                if($duplicate){
+                if ($duplicate) {
                     if (in_array($v['planacar']['models_id'], $check)) {              //根据方案的车型名去重
                         continue;
                     } else {
@@ -297,23 +286,68 @@ specialimages,popularity')
     }
 
     /**
-     * 懒加载新车数据
+     * 新车方案分页
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function LazyLoad()
+    public function pagingNew()
     {
         $city_id = $this->request->post('city_id');
 
         $page = $this->request->post('page');
 
-        $page = ((intval($page)-1) * 6).',6';
+        $limit = ((intval($page) - 1) * 6) . ',6';
 
-        $this->success('', ['newcarList' =>$this->plans($city_id,$page)]);
-
+        $this->success('', ['newcarList' => $this->plans($city_id, $limit)]);
     }
 
+    /**
+     * 二手车方案分页
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function pagingUsed()
+    {
+        //城市ID
+        $city_id = $this->request->post('city_id');
+
+        //页码
+        $page = $this->request->post('page');
+
+        $limit = ((intval($page) - 1) * 6) . ',6';
+
+        //获取满足条件的二手车方案
+        $plans = CompanyStore::field('id')
+            ->with(['secondcarinfo' => function ($query) {
+                $query->withField('id,models_id,newpayment,monthlypaymen,periods,totalprices,models_main_images,guide_price');
+            }, 'city' => function ($query) use ($city_id) {
+                $query->where([
+                    'city.status' => 'normal',
+                    'city.id' => $city_id
+                ]);
+
+                $query->withField('cities_name');
+
+            }])->limit($limit)->where('statuss', 'normal')->select();
+
+        //加入车型名称并返回方案
+        $usedPlan = [];
+        foreach ($plans as $k => $v) {
+            if ($v['secondcarinfo'] && $v['secondcarinfo']['models_id']) {
+                $v['secondcarinfo']['models_name'] = Db::name('models')
+                    ->where('id', $v['secondcarinfo']['models_id'])
+                    ->value('name');
+
+                $usedPlan[] = $v['secondcarinfo'];
+            }
+
+        }
+
+        $this->success('', $usedPlan);
+
+    }
 
     /**
      * 获取品牌信息
@@ -344,7 +378,6 @@ specialimages,popularity')
 
     }
 
-
     /**
      * 获取所有类型方案
      * @param $city_id
@@ -357,7 +390,7 @@ specialimages,popularity')
     {
 
         //获取该城市所有满足条件的方案
-        $info = $this->plans($city_id, '',true);
+        $info = $this->plans($city_id, '', true);
 
         $recommendList = [];             //为你推荐（新车）
         $specialfieldList = [];          //专场（新车）
@@ -423,7 +456,8 @@ specialimages,popularity')
         return [
             'recommendList' => $recommendList,
             'specialList' => $specialList,
-            'specialfieldList' => $specialfieldList
+            'specialfieldList' => $specialfieldList,
+            'newcarList' => $info
         ];
     }
 
@@ -441,18 +475,63 @@ specialimages,popularity')
 
 
     /**
-     * 获取城市信息
-     * @return false|\PDOStatement|string|\think\Collection
+     * 返回省份-城市数组
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getCity()
+    public function cityList()
     {
-        return Cities::where([
+        if(Cache::get('cityList')){
+            $this->success('',Cache::get('cityList'));
+        }
+
+        $province = self::getCityList();
+        Cache::set('cityList',$province);
+
+        $this->success('', ['cityList' => $province]);
+    }
+
+    public static function getCityList()
+    {
+        $citys = Cities::where([
             'status' => 'normal',
-            'pid' => ['neq', 'null']
-        ])->field('id,cities_name')->select();
+        ])->field('id,pid,name,province_letter,cities_name')->select();
+
+        //将省份单独拿出来
+        $province = [];
+        foreach ($citys as $k => $v) {
+            if ($v['pid'] == 0) {
+                unset($v['cities_name']);
+                $province[$v['province_letter']][] = $v;
+
+                //删除省份的数据，保留城市
+                unset($citys[$k]);
+            }
+
+        }
+
+        //省份加入对应的城市
+        foreach ($province as $k => $v) {
+
+            foreach ($v as $kk => $vv) {
+                $temporary = [];
+
+                foreach ($citys as $key => $value) {
+                    if ($value['pid'] == $vv['id']) {
+                        unset($value['name']);
+                        unset($value['province_letter']);
+                        $temporary[] = $value;
+                    }
+                }
+
+                //加入满足条件的城市数据
+                $province[$k][$kk]['citys'] = $temporary;
+            }
+
+        }
+
+        return $province;
     }
 
     /**

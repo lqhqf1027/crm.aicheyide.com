@@ -4,7 +4,10 @@ namespace app\admin\controller\store;
 
 use app\common\controller\Backend;
 use app\admin\model\Cities as citiesModel;
+use think\Cache;
 use think\Collection;
+
+use addons\cms\controller\wxapp\Index as Wxappindex;
 
 /**
  * 城市列管理
@@ -168,7 +171,6 @@ class Cities extends Backend
         foreach ($cities as $key => $value) {
             $newArrays[$value['province_letter']][] = ['id' => $value['id'], 'cities_name' => $value['name']];
         }
-//        pr($newArrays);die;
         $this->view->assign(['newArrays' => $newArrays]);
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
@@ -187,6 +189,8 @@ class Cities extends Backend
                     }
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
+                       Cache::set('cityList',Wxappindex::getCityList());
+
                         $this->success();
                     } else {
                         $this->error($this->model->getError());
