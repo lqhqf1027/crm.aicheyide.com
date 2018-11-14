@@ -23,7 +23,7 @@ class Shop extends Backend
     {
         parent::_initialize();
         $this->model = new \app\admin\model\CompanyStore;
-        $this->view->assign("statusList", $this->model->getStatusList());
+        $this->view->assign("statussList", $this->model->getStatussList());
     }
     
     /**
@@ -78,7 +78,7 @@ class Shop extends Backend
     //获取城市名称
     public function getCity()
     {
-        $result = Db::name('cms_city')->select();
+        $result = Db::name('cms_cities')->where('pid', 'NEQ', 0)->select();
 
         return $result;
     }

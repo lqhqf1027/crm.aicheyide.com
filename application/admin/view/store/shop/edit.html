@@ -1,16 +1,16 @@
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('City_id')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('城市名称')}:</label>
         <div class="col-xs-12 col-sm-8">
             <select id="c-city_id" data-rule="required" class="form-control selectpicker" name="row[city_id]">
 
                 <option value="" style="display: none">未选择任何项</option>
                 {foreach name="$city" item="vo"}
                 {eq name="$vo.id" value="$row.city_id"}
-                <option value="{$vo.id}" selected>{$vo.name}</option>
+                <option value="{$vo.id}" selected>{$vo.cities_name}</option>
                 {else /}
-                <option value="{$vo.id}">{$vo.name}</option>
+                <option value="{$vo.id}">{$vo.cities_name}</option>
                 {/eq}
                 {/foreach}
 
@@ -43,12 +43,12 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('Statuss')}:</label>
         <div class="col-xs-12 col-sm-8">
             
             <div class="radio">
-            {foreach name="statusList" item="vo"}
-            <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status"}checked{/in} /> {$vo}</label> 
+            {foreach name="statussList" item="vo"}
+            <label for="row[statuss]-{$key}"><input id="row[statuss]-{$key}" name="row[statuss]" type="radio" value="{$key}" {in name="key" value="$row.statuss"}checked{/in} /> {$vo}</label> 
             {/foreach}
             </div>
 

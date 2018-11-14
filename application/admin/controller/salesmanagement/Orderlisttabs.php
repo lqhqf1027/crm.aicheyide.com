@@ -54,8 +54,21 @@ class Orderlisttabs extends Backend
 
     public function index()
     {
+        $this->view->assign([
+            'total' => $this->model->where('review_the_data', 'NEQ', 'the_car')->count(),
+            'total1' => $this->model->where('review_the_data', 'the_car')->count(),
+            'total2' => Db::name('rental_order')->where('review_the_data', 'NEQ', 'for_the_car')->count(),
+            'total3' => Db::name('rental_order')->where('review_the_data', 'for_the_car')->count(),
+            'total4' => Db::name('second_sales_order')->where('review_the_data', 'NEQ', 'the_car')->count(),
+            'total5' => Db::name('second_sales_order')->where('review_the_data', 'the_car')->count(),
+            'total6' => Db::name('full_parment_order')->where('review_the_data', 'NEQ', 'for_the_car')->count(),
+            'total7' => Db::name('full_parment_order')->where('review_the_data', 'for_the_car')->count(),
+            'total8' => Db::name('second_full_order')->where('review_the_data', 'NEQ', 'for_the_car')->count(),
+            'total9' => Db::name('second_full_order')->where('review_the_data', 'for_the_car')->count()
+        ]);
 
         return $this->view->fetch();
+
     }
 
     /**
@@ -79,7 +92,7 @@ class Orderlisttabs extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,licensenumber', true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['planacar' => function ($query) {
                     $query->withField('payment,monthly,nperlist,margin,tail_section,gps');

@@ -55,7 +55,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 $(".btn-add").data("area", ["95%", "95%"]);
                 $(".btn-edit").data("area", ["95%", "95%"]);
-                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名、车牌号";};
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
 
                 /**
                  * 初始化表格
@@ -1403,7 +1403,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * 刷新表格渲染
                  */
                 orderAcar.on('load-success.bs.table', function (e, data) {
-                    $('#badge_order_acar').text(data.total);
+                    // $('#badge_order_acar').text(data.total);
                     $(".btn-details").data("area", ["95%", "95%"]);
                 })
                 // 为表格1绑定事件
@@ -2049,7 +2049,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  */
                 orderRental.on('load-success.bs.table', function (e, data) {
                 
-                    $('#badge_order_rental').text(data.total);
+                    // $('#badge_order_rental').text(data.total);
                     $(".btn-rentalDetails").data("area", ["95%", "95%"]);
                 })
                 
@@ -2719,7 +2719,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  */
                 orderSecond.on('load-success.bs.table', function (e, data) {
                     
-                    $('#badge_order_second').text(data.total);
+                    // $('#badge_order_second').text(data.total);
                     $(".btn-seconddetails").data("area", ["95%", "95%"]);
                 })
                 /**
@@ -3045,7 +3045,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  */
                 orderFull.on('load-success.bs.table', function (e, data) {
                     
-                    $('#badge_order_full').text(data.total);
+                    // $('#badge_order_full').text(data.total);
                     $(".btn-fulldetails").data("area", ["95%", "95%"]);
                 })
           
@@ -3322,7 +3322,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  */
                 secondOrderFull.on('load-success.bs.table', function (e, data) {
 
-                    $('#badge_second_order_full').text(data.total);
+                    // $('#badge_second_order_full').text(data.total);
                     $(".btn-secondfulldetails").data("area", ["95%", "95%"]);
                 })
 

@@ -27,7 +27,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('ID')},
                         {field: 'store_name', title: __('Store_name')},
                         {field: 'store_address', title: __('Store_address')},
-                        {field: 'city.name', title: __('City.name')},
+                        {field: 'city.cities_name', title: __('City.name')},
                         {field: 'company_name', title: __('Company_name')},
                         {field: 'phone', title: __('Phone')},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},

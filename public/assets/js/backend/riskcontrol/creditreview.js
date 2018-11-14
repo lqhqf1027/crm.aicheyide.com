@@ -79,6 +79,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                 // 待审核
                 var newcarAudit = $("#newcarAudit");
                 console.log(newcarAudit);
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
                 // 初始化表格 
                 newcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/newcarAudit',
@@ -782,6 +783,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
             rentalcar_audit: function () {
                 // 审核租车单
                 var rentalcarAudit = $("#rentalcarAudit");
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
                 rentalcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/rentalcarAudit',
                     extend: {
@@ -1011,6 +1013,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
             secondhandcar_audit: function () {
                 // 待审核
                 var secondhandcarAudit = $("#secondhandcarAudit");
+                $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:客户姓名";};
                 // 初始化表格
                 secondhandcarAudit.bootstrapTable({
                     url: 'riskcontrol/creditreview/secondhandcarAudit',
