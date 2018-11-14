@@ -8,26 +8,25 @@ Page({
             '/assets/images/avatar.png'
         ],
         swiperIndex: 'index',
-
+        globalData: {},
         city: 1
-
     },
     channel: 0,
     page: 1,
     onLoad: function() {
-        this.getList()
-            // var that = this;
-            // this.channel = 0;
-            // this.page = 1;
-            // this.setData({
-            //     ["tab.list"]: app.globalData.indexTabList
-            // });
-            // app.request('/index/plan_details', {
-            //     plan_id: 149,
-            //     city_id: 1,
-            //     user_id: 5
-            // }, function(data, ret) {
-            //     console.log(data);
+        // this.getList()
+        // var that = this;
+        // this.channel = 0;
+        // this.page = 1;
+        // this.setData({
+        //     ["tab.list"]: app.globalData.indexTabList
+        // });
+        // app.request('/index/plan_details', {
+        //     plan_id: 149,
+        //     city_id: 1,
+        //     user_id: 5
+        // }, function(data, ret) {
+        //     console.log(data);
 
         // }, function(data, ret) {
         //     app.error(ret.msg);
@@ -99,15 +98,45 @@ Page({
         }
     },
     onShow: function() {
-        // var that = this;
-        // app.request('/text/index', {}, function(data, ret) {
-        //     that.setData({
-        //         text: data.plan,
-        //     });
-        //     console.log(data.plan);
-        // }, function(data, ret) {
-        //     app.error(ret.msg);
-        // });
+        this.setGlobalData(this.getList)
+            // var that = this;
+            // app.request('/text/index', {}, function(data, ret) {
+            //     that.setData({
+            //         text: data.plan,
+            //     });
+            //     console.log(data.plan);
+            // }, function(data, ret) {
+            //     app.error(ret.msg);
+            // });
+    },
+    setGlobalData(cb) {
+        var that = this;
+        var callback = function() {
+            that.setData({
+                globalData: app.globalData,
+            })
+            typeof cb == "function" && cb(app.globalData)
+        }
+
+        if (app.globalData.userInfo) {
+            callback()
+            return
+        }
+
+        app.request('/common/init', {}, function(data, ret) {
+            app.globalData.config = data.config;
+            app.globalData.indexTabList = data.indexTabList;
+            app.globalData.newsTabList = data.newsTabList;
+            app.globalData.productTabList = data.productTabList;
+            app.globalData.bannerList = data.bannerList;
+
+            //如果需要一进入小程序就要求授权登录,可在这里发起调用
+            app.check(function(ret) {
+                callback()
+            });
+        }, function(data, ret) {
+            app.error(ret.msg);
+        });
     },
     bindchange(e) {},
     makePhoneCall() {
