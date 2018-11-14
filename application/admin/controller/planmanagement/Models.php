@@ -254,6 +254,7 @@ class Models extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
                 // pr($params);die;
+                $brand_name = Db::name('brand')->where('id', $params['brand_id'])->value('name');
                 $series_name = Db::name('brand')->where('id', $params['series_name'])->value('name');
                 $models_name = Db::name('models_details')->where('id', $params['model_name'])->value('name');
                 //去掉（停售）
@@ -261,7 +262,8 @@ class Models extends Backend
                 $series_name = implode($series_name);
                 
                 $vehicle_configuration = Db::name('models_details')->where('id', $params['model_name'])->value('vehicle_configuration');
-                $params['name'] = $series_name . " " .  $models_name;
+                $params['name'] = $brand_name . " " .  $series_name . " " .  $models_name;
+                // pr($params['name']);die;
                 $params['vehicle_configuration'] = $vehicle_configuration;
                 // pr($params);
                 // die;
@@ -311,6 +313,7 @@ class Models extends Backend
 
             if ($params) {
 
+                $brand_name = Db::name('brand')->where('id', $params['brand_id'])->value('name');
                 $series_name = Db::name('brand')->where('id', $params['series_name'])->value('name');
                 $models_name = Db::name('models_details')->where('id', $params['model_name'])->value('name');
                 //去掉（停售）
@@ -318,7 +321,7 @@ class Models extends Backend
                 $series_name = implode($series_name);
                     
                 $vehicle_configuration = Db::name('models_details')->where('id', $params['model_name'])->value('vehicle_configuration');
-                $params['name'] = $series_name . " " .  $models_name;
+                $params['name'] = $brand_name . " " .  $series_name . " " .  $models_name;
                 $params['vehicle_configuration'] = $vehicle_configuration;
 
                 try {

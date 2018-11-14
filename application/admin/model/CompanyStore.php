@@ -18,20 +18,20 @@ class CompanyStore extends Model
 
     // 追加属性
     protected $append = [
-        'status_text'
+        'statuss_text'
     ];
 
 
-    public function getStatusList()
+    public function getStatussList()
     {
         return ['normal' => __('Normal'), 'hidden' => __('Hidden')];
     }
 
 
-    public function getStatusTextAttr($value, $data)
+    public function getStatussTextAttr($value, $data)
     {
-        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
-        $list = $this->getStatusList();
+        $value = $value ? $value : (isset($data['statuss']) ? $data['statuss'] : '');
+        $list = $this->getStatussList();
         return isset($list[$value]) ? $list[$value] : '';
     }
 
