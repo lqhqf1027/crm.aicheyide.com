@@ -1,6 +1,7 @@
 {
     "pages": [
         "page/index/index",
+        "page/city/index",
         "page/news/list/index",
         "page/store/list/index",
         "page/my/list/index",

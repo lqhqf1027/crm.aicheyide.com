@@ -1,0 +1,9 @@
+{
+    "navigationBarTitleText": "意向购车城市",
+    "usingComponents": {
+        "wux-popup": "../../assets/libs/wux/popup/index",
+        "wux-tag": "../../assets/libs/wux/tag/index",
+        "i-index": "../../assets/libs/iview/index/index",
+        "i-index-item": "../../assets/libs/iview/index-item/index"
+    }
+}

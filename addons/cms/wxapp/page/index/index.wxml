@@ -1,8 +1,8 @@
 <view class="page">
     <!-- 顶部搜索行 -->
     <view class="page_hd">
-        <view class="page_hd_position">
-            成都
+        <view class="page_hd_position" bindtap="onSelect">
+            {{ city.cities_name }}
             <icon class="fa fa-angle-down"></icon>
         </view>
         <view class="page_hd_search">
