@@ -1,0 +1,46 @@
+<view class="i-index-demo">
+    <i-index height="100%" bind:change="onChange">
+        <view class="i-index-item">
+            <view class="i-index-item-content">
+                <view class="i-index-demo-item">
+                    <view class="search-bar">
+                        <view class="search-bar__form">
+                            <view class="search-bar__box">
+                                <icon class="search-bar__search" type="search" color="#B2B2B2" size="14" />
+                                <input type="text" class="search-bar__input" placeholder="搜索城市" />
+                            </view>
+                        </view>
+                        <view class="search-bar__cancel" bindtap="onCancel">返回</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="i-index-item">
+            <view class="i-index-item-header">当前已开通城市：</view>
+            <view class="i-index-item-content">
+                <view class="i-index-demo-item">
+                    <block wx:for="{{ tags }}" wx:key="">
+                        <wux-tag data-value="{{ item }}" bind:click="onSelect">{{item.cities_name}}</wux-tag>
+                    </block>
+                </view>
+            </view>
+        </view>
+        <i-index-item wx:for="{{ cities }}" wx:for-index="index" wx:key="{{index}}" wx:for-item="item" name="{{item.key}}">
+            <view class="i-index-demo-item {{ !it.citys.length ? 'disabled' : '' }}" wx:for="{{item.list}}" wx:for-index="in" wx:key="{{in}}" wx:for-item="it" data-value="{{ it }}" bindtap="onClick">
+                {{it.name}}
+            </view>
+        </i-index-item>
+    </i-index>
+</view>
+<wux-popup position="right" visible="{{ visible }}" zIndex="2" bind:close="onClose">
+    <view class="i-index-item">
+        <view class="i-index-item-content">
+            <view class="i-index-demo-item select-title">选择城市</view>
+            <block wx:for="{{ citys }}" wx:key="">
+                <view class="i-index-demo-item" data-value="{{ item }}" bindtap="onSelect">
+                    {{item.cities_name}}
+                </view>
+            </block>
+        </view>
+    </view>
+</wux-popup>

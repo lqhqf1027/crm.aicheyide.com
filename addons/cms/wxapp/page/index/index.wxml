@@ -1,8 +1,8 @@
 <view class="page">
     <!-- 顶部搜索行 -->
     <view class="page_hd">
-        <view class="page_hd_position">
-            成都
+        <view class="page_hd_position" bindtap="onSelect">
+            {{ city.cities_name }}
             <icon class="fa fa-angle-down"></icon>
         </view>
         <view class="page_hd_search">
@@ -14,10 +14,10 @@
     </view>
     <!-- 导航栏 -->
     <view class="page_broadcast">
-        <swiper class="swiperClass" autoplay indicator-color="#a39f99" indicator-active-color="#f49641" interval="2000" duration="1000" circular bindchange="bindchange">
-            <block wx:for="{{imgUrls}}" wx:key="{{index}}">
+        <swiper class="swiperClass" autoplay interval="2000" duration="1000" circular bindchange="bindchange">
+            <block wx:for="{{globalData.bannerList}}" wx:key="{{index}}">
                 <swiper-item>
-                    <image src="{{item}}" class="slide-image" mode="aspectFill">
+                    <image src="{{item.image}}" class="slide-image" mode="aspectFill">
                     </image>
                 </swiper-item>
             </block>

@@ -6,18 +6,18 @@ App({
     si: 0,
     //小程序启动
     onLaunch: function() {
-        var that = this;
-        that.request('/common/init', {}, function(data, ret) {
-            that.globalData.config = data.config;
-            that.globalData.indexTabList = data.indexTabList;
-            that.globalData.newsTabList = data.newsTabList;
-            that.globalData.productTabList = data.productTabList;
+        // var that = this;
+        // that.request('/common/init', {}, function(data, ret) {
+        //     that.globalData.config = data.config;
+        //     that.globalData.indexTabList = data.indexTabList;
+        //     that.globalData.newsTabList = data.newsTabList;
+        //     that.globalData.productTabList = data.productTabList;
 
-            //如果需要一进入小程序就要求授权登录,可在这里发起调用
-            that.check(function(ret) {});
-        }, function(data, ret) {
-            that.error(ret.msg);
-        });
+        //     //如果需要一进入小程序就要求授权登录,可在这里发起调用
+        //     that.check(function(ret) {});
+        // }, function(data, ret) {
+        //     that.error(ret.msg);
+        // });
     },
     //投票
     vote: function(event, cb) {

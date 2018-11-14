@@ -1,6 +1,9 @@
 {
     "pages": [
         "page/index/index",
+        "page/city/index",
+        "page/news/list/index",
+        "page/store/list/index",
         "page/my/list/index",
         "page/my/setting/index"
     ],
@@ -12,7 +15,7 @@
     },
     "tabBar": {
         "color": "#000",
-        "selectedColor": "#000",
+        "selectedColor": "#3F51B5",
         "borderStyle": "white",
         "backgroundColor": "#fff",
         "list": [{
@@ -20,6 +23,18 @@
                 "iconPath": "assets/images/tabbar/home2.png",
                 "selectedIconPath": "assets/images/tabbar/home2-hl.png",
                 "text": "买车"
+            },
+            {
+                "pagePath": "page/news/list/index",
+                "iconPath": "assets/images/tabbar/news.png",
+                "selectedIconPath": "assets/images/tabbar/news-hl.png",
+                "text": "资讯"
+            },
+            {
+                "pagePath": "page/store/list/index",
+                "iconPath": "assets/images/tabbar/store.png",
+                "selectedIconPath": "assets/images/tabbar/store-hl.png",
+                "text": "门店"
             },
             {
                 "pagePath": "page/my/list/index",

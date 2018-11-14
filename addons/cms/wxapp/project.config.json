@@ -35,9 +35,10 @@
 			"current": 0,
 			"list": [
 				{
-					"id": -1,
-					"name": "新能源",
-					"pathName": "page/product/index"
+					"id": 0,
+					"name": "city",
+					"pathName": "page/city/index",
+					"query": ""
 				}
 			]
 		}
