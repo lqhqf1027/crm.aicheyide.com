@@ -84,5 +84,12 @@ Page({
             console.log(data)
             app.error(ret.msg)
         })
+
+      app.request('/index/searchCity', {text:'成'}, function (data, ret) {
+        console.log(data)
+      }, function (data, ret) {
+        console.log(data)
+        app.error(ret.msg)
+      })
     },
 })
