@@ -52,6 +52,13 @@
             </wux-grids>
         </view>
     </wux-card>
+    <!-- 标签 -->
+    <view class="wux-mt--10 wux-pl--10">
+        <text>首付：</text>
+        <block wx:for="{{ tags }}" wx:key="">
+            <wux-tag bind:click="onTag">{{ item.name }}</wux-tag>
+        </block>
+    </view>
     <!-- 为你推荐 -->
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-header-class="card__header" wx:if="{{ carType.new.recommendList && carType.new.recommendList.length }}">
         <view class="card__content">

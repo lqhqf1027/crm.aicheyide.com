@@ -6,12 +6,15 @@ var city = {
 
 Page({
     data: {
-        imgUrls: [
-            '/assets/images/avatar.png',
-            '/assets/images/avatar.png',
-            '/assets/images/avatar.png',
-            '/assets/images/avatar.png'
-        ],
+        tags: [{
+            name: '1万以内',
+        }, {
+            name: '1-2万',
+        }, {
+            name: '2-3万',
+        }, {
+            name: '4万以上',
+        }],
         swiperIndex: 'index',
         globalData: {},
         shares: {},
@@ -69,6 +72,9 @@ Page({
         });
     },
     bindchange(e) {},
+    onTag(e) {
+        console.log('onTag', e)
+    },
     toMore() {
         wx.switchTab({
             url: '/page/preference/list/index',
