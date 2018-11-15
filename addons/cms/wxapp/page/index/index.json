@@ -1,6 +1,8 @@
 {
     "navigationBarTitleText": "友车友家",
     "usingComponents": {
-        "wux-search-bar": "../../assets/libs/wux/search-bar/index"
+        "wux-card": "../../assets/libs/wux/card/index",
+        "wux-grids": "../../assets/libs/wux/grids/index",
+        "wux-grid": "../../assets/libs/wux/grid/index"
     }
 }

@@ -1,10 +1,11 @@
 <view class="wux-class wux-card {{ bordered ? 'wux-card--bordered' : '' }} {{ full ? 'wux-card--full' : '' }}">
-    <view class="wux-card__hd">
-        <view class="wux-card__content">
+    <view class="wux-card__hd wux-header-class">
+        <view class="wux-card__content" wx:if="{{ thumb || title }}">
             <image class="wux-card__thumb" src="{{ thumb }}" mode="aspectFit" style="{{ thumbStyle }}" wx:if="{{ thumb }}" />
             <text>{{ title }}</text>
         </view>
         <view class="wux-card__extra" wx:if="{{ extra }}">{{ extra }}</view>
+        <slot></slot>
     </view>
     <view class="wux-card__bd">
         <slot name="body"></slot>
