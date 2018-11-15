@@ -28,12 +28,12 @@ Page({
             console.log(data)
 
             let cities = []
-            const words = Object.keys(data.cityList)
+            const words = Object.keys(data)
 
             words.forEach((item, index) => {
                 cities[index] = {
                     key: item,
-                    list: data.cityList[item].map((n, i) => ({...n, key: n.id })),
+                    list: data[item].map((n, i) => ({...n, key: n.id })),
                 }
             })
 

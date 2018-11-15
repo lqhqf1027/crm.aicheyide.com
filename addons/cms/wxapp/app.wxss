@@ -1,6 +1,5 @@
 @import "assets/styles/font-awesome.wxss";
 @import "assets/libs/wux/styles/index.wxss";
-
 page {
     background-color: #f8f8f8;
     font-size: 14px;
@@ -148,4 +147,34 @@ page {
 
 .tab .zan-tab__bd--scroll .zan-tab__item {
     min-width: 50px;
+}
+
+.button-clear {
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    color: inherit;
+    background: 0 0;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    /* padding: 20rpx 30rpx; */
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    /* background: #fff */
+}
+
+.button-clear:after {
+    position: static;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    transform: none;
+    transform-origin: 0 0
 }
