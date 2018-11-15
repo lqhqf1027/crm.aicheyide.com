@@ -205,3 +205,15 @@ image.quiet {
 .car__title--monthly {
     color: rgba(193, 195, 200, 1);
 }
+
+.grid__more {
+    color: #3b66bb;
+}
+
+.grid__more .fa {
+    font-size: 56rpx;
+}
+
+.grid__name {
+    font-size: 24rpx;
+}

@@ -38,9 +38,17 @@
         </view>
         <view slot="body">
             <wux-grids bordered="{{ false }}" col="5">
-                <block wx:for="{{ brandList }}" wx:key="">
-                    <wux-grid thumb="{{ item.brand_logoimage }}" label="{{ item.name }}" />
+                <block wx:for="{{ brandList }}" wx:key="" wx:if="{{ index < 9 }}">
+                    <wux-grid thumb="{{ item.brand_logoimage }}">
+                        <view class="grid__name">{{ item.name }}</view>
+                    </wux-grid>
                 </block>
+                <wux-grid wx:if="{{ brandList.length >= 8 }}" bind:click="toMore">
+                    <view class="grid__more">
+                        <icon class="fa fa-ellipsis-h"></icon>
+                        <view class="grid__name">更多品牌</view>
+                    </view>
+                </wux-grid>
             </wux-grids>
         </view>
     </wux-card>
