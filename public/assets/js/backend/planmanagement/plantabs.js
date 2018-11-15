@@ -28,12 +28,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             first: function () {
 
                 var table1 = $("#table1");
-
                 table1.on('load-success.bs.table', function (e, data) {
                     var arr = data.rows;
                     // console.log(arr);
                     Controller.merge(arr, table1);
+                    //靠左对齐
+                    var td = $("#table1 td:nth-child(4)");
 
+                    for (var i = 0; i<td.length;i++) {
+            
+                        td[i].style.textAlign = "left";
+
+                    }
                 });
 
                 $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function () {
@@ -271,7 +277,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             }
 
-            console.log(data_arr);
+            // console.log(data_arr);
 
             for (var i in data_arr) {
 

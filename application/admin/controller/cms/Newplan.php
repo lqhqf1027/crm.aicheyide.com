@@ -98,7 +98,7 @@ class Newplan extends Backend
 
             foreach ($list as $key => $row) {
 
-                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'createtime', 
+                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'createtime', 'guide_price', 
                                 'updatetime', 'category_id', 'recommendismenu', 'flashviewismenu','specialismenu','subjectismenu','specialimages','models_main_images','modelsimages','weigh']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
