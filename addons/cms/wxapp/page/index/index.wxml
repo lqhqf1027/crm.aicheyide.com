@@ -34,7 +34,7 @@
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-header-class="card__header" wx:if="{{ brandList && brandList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_1.png" />
-            <view class="card__more"><icon class="fa fa-angle-right" /> 随便看看</view>
+            <view class="card__more" bindtap="toMore"><icon class="fa fa-angle-right" /> 随便看看</view>
         </view>
         <view slot="body">
             <wux-grids bordered="{{ false }}" col="5">
@@ -48,7 +48,7 @@
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-header-class="card__header" wx:if="{{ carType.new.recommendList && carType.new.recommendList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_2.png" />
-            <view class="card__more"><icon class="fa fa-angle-right" /> 更多</view>
+            <view class="card__more" bindtap="toMore"><icon class="fa fa-angle-right" /> 更多</view>
         </view>
         <scroll-view scroll-x slot="body" class="car__scroll">
             <block wx:for="{{ carType.new.recommendList }}" wx:key="">

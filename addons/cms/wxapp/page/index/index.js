@@ -69,6 +69,11 @@ Page({
         });
     },
     bindchange(e) {},
+    toMore() {
+        wx.switchTab({
+            url: '/page/preference/list/index',
+        })
+    },
     onSelect() {
         wx.navigateTo({
             url: '/page/city/index',
