@@ -31,4 +31,9 @@ class Models extends Model
         return $this->hasOne('PlanAcar','models_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
+    public function secondcarplan()
+    {
+        return $this->hasOne('SecondcarRentalModelsInfo','models_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
 }
