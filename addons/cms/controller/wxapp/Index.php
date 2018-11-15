@@ -271,7 +271,7 @@ specialimages,popularity')
                         ->field('name,lableimages')
                         ->find();
 
-                    $labels['lableimages'] = Config::get('upload')['cdnurl'] .$labels['lableimages'];
+                    $labels['lableimages'] = Config::get('upload')['cdnurl'] . $labels['lableimages'];
 
                     if ($labels) {
                         $v['planacar']['labels'] = $labels;
@@ -371,9 +371,9 @@ specialimages,popularity')
         $brandList = [];                                                      //品牌列表
         foreach ($brand as $k => $v) {
 
-            $v['brand']['brand_logoimage'] = Config::get('upload')['cdnurl'] .$v['brand']['brand_logoimage'];
+            $v['brand']['brand_logoimage'] = Config::get('upload')['cdnurl'] . $v['brand']['brand_logoimage'];
 
-                $brandList[] = $v['brand'];
+            $brandList[] = $v['brand'];
 
         }
 
@@ -411,7 +411,6 @@ specialimages,popularity')
                 $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages']];
                 $specialfieldList[] = $needData;
             }
-
 
         }
 
@@ -484,12 +483,12 @@ specialimages,popularity')
      */
     public function cityList()
     {
-        if(Cache::get('cityList')){
-            $this->success('',Cache::get('cityList'));
+        if (Cache::get('cityList')) {
+            $this->success('', Cache::get('cityList'));
         }
 
         $province = self::getCityList();
-        Cache::set('cityList',$province);
+        Cache::set('cityList', $province);
 
         $this->success('', ['cityList' => $province]);
     }
@@ -601,19 +600,130 @@ specialimages,popularity')
         //搜索栏内容
         $cities_name = $this->request->post('cities_name');
 
-        if(!$cities_name){
-            $this->success('','');
+        if (!$cities_name) {
+            $this->success('', '');
         }
 
         //获取搜索的数据
         $searchCityList = Cities::field('id,cities_name')
-        ->where([
-            'status'=>'normal',
-            'pid' => ['neq','null'],
-            'cities_name' =>['like',$cities_name.'%']
-        ])
-        ->select();
+            ->where([
+                'status' => 'normal',
+                'pid' => ['neq', 'null'],
+                'cities_name' => ['like', '%' . $cities_name . '%']
+            ])
+            ->select();
 
-        $this->success('',['searchCityList'=>$searchCityList]);
+        $this->success('', ['searchCityList' => $searchCityList]);
+    }
+
+    /**
+     * 搜索车型接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function searchModels()
+    {
+
+        $queryModels = $this->request->post('queryModels');
+
+        if (!$queryModels) {
+            $this->success('', '');
+        }
+
+        //新车车型
+        $new_models = $this->getModels($queryModels, 'planacar');
+        //二手车车型
+        $used_models = $this->getModels($queryModels, 'secondcarplan');
+
+        $this->success('', [
+            'modelType' => [
+                [
+                    'type' => '新车', 'new_carList' => $new_models]
+                , ['type' => '二手车', 'used_carList' => $used_models]
+            ]
+        ]);
+
+    }
+
+    /**
+     * 得到对应的车型
+     * @param $queryModels            搜索内容
+     * @param $withTable              关联的表
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getModels($queryModels, $withTable)
+    {
+        //模糊查询对应车型
+        $models = Models::field('id,name')
+            ->with([$withTable => function ($query) use ($withTable) {
+                if ($withTable == 'planacar') {
+                    $query->where('acar_status', 1);
+                }
+                $query->withField('id');
+            }])->where(function ($query) use ($queryModels) {
+                $query->where([
+                    'name' => ['like', '%' . $queryModels . '%']
+                ]);
+            })->select();
+
+        $check = [];
+        $duplicate_models = [];
+        //根据车型名称去重
+        foreach ($models as $k => $v) {
+            if (in_array($v['name'], $check)) {
+                continue;
+            } else {
+                array_push($check, $v['name']);
+            }
+            unset($v[$withTable]);
+            $v['style'] = $withTable == 'planacar' ? 'new' : 'used';
+            $duplicate_models[] = $v;
+
+        }
+
+        return $duplicate_models;
+    }
+
+
+    public function modelsPlan()
+    {
+        $city_id = $this->request->post('city_id');
+        $models_id = $this->request->post('models_id');
+        $models_style = $this->request->post('models_style');
+
+        $plans = $models_style == 'new' ? new PlanAcar() : new SecondcarRentalModelsInfo();
+
+        $field = $models_style == 'new' ? 'id,payment,monthly,guide_price,models_main_images,popularity'
+            : 'id,newpayment,monthlypaymen,guide_price,models_main_images,popularity';
+        $getPlans = $plans::field($field)
+            ->with(['models' => function ($query) {
+                $query->where('models.status', 'normal');
+                $query->withField('name');
+            }, 'companystore' => function ($query) {
+                $query->where('statuss', 'normal');
+                $query->withField('city_id');
+            }])->where(function ($query) use ($models_id) {
+                $query->where('models_id', $models_id);
+            })->select();
+
+        $myCity = [];
+        foreach ($getPlans as $k => $v) {
+            if ($v['companystore'] && $v['companystore']['city_id']) {
+                if ($v['companystore']['city_id'] == $city_id) {
+                    $myCity[] = $v;
+                    unset($getPlans[$k]);
+                }
+            }
+        }
+
+        $allPlans = array_merge($myCity, $getPlans);
+
+        $this->success('', $allPlans);
+
+
     }
 }
