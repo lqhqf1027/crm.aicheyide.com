@@ -6,26 +6,37 @@ var city = {
 
 Page({
     data: {
-        imgUrls: [
-            '/assets/images/avatar.png',
-            '/assets/images/avatar.png',
-            '/assets/images/avatar.png',
-            '/assets/images/avatar.png'
-        ],
+        tags: [{
+            name: '1万以内',
+        }, {
+            name: '1-2万',
+        }, {
+            name: '2-3万',
+        }, {
+            name: '4万以上',
+        }],
         swiperIndex: 'index',
         globalData: {},
+        shares: {},
         city,
     },
     channel: 0,
     page: 1,
+    onPageScroll(e) {
+        this.setData({
+            fixed: e && e.scrollTop,
+        })
+    },
     onLoad: function() {
         wx.setStorageSync('city', city)
     },
     onShareAppMessage: function() {
+        var shares = this.data.shares || {}
+
         return {
-            title: 'FastAdmin',
-            desc: '基于ThinkPHP5和Bootstrap的极速后台框架',
-            path: '/page/index/index'
+            title: shares.index_share_title,
+            path: '/page/index/index',
+            imageUrl: shares.index_share_img,
         }
     },
     onShow: function() {
@@ -61,6 +72,14 @@ Page({
         });
     },
     bindchange(e) {},
+    onTag(e) {
+        console.log('onTag', e)
+    },
+    toMore() {
+        wx.switchTab({
+            url: '/page/preference/list/index',
+        })
+    },
     onSelect() {
         wx.navigateTo({
             url: '/page/city/index',
@@ -72,6 +91,7 @@ Page({
         })
     },
     getList() {
+        var that = this
         var city = wx.getStorageSync('city')
 
         this.setData({
@@ -80,6 +100,11 @@ Page({
 
         app.request('/index/index', { city_id: city.id }, function(data, ret) {
             console.log(data)
+            that.setData({
+                brandList: data.brandList,
+                carType: data.carType,
+                shares: data.shares,
+            })
         }, function(data, ret) {
             console.log(data)
             app.error(ret.msg)

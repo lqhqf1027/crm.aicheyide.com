@@ -20,6 +20,7 @@ Page({
             cities_name: '银川',
             id: 40,
         }],
+        inputValue: '',
     },
     getList() {
         const that = this
@@ -28,12 +29,12 @@ Page({
             console.log(data)
 
             let cities = []
-            const words = Object.keys(data.cityList)
+            const words = Object.keys(data)
 
             words.forEach((item, index) => {
                 cities[index] = {
                     key: item,
-                    list: data.cityList[item].map((n, i) => ({...n, key: n.id })),
+                    list: data[item].map((n, i) => ({...n, key: n.id })),
                 }
             })
 
@@ -48,13 +49,31 @@ Page({
             app.error(ret.msg)
         })
     },
-    onChange(event) {
-        console.log(event.detail, 'click right menu callback data')
-    },
     onLoad() {
         this.getList()
     },
-    onReady() {},
+    onChange(e) {
+        console.log(e)
+        const inputValue = e.detail.value
+        this.setData({ inputValue })
+        this.searchCity(inputValue)
+    },
+    onFocus(e) {
+        this.setData({
+            arrowInput: true,
+        })
+        console.log(e)
+    },
+    onBlur(e) {
+        console.log(e)
+    },
+    onClear() {
+        this.setData({
+            inputValue: '',
+            arrowInput: false,
+            searchCityList: null,
+        })
+    },
     onClick(e) {
         const { value } = e.currentTarget.dataset
         console.log(value)
@@ -90,5 +109,25 @@ Page({
     },
     onCancel() {
         wx.navigateBack()
+    },
+    searchCity(cities_name) {
+        const that = this
+
+        if (that.timeout) {
+            clearTimeout(that.timeout)
+            that.timeout = null
+        }
+
+        that.timeout = setTimeout(function() {
+            app.request('/index/searchCity', { cities_name }, function(data, ret) {
+                console.log(data)
+                that.setData({
+                    searchCityList: data && data.searchCityList || null,
+                })
+            }, function(data, ret) {
+                console.log(data)
+                app.error(ret.msg)
+            })
+        }, 250)
     },
 })

@@ -3,6 +3,7 @@
         "page/index/index",
         "page/city/index",
         "page/news/list/index",
+        "page/preference/list/index",
         "page/store/list/index",
         "page/my/list/index",
         "page/my/setting/index"
@@ -22,13 +23,13 @@
                 "pagePath": "page/index/index",
                 "iconPath": "assets/images/tabbar/home2.png",
                 "selectedIconPath": "assets/images/tabbar/home2-hl.png",
-                "text": "买车"
+                "text": "选车"
             },
             {
-                "pagePath": "page/news/list/index",
-                "iconPath": "assets/images/tabbar/news.png",
-                "selectedIconPath": "assets/images/tabbar/news-hl.png",
-                "text": "资讯"
+                "pagePath": "page/preference/list/index",
+                "iconPath": "assets/images/tabbar/preference.jpg",
+                "selectedIconPath": "assets/images/tabbar/preference-hl.jpg",
+                "text": "特惠"
             },
             {
                 "pagePath": "page/store/list/index",
