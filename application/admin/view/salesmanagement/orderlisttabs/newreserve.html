@@ -294,41 +294,6 @@
 
             });
         }
-
-        var goeasy = new GoEasy({
-            appkey: 'BC-04084660ffb34fd692a9bd1a40d7b6c2'
-        });
-
-        //新添加销售方案
-        goeasy.subscribe({
-            channel: 'custom_model',
-            onMessage: function (message) {
-                var content = message.content;
-
-                var user_id = $('#user').val();
-
-                content = content.split('|');
-
-                if(content[1]== user_id){
-
-                    Layer.alert(content[0],{ icon:0},function(index){
-                        Layer.close(index);
-                        if($('.page-cursor').length>0){
-                            $('.page-cursor').eq(0).trigger('click');
-                        }
-                    });
-
-                }
-
-
-
-
-
-
-            }
-        });
-
-
     </script>
 
     <div class="form-group">
