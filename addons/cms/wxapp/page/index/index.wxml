@@ -73,20 +73,26 @@
     <view wx:if="{{ carType.new.specialList && carType.new.specialList.length }}">
         <image class="card__image wux-ml--0 wux-mt--10" src="https://static.aicheyide.com/ucuj/Project_title_img/project_3.png" />
         <block wx:for="{{ carType.new.specialList }}" wx:for-item="card" wx:key="">
-            <view class="wux-mt--10">
-                <image class="card__cover" src="{{ card.coverimages }}" />
-                <wux-card full bordered="{{ false }}" wux-header-class="card__header">
-                    <scroll-view scroll-x slot="body" class="car__scroll">
-                        <block wx:for="{{ card.plan }}" wx:key="">
-                            <view class="car">
-                                <image class="car__image" src="{{ item.models_main_images }}" />
-                                <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
-                                <view class="car__title car__title--payment">首付 {{ item.payment }}</view>
-                                <view class="car__title car__title--monthly">月供 {{ item.monthly }} 元</view>
-                            </view>
-                        </block>
-                    </scroll-view>
-                </wux-card>
+            <view class="wux-mt--10 {{ index % 2 !== 0 ? 'scroll-y' : 'scroll-x' }}">
+                <wux-row>
+                    <wux-col span="{{ index % 2 !== 0 ? 6 : 12 }}">
+                        <image class="card__cover" src="{{ card.coverimages }}" />
+                    </wux-col>
+                    <wux-col span="{{ index % 2 !== 0 ? 6 : 12 }}">
+                        <wux-card full bordered="{{ false }}" wux-class="card__scroll" wux-header-class="card__header">
+                            <scroll-view scroll-y="{{ index % 2 !== 0 }}" scroll-x="{{ index % 2 === 0 }}" slot="body" class="car__scroll">
+                                <block wx:for="{{ card.plan }}" wx:key="">
+                                    <view class="car">
+                                        <image class="car__image" src="{{ item.models_main_images }}" />
+                                        <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
+                                        <view class="car__title car__title--payment">首付 {{ item.payment }}</view>
+                                        <view class="car__title car__title--monthly">月供 {{ item.monthly }} 元</view>
+                                    </view>
+                                </block>
+                            </scroll-view>
+                        </wux-card>
+                    </wux-col>
+                </wux-row>
             </view>
         </block>
     </view>

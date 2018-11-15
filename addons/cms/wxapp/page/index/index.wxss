@@ -164,6 +164,22 @@ image.quiet {
     color: rgba(221, 213, 213, 1);
 }
 
+.scroll-y {
+    display: flex;
+    height: 668rpx;
+    overflow: hidden;
+}
+
+.scroll-y .card__cover {
+    height: 668rpx;
+}
+
+.scroll-y .car__scroll {
+    height: 668rpx;
+    overflow-y: auto;
+    white-space: normal;
+}
+
 .car {
     display: inline-block;
     padding: 0 20rpx;

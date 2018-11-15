@@ -3,6 +3,8 @@
     "usingComponents": {
         "wux-card": "../../assets/libs/wux/card/index",
         "wux-grids": "../../assets/libs/wux/grids/index",
-        "wux-grid": "../../assets/libs/wux/grid/index"
+        "wux-grid": "../../assets/libs/wux/grid/index",
+        "wux-row": "../../assets/libs/wux/row/index",
+        "wux-col": "../../assets/libs/wux/col/index"
     }
 }
