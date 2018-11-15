@@ -205,7 +205,7 @@ class Plantabs extends Backend
                 ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id', 'models_id', 'full_total_price', 'ismenu', 'createtime', 'updatetime']);
+                $row->visible(['id', 'models_id', 'full_total_price', 'margin', 'ismenu', 'createtime', 'updatetime']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }
