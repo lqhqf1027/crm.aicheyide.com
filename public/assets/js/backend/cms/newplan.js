@@ -20,6 +20,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.on('load-success.bs.table', function (e, data) {
                 $(".btn-editone").data("area", ["70%", "70%"]);
 
+                var td = $("#table td:nth-child(16)");
+
+                for (var i = 0; i<td.length;i++) {
+            
+                    td[i].style.textAlign = "left";
+
+                }
+
             });
 
             // 初始化表格
@@ -34,26 +42,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         },
                         {field: 'id', title: __('Id'), operate: false},
                         {field: 'weigh', title: __('权重（排序）')},
-                        {
-                            field: 'subject.title', title: __('专题标题'), 
-                        },
-                        {field: 'subject.coverimages', title: __('专题代表图片'), formatter: Table.api.formatter.images},
-                        {
-                            field: 'subjectismenu',
-                            title: __('是否为专题'),
-                            events: Controller.api.events.operate,
-                            formatter: Controller.api.formatter.toggle3,searchList:{"1":"是","0":"否"},
-                        },
-                        {
-                            field: 'label.name', title: __('标签名称'), searchList: {"1":__('新能源'),"2":__('低首付')}, operate:'FIND_IN_SET', formatter: Table.api.formatter.label
-                        },
-                        {field: 'label.lableimages', title: __('标签图片'), formatter: Table.api.formatter.images},
-                        {
-                            field: 'companystore.store_name', title: __('门店名称'), 
-                        },
-                        {field: 'specialimages', title: __('专场车型代表图片'), formatter: Table.api.formatter.images},
                         {field: 'models_main_images', title: __('封面图片'), formatter: Table.api.formatter.images},
                         {field: 'modelsimages', title: __('车型亮点'), formatter: Table.api.formatter.images},
+                        {
+                            field: 'flashviewismenu',
+                            title: __('是否为首页轮播'),
+                            events: Controller.api.events.operate,
+                            formatter: Controller.api.formatter.toggle1,searchList:{"1":"是","0":"否"}
+                        },
                         {
                             field: 'recommendismenu',
                             title: __('是否为推荐'),
@@ -61,11 +57,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             formatter: Controller.api.formatter.toggle,searchList:{"1":"是","0":"否"},
                         },
                         {
-                            field: 'flashviewismenu',
-                            title: __('是否为首页轮播'),
+                            field: 'subjectismenu',
+                            title: __('是否为专题'),
                             events: Controller.api.events.operate,
-                            formatter: Controller.api.formatter.toggle1,searchList:{"1":"是","0":"否"}
+                            formatter: Controller.api.formatter.toggle3,searchList:{"1":"是","0":"否"},
                         },
+                        {
+                            field: 'subject.title', title: __('专题标题'), 
+                        },
+                        {field: 'subject.coverimages', title: __('专题代表图片'), formatter: Table.api.formatter.images},
                         {
                             field: 'specialismenu',
                             title: __('是否为专场车型'),
@@ -78,6 +78,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             events: Controller.api.events.operate,
                             formatter: Controller.api.formatter.toggle2,searchList:{"1":"是","0":"否"}
                         },
+                        {field: 'specialimages', title: __('专场车型代表图片'), formatter: Table.api.formatter.images},
+                        
+                        {
+                            field: 'label.name', title: __('标签名称'), searchList: {"1":__('新能源'),"2":__('低首付')}, operate:'FIND_IN_SET', formatter: Table.api.formatter.label
+                        },
+                        {field: 'label.lableimages', title: __('标签图片'), formatter: Table.api.formatter.images},
+                        {
+                            field: 'companystore.store_name', title: __('门店名称'), 
+                        },
+                        
                         {
                             field: 'models.name', title: '销售车型', operate: false, formatter: function (v, r, i) {
                                 return v != null ? "<img src="+r.brand_log+" alt='品牌logo' width='30' height='30'>" +r.brand_name + '-' + v : v;
@@ -256,12 +266,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //推荐
                 toggle: function (value, row, index) {
 
-                    var color = typeof this.color !== 'undefined' ? this.color : 'success';
-                    var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
-                    var no = typeof this.no !== 'undefined' ? this.no : 0;
-                    return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
-                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+                    if(row.models_main_images){
+
+                        var color = typeof this.color !== 'undefined' ? this.color : 'success';
+                        var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
+                        var no = typeof this.no !== 'undefined' ? this.no : 0;
+                        return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                                + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
                     
+                    }
+                    else{
+                       return "<span style='color:red'>上传封面图片,就可以点击</span>"
+                    }
                 },
                 //轮播
                 toggle1: function (value, row, index) {
