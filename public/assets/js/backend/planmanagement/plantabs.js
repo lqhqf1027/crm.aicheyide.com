@@ -197,6 +197,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
 
                             {field: 'full_total_price', title: __('Full_total_price'), operate: 'BETWEEN'},
+                            {field: 'margin', title: __('保证金（元）'), operate: 'BETWEEN'},
 
                             {
                                 field: 'createtime',
