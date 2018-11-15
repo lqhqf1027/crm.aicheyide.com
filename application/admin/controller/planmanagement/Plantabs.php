@@ -96,7 +96,7 @@ class Plantabs extends Backend
 
             foreach ($list as $key => $row) {
 
-                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance', 'category_id']);
+                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance', 'category_id','sales_id']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['admin']);
@@ -111,6 +111,7 @@ class Plantabs extends Backend
 
             }
             $list = collection($list)->toArray();
+
             $result = array("total" => $total, "rows" => $list);
             return json($result);
         }
@@ -204,7 +205,7 @@ class Plantabs extends Backend
                 ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id', 'models_id', 'full_total_price', 'ismenu', 'createtime', 'updatetime']);
+                $row->visible(['id', 'models_id', 'full_total_price', 'margin', 'ismenu', 'createtime', 'updatetime']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
             }

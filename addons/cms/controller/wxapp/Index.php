@@ -263,7 +263,7 @@ specialimages,popularity')
 
 
                 if ($v['planacar']['label_id']) {           //根据标签ID获取标签
-                    $label_name = Db::name('cms_label')
+                    $labels = Db::name('cms_label')
                         ->where([
                             'status' => 'normal',
                             'id' => $v['planacar']['label_id']
@@ -271,8 +271,10 @@ specialimages,popularity')
                         ->field('name,lableimages')
                         ->find();
 
-                    if ($label_name) {
-                        $v['planacar']['labels'] = $label_name;
+                    $labels['lableimages'] = Config::get('upload')['cdnurl'] .$labels['lableimages'];
+
+                    if ($labels) {
+                        $v['planacar']['labels'] = $labels;
                     }
                 }
 
@@ -369,12 +371,13 @@ specialimages,popularity')
         $brandList = [];                                                      //品牌列表
         foreach ($brand as $k => $v) {
 
-            $brandList[] = $v['brand'];
+            $v['brand']['brand_logoimage'] = Config::get('upload')['cdnurl'] .$v['brand']['brand_logoimage'];
+
+                $brandList[] = $v['brand'];
 
         }
 
         return array_values(array_unique($brandList));
-
 
     }
 
@@ -472,7 +475,6 @@ specialimages,popularity')
             ->value('value'), true);
 
     }
-
 
     /**
      * 返回省份-城市数组
@@ -585,5 +587,33 @@ specialimages,popularity')
 
         $res ? $this->success('', 'success') : $this->error('', 'error');
 
+    }
+
+
+    /**
+     * 模糊搜索城市接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function searchCity()
+    {
+        //搜索栏内容
+        $cities_name = $this->request->post('cities_name');
+
+        if(!$cities_name){
+            $this->success('','');
+        }
+
+        //获取搜索的数据
+        $searchCityList = Cities::field('id,cities_name')
+        ->where([
+            'status'=>'normal',
+            'pid' => ['neq','null'],
+            'cities_name' =>['like',$cities_name.'%']
+        ])
+        ->select();
+
+        $this->success('',['searchCityList'=>$searchCityList]);
     }
 }

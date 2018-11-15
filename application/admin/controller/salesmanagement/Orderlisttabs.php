@@ -34,7 +34,7 @@ class Orderlisttabs extends Backend
 
         'secondedit', 'fulladd', 'fulledit', 'submitCar', 'del', 'fulldel', 'seconddel', 'newreserve', 'newreserveedit', 'newcontroladd', 'newinformation', 'newinformtube',
         'secondreserve', 'secondaudit', 'page', 'new_car_share_data', 'secondinformation', 'rentalinformation', 'newinformation', 'secondOrderFull', 'secondfulladd', 
-        'secondfullinternal', 'secondfulldel', 'secondfulledit', 'newcollectioninformation'];
+        'secondfullinternal', 'secondfulldel', 'secondfulledit', 'newcollectioninformation','getUserId','get_manager','getCount'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
@@ -52,19 +52,107 @@ class Orderlisttabs extends Backend
         $this->view->assign('reviewTheDataList', $this->model->getReviewTheDataList());
     }
 
+    /**
+     * 得到可行管理员ID
+     * @return array
+     */
+    public function getUserId()
+    {
+        $this->model = model("Admin");
+       
+        $backArray = array();
+        $backArray['admin'] = array();
+        $backArray['manager'] =Db::name('admin')
+        ->where('rule_message','in',['message3','message4','message22'])
+        ->column('id');
+
+        $superAdmin = $this->model->where("rule_message", "message21")
+            ->field("id")
+            ->select();
+
+        foreach ($superAdmin as $value) {
+            array_push($backArray['admin'], $value['id']);
+        }
+
+        return $backArray;
+    }
+
+    /**
+     * 销售经理获取自己部门顾问
+     * @return array
+     */
+    public function get_manager()
+    {
+         $message = Db::name('admin')
+         ->where('id',$this->auth->id)
+         ->value('rule_message');
+
+         switch ($message){
+            case 'message3':
+                return Db::name('admin')
+                    ->where('rule_message','message8')
+                    ->column('id');
+            case 'message4':
+                return Db::name('admin')
+                    ->where('rule_message','message9')
+                    ->column('id');
+            case 'message22':
+                return Db::name('admin')
+                    ->where('rule_message','message23')
+                    ->column('id');
+         }
+    }
+
+    /**
+     * 统计
+     * @return array
+     */
+    public function getCount($table, $neq, $review_the_data)
+    {
+        $canUseId = $this->getUserId();
+        //部门经理
+        $get_id = null;
+        if(in_array($this->auth->id,$canUseId['manager'])){
+            $get_id = $this->get_manager();
+        }
+
+        return $count = Db::name($table)->where(function ($query) use ($canUseId,$get_id,$neq,$review_the_data) {
+                if(in_array($this->auth->id,$canUseId['manager'])){
+                    $query->where('admin_id', 'in', $get_id);
+
+                }else if(in_array($this->auth->id,$canUseId['admin'])){
+                    
+                }
+                else{
+                    $query->where('admin_id', $this->auth->id);
+
+                }
+                $query->where('review_the_data', $neq, $review_the_data);
+                    
+            })->count();
+    }
+
     public function index()
     {
+
+        $canUseId = $this->getUserId();
+        //部门经理
+        $get_id = null;
+        if(in_array($this->auth->id,$canUseId['manager'])){
+            $get_id = $this->get_manager();
+        }
+
         $this->view->assign([
-            'total' => $this->model->where('review_the_data', 'NEQ', 'the_car')->count(),
-            'total1' => $this->model->where('review_the_data', 'the_car')->count(),
-            'total2' => Db::name('rental_order')->where('review_the_data', 'NEQ', 'for_the_car')->count(),
-            'total3' => Db::name('rental_order')->where('review_the_data', 'for_the_car')->count(),
-            'total4' => Db::name('second_sales_order')->where('review_the_data', 'NEQ', 'the_car')->count(),
-            'total5' => Db::name('second_sales_order')->where('review_the_data', 'the_car')->count(),
-            'total6' => Db::name('full_parment_order')->where('review_the_data', 'NEQ', 'for_the_car')->count(),
-            'total7' => Db::name('full_parment_order')->where('review_the_data', 'for_the_car')->count(),
-            'total8' => Db::name('second_full_order')->where('review_the_data', 'NEQ', 'for_the_car')->count(),
-            'total9' => Db::name('second_full_order')->where('review_the_data', 'for_the_car')->count()
+            'total'  => $this->getCount('sales_order', 'NEQ', 'the_car'),
+            'total1' => $this->getCount('sales_order', '=', 'the_car'),
+            'total2' => $this->getCount('rental_order', 'NEQ', 'for_the_car'),
+            'total3' => $this->getCount('rental_order', '=', 'for_the_car'),
+            'total4' => $this->getCount('second_sales_order', 'NEQ', 'the_car'),
+            'total5' => $this->getCount('second_sales_order', '=', 'the_car'),
+            'total6' => $this->getCount('full_parment_order', 'NEQ', 'for_the_car'),
+            'total7' => $this->getCount('full_parment_order', '=', 'for_the_car'),
+            'total8' => $this->getCount('second_full_order', 'NEQ', 'for_the_car'),
+            'total9' => $this->getCount('second_full_order', '=', 'for_the_car'),
         ]);
 
         return $this->view->fetch();

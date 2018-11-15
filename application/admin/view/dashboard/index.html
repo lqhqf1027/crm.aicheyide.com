@@ -198,7 +198,7 @@
 
                 <div class="row" style="margin-top:15px;">
 
-                    <div class="col-xs-6 col-md-4 carStatus">
+                    <div class="col-xs-6 col-md-2 carStatus">
                         <div class="panel">
                             <div class="panel-body">
                                 <div class="panel-title">
@@ -224,33 +224,70 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-md-4 carStatus">
-                        <div class="panel ">
+                    <div class="col-xs-6 col-md-5 carStatus">
+
+                        <div class="panel col-md-6 ">
                             <div class="panel-body">
                                 <div class="ibox-title">
                                     <span class="label label-success pull-right">{:__('Real time')}</span>
-                                    <h3>{:__('保险')}</h3>
+                                    <h3>{:__('保险（续保）')}</h3>
                                 </div>
                                 <div class="ibox-content">
 
                                     <div class="col-md-6">
-                                        <h1 class="no-margins"><span class="text-warning">{$strong_status}</span> / <span class="text-danger">{$business_status}</span></h1>
-                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="text-warning">交强</span> / <span class="text-danger">商业险</span>需续保车辆（台）')}</small></div>
+                                            <h1 class="no-margins"><span class="">{$strong_status}</span></h1>
+                                            <div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="">交强险</span> 需续保车辆（台）')}</small></div>
+
                                     </div>
                                     <div class="col-md-6">
-                                        {if $strong_status_past == 0}
-                                        <h1 class="no-margins"><span class="text-warning">{$strong_status_past}</span> / <span class="text-danger">{$business_status_past}</span></h1>
-                                        {else /}
-                                        <h1 class="no-margins text-danger">{$strong_status_past}</h1>
-                                        {/if}  
-                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="text-warning">交强</span> / <span class="text-danger">商业险</span>续保过期车辆（台）')}</small></div>
+
+                                        <h1 class="no-margins"><span class="">{$business_status}</span></h1>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small> {:__('<span class="">商业险</span>需续保车辆（台）')}</small></div>
                                     </div>
+                                    <!--<div class="col-md-6">-->
+                                        <!--{if $strong_status_past == 0}-->
+                                        <!--<h1 class="no-margins"><span class="">{$strong_status_past}</span> / <span class="">{$business_status_past}</span></h1>-->
+                                        <!--{else /}-->
+                                        <!--<h1 class="no-margins ">{$strong_status_past}</h1>-->
+                                        <!--{/if}  -->
+                                        <!--<div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="">交强</span> / <span class="">商业险</span>续保过期车辆（台）')}</small></div>-->
+                                    <!--</div>-->
                                        
                                 </div>
                             </div>
                         </div>
+                        <div class="panel col-md-6 ">
+                            <div class="panel-body">
+                                <div class="ibox-title">
+                                    <span class="label label-success pull-right">{:__('Real time')}</span>
+                                    <h3>{:__('保险（过期）')}</h3>
+                                </div>
+                                <div class="ibox-content">
+
+                                    <div class="col-md-6">
+                                        <h1 class="no-margins"><span class="">{$strong_status_past}</span></h1>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="">交强险</span> 过期车辆（台）')}</small></div>
+
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <h1 class="no-margins"><span class="">{$business_status_past}</span></h1>
+                                        <div class="font-bold "><i class="fa fa-"></i> <small> {:__('<span class="">商业险</span>过期车辆（台）')}</small></div>
+                                    </div>
+                                    <!--<div class="col-md-6">-->
+                                    <!--{if $strong_status_past == 0}-->
+                                    <!--<h1 class="no-margins"><span class="">{$strong_status_past}</span> / <span class="">{$business_status_past}</span></h1>-->
+                                    <!--{else /}-->
+                                    <!--<h1 class="no-margins ">{$strong_status_past}</h1>-->
+                                    <!--{/if}  -->
+                                    <!--<div class="font-bold "><i class="fa fa-"></i> <small>{:__('<span class="">交强</span> / <span class="">商业险</span>续保过期车辆（台）')}</small></div>-->
+                                    <!--</div>-->
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-xs-6 col-md-4 carStatus_last">
+                    <div class="col-xs-6 col-md-5 carStatus_last">
                         <div class="panel ">
                             <div class="panel-body">
                                 <div class="ibox-title">
@@ -271,7 +308,7 @@
                                         {if $total_deduction_little == 0}
                                         <h1 class="no-margins">{$total_deduction_little}</h1>
                                         {else /}
-                                        <h1 class="no-margins text-danger">{$total_deduction_little}</h1>
+                                        <h1 class="no-margins ">{$total_deduction_little}</h1>
                                         {/if}  
                                         <div class="font-bold "><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分1~20')}</small></div>
                                     </div>
@@ -279,15 +316,15 @@
                                         {if $total_deduction_more == 0}
                                         <h1 class="no-margins">{$total_deduction_more}</h1>
                                         {else /}
-                                        <h1 class="no-margins text-danger">{$total_deduction_more}</h1>
-                                        {/if}  
+                                        <h1 class="no-margins ">{$total_deduction_more}</h1>
+                                        {/if}
                                         <div class="font-bold "><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分21~50')}</small></div>
                                     </div>
                                     <div class="col-md-3">
                                         {if $total_deduction_many == 0}
                                         <h1 class="no-margins">{$total_deduction_many}</h1>
                                         {else /}
-                                        <h1 class="no-margins text-danger">{$total_deduction_many}</h1>
+                                        <h1 class="no-margins ">{$total_deduction_many}</h1>
                                         {/if}  
                                         <div class="font-bold " ><i class="fa fa-"></i> <small class="font_little">{:__('违章扣分51以上')}</small></div>
                                     </div>

@@ -67,13 +67,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 field: 'schemecategory.name', title: __('方案类型'), formatter: function (v, r, i) {
                                     // console.log( r.schemecategory.category_note.length);
-                                    return r.schemecategory.category_note != null ? v + "<br />" + '<u>' +Controller.substrPlanTyleNode(r.schemecategory.category_note,16)  + '</u>' : v;
+                                    return r.schemecategory.category_note != null ? v + "<br />" + '<u>' + Controller.substrPlanTyleNode(r.schemecategory.category_note, 16) + '</u>' : v;
                                 }
                             },
                             // {field: 'schemecategory.category_note', title: __('方案类型备注'),operate:false},
                             {
                                 field: 'models.name', title: '销售车型', operate: false, formatter: function (v, r, i) {
-                                    return v != null ? "<img src="+r.brand_log+" alt='品牌logo' width='30' height='30'>" +r.brand_name + '-' + v : v;
+                                    return v != null ? "<img src=" + r.brand_log + " alt='品牌logo' width='30' height='30'>"+ v : v;
                                 }
                             },
                             {field: 'financialplatform.name', title: '所属金融平台'},
@@ -105,11 +105,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             },
 
-                            {field: 'note', title: __('销售方案备注'), operate: false,formatter:function (v,r,i) {
+                            {
+                                field: 'note', title: __('销售方案备注'), operate: false, formatter: function (v, r, i) {
 
-                                    return v != null ?'<u>' +Controller.substrPlanTyleNode(v,16)  + '</u>' : v;
+                                    return v != null ? '<u>' + Controller.substrPlanTyleNode(v, 16) + '</u>' : v;
 
-                                }},
+                                }
+                            },
 
                             {
                                 field: 'createtime',
@@ -161,7 +163,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
 
-                
+
             },
 
             /**
@@ -185,9 +187,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     sortName: 'id',
                     columns: [
                         [
-                            {checkbox: true, formatter: function (v, r, i) {
+                            {
+                                checkbox: true, formatter: function (v, r, i) {
                                     return r.match_plan === 'match_success' ? {disabled: true} : {disabled: false};
-                                }},
+                                }
+                            },
                             {field: 'id', title: __('Id')},
                             {
                                 field: 'models.name', title: '销售车型', formatter: function (v, r, i) {
@@ -197,6 +201,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             },
 
                             {field: 'full_total_price', title: __('Full_total_price'), operate: 'BETWEEN'},
+                            {field: 'margin', title: __('保证金（元）'), operate: 'BETWEEN'},
 
                             {
                                 field: 'createtime',
@@ -279,7 +284,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var td = $(obj).find("tr[data-index=" + data_arr[i][0] + "]").find("td");
 
 
-
                 if (data_arr[i][1] != null) {
                     i % 2 == 0 ? td.eq(2).css({"background-color": "#fff"}) : td.eq(2).css({"background-color": "#ddd"});
                 }
@@ -351,12 +355,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
          * @param $length   长度
          * @returns { string}  返回新的数组
          */
-        substrPlanTyleNode:function (s,$length) {
+        substrPlanTyleNode: function (s, $length) {
             ++$length;
-            var re= '';
+            var re = '';
             var length = s.length;
-            for (var i = 0,j=1; i < length; i++,j++) {
-                if (j&&j % $length == 0) {
+            for (var i = 0, j = 1; i < length; i++, j++) {
+                if (j && j % $length == 0) {
                     re += '<br />';
                 } else {
                     re += s[i];
@@ -419,13 +423,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                  * @returns {string}
                  */
                 toggle: function (value, row, index) {
-
                     var color = typeof this.color !== 'undefined' ? this.color : 'success';
                     var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                     var no = typeof this.no !== 'undefined' ? this.no : 0;
-                    return row.match_plan == 'match_success' ? '正在销售或已出售' : "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
-                        + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+                    // return row.match_plan == 'match_success' ? '正在销售或已出售' : "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                    //     + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
 
+                    return row.sales_id?'正在销售或已出售':"<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
+                        + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
 
                 },
 
