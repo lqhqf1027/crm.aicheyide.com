@@ -50,7 +50,7 @@
     width: 68%;
     height: 60rpx;
     border-radius: 30rpx;
-    background-color: #EFEFF4;
+    background-color: #f2f2f2;
     color: #888;
     text-align: center;
     box-sizing: border-box;
