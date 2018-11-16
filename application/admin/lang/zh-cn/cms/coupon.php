@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'Id'  =>  '优惠券ID',
+    'Id'  =>  'ID',
     'Coupon_name'  =>  '优惠券名称',
     'Circulation'  =>  '发放总量',
-    'City_id'  =>  '发放城市ID',
-    'Display_diagram'  =>  '优惠券展示图',
+    'City_ids'  =>  '发放城市',
+    'Display_diagramimages'  =>  '优惠券展示图',
     'Threshold'  =>  '使用门槛',
-    'Threshold no_limit_use'  =>  '不限制使用',
-    'Threshold full_use_reduction'  =>  '满1000元可用',
+    'Models_ids'  =>  '可用商品（车型）',
     'Membership_grade'  =>  '会员等级（不必填）',
     'Limit_collar'  =>  '每人限领',
-    'Limit_collar no_limit'  =>  '不限',
-    'Limit_collar limit'  =>  '限领一张',
-    'Term_validity'  =>  '有效期（开始/结束时间）',
+    'Release_datetime'  =>  '优惠劵发放时间',
+    'Validity_datetime'  =>  '使用有效期',
     'Createtime'  =>  '创建时间',
-    'Updatetime'  =>  '更新时间'
+    'Updatetime'  =>  '更新时间',
+    'Cities.name'  =>  '省份名称',
+    'Models.name'  =>  '车型名称'
 ];
