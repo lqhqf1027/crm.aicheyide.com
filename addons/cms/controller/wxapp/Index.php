@@ -39,6 +39,7 @@ class Index extends Base
     {
         $city_id = $this->request->post('city_id');                              //参数：城市ID
 
+
         if (!$city_id) {
             $this->error('缺少参数');
         }
@@ -46,7 +47,7 @@ class Index extends Base
         Cache::set('city_id', $city_id);
 
         //品牌
-        $brandList = $this->getBrand();                                            //获取品牌数据
+        $brandList = $this->getBrand();
 
         //小程序分享配置
         $shares = $this->getConfigShare();
@@ -387,7 +388,20 @@ specialimages,popularity')
 
         }
 
-        return array_values(array_unique($brandList));
+        $brandList = array_values(array_unique($brandList));
+
+        //不常用品牌放在最后
+        $notOften = ['东风'];
+        $notOftenCity = [];
+        foreach ($brandList as $k=>$v){
+              if(in_array($v['name'],$notOften)){
+                  $notOftenCity[] = $v;
+                  unset($brandList[$k]);
+              }
+        }
+
+        return array_merge($brandList,$notOftenCity);
+
 
     }
 
@@ -416,7 +430,8 @@ specialimages,popularity')
         foreach ($info as $k => $v) {
 
             if ($v['recommendismenu']) {
-                $recommendList[] = $v;
+                $recommendList[] = ['id'=>$v['id'],'models_main_images'=>$v['models_main_images'],'models_name'=>$v['models_name'],
+                    'payment'=>$v['payment'],'monthly'=>$v['monthly']];
             } else if ($v['specialismenu']) {
                 $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages']];
                 $specialfieldList[] = $needData;
@@ -718,7 +733,7 @@ specialimages,popularity')
         //类型
         $models_style = $this->request->post('models_style');
 
-        $plans = $models_style == 'new' ? new PlanAcar() : new SecondcarRentalModelsInfo();
+        $plans = $models_style == 'new' ? new PlanAcar: new SecondcarRentalModelsInfo;
 
         //查询对应方案
         $field = $models_style == 'new' ? 'id,payment,monthly,guide_price,models_main_images,popularity'
@@ -741,10 +756,16 @@ specialimages,popularity')
             if ($v['companystore'] && $v['companystore']['city_id']) {
                 if ($v['companystore']['city_id'] == Cache::get('city_id')) {
                     unset($v['companystore']);
+                    $v['models_name'] = $v['models']['name'];
+                    unset($v['models']);
                     $myCity[] = $v;
                     unset($getPlans[$k]);
+                }else{
+                    $getPlans[$k]['models_name'] = $v['models']['name'];
+                    unset($getPlans[$k]['models']);
+                    unset($getPlans[$k]['companystore']);
                 }
-                unset($getPlans[$k]['companystore']);
+
             }
         }
 
