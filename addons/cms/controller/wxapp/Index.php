@@ -43,6 +43,8 @@ class Index extends Base
             $this->error('缺少参数');
         }
 
+        Cache::set('city_id', $city_id);
+
         //品牌
         $brandList = $this->getBrand();                                            //获取品牌数据
 
@@ -53,12 +55,10 @@ class Index extends Base
         $useful = $this->getAllStylePlan($city_id);
 
         $data = ['carType' => [
-
-            'new' => ['newcarList' => $useful['newcarList'],
+            'new' => [
                 'recommendList' => $useful['recommendList'],
                 'specialList' => $useful['specialList'],
                 'specialfieldList' => $useful['specialfieldList']],
-            'used' => []
         ],
             'brandList' => $brandList,
             'shares' => $shares];
@@ -99,18 +99,17 @@ class Index extends Base
 
 
     /**
-     * 方案详情页面接口
+     * 新车方案详情页面接口
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function plan_details()
+    public function newPlan_details()
     {
         $plan_id = $this->request->post('plan_id');                   //参数：方案ID
-        $city_id = $this->request->post('city_id');                   //参数：城市ID
         $user_id = $this->request->post('user_id');                   //参数：用户ID
 
-        if (!$plan_id || !$city_id || !$user_id) {
+        if (!$plan_id || !$user_id) {
             $this->error('缺少参数');
         }
 
@@ -125,20 +124,33 @@ specialimages,popularity')
                 $companystore->withField('store_name,store_address,company_name,phone');
             }])->find([$plan_id]);
 
+        //方案标签图片加入CDN
+        if ($plans['label'] && $plans['label']['lableimages']) {
+            $plans['label']['lableimages'] = Config::get('upload')['cdnurl'] . $plans['label']['lableimages'];
+        }
+
         $plans['models']['vehicle_configuration'] = json_decode($plans['models']['vehicle_configuration'], true);
 
+        $plans['models_main_images'] = $plans['models_main_images'] ? Config::get('upload')['cdnurl'] . $plans['models_main_images'] : '';
+        $plans['modelsimages'] = $plans['modelsimages'] ? Config::get('upload')['cdnurl'] . $plans['modelsimages'] : '';
+        $plans['specialimages'] = $plans['specialimages'] ? Config::get('upload')['cdnurl'] . $plans['specialimages'] : '';
         //查看同城市同车型不同的方案
-        $different_schemes = $this->getPlans($plans['models_id'], $city_id, $plan_id);
+        $different_schemes = $this->getPlans($plans['models_id'], Cache::get('city_id'), $plan_id);
+
 
         //查看其它方案的属性名
         if ($different_schemes) {
+            //为其他方案封面图片加入CDN
+            foreach ($different_schemes as $k => $v) {
+                $different_schemes[$k]['models_main_images'] = Config::get('upload')['cdnurl'] . $different_schemes[$k]['models_main_images'];
+            }
             $plans['different_schemes'] = $different_schemes;
         } else {
             $plans['different_schemes'] = null;
         }
 
         //获取其他方案
-        $allModel = $this->getPlans('', $city_id, $plan_id);
+        $allModel = $this->getPlans('', Cache::get('city_id'), $plan_id);
 
         $reallyOther = null;
 
@@ -295,13 +307,11 @@ specialimages,popularity')
      */
     public function pagingNew()
     {
-        $city_id = $this->request->post('city_id');
-
         $page = $this->request->post('page');
 
         $limit = ((intval($page) - 1) * 6) . ',6';
 
-        $this->success('', ['newcarList' => $this->plans($city_id, $limit)]);
+        $this->success('', ['newcarList' => $this->plans(Cache::get('city_id'), $limit)]);
     }
 
     /**
@@ -313,7 +323,7 @@ specialimages,popularity')
     public function pagingUsed()
     {
         //城市ID
-        $city_id = $this->request->post('city_id');
+        $city_id = Cache::get('city_id');
 
         //页码
         $page = $this->request->post('page');
@@ -459,7 +469,6 @@ specialimages,popularity')
             'recommendList' => $recommendList,
             'specialList' => $specialList,
             'specialfieldList' => $specialfieldList,
-            'newcarList' => $info
         ];
     }
 
@@ -493,6 +502,13 @@ specialimages,popularity')
         $this->success('', ['cityList' => $province]);
     }
 
+    /**
+     * 获取省份-城市
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public static function getCityList()
     {
         $citys = Cities::where([
@@ -689,14 +705,22 @@ specialimages,popularity')
     }
 
 
+    /**
+     * 方案车型接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function modelsPlan()
     {
-        $city_id = $this->request->post('city_id');
+        //车型ID
         $models_id = $this->request->post('models_id');
+        //类型
         $models_style = $this->request->post('models_style');
 
         $plans = $models_style == 'new' ? new PlanAcar() : new SecondcarRentalModelsInfo();
 
+        //查询对应方案
         $field = $models_style == 'new' ? 'id,payment,monthly,guide_price,models_main_images,popularity'
             : 'id,newpayment,monthlypaymen,guide_price,models_main_images,popularity';
         $getPlans = $plans::field($field)
@@ -710,19 +734,21 @@ specialimages,popularity')
                 $query->where('models_id', $models_id);
             })->select();
 
+        //将自己的城市单独拉出来
         $myCity = [];
         foreach ($getPlans as $k => $v) {
+            $getPlans[$k]['models_main_images'] = $v['models_main_images'] = Config::get('upload')['cdnurl'] . $v['models_main_images'];
             if ($v['companystore'] && $v['companystore']['city_id']) {
-                if ($v['companystore']['city_id'] == $city_id) {
+                if ($v['companystore']['city_id'] == Cache::get('city_id')) {
+                    unset($v['companystore']);
                     $myCity[] = $v;
                     unset($getPlans[$k]);
                 }
+                unset($getPlans[$k]['companystore']);
             }
         }
 
-        $allPlans = array_merge($myCity, $getPlans);
-
-        $this->success('', $allPlans);
+        $this->success('', ['planList' => array_merge($myCity, $getPlans)]);
 
 
     }
