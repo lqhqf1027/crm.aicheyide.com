@@ -4,7 +4,7 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-store_id" class="form-control selectpicker" name="row[store_id]">
+            <select id="c-store_id" class="form-control selectpicker" data-rule="required" name="row[store_id]" onchange="fun1()">
 
                 <option value="" style="display: none">未选择任何项</option>
                 {foreach name="$store" item="vo"}
@@ -19,6 +19,7 @@
 
         </div>
     </div>
+
 
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择专题标题')}:</label>
@@ -139,4 +140,3 @@
         </div>
     </div>
 </form>
-

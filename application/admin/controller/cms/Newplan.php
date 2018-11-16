@@ -330,5 +330,14 @@ class Newplan extends Backend
         die;
         $row = $this->model->get($ids);
     }
+
+    public function changeStore()
+    {
+        if ($this->request->isAjax()) {
+            echo json_encode('5');
+        }
+
+    }
+
     
 }
