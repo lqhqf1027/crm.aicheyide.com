@@ -43,7 +43,7 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择标签名称(多选)')}:</label>
         <div class="col-xs-12 col-sm-8">
-                {:Form::selectpages('row[label_id]', 2, 'cms/label/index', null, null)}
+                {:Form::selectpages('row[label_id]', "$row[label_id]", 'cms/label/index', null, null)}
         </div>
     </div>
 
