@@ -1,66 +1,113 @@
-// page/preference/list/index.js
+var app = getApp()
+var city = {
+    cities_name: '成都',
+    id: 38,
+}
+
 Page({
+    data: {
+        tags: [{
+            name: '1万以内',
+        }, {
+            name: '1-2万',
+        }, {
+            name: '2-3万',
+        }, {
+            name: '4万以上',
+        }],
+        swiperIndex: 'index',
+        globalData: {},
+        shares: {},
+        city,
+    },
+    channel: 0,
+    page: 1,
+    onPageScroll(e) {
+        this.setData({
+            fixed: e && e.scrollTop,
+        })
+    },
+    onLoad: function() {
+        wx.setStorageSync('city', city)
+    },
+    onShareAppMessage: function() {
+        var shares = this.data.shares || {}
 
-  /**
-   * 页面的初始数据
-   */
-  data: {
+        return {
+            title: shares.index_share_title,
+            path: '/page/index/index',
+            imageUrl: shares.index_share_img,
+        }
+    },
+    onShow: function() {
+        this.setGlobalData(this.getList)
+    },
+    setGlobalData(cb) {
+        var that = this;
+        var callback = function() {
+            that.setData({
+                globalData: app.globalData,
+            })
+            typeof cb == "function" && cb(app.globalData)
+        }
 
-  },
+        if (app.globalData.userInfo) {
+            callback()
+            return
+        }
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
+        app.request('/common/init', {}, function(data, ret) {
+            app.globalData.config = data.config;
+            app.globalData.indexTabList = data.indexTabList;
+            app.globalData.newsTabList = data.newsTabList;
+            app.globalData.productTabList = data.productTabList;
+            app.globalData.bannerList = data.bannerList;
 
-  },
+            //如果需要一进入小程序就要求授权登录,可在这里发起调用
+            app.check(function(ret) {
+                callback()
+            });
+        }, function(data, ret) {
+            app.error(ret.msg);
+        });
+    },
+    bindchange(e) {},
+    onTag(e) {
+        console.log('onTag', e)
+    },
+    toMore() {
+        wx.switchTab({
+            url: '/page/index/index',
+        })
+    },
+    onSelect() {
+        wx.navigateTo({
+            url: '/page/city/index',
+        })
+    },
+    makePhoneCall() {
+        wx.makePhoneCall({
+            phoneNumber: '4001886061'
+        })
+    },
+    getList() {
+        var that = this
+        var city = wx.getStorageSync('city')
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
+        this.setData({
+            city,
+        })
 
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
+        app.request('/index/index', { city_id: city.id }, function(data, ret) {
+            console.log(data)
+            that.setData({
+                brandList: data.brandList,
+                carType: data.carType,
+                shares: data.shares,
+            })
+        }, function(data, ret) {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
 })

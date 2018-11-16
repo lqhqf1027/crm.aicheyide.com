@@ -6,16 +6,6 @@ var city = {
 
 Page({
     data: {
-        tags: [{
-            name: '1万以内',
-        }, {
-            name: '1-2万',
-        }, {
-            name: '2-3万',
-        }, {
-            name: '4万以上',
-        }],
-        swiperIndex: 'index',
         globalData: {},
         shares: {},
         city,
@@ -71,15 +61,6 @@ Page({
             app.error(ret.msg);
         });
     },
-    bindchange(e) {},
-    onTag(e) {
-        console.log('onTag', e)
-    },
-    toMore() {
-        wx.switchTab({
-            url: '/page/preference/list/index',
-        })
-    },
     onSelect() {
         wx.navigateTo({
             url: '/page/city/index',
@@ -109,12 +90,5 @@ Page({
             console.log(data)
             app.error(ret.msg)
         })
-
-      app.request('/index/searchCity', {text:'成'}, function (data, ret) {
-        console.log(data)
-      }, function (data, ret) {
-        console.log(data)
-        app.error(ret.msg)
-      })
     },
 })
