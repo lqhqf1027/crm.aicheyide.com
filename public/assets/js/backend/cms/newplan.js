@@ -22,8 +22,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 var td = $("#table td:nth-child(16)");
 
-                for (var i = 0; i<td.length;i++) {
-            
+                for (var i = 0; i < td.length; i++) {
+
                     td[i].style.textAlign = "left";
 
                 }
@@ -38,7 +38,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 columns: [
                     [
                         {
-                            checkbox: true, 
+                            checkbox: true,
                         },
                         {field: 'id', title: __('Id'), operate: false},
                         {field: 'weigh', title: __('权重（排序）')},
@@ -48,22 +48,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             field: 'flashviewismenu',
                             title: __('是否为首页轮播'),
                             events: Controller.api.events.operate,
-                            formatter: Controller.api.formatter.toggle1,searchList:{"1":"是","0":"否"}
+                            formatter: Controller.api.formatter.toggle1, searchList: {"1": "是", "0": "否"}
                         },
                         {
                             field: 'recommendismenu',
                             title: __('是否为推荐'),
                             events: Controller.api.events.operate,
-                            formatter: Controller.api.formatter.toggle,searchList:{"1":"是","0":"否"},
+                            formatter: Controller.api.formatter.toggle, searchList: {"1": "是", "0": "否"},
                         },
                         {
                             field: 'subjectismenu',
                             title: __('是否为专题'),
                             events: Controller.api.events.operate,
-                            formatter: Controller.api.formatter.toggle3,searchList:{"1":"是","0":"否"},
+                            formatter: Controller.api.formatter.toggle3, searchList: {"1": "是", "0": "否"},
                         },
                         {
-                            field: 'subject.title', title: __('专题标题'), 
+                            field: 'subject.title', title: __('专题标题'),
                         },
                         {field: 'subject.coverimages', title: __('专题代表图片'), formatter: Table.api.formatter.images},
                         {
@@ -76,21 +76,25 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 },
                             ],
                             events: Controller.api.events.operate,
-                            formatter: Controller.api.formatter.toggle2,searchList:{"1":"是","0":"否"}
+                            formatter: Controller.api.formatter.toggle2, searchList: {"1": "是", "0": "否"}
                         },
                         {field: 'specialimages', title: __('专场车型代表图片'), formatter: Table.api.formatter.images},
-                        
+
                         {
-                            field: 'label.name', title: __('标签名称'), searchList: {"1":__('新能源'),"2":__('低首付')}, operate:'FIND_IN_SET', formatter: Table.api.formatter.label
+                            field: 'label.name',
+                            title: __('标签名称'),
+                            searchList: {"1": __('新能源'), "2": __('低首付')},
+                            operate: 'FIND_IN_SET',
+                            formatter: Table.api.formatter.label
                         },
                         {field: 'label.lableimages', title: __('标签图片'), formatter: Table.api.formatter.images},
                         {
-                            field: 'companystore.store_name', title: __('门店名称'), 
+                            field: 'companystore.store_name', title: __('门店名称'),
                         },
-                        
+
                         {
                             field: 'models.name', title: '销售车型', operate: false, formatter: function (v, r, i) {
-                                return v != null ? "<img src="+r.brand_log+" alt='品牌logo' width='30' height='30'>" +r.brand_name + '-' + v : v;
+                                return v != null ? "<img src=" + r.brand_log + " alt='品牌logo' width='30' height='30'>" + r.brand_name + '-' + v : v;
                             }
                         },
                         {field: 'payment', title: __('首付（元）'), operate: 'BETWEEN', operate: false},
@@ -130,13 +134,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             datetimeFormat: 'YYYY-MM-DD'
                         },
                         {
-                            field: 'operate',title: __('Operate'),table: table,
+                            field: 'operate', title: __('Operate'), table: table,
                             buttons: [
                                 {
                                     name: 'firstedit',
                                     icon: 'fa fa-pencil',
-                                    text:'编辑方案',
-                                    title:'编辑方案', 
+                                    text: '编辑方案',
+                                    title: '编辑方案',
                                     extend: 'data-toggle="tooltip"',
                                     classname: 'btn btn-xs btn-info btn-editone',
                                 },
@@ -151,16 +155,31 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 为表格1绑定事件
             Table.api.bindevent(table);
 
-            
+
         },
         add: function () {
-            
+
             Controller.api.bindevent();
         },
         edit: function () {
 
+            $(document).on("change", "#c-store_id", function () {
+                $.post("cms/Newplan/getSubject", {
+
+                    store_id: $('#c-store_id').val(),
+
+                }, function (result) {
+                    console.log(result);
+                });
+            });
+
             Controller.api.bindevent();
         },
+
+        getSubject:function (){
+          Fast.api.ajax()
+        },
+
         firstedit: function () {
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
@@ -218,7 +237,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         var url = options.extend.edit_url;
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('Edit'), $(this).data() || {});
                     },
-                    
+
                 },
             },
             formatter: {
@@ -236,7 +255,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         extend: 'data-toggle="tooltip"',
                         classname: 'btn btn-xs btn-primary btn-dragsort'
                     });
-                    
+
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },
                 /**
@@ -249,34 +268,34 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //专题
                 toggle3: function (value, row, index) {
 
-                   if(row.subject.coverimages){
+                    if (row.subject.coverimages) {
 
                         var color = typeof this.color !== 'undefined' ? this.color : 'success';
                         var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                         var no = typeof this.no !== 'undefined' ? this.no : 0;
                         return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
-                                + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
-                    
+                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+
                     }
-                    else{
-                       return "<span style='color:red'>上传专题图片,就可以点击</span>"
+                    else {
+                        return "<span style='color:red'>上传专题图片,就可以点击</span>"
                     }
 
                 },
                 //推荐
                 toggle: function (value, row, index) {
 
-                    if(row.models_main_images){
+                    if (row.models_main_images) {
 
                         var color = typeof this.color !== 'undefined' ? this.color : 'success';
                         var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                         var no = typeof this.no !== 'undefined' ? this.no : 0;
                         return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
-                                + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
-                    
+                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+
                     }
-                    else{
-                       return "<span style='color:red'>上传封面图片,就可以点击</span>"
+                    else {
+                        return "<span style='color:red'>上传封面图片,就可以点击</span>"
                     }
                 },
                 //轮播
@@ -286,31 +305,32 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                     var no = typeof this.no !== 'undefined' ? this.no : 0;
                     return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
-                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
-                    
+                        + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+
                 },
                 //专场
                 toggle2: function (value, row, index) {
 
-                    if(row.specialimages){
+                    if (row.specialimages) {
 
                         var color = typeof this.color !== 'undefined' ? this.color : 'success';
                         var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
                         var no = typeof this.no !== 'undefined' ? this.no : 0;
                         return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
-                                + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
-                    
+                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
+
                     }
-                    else{
-                       return "<span style='color:red'>上传专场图片,就可以点击</span>"
+                    else {
+                        return "<span style='color:red'>上传专场图片,就可以点击</span>"
                     }
 
                 }
 
             },
-            
+
         }
 
     };
     return Controller;
 });
+

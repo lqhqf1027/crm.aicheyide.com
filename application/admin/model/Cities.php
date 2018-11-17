@@ -37,6 +37,17 @@ class Cities extends Model
     }
 
 
+    public function subject()
+    {
+        return $this->hasOne('Subject','city_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+    public function companystore()
+    {
+        return $this->hasOne('CompanyStore','city_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+
 
 
 }
