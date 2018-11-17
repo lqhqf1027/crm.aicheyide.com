@@ -34,13 +34,40 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {field: 'coupon_name', title: __('Coupon_name')},
+                        {field: 'coupon_amount', title: __('优惠卷金额')},
                         {field: 'circulation', title: __('Circulation')},
                         {field: 'City_ids', title: __('City_ids'),formatter:function (v,r,i) {
                             return '<strong class="text-success">'+ r.cities_name+'</strong>';
                         }},
                         {field: 'display_diagramimages', title: __('Display_diagramimages'), formatter: Table.api.formatter.images},
                         {field: 'threshold', title: __('Threshold')},
-                        {field: 'models.name', title: __('Models_ids')},
+                        {field: 'models_ids', title: __('Models_ids'),table: table, buttons: [
+                            {
+                                name: 'details', text: '查看可用车型', title: '查看可用车型', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-details',
+                                url: 'cms/coupon/details', 
+                                hidden:function(row){
+                                    if(row.models_ids !== ''){ 
+                                        return false; 
+                                    }  
+                                    else if(row.models_ids == ''){
+                                        return true;
+                                    }
+                                }
+                            },
+                            {
+                                name: 'null',text: '所有车型皆可用',title:'所有车型皆可用',icon: 'fa fa-eye-slash',classname: 'btn btn-xs btn-danger btn-primary',
+                                hidden:function(row){  /**所有车型皆可用 */
+                                    if(row.models_ids == ''){ 
+                                        return false; 
+                                    }
+                                    else if(row.models_ids !== ''){
+                                        return true;
+                                    }
+                                }
+                            },
+                        ],
+
+                        operate: false, formatter: Table.api.formatter.buttons},
                         {field: 'membership_grade', title: __('Membership_grade')},
                         {field: 'release_datetime', title: __('Release_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'validity_datetime', title: __('Validity_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
