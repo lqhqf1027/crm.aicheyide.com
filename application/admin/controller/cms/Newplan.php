@@ -2,10 +2,12 @@
 
 namespace app\admin\controller\cms;
 
+use app\admin\model\CompanyStore;
 use app\common\controller\Backend;
 use app\common\library\Email;
 //use app\common\model\Config;
 use think\Config;
+use think\Model;
 use think\Session;
 use think\Db;
 
@@ -19,9 +21,9 @@ class Newplan extends Backend
 {
 
     protected $model = null;
-    protected $multiFields = ['recommendismenu','flashviewismenu','specialismenu','subjectismenu'];
+    protected $multiFields = ['recommendismenu', 'flashviewismenu', 'specialismenu', 'subjectismenu'];
 
-    protected $noNeedRight = ['index', 'firstedit','getBrandName','dragsort'];
+    protected $noNeedRight = ['index', 'firstedit', 'getBrandName', 'dragsort'];
 
     public function _initialize()
     {
@@ -59,13 +61,13 @@ class Newplan extends Backend
                     $query->withField('nickname');
                 }, 'schemecategory' => function ($query) {
                     $query->withField('name,category_note');
-                },'financialplatform'=>function($query){
+                }, 'financialplatform' => function ($query) {
                     $query->withField('name');
-                },'subject'=>function($query){
+                }, 'subject' => function ($query) {
                     $query->withField('title,coverimages');
-                },'label'=>function($query){
+                }, 'label' => function ($query) {
                     $query->withField('name,lableimages');
-                },'companystore'=>function($query){
+                }, 'companystore' => function ($query) {
                     $query->withField('store_name');
                 }])
                 ->where($where)
@@ -80,13 +82,13 @@ class Newplan extends Backend
                     $query->withField('nickname');
                 }, 'schemecategory' => function ($query) {
                     $query->withField('name,category_note');
-                },'financialplatform'=>function($query){
+                }, 'financialplatform' => function ($query) {
                     $query->withField('name');
-                },'subject'=>function($query){
+                }, 'subject' => function ($query) {
                     $query->withField('title,coverimages');
-                },'label'=>function($query){
+                }, 'label' => function ($query) {
                     $query->withField('name,lableimages');
-                },'companystore'=>function($query){
+                }, 'companystore' => function ($query) {
                     $query->withField('store_name');
                 }])
                 ->where($where)
@@ -94,12 +96,12 @@ class Newplan extends Backend
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
-           
+
 
             foreach ($list as $key => $row) {
 
-                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'createtime', 'guide_price', 
-                                'updatetime', 'category_id', 'recommendismenu', 'flashviewismenu','specialismenu','subjectismenu','specialimages','models_main_images','modelsimages','weigh']);
+                $row->visible(['id', 'payment', 'monthly', 'brand_name', 'brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'createtime', 'guide_price',
+                    'updatetime', 'category_id', 'recommendismenu', 'flashviewismenu', 'specialismenu', 'subjectismenu', 'specialimages', 'models_main_images', 'modelsimages', 'weigh']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['admin']);
@@ -115,7 +117,7 @@ class Newplan extends Backend
                 $row->visible(['companystore']);
                 $row->getRelation('companystore')->visible(['store_name']);
                 $list[$key]['brand_name'] = array_keys(self::getBrandName($row['id'])); //获取品牌
-                $list[$key]['brand_log'] =Config::get('upload')['cdnurl'].array_values(self::getBrandName($row['id']))[0]; //获取logo图片
+                $list[$key]['brand_log'] = Config::get('upload')['cdnurl'] . array_values(self::getBrandName($row['id']))[0]; //获取logo图片
 
 
             }
@@ -161,21 +163,20 @@ class Newplan extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             //专题
-            $plan_id = Db::name('cms_subject')->where('id',$params['subject_id'])->field('plan_id')->find();
-            $plan_id = json_decode($plan_id['plan_id'], true); 
-            
-            if($plan_id){
-                if(!in_array($ids,$plan_id['plan_id'])){
-                    array_push($plan_id['plan_id'],$ids);
+            $plan_id = Db::name('cms_subject')->where('id', $params['subject_id'])->field('plan_id')->find();
+            $plan_id = json_decode($plan_id['plan_id'], true);
+
+            if ($plan_id) {
+                if (!in_array($ids, $plan_id['plan_id'])) {
+                    array_push($plan_id['plan_id'], $ids);
                 }
-            }
-            else{
+            } else {
                 $plan_id['plan_id'][] = $ids;
             }
 
-            $plan_id = json_encode($plan_id);        
+            $plan_id = json_encode($plan_id);
 
-            $result_s = Db::name('cms_subject')->where('id', $params['subject_id'])->update(['plan_id' =>$plan_id]);
+            $result_s = Db::name('cms_subject')->where('id', $params['subject_id'])->update(['plan_id' => $plan_id]);
 
             $params['subjectismenu'] = '1';
             if ($params) {
@@ -203,19 +204,36 @@ class Newplan extends Backend
         $this->view->assign([
             "row" => $row,
             'subject' => $this->getSubject(),
-            'label'  => $this->getLabel(),
-            'store'  => $this->getStore()
+            'label' => $this->getLabel(),
+            'store' => $this->getStore()
         ]);
 
         return $this->view->fetch();
     }
 
     //专题标题
-    public function getSubject()
+    public function getSubject($store)
     {
-        $result = Db::name('cms_subject')->select();
+        if ($this->request->isAjax()) {
+            $store_id = $this->request->post('store_id');
 
-        return $result;
+            $result = model('Cities')->field('id')
+                ->with(['subject', 'companystore' => function ($query) use ($store_id) {
+                    $query->where('companystore.id', $store_id);
+                    $query->withField('id');
+                }])->select();
+
+            $subject = [];
+            foreach ($result as $k=>$v){
+                $subject[] = $v['subject'];
+            }
+            echo json_encode($subject);
+        }
+
+
+        if($store){
+            model('Subject')->where('');
+        }
     }
 
     //标签名称
@@ -227,23 +245,66 @@ class Newplan extends Backend
     }
 
     //标签名称
-    public function selectpage()
-    {
-        $result = Db::name('cms_label')->field('name')->select();
-        
-        foreach($result as $k => $v){
-            $data[] = $v['name'];
-        }
-
-        return $data;
-    }
+//    public function selectpage()
+//    {
+//        $result = Db::name('cms_label')->field('name')->select();
+//
+//        foreach ($result as $k => $v) {
+//            $data[] = $v['name'];
+//        }
+//
+//        return $data;
+//    }
 
     //门店名称
+
+
     public function getStore()
     {
         $result = Db::name('cms_company_store')->select();
 
         return $result;
+
+    }
+
+    public function getStores()
+    {
+        $this->model = model('CompanyStore');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+
+            $list = $this->model->field('id,store_name as name')->select();
+
+            $result = array("list" => $list);
+
+            return json($result);
+        }
+    }
+
+    public function getSpecial()
+    {
+        $this->model = model('CompanyStore');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            $store_id = $this->request->post('store_id');
+            $city_id = $this->model->field('id,city_id')->find([$store_id]);
+
+            $city_id = $city_id['city_id'];
+
+            $list = model('Subject')
+                ->field('id,title as name')
+                ->where('city_id', $city_id)
+                ->select();
+            $result = array("list" => $list);
+
+            return json($result);
+        }
     }
 
     /**
@@ -257,42 +318,40 @@ class Newplan extends Backend
                 parse_str($this->request->post("params"), $values);
                 $values = array_intersect_key($values, array_flip(is_array($this->multiFields) ? $this->multiFields : explode(',', $this->multiFields)));
                 if ($values) {
-                    $data = $this->model->where('id',$ids)->field('subject_id')->find();
-                    if($values['subjectismenu'] == '0'){
-                        
-                        $plan_id = Db::name('cms_subject')->where('id',$data['subject_id'])->field('plan_id')->find();
-                        $plan_id = json_decode($plan_id['plan_id'], true); 
+                    $data = $this->model->where('id', $ids)->field('subject_id')->find();
+                    if ($values['subjectismenu'] == '0') {
+
+                        $plan_id = Db::name('cms_subject')->where('id', $data['subject_id'])->field('plan_id')->find();
+                        $plan_id = json_decode($plan_id['plan_id'], true);
                         // pr($plan_id);
                         // die;
-                        if(in_array($ids,$plan_id['plan_id'])){
+                        if (in_array($ids, $plan_id['plan_id'])) {
 
-                            foreach ($plan_id['plan_id'] as $k=>$v){
+                            foreach ($plan_id['plan_id'] as $k => $v) {
                                 if ($v === $ids)
                                     unset($plan_id['plan_id'][$k]);
                             }
 
-                            $plan_id = json_encode($plan_id);        
+                            $plan_id = json_encode($plan_id);
                             // pr($plan_id);
                             // die;
                             $result_s = Db::name('cms_subject')->where('id', $data['subject_id'])->setField('plan_id', $plan_id);
-                                        
+
                         }
-                    }
-                    else{
+                    } else {
                         //专题
-                        $plan_id = Db::name('cms_subject')->where('id',$data['subject_id'])->field('plan_id')->find();
-                        $plan_id = json_decode($plan_id['plan_id'], true); 
-                        
-                        if($plan_id){
-                            if(!in_array($ids,$plan_id['plan_id'])){
-                                array_push($plan_id['plan_id'],$ids);
+                        $plan_id = Db::name('cms_subject')->where('id', $data['subject_id'])->field('plan_id')->find();
+                        $plan_id = json_decode($plan_id['plan_id'], true);
+
+                        if ($plan_id) {
+                            if (!in_array($ids, $plan_id['plan_id'])) {
+                                array_push($plan_id['plan_id'], $ids);
                             }
-                        }
-                        else{
+                        } else {
                             $plan_id['plan_id'][] = $ids;
                         }
 
-                        $plan_id = json_encode($plan_id);        
+                        $plan_id = json_encode($plan_id);
 
                         $result_s = Db::name('cms_subject')->where('id', $data['subject_id'])->setField('plan_id', $plan_id);
                     }
@@ -317,13 +376,13 @@ class Newplan extends Backend
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
-    
+
     //拖拽排序---改变权重
     public function dragsort($ids = NULL)
     {
         pr($ids);
         $data = Session::get('row');
-        foreach($data as $k => $v){
+        foreach ($data as $k => $v) {
             $data_ids[] = $data[$k]['id'];
         }
         pr($data_ids);
@@ -331,13 +390,5 @@ class Newplan extends Backend
         $row = $this->model->get($ids);
     }
 
-    public function changeStore()
-    {
-        if ($this->request->isAjax()) {
-            echo json_encode('5');
-        }
 
-    }
-
-    
 }

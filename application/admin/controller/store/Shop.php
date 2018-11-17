@@ -165,5 +165,8 @@ class Shop extends Backend
         ]);
         return $this->view->fetch();
     }
-
+    public function selectpage()
+    {
+        return parent::selectpage();
+    }
 }
