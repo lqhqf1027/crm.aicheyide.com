@@ -100,22 +100,6 @@ class Models extends Backend
         }
     }
 
-    public function getStores()
-    {
-        $this->model = model('CompanyStore');
-        // //当前是否为关联查询
-        // $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
-                return $this->selectpage();
-            }
-        }
-    }
 
     /**
      * 查询车辆车系
