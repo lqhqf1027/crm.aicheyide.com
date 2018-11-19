@@ -78,7 +78,7 @@ class Shop extends Backend
     //获取城市名称
     public function getCity()
     {
-        $result = Db::name('cms_cities')->where('pid', 'NEQ', 0)->select();
+        $result = Db::name('cms_cities')->where('pid', 'NEQ', 0)->where('status', 'normal')->select();
 
         return $result;
     }
