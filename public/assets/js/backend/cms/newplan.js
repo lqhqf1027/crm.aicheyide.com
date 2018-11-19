@@ -162,22 +162,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
-
             $(document).on("change", "#c-store_id", function () {
-                $.post("cms/Newplan/getSubject", {
+                Controller.getSubject($(this).val())
 
-                    store_id: $('#c-store_id').val(),
-
-                }, function (result) {
-                    console.log(result);
-                });
             });
 
             Controller.api.bindevent();
         },
 
-        getSubject:function (){
-          Fast.api.ajax()
+        getSubject: function (store_id) {
+            Fast.api.ajax({
+                url: 'cms/Newplan/getSubject',
+                data: {
+                    store_id: store_id
+                }
+            }, function (data, ret) {
+                $('#c-subject_id option').remove();
+                var options = '';
+
+                if (data) {
+                    for (var i in data) {
+                        options += '<option value="' + i + '">' + data[i] + '</option>';
+                    }
+                }
+
+                $('#c-subject_id').append(options);
+                return false;
+            })
         },
 
         firstedit: function () {
