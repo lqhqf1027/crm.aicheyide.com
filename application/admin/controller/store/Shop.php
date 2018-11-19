@@ -25,7 +25,8 @@ class Shop extends Backend
         $this->model = new \app\admin\model\CompanyStore;
         $this->view->assign("statussList", $this->model->getStatussList());
     }
-    
+
+
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
@@ -57,22 +58,25 @@ class Shop extends Backend
                     ->count();
 
             $list = $this->model
-                    ->with(['city'])
+                ->with(['city','planacar'])
                     ->where($where)
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
-
-            foreach ($list as $row) {
-                
-                
-            }
             $list = collection($list)->toArray();
+
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
         return $this->view->fetch();
+    }
+
+    /**
+     * @param $shopID
+     */
+    public  static function getPlan_num($shopID){
+
     }
 
     //获取城市名称
