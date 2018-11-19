@@ -26,13 +26,18 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择专题标题')}:</label>
         <div class="col-xs-12 col-sm-8" id="test">
             <select id="c-subject_id" data-rule="required" class="form-control" name="row[subject_id]">
+                {empty name="subject"}
+                <option value="" >该城市暂无专题</option>
+                {else /}
                 {foreach name="subject" item="vo"}
-                {eq name="key" value="row.subject_id"}
+                {eq name="$key" value="$row.subject_id"}
                 <option value="{$key}" selected>{$vo}</option>
                 {else /}
                 <option value="{$key}">{$vo}</option>
                 {/eq}
                 {/foreach}
+                {/empty}
+
             </select>
         </div>
     </div>

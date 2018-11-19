@@ -171,17 +171,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         getSubject: function (store_id) {
+            console.log(store_id);
             Fast.api.ajax({
                 url: 'cms/Newplan/getSubject',
                 data: {
                     store_id: store_id
                 }
             }, function (data, ret) {
+                console.log(data);
                 $('#c-subject_id option').remove();
                 var options = '';
 
                 if (data) {
                     for (var i in data) {
+                        if(!data[i]){
+                            options += '<option value="' + i + '" style="display: none">该门店暂无专题</option>';
+                            break;
+                        }
                         options += '<option value="' + i + '">' + data[i] + '</option>';
                     }
                 }
