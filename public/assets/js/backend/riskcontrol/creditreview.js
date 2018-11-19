@@ -127,7 +127,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
 
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge, operate: false},
                             // { field: 'genderdata', title: __('Genderdata'), visible: false, searchList: { "male": __('genderdata male'), "female": __('genderdata female') } },
                             // { field: 'genderdata_text', title: __('Genderdata'), operate: false },
                             {field: 'phone', title: __('Phone')},
@@ -776,6 +776,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                     $(".btn-newcardetails").data("area", ["95%", "95%"]);
                     // var newcarAudit = $('#badge_newcar_audit').text(data.total);
                     newcarAudit = parseInt($('#badge_newcar_audit').text());
+
+                    var td = $("#newcarAudit td:nth-child(6)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
                 })
 
             },
@@ -810,7 +818,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                             {field: 'models.name', title: __('租车车型')},
                             {field: 'admin.nickname', title: __('销售员'), formatter: Controller.api.formatter.sales},
 
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge, operate: false},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
                             {field: 'cash_pledge', title: __('押金（元）'), operate: false},
@@ -1006,6 +1014,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                     $(".btn-bigData").data("area", ["95%", "95%"]);
                     $(".btn-rentalauditedit").data("area", ["95%", "95%"]);
                     $(".btn-signature").data("area", ["80%", "80%"]);
+
+                    var td = $("#rentalcarAudit td:nth-child(5)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
                 })
 
             },
@@ -1061,7 +1077,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
 
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge, operate: false},
                             {
                                 field: 'genderdata',
                                 title: __('Genderdata'),
@@ -1321,6 +1337,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                     $(".btn-secondhandcardetails").data("area", ["95%", "95%"]);
                     $(".btn-secondauditedit").data("area", ["95%", "95%"]);
                     secondhandcarAudit = parseInt($('#badge_secondhandcar_audit').text());
+
+                    var td = $("#secondhandcarAudit td:nth-child(6)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
                 })
 
             },
@@ -1778,6 +1802,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                  */
                 sales: function (value, row, index) {
                     return value == null ? value : "<img src=" + Config.cdn_url + row.admin.avatar + " style='height:30px;width:30px;border-radius:50%'></img>" + '&nbsp;' + row.admin.department + ' - ' + value;
+                },
+                /**
+                 * 提车返回√
+                 * @param value
+                 * @returns {string}
+                 */
+                judge: function (value, row, index) {
+
+                    var res = "";
+                    var color = "";
+                   
+                   if(row.review_the_data == 'the_car' || row.review_the_data == 'for_the_car'){
+                        res = "<i class='fa fa-check'></i>"
+                        color = "success";
+                    
+                    }
+
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"> ' + row.username +  __(res) + '</span>';
+
+                    return html;
+
                 },
 
 

@@ -78,7 +78,7 @@ class Shop extends Backend
     //获取城市名称
     public function getCity()
     {
-        $result = Db::name('cms_cities')->where('pid', 'NEQ', 0)->where('status', 'normal')->select();
+        $result = Db::name('cms_cities')->where('pid', 'NEQ', 0)->select();
 
         return $result;
     }
@@ -137,6 +137,7 @@ class Shop extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -147,6 +148,9 @@ class Shop extends Backend
                     }
                     $result = $row->allowField(true)->save($params);
                     if ($result !== false) {
+                        //城市与门店的开启与关闭
+                        $this->getStore($ids);
+                       
                         $this->success();
                     } else {
                         $this->error($row->getError());
@@ -165,6 +169,34 @@ class Shop extends Backend
         ]);
         return $this->view->fetch();
     }
+
+    //关闭或开启门店
+    public function getStore($id)
+    {
+        $statuss = Db::name('cms_company_store')->where('id', $id)->value('statuss');
+        $city_id = Db::name('cms_company_store')->where('id', $id)->value('city_id');
+        //关闭门店
+        if ($statuss == 'hidden') {
+            
+            $data = Db::name('cms_company_store')->where(['city_id' => $city_id, 'statuss' => 'normal'])->select();
+            if (!$data) {
+                Db::name('cms_cities')->where('id', $city_id)->update(['status' => 'hidden']);
+            }
+            //关闭门店下的方案
+            Db::name('plan_acar')-where('store_id', $id)-update(['acar_status' => 2, 'ismenu' => 0]);
+        }
+        //开启门店
+        else {
+            $status = Db::name('cms_cities')->where('id', $city_id)->value('status');
+            if ($status == 'hidden') {
+                Db::name('cms_cities')->where('id', $city_id)->update(['status' => 'normal']);
+            }
+            //开启门店下的方案
+            Db::name('plan_acar')-where('store_id', $id)-update(['acar_status' => 1, 'ismenu' => 1]);
+        }
+        
+    }
+
     public function selectpage()
     {
         return parent::selectpage();
