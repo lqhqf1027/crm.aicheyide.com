@@ -13,15 +13,17 @@
         <view class="page_hd_phone">
             <button class="button-clear" open-type="share">
                 <icon class="fa fa-share-square"></icon>
+                <view class="button-text">分享</view>
             </button>
             <button class="button-clear" bindtap="makePhoneCall">
                 <icon class="fa fa-volume-control-phone"></icon>
+                <view class="button-text">7*24h</view>
             </button>
         </view>
     </view>
     <!-- 导航栏 -->
     <view class="page_broadcast">
-        <swiper class="swiperClass" autoplay interval="2000" duration="1000" circular bindchange="bindchange">
+        <swiper class="swiperClass" autoplay interval="2000" duration="1000" circular>
             <block wx:for="{{globalData.bannerList}}" wx:key="{{index}}">
                 <swiper-item>
                     <image src="{{item.image}}" class="slide-image" mode="aspectFill">
@@ -30,11 +32,24 @@
             </block>
         </swiper>
     </view>
+    <!-- 通知公告 -->
+    <view class="notice-bar wux-mt--10">
+        <swiper class="notice-swiper" circular vertical autoplay interval="1500" duration="300">
+            <block wx:for="{{ notices }}" wx:key="">
+                <swiper-item>
+                    <view class="notice-inner">
+                        <wux-avatar wux-class="notice-avatar" src="{{ item.image }}" />
+                        <view class="wux-ellipsis">{{ item.text }}</view>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
     <!-- 快速选车 -->
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-header-class="card__header" wx:if="{{ brandList && brandList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_1.png" />
-            <view class="card__more" bindtap="toMore"><icon class="fa fa-angle-right" /> 随便看看</view>
+            <view class="card__more" bindtap="toMore">MORE+</view>
         </view>
         <view slot="body">
             <wux-grids bordered="{{ false }}" col="5">
@@ -63,18 +78,24 @@
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-header-class="card__header" wx:if="{{ carType.new.recommendList && carType.new.recommendList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_2.png" />
-            <view class="card__more" bindtap="toMore"><icon class="fa fa-angle-right" /> 更多</view>
+            <view class="card__more" bindtap="toMore">MORE+</view>
         </view>
-        <scroll-view scroll-x slot="body" class="car__scroll">
+        <swiper slot="body" indicator-dots display-multiple-items="3" bindchange="bindchange">
             <block wx:for="{{ carType.new.recommendList }}" wx:key="">
-                <view class="car">
-                    <image class="car__image" src="{{ item.specialimages }}" />
-                    <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
-                    <view class="car__title car__title--payment">首付 {{ item.payment }}</view>
-                    <view class="car__title car__title--monthly">月供 {{ item.monthly }} 元</view>
-                </view>
+                <swiper-item class="swiper-item">
+                    <view class="car__box">
+                        <view class="car">
+                            <image class="car__image" src="{{ item.models_main_images }}" />
+                            <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
+                            <view class="wux-clearfix">
+                                <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                                <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
+                            </view>
+                        </view>
+                    </view>
+                </swiper-item>
             </block>
-        </scroll-view>
+        </swiper>
     </wux-card>
     <!-- 专题特卖 -->
     <view wx:if="{{ carType.new.specialList && carType.new.specialList.length }}">
@@ -92,8 +113,10 @@
                                     <view class="car">
                                         <image class="car__image" src="{{ item.models_main_images }}" />
                                         <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
-                                        <view class="car__title car__title--payment">首付 {{ item.payment }}</view>
-                                        <view class="car__title car__title--monthly">月供 {{ item.monthly }} 元</view>
+                                        <view class="wux-clearfix">
+                                            <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                                            <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
+                                        </view>
                                     </view>
                                 </block>
                             </scroll-view>
@@ -104,15 +127,18 @@
         </block>
     </view>
     <!-- 爆款专场 -->
-    <view wx:if="{{ carType.new.specialfieldList && carType.new.specialfieldList.length }}">
-        <image class="card__image wux-ml--0 wux-mt--10" src="https://static.aicheyide.com/ucuj/Project_title_img/project_4.png" />
-        <swiper class="swiperClass swiperClassNext" autoplay interval="2000" duration="1000" circular previous-margin="50" next-margin="50">
+    <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-header-class="card__header" wx:if="{{ carType.new.specialfieldList && carType.new.specialfieldList.length }}">
+        <view class="card__content">
+            <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_4.png" />
+            <view class="card__more" bindtap="toMore">MORE+</view>
+        </view>
+        <swiper slot="body" class="swiperClass swiperClassNext" autoplay interval="2000" duration="1000" circular previous-margin="50" next-margin="50">
             <block wx:for="{{ carType.new.specialfieldList }}" wx:key="">
                 <swiper-item>
-                    <image src="{{ item.specialimages }}" class="slide-image" mode="aspectFill">
+                    <image src="{{ item.models_main_images }}" class="slide-image" mode="aspectFill">
                     </image>
                 </swiper-item>
             </block>
         </swiper>
-    </view>
+    </wux-card>
 </view>

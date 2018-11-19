@@ -3,6 +3,14 @@ var city = {
     cities_name: '成都',
     id: 38,
 }
+var notices = [{
+    text: '180****2586 成功下单 防守打法发送的发送到防守打法发送的发送到',
+    image: 'https://static.aicheyide.com/uploads/20181116/e9bc09b7fd605f0e9f38474913b0a997.png'
+},
+{
+    text: '188****1234 成功下单 防守打法发送的发送到防守打法发送的发送到',
+    image: 'https://static.aicheyide.com/uploads/20181116/e9bc09b7fd605f0e9f38474913b0a997.png'
+}]
 
 Page({
     data: {
@@ -18,6 +26,7 @@ Page({
         swiperIndex: 'index',
         globalData: {},
         shares: {},
+        notices,
         city,
     },
     channel: 0,
@@ -71,7 +80,9 @@ Page({
             app.error(ret.msg);
         });
     },
-    bindchange(e) {},
+    bindchange(e) {
+        console.log(e)
+    },
     onTag(e) {
         console.log('onTag', e)
     },

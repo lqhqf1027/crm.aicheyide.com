@@ -13,8 +13,10 @@
     left: 0;
     top: 0;
     width: 100%;
-    padding: 15rpx 20rpx;
+    padding: 10rpx 20rpx;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: row;
     color: #fff;
     box-sizing: border-box;
@@ -33,7 +35,7 @@
     height: 60rpx;
     line-height: 60rpx;
     position: relative;
-    top: -2px;
+    /*top: -2px;*/
 }
 
 
@@ -65,7 +67,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 16%;
+    /*width: 16%;*/
     height: 100%;
     text-align: center;
     position: relative;
@@ -75,9 +77,19 @@
 }
 
 .button-clear {
-    margin: 0 10rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 10rpx;
+    min-width: 72rpx;
 }
 
+.button-text {
+    font-size: 20rpx;
+    margin-top: 4rpx;
+    /*letter-spacing: -4rpx;*/
+}
 
 /* .page .page_hd .page_hd_phone .fa-volume-control-phone {
     position: absolute;
@@ -140,7 +152,7 @@ image.quiet {
 }
 
 .card__header {
-    padding: 0 30rpx !important;
+    /*padding: 0 30rpx !important;*/
 }
 
 .card__content {
@@ -180,12 +192,27 @@ image.quiet {
     white-space: normal;
 }
 
+.swiper-item:last-child .car__box {
+    padding-right: 0;
+}
+
+.car__box {
+    padding-right: 20rpx;
+}
+
 .car {
-    display: inline-block;
-    padding: 0 20rpx;
-    width: 270rpx;
+    display: block;
+    padding: 10rpx;
+    width: 100%;
+    /*width: 300rpx;*/
     /*height: 180rpx;*/
+    background-color: #f2f2f2;
     box-sizing: border-box;
+    margin-right: 20rpx;
+}
+
+.car:last-child {
+    margin-right: 0;
 }
 
 .car__scroll {
@@ -198,6 +225,7 @@ image.quiet {
     display: block;
     width: 100%;
     height: 180rpx;
+    background-color: #fff;
 }
 
 .card__cover {
@@ -208,7 +236,7 @@ image.quiet {
 
 .car__title {
     color: rgba(16, 16, 16, 1);
-    font-size: 24rpx;
+    font-size: 22rpx;
     text-align: left;
     font-family: PingFangSC-regular;
     margin-top: 6rpx;
@@ -232,4 +260,26 @@ image.quiet {
 
 .grid__name {
     font-size: 24rpx;
+}
+
+.notice-bar {
+    padding: 20rpx;
+    background-color: orange;
+    color: #fff;
+}
+
+.notice-inner {
+    position: relative;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    /*justify-content: center;*/
+}
+
+.notice-avatar {
+    margin-right: 20rpx;
+}
+
+.notice-swiper {
+    height: 60rpx;
 }
