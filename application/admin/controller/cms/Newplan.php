@@ -7,6 +7,7 @@ use app\common\controller\Backend;
 use app\common\library\Email;
 //use app\common\model\Config;
 use think\Config;
+use think\console\output\descriptor\Console;
 use think\Model;
 use think\Session;
 use think\Db;
@@ -203,37 +204,50 @@ class Newplan extends Backend
         }
         $this->view->assign([
             "row" => $row,
-            'subject' => $this->getSubject(),
             'label' => $this->getLabel(),
-            'store' => $this->getStore()
+            'store' => $this->getStore(),
+            'subject'=>$this->getSubject($row['store_id'])
         ]);
 
         return $this->view->fetch();
     }
 
     //专题标题
-    public function getSubject($store)
+    public function getSubject($store_id)
     {
         if ($this->request->isAjax()) {
             $store_id = $this->request->post('store_id');
 
-            $result = model('Cities')->field('id')
-                ->with(['subject', 'companystore' => function ($query) use ($store_id) {
-                    $query->where('companystore.id', $store_id);
-                    $query->withField('id');
-                }])->select();
+            $subject = $this->getSpecials($store_id);
+            $this->success('','',$subject);
+       }
 
-            $subject = [];
-            foreach ($result as $k=>$v){
-                $subject[] = $v['subject'];
-            }
-            echo json_encode($subject);
+       if($store_id){
+           return $this->getSpecials($store_id);
+       }
+
+
+    }
+
+    /**
+     * 根据门店id获取专题
+     * @param $id
+     * @return array
+     */
+    public function getSpecials($id)
+    {
+        $result = model('Cities')->field('id')
+            ->with(['subject', 'companystore' => function ($query) use ($id) {
+                $query->where('companystore.id', $id);
+                $query->withField('id');
+            }])->select();
+
+        $subject = [];
+        foreach ($result as $k=>$v){
+            $subject[$v['subject']['id']] = $v['subject']['title'];
         }
 
-
-        if($store){
-            model('Subject')->where('');
-        }
+        return $subject;
     }
 
     //标签名称
