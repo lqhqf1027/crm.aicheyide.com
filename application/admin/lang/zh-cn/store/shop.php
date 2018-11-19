@@ -14,5 +14,8 @@ return [
     'City.name'  =>  '城市名称',
     'City.createtime'  =>  '创建时间',
     'City.updatetime'  =>  '更新时间',
-    'City.status'  =>  '状态'
+    'City.status'  =>  '状态',
+    'Store_img' =>'门店展示图',
+    'Store_qrcode' =>'门店公众号二维码'
+
 ];

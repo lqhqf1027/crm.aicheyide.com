@@ -30,6 +30,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'city.cities_name', title: __('City.name')},
                         {field: 'company_name', title: __('Company_name')},
                         {field: 'phone', title: __('Phone')},
+                        {field: 'store_img', title: __('Store_img'),formatter:Table.api.formatter.images},
+                        {field: 'store_qrcode', title: __('Store_qrcode'),formatter:Table.api.formatter.image},
+                        {field: 'planacar', title: __('正在销售方案车辆（台）'),formatter:function (v,r,i) {
+                                return v.length>0? '<strong class="text-danger">'+v.length+'</strong>':' ';
+                            }},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'statuss', title: __('Statuss'), searchList: {"normal":__('Normal'),"hidden":__('Hidden')}, formatter: Table.api.formatter.status},
@@ -64,6 +69,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
+            Form.api.bindevent("form[role=form]");
             Controller.api.bindevent();
         },
         api: {
