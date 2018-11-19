@@ -14,7 +14,7 @@ use addons\cms\model\Models;
 use addons\cms\model\Cities;
 use addons\cms\model\Subject;
 use addons\cms\model\SecondcarRentalModelsInfo;
-
+use addons\cms\model\Subscribe;
 /**
  * 首页
  */
@@ -772,5 +772,43 @@ specialimages,popularity')
         $this->success('', ['planList' => array_merge($myCity, $getPlans)]);
 
 
+    }
+
+    /**
+     * 预约栏接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function appointment()
+    {
+       $appointment = Subscribe::field('id')
+       ->with(['user'=>function ($query){
+           $query->withField('mobile,avatar');
+       }, 'newplan' => function ($query) {
+           $query->withField('models_id');
+       }, 'usedplan' => function ($query) {
+           $query->withField('models_id');
+       }, 'energyplan' => function ($query) {
+           $query->withField('name');
+       }])->order('id desc')->limit(10)->select();
+
+       foreach ($appointment as $k=>$v){
+           if($v['newplan']['models_id']){
+               $appointment[$k]['models_name'] = Db::name('models')->where('id',$v['newplan']['models_id'])->value('name');
+           }
+           if($v['usedplan']['models_id']){
+               $appointment[$k]['models_name'] = Db::name('models')->where('id',$v['usedplan']['models_id'])->value('name');
+           }
+           if($v['energyplan']['name']){
+               $appointment[$k]['models_name'] = $v['energyplan']['name'];
+           }
+
+           unset($appointment[$k]['newplan']);
+           unset($appointment[$k]['usedplan']);
+           unset($appointment[$k]['energyplan']);
+       }
+
+       $this->success('',['appointmentList'=>$appointment]);
     }
 }
