@@ -51,11 +51,20 @@ class CompanyStore extends Model
         return $this->hasOne('SecondcarRentalModelsInfo', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+ 
+    /**
+     * 统计门店下所有可卖车型个数
+     * @return \think\model\relation\HasMany
+     */
+    public function planacarCount()
+    {
+        return $this->hasMany('PlanAcar', 'store_id', 'id');
+    }
+ 
     public function logistics()
     {
         return $this->hasOne('Logistics', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
-
-
+ 
 
 }
