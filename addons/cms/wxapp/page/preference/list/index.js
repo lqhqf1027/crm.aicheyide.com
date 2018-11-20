@@ -91,6 +91,11 @@ Page({
             url: '/page/index/index',
         })
     },
+    onSearch() {
+        wx.navigateTo({
+            url: '/page/search/index',
+        })
+    },
     onSelect() {
         wx.navigateTo({
             url: '/page/city/index',
