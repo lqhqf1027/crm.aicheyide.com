@@ -818,7 +818,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                             {field: 'models.name', title: __('租车车型')},
                             {field: 'admin.nickname', title: __('销售员'), formatter: Controller.api.formatter.sales},
 
-                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge, operate: false},
+                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge1, operate: false},
                             {field: 'phone', title: __('Phone')},
                             {field: 'id_card', title: __('Id_card')},
                             {field: 'cash_pledge', title: __('押金（元）'), operate: false},
@@ -1813,7 +1813,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                     var res = "";
                     var color = "";
                    
-                   if(row.review_the_data == 'the_car' || row.review_the_data == 'for_the_car'){
+                   if(row.review_the_data == 'the_car'){
+                        res = "<i class='fa fa-check'></i>"
+                        color = "success";
+                    
+                    }
+
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"> ' + row.username +  __(res) + '</span>';
+
+                    return html;
+
+                },
+                /**
+                 * 提车返回√
+                 * @param value
+                 * @returns {string}
+                 */
+                judge1: function (value, row, index) {
+
+                    var res = "";
+                    var color = "";
+                   
+                   if(row.review_the_data == 'for_the_car'){
                         res = "<i class='fa fa-check'></i>"
                         color = "success";
                     

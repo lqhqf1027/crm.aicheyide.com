@@ -616,7 +616,11 @@ class Plantabs extends Backend
                         $this->model->validate($validate);
                     }
                     $result = $this->model->allowField(true)->save($params);
-                    if ($result !== false) {
+                    $planId = Db::name('plan_acar')->getLastInsID();
+                   
+                    $result_ss = Db::name('plan_acar')->where('id', $planId)->update(['weigh' => $planId]);
+                    
+                    if ($result !== false && $result_ss) {
 
                         $models_name = Db::name('models')
                             ->where('id', $params['models_id'])
