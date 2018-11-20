@@ -4,6 +4,9 @@ namespace app\admin\controller\store;
 
 use app\common\controller\Backend;
 use think\Db;
+use app\admin\model\CompanyStore;
+use app\admin\model\PlanAcar;
+use app\admin\model\Cities;
 
 /**
  * 公司门店
@@ -177,26 +180,27 @@ class Shop extends Backend
     //关闭或开启门店
     public function getStore($id)
     {
-        $statuss = Db::name('cms_company_store')->where('id', $id)->value('statuss');
-        $city_id = Db::name('cms_company_store')->where('id', $id)->value('city_id');
+        $result = CompanyStore::get($id);
+        // pr($result->statuss);
+        // die;
         //关闭门店
-        if ($statuss == 'hidden') {
+        if ($result->statuss == 'hidden') {
             
-            $data = Db::name('cms_company_store')->where(['city_id' => $city_id, 'statuss' => 'normal'])->select();
+            $data = CompanyStore::where(['city_id' => $result->city_id, 'statuss' => 'normal'])->select();
             if (!$data) {
-                Db::name('cms_cities')->where('id', $city_id)->update(['status' => 'hidden']);
+                Cities::update(['id' => $result->city_id, 'status' => 'hidden']);
             }
             //关闭门店下的方案
-            Db::name('plan_acar')-where('store_id', $id)-update(['acar_status' => 2, 'ismenu' => 0]);
+            PlanAcar::update(['id' => $result->city_id, 'acar_status' => 2, 'ismenu' => 0]);
         }
         //开启门店
         else {
-            $status = Db::name('cms_cities')->where('id', $city_id)->value('status');
+            $status = Cities::where('id', $result->city_id)->value('status');
             if ($status == 'hidden') {
-                Db::name('cms_cities')->where('id', $city_id)->update(['status' => 'normal']);
+                Cities::update(['id' => $result->city_id, 'status' => 'normal']);
             }
             //开启门店下的方案
-            Db::name('plan_acar')-where('store_id', $id)-update(['acar_status' => 1, 'ismenu' => 1]);
+           PlanAcar::update(['id' => $result->city_id, 'acar_status' => 1, 'ismenu' => 1]);
         }
         
     }

@@ -7,6 +7,7 @@ use app\admin\model\Cities as citiesModel;
 use think\Cache;
 use think\Collection;
 use think\Db;
+use app\admin\model\CompanyStore;
 
 use addons\cms\controller\wxapp\Index as Wxappindex;
 
@@ -128,6 +129,9 @@ class Cities extends Backend
             $params = $this->request->post("row/a");
             if ($params['status'] == 'hidden') {
                 Db::name('cms_company_store')->where('city_id', $ids)->update(['statuss' => 'hidden']);
+            }
+            else if ($params['status'] == 'normal') {
+                Db::name('cms_company_store')->where('city_id', $ids)->update(['statuss' => 'normal']);
             }
             if ($params) {
                 try {

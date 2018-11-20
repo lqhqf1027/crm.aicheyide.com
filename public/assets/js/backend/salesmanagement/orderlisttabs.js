@@ -1484,7 +1484,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 else{
                                     return row.username
                                 }
-                            },formatter: Controller.api.formatter.judge, operate: false}, 
+                            },formatter: Controller.api.formatter.judge1, operate: false}, 
                             {field: 'phone', title: __('Phone')},
                             {field: 'id', title: __('查看详细资料'), table: orderRental, buttons: [
                                 {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 
@@ -2881,7 +2881,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
 
-                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge, operate: false},
+                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge1, operate: false},
                             {field: 'phone', title: __('Phone')},
                             { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
 
@@ -3166,7 +3166,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
 
-                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge, operate: false},
+                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge1, operate: false},
                             {field: 'phone', title: __('Phone')},
                             { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
 
@@ -4650,7 +4650,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var res = "";
                     var color = "";
                    
-                   if(row.review_the_data == 'the_car' || row.review_the_data == 'for_the_car'){
+                   if(row.review_the_data == 'the_car'){
+                        res = "<i class='fa fa-check'></i>"
+                        color = "success";
+                    
+                    }
+
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"> ' + row.username +  __(res) + '</span>';
+
+                    return html;
+
+                },
+                /**
+                 * 提车返回√
+                 * @param value
+                 * @returns {string}
+                 */
+                judge1: function (value, row, index) {
+
+                    var res = "";
+                    var color = "";
+                   
+                   if(row.review_the_data == 'for_the_car'){
                         res = "<i class='fa fa-check'></i>"
                         color = "success";
                     

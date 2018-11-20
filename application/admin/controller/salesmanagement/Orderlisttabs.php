@@ -29,12 +29,7 @@ class Orderlisttabs extends Backend
      */
     protected $model = null;
     // protected $multiFields = 'fulldel';
-    protected $noNeedRight = ['index', 'orderAcar', 'orderRental', 'orderSecond', 'orderFull', 'sedAudit', 'details', 'rentaldetails', 'seconddetails', 'fulldetails',
-        'add', 'edit', 'planacar', 'planname', 'reserve', 'rentalplanname', 'rentaladd', 'rentaledit', 'rentaldel', 'control', 'setAudit', 'secondadd',
-
-        'secondedit', 'fulladd', 'fulledit', 'submitCar', 'del', 'fulldel', 'seconddel', 'newreserve', 'newreserveedit', 'newcontroladd', 'newinformation', 'newinformtube',
-        'secondreserve', 'secondaudit', 'page', 'new_car_share_data', 'secondinformation', 'rentalinformation', 'newinformation', 'secondOrderFull', 'secondfulladd', 
-        'secondfullinternal', 'secondfulldel', 'secondfulledit', 'newcollectioninformation','getUserId','get_manager','getCount'];
+    protected $noNeedRight = ['*'];
 
 
     protected $dataLimitField = 'admin_id'; //数据关联字段,当前控制器对应的模型表中必须存在该字段
