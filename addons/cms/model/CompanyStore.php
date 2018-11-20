@@ -51,6 +51,11 @@ class CompanyStore extends Model
         return $this->hasOne('SecondcarRentalModelsInfo', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    public function logistics()
+    {
+        return $this->hasOne('Logistics', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
+
 
 
 }
