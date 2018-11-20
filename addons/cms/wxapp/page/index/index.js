@@ -91,12 +91,6 @@ Page({
             app.error(ret.msg)
         })
 
-      app.request('/index/appointment', {}, function (data, ret) {
-        console.log(data)
-        
-      }, function (data, ret) {
-        console.log(data)
-        app.error(ret.msg)
-      })
+      
     },
 })
