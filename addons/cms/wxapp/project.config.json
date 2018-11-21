@@ -36,9 +36,9 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "city",
-					"pathName": "page/city/index",
-					"query": ""
+					"name": "detail",
+					"pathName": "page/preference/detail/index",
+					"query": "id=138"
 				}
 			]
 		}

@@ -83,7 +83,7 @@
             <block wx:for="{{ carType.new.recommendList }}" wx:key="">
                 <swiper-item class="swiper-item">
                     <view class="car__box">
-                        <view class="car">
+                        <view class="car" data-id="{{ item.id }}" bindtap="onOpenDetail">
                             <image class="car__image" src="{{ item.models_main_images }}" />
                             <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                             <view class="wux-clearfix">
@@ -97,54 +97,56 @@
         </swiper>
     </wux-card>
     <!-- 专题特卖 -->
-    <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ carType.new.specialList && carType.new.specialList.length }}">
-        <view class="card__content">
-            <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_3.png" />
-            <view class="card__more" bindtap="toMore">MORE+</view>
-        </view>
-        <view slot="body">
-            <image class="card__cover wux-mb--10" src="{{ carType.new.specialList[0].coverimages }}" />
-            <swiper indicator-dots indicator-color="#d5d5d5" indicator-active-color="#da8103" display-multiple-items="3" bindchange="bindchange">
-                <block wx:for="{{ carType.new.specialList[0].plan }}" wx:key="">
-                    <swiper-item class="swiper-item">
-                        <view class="car__box">
-                            <view class="car">
-                                <image class="car__image" src="{{ item.models_main_images }}" />
-                                <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
-                                <view class="wux-clearfix">
-                                    <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
-                                    <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
+    <block wx:for="{{ carType.new.specialList }}" wx:for-item="card" wx:key="" wx:if="{{ carType.new.specialList && carType.new.specialList.length }}">
+        <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ index % 2 === 0 }}">
+            <view class="card__content">
+                <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_3.png" />
+                <view class="card__more" bindtap="toMore">MORE+</view>
+            </view>
+            <view slot="body">
+                <image class="card__cover wux-mb--10" src="{{ card.coverimages }}" />
+                <swiper indicator-dots indicator-color="#d5d5d5" indicator-active-color="#da8103" display-multiple-items="3" bindchange="bindchange">
+                    <block wx:for="{{ card.plan }}" wx:key="">
+                        <swiper-item class="swiper-item">
+                            <view class="car__box">
+                                <view class="car">
+                                    <image class="car__image" src="{{ item.models_main_images }}" />
+                                    <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
+                                    <view class="wux-clearfix">
+                                        <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                                        <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
+                                    </view>
                                 </view>
                             </view>
-                        </view>
-                    </swiper-item>
-                </block>
-            </swiper>
-        </view>
-    </wux-card>
-    <view class="wux-mt--10 scroll-y" wx:if="{{ carType.new.specialList && carType.new.specialList.length }}">
-        <wux-row>
-            <wux-col span="6">
-                <image class="card__cover" src="{{ carType.new.specialList[1].coverimages }}" />
-            </wux-col>
-            <wux-col span="6">
-                <wux-card full bordered="{{ false }}" wux-class="card__scroll" wux-header-class="card__header">
-                    <scroll-view scroll-y slot="body" class="car__scroll">
-                        <block wx:for="{{ carType.new.specialList[1].plan }}" wx:key="">
-                            <view class="car">
-                                <image class="car__image" src="{{ item.models_main_images }}" />
-                                <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
-                                <view class="wux-clearfix">
-                                    <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
-                                    <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
+                        </swiper-item>
+                    </block>
+                </swiper>
+            </view>
+        </wux-card>
+        <view class="wux-mt--10 scroll-y" wx:else>
+            <wux-row>
+                <wux-col span="6">
+                    <image class="card__cover" src="{{ card.coverimages }}" />
+                </wux-col>
+                <wux-col span="6">
+                    <wux-card full bordered="{{ false }}" wux-class="card__scroll" wux-header-class="card__header">
+                        <scroll-view scroll-y slot="body" class="car__scroll">
+                            <block wx:for="{{ card.plan }}" wx:key="">
+                                <view class="car">
+                                    <image class="car__image" src="{{ item.models_main_images }}" />
+                                    <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
+                                    <view class="wux-clearfix">
+                                        <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                                        <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
+                                    </view>
                                 </view>
-                            </view>
-                        </block>
-                    </scroll-view>
-                </wux-card>
-            </wux-col>
-        </wux-row>
-    </view>
+                            </block>
+                        </scroll-view>
+                    </wux-card>
+                </wux-col>
+            </wux-row>
+        </view>
+    </block>
     <!-- 爆款专场 -->
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ carType.new.specialfieldList && carType.new.specialfieldList.length }}">
         <view class="card__content">

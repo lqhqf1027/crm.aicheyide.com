@@ -83,6 +83,13 @@ Page({
     bindchange(e) {
         console.log(e)
     },
+    onOpenDetail(e) {
+        const { id } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/preference/detail/index?id=${id}`,
+        })
+    },
     onTag(e) {
         console.log('onTag', e)
     },
