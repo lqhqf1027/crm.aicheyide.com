@@ -3,14 +3,6 @@ var city = {
     cities_name: '成都',
     id: 38,
 }
-var notices = [{
-    text: '180****2586 成功下单 防守打法发送的发送到防守打法发送的发送到',
-    image: 'https://static.aicheyide.com/uploads/20181116/e9bc09b7fd605f0e9f38474913b0a997.png'
-},
-{
-    text: '188****1234 成功下单 防守打法发送的发送到防守打法发送的发送到',
-    image: 'https://static.aicheyide.com/uploads/20181116/e9bc09b7fd605f0e9f38474913b0a997.png'
-}]
 
 Page({
     data: {
@@ -26,7 +18,6 @@ Page({
         swiperIndex: 'index',
         globalData: {},
         shares: {},
-        notices,
         city,
     },
     channel: 0,
@@ -124,6 +115,12 @@ Page({
         app.request('/index/index', { city_id: city.id }, function(data, ret) {
             console.log(data)
             that.setData({
+                appointment: data.appointment.map((n) => {
+                    const mobile = n.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+                    const content = `${mobile} 成功下单 ${n.models_name}`
+
+                    return {...n, content }
+                }),
                 brandList: data.brandList,
                 carType: data.carType,
                 shares: data.shares,

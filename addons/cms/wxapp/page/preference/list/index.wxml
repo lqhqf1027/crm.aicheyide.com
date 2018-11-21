@@ -33,13 +33,13 @@
         </swiper>
     </view>
     <!-- 通知公告 -->
-    <view class="notice-bar wux-mt--10">
-        <swiper class="notice-swiper" circular vertical autoplay interval="1500" duration="300">
-            <block wx:for="{{ notices }}" wx:key="">
+    <view class="notice-bar wux-mt--10" wx:if="{{ appointment }}">
+        <swiper class="notice-swiper" circular vertical autoplay interval="2000">
+            <block wx:for="{{ appointment }}" wx:key="">
                 <swiper-item>
                     <view class="notice-inner">
-                        <wux-avatar wux-class="notice-avatar" src="{{ item.image }}" />
-                        <view class="wux-ellipsis">{{ item.text }}</view>
+                        <wux-avatar wux-class="notice-avatar" src="{{ item.avatar }}" />
+                        <view class="wux-ellipsis">{{ item.content }}</view>
                     </view>
                 </swiper-item>
             </block>

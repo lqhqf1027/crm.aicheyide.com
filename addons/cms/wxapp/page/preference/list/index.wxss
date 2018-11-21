@@ -322,5 +322,5 @@ image.quiet {
 }
 
 .notice-swiper {
-    height: 60rpx;
+    height: 64rpx;
 }
