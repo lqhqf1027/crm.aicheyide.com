@@ -21,6 +21,7 @@ use addons\cms\model\Subscribe;
 use app\common\library\Auth;
 use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
+use addons\cms\model\Logistics;
 
 class Share extends Base
 {
@@ -129,10 +130,10 @@ specialimages,popularity')
 
         $fabulous = $this->getCollectionFabulous('cms_fabulous', $plan_id, $user_id);             //判断用户是否点赞该方案
 
-        $appointment = $this->getAppointment($user_id,$plan_id,'new');
+        $appointment = $this->getAppointment($user_id, $plan_id, 'new');
         $plans['collection'] = $collection ? 1 : 0;
         $plans['fabulous'] = $fabulous ? 1 : 0;
-        $plans['appointment'] = $appointment?1:0;
+        $plans['appointment'] = $appointment ? 1 : 0;
 
         return [
             'plan' => $plans,
@@ -207,7 +208,6 @@ specialimages,popularity')
         }
 
     }
-
 
     /**
      * 点赞接口
@@ -315,19 +315,46 @@ specialimages,popularity')
         $new_models = $this->getModels($queryModels, 'planacar');
         //二手车车型
         $used_models = $this->getModels($queryModels, 'secondcarplan');
+        //新能源车型
+        $logistics = $this->getLogisticsModels($queryModels);
 
-        if ($new_models || $used_models) {
-            $this->success('请求成功', ['new' => $new_models, 'used' => $used_models]);
-        } else {
-            $this->error('', '');
+        $data = ['new' => $new_models, 'used' => $used_models, 'logistics' => $logistics];
+
+
+        $this->success('请求成功',$data);
+
+    }
+
+    /**
+     * 模糊查询得到新能源车信息
+     * @param $queryModels
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getLogisticsModels($queryModels)
+    {
+        $logistics = Logistics::field('id,name')->where('name', ['like', '%' . $queryModels . '%'])->select();
+
+        $check = [];
+        foreach ($logistics as $k=>$v){
+            $logistics[$k]['type'] = 'logistics';
+               if(in_array($v['name'],$check)){
+                   unset($logistics[$k]);
+                   continue;
+               }
+               $check[] = $v['name'];
+
+
         }
 
-
+        return $logistics;
     }
 
 
     /**
-     * 得到对应的车型
+     * 模糊查询得到新车或者二手车的车型
      * @param $queryModels            搜索内容
      * @param $withTable              关联的表
      * @return array
@@ -346,6 +373,7 @@ specialimages,popularity')
                 $query->withField('id');
             }])->where(function ($query) use ($queryModels) {
                 $query->where([
+                    'models.status' => 'normal',
                     'name' => ['like', '%' . $queryModels . '%']
                 ]);
             })->select();
@@ -360,7 +388,7 @@ specialimages,popularity')
                 array_push($check, $v['name']);
             }
             unset($v[$withTable]);
-            $v['style'] = $withTable == 'planacar' ? 'new' : 'used';
+            $v['type'] = $withTable == 'planacar' ? 'new' : 'used';
             $duplicate_models[] = $v;
 
         }
@@ -387,10 +415,17 @@ specialimages,popularity')
             ->find();
     }
 
-    public function getAppointment($user_id,$plan_id,$planType)
+    /**
+     * 返回满足条件的预约表数据
+     * @param $user_id
+     * @param $plan_id
+     * @param $planType
+     * @return string|\think\db\Query
+     */
+    public function getAppointment($user_id, $plan_id, $planType)
     {
         $planField = null;
-        switch ($planType){
+        switch ($planType) {
             case 'new':
                 $planField = 'plan_acar_id';
                 break;
@@ -436,12 +471,19 @@ specialimages,popularity')
             ->select();
     }
 
-
+    /**
+     * 根据城市ID获取新能源汽车数据
+     * @param $city_id
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public static function getEnergy($city_id)
     {
         $plans = CompanyStore::field('id')
             ->with(['logistics' => function ($query) {
-                $query->withField('id,name,payment,monthly,nperlist,total_price,models_main_images');
+                $query->withField('id,name,payment,monthly,nperlist,total_price,models_main_images,label_id');
             }, 'city' => function ($query) use ($city_id) {
                 $query->where([
                     'city.status' => 'normal',
@@ -457,6 +499,11 @@ specialimages,popularity')
                 $v['logistics']['models_main_images'] = Config::get('upload')['cdnurl'] . $v['logistics']['models_main_images'];
             }
             if ($v['logistics']['id']) {
+                if($v['logistics']['label_id']){
+                   $logistics = self::getSimpleLabels($v['logistics']['label_id']);
+                    $v['logistics']['labels'] = ['name'=>$logistics['name'],'lableimages'=>Config::get('upload')['cdnurl'] . $logistics['lableimages']];
+                }
+
                 $plans[$k] = $v['logistics'];
             } else {
                 unset($plans[$k]);
@@ -498,7 +545,6 @@ specialimages,popularity')
 
         $info = collection($info)->toArray();
 
-
         $planList = [];
         foreach ($info as $k => $v) {
 
@@ -521,35 +567,22 @@ specialimages,popularity')
                 }
 
                 if ($v['planacar']['models_id']) {        //根据车型ID获取车型
-                    $models_name = Db::name('models')
-                        ->where([
-                            'id' => $v['planacar']['models_id'],
-                            'status' => 'normal'
-                        ])
-                        ->value('name');
-                    if ($models_name) {
-                        $v['planacar']['models_name'] = $models_name;
-                    }
+
+                        $v['planacar']['models_name'] = self::getSimpleModels($v['planacar']['models_id'])['name'];
 
                 }
 
-
                 if ($v['planacar']['label_id']) {           //根据标签ID获取标签
-                    $labels = Db::name('cms_label')
-                        ->where([
-                            'status' => 'normal',
-                            'id' => $v['planacar']['label_id']
-                        ])
-                        ->field('name,lableimages')
-                        ->find();
+                    $labels = self::getSimpleLabels($v['planacar']['label_id']);
 
                     $labels['lableimages'] = Config::get('upload')['cdnurl'] . $labels['lableimages'];
+
+                    $labels = ['name'=>$labels['name'],'lableimages'=>$labels['lableimages']];
 
                     if ($labels) {
                         $v['planacar']['labels'] = $labels;
                     }
                 }
-
 
                 $planList[] = $v['planacar'];
             }
@@ -573,7 +606,7 @@ specialimages,popularity')
     {
         $plans = CompanyStore::field('id')
             ->with(['secondcarinfo' => function ($query) {
-                $query->withField('id,models_id,newpayment,monthlypaymen,periods,totalprices,models_main_images,guide_price');
+                $query->withField('id,models_id,newpayment,monthlypaymen,periods,totalprices,models_main_images,guide_price,label_id');
             }, 'city' => function ($query) use ($city_id) {
                 $query->where([
                     'city.status' => 'normal',
@@ -587,19 +620,45 @@ specialimages,popularity')
         //加入车型名称并返回方案
         $usedPlan = [];
         foreach ($plans as $k => $v) {
-            if ($v['secondcarinfo'] && $v['secondcarinfo']['models_id']) {
-                $v['secondcarinfo']['models_name'] = Db::name('models')
-                    ->where('id', $v['secondcarinfo']['models_id'])
-                    ->value('name');
+
+            if(!$v['secondcarinfo']['id']){
+                unset($plans[$k]);
+                continue;
+            }
+
+                if($v['secondcarinfo']['models_id']){
+                    $v['secondcarinfo']['models_name'] = self::getSimpleModels($v['secondcarinfo']['models_id'])['name'];
+                }
+                if($v['secondcarinfo']['label_id']){
+                    $labels = self::getSimpleLabels($v['secondcarinfo']['label_id']);
+
+                    $v['secondcarinfo']['labels'] = ['name' =>$labels['name'],
+                        'lableimages'=>Config::get('upload')['cdnurl'] . $labels['lableimages']];
+
+                }
 
                 $v['secondcarinfo']['models_main_images'] = Config::get('upload')['cdnurl'] . $v['secondcarinfo']['models_main_images'];
 
                 $usedPlan[] = $v['secondcarinfo'];
-            }
+
 
         }
 
         return $usedPlan;
+    }
+
+    public static function getSimpleModels($models_id)
+    {
+       return Db::name('models')
+            ->where('id', $models_id)
+            ->find();
+    }
+
+    public static function getSimpleLabels($labels_id)
+    {
+        return Db::name('cms_label')
+            ->where('id', $labels_id)
+            ->find();
     }
 
     /**
