@@ -4,6 +4,9 @@ namespace app\admin\controller\store;
 
 use app\common\controller\Backend;
 use think\Db;
+use app\admin\model\CompanyStore;
+use app\admin\model\PlanAcar;
+use app\admin\model\Cities;
 
 /**
  * 公司门店
@@ -25,7 +28,8 @@ class Shop extends Backend
         $this->model = new \app\admin\model\CompanyStore;
         $this->view->assign("statussList", $this->model->getStatussList());
     }
-    
+
+
     /**
      * 默认生成的控制器所继承的父类中有index/add/edit/del/multi五个基础方法、destroy/restore/recyclebin三个回收站方法
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
@@ -57,22 +61,25 @@ class Shop extends Backend
                     ->count();
 
             $list = $this->model
-                    ->with(['city'])
+                ->with(['city','planacar'])
                     ->where($where)
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
-
-            foreach ($list as $row) {
-                
-                
-            }
             $list = collection($list)->toArray();
+
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
         return $this->view->fetch();
+    }
+
+    /**
+     * @param $shopID
+     */
+    public  static function getPlan_num($shopID){
+
     }
 
     //获取城市名称
@@ -137,6 +144,7 @@ class Shop extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -147,6 +155,9 @@ class Shop extends Backend
                     }
                     $result = $row->allowField(true)->save($params);
                     if ($result !== false) {
+                        //城市与门店的开启与关闭
+                        $this->getStore($ids);
+                       
                         $this->success();
                     } else {
                         $this->error($row->getError());
@@ -165,6 +176,35 @@ class Shop extends Backend
         ]);
         return $this->view->fetch();
     }
+
+    //关闭或开启门店
+    public function getStore($id)
+    {
+        $result = CompanyStore::get($id);
+        // pr($result->statuss);
+        // die;
+        //关闭门店
+        if ($result->statuss == 'hidden') {
+            
+            $data = CompanyStore::where(['city_id' => $result->city_id, 'statuss' => 'normal'])->select();
+            if (!$data) {
+                Cities::update(['id' => $result->city_id, 'status' => 'hidden']);
+            }
+            //关闭门店下的方案
+            PlanAcar::update(['id' => $result->city_id, 'acar_status' => 2, 'ismenu' => 0]);
+        }
+        //开启门店
+        else {
+            $status = Cities::where('id', $result->city_id)->value('status');
+            if ($status == 'hidden') {
+                Cities::update(['id' => $result->city_id, 'status' => 'normal']);
+            }
+            //开启门店下的方案
+           PlanAcar::update(['id' => $result->city_id, 'acar_status' => 1, 'ismenu' => 1]);
+        }
+        
+    }
+
     public function selectpage()
     {
         return parent::selectpage();

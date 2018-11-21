@@ -4,7 +4,7 @@ return array (
   'name' => '爱车易得CRM',
   'beian' => ' 蜀 ICP备 17036095号',
   'cdnurl' => '',
-  'version' => '1.4.8',
+  'version' => '1.5.8',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
@@ -27,8 +27,12 @@ return array (
     'dictionary' => 'Dictionary',
     'user' => 'User',
     'example' => 'Example',
-    'message' => 'Message',
-    'pushtemplate' => 'Pushtemplate',
+    'message' => '员工权限配置',
+    'pushtemplate' => '推送模板',
+    'integral' => '积分管理',
+    'share' => '小程序分享配置',
+    'cartype' => '车辆类型',
+    'companystore' => '门店',
   ),
   'mail_type' => '1',
   'mail_smtp_host' => 'smtp.mxhichina.com',
@@ -76,4 +80,24 @@ return array (
   'push' => 
   array (
   ),
+  'integral' => 
+  array (
+    'fabulous' => '1',
+    'share' => '5',
+    'sign' => '2',
+  ),
+  'share' => 
+  array (
+    'index_share_title' => '欢迎来到友车友家',
+    'index_share_img' => 'https://static.aicheyide.com/uploads/20180807/3d6ccb359998725eb9669ca72f88d74e.jpg',
+  ),
+  'cartype' => 
+  array (
+    'new' => '新车',
+    'used' => '二手车',
+  ),
+  'companystore' => 
+  array (
+  ),
+  'company' => '/uploads/20181120/e1202687c911b503200dc3b67816963a.png',
 );

@@ -36,7 +36,9 @@ class Cities extends Model
         return isset($list[$value]) ? $list[$value] : '';
     }
 
-
+    public function storeList(){
+        return $this->hasMany('CompanyStore','city_id','id');
+    }
 
 
 }

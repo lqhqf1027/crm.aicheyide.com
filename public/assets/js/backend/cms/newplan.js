@@ -155,6 +155,63 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 为表格1绑定事件
             Table.api.bindevent(table);
 
+            $(document).on("click", "a.btn-channel", function () {
+                $("#archivespanel").toggleClass("col-md-9", $("#channelbar").hasClass("hidden"));
+                $("#channelbar").toggleClass("hidden");
+            });
+
+            require(['jstree'], function () {
+                //全选和展开
+                $(document).on("click", "#checkall", function () {
+                    $("#channeltree").jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
+                });
+                $(document).on("click", "#expandall", function () {
+                    $("#channeltree").jstree($(this).prop("checked") ? "open_all" : "close_all");
+                });
+                $('#channeltree').on("changed.jstree", function (e, data) {
+                    console.log(data);
+                    console.log(data.selected);
+                    var options = table.bootstrapTable('getOptions');
+                    options.pageNumber = 1;
+                    options.queryParams = function (params) {
+                        params.filter = JSON.stringify(data.selected.length > 0 ? {store_id: data.selected.join(",")} : {});
+                        params.op = JSON.stringify(data.selected.length > 0 ? {store_id: 'in'} : {});
+                        return params;
+                    };
+                    table.bootstrapTable('refresh', {});
+                    return false;
+                });
+                $('#channeltree').jstree({
+                    "themes": {
+                        "stripes": true
+                    },
+                    "checkbox": {
+                        "keep_selected_style": false,
+                    },
+                    "types": {
+                        "channel": {
+                            "icon": "fa fa-th",
+                        },
+                        "list": {
+                            "icon": "fa fa-list",
+                        },
+                        "link": {
+                            "icon": "fa fa-link",
+                        },
+                        "disabled": {
+                            "check_node": false,
+                            "uncheck_node": false
+                        }
+                    },
+                    'plugins': ["types", "checkbox"],
+                    "core": {
+                        "multiple": true,
+                        'check_callback': true,
+                        "data": Config.storeList
+                    }
+                });
+            });
+
 
         },
         add: function () {
@@ -162,22 +219,43 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
-
             $(document).on("change", "#c-store_id", function () {
-                $.post("cms/Newplan/getSubject", {
+                Controller.getSubject($(this).val())
 
-                    store_id: $('#c-store_id').val(),
-
-                }, function (result) {
-                    console.log(result);
-                });
             });
 
             Controller.api.bindevent();
         },
+        dragsort: function () {
 
-        getSubject:function (){
-          Fast.api.ajax()
+            Controller.api.bindevent();
+        },
+
+        getSubject: function (store_id) {
+            console.log(store_id);
+            Fast.api.ajax({
+                url: 'cms/Newplan/getSubject',
+                data: {
+                    store_id: store_id
+                }
+            }, function (data, ret) {
+                console.log(data);
+                $('#c-subject_id option').remove();
+                var options = '';
+
+                if (data) {
+                    for (var i in data) {
+                        if(!data[i]){
+                            options += '<option value="' + i + '" style="display: none">该门店暂无专题</option>';
+                            break;
+                        }
+                        options += '<option value="' + i + '">' + data[i] + '</option>';
+                    }
+                }
+
+                $('#c-subject_id').append(options);
+                return false;
+            })
         },
 
         firstedit: function () {

@@ -41,9 +41,13 @@ class CompanyStore extends Model
         return $this->belongsTo('Cities', 'city_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * 查询门店有多少方案销售
+     * @return \think\model\relation\HasOne
+     */
     public function planacar()
     {
-        return $this->hasOne('PlanAcar', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->hasMany('PlanAcar', 'store_id', 'id');
     }
 
 

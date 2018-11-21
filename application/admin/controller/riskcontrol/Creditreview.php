@@ -33,9 +33,7 @@ class Creditreview extends Backend
     protected $Rc4 = 'd477d6d1803125f1'; //apikey
     protected $sign = null; //sign  md5加密
     protected $searchFields = 'username';
-    protected $noNeedRight = ['index', 'newcarAudit', 'rentalcarAudit', 'secondhandcarAudit', 'newauditResult', 'newpass', 'newdata', 'newnopass', 'rentalauditResult', 'rentalpass', 'rentalnopass', 'secondhandcarResult', 'secondpass', 'seconddata'
-        , 'secondnopass', 'newcardetails', 'rentalcardetails', 'secondhandcardetails', 'bigdata', 'getPlanAcarData', 'getPlanSecondCarData', 'toViewBigData', 'getBigData', 'newsales', 'newtube', 'choosestock', 'newtubefinance', 'secondchoosestock',
-        'secondinformation', 'newinformation', 'rentalinformation', 'auditedit', 'rentalauditedit', 'secondauditedit', 'match_bigdata'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

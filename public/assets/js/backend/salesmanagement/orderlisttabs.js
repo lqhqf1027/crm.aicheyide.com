@@ -89,7 +89,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                             { field: 'newinventory.licensenumber', title: __('车牌号') },
                             { field: 'models.name', title: __('销售车型') },
-                            { field: 'username', title: __('Username') },
+                            { field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge, operate: false },
                             { field: 'financial_name', title: __('金融平台') },
 
                             { field: 'phone', title: __('Phone') },
@@ -1405,6 +1405,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 orderAcar.on('load-success.bs.table', function (e, data) {
                     // $('#badge_order_acar').text(data.total);
                     $(".btn-details").data("area", ["95%", "95%"]);
+
+                    var td = $("#orderAcar td:nth-child(7)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
                 })
                 // 为表格1绑定事件
                 Table.api.bindevent(orderAcar);
@@ -1476,7 +1484,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 else{
                                     return row.username
                                 }
-                            }}, 
+                            },formatter: Controller.api.formatter.judge1, operate: false}, 
                             {field: 'phone', title: __('Phone')},
                             {field: 'id', title: __('查看详细资料'), table: orderRental, buttons: [
                                 {name: 'rentalDetails', text: '查看详细资料', title: '查看订单详细资料' ,icon: 'fa fa-eye',classname: 'btn btn-xs btn-primary btn-dialog btn-rentalDetails', 
@@ -2051,6 +2059,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 
                     // $('#badge_order_rental').text(data.total);
                     $(".btn-rentalDetails").data("area", ["95%", "95%"]);
+
+                    var td = $("#orderRental td:nth-child(6)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
                 })
                 
                 /**
@@ -2114,7 +2130,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             { field: 'plansecond.licenseplatenumber', title: __('车牌号') },
                             { field: 'models.name', title: __('销售车型') },
                             {field: 'admin.nickname', title: __('销售员'),formatter: Controller.api.formatter.sales},
-                            { field: 'username', title: __('Username') },
+                            { field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge, operate: false },
                             { field: 'phone', title: __('Phone') },
                             {
                                 field: 'id', title: __('查看详细资料'), table: orderSecond, buttons: [
@@ -2721,6 +2737,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     
                     // $('#badge_order_second').text(data.total);
                     $(".btn-seconddetails").data("area", ["95%", "95%"]);
+
+                    var td = $("#orderSecond td:nth-child(6)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
                 })
                 /**
                  * 为二手车表格绑定事件
@@ -2857,7 +2881,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
 
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge1, operate: false},
                             {field: 'phone', title: __('Phone')},
                             { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
 
@@ -3047,6 +3071,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     
                     // $('#badge_order_full').text(data.total);
                     $(".btn-fulldetails").data("area", ["95%", "95%"]);
+
+                    var td = $("#orderFull td:nth-child(5)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
                 })
           
                 /**
@@ -3134,7 +3166,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 operate: false, formatter: Table.api.formatter.buttons
                             },
 
-                            {field: 'username', title: __('Username')},
+                            {field: 'username', title: __('Username'),formatter: Controller.api.formatter.judge1, operate: false},
                             {field: 'phone', title: __('Phone')},
                             { field: 'delivery_datetime', title: __('Delivery_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime,datetimeFormat:"YYYY-MM-DD" },
 
@@ -3324,6 +3356,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     // $('#badge_second_order_full').text(data.total);
                     $(".btn-secondfulldetails").data("area", ["95%", "95%"]);
+
+                    var td = $("#secondOrderFull td:nth-child(5)");
+    
+                    for (var i = 0; i < td.length; i++) {
+    
+                        td[i].style.textAlign = "left";
+    
+                    }
                 })
 
                 /**
@@ -4599,7 +4639,51 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         return Y+M+D;
                     }
-                }
+                },
+                /**
+                 * 提车返回√
+                 * @param value
+                 * @returns {string}
+                 */
+                judge: function (value, row, index) {
+
+                    var res = "";
+                    var color = "";
+                   
+                   if(row.review_the_data == 'the_car'){
+                        res = "<i class='fa fa-check'></i>"
+                        color = "success";
+                    
+                    }
+
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"> ' + row.username +  __(res) + '</span>';
+
+                    return html;
+
+                },
+                /**
+                 * 提车返回√
+                 * @param value
+                 * @returns {string}
+                 */
+                judge1: function (value, row, index) {
+
+                    var res = "";
+                    var color = "";
+                   
+                   if(row.review_the_data == 'for_the_car'){
+                        res = "<i class='fa fa-check'></i>"
+                        color = "success";
+                    
+                    }
+
+                    //渲染状态
+                    var html = '<span class="text-' + color + '"> ' + row.username +  __(res) + '</span>';
+
+                    return html;
+
+                },
             }
         }
     };

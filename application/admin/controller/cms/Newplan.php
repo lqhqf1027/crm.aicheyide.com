@@ -3,13 +3,17 @@
 namespace app\admin\controller\cms;
 
 use app\admin\model\CompanyStore;
+use app\admin\model\Cities;
 use app\common\controller\Backend;
 use app\common\library\Email;
 //use app\common\model\Config;
 use think\Config;
+use think\console\output\descriptor\Console;
 use think\Model;
 use think\Session;
 use think\Db;
+use fast\Tree;
+use think\db\Query;
 
 /**
  * 多表格示例
@@ -29,6 +33,53 @@ class Newplan extends Backend
     {
         parent::_initialize();
         $this->model = model('PlanAcar');
+
+        $storeList = [];
+        $disabledIds = [];
+        $cities_all = collection(Cities::where('pid', 'NEQ', '0')->order("id desc")->field(['id,cities_name as name'])->select())->toArray();
+        $store_all = collection(CompanyStore::order("id desc")->field(['id, city_id, store_name as name'])->select())->toArray();
+        $all = array_merge($cities_all, $store_all);
+        // pr($all);
+        // die;
+        foreach ($all as $k => $v) {
+
+            $state = ['opened' => true];
+
+            if (!$v['city_id']) {
+            
+                $disabledIds[] = $v['id'];
+                $storeList[] = [
+                    'id'     => $v['id'],
+                    'parent' => '#',
+                    'text'   => __($v['name']),
+                    'state'  => $state
+                ];
+            }
+
+            foreach ($cities_all as $key => $value) {
+                
+                if ($v['city_id'] == $value['id']) {
+                    
+                    $storeList[] = [
+                        'id'     => $v['id'],
+                        'parent' => $value['id'],
+                        'text'   => __($v['name']),
+                        'state'  => $state
+                    ];
+                }
+                   
+            }
+            
+        }
+        // pr($storeList);
+        // die;
+        // $tree = Tree::instance()->init($all, 'city_id');
+        // $storeOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
+        // pr($storeOptions);
+        // die;
+        // $this->view->assign('storeOptions', $storeOptions);
+        $this->assignconfig('storeList', $storeList);
+
     }
 
     /**
@@ -203,37 +254,50 @@ class Newplan extends Backend
         }
         $this->view->assign([
             "row" => $row,
-            'subject' => $this->getSubject(),
             'label' => $this->getLabel(),
-            'store' => $this->getStore()
+            'store' => $this->getStore(),
+            'subject'=>$this->getSubject($row['store_id'])
         ]);
 
         return $this->view->fetch();
     }
 
     //专题标题
-    public function getSubject($store)
+    public function getSubject($store_id)
     {
         if ($this->request->isAjax()) {
             $store_id = $this->request->post('store_id');
 
-            $result = model('Cities')->field('id')
-                ->with(['subject', 'companystore' => function ($query) use ($store_id) {
-                    $query->where('companystore.id', $store_id);
-                    $query->withField('id');
-                }])->select();
+            $subject = $this->getSpecials($store_id);
+            $this->success('','',$subject);
+       }
 
-            $subject = [];
-            foreach ($result as $k=>$v){
-                $subject[] = $v['subject'];
-            }
-            echo json_encode($subject);
+       if($store_id){
+           return $this->getSpecials($store_id);
+       }
+
+
+    }
+
+    /**
+     * 根据门店id获取专题
+     * @param $id
+     * @return array
+     */
+    public function getSpecials($id)
+    {
+        $result = model('Cities')->field('id')
+            ->with(['subject', 'companystore' => function ($query) use ($id) {
+                $query->where('companystore.id', $id);
+                $query->withField('id');
+            }])->select();
+
+        $subject = [];
+        foreach ($result as $k=>$v){
+            $subject[$v['subject']['id']] = $v['subject']['title'];
         }
 
-
-        if($store){
-            model('Subject')->where('');
-        }
+        return $subject;
     }
 
     //标签名称
@@ -244,20 +308,7 @@ class Newplan extends Backend
         return $result;
     }
 
-    //标签名称
-//    public function selectpage()
-//    {
-//        $result = Db::name('cms_label')->field('name')->select();
-//
-//        foreach ($result as $k => $v) {
-//            $data[] = $v['name'];
-//        }
-//
-//        return $data;
-//    }
-
     //门店名称
-
 
     public function getStore()
     {
@@ -378,17 +429,64 @@ class Newplan extends Backend
     }
 
     //拖拽排序---改变权重
-    public function dragsort($ids = NULL)
+    public function dragsort()
     {
-        pr($ids);
-        $data = Session::get('row');
-        foreach ($data as $k => $v) {
-            $data_ids[] = $data[$k]['id'];
+        //排序的数组
+        $ids = $this->request->post("ids");
+        //拖动的记录ID
+        $changeid = $this->request->post("changeid");
+        //操作字段
+        $field = $this->request->post("field");
+        //操作的数据表
+        $table = $this->request->post("table");
+        //排序的方式
+        $orderway = $this->request->post("orderway", 'strtolower');
+        $orderway = $orderway == 'asc' ? 'ASC' : 'DESC';
+        $sour = $weighdata = [];
+        $ids = explode(',', $ids);
+        $prikey = 'id';
+        $pid = $this->request->post("pid");
+        
+        //限制更新的字段
+        $field = in_array($field, ['weigh']) ? $field : 'weigh';
+
+        // 如果设定了pid的值,此时只匹配满足条件的ID,其它忽略
+        if ($pid !== '') {
+            $hasids = [];
+            $list = Db::name($table)->where($prikey, 'in', $ids)->where('pid', 'in', $pid)->field('id,pid')->select();
+            foreach ($list as $k => $v) {
+                $hasids[] = $v['id'];
+            }
+            $ids = array_values(array_intersect($ids, $hasids));
         }
-        pr($data_ids);
-        die;
-        $row = $this->model->get($ids);
+
+        $list = Db::name($table)->field("$prikey,$field")->where($prikey, 'in', $ids)->order($field, $orderway)->select();
+       
+        foreach ($list as $k => $v) {
+            $sour[] = $v[$prikey];
+            $weighdata[$v[$prikey]] = $v[$field];
+        }
+        $position = array_search($changeid, $ids);
+        $desc_id = $sour[$position];    //移动到目标的ID值,取出所处改变前位置的值
+        $sour_id = $changeid;
+        $weighids = array();
+        $temp = array_values(array_diff_assoc($ids, $sour));
+        foreach ($temp as $m => $n) {
+            if ($n == $sour_id) {
+                $offset = $desc_id;
+            } else {
+                if ($sour_id == $temp[0]) {
+                    $offset = isset($temp[$m + 1]) ? $temp[$m + 1] : $sour_id;
+                } else {
+                    $offset = isset($temp[$m - 1]) ? $temp[$m - 1] : $sour_id;
+                }
+            }
+            $weighids[$n] = $weighdata[$offset];
+            Db::name($table)->where($prikey, $n)->update([$field => $weighdata[$offset]]);
+        }
+        $this->success();
     }
+
 
 
 }

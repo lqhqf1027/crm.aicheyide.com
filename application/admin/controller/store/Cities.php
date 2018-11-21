@@ -6,6 +6,8 @@ use app\common\controller\Backend;
 use app\admin\model\Cities as citiesModel;
 use think\Cache;
 use think\Collection;
+use think\Db;
+use app\admin\model\CompanyStore;
 
 use addons\cms\controller\wxapp\Index as Wxappindex;
 
@@ -56,17 +58,13 @@ class Cities extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
                 ->where($where)
-                ->where(function ($q) {
-                    $q->where('pid', 0);
-                })
+                
                 ->order($sort, $order)
                 ->count();
 
             $list = $this->model
                 ->where($where)
-                ->where(function ($q) {
-                    $q->where('pid', 0);
-                })
+                
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
@@ -110,53 +108,59 @@ class Cities extends Backend
     /**
      * 编辑
      */
-    /*    public function edit($ids = NULL)
-        {
-            $row = $this->model->get($ids);
-            //获取子级所属城市
+    public function edit($ids = NULL)
+    {
+        $row = $this->model->get($ids);
+        //获取子级所属城市
 
-            $dataCities = collection(citiesModel::all(function ($q) use ($ids) {
-                $q->field('id,cities_name,status')->where('pid', $ids);
-            }))->toArray();
-    //        pr($dataCities);die;
-            if (!$row)
-                $this->error(__('No Results were found'));
-            $adminIds = $this->getDataLimitAdminIds();
-            if (is_array($adminIds)) {
-                if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                    $this->error(__('You have no permission'));
-                }
+        $dataCities = collection(citiesModel::all(function ($q) use ($ids) {
+            $q->field('id,cities_name,status')->where('pid', $ids);
+        }))->toArray();
+        // pr($dataCities);die;
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
             }
-            if ($this->request->isPost()) {
-                $params = $this->request->post("row/a");
-                if ($params) {
-                    try {
-                        //是否采用模型验证
-                        if ($this->modelValidate) {
-                            $name = basename(str_replace('\\', '/', get_class($this->model)));
-                            $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-                            $row->validate($validate);
-                        }
-                        $result = $row->allowField(true)->save($params);
-
-                        if ($result !== false) {
-                            $this->success();
-                        } else {
-                            $this->error($row->getError());
-                        }
-                    } catch (\think\exception\PDOException $e) {
-                        $this->error($e->getMessage());
-                    } catch (\think\Exception $e) {
-                        $this->error($e->getMessage());
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");
+            if ($params['status'] == 'hidden') {
+                Db::name('cms_company_store')->where('city_id', $ids)->update(['statuss' => 'hidden']);
+            }
+            else if ($params['status'] == 'normal') {
+                Db::name('cms_company_store')->where('city_id', $ids)->update(['statuss' => 'normal']);
+            }
+            if ($params) {
+                try {
+                    //是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = basename(str_replace('\\', '/', get_class($this->model)));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+                        $row->validate($validate);
                     }
+                    $result = $row->allowField(true)->save($params);
+
+                    if ($result !== false) {
+                        $this->success();
+                    } else {
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
                 }
-                $this->error(__('没有执行任何更新操作项', ''));
             }
+            $this->error(__('没有执行任何更新操作项', ''));
+        }
 
-            $this->view->assign(["row" => $row]);
+        $this->view->assign(["row" => $row]);
 
-            return $this->view->fetch();
-        }*/
+        return $this->view->fetch();
+    }
 
     /**
      * 添加

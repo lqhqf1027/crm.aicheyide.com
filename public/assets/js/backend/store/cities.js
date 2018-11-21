@@ -7,7 +7,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 extend: {
                     index_url: 'store/cities/index',
                     add_url: 'store/cities/add',
-                    // edit_url: 'store/cities/edit',
+                    edit_url: 'store/cities/edit',
                     // del_url: 'store/cities/del',
                     multi_url: 'store/cities/multi',
                     table: 'cms_cities',
@@ -39,7 +39,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             buttons: [
                                 {
                                     icon: 'fa fa-trash', name: 'del', icon: 'fa fa-trash', extend: 'data-toggle="tooltip"', title: __('Del'), classname: 'btn btn-xs btn-danger btn-delone',
-                                    url: 'monthly/newcarmonthly/del',/**删除 */
+                                    url: 'cms/cities/del',/**删除 */
                                     hidden:function (v,r,i) {
                                         if(r.pid==null){
                                             return true;
@@ -49,8 +49,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 },
                                 {
                                     name: 'edit', text: '', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('Edit'), classname: 'btn btn-xs btn-success btn-editone',
-                                    url: 'monthly/newcarmonthly/edit',/**编辑 */
-
+                                    url: 'cms/cities/edit',/**编辑 */
 
                                 },
 
@@ -107,7 +106,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 operate:{
                     //编辑按钮
                     'click .btn-editone': function (e, value, row, index) { /**编辑按钮 */
-                    $(".btn-editone").data("area", ["50%", "80%"]);
+                    $(".btn-editone").data("area", ["30%", "40%"]);
 
                         e.stopPropagation();
                         e.preventDefault();

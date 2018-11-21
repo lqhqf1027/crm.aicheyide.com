@@ -83,9 +83,21 @@
         </div>
         <script type="text/javascript">
 
+            var models = document.getElementById('models_view');
+                // console.log($('#c-models_ids').val());
+
+            if ($('#c-models_ids').val()) {
+                models.style.setProperty('display', 'block', 'important');
+            }
+
             function changeFun(that) {
     
                 var models = document.getElementById('models_view');
+                console.log($('#c-models_ids').val());
+
+                if ($('#c-models_ids').val()) {
+                    models.style.setProperty('display', 'block', 'important');
+                }
                 
                 if (that.value == '0') {
                    
