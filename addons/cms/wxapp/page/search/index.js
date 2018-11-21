@@ -1,20 +1,20 @@
 const app = getApp()
 
 Page({
-	data: {
-		new: [],
-		used: [],
-	},
+    data: {
+        new: [],
+        used: [],
+    },
     onCancel() {
         wx.switchTab({
             url: '/page/preference/list/index',
         })
     },
-	onChange(e) {
-		console.log('onChange', e)
-		this.getList(e.detail.value)
-	},
-	getList(queryModels) {
+    onChange(e) {
+        console.log('onChange', e)
+        this.getList(e.detail.value)
+    },
+    getList(queryModels) {
         if (this.timeout) {
             clearTimeout(this.timeout)
             this.timeout = null
@@ -29,7 +29,7 @@ Page({
         }
 
         this.timeout = setTimeout(() => {
-            app.request('/index/searchModels', { queryModels }, (data, ret) => {
+            app.request('/share/searchModels', { queryModels }, (data, ret) => {
                 console.log(data)
                 this.setData({
                     new: data && data.new,
@@ -37,7 +37,7 @@ Page({
                 })
             }, (data, ret) => {
                 console.log(data)
-                // app.error(ret.msg)
+                    // app.error(ret.msg)
             })
         }, 250)
     },

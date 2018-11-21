@@ -25,7 +25,7 @@ Page({
     getList() {
         const that = this
 
-        app.request('/index/cityList', {}, function(data, ret) {
+        app.request('/share/cityList', {}, function(data, ret) {
             console.log(data)
 
             let cities = []
@@ -119,7 +119,7 @@ Page({
         }
 
         that.timeout = setTimeout(function() {
-            app.request('/index/searchCity', { cities_name }, function(data, ret) {
+            app.request('/share/searchCity', { cities_name }, function(data, ret) {
                 console.log(data)
                 that.setData({
                     searchCityList: data && data.searchCityList || null,

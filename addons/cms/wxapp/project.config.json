@@ -32,15 +32,8 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
-			"list": [
-				{
-					"id": 0,
-					"name": "detail",
-					"pathName": "page/preference/detail/index",
-					"query": "id=138"
-				}
-			]
+			"current": -1,
+			"list": []
 		}
 	}
 }
