@@ -2,6 +2,7 @@
     "pages": [
         "page/preference/list/index",
         "page/preference/detail/index",
+        "page/preference/config/index",
         "page/index/index",
         "page/city/index",
         "page/search/index",

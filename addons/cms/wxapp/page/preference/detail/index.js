@@ -288,6 +288,13 @@ Page({
             longitude: 116.40,
         })
     },
+    openConfig() {
+        const { id } = this.options
+
+        wx.navigateTo({
+            url: `/page/preference/config/index?id=${id}`,
+        })
+    },
     onPlanImageLoad(e) {
         console.log(e)
         const { width, height } = e.detail

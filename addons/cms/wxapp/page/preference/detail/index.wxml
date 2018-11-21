@@ -30,7 +30,7 @@
 </wux-cell-group>
 
 <wux-cell-group wux-class="wux-mt--10" wx:if="{{ defParams }}">
-    <wux-cell hover-class="none" is-link extra="详细配置" bind:click="openLocation">
+    <wux-cell hover-class="none" is-link extra="详细配置" bind:click="openConfig">
         <view class="title">基本参数（详细配置以门店实车为准）</view>
     </wux-cell>
     <wux-cell hover-class="none" title="车身结构" extra="{{ defParams.bodyStructure }}"></wux-cell>

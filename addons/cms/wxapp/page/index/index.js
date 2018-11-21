@@ -79,7 +79,7 @@ Page({
             city,
         })
 
-        app.request('/index/modelsPlan', { city_id: city.id }, (data, ret) => {
+        app.request('/carselection/index', { city_id: city.id }, (data, ret) => {
             console.log(data)
         }, (data, ret) => {
             console.log(data)

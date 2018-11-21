@@ -1,0 +1,13 @@
+<wux-cell-group wux-class="wux-mt--10" wx:if="{{ vehicle_configuration['车身'] }}">
+    <wux-cell hover-class="none">
+        <view class="title">车身</view>
+    </wux-cell>
+    <wux-cell hover-class="none" title="车身结构" extra="{{ defParams.bodyStructure }}"></wux-cell>
+    <wux-cell hover-class="none" title="长/宽/高" extra="{{ defParams.longHighWith }}"></wux-cell>
+    <wux-cell hover-class="none" title="发动机" extra="{{ defParams.engine }}"></wux-cell>
+    <wux-cell hover-class="none" title="变速器" extra="{{ defParams.gearbox }}"></wux-cell>
+    <wux-cell hover-class="none" title="驱动方式" extra="{{ defParams.measuredBrake }}"></wux-cell>
+    <wux-cell hover-class="none" title="燃料形式" extra="{{ defParams.measuredFuelConsumption }}"></wux-cell>
+    <wux-cell hover-class="none" title="综合耗油（L/100km）" extra="{{ defParams.averageConsumptionOfCertification }}"></wux-cell>
+    <wux-cell hover-class="none" title="级别" extra="{{ defParams.level }}"></wux-cell>
+</wux-cell-group>
