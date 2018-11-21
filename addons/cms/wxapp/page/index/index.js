@@ -19,6 +19,7 @@ Page({
     },
     onLoad: function() {
         wx.setStorageSync('city', city)
+        this.getList()
     },
     onShareAppMessage: function() {
         var shares = this.data.shares || {}
@@ -30,7 +31,7 @@ Page({
         }
     },
     onShow: function() {
-        this.setGlobalData(this.getList)
+        // this.setGlobalData(this.getList)
     },
     setGlobalData(cb) {
         var that = this;
@@ -72,21 +73,15 @@ Page({
         })
     },
     getList() {
-        var that = this
-        var city = wx.getStorageSync('city')
+        const city = wx.getStorageSync('city')
 
         this.setData({
             city,
         })
 
-        app.request('/index/index', { city_id: city.id }, function(data, ret) {
+        app.request('/carselection/index', { city_id: city.id }, (data, ret) => {
             console.log(data)
-            that.setData({
-                brandList: data.brandList,
-                carType: data.carType,
-                shares: data.shares,
-            })
-        }, function(data, ret) {
+        }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
         })
