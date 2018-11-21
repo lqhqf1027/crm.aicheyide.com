@@ -1,14 +1,10 @@
 var app = getApp()
-var city = {
-    cities_name: '成都',
-    id: 38,
-}
 
 Page({
     data: {
         globalData: {},
         shares: {},
-        city,
+        city: app.globalData.city,
     },
     channel: 0,
     page: 1,
@@ -18,8 +14,7 @@ Page({
         })
     },
     onLoad: function() {
-        wx.setStorageSync('city', city)
-        this.getList()
+        wx.setStorageSync('city', app.globalData.city)
     },
     onShareAppMessage: function() {
         var shares = this.data.shares || {}
@@ -31,7 +26,7 @@ Page({
         }
     },
     onShow: function() {
-        // this.setGlobalData(this.getList)
+        this.getList()
     },
     setGlobalData(cb) {
         var that = this;
@@ -62,6 +57,11 @@ Page({
             app.error(ret.msg);
         });
     },
+    onSearch() {
+        wx.navigateTo({
+            url: '/page/search/index',
+        })
+    },
     onSelect() {
         wx.navigateTo({
             url: '/page/city/index',
@@ -85,7 +85,5 @@ Page({
             console.log(data)
             app.error(ret.msg)
         })
-
-      
     },
 })

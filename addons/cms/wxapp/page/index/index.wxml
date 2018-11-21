@@ -6,16 +6,18 @@
             <icon class="fa fa-angle-down"></icon>
         </view>
         <view class="page_hd_search">
-            <view class="searchbar">
+            <view class="searchbar" bindtap="onSearch">
                 <icon class="wux-search-bar__search" type="search" color="#B2B2B2" size="14" /> 搜台好车
             </view>
         </view>
         <view class="page_hd_phone">
             <button class="button-clear" open-type="share">
                 <icon class="fa fa-share-square"></icon>
+                <view class="button-text">分享</view>
             </button>
             <button class="button-clear" bindtap="makePhoneCall">
                 <icon class="fa fa-volume-control-phone"></icon>
+                <view class="button-text">7*24h</view>
             </button>
         </view>
     </view>

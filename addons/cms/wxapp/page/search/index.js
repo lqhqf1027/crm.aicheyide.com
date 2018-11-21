@@ -6,9 +6,7 @@ Page({
         used: [],
     },
     onCancel() {
-        wx.switchTab({
-            url: '/page/preference/list/index',
-        })
+        wx.navigateBack()
     },
     onChange(e) {
         console.log('onChange', e)

@@ -1,8 +1,4 @@
 var app = getApp()
-var city = {
-    cities_name: '成都',
-    id: 38,
-}
 
 Page({
     data: {
@@ -18,7 +14,7 @@ Page({
         swiperIndex: 'index',
         globalData: {},
         shares: {},
-        city,
+        city: app.globalData.city,
     },
     channel: 0,
     page: 1,
@@ -28,7 +24,7 @@ Page({
         })
     },
     onLoad: function() {
-        wx.setStorageSync('city', city)
+        wx.setStorageSync('city', app.globalData.city)
     },
     onShareAppMessage: function() {
         var shares = this.data.shares || {}
