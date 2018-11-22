@@ -37,10 +37,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                          return '新车';
                                      case 'used':
                                          return '二手车';
-                                     case 'energy':
+                                     case 'logistics':
                                          return '新能源汽车';
                                  }
-                            },searchList: {'new':'新车','used':'二手车','energy':'新能源汽车'}
+                            },searchList: {'new':'新车','used':'二手车','logistics':'新能源汽车'}
                         },
                         {field: 'plan.payment', title: __('首付'),operate: false},
                         {field: 'plan.monthly', title: __('月供'),operate: false},

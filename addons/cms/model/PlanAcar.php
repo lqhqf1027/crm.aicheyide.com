@@ -13,14 +13,14 @@ class PlanAcar extends Model
     protected $autoWriteTimestamp = 'int';
 
     // 定义时间戳字段名
-    protected $createTime = 'createtime';
-    protected $updateTime = 'updatetime';
-    
-    // 追加属性
-    protected $append = [
-        'nperlist_text',
-        'ismenu_text'
-    ];
+//    protected $createTime = 'createtime';
+//    protected $updateTime = 'updatetime';
+//
+//    // 追加属性
+//    protected $append = [
+//        'nperlist_text',
+//        'ismenu_text'
+//    ];
     
 
     
@@ -70,43 +70,66 @@ class PlanAcar extends Model
     }
 
 
-
+    /**
+     *关联金融平台
+     * @return \think\model\relation\BelongsTo
+     */
     public function financialplatform()
     {
         return $this->belongsTo('FinancialPlatform', 'financial_platform_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
 
+    /**
+     * 关联方案类型
+     * @return \think\model\relation\BelongsTo
+     */
     public function schemecategory()
     {
         return $this->belongsTo('Schemecategory','category_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
-    //关联专题
+    /**
+     * 关联专题
+     * @return \think\model\relation\BelongsTo
+     */
     public function subject()
     {
         return $this->belongsTo('Subject','subject_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
-    //关联标签
+    /**
+     * 关联标签
+     * @return \think\model\relation\BelongsTo
+     */
     public function label()
     {
         return $this->belongsTo('Label','label_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
-    //关联门店
+    /**
+     * 关联门店
+     * @return \think\model\relation\BelongsTo
+     */
     public function companystore()
     {
         return $this->belongsTo('CompanyStore','store_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
 
-    //关联门店
+    /**
+     * 关联城市
+     * @return \think\model\relation\BelongsToMany
+     */
     public function city()
     {
         return $this->belongsToMany('Cities','cms_company_store','city_id','plan_acar_id');
     }
 
+    /**
+     * 关联品牌
+     * @return \think\model\relation\BelongsToMany
+     */
     public function brand()
     {
         return $this->belongsToMany('Brand','models','brand_id','plan_acar_id');
