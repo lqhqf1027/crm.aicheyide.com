@@ -3,11 +3,12 @@ const data = {
     "plan": {
         "id": 149,
         "models_id": 16,
+        "models_name": "大众 速腾 2018款 1.6L 自动舒适型",
         "payment": 31000,
         "monthly": 3087,
         "nperlist": "36",
         "modelsimages": "https://static.aicheyide.com/uploads/20181116/c6688df48871bffb28c0afc15c020ce4.jpg",
-        "guide_price": 4,
+        "guide_price": 31000,
         "models_main_images": "https://static.aicheyide.com/uploads/20181116/7a78ad19d7a7d79d15a8bf9dbac97bd2.png",
         "specialimages": "https://static.aicheyide.com/uploads/20181115/d4111a2a36fd1520957a8a1975601e37.jpg",
         "popularity": null,
@@ -271,7 +272,7 @@ Page({
     getDetail() {
         const plan_id = this.options.id
 
-        app.request('/index/plan_details', { plan_id }, (data, ret) => {
+        app.request('/share/plan_details', { plan_id }, (data, ret) => {
             console.log(data)
             this.setData({
                 new: data && data.new,
@@ -309,6 +310,13 @@ Page({
 
         this.setData({
             planImageStyle,
+        })
+    },
+    onOpenDetail(e) {
+        const { id } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/preference/detail/index?id=${id}`,
         })
     },
     collectionInterface() {
