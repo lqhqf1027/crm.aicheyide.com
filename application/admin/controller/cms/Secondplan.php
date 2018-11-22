@@ -5,8 +5,16 @@ namespace app\admin\controller\cms;
 use app\common\controller\Backend;
 
 use think\Db;
-
 use think\Cache;
+use app\admin\model\CompanyStore;
+use app\admin\model\Cities;
+use think\Config;
+use think\console\output\descriptor\Console;
+use think\Model;
+use think\Session;
+use fast\Tree;
+use think\db\Query;
+use app\admin\model\CarRentalModelsInfo;
 
 
 /**
@@ -29,6 +37,53 @@ class Secondplan extends Backend
     {
         parent::_initialize();
         $this->model = model('SecondcarRentalModelsInfo');
+
+        $storeList = [];
+        $disabledIds = [];
+        $cities_all = collection(Cities::where('pid', 'NEQ', '0')->order("id desc")->field(['id,cities_name as name'])->select())->toArray();
+        $store_all = collection(CompanyStore::order("id desc")->field(['id, city_id, store_name as name'])->select())->toArray();
+        $all = array_merge($cities_all, $store_all);
+        // pr($all);
+        // die;
+        foreach ($all as $k => $v) {
+
+            $state = ['opened' => true];
+
+            if (!$v['city_id']) {
+            
+                $disabledIds[] = $v['id'];
+                $storeList[] = [
+                    'id'     => $v['id'],
+                    'parent' => '#',
+                    'text'   => __($v['name']),
+                    'state'  => $state
+                ];
+            }
+
+            foreach ($cities_all as $key => $value) {
+                
+                if ($v['city_id'] == $value['id']) {
+                    
+                    $storeList[] = [
+                        'id'     => $v['id'],
+                        'parent' => $value['id'],
+                        'text'   => __($v['name']),
+                        'state'  => $state
+                    ];
+                }
+                   
+            }
+            
+        }
+        // pr($storeList);
+        // die;
+        // $tree = Tree::instance()->init($all, 'city_id');
+        // $storeOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
+        // pr($storeOptions);
+        // die;
+        // $this->view->assign('storeOptions', $storeOptions);
+        $this->assignconfig('storeList', $storeList);
+
         $this->view->assign("shelfismenuList", $this->model->getShelfismenuList());
     }
 
@@ -58,7 +113,7 @@ class Secondplan extends Backend
                     $query->withField('store_name');
                 }])
                 ->where($where)
-                ->where('status_data', 'not in', ['the_car', 'take_the_car'])
+                ->where(['status_data' => "", 'shelfismenu' => 1])
                 ->order($sort, $order)
                 ->count();
 
@@ -71,34 +126,19 @@ class Secondplan extends Backend
                     $query->withField('store_name');
                 }])
                 ->where($where)
-                ->where('status_data', 'not in', ['the_car', 'take_the_car'])
+                ->where(['status_data' => "", 'shelfismenu' => 1])
                 ->order($sort, $order)
                 ->limit($offset, $limit)
                 ->select();
             
             foreach ($list as $k=>$row){
                 $data = [
-                    Db::name('second_sales_order')->alias('a')
-                        ->join('secondcar_rental_models_info b','a.plan_car_second_name = b.id')
-                        ->field('b.licenseplatenumber, a.admin_id')
-                        ->select(),
-                    Db::name('second_full_order')->alias('a')
-                        ->join('secondcar_rental_models_info b','a.plan_second_full_name = b.id')
-                        ->field('b.licenseplatenumber, a.admin_id')
-                        ->select()
+                    CarRentalModelsInfo::where(['status_data' => '', 'shelfismenu' => 1])->select()
                 ];
-
-                //租车已租车辆
-                $rental_car = Db::name('car_rental_models_info')
-                    ->where('status_data', 'NEQ', ' ')
-                    ->field('licenseplatenumber')
-                    ->select();
-                // pr($rental_car);
-                // die;
 
                 $row->visible(['id', 'licenseplatenumber','bond', 'kilometres', 'companyaccount', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'drivinglicenseimages', 'vin',
                     'engine_number', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
-                    'createtime', 'updatetime', 'status_data', 'department', 'admin_name', 'modelsimages', 'models_main_images']);
+                    'createtime', 'updatetime', 'status_data', 'department', 'admin_name', 'modelsimages', 'models_main_images','daypaymen']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['label']);
@@ -108,24 +148,14 @@ class Secondplan extends Backend
                 foreach ((array)$data as $key => $value){
                     foreach ($value as $v){
                         if($v['licenseplatenumber'] == $row['licenseplatenumber']){
-                            $department = Db::name('auth_group_access')->alias('a')
-                                ->join('auth_group b','a.group_id = b.id')
-                                ->where('a.uid',$v['admin_id'])
-                                ->value('b.name');
-                            $admin_name = Db::name('admin')->where('id', $v['admin_id'])->value('nickname');
-                            $list[$k]['department'] = $department;
-                            $list[$k]['admin_name'] = $admin_name;
+                            $daypaymen = round($v['manysixmonths'] / 30);
+                            // pr($daypaymen);
+                            // die;
+                            $list[$k]['daypaymen'] = $daypaymen;
                         }
                     }   
                 }
 
-                //租车已租车辆   在二手车里下架
-                foreach ((array)$rental_car as $key => $value) {
-                    if ($value['licenseplatenumber'] == $row['licenseplatenumber']) {
-                        
-                        $this->model->where('licenseplatenumber', $value['licenseplatenumber'])->setField(["shelfismenu"=>'0','vehiclestate'=>'已出租，不可卖','note'=>'车辆已经出租，不可出售']);
-                    }
-                }
             }
 
             $list = collection($list)->toArray();

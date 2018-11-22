@@ -28,7 +28,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'store_name', title: __('Store_name')},
                         {field: 'store_address', title: __('Store_address')},
                         {field: 'city.cities_name', title: __('City.name')},
-                        {field: 'company_name', title: __('Company_name')},
                         {field: 'phone', title: __('Phone')},
                         {field: 'store_img', title: __('Store_img'),formatter:Table.api.formatter.images},
                         {field: 'store_qrcode', title: __('Store_qrcode'),formatter:Table.api.formatter.image},

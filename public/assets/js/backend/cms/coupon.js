@@ -85,6 +85,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.bindevent(table);
         },
         add: function () {
+
+            //门店
+            $(document).on("change", "#c-city_ids", function () {
+
+                $.post("cms/coupon/getStore",{
+
+                    id: $('#c-city_ids').val(),
+
+                    },function(result){
+                    // console.log(result);
+                    $('#c-store_ids').selectPageData(result.list);
+                });
+            });
+
+
             Controller.api.bindevent();
         },
         edit: function () {
