@@ -15,8 +15,8 @@ use think\Config;
 use addons\cms\model\CompanyStore;
 use addons\cms\model\Models;
 use addons\cms\model\Cities;
-use addons\cms\model\Subject;
-use addons\cms\model\SecondcarRentalModelsInfo;
+use addons\cms\model\Collection;
+use addons\cms\model\Fabulous;
 use addons\cms\model\Subscribe;
 use app\common\library\Auth;
 use addons\cms\model\PlanAcar;
@@ -79,6 +79,8 @@ specialimages,popularity')
                 $companystore->withField('store_name,store_address,phone');
             }])->find([$plan_id]);
 
+        $plans['type'] = 'new';
+
         //方案标签图片加入CDN
         if ($plans['label'] && $plans['label']['lableimages']) {
             $plans['label']['lableimages'] = Config::get('upload')['cdnurl'] . $plans['label']['lableimages'];
@@ -97,6 +99,7 @@ specialimages,popularity')
             //为其他方案封面图片加入CDN
             foreach ($different_schemes as $k => $v) {
                 $different_schemes[$k]['models_main_images'] = Config::get('upload')['cdnurl'] . $different_schemes[$k]['models_main_images'];
+                $different_schemes[$k]['type'] = 'new';
             }
             $plans['different_schemes'] = $different_schemes;
         } else {
@@ -121,7 +124,7 @@ specialimages,popularity')
                 }
 
                 $allModel[$v]['models_main_images'] = Config::get('upload')['cdnurl'] . $allModel[$v]['models_main_images'];
-
+                $allModel[$v]['type'] = 'new';
                 $reallyOther[] = $allModel[$v];
             }
         }
@@ -215,25 +218,36 @@ specialimages,popularity')
     {
         $user_id = $this->request->post('user_id');
         $plan_id = $this->request->post('plan_id');
+        $cartype = $this->request->post('cartype');
 
-        if (!$user_id || !$plan_id) {
+        if (!$user_id || !$plan_id || !$cartype) {
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
-        $check = Db::name('cms_fabulous')
-            ->where([
-                'user_id' => $user_id,
-                'planacar_id' => $plan_id
-            ])
-            ->find();
 
-        if ($check) {
-            $this->error('', '该用户已经点赞过了');
+
+        $res = $this->getFabulousCollection($user_id,$plan_id,$cartype,'cms_fabulous');
+
+          switch ($res['errorCode']){
+              case '1':
+                  $this->error('已经点赞过了');
+          }
+    }
+
+    public function getFabulousCollection($user_id,$plan_id,$cartype,$tableName)
+    {
+
+        $plan_field = $this->getQueryPlan($cartype);
+
+        if(!$plan_field){
+            return ['errorCode'=>1];
         }
 
-        $res = Db::name('cms_fabulous')->insert(['planacar_id' => $plan_id, 'user_id' => $user_id, 'fabuloustime' => time()]);
+        $tables = $tableName=='cms_fabulous'? new Fabulous() : new Collection();
 
-        $res ? $this->success('请求成功', 'success') : $this->error('', 'error');
-
+        return  $tables->create([
+            'user_id' => $user_id,
+            $plan_field => $plan_id,
+        ])?  ['errorCode'=>0]:['errorCode'=>2];
     }
 
     /**
