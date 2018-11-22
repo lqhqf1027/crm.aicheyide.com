@@ -1,66 +1,31 @@
-// page/store/list/index.js
+const app = getApp()
+
 Page({
+    data: {
+        store_layout: '',
+        list: [],
+        activeIndex: 0,
+    },
+    onLoad() {
+        this.getList()
+    },
+    getList() {
+        app.request('/store/store_show', {}, (data, ret) => {
+            console.log(data)
+            this.setData({
+                store_layout: data.store_layout,
+                list: data.list,
+            })
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
+    changeTab(e) {
+        const { index } = e.currentTarget.dataset
 
-  /**
-   * 页面的初始数据
-   */
-  data: {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
+        this.setData({
+            activeIndex: index,
+        })
+    },
 })

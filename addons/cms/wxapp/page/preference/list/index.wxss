@@ -13,8 +13,10 @@
     left: 0;
     top: 0;
     width: 100%;
-    padding: 15rpx 20rpx;
+    padding: 10rpx 20rpx;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: row;
     color: #fff;
     box-sizing: border-box;
@@ -33,7 +35,7 @@
     height: 60rpx;
     line-height: 60rpx;
     position: relative;
-    top: -2px;
+    /*top: -2px;*/
 }
 
 
@@ -65,7 +67,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 16%;
+    /*width: 16%;*/
     height: 100%;
     text-align: center;
     position: relative;
@@ -75,9 +77,19 @@
 }
 
 .button-clear {
-    margin: 0 10rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 10rpx;
+    min-width: 72rpx;
 }
 
+.button-text {
+    font-size: 20rpx;
+    margin-top: 4rpx;
+    /*letter-spacing: -4rpx;*/
+}
 
 /* .page .page_hd .page_hd_phone .fa-volume-control-phone {
     position: absolute;
@@ -106,7 +118,7 @@
 /* 轮播 */
 
 .swiperClass {
-    height: 356rpx;
+    height: 360rpx;
     margin: 0;
     padding: 0;
     /* background: #EFEFF4; */
@@ -132,7 +144,11 @@ image.quiet {
 } */
 
 .swiperClassNext {
-    height: 274rpx;
+    height: 272rpx;
+}
+
+.swiperClassNext image {
+    width: 420rpx;
 }
 
 .swiperClassNext .slide-image {
@@ -159,13 +175,13 @@ image.quiet {
     position: absolute;
     right: 0;
     top: 0;
-    font-size: 28rpx;
+    font-size: 24rpx;
     line-height: 54rpx;
-    color: rgba(221, 213, 213, 1);
+    color: #999;
 }
 
 .scroll-y {
-    display: flex;
+    /*display: flex;*/
     height: 668rpx;
     overflow: hidden;
 }
@@ -180,12 +196,43 @@ image.quiet {
     white-space: normal;
 }
 
+.swiper-item:last-child .car__box {
+    padding-right: 0;
+}
+
+.scroll-y .car {
+    width: 100%;
+    margin: 0 0 20rpx;
+}
+
+.scroll-y .car__image {
+    width: 100%;
+    height: 164rpx;
+}
+
+.scroll-y .car__title--payment, 
+.scroll-y .car__title--monthly {
+    font-size: 20rpx;
+}
+
+.car__box {
+    padding-right: 20rpx;
+}
+
 .car {
-    display: inline-block;
-    padding: 0 20rpx;
-    width: 270rpx;
+    display: block;
+    padding: 10rpx;
+    width: 220rpx;
+    /*width: 100%;*/
+    /*width: 300rpx;*/
     /*height: 180rpx;*/
+    background-color: #f2f2f2;
     box-sizing: border-box;
+    margin-right: 20rpx;
+}
+
+.car:last-child {
+    margin-right: 0;
 }
 
 .car__scroll {
@@ -196,14 +243,15 @@ image.quiet {
 
 .car__image {
     display: block;
-    width: 100%;
-    height: 180rpx;
+    width: 200rpx;
+    height: 130rpx;
+    background-color: #fff;
 }
 
 .card__cover {
     display: block;
     width: 100%;
-    height: 216rpx;
+    height: 220rpx;
 }
 
 .car__title {
@@ -215,10 +263,12 @@ image.quiet {
 }
 
 .car__title--payment {
+    font-size: 16rpx;
     color: rgba(229, 28, 35, 1);
 }
 
 .car__title--monthly {
+    font-size: 16rpx;
     color: rgba(193, 195, 200, 1);
 }
 
@@ -232,4 +282,45 @@ image.quiet {
 
 .grid__name {
     font-size: 24rpx;
+}
+
+.grid__name--blue {
+    color: #0371da;
+}
+
+.payment {
+    padding: 20rpx 25rpx;
+    background-color: #fff;
+    font-size: 26rpx;
+}
+
+.payment-tag {
+    font-size: 24rpx !important;
+    color: #666 !important;
+    background-color: #fff !important;
+    border-radius: 50rpx !important;
+    margin-right: 20rpx !important;
+}
+
+.notice-bar {
+    padding: 20rpx 25rpx;
+    background-color: #ffae3d;
+    font-size: 26rpx;
+    color: #fff;
+}
+
+.notice-inner {
+    position: relative;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    /*justify-content: center;*/
+}
+
+.notice-avatar {
+    margin-right: 20rpx;
+}
+
+.notice-swiper {
+    height: 64rpx;
 }

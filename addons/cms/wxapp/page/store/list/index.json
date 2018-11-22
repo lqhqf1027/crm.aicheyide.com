@@ -1,1 +1,6 @@
-{}
+{
+    "navigationBarTitleText": "友车友家",
+    "usingComponents": {
+        "wux-search-bar": "../../../assets/libs/wux/search-bar/index"
+    }
+}

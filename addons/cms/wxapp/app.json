@@ -1,9 +1,12 @@
 {
     "pages": [
+        "page/preference/list/index",
+        "page/preference/detail/index",
+        "page/preference/config/index",
         "page/index/index",
         "page/city/index",
+        "page/search/index",
         "page/news/list/index",
-        "page/preference/list/index",
         "page/store/list/index",
         "page/my/list/index",
         "page/my/setting/index"

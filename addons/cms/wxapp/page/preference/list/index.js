@@ -71,13 +71,27 @@ Page({
             app.error(ret.msg);
         });
     },
-    bindchange(e) {},
+    bindchange(e) {
+        console.log(e)
+    },
+    onOpenDetail(e) {
+        const { id } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/preference/detail/index?id=${id}`,
+        })
+    },
     onTag(e) {
         console.log('onTag', e)
     },
     toMore() {
         wx.switchTab({
             url: '/page/index/index',
+        })
+    },
+    onSearch() {
+        wx.navigateTo({
+            url: '/page/search/index',
         })
     },
     onSelect() {
@@ -101,6 +115,12 @@ Page({
         app.request('/index/index', { city_id: city.id }, function(data, ret) {
             console.log(data)
             that.setData({
+                appointment: data.appointment.map((n) => {
+                    const mobile = n.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+                    const content = `${mobile} 成功下单 ${n.models_name}`
+
+                    return {...n, content }
+                }),
                 brandList: data.brandList,
                 carType: data.carType,
                 shares: data.shares,
