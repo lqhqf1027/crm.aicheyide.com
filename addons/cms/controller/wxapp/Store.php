@@ -7,13 +7,15 @@
  */
 
 namespace addons\cms\controller\wxapp;
+
 use think\Cache;
 use think\console\command\make\Model;
 use think\Db;
 use think\Config;
-use addons\cms\model\CompanyStore;
+use addons\cms\model\CompanyStore as companyStoreModel;
 use addons\cms\model\Cities as citiesModel;
 use addons\cms\model\Config as configModel;
+
 class Store extends Base
 {
 
@@ -31,20 +33,89 @@ class Store extends Base
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function store_show(){
+    public function store_show()
+    {
+        //组装门店首页静态展示图
+        $new = [];
+        $new['store_layout'] = Config::get('upload')['cdnurl'] . configModel::get(['name' => 'company'])->value;
+        $new['cdn_url'] = Config::get('upload')['cdnurl'];
+        //组装城市首字母
+        $data = collection(citiesModel::field('id,cities_name,province_letter')->with(
+            [
+                'storeList' => function ($q) {
+                    $q->where(['statuss' => 'normal'])->withCount(
+                        [
+                            'planacar_count' => function ($q) {
+                                $q->where(['ismenu' => 1, 'sales_id' => null]); //新车统计
+                            },
+                            'usedcar_count' => function ($q) {
+                                $q->where(['shelfismenu' => 1, 'status_data' => '']);//二手车统计
+                            },
+                            'logistics_count' => function ($q) {
+                                $q->where(['ismenu' => 1]);//新能源车统计
+                            }
+                        ]
+                    );
+                },
 
-        $data = citiesModel::field('id,cities_name')
-            ->with(
-            ['storeList'=>function($q){
-                $q->where(['statuss'=>'normal'])->withCount(['planacar_count'=>function($q){
-                    $q->where(['ismenu'=>1,'sales_id'=>null]);
-                }]);
-            }]
-        )->where(['status'=>'normal','pid'=>['neq',0]])->select();
-//        pr(model('config')->get(['name'=>'company'])->value('value'));die;
-        $data['headerShow_img'] =  Config::get('upload')['cdnurl'].Db::name('config')->where(['name'=>'company'])->value('value');
-        $this->success('查询成功',$data);
+            ]
+        )->where(['status' => 'normal', 'pid' => ['neq', 0]])->select())->toArray();
+        foreach ($data as $key => $value) {
+            $new['list'][$value['province_letter']][] = [
+                'id' => $value['id'],
+                'province_letter' => $value['province_letter'],
+                'cities_name' => $value['cities_name'],
+                'store_list' => $value['store_list']
+            ];
+        }
+        $this->success('查询成功', $new);
     }
 
+    /**
+     * 门店详情
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function store_details()
+    {
 
+        $store_id = $this->request->post('store_id');//门店
+        $user_id = $this->request->post('user_id');//用户id
+        if (!$store_id || !$user_id) {
+            $this->error('参数错误或缺失参数,请求失败', 'error');
+        }
+        //获取门店下是否有优惠券
+        $isLogic = companyStoreModel::getLogistics($store_id, $user_id);
+        foreach ($isLogic as $key => $value) {
+            $isLogic[$key]['user_id'] = array_filter(explode(',', $value['user_id'])); //转换数组并去除空值
+            //查询每人限量*张
+            if (!empty($value['limit_collar'])) {  //非空即为不限量,有具体的领用张数
+                //array_count_values 计算某个值出现在数组中的次数
+                //如果当前用户领用的券大于等于限领的优惠券张数 ，返回空数组，不可再领用
+                if (array_count_values($isLogic[$key]['user_id'])[$user_id] >= $value['limit_collar']) return '';
+                else continue;
+
+            }
+        }
+        pr($isLogic);
+        die;
+
+        $data = companyStoreModel::find($store_id)->hidden(['createtime', 'updatetime', 'status', 'plan_acar_id', 'statuss', 'store_qrcode'])->toArray();
+
+        if (!empty($data['store_img'])) {
+            $data['store_img'] = explode(',', $data['store_img']);
+            foreach ($data['store_img'] as $k => $row) {
+                $data['store_img'][$k] = Config::get('upload')['cdnurl'] . $row;
+            }
+        }
+
+        pr($data);
+        die;
+        pr($data);
+        die;
+
+
+    }
 }
