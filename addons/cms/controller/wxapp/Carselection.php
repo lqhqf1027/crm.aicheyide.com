@@ -7,6 +7,7 @@
  */
 
 namespace addons\cms\controller\wxapp;
+use think\Cache;
 use think\Config;
 use addons\cms\model\CompanyStore;
 use addons\cms\model\Models;
@@ -30,9 +31,9 @@ class Carselection extends Base
      public function index()
      {
          $city_id = $this->request->post('city_id');
-         $newcarList = Share::getNewCarPlan($city_id);
-         $usedcarList = Share::getUsedPlan($city_id);
-         $logisticsList = Share::getEnergy($city_id);
+         $newcarList = Share::getNewCarPlan($city_id,'',true);
+         $usedcarList = Share::getUsedPlan($city_id,'',true);
+         $logisticsList = Share::getEnergy($city_id,true);
 
          foreach ($newcarList as $k=>$v){
              $newcarList[$k] = ['id'=>$v['id'],'payment'=>$v['payment'],'monthly'=>$v['monthly'],'popularity'=>$v['popularity'],'models_main_images'=>$v['models_main_images'],
@@ -55,5 +56,18 @@ class Carselection extends Base
 
          $this->success('请求成功',$data);
 
+     }
+
+     public function test()
+     {
+//         $data = CompanyStore::get(1,['city'=>function ($query){
+//             $query->withField(['cities_name']);
+//         }])->field('store_address');
+
+         $data = Cities::field('id')->with(['storeList'=>function ($q){
+             $q->where('statuss','normal')->with('planacarCount');
+         }])->find([38]);
+
+         $this->success('',$data);
      }
 }

@@ -11,8 +11,6 @@ use addons\cms\model\Subject;
 use addons\cms\model\Subscribe;
 use addons\cms\model\CompanyStore as companyStoreModel;
 
-use think\Model;
-
 /**
  * 首页
  */
@@ -42,7 +40,6 @@ class Index extends Base
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
 
-        Cache::set('city_id', $city_id);
 
         //预约缓存
         if (!Cache::get('appointment')) {
@@ -75,14 +72,19 @@ class Index extends Base
         $this->success('请求成功', $data);
     }
 
-
+    /**
+     * 点击品牌侧滑栏接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function brandPlan()
     {
         $brand_id = $this->request->post('brand_id');
 
         $city_id = $this->request->post('city_id');
 
-        if (!$city_id ||!$brand_id) {
+        if (!$city_id || !$brand_id) {
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
 
@@ -91,8 +93,8 @@ class Index extends Base
                 $query->where('brand.id', $brand_id)->withField('id');
             }, 'planacar' => function ($query) {
                 $query->where([
-                    'acar_status'=> 1,
-                    'planacar.sales_id' =>null
+                    'acar_status' => 1,
+                    'planacar.sales_id' => null
                 ])->withField('id,models_main_images,payment,monthly,store_id');
             }])->where('models.status', 'normal')->select();
 
@@ -104,22 +106,22 @@ class Index extends Base
             }
 
             if ($v['planacar']['store_id']) {
-                $v['planacar']['city'] = companyStoreModel::get($v['planacar']['store_id'],['city'=>function ($query){
+                $v['planacar']['city'] = companyStoreModel::get($v['planacar']['store_id'], ['city' => function ($query) {
                     $query->withField('id,cities_name');
                 }])['city'];
 
                 $data = ['id' => $v['planacar']['id'], 'models_main_images' => $v['planacar']['models_main_images'],
                     'models_name' => $v['name'], 'payment' => $v['planacar']['payment'], 'monthly' => $v['planacar']['monthly'],
-                    'city'=>$v['planacar']['city']];
+                    'city' => $v['planacar']['city'], 'type' => 'new'];
 
                 if ($v['planacar']['city']['id'] == $city_id) {
                     $myCity[] = $data;
                     unset($plans[$k]);
                     continue;
-                }else{
+                } else {
                     $plans[$k] = $data;
                 }
-            }else{
+            } else {
                 unset($plans[$k]);
             }
 
@@ -127,7 +129,7 @@ class Index extends Base
 
         if (array_merge($myCity, $plans)) {
             $this->success('请求成功', array_merge($myCity, $plans));
-        }else{
+        } else {
             $this->error();
         }
 
