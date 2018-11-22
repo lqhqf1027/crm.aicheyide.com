@@ -36,38 +36,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'coupon_name', title: __('Coupon_name')},
                         {field: 'coupon_amount', title: __('优惠卷金额')},
                         {field: 'circulation', title: __('Circulation')},
-                        {field: 'City_ids', title: __('City_ids'),formatter:function (v,r,i) {
-                            return '<strong class="text-success">'+ r.cities_name+'</strong>';
+                        {field: 'city_ids', title: __('City_ids'),formatter:function (v,r,i) {
+                            return '<strong class="text-success">'+ r.cities.cities_name +'</strong>';
+                        }},
+                        {field: 'store_ids', title: __('门店名称'),formatter:function (v,r,i) {
+                            return v != null ? '<strong class="text-success">'+ Controller.substrPlanTyleNode(r.store_name) +'</strong>' : v;
                         }},
                         {field: 'display_diagramimages', title: __('Display_diagramimages'), formatter: Table.api.formatter.images},
                         {field: 'threshold', title: __('Threshold')},
-                        {field: 'models_ids', title: __('Models_ids'),table: table, buttons: [
-                            {
-                                name: 'details', text: '查看可用车型', title: '查看可用车型', icon: 'fa fa-eye', classname: 'btn btn-xs btn-primary btn-dialog btn-details',
-                                url: 'cms/coupon/details', 
-                                hidden:function(row){
-                                    if(row.models_ids !== ''){ 
-                                        return false; 
-                                    }  
-                                    else if(row.models_ids == ''){
-                                        return true;
-                                    }
-                                }
-                            },
-                            {
-                                name: 'null',text: '所有车型皆可用',title:'所有车型皆可用',icon: 'fa fa-eye-slash',classname: 'btn btn-xs btn-danger btn-primary',
-                                hidden:function(row){  /**所有车型皆可用 */
-                                    if(row.models_ids == ''){ 
-                                        return false; 
-                                    }
-                                    else if(row.models_ids !== ''){
-                                        return true;
-                                    }
-                                }
-                            },
-                        ],
+                        {field: 'models_ids', title: __('Models_ids'), formatter: function (v, r, i) {
 
-                        operate: false, formatter: Table.api.formatter.buttons},
+                            return v != null ? '<strong class="text-success">' + Controller.substrPlanTyleNode(r.models_name) + '</strong>' : v;
+
+                        }},
                         {field: 'membership_grade', title: __('Membership_grade')},
                         {field: 'release_datetime', title: __('Release_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'validity_datetime', title: __('Validity_datetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
@@ -87,23 +68,47 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         add: function () {
 
             //门店
-            $(document).on("change", "#c-city_ids", function () {
+            $("#c-store_ids").data("params", function (obj) {
 
-                $.post("cms/coupon/getStore",{
+                return {custom: {city_id: $("#c-city_ids").val()}};
 
-                    id: $('#c-city_ids').val(),
-
-                    },function(result){
-                    // console.log(result);
-                    $('#c-store_ids').selectPageData(result.list);
-                });
             });
-
 
             Controller.api.bindevent();
         },
         edit: function () {
+
+            //门店
+            $("#c-store_ids").data("params", function (obj) {
+
+                return {custom: {city_id: $("#c-city_ids").val()}};
+
+            });
+
             Controller.api.bindevent();
+        },
+        /**
+         *   字符串按照指定长度换行
+         * @param s   字符串
+         * @param $length   长度
+         * @returns { string}  返回新的数组
+         */
+        substrPlanTyleNode: function (s) {
+            
+            var re = "";
+            var arr = s.split(',');
+            
+            var length = arr.length;
+           
+            for (var i = 0; i < length; i++) {
+
+                re += arr[i];
+                re += '<br />';
+                
+            }
+            // console.log(arr);
+            // return;
+            return re;
         },
         api: {
             bindevent: function (value, row, index) {
