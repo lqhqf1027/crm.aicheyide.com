@@ -4,6 +4,8 @@ namespace app\admin\controller\cms;
 
 use app\common\controller\Backend;
 use app\admin\model\Cities as CitiesModel;
+use app\admin\model\CompanyStore;
+use app\admin\model\Models;
 use think\Db;
 
 /**
@@ -68,7 +70,8 @@ class Coupon extends Backend
                     ->select();
 
             foreach ($list as $key => $row) {
-                $list[$key]['cities_name'] = $this->getCtitesName($row['city_ids']);
+                $list[$key]['store_name'] = $this->getStoreName($row['store_ids']);
+                $list[$key]['models_name'] = $this->getModelsName($row['models_ids']);
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
@@ -78,21 +81,38 @@ class Coupon extends Backend
         return $this->view->fetch();
     }
 
-    //展示城市
-    public function getCtitesName($city_ids = null)
+    //展示门店
+    public function getStoreName($store_ids = null)
     {
-        $city_ids = explode(',',$city_ids);
+        $store_ids = explode(',',$store_ids);
         // pr($city_ids);
         // die;
-        $data = collection(CitiesModel::all(function ($q) use ($city_ids) {
-            $q->field('cities_name')->where('id', 'in', $city_ids);
+        $data = collection(CompanyStore::all(function ($q) use ($store_ids) {
+            $q->field('store_name')->where('id', 'in', $store_ids);
         }))->toArray();
         foreach ($data as $k => $v) {
-            $ci .= ' ，' . $v['cities_name'];
+            $ci .= ',' . $v['store_name'];
         }
         // pr($ci);
         // die;
-        return mb_substr($ci, 2, mb_strlen($ci, 'utf-8'), 'utf-8');
+        return mb_substr($ci, 1, mb_strlen($ci, 'utf-8'), 'utf-8');
+    }
+
+    //展示车型
+    public function getModelsName($models_ids = null)
+    {
+        $models_ids = explode(',',$models_ids);
+        // pr($city_ids);
+        // die;
+        $data = collection(Models::all(function ($q) use ($models_ids) {
+            $q->field('name')->where('id', 'in', $models_ids);
+        }))->toArray();
+        foreach ($data as $k => $v) {
+            $ci .= ',' . $v['name'];
+        }
+        // pr($ci);
+        // die;
+        return mb_substr($ci, 1, mb_strlen($ci, 'utf-8'), 'utf-8');
     }
 
     //获取城市
@@ -113,7 +133,7 @@ class Coupon extends Backend
     }
 
     /**
-     * 重新定义
+     * 重新定义-----来获取城市
      * 
      * Selectpage的实现方法.
      *
@@ -205,6 +225,8 @@ class Coupon extends Backend
     {
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            //门店
+            $params['store_ids'] = ',' . $params['store_ids'] . ',';
             // pr($params);
             // die;
             if ($params) {
@@ -233,6 +255,34 @@ class Coupon extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
         return $this->view->fetch();
+    }
+
+    /**
+     * 添加--查询门店
+     */
+    public function getStore()
+    {
+        $this->model = model('CompanyStore');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage1();
+            }
+            $id = $this->request->post('id');
+            
+            $list = $this->model->where('city_id', $id)->field('id,store_name as name')->select();
+            
+            $result = array("list" => $list);
+
+            return json($result);
+        }
+        
     }
 
     /**
@@ -275,53 +325,6 @@ class Coupon extends Backend
         }
         $this->view->assign("row", $row);
         return $this->view->fetch();
-    }
-
-
-    //查看优惠卷可用车型
-    public function details($ids = NULL) 
-    {
-        
-        $models_ids = $this->model->where('id', $ids)->find();
-        
-        $models_ids = explode(',', $models_ids['models_ids']);
-
-        $models = Db::name('models')->where('id', 'in', $models_ids)->select();
-
-        $this->view->assign('models', $models);
-
-        return $this->view->fetch();
-        
-    }
-
-    /**
-     * 查询门店
-     */
-    public function getStore()
-    {
-        $this->model = model('CompanyStore');
-        // //当前是否为关联查询
-        // $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
-                return $this->selectpage();
-            }
-            $id = $this->request->post('id');
-            // pr($id);
-            // die;
-            $list = $this->model->where('city_id', $id)->field('id,store_name as name')->select();
-            // pr($list);
-            // die;
-            $result = array("list" => $list);
-
-            return json($result);
-        }
-        
     }
 
 }
