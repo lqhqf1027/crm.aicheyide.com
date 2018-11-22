@@ -295,6 +295,13 @@ Page({
             url: `/page/preference/config/index?id=${id}`,
         })
     },
+    openPlan() {
+        const { id } = this.options
+
+        wx.navigateTo({
+            url: `/page/preference/plan/index?id=${id}`,
+        })
+    },
     onPlanImageLoad(e) {
         console.log(e)
         const { width, height } = e.detail
@@ -302,6 +309,36 @@ Page({
 
         this.setData({
             planImageStyle,
+        })
+    },
+    collectionInterface() {
+        const plan_id = this.options.id
+
+        app.request('/share/collectionInterface', { plan_id }, (data, ret) => {
+            console.log(data)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
+    fabulousInterface() {
+        const plan_id = this.options.id
+
+        app.request('/share/fabulousInterface', { plan_id }, (data, ret) => {
+            console.log(data)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
+    clickAppointment() {
+        const plan_id = this.options.id
+
+        app.request('/share/clickAppointment', { plan_id }, (data, ret) => {
+            console.log(data)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
         })
     },
 })

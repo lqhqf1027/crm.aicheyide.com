@@ -1,5 +1,5 @@
 <wux-cell-group wux-class="wux-mt--10" wx:if="{{ plan }}">
-    <wux-cell hover-class="none" is-link extra="更多方案" bind:click="openLocation">
+    <wux-cell hover-class="none" is-link extra="更多方案" bind:click="openPlan">
         <view class="title">先用后买</view>
     </wux-cell>
     <wux-cell hover-class="none">
@@ -82,14 +82,14 @@
     <view class="bottom-icon">
         <icon class="fa fa-share-square"></icon>
     </view>
-    <view class="bottom-icon">
+    <view class="bottom-icon" bindtap="collectionInterface">
         <icon class="fa fa-star"></icon>
     </view>
     <view class="bottom-icon">
         <icon class="fa fa-comment"></icon>
     </view>
-    <view class="bottom-icon">
+    <view class="bottom-icon" bindtap="fabulousInterface">
         <icon class="fa fa-thumbs-up"></icon>
     </view>
-    <view class="bottom-btn">立即预约</view>
+    <view class="bottom-btn" bindtap="clickAppointment">立即预约</view>
 </view>
