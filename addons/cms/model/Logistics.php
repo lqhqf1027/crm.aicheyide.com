@@ -13,14 +13,14 @@ class Logistics extends Model
     protected $autoWriteTimestamp = 'int';
 
     // 定义时间戳字段名
-    protected $createTime = 'createtime';
-    protected $updateTime = 'updatetime';
-    
-    // 追加属性
-    protected $append = [
-        'nperlist_text',
-        'acar_status_text'
-    ];
+//    protected $createTime = 'createtime';
+//    protected $updateTime = 'updatetime';
+//
+//    // 追加属性
+//    protected $append = [
+//        'nperlist_text',
+//        'acar_status_text'
+//    ];
     
 
     
@@ -49,19 +49,29 @@ class Logistics extends Model
         $list = $this->getAcarStatusList();
         return isset($list[$value]) ? $list[$value] : '';
     }
-    //专题
+
+    /**
+     * 关联专题
+     * @return \think\model\relation\BelongsTo
+     */
     public function subject()
     {
         return $this->belongsTo('Subject', 'subject_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
-    //标签
+    /**
+     * 关联标签
+     * @return \think\model\relation\BelongsTo
+     */
     public function label()
     {
         return $this->belongsTo('Label', 'label_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
-    //门店
+    /**
+     * 关联门店
+     * @return \think\model\relation\BelongsTo
+     */
     public function store()
     {
         return $this->belongsTo('CompanyStore', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);

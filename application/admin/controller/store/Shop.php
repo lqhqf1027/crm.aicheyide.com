@@ -21,6 +21,7 @@ class Shop extends Backend
      * @var \app\admin\model\cms\company\Store
      */
     protected $model = null;
+    protected static $key = "7cd2a3dc6f7174c013693bc9d7c24e58";
 
     public function _initialize()
     {
@@ -61,7 +62,10 @@ class Shop extends Backend
                     ->count();
 
             $list = $this->model
-                ->with(['city','planacar'])
+                    ->with(['city'])
+                    ->with(['planacar' => function ($query) {
+                        $query->where(['ismenu' => 1, 'acar_status' => 1]);
+                    }])
                     ->where($where)
                     ->order($sort, $order)
                     ->limit($offset, $limit)
@@ -95,8 +99,18 @@ class Shop extends Backend
      */
     public function add()
     {
+        $key = self::$key;
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $result = gets("https://restapi.amap.com/v3/geocode/geo?key=" . $key . "&address=" . $params['store_address']);
+            if ($result['status']) {
+
+                $data = explode(",", $result['geocodes'][0]['location']);
+                $params['longitude'] = $data[0];
+                $params['latitude'] = $data[1];
+            }
+            // pr($params);
+            // die;
             if ($params) {
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -133,6 +147,8 @@ class Shop extends Backend
      */
     public function edit($ids = NULL)
     {
+        $key = self::$key;
+
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
@@ -144,7 +160,15 @@ class Shop extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $result = gets("https://restapi.amap.com/v3/geocode/geo?key=" . $key . "&address=" . $params['store_address']);
+            if ($result['status']) {
 
+                $data = explode(",", $result['geocodes'][0]['location']);
+                $params['longitude'] = $data[0];
+                $params['latitude'] = $data[1];
+            }
+            // pr($params);
+            // die;
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -191,7 +215,7 @@ class Shop extends Backend
                 Cities::update(['id' => $result->city_id, 'status' => 'hidden']);
             }
             //关闭门店下的方案
-            PlanAcar::update(['id' => $result->city_id, 'acar_status' => 2, 'ismenu' => 0]);
+            PlanAcar::where('store_id', $result->id)->setField(['acar_status' => 2, 'ismenu' => 0]);
         }
         //开启门店
         else {
@@ -200,7 +224,7 @@ class Shop extends Backend
                 Cities::update(['id' => $result->city_id, 'status' => 'normal']);
             }
             //开启门店下的方案
-           PlanAcar::update(['id' => $result->city_id, 'acar_status' => 1, 'ismenu' => 1]);
+           PlanAcar::where('store_id', $result->id)->setField(['acar_status' => 1, 'ismenu' => 1]);
         }
         
     }

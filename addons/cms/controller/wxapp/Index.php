@@ -2,19 +2,14 @@
 
 namespace addons\cms\controller\wxapp;
 
-use app\common\library\Auth;
-use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
 use think\Cache;
-use think\console\command\make\Model;
 use think\Db;
 use think\Config;
-use addons\cms\model\CompanyStore;
 use addons\cms\model\Models;
-use addons\cms\model\Cities;
 use addons\cms\model\Subject;
-use addons\cms\model\SecondcarRentalModelsInfo;
 use addons\cms\model\Subscribe;
+use addons\cms\model\CompanyStore as companyStoreModel;
 
 /**
  * 首页
@@ -45,8 +40,14 @@ class Index extends Base
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
 
-        Cache::set('city_id', $city_id);
 
+        //预约缓存
+        if (!Cache::get('appointment')) {
+            $appointment = $this->appointment();
+            Cache::set('appointment', $appointment);
+        } else {
+            $appointment = Cache::get('appointment');
+        }
 
         //返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
@@ -65,12 +66,74 @@ class Index extends Base
             //分享
             'shares' => Share::getConfigShare(),
             //预约
-            'appointment' => $this->appointment()
+            'appointment' => $appointment
         ];
 
         $this->success('请求成功', $data);
     }
 
+    /**
+     * 点击品牌侧滑栏接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function brandPlan()
+    {
+        $brand_id = $this->request->post('brand_id');
+
+        $city_id = $this->request->post('city_id');
+
+        if (!$city_id || !$brand_id) {
+            $this->error('参数错误或缺失参数,请求失败', 'error');
+        }
+
+        $plans = Models::field('name')
+            ->with(['brand' => function ($query) use ($brand_id) {
+                $query->where('brand.id', $brand_id)->withField('id');
+            }, 'planacar' => function ($query) {
+                $query->where([
+                    'acar_status' => 1,
+                    'planacar.sales_id' => null
+                ])->withField('id,models_main_images,payment,monthly,store_id');
+            }])->where('models.status', 'normal')->select();
+
+        $myCity = [];
+        foreach ($plans as $k => $v) {
+
+            if ($v['planacar']['models_main_images']) {
+                $v['planacar']['models_main_images'] = Config::get('upload')['cdnurl'] . $v['planacar']['models_main_images'];
+            }
+
+            if ($v['planacar']['store_id']) {
+                $v['planacar']['city'] = companyStoreModel::get($v['planacar']['store_id'], ['city' => function ($query) {
+                    $query->withField('id,cities_name');
+                }])['city'];
+
+                $data = ['id' => $v['planacar']['id'], 'models_main_images' => $v['planacar']['models_main_images'],
+                    'models_name' => $v['name'], 'payment' => $v['planacar']['payment'], 'monthly' => $v['planacar']['monthly'],
+                    'city' => $v['planacar']['city'], 'type' => 'new'];
+
+                if ($v['planacar']['city']['id'] == $city_id) {
+                    $myCity[] = $data;
+                    unset($plans[$k]);
+                    continue;
+                } else {
+                    $plans[$k] = $data;
+                }
+            } else {
+                unset($plans[$k]);
+            }
+
+        }
+
+        if (array_merge($myCity, $plans)) {
+            $this->success('请求成功', array_merge($myCity, $plans));
+        } else {
+            $this->error();
+        }
+
+    }
 
     /**
      * 详情方案
@@ -96,7 +159,6 @@ class Index extends Base
             ->field('b.id,b.payment,b.monthly,b.guide_price,b.models_main_images,a.name as models_name')
             ->select();
     }
-
 
 
     /**
@@ -168,10 +230,10 @@ class Index extends Base
 
             if ($v['recommendismenu']) {
                 $recommendList[] = ['id' => $v['id'], 'models_main_images' => $v['models_main_images'], 'models_name' => $v['models_name'],
-                    'payment' => $v['payment'], 'monthly' => $v['monthly']];
+                    'payment' => $v['payment'], 'monthly' => $v['monthly'], 'type' => 'new'];
             }
             if ($v['specialismenu']) {
-                $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages']];
+                $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages'], 'type' => 'new'];
                 $specialfieldList[] = $needData;
             }
 
@@ -204,6 +266,7 @@ class Index extends Base
                     ->find();
 
                 $plan['models_main_images'] = Config::get('upload')['cdnurl'] . $plan['models_main_images'];
+                $plan['type'] = 'new';
 
                 if ($plan) {
                     $plan_arr[] = $plan;
@@ -294,9 +357,6 @@ class Index extends Base
 //
 //
 //    }
-
-
-
 
 
     /**
