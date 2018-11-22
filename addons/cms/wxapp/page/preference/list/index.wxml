@@ -70,7 +70,7 @@
         <view class="brandPlan">
             <scroll-view scroll-y style="height: {{ deviceHeight + 'px' }}">
                 <block wx:for="{{ brandPlan[brand_id] }}" wx:key="">
-                    <wux-media wux-class="brandPlan__media" thumb="{{ item.models_main_images }}" thumbStyle="width: 200rpx; height: 120rpx">
+                    <wux-media wux-class="brandPlan__media" thumb="{{ item.models_main_images }}" thumbStyle="width: 200rpx; height: 120rpx" data-id="{{ item.id }}" bindtap="onOpenDetail">
                         <view class="brandPlan__title wux-ellipsis wux-text--left">{{ item.models_name }}</view>
                         <view class="wux-clearfix">
                             <view class="brandPlan__title brandPlan__title--payment wux-pull-left wux-mt--10">首付 {{ item.payment / 10000 }} 万</view>
@@ -128,7 +128,7 @@
                     <block wx:for="{{ card.plan }}" wx:key="">
                         <swiper-item class="swiper-item">
                             <view class="car__box">
-                                <view class="car">
+                                <view class="car" data-id="{{ item.id }}" bindtap="onOpenDetail">
                                     <image class="car__image" src="{{ item.models_main_images }}" />
                                     <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                                     <view class="wux-clearfix">
@@ -151,7 +151,7 @@
                     <wux-card full bordered="{{ false }}" wux-class="card__scroll" wux-header-class="card__header">
                         <scroll-view scroll-y slot="body" class="car__scroll">
                             <block wx:for="{{ card.plan }}" wx:key="">
-                                <view class="car">
+                                <view class="car" data-id="{{ item.id }}" bindtap="onOpenDetail">
                                     <image class="car__image" src="{{ item.models_main_images }}" />
                                     <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                                     <view class="wux-clearfix">
