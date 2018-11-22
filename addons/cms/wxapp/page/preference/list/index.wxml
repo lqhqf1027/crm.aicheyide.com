@@ -54,7 +54,7 @@
         <view slot="body">
             <wux-grids bordered="{{ false }}" col="5">
                 <block wx:for="{{ brandList }}" wx:key="" wx:if="{{ index < 9 }}">
-                    <wux-grid thumb="{{ item.brand_logoimage }}">
+                    <wux-grid thumb="{{ item.brand_logoimage }}" data-id="{{ item.id }}" bind:click="onBrandPlan">
                         <view class="grid__name">{{ item.name }}</view>
                     </wux-grid>
                 </block>
@@ -66,6 +66,25 @@
             </wux-grids>
         </view>
     </wux-card>
+    <wux-popup position="right" visible="{{ visible && brandPlan[brand_id] && brandPlan[brand_id].length }}" bind:close="onClose">
+        <view class="brandPlan">
+            <scroll-view scroll-y style="height: {{ deviceHeight + 'px' }}">
+                <block wx:for="{{ brandPlan[brand_id] }}" wx:key="">
+                    <wux-media wux-class="brandPlan__media" thumb="{{ item.models_main_images }}" thumbStyle="width: 200rpx; height: 120rpx" data-id="{{ item.id }}" bindtap="onOpenDetail">
+                        <view class="brandPlan__title wux-ellipsis wux-text--left">{{ item.models_name }}</view>
+                        <view class="wux-clearfix">
+                            <view class="brandPlan__title brandPlan__title--payment wux-pull-left wux-mt--10">首付 {{ item.payment / 10000 }} 万</view>
+                            <view class="brandPlan__title brandPlan__title--monthly wux-pull-right wux-mt--10">月供 {{ item.monthly }} 元</view>
+                            <view class="brandPlan__address">
+                                <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
+                            </view>
+                        </view>
+                    </wux-media>
+                </block>
+            </scroll-view>
+            <view class="brandPlan__arrow" bindtap="onClose"></view>
+        </view>
+    </wux-popup>
     <!-- 标签 -->
     <view class="payment wux-mt--10 wux-pl--10">
         <text class="wux-mr--15">首付</text>
@@ -109,7 +128,7 @@
                     <block wx:for="{{ card.plan }}" wx:key="">
                         <swiper-item class="swiper-item">
                             <view class="car__box">
-                                <view class="car">
+                                <view class="car" data-id="{{ item.id }}" bindtap="onOpenDetail">
                                     <image class="car__image" src="{{ item.models_main_images }}" />
                                     <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                                     <view class="wux-clearfix">
@@ -132,7 +151,7 @@
                     <wux-card full bordered="{{ false }}" wux-class="card__scroll" wux-header-class="card__header">
                         <scroll-view scroll-y slot="body" class="car__scroll">
                             <block wx:for="{{ card.plan }}" wx:key="">
-                                <view class="car">
+                                <view class="car" data-id="{{ item.id }}" bindtap="onOpenDetail">
                                     <image class="car__image" src="{{ item.models_main_images }}" />
                                     <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                                     <view class="wux-clearfix">
