@@ -60,7 +60,7 @@
                             </view>
                         </radio-group>
                         <view class="wux-mt--20">自定义首付（万）</view>
-                        <wux-slider step="10" max="60" showMark wux-class="slider" value="{{ searchVal.payment }}" controlled bind:change="onPaymentChange" />
+                        <wux-slider step="10" max="60" showMark wux-class="slider" value="{{ searchVal.payment || [0, 0] }}" controlled bind:change="onPaymentChange" />
                     </view>
                 </block>
                 <block wx:if="{{ index === 3 }}">
@@ -76,7 +76,7 @@
                             </view>
                         </radio-group>
                         <view class="wux-mt--20">自定义月供（元）</view>
-                        <wux-slider step="10" max="60" showMark wux-class="slider" value="{{ searchVal.monthly }}" controlled bind:change="onMonthlyChange" />
+                        <wux-slider step="10" max="60" showMark wux-class="slider" value="{{ searchVal.monthly || [0, 0] }}" controlled bind:change="onMonthlyChange" />
                     </view>
                 </block>
             </block>
