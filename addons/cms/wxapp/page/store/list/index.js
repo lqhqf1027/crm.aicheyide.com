@@ -2,6 +2,7 @@ const app = getApp()
 
 Page({
     data: {
+        cdn_url: '',
         store_layout: '',
         list: [],
         activeIndex: 0,
@@ -12,10 +13,18 @@ Page({
     getList() {
         app.request('/store/store_show', {}, (data, ret) => {
             console.log(data)
+
+            let list = []
+
+            Object.keys(data.list).forEach((n) => {
+                list = [...list, ...data.list[n]]
+            })
+
             this.setData({
+                cdn_url: data.cdn_url,
                 store_layout: data.store_layout,
-                list: data.list,
-                store: data.list,
+                list,
+                store: list,
             })
         }, (data, ret) => {
             console.log(data)
