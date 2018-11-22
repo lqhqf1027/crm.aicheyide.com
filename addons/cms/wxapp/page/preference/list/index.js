@@ -1,8 +1,4 @@
 var app = getApp()
-var city = {
-    cities_name: '成都',
-    id: 38,
-}
 
 Page({
     data: {
@@ -18,7 +14,10 @@ Page({
         swiperIndex: 'index',
         globalData: {},
         shares: {},
-        city,
+        brandPlan: {},
+        brand_id: '',
+        city: app.globalData.city,
+        deviceHeight: '100%',
     },
     channel: 0,
     page: 1,
@@ -28,7 +27,8 @@ Page({
         })
     },
     onLoad: function() {
-        wx.setStorageSync('city', city)
+        this.getSystemInfo()
+        wx.setStorageSync('city', app.globalData.city)
     },
     onShareAppMessage: function() {
         var shares = this.data.shares || {}
@@ -71,13 +71,68 @@ Page({
             app.error(ret.msg);
         });
     },
-    bindchange(e) {},
+    bindchange(e) {
+        console.log(e)
+    },
+    onClose() {
+        this.setData({
+            visible: false,
+        })
+    },
+    onBrandPlan(e) {
+        const { id } = e.currentTarget.dataset
+        const { brandPlan } = this.data
+
+        console.log(id)
+
+        var that = this
+        var city = wx.getStorageSync('city')
+
+        // 判断是否同一城市下，取其缓存
+        if (city && city.id === this.data.city.id) {
+            if (brandPlan[id]) {
+                this.setData({
+                    visible: true,
+                    brand_id: id,
+                })
+                return
+            }
+        }
+
+        that.setData({
+            city,
+        })
+
+        app.request('/index/brandPlan', { city_id: city.id, brand_id: id }, function(data, ret) {
+            console.log(data)
+            that.setData({
+                visible: true,
+                brand_id: id,
+                [`brandPlan.${id}`]: data || [],
+            })
+        }, function(data, ret) {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
+    onOpenDetail(e) {
+        const { id } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/preference/detail/index?id=${id}`,
+        })
+    },
     onTag(e) {
         console.log('onTag', e)
     },
     toMore() {
         wx.switchTab({
             url: '/page/index/index',
+        })
+    },
+    onSearch() {
+        wx.navigateTo({
+            url: '/page/search/index',
         })
     },
     onSelect() {
@@ -88,6 +143,15 @@ Page({
     makePhoneCall() {
         wx.makePhoneCall({
             phoneNumber: '4001886061'
+        })
+    },
+    getSystemInfo() {
+        wx.getSystemInfo({
+            success: (res) => {
+                this.setData({
+                    deviceHeight: res.windowHeight,
+                })
+            }
         })
     },
     getList() {
@@ -101,6 +165,12 @@ Page({
         app.request('/index/index', { city_id: city.id }, function(data, ret) {
             console.log(data)
             that.setData({
+                appointment: data.appointment.map((n) => {
+                    const mobile = n.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+                    const content = `${mobile} 成功下单 ${n.models_name}`
+
+                    return {...n, content }
+                }),
                 brandList: data.brandList,
                 carType: data.carType,
                 shares: data.shares,

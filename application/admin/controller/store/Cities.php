@@ -108,53 +108,94 @@ class Cities extends Backend
     /**
      * 编辑
      */
+    // public function edit($ids = NULL)
+    // {
+    //     $row = $this->model->get($ids);
+    //     //获取子级所属城市
+
+    //     $dataCities = collection(citiesModel::all(function ($q) use ($ids) {
+    //         $q->field('id,cities_name,status')->where('pid', $ids);
+    //     }))->toArray();
+    //     // pr($dataCities);die;
+    //     if (!$row)
+    //         $this->error(__('No Results were found'));
+    //     $adminIds = $this->getDataLimitAdminIds();
+    //     if (is_array($adminIds)) {
+    //         if (!in_array($row[$this->dataLimitField], $adminIds)) {
+    //             $this->error(__('You have no permission'));
+    //         }
+    //     }
+    //     if ($this->request->isPost()) {
+    //         $params = $this->request->post("row/a");
+    //         if ($params['status'] == 'hidden') {
+    //             CompanyStore::where('city_id', $ids)->setField(['statuss' => 'hidden']);
+    //         }
+    //         else if ($params['status'] == 'normal') {
+    //             CompanyStore::where('city_id', $ids)->setField(['statuss' => 'normal']);
+    //         }
+    //         if ($params) {
+    //             try {
+    //                 //是否采用模型验证
+    //                 if ($this->modelValidate) {
+    //                     $name = basename(str_replace('\\', '/', get_class($this->model)));
+    //                     $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
+    //                     $row->validate($validate);
+    //                 }
+    //                 $result = $row->allowField(true)->save($params);
+
+    //                 if ($result !== false) {
+    //                     $this->success();
+    //                 } else {
+    //                     $this->error($row->getError());
+    //                 }
+    //             } catch (\think\exception\PDOException $e) {
+    //                 $this->error($e->getMessage());
+    //             } catch (\think\Exception $e) {
+    //                 $this->error($e->getMessage());
+    //             }
+    //         }
+    //         $this->error(__('没有执行任何更新操作项', ''));
+    //     }
+
+    //     $this->view->assign(["row" => $row]);
+
+    //     return $this->view->fetch();
+    // }
+    
+     /**
+     * 编辑
+     */
     public function edit($ids = NULL)
     {
         $row = $this->model->get($ids);
-        //获取子级所属城市
-
-        $dataCities = collection(citiesModel::all(function ($q) use ($ids) {
-            $q->field('id,cities_name,status')->where('pid', $ids);
-        }))->toArray();
-        // pr($dataCities);die;
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $data = CompanyStore::where('city_id', $ids)->select();
+            // pr($data);
+            // die;
             if ($params['status'] == 'hidden') {
-                Db::name('cms_company_store')->where('city_id', $ids)->update(['statuss' => 'hidden']);
-            }
-            else if ($params['status'] == 'normal') {
-                Db::name('cms_company_store')->where('city_id', $ids)->update(['statuss' => 'normal']);
-            }
-            if ($params) {
-                try {
-                    //是否采用模型验证
-                    if ($this->modelValidate) {
-                        $name = basename(str_replace('\\', '/', get_class($this->model)));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-                        $row->validate($validate);
-                    }
-                    $result = $row->allowField(true)->save($params);
 
-                    if ($result !== false) {
-                        $this->success();
-                    } else {
-                        $this->error($row->getError());
-                    }
-                } catch (\think\exception\PDOException $e) {
-                    $this->error($e->getMessage());
-                } catch (\think\Exception $e) {
-                    $this->error($e->getMessage());
+                CompanyStore::where('city_id', $ids)->setField(['statuss' => 'hidden']);
+                $result = $this->model->where('id', $ids)->setField(['status' => 'hidden']);
+
+                if ($result) {
+                    $this->success();
+                }
+
+            }
+            else if ($params['status'] == 'normal' && $data) {
+                
+                CompanyStore::where('city_id', $ids)->setField(['statuss' => 'normal']);
+                $result = $this->model->where('id', $ids)->setField(['status' => 'normal']);
+                if ($result) {
+                    $this->success();
                 }
             }
-            $this->error(__('没有执行任何更新操作项', ''));
+            else if (!$data) {
+
+                $this->success('城市下没有门店，无法开启', '');
+            }
+           
         }
 
         $this->view->assign(["row" => $row]);

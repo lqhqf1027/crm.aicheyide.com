@@ -12,11 +12,7 @@ class CompanyStore extends Model
     // 自动写入时间戳字段
 //    protected $autoWriteTimestamp = 'int';
 
-//    // 定义时间戳字段名
-//    protected $createTime = 'createtime';
-//    protected $updateTime = 'updatetime';
-
-    // 追加属性
+ 
 //    protected $append = [
 //        'status_text'
 //    ];
@@ -35,17 +31,28 @@ class CompanyStore extends Model
 //        return isset($list[$value]) ? $list[$value] : '';
 //    }
 
-
+    /**
+     * 关联城市
+     * @return \think\model\relation\BelongsTo
+     */
     public function city()
     {
         return $this->belongsTo('Cities', 'city_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * 关联新车方案
+     * @return \think\model\relation\HasOne
+     */
     public function planacar()
     {
         return $this->hasOne('PlanAcar', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     * 关联二手车方案
+     * @return \think\model\relation\HasOne
+     */
     public function secondcarinfo()
     {
         return $this->hasOne('SecondcarRentalModelsInfo', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
@@ -62,6 +69,7 @@ class CompanyStore extends Model
     }
 
     /**
+ 
      * 统计门店下二手车所有可卖车型个数
      * @return \think\model\relation\HasMany
      */
@@ -102,6 +110,11 @@ class CompanyStore extends Model
                 'remaining_amount'=>['GT',0]]); // 剩余总量大于0
         })->select())->toArray();
     }
+
+    /*
+     * 关联新能源方案
+     * @return \think\model\relation\HasOne
+     */
 
     public function logistics()
     {

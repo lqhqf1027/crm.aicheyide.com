@@ -70,31 +70,47 @@ class Newplan extends Model
     }
 
 
-
+    /**
+     * 关联金融平台
+     * @return \think\model\relation\BelongsTo
+     */
     public function financialplatform()
     {
         return $this->belongsTo('FinancialPlatform', 'financial_platform_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
 
+    /**
+     * 关联方案类型
+     * @return \think\model\relation\BelongsTo
+     */
     public function schemecategory()
     {
         return $this->belongsTo('Schemecategory','category_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
-    //关联专题
+    /**
+     * 关联专题
+     * @return \think\model\relation\BelongsTo
+     */
     public function subject()
     {
         return $this->belongsTo('Subject','subject_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
-    //关联标签
+    /**
+     * 关联标签
+     * @return \think\model\relation\BelongsTo
+     */
     public function label()
     {
         return $this->belongsTo('Label','label_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
-    //关联门店
+    /**
+     * 关联门店
+     * @return \think\model\relation\BelongsTo
+     */
     public function companystore()
     {
         return $this->belongsTo('CompanyStore','store_id','id',[],'LEFT')->setEagerlyType(0);

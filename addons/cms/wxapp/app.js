@@ -289,5 +289,9 @@ App({
         indexTabList: [],
         newsTabList: [],
         productTabList: [],
+        city: {
+            cities_name: '成都',
+            id: 38,
+        },
     }
 })

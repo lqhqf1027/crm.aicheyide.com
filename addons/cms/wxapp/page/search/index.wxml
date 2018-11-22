@@ -1,0 +1,36 @@
+<view class="wux-search-bar">
+    <view class="wux-search-bar__form">
+        <view class="wux-search-bar__box">
+            <icon class="wux-search-bar__search" type="search" color="#B2B2B2" size="14" />
+            <input type="text" class="wux-search-bar__input" bindinput="onChange" bindconfirm="onConfirm" />
+        </view>
+    </view>
+    <view class="wux-search-bar__cancel" bindtap="onCancel">取消</view>
+</view>
+
+<wux-cell-group wux-class="wux-mt--0" wx:if="{{ new.length }}">
+    <wux-cell hover-class="none">
+        <view class="cell-title">新车</view>
+    </wux-cell>
+    <block wx:for="{{ new }}" wx:key="">
+        <wux-cell title="{{ item.name }}" data-value="{{ item }}" bind:click="onClick" />
+    </block>
+</wux-cell-group>
+
+<wux-cell-group wux-class="wux-mt--10" wx:if="{{ used.length }}">
+    <wux-cell hover-class="none">
+        <view class="cell-title">二手车</view>
+    </wux-cell>
+    <block wx:for="{{ used }}" wx:key="">
+        <wux-cell title="{{ item.name }}" data-value="{{ item }}" bind:click="onClick" />
+    </block>
+</wux-cell-group>
+
+<wux-cell-group wux-class="wux-mt--10" wx:if="{{ logistics.length }}">
+    <wux-cell hover-class="none">
+        <view class="cell-title">新能源物流车</view>
+    </wux-cell>
+    <block wx:for="{{ logistics }}" wx:key="">
+        <wux-cell title="{{ item.name }}" data-value="{{ item }}" bind:click="onClick" />
+    </block>
+</wux-cell-group>

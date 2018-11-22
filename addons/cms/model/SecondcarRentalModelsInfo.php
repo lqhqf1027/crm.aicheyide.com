@@ -13,13 +13,13 @@ class SecondcarRentalModelsInfo extends Model
     protected $autoWriteTimestamp = 'int';
 
     // 定义时间戳字段名
-    protected $createTime = 'createtime';
-    protected $updateTime = 'updatetime';
-    
-    // 追加属性
-    protected $append = [
-        'shelf_text'
-    ];
+//    protected $createTime = 'createtime';
+//    protected $updateTime = 'updatetime';
+//
+//    // 追加属性
+//    protected $append = [
+//        'shelf_text'
+//    ];
     
 
     
@@ -37,20 +37,28 @@ class SecondcarRentalModelsInfo extends Model
     }
 
 
-
-
+    /**
+     * 关联车型
+     * @return \think\model\relation\BelongsTo
+     */
     public function models()
     {
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
-    //关联标签
+    /**
+     * 关联标签
+     * @return \think\model\relation\BelongsTo
+     */
     public function label()
     {
         return $this->belongsTo('Label','label_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
-    //关联门店
+    /**
+     * 关联门店
+     * @return \think\model\relation\BelongsTo
+     */
     public function companystore()
     {
         return $this->belongsTo('CompanyStore','store_id','id',[],'LEFT')->setEagerlyType(0);

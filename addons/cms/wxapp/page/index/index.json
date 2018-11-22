@@ -1,11 +1,11 @@
 {
     "navigationBarTitleText": "友车友家",
     "usingComponents": {
-        "wux-card": "../../assets/libs/wux/card/index",
-        "wux-grids": "../../assets/libs/wux/grids/index",
-        "wux-grid": "../../assets/libs/wux/grid/index",
-        "wux-row": "../../assets/libs/wux/row/index",
-        "wux-col": "../../assets/libs/wux/col/index",
-        "wux-tag": "../../assets/libs/wux/tag/index"
+        "wux-animation-group": "../../assets/libs/wux/animation-group/index",
+        "wux-radio-group": "../../assets/libs/wux/radio-group/index",
+        "wux-radio": "../../assets/libs/wux/radio/index",
+        "wux-slider": "../../assets/libs/wux/slider/index",
+        "wux-tabs": "../../assets/libs/wux/tabs/index",
+        "wux-tab": "../../assets/libs/wux/tab/index"
     }
 }
