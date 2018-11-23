@@ -15,7 +15,7 @@ use app\common\library\Email;
 class Carreservation extends Backend
 {
     protected $model = null;
-    protected $noNeedRight = ['index','prepare_submit','already_submit','matching_finance','mass_finance','sendOrderNotice'];
+    protected $noNeedRight = ['*'];
     public function _initialize()
     {
         parent::_initialize();

@@ -23,7 +23,7 @@ class Secondvehicleinformation extends Backend
      */
     protected $model = null;
     protected $multiFields = 'shelfismenu';
-    protected $noNeedRight = ['index','takecar','add','getInfo','edit'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

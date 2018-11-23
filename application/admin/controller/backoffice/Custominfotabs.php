@@ -19,7 +19,7 @@ class Custominfotabs extends Backend
 {
 
     protected $model = null;
-    protected $noNeedRight = ['newCustomer', 'batch', 'assignedCustomers', 'admeasure', 'index','test1'];
+    protected $noNeedRight = ['*'];
     protected $dataLimit = false; //表示不启用，显示所有数据
     static protected $token = null;
 
