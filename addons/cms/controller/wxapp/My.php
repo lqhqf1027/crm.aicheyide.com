@@ -4,6 +4,16 @@ namespace addons\cms\controller\wxapp;
 
 use addons\cms\model\Comment;
 use addons\cms\model\Page;
+use think\Cache;
+use think\Config;
+use addons\cms\model\CompanyStore;
+use addons\cms\model\Models;
+use addons\cms\model\Cities;
+use addons\cms\model\Subject;
+use addons\cms\model\SecondcarRentalModelsInfo;
+use app\common\library\Auth;
+use addons\cms\model\PlanAcar;
+use app\common\model\Addon;
 
 /**
  * 我的
@@ -11,11 +21,17 @@ use addons\cms\model\Page;
 class My extends Base
 {
 
-    protected $noNeedLogin = ['aboutus'];
+    protected $noNeedLogin = '*';
 
     public function _initialize()
     {
         parent::_initialize();
+    }
+
+    public function index()
+    {
+        $user_id = $this->request->post('user_id');
+
     }
 
     /**
