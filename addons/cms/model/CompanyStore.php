@@ -76,7 +76,7 @@ class CompanyStore extends Model
     {
 
         return $this->hasMany('PlanAcar', 'store_id', 'id')
-            ->field('id,store_id,label_id,monthly,payment,weigh,models_main_images');
+            ->field('id,store_id,label_id,monthly,payment,weigh,models_main_images,recommendismenu,specialismenu,specialimages');
     }
 
     /**
@@ -87,7 +87,7 @@ class CompanyStore extends Model
     public function usedcarCount()
     {
         return $this->hasMany('UsedCar', 'store_id', 'id')
-            ->field('id,store_id,label_id,kilometres,newpayment,monthlypaymen,models_main_images,car_licensedate');
+            ->field('id,store_id,label_id,kilometres,newpayment,monthlypaymen,models_main_images,car_licensedate,popularity');
     }
 
     /**
@@ -96,7 +96,8 @@ class CompanyStore extends Model
      */
     public function logisticsCount()
     {
-        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,label_id');;
+        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,label_id,name,
+        payment,monthly,models_main_images,popularity');
     }
 //
     public static function getCarList($store_id){

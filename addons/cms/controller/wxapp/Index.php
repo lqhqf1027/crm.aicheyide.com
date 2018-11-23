@@ -49,9 +49,11 @@ class Index extends Base
             $appointment = Cache::get('appointment');
         }
 
+
+
         //返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
-
+        
         $data = ['carType' => [
             'new' => [
                 //为你推荐
@@ -218,6 +220,7 @@ class Index extends Base
         //获取该城市所有满足条件的方案
         $info = Share::getNewCarPlan($city_id, '', true);
 
+
         $recommendList = [];             //为你推荐（新车）
         $specialfieldList = [];          //专场（新车）
 
@@ -229,7 +232,7 @@ class Index extends Base
         foreach ($info as $k => $v) {
 
             if ($v['recommendismenu']) {
-                $recommendList[] = ['id' => $v['id'], 'models_main_images' => $v['models_main_images'], 'models_name' => $v['models_name'],
+                $recommendList[] = ['id' => $v['id'], 'models_main_images' => $v['models_main_images'], 'models_name' => $v['models']['name'],
                     'payment' => $v['payment'], 'monthly' => $v['monthly']];
             }
             if ($v['specialismenu']) {
@@ -251,7 +254,6 @@ class Index extends Base
         foreach ($specialList as $k => $v) {
             $specialList[$k]['plan_id'] = json_decode($v['plan_id'], true);
 
-            $specialList[$k]['coverimages'] = Config::get('upload')['cdnurl'] . $specialList[$k]['coverimages'];
             $plan_arr = [];
             foreach ($specialList[$k]['plan_id']['plan_id'] as $key => $value) {
                 $plan = Db::name('plan_acar')
@@ -264,8 +266,6 @@ class Index extends Base
                     ])
                     ->field('a.id,b.name as models_name,a.payment,a.monthly,a.models_main_images')
                     ->find();
-
-                $plan['models_main_images'] = Config::get('upload')['cdnurl'] . $plan['models_main_images'];
 
 
                 if ($plan) {
