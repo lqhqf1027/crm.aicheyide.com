@@ -8,9 +8,7 @@ class PlanAcar extends Model
 {
     // 表名
     protected $name = 'plan_acar';
-    
-    // 自动写入时间戳字段
-    protected $autoWriteTimestamp = 'int';
+ 
     // 追加属性
     protected $append = [
         'type',
@@ -20,6 +18,7 @@ class PlanAcar extends Model
     {        
          return 'new';
     }
+ 
 
 
 
@@ -106,6 +105,12 @@ class PlanAcar extends Model
     {
         return $this->belongsToMany('Brand','models','brand_id','plan_acar_id');
     }
+
+    public function collections()
+    {
+        return $this->hasOne('Collection','plan_acar_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
 
 
 }

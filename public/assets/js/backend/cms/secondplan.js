@@ -18,6 +18,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     edit_url: 'cms/secondplan/edit',
                     del_url: 'cms/secondplan/del',
                     multi_url: 'cms/secondplan/multi',
+                    dragsort_url: 'cms/secondplan/dragsort',
                     table: 'secondcar_rental_models_info',
                 }
             });
@@ -30,19 +31,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
-                sortName: 'id',
+                sortName: 'weigh',
                 // searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
                         // {field: 'sales_id', title: __('Sales_id')},
+                        {field: 'models.name', title: __('Models.name')},
+                        {field: 'weigh', title: __('权重（排序）')},
                         {
                             field: 'label.name', title: __('标签名称'), searchList: {"1":__('新能源'),"2":__('低首付')}, operate:'FIND_IN_SET', formatter: Table.api.formatter.label
                         },
                         {field: 'label.lableimages', title: __('标签图片'), formatter: Table.api.formatter.images},
                         {
-                            field: 'companystore.store_name', title: __('门店名称'), 
+                            field: 'store_name', title: __('门店名称'), 
                         },
                         {field: 'models_main_images', title: __('封面图片'), formatter: Table.api.formatter.images},
                         {field: 'modelsimages', title: __('车型亮点'), formatter: Table.api.formatter.images},
@@ -51,7 +54,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         }},
                         // {field: 'models_id', title: __('Models_id')},
-                        {field: 'models.name', title: __('Models.name')},
+                        
                         {field: 'kilometres', title: __('Kilometres'), operate:'BETWEEN',operate:false},
                         {field: 'companyaccount', title: __('Companyaccount')},
                         {field: 'newpayment', title: __('Newpayment'),operate:false},
@@ -223,6 +226,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.on('load-success.bs.table', function (e, data) {
          
                 $(".btn-edit").data("area", ["70%", "70%"]);
+
+                var td = $("#table td:nth-child(3)");
+
+                for (var i = 0; i < td.length; i++) {
+
+                    td[i].style.textAlign = "left";
+
+                }
                 
             })
 
@@ -402,6 +413,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = table ? table.bootstrapTable('getOptions') : {};
                     // 默认按钮组
                     var buttons = $.extend([], this.buttons || []);
+
+                    buttons.push({
+                        name: 'dragsort',
+                        icon: 'fa fa-arrows',
+                        title: __('Drag to sort'),
+                        extend: 'data-toggle="tooltip"',
+                        classname: 'btn btn-xs btn-primary btn-dragsort'
+                    });
 
                     return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
                 },

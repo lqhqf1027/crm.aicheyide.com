@@ -19,7 +19,7 @@ class Channellisttabs extends Backend
      */
     protected $model = null;
 
-    protected $noNeedRight = ['index', 'edit', 'del'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {
