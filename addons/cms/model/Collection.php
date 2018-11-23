@@ -15,8 +15,9 @@ class Collection extends Model
 {
     // 表名
     protected $name = 'cms_collection';
+// 自动写入时间戳字段
+    protected $autoWriteTimestamp = 'int';
+    protected $createTime = 'collectiontime';
 
-    protected $createtime = 'collectiontime';
-
-
+    protected $updateTime = false;
 }

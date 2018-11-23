@@ -32,6 +32,10 @@ class My extends Base
     {
         $user_id = $this->request->post('user_id');
 
+        PlanAcar::field(['id', 'payment', 'monthly', 'popularity', 'models_main_images'])
+        ->with(['models'=>function ($q){
+            $q->withField('name');
+        },'']);
     }
 
     /**
