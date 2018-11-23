@@ -22,8 +22,7 @@ class Customerlisttabs extends Backend
      */
     protected $model = null;
 //    protected $searchFields = 'id,username';
-    protected $noNeedRight = ['newCustomer', 'relation', 'intention', 'nointention', 'giveup', 'index', 'overdue', 'add', 'edits', 'showFeedback'
-        , 'ajaxGiveup', 'ajaxBatchGiveup', 'get_total', 'encapsulationSelect', 'edit', 'batchfeedback', 'showFeedback'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

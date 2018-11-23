@@ -68,6 +68,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         add: function () {
 
             //门店
+            $(document).on("change", "#c-city_ids", function () {
+
+                $('li.selected_tag').remove();
+            });
+            
             $("#c-store_ids").data("params", function (obj) {
 
                 return {custom: {city_id: $("#c-city_ids").val()}};
@@ -79,6 +84,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         edit: function () {
 
             //门店
+            $(document).on("change", "#c-city_ids", function () {
+
+                $('li.selected_tag').remove();
+            });
+
             $("#c-store_ids").data("params", function (obj) {
 
                 return {custom: {city_id: $("#c-city_ids").val()}};

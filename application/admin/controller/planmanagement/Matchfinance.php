@@ -18,8 +18,7 @@ use app\admin\model\BigData as bigDataModel;
 class Matchfinance extends Backend
 {
     protected $model = null;
-    protected $noNeedRight = ['index', 'newprepare_match', 'secondprepare_match', 'newedit', 'secondedit', 'newbatch', 'secondbatch', 'add_sales'
-        , 'used_details', 'new_details','view_plan', 'del_sales_order', 'del_second_sales_order'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

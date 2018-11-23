@@ -21,8 +21,7 @@ class Plantabs extends Backend
     protected $model = null;
     protected $multiFields = 'ismenu';
 
-    protected $noNeedRight = ['index', 'table1', 'table2', 'table3', 'firstedit', 'firstdel', 'fulledit', 'fulldel', 'working_insurance', 'getSales', 'getCategory', 'firstmulti', 'fullmulti'
-        , 'firstadd', 'fulladd','matchingSalesOrder', 'import'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

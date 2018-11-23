@@ -24,7 +24,7 @@ class Vehicleinformation extends Backend
      */
     protected $model = null;
     protected $multiFields = 'shelfismenu';
-    protected $noNeedRight = ['index', 'rentalrequest', 'carsingle', 'takecar', 'add', 'getInfo', 'edit'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

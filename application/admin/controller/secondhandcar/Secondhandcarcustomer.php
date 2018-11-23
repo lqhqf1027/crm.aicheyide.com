@@ -19,7 +19,7 @@ class Secondhandcarcustomer extends Backend
      * @var \app\admin\model\Secondpeople
      */
     protected $model = null;
-    protected $noNeedRight = ['index','seconddetails'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {
