@@ -34,7 +34,8 @@ class UsedCar extends Model
     public function label()
     {
         return $this->belongsTo('Label','label_id','id',[],'LEFT')->setEagerlyType(0);
- 
+
+    } 
     /**
      * 关联车型
      * @return \think\model\relation\BelongsTo
@@ -42,7 +43,7 @@ class UsedCar extends Model
     public function models()
     {
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
- 
-    } 
-    
+
+    }
+
 }

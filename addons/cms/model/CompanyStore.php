@@ -75,7 +75,8 @@ class CompanyStore extends Model
     public function planacarCount()
     {
 
-        return $this->hasMany('PlanAcar', 'store_id', 'id')->field('id,store_id,payment,label_id');
+        return $this->hasMany('PlanAcar', 'store_id', 'id')
+            ->field('id,store_id,label_id,monthly,payment,weigh,models_main_images');
     }
 
     /**
@@ -85,7 +86,8 @@ class CompanyStore extends Model
      */
     public function usedcarCount()
     {
-        return $this->hasMany('UsedCar', 'store_id', 'id')->field('id,store_id,label_id');;
+        return $this->hasMany('UsedCar', 'store_id', 'id')
+            ->field('id,store_id,label_id,kilometres,newpayment,monthlypaymen,models_main_images,car_licensedate');
     }
 
     /**

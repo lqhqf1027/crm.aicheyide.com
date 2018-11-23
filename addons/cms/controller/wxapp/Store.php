@@ -101,18 +101,47 @@ class Store extends Base
         }
 
         //门店信息
-        $store_info =companyStoreModel::find($store_id)->hidden(['createtime', 'updatetime', 'status', 'plan_acar_id', 'statuss', 'store_qrcode']);
-        $store_info['store_img']=!empty($store_info['store_img'])?explode(',', $store_info['store_img']):''; //转换图片为数组
+        $store_info = companyStoreModel::find($store_id)->hidden(['createtime', 'updatetime', 'status', 'plan_acar_id', 'statuss', 'store_qrcode']);
+        $store_info['store_img'] = !empty($store_info['store_img']) ? explode(',', $store_info['store_img']) : ''; //转换图片为数组
         //门店下所卖的所有车型
-        $store_carList =collection(companyStoreModel::field('id,store_name')
-            ->with([ 'planacarCount'=>['label'],'usedcarCount'=>['label'],'logisticsCount'=>['label']])
-            ->select(['store_id'=>$store_id]))
+        $store_carList = collection(companyStoreModel::field('id,store_name')
+            ->with(
+                ['planacarCount' =>function($q){
+                    $q->limit(1)->with(
+                        ['label' => function ($q) //新车方案&&标签
+                        {
+                            $q->withField(['id', 'name', 'lableimages']);
+                        },
+                            'models'=>function($q){  //新车车型
+                                $q->withField(['id', 'name', 'price','vehicle_configuration']);
+                            }
+                        ]
+                    );
+                },
+                    'usedcarCount' => ['label' => function ($q) {  //二手车方案&&标签
+                        $q->withField(['id', 'name', 'lableimages']);
+                    },
+                    'models'=>function($q){  //二手车方案
+                        $q->withField(['id', 'name', 'price','vehicle_configuration']);
+                    }
+                    ],
+                    'logisticsCount' => ['label' => function ($q) {   //新能源方案&&标签
+                        $q->withField(['id', 'name', 'lableimages']);
+                    }
+                    ],
+                    'city'=>function($q){   //门店所属城市
+                        $q->withField(['cities_name']);
+                    }
+                ]
+            )
+            ->select(['store_id' => $store_id]))
             ->toArray();
-        pr($store_carList);die;
-        $result['store_info'] =$store_info;
-        $result['isLogic'] =$isLogic;
+        pr($store_carList);
+        die;
+        $result['store_info'] = $store_info;
+        $result['isLogic'] = $isLogic;
 
-        $result['store_carList'] =$store_carList;
-        $this->success('请求成功',$result);
+        $result['store_carList'] = $store_carList;
+        $this->success('请求成功', $result);
     }
 }
