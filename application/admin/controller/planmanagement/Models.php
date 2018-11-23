@@ -21,7 +21,7 @@ class Models extends Backend
 
     protected static $keys = '723d926ce76f411dab7836aeb5b33a76';
 
-    protected $noNeedRight = ['index','getBrand','getSeries','getModel','add','edit'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

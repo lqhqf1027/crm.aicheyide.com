@@ -18,7 +18,7 @@ class Newnventory extends Backend
      * @var \app\common\model\CarNewInventory
      */
     protected $model = null;
-    protected $noNeedRight = ['index','add','edit','del','getReally','getInfo'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {
