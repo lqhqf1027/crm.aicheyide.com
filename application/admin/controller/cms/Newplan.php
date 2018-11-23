@@ -27,7 +27,7 @@ class Newplan extends Backend
     protected $model = null;
     protected $multiFields = ['recommendismenu', 'flashviewismenu', 'specialismenu', 'subjectismenu'];
 
-    protected $noNeedRight = ['index', 'firstedit', 'getBrandName', 'dragsort'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {
@@ -152,7 +152,8 @@ class Newplan extends Backend
             foreach ($list as $key => $row) {
 
                 $row->visible(['id', 'payment', 'monthly', 'brand_name', 'brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'createtime', 'guide_price',
-                    'updatetime', 'category_id', 'recommendismenu', 'flashviewismenu', 'specialismenu', 'subjectismenu', 'specialimages', 'models_main_images', 'modelsimages', 'weigh']);
+                    'updatetime', 'category_id', 'recommendismenu', 'flashviewismenu', 'specialismenu', 'subjectismenu', 'specialimages', 'models_main_images', 'modelsimages', 'weigh',
+                    'store_name']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
                 $row->visible(['admin']);
@@ -169,6 +170,7 @@ class Newplan extends Backend
                 $row->getRelation('companystore')->visible(['store_name']);
                 $list[$key]['brand_name'] = array_keys(self::getBrandName($row['id'])); //获取品牌
                 $list[$key]['brand_log'] = Config::get('upload')['cdnurl'] . array_values(self::getBrandName($row['id']))[0]; //获取logo图片
+                $list[$key]['store_name'] = $this->getStoreName($row['store_id']); //门店
 
 
             }
@@ -193,6 +195,19 @@ class Newplan extends Backend
             ->join('brand c', 'b.brand_id=c.id')
             ->where('a.id', $plan_id)
             ->column('c.name,c.brand_logoimage');
+    }
+
+    /**
+     * 关联城市省份
+     * @param $store_id 门店id
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public static function getStoreName($store_id)
+    {
+        $store = CompanyStore::where('id', $store_id)->find();
+        $cities = Cities::where('id', $store['city_id'])->find();
+        $provice = Cities::where('id', $cities['pid'])->value('name');
+        return $provice . $cities['cities_name'] . "---" . $store['store_name'];
     }
 
     /**
