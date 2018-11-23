@@ -81,7 +81,7 @@ class Store extends Base
     public function store_details()
     {
 
-        $store_id = $this->request->post('store_id');//门店
+        $store_id = $this->request->post('store_id');//门店id
         $user_id = $this->request->post('user_id');//用户id
         if (!$store_id || !$user_id) {
             $this->error('参数错误或缺失参数,请求失败', 'error');
@@ -99,23 +99,20 @@ class Store extends Base
 
             }
         }
-        pr($isLogic);
-        die;
 
-        $data = companyStoreModel::find($store_id)->hidden(['createtime', 'updatetime', 'status', 'plan_acar_id', 'statuss', 'store_qrcode'])->toArray();
+        //门店信息
+        $store_info =companyStoreModel::find($store_id)->hidden(['createtime', 'updatetime', 'status', 'plan_acar_id', 'statuss', 'store_qrcode']);
+        $store_info['store_img']=!empty($store_info['store_img'])?explode(',', $store_info['store_img']):''; //转换图片为数组
+        //门店下所卖的所有车型
+        $store_carList =collection(companyStoreModel::field('id,store_name')
+            ->with([ 'planacarCount'=>['label'],'usedcarCount'=>['label'],'logisticsCount'=>['label']])
+            ->select(['store_id'=>$store_id]))
+            ->toArray();
+        pr($store_carList);die;
+        $result['store_info'] =$store_info;
+        $result['isLogic'] =$isLogic;
 
-        if (!empty($data['store_img'])) {
-            $data['store_img'] = explode(',', $data['store_img']);
-            foreach ($data['store_img'] as $k => $row) {
-                $data['store_img'][$k] = Config::get('upload')['cdnurl'] . $row;
-            }
-        }
-
-        pr($data);
-        die;
-        pr($data);
-        die;
-
-
+        $result['store_carList'] =$store_carList;
+        $this->success('请求成功',$result);
     }
 }

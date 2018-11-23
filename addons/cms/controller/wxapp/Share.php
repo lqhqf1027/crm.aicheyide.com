@@ -505,9 +505,9 @@ specialimages,popularity')
 
     /**
      * 新车方案
-     * @param $city
+     * @param $city 城市
      * @param null $limit
-     * @param bool $duplicate
+     * @param bool $duplicate 去重
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException

@@ -8,32 +8,17 @@ class SecondcarRentalModelsInfo extends Model
 {
     // 表名
     protected $name = 'secondcar_rental_models_info';
-    
-    // 自动写入时间戳字段
-    protected $autoWriteTimestamp = 'int';
 
-    // 定义时间戳字段名
-//    protected $createTime = 'createtime';
-//    protected $updateTime = 'updatetime';
-//
 //    // 追加属性
-//    protected $append = [
-//        'shelf_text'
-//    ];
+    protected $append = [
+        'type'
+    ];
     
 
-    
-    public function getShelfismenuList()
+
+    public function getTypeAttr($value, $data)
     {
-        return ['1' => __('Shelfismenu 1')];
-    }     
-
-
-    public function getShelfTextAttr($value, $data)
-    {        
-        $value = $value ? $value : $data['shelf'];
-        $list = $this->getShelfismenuList();
-        return isset($list[$value]) ? $list[$value] : '';
+        return 'used';
     }
 
 

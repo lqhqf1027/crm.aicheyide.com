@@ -12,18 +12,18 @@ class CompanyStore extends Model
     // 自动写入时间戳字段
 //    protected $autoWriteTimestamp = 'int';
 
- 
+
 //    protected $append = [
 //        'status_text'
 //    ];
 
-
+//
 //    public function getStatusList()
 //    {
 //        return ['normal' => __('Normal'), 'hidden' => __('Hidden')];
 //    }
-
-
+//
+//
 //    public function getStatusTextAttr($value, $data)
 //    {
 //        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
@@ -58,6 +58,15 @@ class CompanyStore extends Model
         return $this->hasOne('SecondcarRentalModelsInfo', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
+    /**
+     *  关联新能源方案
+     * @return \think\model\relation\HasOne
+     */
+
+    public function logistics()
+    {
+        return $this->hasOne('Logistics', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
 
     /**
      * 统计门店下新车所有可卖车型个数
@@ -65,7 +74,8 @@ class CompanyStore extends Model
      */
     public function planacarCount()
     {
-        return $this->hasMany('PlanAcar', 'store_id', 'id');
+
+        return $this->hasMany('PlanAcar', 'store_id', 'id')->field('id,store_id,payment,label_id');
     }
 
     /**
@@ -75,7 +85,7 @@ class CompanyStore extends Model
      */
     public function usedcarCount()
     {
-        return $this->hasMany('UsedCar', 'store_id', 'id');
+        return $this->hasMany('UsedCar', 'store_id', 'id')->field('id,store_id,label_id');;
     }
 
     /**
@@ -84,7 +94,13 @@ class CompanyStore extends Model
      */
     public function logisticsCount()
     {
-        return $this->hasMany('Logistics', 'store_id', 'id');
+        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,label_id');;
+    }
+//
+    public static function getCarList($store_id){
+        return  self::with([
+            ['planacarCount','usedcarCount','logisticsCount']
+        ])->select(['store_id'=>$store_id]);
     }
 
     /**
@@ -111,15 +127,6 @@ class CompanyStore extends Model
         })->select())->toArray();
     }
 
-    /*
-     * 关联新能源方案
-     * @return \think\model\relation\HasOne
-     */
-
-    public function logistics()
-    {
-        return $this->hasOne('Logistics', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
-    }
 
 
 }

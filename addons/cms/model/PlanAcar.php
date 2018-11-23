@@ -8,6 +8,17 @@ class PlanAcar extends Model
 {
     // 表名
     protected $name = 'plan_acar';
+ 
+    // 追加属性
+    protected $append = [
+        'type',
+    ];
+
+    public function getTypeAttr($value, $data)
+    {        
+         return 'new';
+    }
+ 
 
 
 
