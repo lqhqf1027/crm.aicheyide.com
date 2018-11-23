@@ -522,7 +522,7 @@ specialimages,popularity')
                         'acar_status' => 1,
                         'sales_id' => null
                     ])->with(['models' => function ($models) {
-                        $models->where('models.status', 'normal')->withField('name');
+                        $models->where('models.status', 'normal')->withField('id,name');
                     }, 'label' => function ($label) {
                         $label->where('label.status', 'normal')->withField('name,lableimages,rotation_angle');
                     }]);
@@ -533,10 +533,10 @@ specialimages,popularity')
         foreach ($info['store_list'] as $k => $v) {
             foreach ($v['planacar_count'] as $kk => $vv) {
                 if ($duplicate) {
-                    if (in_array($vv['models_id'], $check)) {
+                    if (in_array($vv['models']['id'], $check)) {
                         continue;
                     } else {
-                        $check[] = $vv['models_id'];
+                        $check[] = $vv['models']['id'];
                     }
                 }
                 $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
@@ -566,22 +566,22 @@ specialimages,popularity')
                     $query->where([
                         'sales_id' => null
                     ])->with(['models' => function ($models) {
-                        $models->where('models.status', 'normal')->withField('name');
+                        $models->where('models.status', 'normal')->withField('id,name');
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->find($city_id);
-
+return $info;
         $arr = [];
         $check = [];
         foreach ($info['store_list'] as $k => $v) {
             foreach ($v['usedcarCount'] as $kk => $vv) {
                 if ($duplicate) {
-                    if (in_array($vv['models_id'], $check)) {
+                    if (in_array($vv['models']['id'], $check)) {
                         continue;
                     } else {
-                        $check[] = $vv['models_id'];
+                        $check[] = $vv['models']['id'];
                     }
                 }
                 $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
