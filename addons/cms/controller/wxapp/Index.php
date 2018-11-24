@@ -53,7 +53,6 @@ class Index extends Base
 
         //返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
-        
         $data = ['carType' => [
             'new' => [
                 //为你推荐
@@ -220,7 +219,6 @@ class Index extends Base
         //获取该城市所有满足条件的方案
         $info = Share::getNewCarPlan($city_id, '', true);
 
-
         $recommendList = [];             //为你推荐（新车）
         $specialfieldList = [];          //专场（新车）
 
@@ -233,10 +231,10 @@ class Index extends Base
 
             if ($v['recommendismenu']) {
                 $recommendList[] = ['id' => $v['id'], 'models_main_images' => $v['models_main_images'], 'models_name' => $v['models']['name'],
-                    'payment' => $v['payment'], 'monthly' => $v['monthly']];
+                    'payment' => $v['payment'], 'monthly' => $v['monthly'],'type' => $v['type']];
             }
             if ($v['specialismenu']) {
-                $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages']];
+                $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages'],'type' => $v['type']];
                 $specialfieldList[] = $needData;
             }
 
@@ -269,6 +267,7 @@ class Index extends Base
 
 
                 if ($plan) {
+                    $plan['type'] = 'new';
                     $plan_arr[] = $plan;
                 }
 
