@@ -90,6 +90,7 @@ Page({
         app.request('/share/fabulousInterface', { plan_id, cartype }, (data, ret) => {
             console.log(data)
             app.success(ret.msg)
+            setTimeout(() => app.integral('fabulous'))
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)

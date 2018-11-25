@@ -21,7 +21,7 @@
     <view class="body">
         <scroll-view scroll-y style="height: 100%" wx:if="{{ !visible }}">
             <block wx:for="{{ [1,2,3,4,5,6] }}" wx:key="">
-                <wux-media wux-class="media" thumbStyle="width: 180rpx; background: #f1efef" thumb="https://static.aicheyide.com/uploads/20181116/7a78ad19d7a7d79d15a8bf9dbac97bd2.png">
+                <wux-media wux-class="media" thumbStyle="width: 180rpx; background: #f1efef" thumb="https://static.aicheyide.com/uploads/20181116/7a78ad19d7a7d79d15a8bf9dbac97bd2.png" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
                     <view class="media__title wux-ellipsis--l2">黑色逸轩2018经典款1.6XE+手动领先版 版手动领先版</view>
                     <view class="wux-clearfix">
                         <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付0.59万</view>

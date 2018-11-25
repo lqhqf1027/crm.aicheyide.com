@@ -42,7 +42,7 @@ App({
         var that = this;
         this.request('/share/integral', { style }, function(data, ret) {
             typeof cb == "function" && cb(data);
-            that.success(ret.msg)
+            // that.success(ret.msg)
         }, function(data, ret) {
             that.error(ret.msg);
         });
