@@ -89,7 +89,7 @@
     <view class="payment wux-mt--10 wux-pl--10">
         <text class="wux-mr--15">首付</text>
         <block wx:for="{{ tags }}" wx:key="">
-            <wux-tag wux-class="payment-tag" bind:click="onTag">{{ item.name }}</wux-tag>
+            <wux-tag wux-class="payment-tag" data-payment="{{ item.payment }}" bind:click="onTag">{{ item.label }}</wux-tag>
         </block>
     </view>
     <!-- 为你推荐 -->
