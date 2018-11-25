@@ -87,4 +87,7 @@ Page({
             url: '/page/index/index',
         })
     },
+    integral() {
+        app.integral('sign')
+    },
 })

@@ -1,5 +1,7 @@
 .header {
+    display: flex;
     height: 170rpx;
+    font-size: 26rpx;
     color: #fff;
     background-color: #3b66bb;
     padding: 20rpx;
@@ -59,6 +61,53 @@
     font-size: 26rpx;
     color: #666;
     margin-top: 14rpx;
+}
+
+.userinfo {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.other {
+    flex: 1;
+    text-align: right;
+}
+
+.line {
+    position: relative;
+    height: 20rpx;
+    margin: 0 40rpx;
+}
+
+.sign {
+    display: inline-block;
+    width: 180rpx;
+    height: 60rpx;
+    font-size: 24rpx;
+    line-height: 1.5;
+    color: #fff;
+    background-color: #ff6740;
+    text-align: center;
+    border-radius: 10rpx;
+    padding: 12rpx;
+    /*margin-top: 30rpx;*/
+    box-sizing: border-box;
+}
+
+.line:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    bottom: 0;
+    border-left: 1px solid #D5D5D6;
+    color: #D5D5D6;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
 }
 
 .avatar {
