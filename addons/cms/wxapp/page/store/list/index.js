@@ -5,6 +5,7 @@ Page({
         cdn_url: '',
         store_layout: '',
         list: [],
+        store: [],
         activeIndex: 0,
     },
     onLoad() {
@@ -45,6 +46,13 @@ Page({
 
         this.setData({
             list,
+        })
+    },
+    onOpenDetail(e) {
+        const { id } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/store/detail/index?id=${id}`,
         })
     },
 })

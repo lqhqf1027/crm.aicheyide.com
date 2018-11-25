@@ -9,6 +9,7 @@
         "page/search/index",
         "page/news/list/index",
         "page/store/list/index",
+        "page/store/detail/index",
         "page/my/list/index",
         "page/my/setting/index"
     ],

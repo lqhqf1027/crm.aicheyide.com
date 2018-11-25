@@ -32,8 +32,14 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
-			"list": []
+			"current": 0,
+			"list": [
+				{
+					"id": -1,
+					"name": "detail",
+					"pathName": "page/store/detail/index"
+				}
+			]
 		}
 	}
 }
