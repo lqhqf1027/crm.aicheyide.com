@@ -1,16 +1,61 @@
 <view class="container">
     <view class="header">
-        <view class="avatar">
-            <image bindtap="uploadAvatar" src="{{ userInfo.avatar }}"></image>
+        <view class="userinfo">
+            <wux-avatar wux-class="avatar" src="{{ userInfo.avatar }}" />
+            <view class="wux-mt--10">{{ userInfo.nickname }}</view>
         </view>
-        <view class="account">
-            <navigator url="profile">
-                <view class="zan-font-16">
-                    {{ userInfo.nickname }}
-                </view>
-            </navigator>
-            <view class="zan-font-12" wx:if="{{ userInfo.id }}">{{ userInfo.bio ? userInfo.bio : '写点什么介绍下自己吧!' }}</view>
-            <button wx:if="{{ userInfo.id==0 }}" open-type="getUserInfo" bindgetuserinfo="login" class="zan-btn zan-btn--mini btn-auth">立即登录</button>
+        <view class="other">
+            <view class="sign" bindtap="integral">立即签到</view>
+            <view class="wux-mt--20">
+                <text class="score">积分：100</text>
+                <text class="line"></text>
+                <text class="coupon">优惠券：2</text>
+            </view>
         </view>
     </view>
+    <wux-tabs wux-class="wux-mt--10" theme="positive" defaultCurrent="collection" bind:change="onChange">
+        <wux-tab key="collection" title="我的收藏"></wux-tab>
+        <wux-tab key="appointment" title="我的预约"></wux-tab>
+        <wux-tab key="pickup" title="已提车"></wux-tab>
+    </wux-tabs>
+    <view class="body">
+        <scroll-view scroll-y style="height: 100%" wx:if="{{ !visible }}">
+            <block wx:for="{{ [1,2,3,4,5,6] }}" wx:key="">
+                <wux-media wux-class="media" thumbStyle="width: 180rpx; background: #f1efef" thumb="https://static.aicheyide.com/uploads/20181116/7a78ad19d7a7d79d15a8bf9dbac97bd2.png" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
+                    <view class="media__title wux-ellipsis--l2">黑色逸轩2018经典款1.6XE+手动领先版 版手动领先版</view>
+                    <view class="wux-clearfix">
+                        <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付0.59万</view>
+                        <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10">月供2548元</view>
+                        <view class="media__desc wux-pull-right">
+                            <view class="fa fa-map-marker"></view> 成都</view>
+                        <view class="media__desc wux-pull-right wux-mr--10">
+                            <view class="fa fa-map-marker"></view> 2.3 W</view>
+                    </view>
+                </wux-media>
+            </block>
+        </scroll-view>
+        <view class="notfound" wx:else>
+            <view class="notfound__title">您还没有收藏宝贝哦~</view>
+            <view class="notfound__button" bindtap="toMore">去逛逛</view>
+        </view>
+    </view>
+    <wux-grids wux-class="wux-mt--10" bordered="{{ false }}" col="3">
+        <wux-grid thumb="/assets/images/score.png">
+            <view class="grid__name">我的积分</view>
+        </wux-grid>
+        <wux-grid thumb="/assets/images/message.png">
+            <view class="grid__name">我的消息</view>
+        </wux-grid>
+        <wux-grid thumb="/assets/images/service.png">
+            <view class="grid__name">我的客户</view>
+        </wux-grid>
+    </wux-grids>
+    <view class="wish">
+        <view class="wish__hd">
+            <image class="wish__image" src="/assets/images/upload.png"></image>
+        </view>
+        <view class="wish__bd">关于友车有家</view>
+        <view class="wish__ft"></view>
+    </view>
+    <view class="footer">©成都君忆汽车服务有限公司 • All Rights Reserved </view>
 </view>

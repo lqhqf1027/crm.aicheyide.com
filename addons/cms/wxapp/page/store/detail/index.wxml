@@ -1,0 +1,34 @@
+<view class="store">
+	<image class="store__image" src="{{ 'https://static.aicheyide.com' + store_info.store_img[0] }}" />
+	<view class="store__card wux-mt--10">
+		<view class="store__title">{{ store_info.store_name }}</view>
+		<view class="store__desc">客服电话：{{ store_info.phone }}</view>
+		<view class="store__desc">工作时间：周一至周日00:00 ~24:00</view>
+		<view class="store__desc">门店地址：{{ store_info.store_address }}</view>
+		<map class="store__map" longitude="{{ store_info.longitude }}" latitude="{{ store_info.latitude }}" />
+	</view>
+	<block wx:if="{{ store_carList.length }}">
+		<view class="store__hot-title"><image class="store__hot-image" src="/assets/images/hot.png" />热销车型</view>
+		<view class="store__card">
+			<block wx:for="{{ store_carList[0].planacar_count }}" wx:key="">
+		        <view class="car">
+		            <image class="car__image" src="{{ 'https://static.aicheyide.com' + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
+		            <view class="car__title">{{ item.models_name }}</view>
+		            <image class="car__label" src="{{ 'https://static.aicheyide.com' + item.labels.lableimages }}" wx:if="{{ item.labels }}" />
+		            <view class="wux-clearfix">
+		                <view class="car__title car__title--payment wux-pull-left wux-mr--20 wux-mt--10 {{ item.labels && item.labels.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
+		                <view class="car__title car__title--monthly wux-pull-left wux-mt--10">月供 {{ item.monthly }} 元</view>
+		                <view class="car__title car__title--monthly wux-pull-right wux-mt--10" wx:if="{{ item.popularity }}">{{ item.popularity || 0 }}</view>
+		            </view>
+		        </view>
+		    </block>
+		</view>
+	</block>
+    <view class="wish">
+        <view class="wish__hd">
+            <image class="wish__image" src="/assets/images/upload.png"></image>
+        </view>
+        <view class="wish__bd">没有合适的车型？提交心愿单帮你找</view>
+        <view class="wish__ft"></view>
+    </view>
+</view>

@@ -116,10 +116,10 @@ Page({
         })
     },
     onOpenDetail(e) {
-        const { id } = e.currentTarget.dataset
+        const { id, type } = e.currentTarget.dataset
 
         wx.navigateTo({
-            url: `/page/preference/detail/index?id=${id}`,
+            url: `/page/preference/detail/index?id=${id}&type=${type}`,
         })
     },
     onTag(e) {

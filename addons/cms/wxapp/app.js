@@ -37,6 +37,16 @@ App({
             that.error(ret.msg);
         });
     },
+    //添加积分
+    integral: function(style, cb) {
+        var that = this;
+        this.request('/share/integral', { style }, function(data, ret) {
+            typeof cb == "function" && cb(data);
+            // that.success(ret.msg)
+        }, function(data, ret) {
+            that.error(ret.msg);
+        });
+    },
     //判断是否登录
     check: function(cb) {
         var that = this;
@@ -210,6 +220,7 @@ App({
     },
     //构造CDN地址
     cdnurl: function(url) {
+        if (!url) return ''
         return url.toString().match(/^https?:\/\/(.*)/i) ? url : this.globalData.config.upload.cdnurl + url;
     },
     //文本提示

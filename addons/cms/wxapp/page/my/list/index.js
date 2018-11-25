@@ -72,5 +72,31 @@ Page({
                 });
             }
         });
-    }
+    },
+    onChange(e) {
+        const { key } = e.detail
+
+        if (key !== 'collection') {
+            this.setData({
+                visible: true,
+            })
+        }
+    },
+    toMore() {
+        wx.switchTab({
+            url: '/page/index/index',
+        })
+    },
+    integral() {
+        app.integral('sign', function(data) {
+            app.success(data)
+        })
+    },
+    onOpenDetail(e) {
+        const { id, type } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/preference/detail/index?id=${id}&type=${type}`,
+        })
+    },
 })

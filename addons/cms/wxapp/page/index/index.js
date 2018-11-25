@@ -95,7 +95,7 @@ var getPaymentLabel = (str) => {
 Page({
     data: {
         items,
-        globalData: {},
+        globalData: app.globalData,
         shares: {},
         city: app.globalData.city,
         list: [],
@@ -254,6 +254,20 @@ Page({
     onReset() {
         this.setCars()
     },
+    onCancel() {
+        const { index } = this.data
+        const items = this.data.items.map((n, i) => {
+            return Object.assign({}, n, {
+                checked: index !== i ? n.checked : false,
+                visible: index !== i ? n.checked : false,
+            })
+        })
+
+        this.setData({
+            items,
+            backdrop: false,
+        })
+    },
     onClick(e) {
         const { index, checked } = e.currentTarget.dataset
         const items = this.data.items.map((n, i) => {
@@ -264,6 +278,7 @@ Page({
         })
 
         this.setData({
+            index,
             items,
             backdrop: index !== 1 && !checked,
         })

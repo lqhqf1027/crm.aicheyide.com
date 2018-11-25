@@ -1,11 +1,26 @@
+<view class="card">
+    <image class="card__image" src="{{ plan.models_main_images }}" wx:if="{{ plan.models_main_images }}" />
+    <view class="card__extra">车辆图片仅供参考 以配置描述为准</view>
+    <view class="card__title wux-mt--10">{{ plan.models.name }}</view>
+    <image class="card__label" src="{{ plan.label.lableimages }}" wx:if="{{ plan.label }}" />
+    <view class="wux-clearfix">
+        <view class="card__title card__title--monthly wux-pull-left wux-mr--20 wux-mt--10">厂商指导价 {{ plan.guide_price / 10000 }} 万</view>
+        <view class="tags wux-pull-right wux-mt--10">
+            <view class="tag">含</view>购置税
+            <view class="tag">送</view>一年保险
+            <view class="tag">送</view>首次保养
+        </view>
+    </view>
+</view>
+
 <wux-cell-group wux-class="wux-mt--10" wx:if="{{ plan }}">
-    <wux-cell hover-class="none" is-link extra="更多方案" bind:click="openLocation">
+    <wux-cell hover-class="none" is-link extra="更多方案" bind:click="openPlan">
         <view class="title">先用后买</view>
     </wux-cell>
     <wux-cell hover-class="none">
         <view class="payment">
             <view class="payment-item">
-                <view class="payment-label payment-label--del">首付{{ plan.payment / 10000 }}万</view>
+                <view class="payment-label {{ plan.label.name === '免首付' ? 'payment-label--del' : '' }}">首付{{ plan.payment / 10000 }}万</view>
                 <view class="payment-money">0元</view>
             </view>
             <view class="payment-item">
@@ -57,7 +72,7 @@
     <view class="guesslike-content">
         <scroll-view scroll-x class="guesslike-srcoll">
             <block wx:for="{{ guesslike }}" wx:key="">
-                <view class="car">
+                <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
                     <image class="car__image" src="{{ item.models_main_images }}" />
                     <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                     <view class="wux-clearfix">
@@ -82,14 +97,14 @@
     <view class="bottom-icon">
         <icon class="fa fa-share-square"></icon>
     </view>
-    <view class="bottom-icon">
+    <view class="bottom-icon" bindtap="collectionInterface">
         <icon class="fa fa-star"></icon>
     </view>
     <view class="bottom-icon">
         <icon class="fa fa-comment"></icon>
     </view>
-    <view class="bottom-icon">
+    <view class="bottom-icon" bindtap="fabulousInterface">
         <icon class="fa fa-thumbs-up"></icon>
     </view>
-    <view class="bottom-btn">立即预约</view>
+    <view class="bottom-btn" bindtap="clickAppointment">立即预约</view>
 </view>

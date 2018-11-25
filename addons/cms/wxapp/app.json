@@ -3,11 +3,13 @@
         "page/preference/list/index",
         "page/preference/detail/index",
         "page/preference/config/index",
+        "page/preference/plan/index",
         "page/index/index",
         "page/city/index",
         "page/search/index",
         "page/news/list/index",
         "page/store/list/index",
+        "page/store/detail/index",
         "page/my/list/index",
         "page/my/setting/index"
     ],
