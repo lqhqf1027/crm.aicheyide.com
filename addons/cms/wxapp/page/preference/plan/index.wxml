@@ -1,11 +1,11 @@
 <view class="container">
     <view class="plans">
-        <block wx:for="{{ plans }}" wx:key="">
+        <block wx:for="{{ plan.different_schemes }}" wx:key="">
             <view class="plans-title">方案{{ index + 1 }}</view>
             <view class="title">先用后买</view>
             <view class="payment">
                 <view class="payment-item">
-                    <view class="payment-label payment-label--del">首付{{ item.payment / 10000 }}万</view>
+                    <view class="payment-label {{ plan.label.name === '免首付' ? 'payment-label--del' : '' }}">首付{{ item.payment / 10000 }}万</view>
                     <view class="payment-money">0元</view>
                 </view>
                 <view class="payment-item">

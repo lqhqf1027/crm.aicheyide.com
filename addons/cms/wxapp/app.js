@@ -210,6 +210,7 @@ App({
     },
     //构造CDN地址
     cdnurl: function(url) {
+        if (!url) return ''
         return url.toString().match(/^https?:\/\/(.*)/i) ? url : this.globalData.config.upload.cdnurl + url;
     },
     //文本提示

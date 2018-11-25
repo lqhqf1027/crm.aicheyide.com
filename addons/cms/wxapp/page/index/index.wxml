@@ -1,6 +1,6 @@
 <view class="page">
     <!-- 顶部搜索行 -->
-    <wux-animation-group wux-class="backdrop" in="{{ backdrop }}" class-names="wux-animate--fadeIn" />
+    <wux-animation-group wux-class="backdrop" in="{{ backdrop }}" class-names="wux-animate--fadeIn" bind:click="onCancel" />
     <view class="header">
         <view class="page_hd page_hd--fixed">
             <view class="page_hd_position" bindtap="onSelect">
@@ -23,7 +23,7 @@
                 </button>
             </view>
         </view>
-        <wux-tabs current="{{ searchVal.style }}" controlled bind:change="onChange">
+        <wux-tabs theme="positive" current="{{ searchVal.style }}" controlled bind:change="onChange">
             <wux-tab key="new" title="新车"></wux-tab>
             <wux-tab key="used" title="二手车"></wux-tab>
             <wux-tab key="logistics" title="新能源物流车"></wux-tab>
@@ -90,9 +90,9 @@
     </view>
     <block wx:for="{{ list }}" wx:key="">
         <view class="car">
-            <image class="car__image" src="{{ item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
+            <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
             <view class="car__title">{{ item.models_name }}</view>
-            <image class="car__label" src="{{ item.labels.lableimages }}" wx:if="{{ item.labels }}" />
+            <image class="car__label" src="{{ globalData.config.upload.cdnurl + item.labels.lableimages }}" wx:if="{{ item.labels }}" />
             <view class="wux-clearfix">
                 <view class="car__title car__title--payment wux-pull-left wux-mr--20 wux-mt--10 {{ item.labels && item.labels.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
                 <view class="car__title car__title--monthly wux-pull-left wux-mt--10">月供 {{ item.monthly }} 元</view>
