@@ -2,13 +2,13 @@
     <view class="header">
         <wux-avatar wux-class="avatar" src="{{ userInfo.avatar }}" /> {{ userInfo.nickname }}
     </view>
-    <wux-tabs wux-class="wux-mt--10" theme="positive" defaultCurrent="collection">
+    <wux-tabs wux-class="wux-mt--10" theme="positive" defaultCurrent="collection" bind:change="onChange">
         <wux-tab key="collection" title="我的收藏"></wux-tab>
         <wux-tab key="appointment" title="我的预约"></wux-tab>
         <wux-tab key="pickup" title="已提车"></wux-tab>
     </wux-tabs>
     <view class="body">
-        <scroll-view scroll-y style="height: 100%">
+        <scroll-view scroll-y style="height: 100%" wx:if="{{ !visible }}">
             <block wx:for="{{ [1,2,3,4,5,6] }}" wx:key="">
                 <wux-media wux-class="media" thumbStyle="width: 180rpx; background: #f1efef" thumb="https://static.aicheyide.com/uploads/20181116/7a78ad19d7a7d79d15a8bf9dbac97bd2.png">
                     <view class="media__title wux-ellipsis--l2">黑色逸轩2018经典款1.6XE+手动领先版 版手动领先版</view>
@@ -23,6 +23,10 @@
                 </wux-media>
             </block>
         </scroll-view>
+        <view class="notfound" wx:else>
+            <view class="notfound__title">您还没有收藏宝贝哦~</view>
+            <view class="notfound__button" bindtap="toMore">去逛逛</view>
+        </view>
     </view>
     <wux-grids wux-class="wux-mt--10" bordered="{{ false }}" col="3">
         <wux-grid thumb="/assets/images/score.png">

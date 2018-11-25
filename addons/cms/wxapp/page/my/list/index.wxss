@@ -118,3 +118,29 @@
     margin-top: -8rpx;
     right: 4rpx
 }
+
+.notfound {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.notfound__title {
+    font-size: 30rpx;
+    color: #999;
+}
+
+.notfound__button {
+    width: 200rpx;
+    height: 52rpx;
+    font-size: 28rpx;
+    color: #fff;
+    background-color: #3b66bb;
+    text-align: center;
+    border-radius: 26rpx;
+    padding: 4rpx 14rpx;
+    margin-top: 30rpx;
+    box-sizing: border-box;
+}

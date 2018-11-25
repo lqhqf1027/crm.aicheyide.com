@@ -72,5 +72,19 @@ Page({
                 });
             }
         });
-    }
+    },
+    onChange(e) {
+        const { key } = e.detail
+
+        if (key !== 'collection') {
+            this.setData({
+                visible: true,
+            })
+        }
+    },
+    toMore() {
+        wx.switchTab({
+            url: '/page/index/index',
+        })
+    },
 })
