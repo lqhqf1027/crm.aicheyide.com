@@ -21,7 +21,7 @@ class Takesecondcar extends Backend
      * @var \app\admin\model\Sms
      */
     protected $model = null;
-    protected $noNeedRight = ['index', 'secondtakecar', 'takecar', 'seconddetails','edit'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

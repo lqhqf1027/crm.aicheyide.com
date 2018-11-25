@@ -21,7 +21,7 @@ class Models extends Backend
 
     protected static $keys = '723d926ce76f411dab7836aeb5b33a76';
 
-    protected $noNeedRight = ['index','getBrand','getSeries','getModel','add','edit'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {
@@ -64,7 +64,7 @@ class Models extends Backend
                     ->select();
 
             foreach ($list as $row) {
-                $row->visible(['id','name','standard_price','status','createtime','updatetime']);
+                $row->visible(['id','name','standard_price','status','createtime','updatetime','price']);
                 $row->visible(['brand']);
                 $row->getRelation('brand')->visible(['name']);
                 $row->visible(['series']);
@@ -262,10 +262,12 @@ class Models extends Backend
                 $series_name = explode('(停售)',$series_name);
                 $series_name = implode($series_name);
                 
-                $vehicle_configuration = Db::name('models_details')->where('id', $params['model_name'])->value('vehicle_configuration');
+                $data = Db::name('models_details')->where('id', $params['model_name'])->find();
                 $params['name'] = $brand_name . " " .  $series_name . " " .  $models_name;
                 // pr($params['name']);die;
-                $params['vehicle_configuration'] = $vehicle_configuration;
+                $params['vehicle_configuration'] = $data['vehicle_configuration'];
+                //厂商指导价
+                $params['price'] = $data['price'];
                 // pr($params);
                 // die;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
@@ -321,9 +323,11 @@ class Models extends Backend
                 $series_name = explode('(停售)',$series_name);
                 $series_name = implode($series_name);
                     
-                $vehicle_configuration = Db::name('models_details')->where('id', $params['model_name'])->value('vehicle_configuration');
+                $data = Db::name('models_details')->where('id', $params['model_name'])->find();
                 $params['name'] = $brand_name . " " .  $series_name . " " .  $models_name;
-                $params['vehicle_configuration'] = $vehicle_configuration;
+                $params['vehicle_configuration'] = $data['vehicle_configuration'];
+                //厂商指导价
+                $params['price'] = $data['price'];
 
                 try {
                     //是否采用模型验证

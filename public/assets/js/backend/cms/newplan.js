@@ -20,7 +20,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.on('load-success.bs.table', function (e, data) {
                 $(".btn-editone").data("area", ["70%", "70%"]);
 
-                var td = $("#table td:nth-child(16)");
+                var td = $("#table td:nth-child(3)");
 
                 for (var i = 0; i < td.length; i++) {
 
@@ -41,6 +41,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             checkbox: true,
                         },
                         {field: 'id', title: __('Id'), operate: false},
+                        {
+                            field: 'models.name', title: '销售车型', operate: false, formatter: function (v, r, i) {
+                                return v != null ? "<img src=" + r.brand_log + " alt='品牌logo' width='30' height='30'>" + r.brand_name + '-' + v : v;
+                            }
+                        },
                         {field: 'weigh', title: __('权重（排序）')},
                         {field: 'models_main_images', title: __('封面图片'), formatter: Table.api.formatter.images},
                         {field: 'modelsimages', title: __('车型亮点'), formatter: Table.api.formatter.images},
@@ -89,14 +94,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         },
                         {field: 'label.lableimages', title: __('标签图片'), formatter: Table.api.formatter.images},
                         {
-                            field: 'companystore.store_name', title: __('门店名称'),
+                            field: 'store_name', title: __('门店名称'),
                         },
 
-                        {
-                            field: 'models.name', title: '销售车型', operate: false, formatter: function (v, r, i) {
-                                return v != null ? "<img src=" + r.brand_log + " alt='品牌logo' width='30' height='30'>" + r.brand_name + '-' + v : v;
-                            }
-                        },
+                        
                         {field: 'payment', title: __('首付（元）'), operate: 'BETWEEN', operate: false},
                         {field: 'monthly', title: __('月供（元）'), operate: 'BETWEEN', operate: false},
                         {

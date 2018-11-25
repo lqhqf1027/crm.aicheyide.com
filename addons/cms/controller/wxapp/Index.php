@@ -49,9 +49,10 @@ class Index extends Base
             $appointment = Cache::get('appointment');
         }
 
+
+
         //返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
-
         $data = ['carType' => [
             'new' => [
                 //为你推荐
@@ -112,7 +113,7 @@ class Index extends Base
 
                 $data = ['id' => $v['planacar']['id'], 'models_main_images' => $v['planacar']['models_main_images'],
                     'models_name' => $v['name'], 'payment' => $v['planacar']['payment'], 'monthly' => $v['planacar']['monthly'],
-                    'city' => $v['planacar']['city'], 'type' => 'new'];
+                    'city' => $v['planacar']['city']];
 
                 if ($v['planacar']['city']['id'] == $city_id) {
                     $myCity[] = $data;
@@ -229,11 +230,11 @@ class Index extends Base
         foreach ($info as $k => $v) {
 
             if ($v['recommendismenu']) {
-                $recommendList[] = ['id' => $v['id'], 'models_main_images' => $v['models_main_images'], 'models_name' => $v['models_name'],
-                    'payment' => $v['payment'], 'monthly' => $v['monthly'], 'type' => 'new'];
+                $recommendList[] = ['id' => $v['id'], 'models_main_images' => $v['models_main_images'], 'models_name' => $v['models']['name'],
+                    'payment' => $v['payment'], 'monthly' => $v['monthly'],'type' => $v['type']];
             }
             if ($v['specialismenu']) {
-                $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages'], 'type' => 'new'];
+                $needData = ['id' => $v['id'], 'specialimages' => $v['specialimages'],'type' => $v['type']];
                 $specialfieldList[] = $needData;
             }
 
@@ -251,7 +252,6 @@ class Index extends Base
         foreach ($specialList as $k => $v) {
             $specialList[$k]['plan_id'] = json_decode($v['plan_id'], true);
 
-            $specialList[$k]['coverimages'] = Config::get('upload')['cdnurl'] . $specialList[$k]['coverimages'];
             $plan_arr = [];
             foreach ($specialList[$k]['plan_id']['plan_id'] as $key => $value) {
                 $plan = Db::name('plan_acar')
@@ -265,10 +265,9 @@ class Index extends Base
                     ->field('a.id,b.name as models_name,a.payment,a.monthly,a.models_main_images')
                     ->find();
 
-                $plan['models_main_images'] = Config::get('upload')['cdnurl'] . $plan['models_main_images'];
-                $plan['type'] = 'new';
 
                 if ($plan) {
+                    $plan['type'] = 'new';
                     $plan_arr[] = $plan;
                 }
 
@@ -287,76 +286,6 @@ class Index extends Base
             'specialfieldList' => $specialfieldList,
         ];
     }
-
-
-
-
-
-    /**
-     * 方案车型接口
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-//    public function modelsPlan()
-//    {
-////        //车型ID
-////        $models_id = $this->request->post('models_id');
-////        //类型
-////        $models_style = $this->request->post('models_style');
-//
-////        if (!$models_id || !$models_style) {
-////            $this->error('参数错误或缺失参数', 'error');
-////        }
-//
-//
-//        $getPlans = PlanAcar::field('id,payment,monthly,guide_price,models_main_images,popularity')
-//            ->with(['models' => function ($query) {
-//                $query->where('models.status', 'normal');
-//                $query->withField('name');
-//            }, 'companystore' => function ($query) {
-//                $query->where('statuss', 'normal');
-//                $query->withField('city_id');
-//            }])->select();
-//
-//        //将自己的城市单独拉出来
-//        $myCity = [];
-//        foreach ($getPlans as $k => $v) {
-//            $getPlans[$k]['models_main_images'] = $v['models_main_images'] = Config::get('upload')['cdnurl'] . $v['models_main_images'];
-//            if ($v['companystore'] && $v['companystore']['city_id']) {
-//                if ($models_style == 'new') {
-//                    $getPlans[$k]['style'] = 'new';
-//                    $v['style'] = 'new';
-//                } else {
-//                    $getPlans[$k]['style'] = 'used';
-//                    $v['style'] = 'used';
-//                }
-//
-//                if ($v['companystore']['city_id'] == Cache::get('city_id')) {
-//                    unset($v['companystore']);
-//                    $v['models_name'] = $v['models']['name'];
-//                    unset($v['models']);
-//                    $myCity[] = $v;
-//                    unset($getPlans[$k]);
-//                } else {
-//                    $getPlans[$k]['models_name'] = $v['models']['name'];
-//                    unset($getPlans[$k]['models']);
-//                    unset($getPlans[$k]['companystore']);
-//                }
-//
-//            }
-//        }
-//
-//        $data = array_merge($myCity, $getPlans);
-//
-//        if ($data) {
-//            $this->success('请求成功', $data);
-//        } else {
-//            $this->error('', '');
-//        }
-//
-//
-//    }
 
 
     /**

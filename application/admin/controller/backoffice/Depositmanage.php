@@ -23,7 +23,7 @@ class Depositmanage extends Backend
      * @var \app\admin\model\CustomerDownpayment
      */
     protected $model = null;
-    protected $noNeedRight = ['index', 'new_car', 'used_car', 'rent_car', 'full_car', 'edit', 'edit_used', 'edit_rent', 'edit_full'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {

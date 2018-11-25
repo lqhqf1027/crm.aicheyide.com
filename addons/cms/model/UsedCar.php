@@ -14,5 +14,36 @@ class UsedCar extends Model
     // 表名
     protected $name = 'secondcar_rental_models_info';
 
+ 
+//    // 追加属性
+    protected $append = [
+        'type'
+    ];
+
+
+
+    public function getTypeAttr($value, $data)
+    {
+
+        return 'used';
+    }
+    /**
+     * 关联标签
+     * @return \think\model\relation\BelongsTo
+     */
+    public function label()
+    {
+        return $this->belongsTo('Label','label_id','id',[],'LEFT')->setEagerlyType(0);
+
+    } 
+    /**
+     * 关联车型
+     * @return \think\model\relation\BelongsTo
+     */
+    public function models()
+    {
+        return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
+
+    }
 
 }
