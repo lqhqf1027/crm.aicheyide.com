@@ -20,7 +20,7 @@ class Logistics extends Backend
     protected $model = null;
     protected $multiFields = ['recommendismenu','flashviewismenu','specialismenu','subjectismenu','ismenu'];
 
-    protected $noNeedRight = ['index', 'add','edit'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {
@@ -55,20 +55,20 @@ class Logistics extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                    ->with(['subject','label','store'])
+                    ->with(['subject','label','store','brand'])
                     ->where($where)
                     ->order($sort, $order)
                     ->count();
 
             $list = $this->model
-                    ->with(['subject','label','store'])
+                    ->with(['subject','label','store','brand'])
                     ->where($where)
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
 
-            foreach ($list as $row) {
-                
+            foreach ($list as $key => $row) {
+    
                 
             }
             $list = collection($list)->toArray();
@@ -86,6 +86,11 @@ class Logistics extends Backend
     {
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            // pr($params);
+            // die;
+            //车型名称
+            $params['name'] = Db::name('brand')->where('id', $params['series_name'])->value('name');
+            
             if ($params) {
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -120,6 +125,56 @@ class Logistics extends Backend
     }
 
     /**
+     * 查询车辆品牌
+     */
+    public function getBrand()
+    {
+        $this->model = model('Brand');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
+        }
+    }
+
+
+    /**
+     * 查询车辆车系
+     */
+    public function getSeries()
+    {
+        $this->model = model('Brand');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
+            $id = $this->request->post('id');
+            //父级id
+            $list = $this->model->where('pid', $id)->field('id,name')->select();
+
+            $result = array("list" => $list);
+
+            return json($result);
+        }
+        
+    }
+
+
+    /**
      * 编辑
      */
     public function edit($ids = NULL)
@@ -135,6 +190,8 @@ class Logistics extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            //车型名称
+            $params['name'] = Db::name('brand')->where('id', $params['series_name'])->value('name');
             if ($params) {
                 try {
                     //是否采用模型验证

@@ -219,6 +219,7 @@ class Index extends Base
         //获取该城市所有满足条件的方案
         $info = Share::getNewCarPlan($city_id, '', true);
 
+
         $recommendList = [];             //为你推荐（新车）
         $specialfieldList = [];          //专场（新车）
 
@@ -320,11 +321,12 @@ class Index extends Base
             }
             $appointment[$k]['mobile'] = $v['user']['mobile'];
             $appointment[$k]['avatar'] = $v['user']['avatar'];
-            unset($appointment[$k]['user']);
-            unset($appointment[$k]['newplan']);
-            unset($appointment[$k]['usedplan']);
-            unset($appointment[$k]['energyplan']);
-            unset($appointment[$k]['state_text']);
+            unset($appointment[$k]['user'],$appointment[$k]['newplan'],$appointment[$k]['usedplan'],
+                $appointment[$k]['energyplan'],$appointment[$k]['state_text']);
+//            unset($appointment[$k]['newplan']);
+//            unset($appointment[$k]['usedplan']);
+//            unset($appointment[$k]['energyplan']);
+//            unset($appointment[$k]['state_text']);
         }
 
         return $appointment;
