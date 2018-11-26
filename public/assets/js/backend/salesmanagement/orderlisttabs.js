@@ -182,7 +182,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                             }
                                         }
                                     },
-                                    /**、
+                                    /**
                                      * 删除 
                                      */
                                     {
@@ -829,7 +829,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                      * 补全客户提车资料
                                      */
                                     {
-                                        name: 'take_the_data', text: '补全客户提车资料', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('补全客户提车资料'), classname: 'btn btn-xs btn-success btn-customer_information',
+                                        name: 'newinformation', text: '补全客户提车资料', icon: 'fa fa-pencil', extend: 'data-toggle="tooltip"', title: __('补全客户提车资料'), classname: 'btn btn-xs btn-success btn-newinformation',
                                         
                                         hidden: function (row, value, index) {
                                             if (row.review_the_data == 'take_the_data') {
@@ -3575,7 +3575,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
  
         },
         /**
-         * 二手车提交内勤
+         * 二手车审核
          */
         secondaudit:function(){
             
@@ -3771,18 +3771,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
          * 新车提车资料完善
          */
         newinformation:function(){
+            
             Table.api.init({
                
             });
             Form.api.bindevent($("form[role=form]"), function(data, ret){
-                Fast.api.close(data);
-                Toastr.success("成功");
+                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+
+                Fast.api.close(data);//这里是重点
+                
+                Toastr.success("成功");//这个可有可无
             }, function(data, ret){
+                
                 Toastr.success("失败");
+                
             });
-
-            Controller.api.bindevent();
-
+            // Controller.api.bindevent();
+ 
         },
         /**
          * 新车资料添加
@@ -4183,8 +4188,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                      * @param row
                      * @param index
                      */
-                    'click .btn-customer_information': function (e, value, row, index) { /**录入客户提车资料按钮 */
-                        $(".btn-customer_information").data("area", ["95%", "95%"]);
+                    'click .btn-newinformation': function (e, value, row, index) { /**录入客户提车资料按钮 */
+                        $(".btn-newinformation").data("area", ["95%", "95%"]);
 
                         e.stopPropagation();
                         e.preventDefault();

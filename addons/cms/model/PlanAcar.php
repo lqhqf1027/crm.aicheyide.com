@@ -113,6 +113,4 @@ class PlanAcar extends Model
         return $this->hasOne('Collection','plan_acar_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
-
-
 }

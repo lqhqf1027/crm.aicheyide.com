@@ -39,7 +39,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'name', title: __('Name')},
+                        {field: 'brand.name', title: __('车辆品牌')},
+                        {field: 'name', title: __('车辆车型')},
                         {field: 'models_main_images', title: __('Models_main_images'), formatter: Table.api.formatter.images},
                         {field: 'modelsimages', title: __('Modelsimages'), formatter: Table.api.formatter.images},
                         
@@ -79,9 +80,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.bindevent(table);
         },
         add: function () {
+            //车系
+            $(document).on("change", "#c-brand_id", function () {
+
+                $.post("planmanagement/models/getSeries",{
+
+                    id: $('#c-brand_id').val(),
+
+                    },function(result){
+                    // console.log(result);
+                    $('#c-series_name').selectPageData(result.list);
+                });
+            });
             Controller.api.bindevent();
         },
         edit: function () {
+            //车系
+            $(document).on("change", "#c-brand_id", function () {
+
+                $.post("planmanagement/models/getSeries",{
+
+                    id: $('#c-brand_id').val(),
+
+                    },function(result){
+                    // console.log(result);
+                    $('#c-series_name').selectPageData(result.list);
+                });
+            });
             Controller.api.bindevent();
         },
         api: {
