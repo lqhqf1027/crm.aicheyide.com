@@ -76,11 +76,10 @@ class CompanyStore extends Model
     {
 
         return $this->hasMany('PlanAcar', 'store_id', 'id')
-            ->field('id,store_id,label_id,monthly,payment,weigh,models_main_images,recommendismenu,specialismenu,specialimages');
+            ->field('id,store_id,label_id,monthly,payment,weigh,models_main_images');
     }
 
     /**
- 
      * 统计门店下二手车所有可卖车型个数
      * @return \think\model\relation\HasMany
      */
@@ -99,11 +98,13 @@ class CompanyStore extends Model
         return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,label_id,name,
         payment,monthly,models_main_images,popularity');
     }
+
 //
-    public static function getCarList($store_id){
-        return  self::with([
-            ['planacarCount','usedcarCount','logisticsCount']
-        ])->select(['store_id'=>$store_id]);
+    public static function getCarList($store_id)
+    {
+        return self::with([
+            ['planacarCount', 'usedcarCount', 'logisticsCount']
+        ])->select(['store_id' => $store_id]);
     }
 
     /**
@@ -115,21 +116,17 @@ class CompanyStore extends Model
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public static function getLogistics($store_id,$user_id)
+    public static function getLogistics($store_id, $user_id)
     {
-
-        return collection(Coupon::whereLike('store_ids','%,'.$store_id.',%','like')
+        return collection(Coupon::whereLike('store_ids', '%,' . $store_id . ',%', 'like')
 //            ->whereNotLike('user_id','%,'.$user_id.',%','not like')
-            ->where(function ($q) use($user_id) {
-            $q->where([
+            ->where(function ($q) use ($user_id) {
+                $q->where([
 //                'user_id'=>['like','%,'.$user_id.',%'],
-                'ismenu'=>1,//正常上架状态
-                'release_datetime'=>['LT',time()],//领用截至日期小于当前时间
-                'circulation'=>['GT',0], // 发放总量大于0
-                'remaining_amount'=>['GT',0]]); // 剩余总量大于0
-        })->select())->toArray();
+                    'ismenu' => 1,//正常上架状态
+                    'release_datetime' => ['LT', time()],//领用截至日期小于当前时间
+                    'circulation' => ['GT', 0], // 发放总量大于0
+                    'remaining_amount' => ['GT', 0]]); // 剩余总量大于0
+            })->select())->toArray();
     }
-
-
-
 }

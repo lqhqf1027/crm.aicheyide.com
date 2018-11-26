@@ -15,6 +15,8 @@ use think\Config;
 use addons\cms\model\CompanyStore as companyStoreModel;
 use addons\cms\model\Cities as citiesModel;
 use addons\cms\model\Config as configModel;
+use addons\cms\model\Models as modelsModel;
+use addons\cms\model\Brand as brandModel;
 
 class Store extends Base
 {
@@ -80,6 +82,10 @@ class Store extends Base
      */
     public function store_details()
     {
+        //获取品牌缓存；
+//        Cache::pull('BRAND_CACHE');
+
+        $cacheBrand = Cache::get('BRAND_CACHE')?Cache::get('BRAND_CACHE'):cache::set('BRAND_CACHE',self::matchBrand());
 
         $store_id = $this->request->post('store_id');//门店id
         $user_id = $this->request->post('user_id');//用户id
@@ -104,16 +110,17 @@ class Store extends Base
         $store_info = companyStoreModel::find($store_id)->hidden(['createtime', 'updatetime', 'status', 'plan_acar_id', 'statuss', 'store_qrcode']);
         $store_info['store_img'] = !empty($store_info['store_img']) ? explode(',', $store_info['store_img']) : ''; //转换图片为数组
         //门店下所卖的所有车型
+//        pr(collection(modelsModel::with(['brand'])->select())->toArray());die;
         $store_carList = collection(companyStoreModel::field('id,store_name')
             ->with(
-                ['planacarCount' =>function($q){
-                    $q->limit(1)->with(
+                ['planacarCount' => function ($q) {
+                    $q->with(
                         ['label' => function ($q) //新车方案&&标签
                         {
                             $q->withField(['id', 'name', 'lableimages']);
                         },
-                            'models'=>function($q){  //新车车型
-                                $q->withField(['id', 'name', 'price','vehicle_configuration']);
+                            'models' => function ($q) {  //新车车型
+                                $q->withField(['id', 'brand_id', 'name', 'standard_price']);
                             }
                         ]
                     );
@@ -121,27 +128,74 @@ class Store extends Base
                     'usedcarCount' => ['label' => function ($q) {  //二手车方案&&标签
                         $q->withField(['id', 'name', 'lableimages']);
                     },
-                    'models'=>function($q){  //二手车方案
-                        $q->withField(['id', 'name', 'price','vehicle_configuration']);
-                    }
+                        'models' => function ($q) {  //二手车方案
+                            $q->withField(['id', 'name', 'price', 'vehicle_configuration']);
+                        }
                     ],
                     'logisticsCount' => ['label' => function ($q) {   //新能源方案&&标签
                         $q->withField(['id', 'name', 'lableimages']);
                     }
                     ],
-                    'city'=>function($q){   //门店所属城市
-                        $q->withField(['cities_name']);
-                    }
+//                    'city'=>function($q){   //门店所属城市
+//                        $q->withField(['cities_name']);
+//                    }
                 ]
             )
             ->select(['store_id' => $store_id]))
             ->toArray();
-        pr($store_carList);
-        die;
-        $result['store_info'] = $store_info;
-        $result['isLogic'] = $isLogic;
+//        pr($store_carList);die;
+//        $result['store_info'] = $store_info;
+//        $result['isLogic'] = $isLogic;
+        $id = [];
 
-        $result['store_carList'] = $store_carList;
+
+        foreach ($store_carList as $key => $value) {
+            $newResult[] = $value['planacar_count'] ? ['car_typeName' => '新车', 'planaCar_list' => $store_carList[$key]['planacar_count']] : '';
+            $newResult[] = $value['usedcar_count'] ? ['car_typeName' => '二手车', 'usedCar_list' => $store_carList[$key]['usedcar_count']] : '';
+            $newResult[] = $value['logistics_count'] ? ['car_typeName' => '新能源', 'logisticsCar_list' => $store_carList[$key]['logistics_count']] : '';
+            if ($newResult[$key]['planaCar_list']) {
+                foreach ($newResult[$key]['planaCar_list'] as $k => $v) {
+
+//                    pr(array_ke array_values(self::matchBrand())) ;die;
+//                    if (in_array($v['models']['brand_id'],array_keys(self::matchBrand()[$key]['id']))){
+////                        echo 1;die;
+////                    }
+//                    if (isset($v['models'])) {
+//                        if ($v)
+//                            $newResult[$key]['planacar_list'] = [self::matchBrand($v['models']['brand_id'], $v)];
+////                        if();
+//                    }
+                }
+            } else {
+
+            }
+        }
+
+//        $result['store_carList'] = $store_carList;
+
+        $result = array_filter($newResult);
+        pr($result);
+
+        die;
         $this->success('请求成功', $result);
+    }
+
+    /**
+     * 根据车型里的品牌id获取品牌
+     * @param $brandId
+     * @return mixed
+     * @throws \think\exception\DbException
+     */
+    public static function matchBrand($data = null)
+    {
+        $brand = brandModel::all(function ($q) {
+            $q->field(['id', 'name', 'brand_initials'])->where(['status' => 'normal', 'pid' => 0, 'level' => 0]);
+        });
+        $new = [];
+        foreach ((array)$brand as $key => $value) {
+            $new[$value['brand_initials']][] = ['id' => $value['id'], 'name' => $value['name']];
+        }
+        $brand['data'] = $data;
+        return collection($new)->toArray();
     }
 }
