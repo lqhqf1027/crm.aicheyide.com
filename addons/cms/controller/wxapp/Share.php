@@ -8,6 +8,7 @@
 
 namespace addons\cms\controller\wxapp;
 
+use addons\cms\model\Brand;
 use think\Cache;
 use think\console\command\make\Model;
 use think\Db;
@@ -500,14 +501,15 @@ specialimages,popularity')
             ])
             ->field('b.id,b.payment,b.monthly,b.guide_price,b.models_main_images,a.name as models_name')
             ->select();
+
     }
 
 
     /**
      * 新车方案
-     * @param $city 城市
+     * @param $city
      * @param null $limit
-     * @param bool $duplicate 去重
+     * @param bool $duplicate
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -517,34 +519,17 @@ specialimages,popularity')
     {
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
-                $q->where('statuss', 'normal')->with(['planacarCount' => function ($query) {
-                    $query->where([
-                        'acar_status' => 1,
-                        'sales_id' => null
-                    ])->with(['models' => function ($models) {
-                        $models->where('models.status', 'normal')->withField('id,name');
+                $q->with(['planacarIndex' => function ($query) {
+                    $query->order('weigh desc')->with(['models' => function ($models) {
+                        $models->withField('id,name,brand_id');
                     }, 'label' => function ($label) {
-                        $label->where('label.status', 'normal')->withField('name,lableimages,rotation_angle');
+                        $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->find($city);
-        $arr = [];
-        $check = [];
-        foreach ($info['store_list'] as $k => $v) {
-            foreach ($v['planacar_count'] as $kk => $vv) {
-                if ($duplicate) {
-                    if (in_array($vv['models']['id'], $check)) {
-                        continue;
-                    } else {
-                        $check[] = $vv['models']['id'];
-                    }
-                }
-                $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
-                $arr[] = $vv;
-            }
-        }
 
-        return $arr;
+        return self::handleNewUsed($info, true, 'new');
+
     }
 
 
@@ -559,39 +544,125 @@ specialimages,popularity')
      */
     public static function getUsedPlan($city_id, $limit = '', $duplicate = false)
     {
-
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
                 $q->where('statuss', 'normal')->with(['usedcarCount' => function ($query) {
-                    $query->where([
-                        'sales_id' => null
-                    ])->with(['models' => function ($models) {
-                        $models->where('models.status', 'normal')->withField('id,name');
+                    $query->order('weigh desc')->with(['models' => function ($models) {
+                        $models->withField('id,name,brand_id');
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->find($city_id);
-return $info;
-        $arr = [];
+
+        return self::handleNewUsed($info, true, 'used');
+
+
+    }
+
+    public static function brandInfo()
+    {
+        return Brand::field('id,name,brand_initials')
+            ->where([
+                'status' => 'normal',
+                'pid' => 0
+            ])->select();
+    }
+
+    /**
+     *新车二手车返回
+     * @param $info
+     * @param bool $duplicate
+     * @param $type
+     * @return array
+     */
+    public static function handleNewUsed($info, $duplicate = false, $type)
+    {
         $check = [];
+
+        //得到所有的品牌列表
+        if (Cache::get('brandList')) {
+            $brand = Cache::get('brandList');
+        } else {
+            Cache::set('brandList', self::brandInfo());
+            $brand = Cache::get('brandList');
+        }
+
+        switch ($type) {
+            case 'new':
+                $planKey = 'planacar_index';
+                break;
+            case 'used':
+                $planKey = 'usedcar_count';
+                break;
+            case 'logistics':
+                $planKey = 'logistics_count';
+                break;
+            default:
+                $planKey = null;
+                break;
+        }
+
         foreach ($info['store_list'] as $k => $v) {
-            foreach ($v['usedcarCount'] as $kk => $vv) {
-                if ($duplicate) {
-                    if (in_array($vv['models']['id'], $check)) {
-                        continue;
-                    } else {
-                        $check[] = $vv['models']['id'];
+            if ($v[$planKey]) {
+                foreach ($v[$planKey] as $kk => $vv) {
+                    if ($duplicate) {
+                        if($type =='logistics'){
+                            if (in_array($vv['name'], $check)) {
+                                continue;
+                            } else {
+                                $check[] = $vv['name'];
+                            }
+                        }else{
+                            if (in_array($vv['models']['id'], $check)) {
+                                continue;
+                            } else {
+                                $check[] = $vv['models']['id'];
+                            }
+                        }
+
                     }
+                    $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
+                    $data = $vv['label'];
+                    $vv['label'] = $data;
+
+                    //方案加入到对应的品牌数组
+                    foreach ($brand as $key => $value) {
+                        if (empty($value['planList'])) {
+                            $brand[$key]['planList'] = array();
+                        }
+
+                        if($type =='logistics'){
+                            if ($value['id'] == $vv['brand_id']) {
+                                $arr = $brand[$key]['planList'];
+                                $arr[] = $vv;
+                                $brand[$key]['planList'] = $arr;
+                            }
+                        }else{
+                            if ($value['id'] == $vv['models']['brand_id']) {
+                                $arr = $brand[$key]['planList'];
+                                $arr[] = $vv;
+                                $brand[$key]['planList'] = $arr;
+                            }
+                        }
+
+
+
+                    }
+
                 }
-                $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
-                $data = $vv['label'];
-                $vv['label'] = $data;
-                $arr[] = $vv;
+            }
+
+        }
+
+        //去除没用的品牌
+        foreach ($brand as $k => $v) {
+            if (!$v['planList']) {
+                unset($brand[$k]);
             }
         }
-        return $arr;
 
+        return array_values($brand);
     }
 
 
@@ -607,71 +678,16 @@ return $info;
     {
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
-                $q->where('statuss', 'normal')->with(['logisticsCount' => function ($query) {
+                $q->with(['logisticsCount' => function ($query) {
                     $query->with(['label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->find($city_id);
 
-        $arr = [];
-        $check = [];
-        foreach ($info['store_list'] as $k => $v) {
-            foreach ($v['logisticsCount'] as $kk => $vv) {
-                if ($duplicate) {
-                    if (in_array($vv['name'], $check)) {
-                        continue;
-                    } else {
-                        $check[] = $vv['name'];
-                    }
-                }
-                $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
-                $arr[] = $vv;
-            }
-        }
-        return $arr;
-//        $plans = CompanyStore::field('id')
-//            ->with(['logistics' => function ($query) {
-//                $query->withField('id,name,payment,monthly,nperlist,total_price,models_main_images,label_id');
-//            }, 'city' => function ($query) use ($city_id) {
-//                $query->where([
-//                    'city.status' => 'normal',
-//                    'city.id' => $city_id
-//                ])->withField('cities_name');
-//
-//            }])->where('statuss', 'normal')->select();
-//
-//        $check = [];
-//        foreach ($plans as $k => $v) {
-//            if (!$v['logistics']['id']) {
-//                unset($plans[$k]);
-//                continue;
-//            }
-//
-//            if ($duplicate) {
-//
-//                if (in_array($v['logistics']['name'], $check)) {
-//                    unset($plans[$k]);
-//                    continue;
-//                } else {
-//                    $check[] = $v['logistics']['name'];
-//                }
-//            }
-//
-//            if ($v['logistics']['label_id']) {
-//                $logistics = self::getSimpleLabels($v['logistics']['label_id']);
-//                $v['logistics']['labels'] = ['name' => $logistics['name'], 'lableimages' => Config::get('upload')['cdnurl'] . $logistics['lableimages']];
-//            }
-//
-//            if ($v['logistics']['models_main_images']) {
-//                $v['logistics']['models_main_images'] = Config::get('upload')['cdnurl'] . $v['logistics']['models_main_images'];
-//            }
-//
-//            $plans[$k] = $v['logistics'];
-//
-//        }
-//
-//        return $plans;
+        return self::handleNewUsed($info,true,'logistics');
+
+
     }
 
     public static function getSimpleModels($models_id)

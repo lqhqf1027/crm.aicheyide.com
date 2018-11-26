@@ -80,6 +80,17 @@ class CompanyStore extends Model
     }
 
     /**
+     * 首页新车方案
+     * @return \think\model\relation\HasMany
+     */
+    public function planacarIndex()
+    {
+
+        return $this->hasMany('PlanAcar', 'store_id', 'id')
+            ->field('id,store_id,monthly,payment,models_main_images,recommendismenu,specialismenu,specialimages,popularity');
+    }
+
+    /**
  
      * 统计门店下二手车所有可卖车型个数
      * @return \think\model\relation\HasMany
@@ -87,7 +98,7 @@ class CompanyStore extends Model
     public function usedcarCount()
     {
         return $this->hasMany('UsedCar', 'store_id', 'id')
-            ->field('id,store_id,label_id,kilometres,newpayment,monthlypaymen,models_main_images,car_licensedate,popularity');
+            ->field('id,store_id,kilometres,newpayment,models_main_images,car_licensedate,popularity');
     }
 
     /**
@@ -96,10 +107,11 @@ class CompanyStore extends Model
      */
     public function logisticsCount()
     {
-        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,label_id,name,
-        payment,monthly,models_main_images,popularity');
+        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,name,
+        payment,monthly,models_main_images,popularity,brand_id');
     }
-//
+
+
     public static function getCarList($store_id){
         return  self::with([
             ['planacarCount','usedcarCount','logisticsCount']

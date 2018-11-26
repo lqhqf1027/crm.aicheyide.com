@@ -32,42 +32,20 @@ class Carselection extends Base
      {
          $city_id = $this->request->post('city_id');
          $newcarList = Share::getNewCarPlan($city_id,'',true);
+         $newcarList = ['type'=>'new','car_type_name'=>'新车','newCarList'=>$newcarList];
+
          $usedcarList = Share::getUsedPlan($city_id,'',true);
+         $usedcarList = ['type'=>'used','car_type_name'=>'二手车','usedCarList'=>$usedcarList];
+
          $logisticsList = Share::getEnergy($city_id,true);
+         $logisticsList = ['type'=>'logistics','car_type_name'=>'新能源车','logisticsCarList'=>$logisticsList];
 
-//         foreach ($newcarList as $k=>$v){
-//             $newcarList[$k] = ['id'=>$v['id'],'payment'=>$v['payment'],'monthly'=>$v['monthly'],'popularity'=>$v['popularity'],'models_main_images'=>$v['models_main_images'],
-//                'guide_price'=> $v['guide_price'],'models_name'=>$v['models_name'],'labels'=>$v['labels'],'type'=>'new'];
-//         }
+         $data = ['carSelectList'=>[$newcarList,$usedcarList,$logisticsList]];
 
-//         foreach ($usedcarList as $k=>$v){
-//             $usedcarList[$k] = ['id'=>$v['id'],'newpayment'=>$v['newpayment'],'monthlypaymen'=>$v['monthlypaymen'],'models_main_images'=>$v['models_main_images'],
-//                 'guide_price'=>$v['guide_price'],'models_name'=>$v['models_name'],'labels'=>$v['labels'],'type'=>'used'];
-//         }
-//         foreach ($logisticsList as $k=>$v){
-//             $logisticsList[$k] = ['id'=>$v['id'],'models_name'=>$v['name'],'payment'=>$v['payment'],'monthly'=>$v['monthly'],
-//                 'models_main_images'=>$v['models_main_images'],'type'=>'logistics'];
-//         }
-         $data = [
-           'newcarList' => $newcarList,
-           'usedcarList' => $usedcarList,
-           'logisticsList' => $logisticsList
-         ];
+
 
          $this->success('请求成功',$data);
 
      }
 
-     public function test()
-     {
-//         $data = CompanyStore::get(1,['city'=>function ($query){
-//             $query->withField(['cities_name']);
-//         }])->field('store_address');
-
-         $data = Cities::field('id')->with(['storeList'=>function ($q){
-             $q->where('statuss','normal')->with('planacarCount');
-         }])->find([38]);
-
-         $this->success('',$data);
-     }
 }
