@@ -4,7 +4,7 @@ Page({
     data: {
         plan: {},
         guesslike: [],
-        defParams: {},
+        vehicle_configuration: {},
     },
     onLoad(options) {
         console.log(options)
@@ -15,12 +15,12 @@ Page({
         const plan_id = this.options.id
         const cartype = this.options.type
 
-      app.request('/share/plan_details', { plan_id, cartype }, (data, ret) => {
+        app.request('/share/plan_details', { plan_id, cartype }, (data, ret) => {
             console.log(data)
             this.setData({
                 plan: data && data.plan,
                 guesslike: data && data.guesslike,
-                defParams: data && data.plan.models.vehicle_configuration['基本参数'],
+                vehicle_configuration: data && data.plan.models.vehicle_configuration,
             })
         }, (data, ret) => {
             console.log(data)
@@ -100,7 +100,7 @@ Page({
         if (this.data.plan.appointment === 1) {
             return app.info('已预约')
         }
-        
+
         const plan_id = this.options.id
         const cartype = this.options.type
 
