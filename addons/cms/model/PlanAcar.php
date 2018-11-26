@@ -103,7 +103,9 @@ class PlanAcar extends Model
      */
     public function brand()
     {
-        return $this->belongsToMany('Brand','models','brand_id','plan_acar_id');
+        return $this->belongsTo('Brand', 'brand_id', 'id',[],'JOIN')->setEagerlyType(1);
+
+//        return $this->belongsToMany('Brand','models','brand_id','plan_acar_id');
     }
 
     public function collections()

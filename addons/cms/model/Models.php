@@ -10,7 +10,7 @@ class Models extends Model
     protected $name = 'models';
     
     // 自动写入时间戳字段
-    protected $autoWriteTimestamp = 'int';
+//    protected $autoWriteTimestamp = 'int';
 
     // 定义时间戳字段名
 //    protected $createTime = 'createtime';
@@ -27,7 +27,7 @@ class Models extends Model
      */
     public function brand()
     {
-        return $this->belongsTo('Brand', 'brand_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->belongsTo('Brand', 'brand_id', 'id');
     }
 
     /**
