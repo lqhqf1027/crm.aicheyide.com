@@ -369,7 +369,7 @@ Page({
         this.setData({
             [`items[${index}].children`]: children,
             'searchVal.payment': e.detail.value,
-        })
+        }, this.setCars)
     },
     onMonthlyChange(e) {
         const index = 3
@@ -381,7 +381,7 @@ Page({
         this.setData({
             [`items[${index}].children`]: children,
             'searchVal.monthly': e.detail.value,
-        })
+        }, this.setCars)
     },
     onSelectChange() {
         const items = this.data.items.map((n) => ({...n, checked: false, visible: false }))
