@@ -3,13 +3,17 @@ var app = getApp()
 Page({
     data: {
         tags: [{
-            name: '1万以内',
+            label: '1万以内',
+            payment: [0, 10],
         }, {
-            name: '1-2万',
+            label: '1-2万',
+            payment: [10, 20],
         }, {
-            name: '2-3万',
+            label: '2-3万',
+            payment: [20, 30],
         }, {
-            name: '4万以上',
+            label: '4万以上',
+            payment: [40],
         }],
         swiperIndex: 'index',
         globalData: {},
@@ -123,7 +127,19 @@ Page({
         })
     },
     onTag(e) {
-        console.log('onTag', e)
+        const { payment } = e.currentTarget.dataset
+
+        console.log('onTag', payment)
+
+        wx.setStorage({
+            key: 'searchVal',
+            data: {
+                payment,
+            },
+            success: () => {
+                this.toMore()
+            },
+        })
     },
     toMore() {
         wx.switchTab({

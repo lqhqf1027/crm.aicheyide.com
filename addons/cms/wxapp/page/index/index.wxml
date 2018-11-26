@@ -82,10 +82,10 @@
             </block>
         </view>
     </view>
-    <view class="labels" wx:if="{{ searchVal.name || searchVal.payment || searchVal.monthly }}">
-        <view class="label wux-ellipsis" data-name="{{ searchVal.name }}" bindtap="onTag" wx:if="{{ searchVal.name }}">{{ searchVal.name }}</view>
-        <view class="label wux-ellipsis" data-payment="{{ searchVal.payment }}" bindtap="onTag" wx:if="{{ searchVal.payment }}">{{ common.getPaymentLabel(items[2].children, searchVal.payment) }}</view>
-        <view class="label wux-ellipsis" data-monthly="{{ searchVal.monthly }}" bindtap="onTag" wx:if="{{ searchVal.monthly }}">{{ common.getMonthlyLabel(items[3].children, searchVal.monthly) }}</view>
+    <view class="labels" wx:if="{{ searchVal.name || common.getPaymentLabel(items[2].children, searchVal.payment) || common.getMonthlyLabel(items[3].children, searchVal.monthly) }}">
+        <view class="label wux-ellipsis" data-meta="name" bindtap="onTag" wx:if="{{ searchVal.name }}">{{ searchVal.name }}</view>
+        <view class="label wux-ellipsis" data-meta="payment" bindtap="onTag" wx:if="{{ common.getPaymentLabel(items[2].children, searchVal.payment) }}">{{ common.getPaymentLabel(items[2].children, searchVal.payment) }}</view>
+        <view class="label wux-ellipsis" data-meta="monthly" bindtap="onTag" wx:if="{{ common.getMonthlyLabel(items[3].children, searchVal.monthly) }}">{{ common.getMonthlyLabel(items[3].children, searchVal.monthly) }}</view>
         <view class="label label-reset wux-ellipsis" bindtap="onReset"><view class="fa fa-refresh"></view> 重置</view>
     </view>
     <block wx:for="{{ list }}" wx:key="">
@@ -121,6 +121,9 @@
         getPaymentLabel: function(array, str) {
             var value = str.map(function(n) { return n / 10 }).join('-')
             var reslut = array.filter(function(n) { return n.value === value })[0]
+            if (value === '0-0' || value === '0-6') {
+                return ''
+            }
             if (reslut) {
                 return '首付' + reslut.label
             }
@@ -129,6 +132,9 @@
         getMonthlyLabel: function(array, str) {
             var value = str.map(function(n) { return n * 100 }).join('-')
             var reslut = array.filter(function(n) { return n.value === value })[0]
+            if (value === '0-0' || value === '0-6000') {
+                return ''
+            }
             if (reslut) {
                 return '月供' + reslut.label
             }
