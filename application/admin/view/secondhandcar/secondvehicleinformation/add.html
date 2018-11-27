@@ -115,27 +115,57 @@
         </div>
     </div> -->
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Expirydate')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('交强险到期时间')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-expirydate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[expirydate]" type="text" value="">
+            <input id="c-expirydate" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[expirydate]" type="text" value="">
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Annualverificationdate')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-annualverificationdate" class="form-control" name="row[annualverificationdate]" type="number">
-        </div>
-    </div> -->
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Annualverificationdate')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('商业险到期时间')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-annualverificationdate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[annualverificationdate]" type="text" value="">
+            <input id="c-businessdate" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[businessdate]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('年检到期时间')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-annualverificationdate" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[annualverificationdate]" type="text" value="">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('上牌时间')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-car_licensedate" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[car_licensedate]" type="text" value="">
+            <input id="c-car_licensedate" data-rule="required" class="form-control datetimepicker" data-date-format="YYYY-MM" data-use-current="true" name="row[car_licensedate]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('车牌所在地')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-license_plate" data-rule="required" class="form-control" name="row[license_plate]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('过户记录')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-the_transfer_record" data-rule="required" class="form-control" name="row[the_transfer_record]" type="text" placeholder="格式如：1次">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('变速箱')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-speed_changing_box" data-rule="required" class="form-control" name="row[speed_changing_box]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('排放量')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-emission_load" data-rule="required" class="form-control" name="row[emission_load]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('排放标准')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-emission_standard" data-rule="required" class="form-control" name="row[emission_standard]" type="text">
         </div>
     </div>
     <div class="form-group">
