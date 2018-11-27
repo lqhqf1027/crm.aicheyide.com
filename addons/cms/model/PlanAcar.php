@@ -108,9 +108,22 @@ class PlanAcar extends Model
 //        return $this->belongsToMany('Brand','models','brand_id','plan_acar_id');
     }
 
+    /**
+     * 关联收藏表
+     * @return \think\model\relation\HasOne
+     */
     public function collections()
     {
         return $this->hasOne('Collection','plan_acar_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+    /**
+     * 关联预约表
+     * @return \think\model\relation\HasOne
+     */
+    public function subscribe()
+    {
+        return $this->hasOne('Subscribe','plan_acar_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
 }

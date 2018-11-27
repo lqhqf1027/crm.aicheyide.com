@@ -520,8 +520,8 @@ specialimages,popularity')
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
                 $q->with(['planacarIndex' => function ($query) {
-                    $query->order('weigh desc')->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id');
+                    $query->order('weigh desc')->where('ismenu',1)->with(['models' => function ($models) {
+                        $models->withField('id,name,brand_id,price');
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
@@ -529,9 +529,7 @@ specialimages,popularity')
             }])->find($city);
 
         return self::handleNewUsed($info, true, 'new');
-
     }
-
 
     /**
      * 二手车方案
@@ -547,8 +545,8 @@ specialimages,popularity')
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
                 $q->where('statuss', 'normal')->with(['usedcarCount' => function ($query) {
-                    $query->order('weigh desc')->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id');
+                    $query->where('shelfismenu',1)->order('weigh desc')->with(['models' => function ($models) {
+                        $models->withField('id,name,brand_id,price');
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
@@ -556,8 +554,6 @@ specialimages,popularity')
             }])->find($city_id);
 
         return self::handleNewUsed($info, true, 'used');
-
-
     }
 
     public static function brandInfo()
@@ -607,18 +603,12 @@ specialimages,popularity')
             if ($v[$planKey]) {
                 foreach ($v[$planKey] as $kk => $vv) {
                     if ($duplicate) {
-                        if($type =='logistics'){
-                            if (in_array($vv['name'], $check)) {
-                                continue;
-                            } else {
-                                $check[] = $vv['name'];
-                            }
-                        }else{
-                            if (in_array($vv['models']['id'], $check)) {
-                                continue;
-                            } else {
-                                $check[] = $vv['models']['id'];
-                            }
+
+                        $models_check = $type == 'logistics' ? $vv['name'] : $vv['models']['id'];
+                        if (in_array($models_check, $check)) {
+                            continue;
+                        } else {
+                            $check[] = $models_check;
                         }
 
                     }
@@ -632,21 +622,13 @@ specialimages,popularity')
                             $brand[$key]['planList'] = array();
                         }
 
-                        if($type =='logistics'){
-                            if ($value['id'] == $vv['brand_id']) {
-                                $arr = $brand[$key]['planList'];
-                                $arr[] = $vv;
-                                $brand[$key]['planList'] = $arr;
-                            }
-                        }else{
-                            if ($value['id'] == $vv['models']['brand_id']) {
-                                $arr = $brand[$key]['planList'];
-                                $arr[] = $vv;
-                                $brand[$key]['planList'] = $arr;
-                            }
+                        $brand_id = $type == 'logistics' ? $vv['brand_id'] : $vv['models']['brand_id'];
+
+                        if ($value['id'] == $brand_id) {
+                            $arr = $brand[$key]['planList'];
+                            $arr[] = $vv;
+                            $brand[$key]['planList'] = $arr;
                         }
-
-
 
                     }
 
@@ -665,7 +647,6 @@ specialimages,popularity')
         return array_values($brand);
     }
 
-
     /**
      * 根据城市ID获取新能源汽车数据
      * @param $city_id
@@ -679,13 +660,13 @@ specialimages,popularity')
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
                 $q->with(['logisticsCount' => function ($query) {
-                    $query->with(['label' => function ($label) {
+                    $query->where('ismenu',1)->with(['label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->find($city_id);
 
-        return self::handleNewUsed($info,true,'logistics');
+        return self::handleNewUsed($info, true, 'logistics');
 
 
     }

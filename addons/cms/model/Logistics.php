@@ -47,4 +47,22 @@ class Logistics extends Model
     {
         return $this->belongsTo('CompanyStore', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+    /**
+     * 关联收藏表
+     * @return \think\model\relation\HasOne
+     */
+    public function collections()
+    {
+        return $this->hasOne('Collection','logistics_project_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+    /**
+     * 关联预约表
+     * @return \think\model\relation\HasOne
+     */
+    public function subscribe()
+    {
+        return $this->hasOne('Subscribe','logistics_project_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }
