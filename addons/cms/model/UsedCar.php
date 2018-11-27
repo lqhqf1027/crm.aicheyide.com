@@ -46,4 +46,21 @@ class UsedCar extends Model
 
     }
 
+    /**
+     * 关联收藏表
+     * @return \think\model\relation\HasOne
+     */
+    public function collections()
+    {
+        return $this->hasOne('Collection','secondcar_rental_models_info_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+    /**
+     * 关联预约表
+     * @return \think\model\relation\HasOne
+     */
+    public function subscribe()
+    {
+        return $this->hasOne('Subscribe','secondcar_rental_models_info_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }

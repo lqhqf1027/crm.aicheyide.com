@@ -48,4 +48,9 @@ class SecondcarRentalModelsInfo extends Model
     {
         return $this->belongsTo('CompanyStore','store_id','id',[],'LEFT')->setEagerlyType(0);
     }
+
+    public function collections()
+    {
+        return $this->hasOne('Collection','secondcar_rental_models_info_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }
