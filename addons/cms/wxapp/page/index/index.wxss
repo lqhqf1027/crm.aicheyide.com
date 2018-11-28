@@ -707,3 +707,8 @@ image.quiet {
     font-size: 24rpx;
     color: rgba(193, 195, 200, 1);
 }
+
+.media__desc--price {
+    font-size: 24rpx;
+    color: #333;
+}
