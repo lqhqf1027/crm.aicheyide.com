@@ -640,21 +640,21 @@ class Peccancy extends Backend
     {
         if ($this->request->isAjax()) {
             $date = input('date');
-
+            
             $id = input('id');
 
             $licenseplatenumber = $this->model->where('id', $id)->value('license_plate_number');
+            
+            $result = SecondcarRentalModelsInfo::where('licenseplatenumber', $licenseplatenumber)->setField(['annualverificationdate' => $date]);
 
-            // $date = strtotime($date);
-            // $res = Db::name('violation_inquiry')
-            //     ->where('id', $id)
-            //     ->setField('year_checktime', $date);
+            $date = strtotime($date);
+            $res = $this->model ->where('id', $id)->update(['year_checktime' => $date]);
 
-            $res = Db::name('secondcar_rental_models_info')
-                ->where('licenseplatenumber', $licenseplatenumber)
-                ->setField('annualverificationdate', $date);
+            // pr($res);
+            // pr($result);
+            // die;
 
-            if ($res) {
+            if ($res !== false && $result !== false) {
                 $this->success();
             } else {
                 $this->error('年检更新失败');
