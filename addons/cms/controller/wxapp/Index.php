@@ -39,12 +39,15 @@ class Index extends Base
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
 
+
         //预约缓存
         if (!Cache::get('appointment')) {
-            $appointment = $this->appointment();
-            Cache::set('appointment', $appointment);
-        } else {
-            $appointment = Cache::get('appointment');
+            Cache::set('appointment', $this->appointment());
+        }
+
+
+        if(!Cache::get('brandIndex')){
+            Cache::set('brandIndex',$this->getBrand());
         }
 
         //返回所有类型的方案
@@ -59,11 +62,11 @@ class Index extends Base
                 'specialfieldList' => $useful['specialfieldList']],
         ],
             //品牌
-            'brandList' => $this->getBrand(),
+            'brandList' => Cache::get('brandIndex'),
             //分享
             'shares' => Share::getConfigShare(),
             //预约
-            'appointment' => $appointment
+            'appointment' => Cache::get('appointment')
         ];
 
         $this->success('请求成功', $data);
@@ -109,7 +112,7 @@ class Index extends Base
 
                 $data = ['id' => $v['planacar']['id'], 'models_main_images' => $v['planacar']['models_main_images'],
                     'models_name' => $v['name'], 'payment' => $v['planacar']['payment'], 'monthly' => $v['planacar']['monthly'],
-                    'city' => $v['planacar']['city']];
+                    'city' => $v['planacar']['city'],'type'=>'new'];
 
                 if ($v['planacar']['city']['id'] == $city_id) {
                     $myCity[] = $data;
