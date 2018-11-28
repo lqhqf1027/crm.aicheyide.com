@@ -55,4 +55,12 @@ Page({
             url: `/page/store/detail/index?id=${id}`,
         })
     },
+    previewImage(e) {
+        const { url } = e.currentTarget.dataset
+
+        wx.previewImage({
+            current: url,
+            urls: [url],
+        })
+    },
 })
