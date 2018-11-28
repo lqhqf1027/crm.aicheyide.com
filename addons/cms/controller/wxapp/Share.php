@@ -234,8 +234,13 @@ specialimages,popularity')
                 $this->error('点赞失败');
                 break;
             case '0':
-                $this->success('点赞成功', 'success');
+                break;
         }
+
+        $integral = self::integral($user_id,'fabulous');
+
+        $integral?$this->success('点赞成功,添加积分:'.$integral,$integral):$this->error('添加积分失败');
+
     }
 
 
@@ -292,6 +297,9 @@ specialimages,popularity')
                 $this->error('预约失败');
                 break;
             case '0':
+                 if(Cache::get('appointment')){
+                     Cache::rm('appointment');
+                 }
                 $this->success('预约成功', 'success');
         }
     }
@@ -349,21 +357,14 @@ specialimages,popularity')
 
 
     /**
-     * style仅限：fabulous点赞,share分享,sign签到
-     * 增加积分接口
+     *添加积分
+     * @param $user_id        用户ID
+     * @param $style          增加积分参数，仅支持['fabulous','share','sign']
+     * @return int|true
      * @throws \think\Exception
      */
-    public function integral()
+    public static function integral($user_id,$style)
     {
-        $style = $this->request->post('style');                         //添加积分方式
-
-        $user_id = $this->request->post('user_id');                     //用户ID
-
-
-        if (!$style || !$user_id || !in_array($style, ['fabulous', 'share', 'sign'])) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
-        }
-
         $rule = Db::name('config')
             ->where('group', 'integral')
             ->value('value');
@@ -374,7 +375,7 @@ specialimages,popularity')
             ->where('id', $user_id)
             ->setInc('score', intval($rule[$style]));
 
-        $res ? $this->success('', 'success') : $this->error('', 'error');
+       return $res?$rule[$style]:0;
 
     }
 
@@ -528,7 +529,7 @@ specialimages,popularity')
                 }]);
             }])->find($city);
 
-        return self::handleNewUsed($info, true, 'new');
+        return self::handleNewUsed($info, $duplicate, 'new');
     }
 
     /**
@@ -553,7 +554,8 @@ specialimages,popularity')
                 }]);
             }])->find($city_id);
 
-        return self::handleNewUsed($info, true, 'used');
+
+        return self::handleNewUsed($info, $duplicate, 'used');
     }
 
     public static function brandInfo()
@@ -666,7 +668,7 @@ specialimages,popularity')
                 }]);
             }])->find($city_id);
 
-        return self::handleNewUsed($info, true, 'logistics');
+        return self::handleNewUsed($info, $duplicate, 'logistics');
 
 
     }
