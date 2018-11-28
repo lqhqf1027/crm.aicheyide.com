@@ -151,6 +151,8 @@ class Secondplan extends Backend
                             // pr($daypaymen);
                             // die;
                             $list[$k]['daypaymen'] = $daypaymen;
+
+                            $this->model->where('licenseplatenumber', $v['licenseplatenumber'])->setField(['daypaymen' => $daypaymen]);
                         }
                     }   
                 }
