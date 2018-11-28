@@ -24,9 +24,9 @@
             </view>
         </view>
         <wux-tabs theme="positive" current="{{ searchVal.style }}" controlled bind:change="onChange">
-            <wux-tab key="new" title="新车"></wux-tab>
-            <wux-tab key="used" title="二手车"></wux-tab>
-            <wux-tab key="logistics" title="新能源物流车"></wux-tab>
+            <block wx:for="{{ tabs }}" wx:key="">
+                <wux-tab key="{{ item.type }}" title="{{ item.car_type_name }}"></wux-tab>
+            </block>
         </wux-tabs>
         <view class="filterbar">
             <view class="filterbar__bd">
@@ -82,23 +82,38 @@
             </block>
         </view>
     </view>
-    <view class="labels" wx:if="{{ searchVal.name || common.getPaymentLabel(items[2].children, searchVal.payment) || common.getMonthlyLabel(items[3].children, searchVal.monthly) }}">
+    <view class="labels" wx:if="{{ searchVal.name || searchVal.brand || common.getPaymentLabel(items[2].children, searchVal.payment) || common.getMonthlyLabel(items[3].children, searchVal.monthly) }}">
         <view class="label wux-ellipsis" data-meta="name" bindtap="onTag" wx:if="{{ searchVal.name }}">{{ searchVal.name }}</view>
+        <view class="label wux-ellipsis" data-meta="brand" bindtap="onTag" wx:if="{{ searchVal.brand }}">{{ searchVal.brand.name }}</view>
         <view class="label wux-ellipsis" data-meta="payment" bindtap="onTag" wx:if="{{ common.getPaymentLabel(items[2].children, searchVal.payment) }}">{{ common.getPaymentLabel(items[2].children, searchVal.payment) }}</view>
         <view class="label wux-ellipsis" data-meta="monthly" bindtap="onTag" wx:if="{{ common.getMonthlyLabel(items[3].children, searchVal.monthly) }}">{{ common.getMonthlyLabel(items[3].children, searchVal.monthly) }}</view>
         <view class="label label-reset wux-ellipsis" bindtap="onReset"><view class="fa fa-refresh"></view> 重置</view>
     </view>
-    <block wx:for="{{ list }}" wx:key="">
-        <view class="car">
+    <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style !== 'used' }}">
+        <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
             <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
-            <view class="car__title">{{ item.models_name }}</view>
-            <image class="car__label" src="{{ globalData.config.upload.cdnurl + item.labels.lableimages }}" wx:if="{{ item.labels }}" />
+            <view class="car__title">{{ searchVal.style == 'new' ? item.models.name : item.name }}</view>
+            <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2" wx:if="{{ item.models }}">指导价 {{ item.models.price / 10000 }} W</view>
+            <image class="car__label" src="{{ globalData.config.upload.cdnurl + item.label.lableimages }}" wx:if="{{ item.label }}" />
             <view class="wux-clearfix">
-                <view class="car__title car__title--payment wux-pull-left wux-mr--20 wux-mt--10 {{ item.labels && item.labels.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
+                <view class="car__title car__title--payment wux-pull-left wux-mr--20 wux-mt--10 {{ item.label && item.label.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
                 <view class="car__title car__title--monthly wux-pull-left wux-mt--10">月供 {{ item.monthly }} 元</view>
                 <view class="car__title car__title--monthly wux-pull-right wux-mt--10" wx:if="{{ item.popularity }}">{{ item.popularity || 0 }}</view>
             </view>
         </view>
+    </block>
+    <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style === 'used' }}">
+        <wux-media wux-class="media" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ globalData.config.upload.cdnurl + item.models_main_images }}" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
+            <view class="media__title wux-ellipsis--l2">{{ item.models.name }}</view>
+            <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ item.car_licensedate + '/' + item.kilometres / 10000 + 'W公里' }}</view>
+            <view class="wux-clearfix">
+                <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ item.models.price }}">{{ item.models.price / 10000 }} 万</view>
+                <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ item.newpayment / 10000 }} 万</view>
+                <view class="media__desc wux-pull-right">
+                    <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
+                </view>
+            </view>
+        </wux-media>
     </block>
     <view class="wish">
         <view class="wish__hd">
@@ -112,7 +127,7 @@
 <wxs module="common">
     module.exports = {
         getRadioValue: function(array) {
-            var result = array.filter(function(n) { return n.checked })[0]
+            var result = array && array.filter(function(n) { return n.checked })[0]
             if (result) {
                 return result.value
             }
@@ -120,7 +135,7 @@
         },
         getPaymentLabel: function(array, str) {
             var value = str.map(function(n) { return n / 10 }).join('-')
-            var reslut = array.filter(function(n) { return n.value === value })[0]
+            var reslut = array && array.filter(function(n) { return n.value === value })[0]
             if (value === '0-0' || value === '0-6') {
                 return ''
             }
@@ -131,7 +146,7 @@
         },
         getMonthlyLabel: function(array, str) {
             var value = str.map(function(n) { return n * 100 }).join('-')
-            var reslut = array.filter(function(n) { return n.value === value })[0]
+            var reslut = array && array.filter(function(n) { return n.value === value })[0]
             if (value === '0-0' || value === '0-6000') {
                 return ''
             }

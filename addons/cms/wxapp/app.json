@@ -6,6 +6,7 @@
         "page/preference/plan/index",
         "page/index/index",
         "page/city/index",
+        "page/brand/index",
         "page/search/index",
         "page/news/list/index",
         "page/store/list/index",
