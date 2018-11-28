@@ -669,3 +669,41 @@ image.quiet {
     padding-right: 14px;
     background: none;
 }
+
+.media {
+    padding: 20rpx !important;
+    background-color: #fff !important;
+}
+
+.media:after {
+    content: " ";
+    position: absolute;
+    left: 20rpx;
+    top: 0;
+    right: 20rpx;
+    height: 1px;
+    border-top: 1px solid #D5D5D6;
+    color: #D5D5D6;
+    transform-origin: 0 0;
+    transform: scaleY(0.5);
+}
+
+.media__title {
+    font-size: 28rpx;
+    color: #333;
+}
+
+.media__desc {
+    font-size: 20rpx;
+    color: #666;
+}
+
+.media__desc--payment {
+    font-size: 24rpx;
+    color: rgba(229, 28, 35, 1);
+}
+
+.media__desc--monthly {
+    font-size: 24rpx;
+    color: rgba(193, 195, 200, 1);
+}
