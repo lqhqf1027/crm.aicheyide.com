@@ -234,8 +234,13 @@ specialimages,popularity')
                 $this->error('点赞失败');
                 break;
             case '0':
-                $this->success('点赞成功', 'success');
+                break;
         }
+
+        $integral = self::integral($user_id,'fabulous');
+
+        $integral?$this->success('点赞成功,添加积分:'.$integral,$integral):$this->error('添加积分失败');
+
     }
 
 
@@ -292,6 +297,9 @@ specialimages,popularity')
                 $this->error('预约失败');
                 break;
             case '0':
+                 if(Cache::get('appointment')){
+                     Cache::rm('appointment');
+                 }
                 $this->success('预约成功', 'success');
         }
     }
@@ -349,21 +357,14 @@ specialimages,popularity')
 
 
     /**
-     * style仅限：fabulous点赞,share分享,sign签到
-     * 增加积分接口
+     *添加积分
+     * @param $user_id        用户ID
+     * @param $style          增加积分参数，仅支持['fabulous','share','sign']
+     * @return int|true
      * @throws \think\Exception
      */
-    public function integral()
+    public static function integral($user_id,$style)
     {
-        $style = $this->request->post('style');                         //添加积分方式
-
-        $user_id = $this->request->post('user_id');                     //用户ID
-
-
-        if (!$style || !$user_id || !in_array($style, ['fabulous', 'share', 'sign'])) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
-        }
-
         $rule = Db::name('config')
             ->where('group', 'integral')
             ->value('value');
@@ -374,7 +375,7 @@ specialimages,popularity')
             ->where('id', $user_id)
             ->setInc('score', intval($rule[$style]));
 
-        $res ? $this->success('', 'success') : $this->error('', 'error');
+       return $res?$rule[$style]:0;
 
     }
 
@@ -520,18 +521,16 @@ specialimages,popularity')
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
                 $q->with(['planacarIndex' => function ($query) {
-                    $query->order('weigh desc')->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id');
+                    $query->order('weigh desc')->where('ismenu',1)->with(['models' => function ($models) {
+                        $models->withField('id,name,brand_id,price');
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->find($city);
 
-        return self::handleNewUsed($info, true, 'new');
-
+        return self::handleNewUsed($info, $duplicate, 'new');
     }
-
 
     /**
      * 二手车方案
@@ -547,17 +546,16 @@ specialimages,popularity')
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
                 $q->where('statuss', 'normal')->with(['usedcarCount' => function ($query) {
-                    $query->order('weigh desc')->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id');
+                    $query->where('shelfismenu',1)->order('weigh desc')->with(['models' => function ($models) {
+                        $models->withField('id,name,brand_id,price');
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->find($city_id);
 
-        return self::handleNewUsed($info, true, 'used');
 
-
+        return self::handleNewUsed($info, $duplicate, 'used');
     }
 
     public static function brandInfo()
@@ -607,18 +605,12 @@ specialimages,popularity')
             if ($v[$planKey]) {
                 foreach ($v[$planKey] as $kk => $vv) {
                     if ($duplicate) {
-                        if($type =='logistics'){
-                            if (in_array($vv['name'], $check)) {
-                                continue;
-                            } else {
-                                $check[] = $vv['name'];
-                            }
-                        }else{
-                            if (in_array($vv['models']['id'], $check)) {
-                                continue;
-                            } else {
-                                $check[] = $vv['models']['id'];
-                            }
+
+                        $models_check = $type == 'logistics' ? $vv['name'] : $vv['models']['id'];
+                        if (in_array($models_check, $check)) {
+                            continue;
+                        } else {
+                            $check[] = $models_check;
                         }
 
                     }
@@ -632,21 +624,13 @@ specialimages,popularity')
                             $brand[$key]['planList'] = array();
                         }
 
-                        if($type =='logistics'){
-                            if ($value['id'] == $vv['brand_id']) {
-                                $arr = $brand[$key]['planList'];
-                                $arr[] = $vv;
-                                $brand[$key]['planList'] = $arr;
-                            }
-                        }else{
-                            if ($value['id'] == $vv['models']['brand_id']) {
-                                $arr = $brand[$key]['planList'];
-                                $arr[] = $vv;
-                                $brand[$key]['planList'] = $arr;
-                            }
+                        $brand_id = $type == 'logistics' ? $vv['brand_id'] : $vv['models']['brand_id'];
+
+                        if ($value['id'] == $brand_id) {
+                            $arr = $brand[$key]['planList'];
+                            $arr[] = $vv;
+                            $brand[$key]['planList'] = $arr;
                         }
-
-
 
                     }
 
@@ -665,7 +649,6 @@ specialimages,popularity')
         return array_values($brand);
     }
 
-
     /**
      * 根据城市ID获取新能源汽车数据
      * @param $city_id
@@ -679,13 +662,13 @@ specialimages,popularity')
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) {
                 $q->with(['logisticsCount' => function ($query) {
-                    $query->with(['label' => function ($label) {
+                    $query->where('ismenu',1)->with(['label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->find($city_id);
 
-        return self::handleNewUsed($info,true,'logistics');
+        return self::handleNewUsed($info, $duplicate, 'logistics');
 
 
     }

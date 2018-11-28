@@ -7,6 +7,7 @@ use app\common\model\Config;
 use think\Cache;
 use think\Db;
 use app\common\library\Email;
+use app\admin\model\SecondcarRentalModelsInfo;
 
 /**
  * 违章信息管理
@@ -22,8 +23,7 @@ class Peccancy extends Backend
      */
     protected $model = null;
 
-    protected $noNeedRight = ['index', 'prepare_send', 'already_send', 'sendMessage', 'sendMessagePerson','details', 'sendCustomer',
-        'note','edit','insurance','modify','check_year','year_status'];
+    protected $noNeedRight = ['*'];
 
     protected static $keys = '217fb8552303cb6074f88dbbb5329be7';
 
@@ -89,6 +89,15 @@ class Peccancy extends Backend
 
                     if ($retiring && $retiring == 'retiring') {
                         continue;
+                    }
+                }
+
+                $data = SecondcarRentalModelsInfo::select();
+                foreach ( $data as $key => $value) {
+                    if ($v['license_plate_number'] == $value['licenseplatenumber']) {
+                        $v['strong_deadtime'] = strtotime($value['expirydate']);
+                        $v['business_deadtime'] = strtotime($value['businessdate']);
+                        $v['year_checktime'] = strtotime($value['annualverificationdate']);
                     }
                 }
 
@@ -500,6 +509,14 @@ class Peccancy extends Backend
     public function edit($ids = NULL)
     {
         $row = $this->model->get($ids);
+        $data = SecondcarRentalModelsInfo::select();
+        foreach ( $data as $key => $value) {
+            if ($row['license_plate_number'] == $value['licenseplatenumber']) {
+                $row['strong_deadtime'] = strtotime($value['expirydate']);
+                $row['business_deadtime'] = strtotime($value['businessdate']);
+                $row['year_checktime'] = strtotime($value['annualverificationdate']);
+            }
+        }
         if (!$row)
             $this->error(__('No Results were found'));
         $adminIds = $this->getDataLimitAdminIds();
@@ -511,13 +528,20 @@ class Peccancy extends Backend
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
 
-
+            // pr($params);
+            // die;
             if ($params['strong_deadtime']) {
 
+                SecondcarRentalModelsInfo::where('licenseplatenumber', $params['license_plate_number'])->setField(['expirydate' => $params['strong_deadtime']]);
+
                 $params['strong_deadtime'] = strtotime($params['strong_deadtime']);
+
             }
 
             if ($params['business_deadtime']) {
+            
+                SecondcarRentalModelsInfo::where('licenseplatenumber', $params['license_plate_number'])->setField(['businessdate' => $params['business_deadtime']]);
+                
                 $params['business_deadtime'] = strtotime($params['business_deadtime']);
             }
 
@@ -616,17 +640,21 @@ class Peccancy extends Backend
     {
         if ($this->request->isAjax()) {
             $date = input('date');
-
+            
             $id = input('id');
 
+            $licenseplatenumber = $this->model->where('id', $id)->value('license_plate_number');
+            
+            $result = SecondcarRentalModelsInfo::where('licenseplatenumber', $licenseplatenumber)->setField(['annualverificationdate' => $date]);
+
             $date = strtotime($date);
+            $res = $this->model ->where('id', $id)->update(['year_checktime' => $date]);
 
+            // pr($res);
+            // pr($result);
+            // die;
 
-            $res = Db::name('violation_inquiry')
-                ->where('id', $id)
-                ->setField('year_checktime', $date);
-
-            if ($res) {
+            if ($res !== false && $result !== false) {
                 $this->success();
             } else {
                 $this->error('年检更新失败');

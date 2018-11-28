@@ -35,7 +35,6 @@ class Index extends Base
     {
         $city_id = $this->request->post('city_id');                              //参数：城市ID
 
-
         if (!$city_id) {
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
@@ -43,13 +42,13 @@ class Index extends Base
 
         //预约缓存
         if (!Cache::get('appointment')) {
-            $appointment = $this->appointment();
-            Cache::set('appointment', $appointment);
-        } else {
-            $appointment = Cache::get('appointment');
+            Cache::set('appointment', $this->appointment());
         }
 
 
+        if(!Cache::get('brandIndex')){
+            Cache::set('brandIndex',$this->getBrand());
+        }
 
         //返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
@@ -63,11 +62,11 @@ class Index extends Base
                 'specialfieldList' => $useful['specialfieldList']],
         ],
             //品牌
-            'brandList' => $this->getBrand(),
+            'brandList' => Cache::get('brandIndex'),
             //分享
             'shares' => Share::getConfigShare(),
             //预约
-            'appointment' => $appointment
+            'appointment' => Cache::get('appointment')
         ];
 
         $this->success('请求成功', $data);
@@ -113,7 +112,7 @@ class Index extends Base
 
                 $data = ['id' => $v['planacar']['id'], 'models_main_images' => $v['planacar']['models_main_images'],
                     'models_name' => $v['name'], 'payment' => $v['planacar']['payment'], 'monthly' => $v['planacar']['monthly'],
-                    'city' => $v['planacar']['city']];
+                    'city' => $v['planacar']['city'],'type'=>'new'];
 
                 if ($v['planacar']['city']['id'] == $city_id) {
                     $myCity[] = $data;
@@ -172,11 +171,9 @@ class Index extends Base
     public function getBrand()
     {
         $brand = Models::with(['brand' => function ($brand) {
-            $brand->where('brand.status', 'normal');
-            $brand->withField('id,name,brand_logoimage');
+            $brand->where('status', 'normal')->withField('id,name,brand_logoimage');
         }, 'planacar' => function ($planacar) {
-            $planacar->where('acar_status', 1);
-            $planacar->withField('id');
+            $planacar->where('acar_status', 1)->withField('id');
         }])->where('models.status', 'normal')->select();
 
         $brandList = [];                                                      //品牌列表
@@ -216,9 +213,14 @@ class Index extends Base
     public function getAllStylePlan($city_id)
     {
 
-        //获取该城市所有满足条件的方案
-        $info = Share::getNewCarPlan($city_id, '', true);
+        //得到品牌-方案数组
+        $res = Share::getNewCarPlan($city_id, '', true);
 
+        //得到其中所有的方案
+        $info = [];
+        foreach ($res as $k=>$v){
+            $info = array_merge($info,$v['planList']);
+        }
 
         $recommendList = [];             //为你推荐（新车）
         $specialfieldList = [];          //专场（新车）
@@ -323,10 +325,7 @@ class Index extends Base
             $appointment[$k]['avatar'] = $v['user']['avatar'];
             unset($appointment[$k]['user'],$appointment[$k]['newplan'],$appointment[$k]['usedplan'],
                 $appointment[$k]['energyplan'],$appointment[$k]['state_text']);
-//            unset($appointment[$k]['newplan']);
-//            unset($appointment[$k]['usedplan']);
-//            unset($appointment[$k]['energyplan']);
-//            unset($appointment[$k]['state_text']);
+
         }
 
         return $appointment;

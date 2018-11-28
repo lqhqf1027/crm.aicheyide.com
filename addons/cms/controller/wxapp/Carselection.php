@@ -34,15 +34,13 @@ class Carselection extends Base
          $newcarList = Share::getNewCarPlan($city_id,'',true);
          $newcarList = ['type'=>'new','car_type_name'=>'新车','newCarList'=>$newcarList];
 
-         $usedcarList = Share::getUsedPlan($city_id,'',true);
+         $usedcarList = Share::getUsedPlan($city_id);
          $usedcarList = ['type'=>'used','car_type_name'=>'二手车','usedCarList'=>$usedcarList];
 
          $logisticsList = Share::getEnergy($city_id,true);
          $logisticsList = ['type'=>'logistics','car_type_name'=>'新能源车','logisticsCarList'=>$logisticsList];
 
          $data = ['carSelectList'=>[$newcarList,$usedcarList,$logisticsList]];
-
-
 
          $this->success('请求成功',$data);
 
