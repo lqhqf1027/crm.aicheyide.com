@@ -7,15 +7,6 @@
  */
 
 namespace addons\cms\controller\wxapp;
-use think\Cache;
-use think\Config;
-use addons\cms\model\CompanyStore;
-use addons\cms\model\Models;
-use addons\cms\model\Cities;
-use addons\cms\model\Subject;
-use addons\cms\model\SecondcarRentalModelsInfo;
-use app\common\library\Auth;
-use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
 
 class Carselection extends Base
@@ -31,13 +22,16 @@ class Carselection extends Base
      public function index()
      {
          $city_id = $this->request->post('city_id');
-         $newcarList = Share::getNewCarPlan($city_id,'',true);
+         $newcarList = Share::getVariousTypePlan($city_id,true,'planacarIndex','new');
+         $newcarList = $newcarList?$newcarList:[];
          $newcarList = ['type'=>'new','car_type_name'=>'新车','newCarList'=>$newcarList];
 
-         $usedcarList = Share::getUsedPlan($city_id);
+         $usedcarList = Share::getVariousTypePlan($city_id,false,'usedcarCount','used');
+         $usedcarList = $usedcarList?$usedcarList:[];
          $usedcarList = ['type'=>'used','car_type_name'=>'二手车','usedCarList'=>$usedcarList];
 
-         $logisticsList = Share::getEnergy($city_id,true);
+         $logisticsList = Share::getVariousTypePlan($city_id,true,'logisticsCount','logistics');
+         $logisticsList = $logisticsList?$logisticsList:[];
          $logisticsList = ['type'=>'logistics','car_type_name'=>'新能源车','logisticsCarList'=>$logisticsList];
 
          $data = ['carSelectList'=>[$newcarList,$usedcarList,$logisticsList]];

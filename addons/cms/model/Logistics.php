@@ -66,6 +66,7 @@ class Logistics extends Model
         return $this->hasOne('Subscribe','logistics_project_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
+
     /**
      * 关联车型
      * @return \think\model\relation\BelongsTo

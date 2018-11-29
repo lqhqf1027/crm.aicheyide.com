@@ -9,27 +9,6 @@ class CompanyStore extends Model
     // 表名
     protected $name = 'cms_company_store';
 
-    // 自动写入时间戳字段
-//    protected $autoWriteTimestamp = 'int';
-
-
-//    protected $append = [
-//        'status_text'
-//    ];
-
-//
-//    public function getStatusList()
-//    {
-//        return ['normal' => __('Normal'), 'hidden' => __('Hidden')];
-//    }
-//
-//
-//    public function getStatusTextAttr($value, $data)
-//    {
-//        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
-//        $list = $this->getStatusList();
-//        return isset($list[$value]) ? $list[$value] : '';
-//    }
 
     /**
      * 关联城市
