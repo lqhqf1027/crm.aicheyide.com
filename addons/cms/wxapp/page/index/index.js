@@ -1,5 +1,5 @@
-const app = getApp()
-const items = [{
+var app = getApp()
+var items = [{
         type: 'radio',
         label: '默认排序',
         value: '1',
@@ -25,37 +25,30 @@ const items = [{
         children: [{
                 label: '不限',
                 value: '0-6',
-                range: [0],
             },
             {
                 label: '1万以内',
                 value: '0-1',
-                range: [0, 10000],
             },
             {
                 label: '1-2万',
                 value: '1-2',
-                range: [10000, 20000],
             },
             {
                 label: '2-3万',
                 value: '2-3',
-                range: [20000, 30000],
             },
             {
                 label: '3-4万',
                 value: '3-4',
-                range: [30000, 40000],
             },
             {
                 label: '4-5万',
                 value: '4-5',
-                range: [40000, 50000],
             },
             {
                 label: '5万以上',
                 value: '5-6',
-                range: [50000],
             },
         ],
     },
@@ -66,54 +59,37 @@ const items = [{
         children: [{
                 label: '不限',
                 value: '0-6000',
-                range: [0],
             },
             {
                 label: '2000元以内',
                 value: '0-2000',
-                range: [0, 2000],
             },
             {
                 label: '2000-3000元',
                 value: '2000-3000',
-                range: [2000, 3000],
             },
             {
                 label: '3000-4000元',
                 value: '3000-4000',
-                range: [3000, 4000],
             },
             {
                 label: '4000-5000元',
                 value: '4000-5000',
-                range: [4000, 5000],
             },
             {
                 label: '5000元以上',
                 value: '5000-6000',
-                range: [5000],
             },
         ],
     },
 ]
-
-const getRange = (value, array = [], num = 1) => {
-    const reslut = array.filter(function(n) { return n.value === value })[0]
+var getPaymentLabel = (str) => {
+    var value = str.map((n) => n / 10).join('-')
+    var reslut = items[2].children.filter((n) => n.value === value)[0]
     if (reslut) {
-        return reslut.range
+        return reslut.label
     }
-    return value && value !== '0-0' ? value.split('-').map((n) => Number(n) * num) : [0]
-}
-
-const checkValueInRange = (value = 0, min = 0, max = Infinity) => {
-    return value >= min && value <= max
-}
-
-const defaultSearchValue = {
-    name: '',
-    style: 'new',
-    payment: [0, 0],
-    monthly: [0, 0],
+    return ''
 }
 
 Page({
@@ -127,7 +103,11 @@ Page({
         newcarList: [],
         usedcarList: [],
         allList: [],
-        searchVal: { ...defaultSearchValue },
+        searchVal: {
+            name: '',
+            payment: [0, 0],
+            monthly: [0, 0],
+        },
     },
     onLoad: function() {
         wx.setStorageSync('city', app.globalData.city)
@@ -208,7 +188,7 @@ Page({
                     success: ({ data }) => {
                         console.log(data)
                         wx.removeStorageSync('searchVal')
-                        this.setCars({ ...this.data.searchVal, ...data })
+                        this.setCars(data)
                     },
                     fail: () => {
                         this.setCars()
@@ -224,14 +204,13 @@ Page({
         console.log(e)
         this.setCars({...this.data.searchVal, style: e.detail.key })
     },
-    setCars(searchVal = this.data.searchVal) {
-        const { style, name, payment, monthly } = searchVal
+    setCars(searchVal = {}) {
+        const { style, name, payment } = searchVal
 
-        console.log('searchVal', searchVal)
+        console.log(style, name)
 
         let list = []
 
-        // 按类型过滤
         if (style === 'new') {
             list = [...this.data.newcarList]
         } else if (style === 'used') {
@@ -242,28 +221,21 @@ Page({
             list = [...this.data.allList]
         }
 
-        // 按名称过滤
         if (name) {
             list = list.filter((n) => n.models_name && n.models_name.indexOf(name) !== -1)
         }
 
-        // 按首付过滤
-        if (payment) {
-            const value = payment.map((n) => Number(n) / 10).join('-')
-            const range = getRange(value, items[2]['children'], 10000)
-            console.log('payment', range)
-            list = list.filter((n) => checkValueInRange(n.payment, range[0], range[1]))
-        }
+        // if (payment) {
+        //     if (payment === '0-60') {
+        //         continue
+        //     } else if (payment === '50-60') {
+        //         continue
+        //     } else {
+        //         const pay = payment.split('-').map((n) => Number(n) * 1000)
 
-        // 按月供过滤
-        if (monthly) {
-            const value = monthly.map((n) => Number(n) * 100).join('-')
-            const range = getRange(value, items[3]['children'])
-            console.log('monthly', range)
-            list = list.filter((n) => checkValueInRange(n.monthly, range[0], range[1]))
-        }
-
-        console.log('list', list)
+        //         list = list.filter((n) => n)
+        //     }
+        // }
 
         this.setData({
             searchVal,
@@ -271,32 +243,16 @@ Page({
         })
     },
     onTag(e) {
-        const { meta } = e.currentTarget.dataset
-        const { searchVal, items } = this.data
+        const { name } = e.currentTarget.dataset
+        const { searchVal } = this.data
 
-        console.log('onTag', meta)
-
-        if (meta === 'name') {
-            searchVal.name = ''
-        } else if (meta === 'payment' || meta === 'monthly') {
-            searchVal[meta] = [0, 0]
-            const index = meta === 'payment' ? 2 : 3
-            const children = items[index].children.map((n) => Object.assign({}, n, {
-                checked: false,
-            }))
-
-            this.setData({
-                [`items[${index}].children`]: children,
-            })
+        if (searchVal.name === name) {
+            delete searchVal.name
+            this.setCars(searchVal)
         }
-
-        console.log('searchVal', searchVal)
-
-        this.setCars(searchVal)
     },
     onReset() {
-        console.log('onReset', defaultSearchValue)
-        this.setCars({ ...defaultSearchValue })
+        this.setCars()
     },
     onCancel() {
         const { index } = this.data
@@ -369,7 +325,7 @@ Page({
         this.setData({
             [`items[${index}].children`]: children,
             'searchVal.payment': e.detail.value,
-        }, this.setCars)
+        })
     },
     onMonthlyChange(e) {
         const index = 3
@@ -381,7 +337,7 @@ Page({
         this.setData({
             [`items[${index}].children`]: children,
             'searchVal.monthly': e.detail.value,
-        }, this.setCars)
+        })
     },
     onSelectChange() {
         const items = this.data.items.map((n) => ({...n, checked: false, visible: false }))
@@ -390,7 +346,7 @@ Page({
             this.setData({
                 items,
                 backdrop: false,
-            }, this.setCars)
+            })
         }, 300)
     },
 })

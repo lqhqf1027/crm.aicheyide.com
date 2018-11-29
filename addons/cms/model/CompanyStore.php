@@ -116,7 +116,11 @@ class CompanyStore extends Model
             ['planacarCount', 'usedcarCount', 'logisticsCount']
         ])->select(['store_id' => $store_id]);
 
+
     }
+
+
+
         /**
          * 查询门店下有多少张优惠券
          * @param $store_id 门店Id
