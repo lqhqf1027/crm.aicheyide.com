@@ -71,8 +71,8 @@
 
             <select id="c-models_id" data-rule="required" class="form-control selectpicker" name="row[models_id]">
                 <option value=" " style='display: none'>未选中任何项</option>
-                {volist name="car_models" id="vo"}
-                <option disabled>{$vo.name}</option>
+                {volist name="car_models" id="vo" }
+                <option disabled style="background-color: #f2f2f2">{$vo.name}</option>
                 {volist name="vo.models" id="model_vo"}
                 <option value="{$model_vo.models_id}">{$model_vo.models_name}</option>
                 {/volist}

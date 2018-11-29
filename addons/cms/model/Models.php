@@ -27,7 +27,7 @@ class Models extends Model
      */
     public function brand()
     {
-        return $this->belongsTo('Brand', 'brand_id', 'id');
+        return $this->belongsTo('Brand', 'brand_id', 'id')->setEagerlyType(1);
     }
 
     /**
