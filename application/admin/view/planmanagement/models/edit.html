@@ -27,9 +27,14 @@
 
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择车辆车型')}:</label>
-        <div class="col-xs-12 col-sm-8">
+        <div class="col-xs-12 col-sm-5">
                
             <input id="c-model_name" data-rule="required" data-source="planmanagement/models/getModel1" data-params='{"custom[brnad_id]":"{$row.series_name}"}' class="form-control selectpage" name="row[model_name]" type="text" value="{$row.model_name}">
+                
+        </div>
+        <div class="col-xs-12 col-sm-3">
+               
+            <input id="c-models_name" class="form-control" name="row[models_name]" type="text" value="{$row.models_name}">
                 
         </div>
     </div>
