@@ -24,7 +24,6 @@ class Index extends Base
         parent::_initialize();
     }
 
-
     /**
      * 首页数据接口，返回各种类型方案丶品牌列表丶城市列表以及配置分享信息
      * @throws \think\db\exception\DataNotFoundException
@@ -39,7 +38,6 @@ class Index extends Base
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
 
-
         //预约缓存
         if (!Cache::get('appointment')) {
             Cache::set('appointment', $this->appointment());
@@ -52,6 +50,7 @@ class Index extends Base
 
         //返回所有类型的方案
         $useful = $this->getAllStylePlan($city_id);
+
         $data = ['carType' => [
             'new' => [
                 //为你推荐
@@ -160,7 +159,6 @@ class Index extends Base
             ->select();
     }
 
-
     /**
      * 获取品牌信息
      * @return array
@@ -199,7 +197,6 @@ class Index extends Base
 
         return array_merge($brandList, $notOftenCity);
 
-
     }
 
     /**
@@ -214,7 +211,7 @@ class Index extends Base
     {
 
         //得到品牌-方案数组
-        $res = Share::getNewCarPlan($city_id, '', true);
+        $res = Share::getVariousTypePlan($city_id,'','planacarIndex','new');
 
         //得到其中所有的方案
         $info = [];
@@ -300,6 +297,7 @@ class Index extends Base
      */
     public function appointment()
     {
+
         $appointment = Subscribe::field('id')
             ->with(['user' => function ($query) {
                 $query->withField('mobile,avatar');
@@ -308,19 +306,21 @@ class Index extends Base
             }, 'usedplan' => function ($query) {
                 $query->withField('models_id');
             }, 'energyplan' => function ($query) {
-                $query->withField('name');
+                $query->withField('models_id');
             }])->order('id desc')->limit(10)->select();
 
+        $models_id = null;
         foreach ($appointment as $k => $v) {
             if ($v['newplan']['models_id']) {
-                $appointment[$k]['models_name'] = Db::name('models')->where('id', $v['newplan']['models_id'])->value('name');
+                $models_id = $v['newplan']['models_id'];
             }
             if ($v['usedplan']['models_id']) {
-                $appointment[$k]['models_name'] = Db::name('models')->where('id', $v['usedplan']['models_id'])->value('name');
+                $models_id = $v['usedplan']['models_id'];
             }
-            if ($v['energyplan']['name']) {
-                $appointment[$k]['models_name'] = $v['energyplan']['name'];
+            if ($v['energyplan']['models_id']) {
+                $models_id = $v['energyplan']['models_id'];
             }
+            $appointment[$k]['models_name'] = $this->modelsName($models_id);
             $appointment[$k]['mobile'] = $v['user']['mobile'];
             $appointment[$k]['avatar'] = $v['user']['avatar'];
             unset($appointment[$k]['user'],$appointment[$k]['newplan'],$appointment[$k]['usedplan'],
@@ -330,6 +330,11 @@ class Index extends Base
 
         return $appointment;
 
+    }
+
+    public function modelsName($models_id)
+    {
+        return Db::name('models')->where('id', $models_id)->value('name');
     }
 
 }

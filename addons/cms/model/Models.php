@@ -48,4 +48,9 @@ class Models extends Model
         return $this->hasOne('SecondcarRentalModelsInfo','models_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
+    public function logistics()
+    {
+        return $this->hasOne('Logistics','models_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
 }

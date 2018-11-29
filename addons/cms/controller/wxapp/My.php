@@ -85,6 +85,7 @@ class My extends Base
         }
 
         $user = $this->getSign($user_id);
+        $fabulousScore = intval(json_decode(Share::ConfigData(['group'=>'integral'])['value'],true)['sign']);
 
         if (!$user) {
             $res = UserSign::create([
@@ -93,10 +94,10 @@ class My extends Base
                 'continuitycount' => 1
             ]);
 
-            $this->insertSignRecord([
+            $insert = [
                 'user_sign_id' => $res->id,
                 'sign_time' => $res->lastModifyTime
-            ]);
+            ];
 
         } else {
             //昨天0点时间
@@ -115,15 +116,17 @@ class My extends Base
             $res = UserSign::where('user_id', $user_id)
                 ->update($data);
 
-            $this->insertSignRecord(['user_sign_id'=>$user['id'],'sign_time'=> $data['lastModifyTime']]);
+            $insert = ['user_sign_id'=>$user['id'],'sign_time'=> $data['lastModifyTime']];
+
 
         }
-
+        $insert['score'] = $fabulousScore;
+        $this->insertSignRecord($insert);
         if (!$res) {
             $this->error('签到失败');
         }
 
-        $integral = Share::integral($user_id, 'sign');
+        $integral = Share::integral($user_id, $fabulousScore);
 
         $integral ? $this->success('签到成功，添加积分：' . $integral, $integral) : $this->error('添加积分失败');
 
@@ -156,19 +159,21 @@ class My extends Base
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) use ($user_id, $table) {
                 $q->with(['planacarIndex' => function ($query) use ($user_id, $table) {
-                    $query->order('weigh desc')->with(['models' => function ($models) use ($user_id) {
+                    $query->order('weigh desc')->with(['models' => function ($models){
                         $models->withField('id,name,brand_id,price');
                     }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
                 }, 'usedcarCount' => function ($query) use ($user_id, $table) {
-                    $query->order('weigh desc')->with(['models' => function ($models) use ($user_id) {
+                    $query->order('weigh desc')->with(['models' => function ($models){
                         $models->withField('id,name,brand_id,price');
                     }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
                 }, 'logisticsCount' => function ($query) use ($user_id, $table) {
-                    $query->with([$table => function ($collections) use ($user_id) {
+                    $query->with(['models' => function ($models){
+                        $models->withField('id,name,brand_id,price');
+                    },$table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
                 }]);
