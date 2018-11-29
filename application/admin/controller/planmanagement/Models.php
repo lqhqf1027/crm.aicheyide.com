@@ -63,14 +63,15 @@ class Models extends Backend
                     ->limit($offset, $limit)
                     ->select();
 
-            foreach ($list as $row) {
+            foreach ($list as $key => $row) {
                 $row->visible(['id','name','standard_price','status','createtime','updatetime','price']);
                 $row->visible(['brand']);
                 $row->getRelation('brand')->visible(['name']);
                 $row->visible(['series']);
                 $row->getRelation('series')->visible(['name']);
                 $row->visible(['model']);
-				$row->getRelation('model')->visible(['name']);
+                $row->getRelation('model')->visible(['name']);
+                $list[$key]['name'] = $list[$key]['name'] . " " . $list[$key]['models_name'];
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
