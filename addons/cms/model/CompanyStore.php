@@ -9,27 +9,6 @@ class CompanyStore extends Model
     // 表名
     protected $name = 'cms_company_store';
 
-    // 自动写入时间戳字段
-//    protected $autoWriteTimestamp = 'int';
-
-
-//    protected $append = [
-//        'status_text'
-//    ];
-
-//
-//    public function getStatusList()
-//    {
-//        return ['normal' => __('Normal'), 'hidden' => __('Hidden')];
-//    }
-//
-//
-//    public function getStatusTextAttr($value, $data)
-//    {
-//        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
-//        $list = $this->getStatusList();
-//        return isset($list[$value]) ? $list[$value] : '';
-//    }
 
     /**
      * 关联城市
@@ -106,8 +85,8 @@ class CompanyStore extends Model
      */
     public function logisticsCount()
     {
-        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,name,
-        payment,monthly,models_main_images,popularity,brand_id,ismenu');
+        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,
+        payment,monthly,models_main_images,popularity,ismenu');
     }
 
     public static function getCarList($store_id)
