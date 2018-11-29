@@ -1,15 +1,27 @@
-var app = getApp()
-var items = [{
+const app = getApp()
+const defaultItems = [{
         type: 'radio',
         label: '默认排序',
         value: '1',
         children: [{
-                label: '默认排序',
+                label: '推荐排序',
                 value: '11',
             },
             {
-                label: '销量最高',
+                label: '首付最低',
                 value: '12',
+            },
+            {
+                label: '月供最低',
+                value: '13',
+            },
+            {
+                label: '人气最高',
+                value: '14',
+            },
+            {
+                label: '车价最低',
+                value: '15',
             },
         ],
     },
@@ -25,30 +37,37 @@ var items = [{
         children: [{
                 label: '不限',
                 value: '0-6',
+                range: [0],
             },
             {
                 label: '1万以内',
                 value: '0-1',
+                range: [0, 10000],
             },
             {
                 label: '1-2万',
                 value: '1-2',
+                range: [10000, 20000],
             },
             {
                 label: '2-3万',
                 value: '2-3',
+                range: [20000, 30000],
             },
             {
                 label: '3-4万',
                 value: '3-4',
+                range: [30000, 40000],
             },
             {
                 label: '4-5万',
                 value: '4-5',
+                range: [40000, 50000],
             },
             {
                 label: '5万以上',
                 value: '5-6',
+                range: [50000],
             },
         ],
     },
@@ -59,42 +78,60 @@ var items = [{
         children: [{
                 label: '不限',
                 value: '0-6000',
+                range: [0],
             },
             {
                 label: '2000元以内',
                 value: '0-2000',
+                range: [0, 2000],
             },
             {
                 label: '2000-3000元',
                 value: '2000-3000',
+                range: [2000, 3000],
             },
             {
                 label: '3000-4000元',
                 value: '3000-4000',
+                range: [3000, 4000],
             },
             {
                 label: '4000-5000元',
                 value: '4000-5000',
+                range: [4000, 5000],
             },
             {
                 label: '5000元以上',
                 value: '5000-6000',
+                range: [5000],
             },
         ],
     },
 ]
-var getPaymentLabel = (str) => {
-    var value = str.map((n) => n / 10).join('-')
-    var reslut = items[2].children.filter((n) => n.value === value)[0]
+
+const getRange = (value, array = [], num = 1) => {
+    const reslut = array.filter(function(n) { return n.value === value })[0]
     if (reslut) {
-        return reslut.label
+        return reslut.range
     }
-    return ''
+    return value && value !== '0-0' ? value.split('-').map((n) => Number(n) * num) : [0]
+}
+
+const checkValueInRange = (value = 0, min = 0, max = Infinity) => {
+    return value >= min && value <= max
+}
+
+const defaultSearchValue = {
+    sort: '',
+    name: '',
+    style: 'new',
+    payment: [0, 0],
+    monthly: [0, 0],
 }
 
 Page({
     data: {
-        items,
+        items: defaultItems,
         globalData: app.globalData,
         shares: {},
         city: app.globalData.city,
@@ -103,11 +140,7 @@ Page({
         newcarList: [],
         usedcarList: [],
         allList: [],
-        searchVal: {
-            name: '',
-            payment: [0, 0],
-            monthly: [0, 0],
-        },
+        searchVal: {...defaultSearchValue },
     },
     onLoad: function() {
         wx.setStorageSync('city', app.globalData.city)
@@ -168,6 +201,24 @@ Page({
             phoneNumber: '4001886061'
         })
     },
+    onBrand() {
+        wx.setStorage({
+            key: 'brandList',
+            data: this.data.brandList,
+            success() {
+                wx.navigateTo({
+                    url: '/page/brand/index',
+                })
+            },
+        })
+    },
+    onOpenDetail(e) {
+        const { id, type } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/preference/detail/index?id=${id}&type=${type}`,
+        })
+    },
     getList() {
         const city = wx.getStorageSync('city')
 
@@ -177,18 +228,70 @@ Page({
 
         app.request('/carselection/index', { city_id: city.id }, (data, ret) => {
             console.log(data)
+
+            const tabs = data.carSelectList.map((n) => ({ car_type_name: n.car_type_name, type: n.type }))
+            let logisticsList = []
+            let newcarList = []
+            let usedcarList = []
+            let brandList = {}
+
+            if (data.carSelectList.length > 0) {
+                data.carSelectList.forEach((n) => {
+                    console.log(n)
+                    if (n.type === 'new') {
+                        n.newCarList.forEach((m) => {
+                            if (brandList[m.brand_initials] = brandList[m.brand_initials] || []) {
+                                if (!brandList[m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[m.brand_initials].push({
+                                        id: m.id,
+                                        name: m.name,
+                                    })
+                                }
+                            }
+                            newcarList = [...newcarList, ...m.planList.map((v) => ({...v, brand_id: m.id }))]
+                        })
+                    } else if (n.type === 'used') {
+                        n.usedCarList.forEach((m) => {
+                            if (brandList[m.brand_initials] = brandList[m.brand_initials] || []) {
+                                if (!brandList[m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[m.brand_initials].push({
+                                        id: m.id,
+                                        name: m.name,
+                                    })
+                                }
+                            }
+                            usedcarList = [...usedcarList, ...m.planList.map((v) => ({...v, brand_id: m.id }))]
+                        })
+                    } else if (n.type === 'logistics') {
+                        n.logisticsCarList.forEach((m) => {
+                            if (brandList[m.brand_initials] = brandList[m.brand_initials] || []) {
+                                if (!brandList[m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[m.brand_initials].push({
+                                        id: m.id,
+                                        name: m.name,
+                                    })
+                                }
+                            }
+                            logisticsList = [...logisticsList, ...m.planList.map((v) => ({...v, brand_id: m.id }))]
+                        })
+                    }
+                })
+            }
+
             this.setData({
-                logisticsList: data.logisticsList,
-                newcarList: data.newcarList,
-                usedcarList: data.usedcarList,
-                allList: [...data.logisticsList, ...data.newcarList, ...data.usedcarList],
+                brandList,
+                tabs,
+                logisticsList,
+                newcarList,
+                usedcarList,
+                allList: [...logisticsList, ...newcarList, ...usedcarList],
             }, () => {
                 wx.getStorage({
                     key: 'searchVal',
                     success: ({ data }) => {
                         console.log(data)
                         wx.removeStorageSync('searchVal')
-                        this.setCars(data)
+                        this.setCars({...this.data.searchVal, ...data })
                     },
                     fail: () => {
                         this.setCars()
@@ -200,17 +303,32 @@ Page({
             app.error(ret.msg)
         })
     },
+    setFilter(style) {
+        const items = [...defaultItems]
+        const searchVal = {...defaultSearchValue, style }
+
+        if (style === 'used') {
+            items[0].children.splice(2, 1)
+            items.pop()
+        }
+
+        this.setData({
+            items,
+            searchVal
+        }, this.setCars)
+    },
     onChange(e) {
         console.log(e)
-        this.setCars({...this.data.searchVal, style: e.detail.key })
+        this.setFilter(e.detail.key)
     },
-    setCars(searchVal = {}) {
-        const { style, name, payment } = searchVal
+    setCars(searchVal = this.data.searchVal) {
+        const { sort, brand, style, name, payment, monthly } = searchVal
 
-        console.log(style, name)
+        console.log('searchVal', searchVal)
 
         let list = []
 
+        // 按类型过滤
         if (style === 'new') {
             list = [...this.data.newcarList]
         } else if (style === 'used') {
@@ -221,21 +339,44 @@ Page({
             list = [...this.data.allList]
         }
 
+        // 按名称过滤
         if (name) {
             list = list.filter((n) => n.models_name && n.models_name.indexOf(name) !== -1)
         }
 
-        // if (payment) {
-        //     if (payment === '0-60') {
-        //         continue
-        //     } else if (payment === '50-60') {
-        //         continue
-        //     } else {
-        //         const pay = payment.split('-').map((n) => Number(n) * 1000)
+        // 按品牌过滤
+        if (brand) {
+            list = list.filter((n) => n.brand_id === brand.id)
+        }
 
-        //         list = list.filter((n) => n)
-        //     }
-        // }
+        // 按首付过滤
+        if (payment) {
+            const value = payment.map((n) => Number(n) / 10).join('-')
+            const range = getRange(value, defaultItems[2]['children'], 10000)
+            console.log('payment', range)
+            list = list.filter((n) => checkValueInRange(n.payment, range[0], range[1]))
+        }
+
+        // 按月供过滤
+        if (monthly) {
+            const value = monthly.map((n) => Number(n) * 100).join('-')
+            const range = getRange(value, defaultItems[3]['children'])
+            console.log('monthly', range)
+            list = list.filter((n) => checkValueInRange(n.monthly, range[0], range[1]))
+        }
+
+        // 排序
+        if (sort === '12') {
+            list = list.sort((a, b) => a.payment - b.payment)
+        } else if (sort === '13') {
+            list = list.sort((a, b) => a.monthly - b.monthly)
+        } else if (sort === '14') {
+            list = list.sort((a, b) => b.popularity - a.popularity)
+        } else if (sort === '15') {
+            list = list.sort((a, b) => a.models.price - b.models.price)
+        }
+
+        console.log('list', list)
 
         this.setData({
             searchVal,
@@ -243,16 +384,34 @@ Page({
         })
     },
     onTag(e) {
-        const { name } = e.currentTarget.dataset
-        const { searchVal } = this.data
+        const { meta } = e.currentTarget.dataset
+        const { searchVal, items } = this.data
 
-        if (searchVal.name === name) {
-            delete searchVal.name
-            this.setCars(searchVal)
+        console.log('onTag', meta)
+
+        if (meta === 'name') {
+            searchVal.name = ''
+        } else if (meta === 'brand') {
+            searchVal.brand = ''
+        } else if (meta === 'payment' || meta === 'monthly') {
+            searchVal[meta] = [0, 0]
+            const index = meta === 'payment' ? 2 : 3
+            const children = items[index].children.map((n) => Object.assign({}, n, {
+                checked: false,
+            }))
+
+            this.setData({
+                [`items[${index}].children`]: children,
+            })
         }
+
+        console.log('searchVal', searchVal)
+
+        this.setCars(searchVal)
     },
     onReset() {
-        this.setCars()
+        console.log('onReset', defaultSearchValue)
+        this.setCars({...defaultSearchValue })
     },
     onCancel() {
         const { index } = this.data
@@ -277,9 +436,13 @@ Page({
             })
         })
 
+        if (index === 1) {
+            this.onBrand()
+        }
+
         this.setData({
             index,
-            items,
+            items: index === 1 ? this.data.items : items,
             backdrop: index !== 1 && !checked,
         })
     },
@@ -290,6 +453,7 @@ Page({
             checked: n.value === value,
         }))
         const params = {
+            'searchVal.sort': value,
             [`items[${index}].children`]: children,
         }
 
@@ -325,7 +489,7 @@ Page({
         this.setData({
             [`items[${index}].children`]: children,
             'searchVal.payment': e.detail.value,
-        })
+        }, this.setCars)
     },
     onMonthlyChange(e) {
         const index = 3
@@ -337,7 +501,7 @@ Page({
         this.setData({
             [`items[${index}].children`]: children,
             'searchVal.monthly': e.detail.value,
-        })
+        }, this.setCars)
     },
     onSelectChange() {
         const items = this.data.items.map((n) => ({...n, checked: false, visible: false }))
@@ -346,7 +510,7 @@ Page({
             this.setData({
                 items,
                 backdrop: false,
-            })
+            }, this.setCars)
         }, 300)
     },
 })
