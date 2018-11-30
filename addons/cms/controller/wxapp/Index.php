@@ -79,6 +79,7 @@ class Index extends Base
      */
     public function brandPlan()
     {
+
         $brand_id = $this->request->post('brand_id');
 
         $city_id = $this->request->post('city_id');
@@ -196,7 +197,6 @@ class Index extends Base
         }
 
         return array_merge($brandList, $notOftenCity);
-
     }
 
     /**

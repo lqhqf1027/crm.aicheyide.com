@@ -19,6 +19,7 @@ use addons\cms\model\Fabulous;
 use addons\cms\model\Subscribe;
 use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
+use app\common\model\User;
 use addons\cms\model\SecondcarRentalModelsInfo;
 
 class Share extends Base
@@ -30,6 +31,7 @@ class Share extends Base
      */
     public function plan_details()
     {
+        $this->success('',User::getBynickname('gxabc'));
         $plan_id = $this->request->post('plan_id');                   //参数：方案ID
         $user_id = $this->request->post('user_id');                   //参数：用户ID
         $cartype = $this->request->post('cartype');                   //车辆类型
@@ -258,7 +260,34 @@ specialimages,popularity')
             ->select();
 
         if ($searchCityList) {
-            $this->success('请求成功', ['searchCity'=>$searchCityList]);
+            $this->success('请求成功', ['searchCity' => $searchCityList]);
+        } else {
+            $this->error();
+        }
+
+    }
+
+    /**
+     * 分享接口
+     * @throws \think\Exception
+     */
+    public function shareInterface()
+    {
+        $user_id = $this->request->post('user_id');
+
+        $shareScore = intval(json_decode(self::ConfigData(['group' => 'integral'])['value'], true)['share']);
+
+        $data = [
+            'type' => 'share',
+            'score' => $shareScore,
+            'user_id' => $user_id
+        ];
+
+        $res = self::integral($user_id, $shareScore);
+
+        if ($res) {
+            Fabulous::create($data) ? $this->success('分享成功,添加积分:' . $shareScore, $shareScore) : $this->error();
+
         } else {
             $this->error();
         }
@@ -277,9 +306,9 @@ specialimages,popularity')
         if (!$user_id || !$plan_id || !$cartype) {
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
-        $fabulousScore = intval(json_decode(self::ConfigData(['group'=>'integral'])['value'],true)['fabulous']);
+        $fabulousScore = intval(json_decode(self::ConfigData(['group' => 'integral'])['value'], true)['fabulous']);
 
-        $res = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'cms_fabulous',false,$fabulousScore);
+        $res = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'cms_fabulous', false, $fabulousScore);
 
         switch ($res['errorCode']) {
             case '1':
@@ -291,7 +320,6 @@ specialimages,popularity')
             case '0':
                 break;
         }
-
 
 
         $integral = self::integral($user_id, $fabulousScore);
@@ -373,7 +401,7 @@ specialimages,popularity')
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getFabulousCollection($user_id, $plan_id, $cartype, $tableName, $getData = false,$score = null)
+    public function getFabulousCollection($user_id, $plan_id, $cartype, $tableName, $getData = false, $score = null)
     {
 
         $plan_field = $this->getQueryPlan($cartype);
@@ -409,7 +437,7 @@ specialimages,popularity')
             $data['cartype'] = $cartype;
         }
 
-        if($score){
+        if ($score) {
             $data['score'] = intval($score);
         }
 
@@ -426,14 +454,21 @@ specialimages,popularity')
      */
     public static function integral($user_id, $score)
     {
-        $res = Db::name('user')
-            ->where('id', $user_id)
+        $res = User::where('id', $user_id)
             ->setInc('score', $score);
 
-        return $res ? $score : 0;
+        return $res ? 1 : 0;
 
     }
 
+    /**
+     * 获取配置信息
+     * @param $where
+     * @return array|false|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public static function ConfigData($where)
     {
         return Db::name('config')
@@ -463,7 +498,7 @@ specialimages,popularity')
         //新能源车型
         $logistics = $this->getModels($queryModels, 'logistics');
 
-        $data = ['searchModel' =>['new' => $new_models, 'used' => $used_models, 'logistics' => $logistics]];
+        $data = ['searchModel' => ['new' => $new_models, 'used' => $used_models, 'logistics' => $logistics]];
 
         $this->success('请求成功', $data);
 
@@ -482,9 +517,8 @@ specialimages,popularity')
     {
         //模糊查询对应车型
         $models = Models::field('id,name')
-            ->with([$withTable => function ($query) use ($withTable){
-                $where = $withTable=='secondcarplan'?['shelfismenu'=>1]:['ismenu'=>1];
-
+            ->with([$withTable => function ($query) use ($withTable) {
+                $where = $withTable == 'secondcarplan' ? ['shelfismenu' => 1] : ['ismenu' => 1];
                 $query->where($where)->withField('id');
             }])->where(function ($query) use ($queryModels) {
                 $query->where([
@@ -494,7 +528,7 @@ specialimages,popularity')
             })->select();
 
         $type = null;
-        switch ($withTable){
+        switch ($withTable) {
             case 'planacar':
                 $type = 'new';
                 break;
@@ -553,12 +587,10 @@ specialimages,popularity')
     }
 
 
-
-
     /**
      * 返回需要类型的方案
      * @param $city_id          城市ID
-     * @param bool $duplicate   是否去重
+     * @param bool $duplicate 是否去重
      * @param $withPlan         关联方案
      * @param $type             车辆类型
      * @return array
@@ -566,16 +598,17 @@ specialimages,popularity')
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public static function getVariousTypePlan($city_id, $duplicate = false,$withPlan,$type)
+    public static function getVariousTypePlan($city_id = null, $duplicate = false, $withPlan, $type, $store_id = null)
     {
         $info = Cities::field('id,cities_name')
-            ->with(['storeList' => function ($q) use ($withPlan) {
+            ->with(['storeList' => function ($q) use ($withPlan, $store_id) {
                 $q->where([
-                    'statuss'=> 'normal',
+                    'id' => $store_id ? $store_id : ['neq', 'null'],
+                    'statuss' => 'normal',
                 ])->with([$withPlan => function ($query) use ($withPlan) {
-                    $where = $withPlan=='usedcarCount'? ['shelfismenu' => 1]:['ismenu' => 1];
+                    $where = $withPlan == 'usedcarCount' ? ['shelfismenu' => 1] : ['ismenu' => 1];
 
-                    $order = $withPlan=='logisticsCount'?'':'weigh desc';
+                    $order = $withPlan == 'logisticsCount' ? '' : 'weigh desc';
 
                     $query->where($where)->order($order)->with(['models' => function ($models) {
                         $models->withField('id,name,brand_id,price');
@@ -583,13 +616,18 @@ specialimages,popularity')
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
-            }])->find($city_id);
+            }])->select($city_id ? $city_id : null);
 
+
+
+        foreach ($info as $k => $v) {
+            if ($v['store_list']) {
+                $info = $v;
+                break;
+            }
+        }
         return self::handleNewUsed($info, $duplicate, $type);
     }
-
-
-
 
 
     /**
@@ -601,8 +639,9 @@ specialimages,popularity')
      */
     public static function handleNewUsed($info, $duplicate = false, $type)
     {
-        if(!$info['store_list']){
-            return false;
+        //该城市无任何门店
+        if (!$info['store_list']) {
+            return [];
         }
 
         $check = [];
@@ -665,6 +704,10 @@ specialimages,popularity')
 
         }
 
+        //如果品牌列表没有【planList】键，表示该城市门店无方案
+        if(!isset($brand[0]['planList'])){
+            return [];
+        }
         //去除没用的品牌
         foreach ($brand as $k => $v) {
             if (!$v['planList']) {
@@ -672,7 +715,7 @@ specialimages,popularity')
             }
         }
 
-        return array_values($brand);
+        return $brand ? array_values($brand) : [];
     }
 
     /**
