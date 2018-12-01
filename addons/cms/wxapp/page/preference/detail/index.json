@@ -1,5 +1,5 @@
 {
-    "navigationBarTitleText": "友车友家",
+    "navigationBarTitleText": "车辆详情",
     "usingComponents": {
     	"wux-cell-group": "../../../assets/libs/wux/cell-group/index",
     	"wux-cell": "../../../assets/libs/wux/cell/index",
