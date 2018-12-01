@@ -18,6 +18,7 @@ Page({
         score: 0,
         sign: 0,
         style: 'collection',
+        scrollTop: 0,
     },
     onLoad: function() {
         var that = this;
@@ -81,6 +82,11 @@ Page({
                 });
             }
         });
+    },
+    onPageScroll(e) {
+        this.setData({
+            scrollTop : e.scrollTop,
+        })
     },
     checkValue(items = []) {
         if (!items || !items.length) return false
