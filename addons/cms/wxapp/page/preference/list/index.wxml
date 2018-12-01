@@ -175,7 +175,7 @@
         <swiper slot="body" class="swiperClass swiperClassNext" indicator-dots indicator-color="#d5d5d5" indicator-active-color="#da8103" autoplay interval="2000" duration="1000" circular previous-margin="50" next-margin="50">
             <block wx:for="{{ carType.new.specialfieldList }}" wx:key="">
                 <swiper-item>
-                    <image src="{{ globalData.config.upload.cdnurl + item.specialimages }}" class="slide-image" mode="aspectFill">
+                    <image src="{{ globalData.config.upload.cdnurl + item.specialimages }}" class="slide-image" mode="aspectFill" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
                     </image>
                 </swiper-item>
             </block>

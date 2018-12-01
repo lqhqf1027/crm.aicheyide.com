@@ -21,7 +21,7 @@ Page({
         scrollTop: 0,
     },
     onLoad: function() {
-        var that = this;
+        this.setData({ globalData: app.globalData })
     },
     onShow: function() {
         var that = this;

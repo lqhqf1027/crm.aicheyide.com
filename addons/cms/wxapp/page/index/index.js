@@ -155,6 +155,7 @@ Page({
         searchVal: {...defaultSearchValue },
     },
     onLoad: function() {
+        this.setData({ globalData: app.globalData })
         wx.setStorageSync('city', app.globalData.city)
     },
     onShareAppMessage: function() {
