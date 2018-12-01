@@ -2,6 +2,8 @@
     "navigationBarTitleText": "友车友家",
     "usingComponents": {
         "wux-animation-group": "../../assets/libs/wux/animation-group/index",
+        "wux-cell-group": "../../assets/libs/wux/cell-group/index",
+        "wux-cell": "../../assets/libs/wux/cell/index",
         "wux-radio-group": "../../assets/libs/wux/radio-group/index",
         "wux-radio": "../../assets/libs/wux/radio/index",
         "wux-slider": "../../assets/libs/wux/slider/index",
