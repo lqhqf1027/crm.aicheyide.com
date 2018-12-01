@@ -1,6 +1,8 @@
 {
     "navigationBarTitleText": "我的",
     "usingComponents": {
+    	"i-sticky": "../../../assets/libs/iview/sticky/index",
+    	"i-sticky-item": "../../../assets/libs/iview/sticky-item/index",
         "wux-avatar": "../../../assets/libs/wux/avatar/index",
         "wux-media": "../../../assets/libs/wux/media/index",
         "wux-grids": "../../../assets/libs/wux/grids/index",

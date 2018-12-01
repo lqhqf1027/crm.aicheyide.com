@@ -131,6 +131,16 @@ const defaultSearchValue = {
 
 Page({
     data: {
+        tabs: [{
+            type: 'new',
+            car_type_name: '新车',
+        },{
+            type: 'used',
+            car_type_name: '二手车',
+        },{
+            type: 'logistics',
+            car_type_name: '新能源车',
+        }],
         items: defaultItems,
         globalData: app.globalData,
         shares: {},
@@ -140,9 +150,12 @@ Page({
         newcarList: [],
         usedcarList: [],
         allList: [],
+        brandList: {},
+        carBrandList: [],
         searchVal: {...defaultSearchValue },
     },
     onLoad: function() {
+        this.setData({ globalData: app.globalData })
         wx.setStorageSync('city', app.globalData.city)
     },
     onShareAppMessage: function() {
@@ -201,16 +214,10 @@ Page({
             phoneNumber: '4001886061'
         })
     },
-    onBrand() {
-        wx.setStorage({
-            key: 'brandList',
-            data: this.data.brandList,
-            success() {
-                wx.navigateTo({
-                    url: '/page/brand/index',
-                })
-            },
-        })
+    onBrand(e) {
+        const { brand } = e.currentTarget.dataset
+
+        this.setData({ 'searchVal.brand': brand }, this.onSelectChange)
     },
     onOpenDetail(e) {
         const { id, type } = e.currentTarget.dataset
@@ -218,6 +225,21 @@ Page({
         wx.navigateTo({
             url: `/page/preference/detail/index?id=${id}&type=${type}`,
         })
+    },
+    getBrandList() {
+        let carBrandList = []
+        const { brandList, searchVal } = this.data
+        const data = brandList[searchVal.style]
+        const words = Object.keys(data)
+
+        words.forEach((item, index) => {
+            carBrandList[index] = {
+                key: item,
+                list: data[item].map((n, i) => ({...n, key: n.id })),
+            }
+        })
+
+        this.setData({ carBrandList })
     },
     getList() {
         const city = wx.getStorageSync('city')
@@ -229,7 +251,7 @@ Page({
         app.request('/carselection/index', { city_id: city.id }, (data, ret) => {
             console.log(data)
 
-            const tabs = data.carSelectList.map((n) => ({ car_type_name: n.car_type_name, type: n.type }))
+            // const tabs = data.carSelectList.map((n) => ({ car_type_name: n.car_type_name, type: n.type }))
             let logisticsList = []
             let newcarList = []
             let usedcarList = []
@@ -238,11 +260,12 @@ Page({
             if (data.carSelectList.length > 0) {
                 data.carSelectList.forEach((n) => {
                     console.log(n)
+                    brandList[n.type] = {}
                     if (n.type === 'new') {
                         n.newCarList.forEach((m) => {
-                            if (brandList[m.brand_initials] = brandList[m.brand_initials] || []) {
-                                if (!brandList[m.brand_initials].map((n) => n.id).includes(m.id)) {
-                                    brandList[m.brand_initials].push({
+                            if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
+                                if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[n.type][m.brand_initials].push({
                                         id: m.id,
                                         name: m.name,
                                     })
@@ -252,9 +275,9 @@ Page({
                         })
                     } else if (n.type === 'used') {
                         n.usedCarList.forEach((m) => {
-                            if (brandList[m.brand_initials] = brandList[m.brand_initials] || []) {
-                                if (!brandList[m.brand_initials].map((n) => n.id).includes(m.id)) {
-                                    brandList[m.brand_initials].push({
+                            if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
+                                if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[n.type][m.brand_initials].push({
                                         id: m.id,
                                         name: m.name,
                                     })
@@ -264,9 +287,9 @@ Page({
                         })
                     } else if (n.type === 'logistics') {
                         n.logisticsCarList.forEach((m) => {
-                            if (brandList[m.brand_initials] = brandList[m.brand_initials] || []) {
-                                if (!brandList[m.brand_initials].map((n) => n.id).includes(m.id)) {
-                                    brandList[m.brand_initials].push({
+                            if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
+                                if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[n.type][m.brand_initials].push({
                                         id: m.id,
                                         name: m.name,
                                     })
@@ -280,7 +303,7 @@ Page({
 
             this.setData({
                 brandList,
-                tabs,
+                // tabs,
                 logisticsList,
                 newcarList,
                 usedcarList,
@@ -314,7 +337,8 @@ Page({
 
         this.setData({
             items,
-            searchVal
+            searchVal,
+            backdrop: false,
         }, this.setCars)
     },
     onChange(e) {
@@ -437,13 +461,13 @@ Page({
         })
 
         if (index === 1) {
-            this.onBrand()
+            this.getBrandList()
         }
 
         this.setData({
             index,
-            items: index === 1 ? this.data.items : items,
-            backdrop: index !== 1 && !checked,
+            items,
+            backdrop: !checked,
         })
     },
     radioChange(e) {

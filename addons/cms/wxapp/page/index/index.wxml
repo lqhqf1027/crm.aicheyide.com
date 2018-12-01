@@ -47,6 +47,15 @@
                         </wux-radio-group>
                     </view>
                 </block>
+                <block wx:if="{{ index === 1 }}">
+                    <view class="filterbar__select select" wx:if="{{ item.visible }}">
+                        <scroll-view scroll-y style="height: 400rpx;">
+                            <wux-cell-group wx:for="{{ carBrandList }}" wx:key="" title="{{ item.key }}">
+                                <wux-cell title="{{ c.name }}" wx:for="{{ item.list }}" wx:for-item="c" wx:key="" data-brand="{{ c }}" bind:click="onBrand"></wux-cell>
+                            </wux-cell-group>
+                        </scroll-view>
+                    </view>
+                </block>
                 <block wx:if="{{ index === 2 }}">
                     <view class="filterbar__select select" wx:if="{{ item.visible }}">
                         <radio-group bindchange="onRadioChange" data-index="{{ index }}" data-item="{{ item }}">

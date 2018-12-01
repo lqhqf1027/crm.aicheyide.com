@@ -1,6 +1,7 @@
 var app = getApp();
 Page({
     data: {
+        globalData: app.globalData,
         isWxapp: true,
         userInfo: {
             id: 0,
@@ -9,16 +10,25 @@ Page({
             balance: 0,
             score: 0,
             level: 0
-        }
+        },
+        pickup: {},
+        collection: {},
+        subscribe: {},
+        couponCount: 0,
+        score: 0,
+        sign: 0,
+        style: 'collection',
+        scrollTop: 0,
     },
     onLoad: function() {
-        var that = this;
+        this.setData({ globalData: app.globalData })
     },
     onShow: function() {
         var that = this;
         if (app.globalData.userInfo) {
             that.setData({ userInfo: app.globalData.userInfo, isWxapp: that.isWxapp() });
         }
+        that.getInfo();
     },
     login: function() {
         var that = this;
@@ -73,14 +83,19 @@ Page({
             }
         });
     },
+    onPageScroll(e) {
+        this.setData({
+            scrollTop : e.scrollTop,
+        })
+    },
+    checkValue(items = []) {
+        if (!items || !items.length) return false
+        return items.map((n) => n.planList && n.planList.length > 0).includes(true)
+    },
     onChange(e) {
-        const { key } = e.detail
-
-        if (key !== 'collection') {
-            this.setData({
-                visible: true,
-            })
-        }
+        this.setData({
+            style: e.detail.key,
+        })
     },
     toMore() {
         wx.switchTab({
@@ -97,6 +112,40 @@ Page({
 
         wx.navigateTo({
             url: `/page/preference/detail/index?id=${id}&type=${type}`,
+        })
+    },
+    getInfo() {
+        const user_id = app.globalData.userInfo.id
+
+        app.request('/my/index', { user_id }, (data, ret) => {
+            console.log(data)
+            this.setData({
+                'collection.carSelectList': data.collection && data.collection.carSelectList,
+                'collection.hasList': this.checkValue(data.collection && data.collection.carSelectList),
+                'subscribe.carSelectList': data.subscribe && data.subscribe.carSelectList,
+                'subscribe.hasList': this.checkValue(data.subscribe && data.subscribe.carSelectList),
+                couponCount: data.couponCount,
+                score: data.score,
+                sign: data.sign,
+            })
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
+    signIn() {
+        if (this.data.sign === 1) {
+            return app.info('已签到')
+        }
+
+        const user_id = app.globalData.userInfo.id
+
+        app.request('/my/signIn', { user_id }, (data, ret) => {
+            console.log(data)
+            app.success(ret.msg)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
         })
     },
 })
