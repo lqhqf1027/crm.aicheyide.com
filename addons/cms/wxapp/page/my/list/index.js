@@ -21,13 +21,13 @@ Page({
     },
     onLoad: function() {
         var that = this;
-        that.getInfo();
     },
     onShow: function() {
         var that = this;
         if (app.globalData.userInfo) {
             that.setData({ userInfo: app.globalData.userInfo, isWxapp: that.isWxapp() });
         }
+        that.getInfo();
     },
     login: function() {
         var that = this;
