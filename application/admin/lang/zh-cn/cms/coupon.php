@@ -10,7 +10,7 @@ return [
     'Models_ids'  =>  '可用商品（车型）',
     'Membership_grade'  =>  '会员等级（不必填）',
     'Limit_collar'  =>  '每人限领',
-    'Release_datetime'  =>  '优惠劵发放时间',
+    'Release_datetime'  =>  '优惠劵领取截至时间',
     'Validity_datetime'  =>  '使用有效期',
     'Createtime'  =>  '创建时间',
     'Updatetime'  =>  '更新时间',

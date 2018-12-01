@@ -55,13 +55,13 @@ class Logistics extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
-                    ->with(['subject','label','store','brand'])
+                    ->with(['subject','label','store','models'])
                     ->where($where)
                     ->order($sort, $order)
                     ->count();
 
             $list = $this->model
-                    ->with(['subject','label','store','brand'])
+                    ->with(['subject','label','store','models'])
                     ->where($where)
                     ->order($sort, $order)
                     ->limit($offset, $limit)
@@ -118,61 +118,12 @@ class Logistics extends Backend
         }
         $this->view->assign([
             'subject' => $this->getSubject(),
-            'store'  => $this->getStore()
+            'store'  => $this->getStore(),
+            'car_models' => $this->getInfo(),
         ]);
 
         return $this->view->fetch();
     }
-
-    /**
-     * 查询车辆品牌
-     */
-    public function getBrand()
-    {
-        $this->model = model('Brand');
-        // //当前是否为关联查询
-        // $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
-                return $this->selectpage();
-            }
-        }
-    }
-
-
-    /**
-     * 查询车辆车系
-     */
-    public function getSeries()
-    {
-        $this->model = model('Brand');
-        // //当前是否为关联查询
-        // $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax())
-        {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField'))
-            {
-                return $this->selectpage();
-            }
-            $id = $this->request->post('id');
-            //父级id
-            $list = $this->model->where('pid', $id)->field('id,name')->select();
-
-            $result = array("list" => $list);
-
-            return json($result);
-        }
-        
-    }
-
 
     /**
      * 编辑
@@ -217,7 +168,8 @@ class Logistics extends Backend
         $this->view->assign([
             "row" => $row,
             'subject' => $this->getSubject(),
-            'store'  => $this->getStore()
+            'store'  => $this->getStore(),
+            'car_models' => $this->getInfo(),
         ]);
         return $this->view->fetch();
     }
@@ -238,5 +190,47 @@ class Logistics extends Backend
         $result = Db::name('cms_company_store')->select();
 
         return $result;
+    }
+
+    /**车型对应车辆
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getInfo()
+    {
+        $models = Db::name("models")
+            ->field("id as models_id,name as models_name,brand_id")
+            ->select();
+            
+        //品牌下没有车型，就不显示在下拉列表
+        foreach ($models as $key => $value) {
+            $ids[] = $value['brand_id'];
+        }
+        
+        $brand = Db::name("brand")
+            ->where('pid', '0')
+            ->where('id', 'in', $ids)
+            ->field("id,name")
+            ->select();
+
+        // pr($brand);
+        // die;
+
+        foreach ($brand as $k => $v) {
+            $brand[$k]['models'] = array();
+            foreach ($models as $key => $value) {
+
+                if ($v['id'] == $value['brand_id']) {
+
+                    array_push($brand[$k]['models'], $value);
+                }
+            }
+
+        }
+
+        return $brand;
+
     }
 }

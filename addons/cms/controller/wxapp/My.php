@@ -5,6 +5,7 @@ namespace addons\cms\controller\wxapp;
 use addons\cms\model\Cities;
 use addons\cms\model\Comment;
 use addons\cms\model\Coupon;
+use addons\cms\model\Fabulous;
 use addons\cms\model\Page;
 use addons\cms\model\User;
 use addons\cms\model\UserSign;
@@ -85,6 +86,7 @@ class My extends Base
         }
 
         $user = $this->getSign($user_id);
+        $signScore = intval(json_decode(Share::ConfigData(['group' => 'integral'])['value'], true)['sign']);
 
         if (!$user) {
             $res = UserSign::create([
@@ -93,10 +95,10 @@ class My extends Base
                 'continuitycount' => 1
             ]);
 
-            $this->insertSignRecord([
+            $insert = [
                 'user_sign_id' => $res->id,
                 'sign_time' => $res->lastModifyTime
-            ]);
+            ];
 
         } else {
             //昨天0点时间
@@ -115,17 +117,19 @@ class My extends Base
             $res = UserSign::where('user_id', $user_id)
                 ->update($data);
 
-            $this->insertSignRecord(['user_sign_id'=>$user['id'],'sign_time'=> $data['lastModifyTime']]);
+            $insert = ['user_sign_id' => $user['id'], 'sign_time' => $data['lastModifyTime']];
+
 
         }
-
+        $insert['score'] = $signScore;
+        $this->insertSignRecord($insert);
         if (!$res) {
             $this->error('签到失败');
         }
 
-        $integral = Share::integral($user_id, 'sign');
+        $integral = Share::integral($user_id, $signScore);
 
-        $integral ? $this->success('签到成功，添加积分：' . $integral, $integral) : $this->error('添加积分失败');
+        $integral ? $this->success('签到成功，添加积分：' . $signScore, $signScore) : $this->error('添加积分失败');
 
     }
 
@@ -133,6 +137,57 @@ class My extends Base
     {
         return Db::name('cms_sign_record')
             ->insert($data);
+    }
+
+    /**
+     * 我的积分
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function myScore()
+    {
+        $user_id = $this->request->post('user_id');
+
+        $fabulous = $this->fabulousData($user_id, 'fabulous');
+
+        $sign = Db::name('cms_sign_record')
+            ->alias('a')
+            ->join('cms_user_sign b', 'a.user_sign_id = b.id')
+            ->field('a.score,a.sign_time')
+            ->where('b.user_id', $user_id)
+            ->order('a.sign_time desc')
+            ->select();
+
+        $share = $this->fabulousData($user_id, 'share');
+
+        $this->success('', [
+            'integral' => [
+                ['name'=>'点赞','fabulous' => $fabulous],
+                ['name'=>'签到','sign' => $sign],
+                ['name'=>'分享','share' => $share]
+            ]
+        ]);
+    }
+
+    /**
+     * 点赞数据
+     * @param $user_id       用户ID
+     * @param $type          类型
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function fabulousData($user_id, $type)
+    {
+        return Fabulous::field('score,fabuloustime')
+            ->where([
+                'user_id' => $user_id,
+                'type' => $type
+            ])
+            ->order('fabuloustime desc')
+            ->select();
     }
 
     public function getSign($user_id)
@@ -156,19 +211,21 @@ class My extends Base
         $info = Cities::field('id,cities_name')
             ->with(['storeList' => function ($q) use ($user_id, $table) {
                 $q->with(['planacarIndex' => function ($query) use ($user_id, $table) {
-                    $query->order('weigh desc')->with(['models' => function ($models) use ($user_id) {
+                    $query->order('weigh desc')->with(['models' => function ($models) {
                         $models->withField('id,name,brand_id,price');
                     }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
                 }, 'usedcarCount' => function ($query) use ($user_id, $table) {
-                    $query->order('weigh desc')->with(['models' => function ($models) use ($user_id) {
+                    $query->order('weigh desc')->with(['models' => function ($models) {
                         $models->withField('id,name,brand_id,price');
                     }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
                 }, 'logisticsCount' => function ($query) use ($user_id, $table) {
-                    $query->with([$table => function ($collections) use ($user_id) {
+                    $query->with(['models' => function ($models) {
+                        $models->withField('id,name,brand_id,price');
+                    }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
                 }]);

@@ -27,7 +27,7 @@ class Models extends Model
      */
     public function brand()
     {
-        return $this->belongsTo('Brand', 'brand_id', 'id');
+        return $this->belongsTo('Brand', 'brand_id', 'id')->setEagerlyType(1);
     }
 
     /**
@@ -46,6 +46,11 @@ class Models extends Model
     public function secondcarplan()
     {
         return $this->hasOne('SecondcarRentalModelsInfo','models_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+
+    public function logistics()
+    {
+        return $this->hasOne('Logistics','models_id','id',[],'LEFT')->setEagerlyType(0);
     }
 
 }

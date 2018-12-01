@@ -9,27 +9,6 @@ class CompanyStore extends Model
     // 表名
     protected $name = 'cms_company_store';
 
-    // 自动写入时间戳字段
-//    protected $autoWriteTimestamp = 'int';
-
-
-//    protected $append = [
-//        'status_text'
-//    ];
-
-//
-//    public function getStatusList()
-//    {
-//        return ['normal' => __('Normal'), 'hidden' => __('Hidden')];
-//    }
-//
-//
-//    public function getStatusTextAttr($value, $data)
-//    {
-//        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
-//        $list = $this->getStatusList();
-//        return isset($list[$value]) ? $list[$value] : '';
-//    }
 
     /**
      * 关联城市
@@ -97,7 +76,7 @@ class CompanyStore extends Model
     public function usedcarCount()
     {
         return $this->hasMany('UsedCar', 'store_id', 'id')
-            ->field('id,store_id,kilometres,newpayment,models_main_images,car_licensedate,popularity,shelfismenu');
+            ->field('id,store_id,kilometres,newpayment,models_main_images,car_licensedate,shelfismenu');
     }
 
     /**
@@ -106,8 +85,8 @@ class CompanyStore extends Model
      */
     public function logisticsCount()
     {
-        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,name,
-        payment,monthly,models_main_images,popularity,brand_id,ismenu');
+        return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,
+        payment,monthly,models_main_images,popularity,ismenu');
     }
 
     public static function getCarList($store_id)
@@ -116,32 +95,54 @@ class CompanyStore extends Model
             ['planacarCount', 'usedcarCount', 'logisticsCount']
         ])->select(['store_id' => $store_id]);
 
+
     }
-        /**
-         * 查询门店下有多少张优惠券
-         * @param $store_id 门店Id
-         * @param $user_id 用户ID
-         * @return array
-         * @throws \think\db\exception\DataNotFoundException
-         * @throws \think\db\exception\ModelNotFoundException
-         * @throws \think\exception\DbException
-         */
 
 
-        public static function getLogistics($store_id, $user_id)
-        {
-            return collection(Coupon::whereLike('store_ids', '%,' . $store_id . ',%', 'like')
-//            ->whereNotLike('user_id','%,'.$user_id.',%','not like')
-                ->where(function ($q) use ($user_id) {
-                    $q->where([
-//                'user_id'=>['like','%,'.$user_id.',%'],
-                        'ismenu' => 1,//正常上架状态
-                        'release_datetime' => ['LT', time()],//领用截至日期小于当前时间
-                        'circulation' => ['GT', 0], // 发放总量大于0
-                        'remaining_amount' => ['GT', 0]]); // 剩余总量大于0
-                })->select())->toArray();
+    /**
+     * 查询门店下有多少张优惠券
+     * @param $store_id 门店Id
+     * @param $user_id 用户ID
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
 
-        }
+
+    public static function getLogistics($store_id, $user_id)
+    {
+        $isLogic = collection(Coupon::all(function ($q) use ($user_id, $store_id) {
+            $q->field('id,display_diagramimages,user_id,limit_collar')
+                ->where([
+                    'store_ids' => ['like', '%,' . $store_id . ',%'],
+                    'user_id' => ['like', '%,' . $user_id . ',%'],
+                    'ismenu' => 1,//正常上架状态
+                    'release_datetime' => ['GT', time()],//领用截至日期小于当前时间
+                    'circulation' => ['GT', 0], // 发放总量大于0
+                    'remaining_amount' => ['GT', 0]
+                ]); // 剩余总量大于0
+        }))->toArray();
+
+        foreach ($isLogic as $key => $value) {
+
+                   $isLogic[$key]['user_id'] = array_filter(explode(',', $value['user_id'])); //转换数组并去除空值
+
+
+            //查询每人限量*张
+                   if (!empty($value['limit_collar'])) {  //非空即为不限量,有具体的领用张数
+
+                       //array_count_values 计算某个值出现在数组中的次数
+                       //如果当前用户领用的券大于等于限领的优惠券张数 ，返回空数组，不可再领用
+//                       return array_count_values($isLogic[$key]['user_id'])[$user_id];
+                       if (array_count_values($isLogic[$key]['user_id'])[$user_id] >= $value['limit_collar']) return '';
+                       else continue;
+
+                   }
+           }
+               return $isLogic;
+
+    }
 
 
 }

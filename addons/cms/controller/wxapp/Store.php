@@ -84,118 +84,61 @@ class Store extends Base
     {
         //获取品牌缓存；
 //        Cache::pull('BRAND_CACHE');
-
-        $cacheBrand = Cache::get('BRAND_CACHE')?Cache::get('BRAND_CACHE'):cache::set('BRAND_CACHE',self::matchBrand());
-
+//        die;
+//        $cacheBrand = Cache::get('BRAND_CACHE') ? Cache::get('BRAND_CACHE') : cache::set('BRAND_CACHE', self::matchBrand());
         $store_id = $this->request->post('store_id');//门店id
         $user_id = $this->request->post('user_id');//用户id
+        $cartype = $this->request->post('cartype');//用户id
+//        pr($store_id);die;
         if (!$store_id || !$user_id) {
             $this->error('参数错误或缺失参数,请求失败', 'error');
         }
         //获取门店下是否有优惠券
         $isLogic = companyStoreModel::getLogistics($store_id, $user_id);
-        foreach ($isLogic as $key => $value) {
+        /*foreach ($isLogic as $key => $value) {
             $isLogic[$key]['user_id'] = array_filter(explode(',', $value['user_id'])); //转换数组并去除空值
             //查询每人限量*张
             if (!empty($value['limit_collar'])) {  //非空即为不限量,有具体的领用张数
                 //array_count_values 计算某个值出现在数组中的次数
                 //如果当前用户领用的券大于等于限领的优惠券张数 ，返回空数组，不可再领用
+                return array_count_values($isLogic[$key]['user_id'])[$user_id];
                 if (array_count_values($isLogic[$key]['user_id'])[$user_id] >= $value['limit_collar']) return '';
                 else continue;
 
             }
-        }
+        }*/
 
         //门店信息
         $store_info = companyStoreModel::find($store_id)->hidden(['createtime', 'updatetime', 'status', 'plan_acar_id', 'statuss', 'store_qrcode']);
         $store_info['store_img'] = !empty($store_info['store_img']) ? explode(',', $store_info['store_img']) : ''; //转换图片为数组
-        //门店下所卖的所有车型
-//        pr(collection(modelsModel::with(['brand'])->select())->toArray());die;
-        $store_carList = collection(companyStoreModel::field('id,store_name')
-            ->with(
-                ['planacarCount' => function ($q) {
-                    $q->with(
-                        ['label' => function ($q) //新车方案&&标签
-                        {
-                            $q->withField(['id', 'name', 'lableimages']);
-                        },
-                            'models' => function ($q) {  //新车车型
-                                $q->withField(['id', 'brand_id', 'name', 'standard_price']);
-                            }
-                        ]
-                    );
-                },
-                    'usedcarCount' => ['label' => function ($q) {  //二手车方案&&标签
-                        $q->withField(['id', 'name', 'lableimages']);
-                    },
-                        'models' => function ($q) {  //二手车方案
-                            $q->withField(['id', 'name', 'price', 'vehicle_configuration']);
-                        }
-                    ],
-                    'logisticsCount' => ['label' => function ($q) {   //新能源方案&&标签
-                        $q->withField(['id', 'name', 'lableimages']);
-                    }
-                    ],
-//                    'city'=>function($q){   //门店所属城市
-//                        $q->withField(['cities_name']);
-//                    }
-                ]
-            )
-            ->select(['store_id' => $store_id]))
-            ->toArray();
-//        pr($store_carList);die;
-//        $result['store_info'] = $store_info;
-//        $result['isLogic'] = $isLogic;
-        $id = [];
 
+        $result['info'] = $store_info;
+        $result['logic'] = $isLogic;
 
-        foreach ($store_carList as $key => $value) {
-            $newResult[] = $value['planacar_count'] ? ['car_typeName' => '新车', 'planaCar_list' => $store_carList[$key]['planacar_count']] : '';
-            $newResult[] = $value['usedcar_count'] ? ['car_typeName' => '二手车', 'usedCar_list' => $store_carList[$key]['usedcar_count']] : '';
-            $newResult[] = $value['logistics_count'] ? ['car_typeName' => '新能源', 'logisticsCar_list' => $store_carList[$key]['logistics_count']] : '';
-            if ($newResult[$key]['planaCar_list']) {
-                foreach ($newResult[$key]['planaCar_list'] as $k => $v) {
-
-//                    pr(array_ke array_values(self::matchBrand())) ;die;
-//                    if (in_array($v['models']['brand_id'],array_keys(self::matchBrand()[$key]['id']))){
-////                        echo 1;die;
-////                    }
-//                    if (isset($v['models'])) {
-//                        if ($v)
-//                            $newResult[$key]['planacar_list'] = [self::matchBrand($v['models']['brand_id'], $v)];
-////                        if();
-//                    }
-                }
-            } else {
-
-            }
+        $plans =$type_name = null;
+        switch ($cartype){
+            case 'new':
+                $plans =  Share::getVariousTypePlan('', true, 'planacarIndex', 'new',$store_id);
+                $type_name = '新车';
+                break;
+            case 'used':
+                $plans =  Share::getVariousTypePlan('', false, 'usedcarCount', 'used',$store_id);
+                $type_name = '二手车';
+                break;
+            case 'logistics':
+                $plans =  Share::getVariousTypePlan('', true, 'logisticsCount', 'logistics',$store_id);
+                $type_name = '新能源车';
+                break;
+            default:
+                $this->error('cartype参数错误');
         }
 
-//        $result['store_carList'] = $store_carList;
+        $result['plans'] = ['type' => $cartype, 'car_type_name' => $type_name, 'carList' => $plans];
 
-        $result = array_filter($newResult);
-        pr($result);
 
-        die;
         $this->success('请求成功', $result);
     }
 
-    /**
-     * 根据车型里的品牌id获取品牌
-     * @param $brandId
-     * @return mixed
-     * @throws \think\exception\DbException
-     */
-    public static function matchBrand($data = null)
-    {
-        $brand = brandModel::all(function ($q) {
-            $q->field(['id', 'name', 'brand_initials'])->where(['status' => 'normal', 'pid' => 0, 'level' => 0]);
-        });
-        $new = [];
-        foreach ((array)$brand as $key => $value) {
-            $new[$value['brand_initials']][] = ['id' => $value['id'], 'name' => $value['name']];
-        }
-        $brand['data'] = $data;
-        return collection($new)->toArray();
-    }
+
+
 }

@@ -7,15 +7,6 @@
  */
 
 namespace addons\cms\controller\wxapp;
-use think\Cache;
-use think\Config;
-use addons\cms\model\CompanyStore;
-use addons\cms\model\Models;
-use addons\cms\model\Cities;
-use addons\cms\model\Subject;
-use addons\cms\model\SecondcarRentalModelsInfo;
-use app\common\library\Auth;
-use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
 
 class Carselection extends Base
@@ -28,22 +19,43 @@ class Carselection extends Base
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-     public function index()
-     {
-         $city_id = $this->request->post('city_id');
-         $newcarList = Share::getNewCarPlan($city_id,'',true);
-         $newcarList = ['type'=>'new','car_type_name'=>'新车','newCarList'=>$newcarList];
+    public function index()
+    {
+        $city_id = $this->request->post('city_id');
+        $cartype = $this->request->post('cartype');
 
-         $usedcarList = Share::getUsedPlan($city_id);
-         $usedcarList = ['type'=>'used','car_type_name'=>'二手车','usedCarList'=>$usedcarList];
+        $plans =$type_name = null;
+        switch ($cartype){
+            case 'new':
+                $plans =  Share::getVariousTypePlan($city_id, true, 'planacarIndex', 'new');
+                $type_name = '新车';
+                break;
+            case 'used':
+                $plans =  Share::getVariousTypePlan($city_id, false, 'usedcarCount', 'used');
+                $type_name = '二手车';
+                break;
+            case 'logistics':
+                $plans =  Share::getVariousTypePlan($city_id, true, 'logisticsCount', 'logistics');
+                $type_name = '新能源车';
+                break;
+            default:
+                $this->error('cartype参数错误');
+        }
 
-         $logisticsList = Share::getEnergy($city_id,true);
-         $logisticsList = ['type'=>'logistics','car_type_name'=>'新能源车','logisticsCarList'=>$logisticsList];
+        $planList = ['type' => $cartype, 'car_type_name' => $type_name, 'carList' => $plans];
 
-         $data = ['carSelectList'=>[$newcarList,$usedcarList,$logisticsList]];
+//        $usedcarList = Share::getVariousTypePlan($city_id, false, 'usedcarCount', 'used');
+//        $usedcarList = ['type' => 'used', 'car_type_name' => '二手车', 'usedCarList' => $usedcarList];
+//
+//        $logisticsList = Share::getVariousTypePlan($city_id, true, 'logisticsCount', 'logistics');
+//        $logisticsList = ['type' => 'logistics', 'car_type_name' => '新能源车', 'logisticsCarList' => $logisticsList];
 
-         $this->success('请求成功',$data);
 
-     }
+
+        $this->success('请求成功', $planList);
+
+    }
+
+
 
 }

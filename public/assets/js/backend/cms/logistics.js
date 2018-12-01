@@ -39,8 +39,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'brand.name', title: __('车辆品牌')},
-                        {field: 'name', title: __('车辆车型')},
+                        {field: 'models.name', title: __('车辆车型')},
                         {field: 'models_main_images', title: __('Models_main_images'), formatter: Table.api.formatter.images},
                         {field: 'modelsimages', title: __('Modelsimages'), formatter: Table.api.formatter.images},
                         
