@@ -4,6 +4,7 @@
     	"wux-cell-group": "../../../assets/libs/wux/cell-group/index",
     	"wux-cell": "../../../assets/libs/wux/cell/index",
     	"wux-media": "../../../assets/libs/wux/media/index",
+    	"wux-tag": "../../../assets/libs/wux/tag/index",
     	"wux-card": "../../../assets/libs/wux/card/index"
     }
 }

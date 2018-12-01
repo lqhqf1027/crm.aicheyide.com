@@ -1,4 +1,27 @@
 const app = getApp()
+const dateDiff = (start = '', end = '') => {
+    let str = ''
+    const a = new Date(start).valueOf()
+    const b = new Date().valueOf()
+    const c = new Date(b - a)
+    const y = c.getFullYear() - 1970
+    const m = c.getMonth()
+    const d = c.getDate() - 1 || 1
+
+    if (y > 0) {
+        str = `${str}${y}年`
+    }
+
+    if (m) {
+        str = `${str}${m}个月`
+    }
+
+    if (y <= 0 && !m) {
+        return `${d}天`
+    }
+
+    return str
+}
 
 Page({
     data: {
@@ -9,6 +32,7 @@ Page({
     onLoad(options) {
         console.log(options)
         this.options = options
+        this.setData({ type: options.type })
         this.getDetail()
     },
     getDetail() {
@@ -19,8 +43,9 @@ Page({
             console.log(data)
             this.setData({
                 plan: data && data.plan,
-                guesslike: data && data.guesslike,
+                guesslike: data && data.guesslike || [],
                 vehicle_configuration: data && data.plan.models.vehicle_configuration,
+                'plan.diff_date': dateDiff(data && data.plan.car_licensedate),
             })
         }, (data, ret) => {
             console.log(data)
@@ -28,9 +53,13 @@ Page({
         })
     },
     openLocation() {
+        const { latitude, longitude } = this.data.plan.companystore || {}
+
+        if (!latitude || !longitude) return
+
         wx.openLocation({
-            latitude: 39.90,
-            longitude: 116.40,
+            latitude: Number(latitude),
+            longitude: Number(longitude),
         })
     },
     openConfig() {
@@ -73,6 +102,7 @@ Page({
 
         app.request('/share/collectionInterface', { plan_id, cartype }, (data, ret) => {
             console.log(data)
+            this.setData({ 'plan.collection': 1 })
             app.success(ret.msg)
         }, (data, ret) => {
             console.log(data)
@@ -89,8 +119,9 @@ Page({
 
         app.request('/share/fabulousInterface', { plan_id, cartype }, (data, ret) => {
             console.log(data)
+            this.setData({ 'plan.fabulous': 1 })
             app.success(ret.msg)
-            setTimeout(() => app.integral('fabulous'))
+            // setTimeout(() => app.integral('fabulous'))
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
@@ -106,10 +137,34 @@ Page({
 
         app.request('/share/clickAppointment', { plan_id, cartype }, (data, ret) => {
             console.log(data)
+            this.setData({ 'plan.appointment': 1 })
             app.success(ret.msg)
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
+        })
+    },
+    alert1() {
+        wx.showModal({
+            title: '排放标准',
+            content: '排放标准以各地车管所实际认定为准，外迁标准以迁入地车管所规定为准',
+            showCancel: false,
+        })
+    },
+    alert2() {
+        wx.showModal({
+            title: '过户记录',
+            content: '具体结果以车辆等级证书为准',
+            showCancel: false,
+        })
+    },
+    makePhoneCall() {
+        const { phone } = this.data.plan.companystore || {}
+
+        if (!phone) return
+
+        wx.makePhoneCall({
+            phoneNumber: phone,
         })
     },
 })
