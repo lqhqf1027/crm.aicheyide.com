@@ -24,6 +24,10 @@ class Carselection extends Base
         $city_id = $this->request->post('city_id');
         $cartype = $this->request->post('cartype');
 
+        if (!$city_id || !$cartype) {
+            $this->error('缺少参数，请求失败', 'error');
+        }
+
         $plans =$type_name = null;
         switch ($cartype){
             case 'new':
