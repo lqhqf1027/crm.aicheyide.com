@@ -29,6 +29,7 @@ Page({
         guesslike: [],
         vehicle_configuration: {},
         planImageStyle: {},
+        backtop: false,
     },
     onLoad(options) {
         console.log(options)
@@ -167,6 +168,18 @@ Page({
 
         wx.makePhoneCall({
             phoneNumber: phone,
+        })
+    },
+    onPageScroll(e) {
+        this.setData({
+            backtop : e.scrollTop > 100,
+        })
+    },
+    backtop() {
+        this.setData({ backtop: false })
+        wx.pageScrollTo({
+            scrollTop: 0,
+            duration: 300,
         })
     },
 })
