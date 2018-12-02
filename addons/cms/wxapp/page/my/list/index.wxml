@@ -6,7 +6,7 @@
                     <view slot="title" class="title">{{ item.type_name }}</view>
                     <view slot="content">
                         <block wx:for="{{ item.planList }}" wx:for-item="card" wx:for-index="cIndex" wx:key="">
-                            <i-swipeout i-class="i-swipeout-demo-item" unclosable toggle="{{ toggle }}" actions="{{ actions }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bind:change="onSwipeout">
+                            <i-swipeout i-class="i-swipeout-demo-item" unclosable disabled="{{ style !== 'collection' }}" toggle="{{ toggle }}" actions="{{ actions }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bind:change="onSwipeout">
                                 <view slot="content">
                                     <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 180rpx; background: #f1efef" thumb="{{ config.upload.cdnurl + card.models_main_images }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
                                         <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
@@ -30,7 +30,7 @@
                     <view slot="title" class="title">{{ item.type_name }}</view>
                     <view slot="content">
                         <block wx:for="{{ item.planList }}" wx:for-item="card" wx:for-index="cIndex" wx:key="">
-                            <i-swipeout i-class="i-swipeout-demo-item" unclosable toggle="{{ toggle }}" actions="{{ actions }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bind:change="onSwipeout">
+                            <i-swipeout i-class="i-swipeout-demo-item" unclosable disabled="{{ style !== 'collection' }}" toggle="{{ toggle }}" actions="{{ actions }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bind:change="onSwipeout">
                                 <view slot="content">
                                     <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ config.upload.cdnurl + card.models_main_images }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
                                         <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
@@ -78,9 +78,9 @@
         <wux-tab key="pickup" title="已提车"></wux-tab>
     </wux-tabs>
     <view class="body">
-        <template is="car" data="{{ ...collection, ...globalData, scrollTop, actions, toggle }}" wx:if="{{ style === 'collection' }}" />
-        <template is="car" data="{{ ...subscribe, ...globalData, scrollTop, actions, toggle }}" wx:if="{{ style === 'subscribe' }}" />
-        <template is="car" data="{{ ...pickup, ...globalData, scrollTop, actions, toggle }}" wx:if="{{ style === 'pickup' }}" />
+        <template is="car" data="{{ ...collection, ...globalData, scrollTop, actions, toggle, style }}" wx:if="{{ style === 'collection' }}" />
+        <template is="car" data="{{ ...subscribe, ...globalData, scrollTop, actions, toggle, style }}" wx:if="{{ style === 'subscribe' }}" />
+        <template is="car" data="{{ ...pickup, ...globalData, scrollTop, actions, toggle, style }}" wx:if="{{ style === 'pickup' }}" />
     </view>
     <wux-grids wux-class="wux-mt--10" bordered="{{ false }}" col="3">
         <wux-grid thumb="/assets/images/score.png">

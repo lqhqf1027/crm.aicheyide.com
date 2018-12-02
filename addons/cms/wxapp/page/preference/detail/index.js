@@ -102,7 +102,7 @@ Page({
         const plan_id = this.options.id
         const cartype = this.options.type
 
-        app.request('/share/collectionInterface', { plan_id, cartype }, (data, ret) => {
+        app.request('/share/collectionInterface', { plan_id, cartype, identification: 0 }, (data, ret) => {
             console.log(data)
             this.setData({ 'plan.collection': 1 })
             app.success(ret.msg)
