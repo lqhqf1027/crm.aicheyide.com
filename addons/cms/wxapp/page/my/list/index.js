@@ -30,6 +30,9 @@ Page({
         }
         that.getInfo();
     },
+    onPullDownRefresh() {
+        this.getInfo()
+    },
     login: function() {
         var that = this;
         app.login(function() {
@@ -128,6 +131,7 @@ Page({
                 score: data.score,
                 sign: data.sign,
             })
+            wx.stopPullDownRefresh()
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
