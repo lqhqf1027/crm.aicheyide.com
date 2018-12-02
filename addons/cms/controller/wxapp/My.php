@@ -154,7 +154,7 @@ class My extends Base
         $sign = Db::name('cms_sign_record')
             ->alias('a')
             ->join('cms_user_sign b', 'a.user_sign_id = b.id')
-            ->field('a.score,a.sign_time')
+            ->field('a.id,a.score,a.sign_time')
             ->where('b.user_id', $user_id)
             ->order('a.sign_time desc')
             ->select();
@@ -163,9 +163,9 @@ class My extends Base
 
         $this->success('', [
             'integral' => [
-                ['name'=>'点赞','fabulous' => $fabulous],
-                ['name'=>'签到','sign' => $sign],
-                ['name'=>'分享','share' => $share]
+                ['type'=>'fabulous','name'=>'点赞','detailed' => $fabulous],
+                ['type'=>'sign','name'=>'签到','detailed' => $sign],
+                ['type'=>'share','name'=>'分享','detailed' => $share]
             ]
         ]);
     }
@@ -181,7 +181,7 @@ class My extends Base
      */
     public function fabulousData($user_id, $type)
     {
-        return Fabulous::field('score,fabuloustime')
+        return Fabulous::field('id,score,fabuloustime')
             ->where([
                 'user_id' => $user_id,
                 'type' => $type
@@ -279,17 +279,17 @@ class My extends Base
             [
                 'type' => 'new',
                 'type_name' => '新车',
-                'planList' => $newCollect
+                'planList' =>array_reverse($newCollect)
             ],
             [
                 'type' => 'used',
                 'type_name' => '二手车',
-                'planList' => $usdCollect
+                'planList' => array_reverse($usdCollect)
             ],
             [
                 'type' => 'logistics',
                 'type_name' => '新能源车',
-                'planList' => $logisticsCollect
+                'planList' =>array_reverse($logisticsCollect)
             ]
         ]];
     }
