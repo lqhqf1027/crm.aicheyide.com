@@ -18,9 +18,14 @@
     text-align: center;
 }
 
-.backtop--qa {
+.backtop--home {
     bottom: 300rpx;
-    background-color: #ffae3d;
+    background-color: #ff9a18;
+}
+
+.backtop--qa {
+    bottom: 400rpx;
+    background-color: #ff9a18;
 }
 
 .container {
@@ -411,6 +416,11 @@
     flex: 1;
     font-size: 52rpx;
     color: #999;
+    transition: color .3s;
+}
+
+.bottom-icon--active {
+    color: #ff9a18;
 }
 
 .bottom-btn {

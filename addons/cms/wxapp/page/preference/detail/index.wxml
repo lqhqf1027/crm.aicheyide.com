@@ -236,13 +236,13 @@
             <icon class="fa fa-share-square"></icon>
         </button>
     </view>
-    <view class="bottom-icon" bindtap="collectionInterface">
+    <view class="bottom-icon {{ plan && plan.collection === 1 ? 'bottom-icon--active' : '' }}" bindtap="collectionInterface">
         <icon class="fa fa-star"></icon>
     </view>
     <!-- <view class="bottom-icon">
         <icon class="fa fa-comment"></icon>
     </view> -->
-    <view class="bottom-icon" bindtap="fabulousInterface">
+    <view class="bottom-icon {{ plan && plan.fabulous === 1 ? 'bottom-icon--active' : '' }}" bindtap="fabulousInterface">
         <icon class="fa fa-thumbs-up"></icon>
     </view>
     <view class="bottom-btn wux-balanced--bg" bindtap="makePhoneCall" wx:if="{{ type === 'used' }}">咨询车况</view>
@@ -255,6 +255,9 @@
         <button class="button-clear" open-type="contact">
             <view class="fa fa-comment"></view>
         </button>
+    </view>
+    <view class="backtop backtop--home" bindtap="goHome">
+        <view class="fa fa-home"></view>
     </view>
     <view class="backtop" bindtap="backtop">
         <view class="fa fa-arrow-up"></view>

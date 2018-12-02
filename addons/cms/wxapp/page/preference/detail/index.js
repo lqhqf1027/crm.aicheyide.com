@@ -96,16 +96,17 @@ Page({
         })
     },
     collectionInterface() {
-        if (this.data.plan.collection === 1) {
-            return app.info('已收藏')
-        }
+        // if (this.data.plan.collection === 1) {
+        //     return app.info('已收藏')
+        // }
 
         const plan_id = this.options.id
         const cartype = this.options.type
+        const identification = this.data.plan.collection === 1 ? 1 : 0
 
-        app.request('/share/collectionInterface', { plan_id, cartype, identification: 0 }, (data, ret) => {
+        app.request('/share/collectionInterface', { plan_id, cartype, identification }, (data, ret) => {
             console.log(data)
-            this.setData({ 'plan.collection': 1 })
+            this.setData({ 'plan.collection': identification === 1 ? 0 : 1 })
             app.success(ret.msg)
         }, (data, ret) => {
             console.log(data)
@@ -182,4 +183,10 @@ Page({
             duration: 300,
         })
     },
+    goHome() {
+        wx.switchTab({
+            url: '/page/preference/list/index',
+        })
+    },
+    onShareAppMessage() {},
 })
