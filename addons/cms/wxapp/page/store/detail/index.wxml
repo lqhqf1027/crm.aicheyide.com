@@ -1,29 +1,123 @@
 <view class="store">
-	<image class="store__image" src="{{ 'https://static.aicheyide.com' + store_info.store_img[0] }}" />
+	<image class="store__image" src="{{ globalData.config.upload.cdnurl + info.store_img[0] }}" />
 	<view class="store__card wux-mt--10">
-		<view class="store__title">{{ store_info.store_name }}</view>
-		<view class="store__desc">客服电话：{{ store_info.phone }}</view>
+		<view class="store__title">{{ info.store_name }}</view>
+		<view class="store__desc">客服电话：{{ info.phone }}</view>
 		<view class="store__desc">工作时间：周一至周日00:00 ~24:00</view>
-		<view class="store__desc">门店地址：{{ store_info.store_address }}</view>
-		<map class="store__map" longitude="{{ store_info.longitude }}" latitude="{{ store_info.latitude }}" />
+		<view class="store__desc">门店地址：{{ info.store_address }}</view>
+		<map class="store__map" longitude="{{ info.longitude }}" latitude="{{ info.latitude }}" />
 	</view>
-	<block wx:if="{{ store_carList.length }}">
-		<view class="store__hot-title"><image class="store__hot-image" src="/assets/images/hot.png" />热销车型</view>
-		<view class="store__card">
-			<block wx:for="{{ store_carList[0].planacar_count }}" wx:key="">
-		        <view class="car">
-		            <image class="car__image" src="{{ 'https://static.aicheyide.com' + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
-		            <view class="car__title">{{ item.models_name }}</view>
-		            <image class="car__label" src="{{ 'https://static.aicheyide.com' + item.labels.lableimages }}" wx:if="{{ item.labels }}" />
-		            <view class="wux-clearfix">
-		                <view class="car__title car__title--payment wux-pull-left wux-mr--20 wux-mt--10 {{ item.labels && item.labels.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
-		                <view class="car__title car__title--monthly wux-pull-left wux-mt--10">月供 {{ item.monthly }} 元</view>
-		                <view class="car__title car__title--monthly wux-pull-right wux-mt--10" wx:if="{{ item.popularity }}">{{ item.popularity || 0 }}</view>
-		            </view>
-		        </view>
-		    </block>
+	<block wx:for="{{ logic }}" wx:key="" wx:if="{{ logic.length }}">
+		<view class="store__card wux-mt--10">
+			<image class="store__logic" src="{{ globalData.config.upload.cdnurl + item.display_diagramimages }}" />
 		</view>
 	</block>
+	
+	<wux-animation-group wux-class="backdrop" in="{{ backdrop }}" class-names="wux-animate--fadeIn" bind:click="onCancel" />
+	
+	<view class="store__hot-title"><image class="store__hot-image" src="/assets/images/hot.png" />热销车型</view>
+	<wux-tabs theme="positive" current="{{ searchVal.style }}" controlled bind:change="onChange">
+        <block wx:for="{{ tabs }}" wx:key="">
+            <wux-tab key="{{ item.type }}" title="{{ item.car_type_name }}"></wux-tab>
+        </block>
+    </wux-tabs>
+    <view class="filterbar">
+        <view class="filterbar__bd">
+            <block wx:for="{{ items }}" wx:key="">
+                <view class="filterbar__item {{ item.checked ? 'filterbar__item--checked' : '' }}" bindtap="onClick" data-checked="{{ item.checked }}" data-index="{{ index }}">
+                    <text class="filterbar__text">{{ item.label }}</text>
+                    <text class="filterbar__icon filterbar__icon--radio"></text>
+                </view>
+            </block>
+        </view>
+        <block wx:for="{{ items }}" wx:key="">
+            <block wx:if="{{ index === 0 }}">
+                <view class="filterbar__select" wx:if="{{ item.visible }}">
+                    <wux-radio-group value="{{ common.getRadioValue(item.children) }}" bind:change="radioChange" data-index="{{ index }}" data-item="{{ item }}">
+                        <block wx:for="{{ item.children }}" wx:for-item="p" wx:key="{{ item.value }}">
+                            <wux-radio title="{{ p.label }}" value="{{ p.value }}" />
+                        </block>
+                    </wux-radio-group>
+                </view>
+            </block>
+            <block wx:if="{{ index === 1 }}">
+                <view class="filterbar__select select" wx:if="{{ item.visible }}">
+                    <scroll-view scroll-y style="height: 400rpx;">
+                        <wux-cell-group wx:for="{{ carBrandList }}" wx:key="" title="{{ item.key }}">
+                            <wux-cell title="{{ c.name }}" wx:for="{{ item.list }}" wx:for-item="c" wx:key="" data-brand="{{ c }}" bind:click="onBrand"></wux-cell>
+                        </wux-cell-group>
+                    </scroll-view>
+                </view>
+            </block>
+            <block wx:if="{{ index === 2 }}">
+                <view class="filterbar__select select" wx:if="{{ item.visible }}">
+                    <radio-group bindchange="onRadioChange" data-index="{{ index }}" data-item="{{ item }}">
+                        <view class="filterbar__groups">
+                            <block wx:for="{{ item.children }}" wx:for-item="g" wx:key="">
+                                <view class="filterbar__group">
+                                    <radio class="filterbar__radio" value="{{ g.value }}" checked="{{ g.checked }}" />
+                                    <view class="filterbar__btn {{ g.checked ? 'filterbar__btn--checked' : '' }}">{{ g.label }}</view>
+                                </view>
+                            </block>
+                        </view>
+                    </radio-group>
+                    <view class="wux-mt--20">自定义首付（万）</view>
+                    <wux-slider step="10" max="60" showMark wux-class="slider" value="{{ searchVal.payment || [0, 0] }}" controlled bind:change="onPaymentChange" />
+                </view>
+            </block>
+            <block wx:if="{{ index === 3 }}">
+                <view class="filterbar__select select" wx:if="{{ item.visible }}">
+                    <radio-group bindchange="onRadioChange" data-index="{{ index }}" data-item="{{ item }}">
+                        <view class="filterbar__groups">
+                            <block wx:for="{{ item.children }}" wx:for-item="g" wx:key="">
+                                <view class="filterbar__group">
+                                    <radio class="filterbar__radio" value="{{ g.value }}" checked="{{ g.checked }}" />
+                                    <view class="filterbar__btn {{ g.checked ? 'filterbar__btn--checked' : '' }}">{{ g.label }}</view>
+                                </view>
+                            </block>
+                        </view>
+                    </radio-group>
+                    <view class="wux-mt--20">自定义月供（元）</view>
+                    <wux-slider step="10" max="60" showMark wux-class="slider" value="{{ searchVal.monthly || [0, 0] }}" controlled bind:change="onMonthlyChange" />
+                </view>
+            </block>
+        </block>
+    </view>
+
+	<view class="labels" wx:if="{{ searchVal.name || searchVal.brand || common.getPaymentLabel(items[2].children, searchVal.payment) || common.getMonthlyLabel(items[3].children, searchVal.monthly) }}">
+        <view class="label wux-ellipsis" data-meta="name" bindtap="onTag" wx:if="{{ searchVal.name }}">{{ searchVal.name }}</view>
+        <view class="label wux-ellipsis" data-meta="brand" bindtap="onTag" wx:if="{{ searchVal.brand }}">{{ searchVal.brand.name }}</view>
+        <view class="label wux-ellipsis" data-meta="payment" bindtap="onTag" wx:if="{{ common.getPaymentLabel(items[2].children, searchVal.payment) }}">{{ common.getPaymentLabel(items[2].children, searchVal.payment) }}</view>
+        <view class="label wux-ellipsis" data-meta="monthly" bindtap="onTag" wx:if="{{ common.getMonthlyLabel(items[3].children, searchVal.monthly) }}">{{ common.getMonthlyLabel(items[3].children, searchVal.monthly) }}</view>
+        <view class="label label-reset wux-ellipsis" bindtap="onReset"><view class="fa fa-refresh"></view> 重置</view>
+    </view>
+    <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style !== 'used' }}">
+        <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
+            <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
+            <view class="car__title">{{ searchVal.style == 'new' ? item.models.name : item.name }}</view>
+            <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2" wx:if="{{ item.models }}">指导价 {{ item.models.price / 10000 }} W</view>
+            <image class="car__label" src="{{ globalData.config.upload.cdnurl + item.label.lableimages }}" wx:if="{{ item.label }}" />
+            <view class="wux-clearfix">
+                <view class="car__title car__title--payment wux-pull-left wux-mr--20 wux-mt--10 {{ item.label && item.label.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
+                <view class="car__title car__title--monthly wux-pull-left wux-mt--10">月供 {{ item.monthly }} 元</view>
+                <view class="car__title car__title--monthly wux-pull-right wux-mt--10" wx:if="{{ item.popularity }}">{{ item.popularity || 0 }}</view>
+            </view>
+        </view>
+    </block>
+    <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style === 'used' }}">
+        <wux-media wux-class="media" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ globalData.config.upload.cdnurl + item.models_main_images }}" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
+            <view class="media__title wux-ellipsis--l2">{{ item.models.name }}</view>
+            <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ item.car_licensedate + '/' + item.kilometres / 10000 + 'W公里' }}</view>
+            <view class="wux-clearfix">
+                <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ item.models.price }}">{{ item.models.price / 10000 }} 万</view>
+                <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ item.newpayment / 10000 }} 万</view>
+                <view class="media__desc wux-pull-right">
+                    <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
+                </view>
+            </view>
+        </wux-media>
+    </block>
+
     <view class="wish">
         <view class="wish__hd">
             <image class="wish__image" src="/assets/images/upload.png"></image>
@@ -32,3 +126,37 @@
         <view class="wish__ft"></view>
     </view>
 </view>
+
+<wxs module="common">
+    module.exports = {
+        getRadioValue: function(array) {
+            var result = array && array.filter(function(n) { return n.checked })[0]
+            if (result) {
+                return result.value
+            }
+            return ''
+        },
+        getPaymentLabel: function(array, str) {
+            var value = str.map(function(n) { return n / 10 }).join('-')
+            var reslut = array && array.filter(function(n) { return n.value === value })[0]
+            if (value === '0-0' || value === '0-6') {
+                return ''
+            }
+            if (reslut) {
+                return '首付' + reslut.label
+            }
+            return '首付' + value + '万'
+        },
+        getMonthlyLabel: function(array, str) {
+            var value = str.map(function(n) { return n * 100 }).join('-')
+            var reslut = array && array.filter(function(n) { return n.value === value })[0]
+            if (value === '0-0' || value === '0-6000') {
+                return ''
+            }
+            if (reslut) {
+                return '月供' + reslut.label
+            }
+            return '月供' + value + '元'
+        },
+    }
+</wxs>

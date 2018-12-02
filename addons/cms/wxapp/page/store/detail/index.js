@@ -1,205 +1,483 @@
 const app = getApp()
-const data = {
-    "store_info": {
-        "id": 1,
-        "city_id": 38,
-        "store_name": "成都天润出行服务有限公司",
-        "store_address": "成华区建材路39号隆鑫九熙广场二期1栋1515",
-        "phone": "16352452148",
-        "store_img": [
-            "/uploads/20181121/169bb62e725078905de4cc84f4166307.jpg",
-            "/uploads/20181121/de4ee95d8b0e610e14e772ea51f392bb.jpg"
-        ],
-        "longitude": "104.139225",
-        "latitude": "30.644425"
-    },
-    "isLogic": [
-        {
-            "id": 1,
-            "coupon_name": "满减优惠",
-            "circulation": 100,
-            "city_ids": "38",
-            "user_id": {
-                "1": "3",
-                "2": "3",
-                "3": "4",
-                "4": "5",
-                "5": "6"
+const defaultItems = [{
+        type: 'radio',
+        label: '默认排序',
+        value: '1',
+        children: [{
+                label: '推荐排序',
+                value: '11',
             },
-            "display_diagramimages": "/uploads/20181116/0894fd16abe33a256ac82236540d05ae.jpg",
-            "coupon_amount": 2000,
-            "threshold": "1000",
-            "models_ids": "",
-            "membership_grade": 0,
-            "limit_collar": 3,
-            "release_datetime": 1542535087,
-            "validity_datetime": null,
-            "createtime": 1542362296,
-            "updatetime": 1542438057,
-            "ismenu": 1,
-            "use_id": null,
-            "store_ids": ",1,2,",
-            "remaining_amount": 99
-        }
-    ],
-    "store_carList": [
-        {
-            "id": 1,
-            "store_name": "成都天润出行服务有限公司",
-            "planacar_count": [
-                {
-                    "id": 148,
-                    "financial_platform_id": 6,
-                    "models_id": 15,
-                    "payment": 29800,
-                    "monthly": 2895,
-                    "nperlist": "36",
-                    "margin": 0,
-                    "tail_section": 0,
-                    "gps": 1500,
-                    "note": "",
-                    "ismenu": 1,
-                    "working_insurance": "yes",
-                    "total_payment": null,
-                    "sales_id": null,
-                    "createtime": 1539935447,
-                    "updatetime": 1542684599,
-                    "category_id": 13,
-                    "acar_status": 1,
-                    "subject_id": 2,
-                    "modelsimages": "/uploads/20181116/c6688df48871bffb28c0afc15c020ce4.jpg",
-                    "recommendismenu": 1,
-                    "flashviewismenu": 0,
-                    "guide_price": 0,
-                    "models_main_images": "/uploads/20181116/7a78ad19d7a7d79d15a8bf9dbac97bd2.png",
-                    "label_id": "2",
-                    "specialismenu": 1,
-                    "specialimages": "/uploads/20181115/d4111a2a36fd1520957a8a1975601e37.jpg",
-                    "store_id": 1,
-                    "popularity": null,
-                    "weigh": 158,
-                    "subjectismenu": 1
-                }
-            ],
-            "usedcar_count": [
-                {
-                    "id": 46,
-                    "sales_id": null,
-                    "licenseplatenumber": "川AN11Y1",
-                    "models_id": 33,
-                    "kilometres": 59598,
-                    "companyaccount": "四轮",
-                    "newpayment": 3000,
-                    "monthlypaymen": 2480,
-                    "periods": 26,
-                    "totalprices": 61520,
-                    "bond": 3000,
-                    "tailmoney": 0,
-                    "drivinglicenseimages": "/uploads/20181029/4f1616da72f256946c83ec7fc24cd032.jpg",
-                    "vin": "LJDGAA2CXH0505109",
-                    "engine_number": "H1048343",
-                    "expirydate": "",
-                    "annualverificationdate": "2019-10-18",
-                    "carcolor": "白",
-                    "aeratedcard": "有",
-                    "volumekeys": 1,
-                    "Parkingposition": "总部停车场",
-                    "lending_date": null,
-                    "car_images": null,
-                    "bank_card": null,
-                    "invoice_monney": null,
-                    "registration_code": null,
-                    "tax": null,
-                    "business_risks": null,
-                    "insurance": null,
-                    "mortgage_type": null,
-                    "shelfismenu": 1,
-                    "vehiclestate": "可卖",
-                    "note": "",
-                    "createtime": 1540796956,
-                    "updatetime": 1542784281,
-                    "status_data": "",
-                    "modelsimages": "/uploads/20181116/c6688df48871bffb28c0afc15c020ce4.jpg",
-                    "guide_price": 0,
-                    "models_main_images": "/uploads/20181116/7a78ad19d7a7d79d15a8bf9dbac97bd2.png",
-                    "label_id": "2",
-                    "store_id": 1,
-                    "popularity": null,
-                    "weigh": 46,
-                    "car_licensedate": null
-                }
-            ],
-            "logistics_count": [
-                {
-                    "id": 1,
-                    "name": "瑞驰EC35",
-                    "payment": 23800,
-                    "monthly": 2483,
-                    "nperlist": "36",
-                    "margin": 3000,
-                    "note": "三元锂电池，含保险   对个人",
-                    "total_price": 83900,
-                    "ismenu": 1,
-                    "createtime": 1542347199,
-                    "updatetime": 1542347199,
-                    "subject_id": 0,
-                    "modelsimages": "",
-                    "recommendismenu": 0,
-                    "flashviewismenu": 0,
-                    "models_main_images": "",
-                    "label_id": "",
-                    "specialismenu": 0,
-                    "specialimages": "",
-                    "store_id": 1,
-                    "popularity": null,
-                    "subjectismenu": 0
-                },
-                {
-                    "id": 2,
-                    "name": "瑞驰EC35",
-                    "payment": 26980,
-                    "monthly": 2344,
-                    "nperlist": "36",
-                    "margin": 3000,
-                    "note": "三元锂电池，含保险   对公司",
-                    "total_price": 83900,
-                    "ismenu": 1,
-                    "createtime": 1542347347,
-                    "updatetime": 1542347347,
-                    "subject_id": 0,
-                    "modelsimages": "",
-                    "recommendismenu": 0,
-                    "flashviewismenu": 0,
-                    "models_main_images": "",
-                    "label_id": "",
-                    "specialismenu": 0,
-                    "specialimages": "",
-                    "store_id": 1,
-                    "popularity": null,
-                    "subjectismenu": 0
-                }
-            ]
-        }
-    ]
+            {
+                label: '首付最低',
+                value: '12',
+            },
+            {
+                label: '月供最低',
+                value: '13',
+            },
+            {
+                label: '人气最高',
+                value: '14',
+            },
+            {
+                label: '车价最低',
+                value: '15',
+            },
+        ],
+    },
+    {
+        type: 'text',
+        label: '品牌',
+        value: '2',
+    },
+    {
+        type: 'text',
+        label: '首付',
+        value: '3',
+        children: [{
+                label: '不限',
+                value: '0-6',
+                range: [0],
+            },
+            {
+                label: '1万以内',
+                value: '0-1',
+                range: [0, 10000],
+            },
+            {
+                label: '1-2万',
+                value: '1-2',
+                range: [10000, 20000],
+            },
+            {
+                label: '2-3万',
+                value: '2-3',
+                range: [20000, 30000],
+            },
+            {
+                label: '3-4万',
+                value: '3-4',
+                range: [30000, 40000],
+            },
+            {
+                label: '4-5万',
+                value: '4-5',
+                range: [40000, 50000],
+            },
+            {
+                label: '5万以上',
+                value: '5-6',
+                range: [50000],
+            },
+        ],
+    },
+    {
+        type: 'text',
+        label: '月供',
+        value: '4',
+        children: [{
+                label: '不限',
+                value: '0-6000',
+                range: [0],
+            },
+            {
+                label: '2000元以内',
+                value: '0-2000',
+                range: [0, 2000],
+            },
+            {
+                label: '2000-3000元',
+                value: '2000-3000',
+                range: [2000, 3000],
+            },
+            {
+                label: '3000-4000元',
+                value: '3000-4000',
+                range: [3000, 4000],
+            },
+            {
+                label: '4000-5000元',
+                value: '4000-5000',
+                range: [4000, 5000],
+            },
+            {
+                label: '5000元以上',
+                value: '5000-6000',
+                range: [5000],
+            },
+        ],
+    },
+]
+
+const getRange = (value, array = [], num = 1) => {
+    const reslut = array.filter(function(n) { return n.value === value })[0]
+    if (reslut) {
+        return reslut.range
+    }
+    return value && value !== '0-0' ? value.split('-').map((n) => Number(n) * num) : [0]
+}
+
+const checkValueInRange = (value = 0, min = 0, max = Infinity) => {
+    return value >= min && value <= max
+}
+
+const defaultSearchValue = {
+    sort: '',
+    name: '',
+    style: 'new',
+    payment: [0, 0],
+    monthly: [0, 0],
 }
 
 Page({
     data: {
-        ...data,
+        tabs: [{
+            type: 'new',
+            car_type_name: '新车',
+        },{
+            type: 'used',
+            car_type_name: '二手车',
+        },{
+            type: 'logistics',
+            car_type_name: '新能源车',
+        }],
+        items: defaultItems,
+        list: [],
+        logisticsList: [],
+        newcarList: [],
+        usedcarList: [],
+        allList: [],
+        brandList: {},
+        carBrandList: [],
+        searchVal: {...defaultSearchValue },
+
+        globalData: app.globalData,
+        info: {},
+        logic: [],
+        plans: [],
     },
     onLoad(options) {
         console.log(options)
         this.options = options
-        this.getDetail()
+        // this.getList()
+        this.setData({ globalData: app.globalData })
     },
-    getDetail() {
+    onShow() {
+        const { style } = wx.getStorageSync('searchVal') || {}
+        this.getList(style)
+    },
+    onPullDownRefresh() {
+        this.getList()
+    },
+    getList(cartype = this.data.searchVal.style) {
         const store_id = this.options.id
 
-      app.request('/store/store_details', { store_id }, (data, ret) => {
+        app.request('/store/store_details', { store_id, cartype }, (data, ret) => {
             console.log(data)
+
+            let carSelectList = [data.plans]
+            let logisticsList = []
+            let newcarList = []
+            let usedcarList = []
+            let brandList = {}
+
+            if (carSelectList.length > 0) {
+                carSelectList.forEach((n) => {
+                    console.log(n)
+                    brandList[n.type] = {}
+                    if (n.type === 'new') {
+                        n.carList.forEach((m) => {
+                            if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
+                                if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[n.type][m.brand_initials].push({
+                                        id: m.id,
+                                        name: m.name,
+                                    })
+                                }
+                            }
+                            newcarList = [...newcarList, ...m.planList.map((v) => ({...v, brand_id: m.id }))]
+                        })
+                    } else if (n.type === 'used') {
+                        n.carList.forEach((m) => {
+                            if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
+                                if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[n.type][m.brand_initials].push({
+                                        id: m.id,
+                                        name: m.name,
+                                    })
+                                }
+                            }
+                            usedcarList = [...usedcarList, ...m.planList.map((v) => ({...v, brand_id: m.id }))]
+                        })
+                    } else if (n.type === 'logistics') {
+                        n.carList.forEach((m) => {
+                            if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
+                                if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
+                                    brandList[n.type][m.brand_initials].push({
+                                        id: m.id,
+                                        name: m.name,
+                                    })
+                                }
+                            }
+                            logisticsList = [...logisticsList, ...m.planList.map((v) => ({...v, brand_id: m.id }))]
+                        })
+                    }
+                })
+            }
+
+            this.setData({
+                info: data && data.info,
+                logic: data && data.logic || [],
+                brandList,
+                logisticsList,
+                newcarList,
+                usedcarList,
+                allList: [...logisticsList, ...newcarList, ...usedcarList],
+            }, () => this.setCars({ ...this.data.searchVal, style: cartype }))
+
+            wx.stopPullDownRefresh()
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
         })
+    },
+    onBrand(e) {
+        const { brand } = e.currentTarget.dataset
+
+        this.setData({ 'searchVal.brand': brand }, this.onSelectChange)
+    },
+    onOpenDetail(e) {
+        const { id, type } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/preference/detail/index?id=${id}&type=${type}`,
+        })
+    },
+    getBrandList() {
+        let carBrandList = []
+        const { brandList, searchVal } = this.data
+        const data = brandList[searchVal.style]
+        const words = Object.keys(data)
+
+        words.forEach((item, index) => {
+            carBrandList[index] = {
+                key: item,
+                list: data[item].map((n, i) => ({...n, key: n.id })),
+            }
+        })
+
+        this.setData({ carBrandList })
+    },
+    setFilter(style) {
+        const items = [...defaultItems]
+        const searchVal = {...defaultSearchValue, style }
+
+        if (style === 'used') {
+            items[0].children.splice(2, 1)
+            items.pop()
+        }
+
+        this.setData({
+            items,
+            searchVal,
+            backdrop: false,
+            list: [],
+        }, () => this.getList(style))
+    },
+    onChange(e) {
+        console.log(e)
+        this.setFilter(e.detail.key)
+    },
+    setCars(searchVal = this.data.searchVal) {
+        const { sort, brand, style, name, payment, monthly } = searchVal
+
+        console.log('searchVal', searchVal)
+
+        let list = []
+
+        // 按类型过滤
+        if (style === 'new') {
+            list = [...this.data.newcarList]
+        } else if (style === 'used') {
+            list = [...this.data.usedcarList]
+        } else if (style === 'logistics') {
+            list = [...this.data.logisticsList]
+        } else {
+            list = [...this.data.allList]
+        }
+
+        // 按名称过滤
+        if (name) {
+            list = list.filter((n) => n.models && n.models.name.indexOf(name) !== -1)
+        }
+
+        // 按品牌过滤
+        if (brand) {
+            list = list.filter((n) => n.brand_id === brand.id)
+        }
+
+        // 按首付过滤
+        if (payment) {
+            const value = payment.map((n) => Number(n) / 10).join('-')
+            const range = getRange(value, defaultItems[2]['children'], 10000)
+            console.log('payment', range)
+            list = list.filter((n) => checkValueInRange(n.payment, range[0], range[1]))
+        }
+
+        // 按月供过滤
+        if (monthly) {
+            const value = monthly.map((n) => Number(n) * 100).join('-')
+            const range = getRange(value, defaultItems[3]['children'])
+            console.log('monthly', range)
+            list = list.filter((n) => checkValueInRange(n.monthly, range[0], range[1]))
+        }
+
+        // 排序
+        if (sort === '12') {
+            list = list.sort((a, b) => a.payment - b.payment)
+        } else if (sort === '13') {
+            list = list.sort((a, b) => a.monthly - b.monthly)
+        } else if (sort === '14') {
+            list = list.sort((a, b) => b.popularity - a.popularity)
+        } else if (sort === '15') {
+            list = list.sort((a, b) => a.models.price - b.models.price)
+        }
+
+        console.log('list', list)
+
+        this.setData({
+            searchVal,
+            list,
+        })
+    },
+    onTag(e) {
+        const { meta } = e.currentTarget.dataset
+        const { searchVal, items } = this.data
+
+        console.log('onTag', meta)
+
+        if (meta === 'name') {
+            searchVal.name = ''
+        } else if (meta === 'brand') {
+            searchVal.brand = ''
+        } else if (meta === 'payment' || meta === 'monthly') {
+            searchVal[meta] = [0, 0]
+            const index = meta === 'payment' ? 2 : 3
+            const children = items[index].children.map((n) => Object.assign({}, n, {
+                checked: false,
+            }))
+
+            this.setData({
+                [`items[${index}].children`]: children,
+            })
+        }
+
+        console.log('searchVal', searchVal)
+
+        this.setCars(searchVal)
+    },
+    onReset() {
+        console.log('onReset', defaultSearchValue)
+        this.setCars({...defaultSearchValue })
+    },
+    onCancel() {
+        const { index } = this.data
+        const items = this.data.items.map((n, i) => {
+            return Object.assign({}, n, {
+                checked: index !== i ? n.checked : false,
+                visible: index !== i ? n.checked : false,
+            })
+        })
+
+        this.setData({
+            items,
+            backdrop: false,
+        })
+    },
+    onClick(e) {
+        const { index, checked } = e.currentTarget.dataset
+        const items = this.data.items.map((n, i) => {
+            return Object.assign({}, n, {
+                checked: index === i ? !checked : false,
+                visible: index === i ? !checked : false,
+            })
+        })
+
+        if (index === 1) {
+            this.getBrandList()
+        }
+
+        this.setData({
+            index,
+            items,
+            backdrop: !checked,
+        })
+    },
+    radioChange(e) {
+        const { value } = e.detail
+        const { index, item } = e.currentTarget.dataset
+        const children = item.children.map((n) => Object.assign({}, n, {
+            checked: n.value === value,
+        }))
+        const params = {
+            'searchVal.sort': value,
+            [`items[${index}].children`]: children,
+        }
+
+        this.setData(params, this.onSelectChange)
+    },
+    onRadioChange(e) {
+        const { value } = e.detail
+        const { index, item } = e.currentTarget.dataset
+        const children = item.children.map((n) => Object.assign({}, n, {
+            checked: n.value === value,
+        }))
+        const params = {
+            [`items[${index}].children`]: children,
+        }
+
+        if (index === 2) {
+            params['searchVal.payment'] = value.split('-').map((n) => n * 10)
+        } else if (index === 3) {
+            params['searchVal.monthly'] = value.split('-').map((n) => n / 100)
+        }
+
+        console.log(params)
+
+        this.setData(params, this.onSelectChange)
+    },
+    onPaymentChange(e) {
+        const index = 2
+        const item = this.data.items[index]
+        const children = item.children.map((n) => Object.assign({}, n, {
+            checked: false,
+        }))
+        console.log(e)
+        this.setData({
+            [`items[${index}].children`]: children,
+            'searchVal.payment': e.detail.value,
+        }, this.setCars)
+    },
+    onMonthlyChange(e) {
+        const index = 3
+        const item = this.data.items[index]
+        const children = item.children.map((n) => Object.assign({}, n, {
+            checked: false,
+        }))
+        console.log(e)
+        this.setData({
+            [`items[${index}].children`]: children,
+            'searchVal.monthly': e.detail.value,
+        }, this.setCars)
+    },
+    onSelectChange() {
+        const items = this.data.items.map((n) => ({...n, checked: false, visible: false }))
+
+        setTimeout(() => {
+            this.setData({
+                items,
+                backdrop: false,
+            }, this.setCars)
+        }, 300)
     },
 })
