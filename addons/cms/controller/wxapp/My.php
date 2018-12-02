@@ -34,7 +34,7 @@ class My extends Base
         $user_id = $this->request->post('user_id');
 
         if (!$user_id) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
         //积分
         $score = User::get(function ($query) use ($user_id) {
@@ -82,7 +82,7 @@ class My extends Base
         $user_id = $this->request->post('user_id');
 
         if (!$user_id) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
 
         $user = $this->getSign($user_id);
@@ -212,19 +212,19 @@ class My extends Base
             ->with(['storeList' => function ($q) use ($user_id, $table) {
                 $q->with(['planacarIndex' => function ($query) use ($user_id, $table) {
                     $query->order('weigh desc')->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id,price');
+                        $models->withField('id,name,brand_id,price,models_name');
                     }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
                 }, 'usedcarCount' => function ($query) use ($user_id, $table) {
                     $query->order('weigh desc')->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id,price');
+                        $models->withField('id,name,brand_id,price,models_name');
                     }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
                 }, 'logisticsCount' => function ($query) use ($user_id, $table) {
                     $query->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id,price');
+                        $models->withField('id,name,brand_id,price,models_name');
                     }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
@@ -247,24 +247,27 @@ class My extends Base
 
                 if ($value['planacar_index']) {
                     foreach ($value['planacar_index'] as $kk => $vv) {
+                        $vv['models']['name'] = $vv['models']['name'].' '.$vv['models']['models_name'];
                         $vv['city'] = ['id' => $v['id'], 'cities_name' => $v['cities_name']];
-                        unset($vv['recommendismenu'], $vv['specialismenu'], $vv['specialimages'], $vv['store_id']);
+                        unset($vv['recommendismenu'], $vv['specialismenu'], $vv['specialimages'], $vv['store_id'],$vv['models']['models_name']);
                         $newCollect[] = $vv;
                     }
                 }
 
                 if ($value['usedcar_count']) {
                     foreach ($value['usedcar_count'] as $kk => $vv) {
+                        $vv['models']['name'] = $vv['models']['name'].' '.$vv['models']['models_name'];
                         $vv['city'] = ['id' => $v['id'], 'cities_name' => $v['cities_name']];
-                        unset($vv['store_id']);
+                        unset($vv['store_id'],$vv['models']['models_name']);
                         $usdCollect[] = $vv;
                     }
                 }
 
                 if ($value['logistics_count']) {
                     foreach ($value['logistics_count'] as $kk => $vv) {
+                        $vv['models']['name'] = $vv['models']['name'].' '.$vv['models']['models_name'];
                         $vv['city'] = ['id' => $v['id'], 'cities_name' => $v['cities_name']];
-                        unset($vv['store_id'], $vv['brand_id']);
+                        unset($vv['store_id'], $vv['brand_id'],$vv['models']['models_name']);
                         $logisticsCollect[] = $vv;
                     }
                 }
