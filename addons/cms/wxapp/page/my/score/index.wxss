@@ -1,0 +1,30 @@
+/* page/my/score/index.wxss */
+
+page,
+swiper {
+	height: 100%;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 50rpx;
+	font-size: 24rpx;
+	line-height: 1.5;
+	color: #999;
+	background-color: #fff;
+	box-sizing: border-box;
+}
+
+.title {
+	font-size: 28rpx;
+	color: #333;
+	margin-top: 20rpx;
+}
+
+.score {
+	font-size: 36rpx;
+	margin-left: 20rpx;
+}
