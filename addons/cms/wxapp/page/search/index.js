@@ -5,12 +5,14 @@ Page({
         new: [],
         used: [],
         logistics: [],
+        inputVal: '',
     },
     onCancel() {
         wx.navigateBack()
     },
     onChange(e) {
         console.log('onChange', e)
+        this.setData({ inputVal: e.detail.value })
         this.getList(e.detail.value)
     },
     onConfirm(e) {
