@@ -28,6 +28,7 @@ Page({
         plan: {},
         guesslike: [],
         vehicle_configuration: {},
+        planImageStyle: {},
     },
     onLoad(options) {
         console.log(options)
@@ -78,11 +79,12 @@ Page({
     },
     onPlanImageLoad(e) {
         console.log(e)
+        const { type } = e.currentTarget.dataset
         const { width, height } = e.detail
         const planImageStyle = `width: 100%; height: ${height}rpx`
 
         this.setData({
-            planImageStyle,
+            [`planImageStyle.${type}`]: planImageStyle,
         })
     },
     onOpenDetail(e) {
