@@ -4,6 +4,7 @@
     "usingComponents": {
     	"i-sticky": "../../../assets/libs/iview/sticky/index",
     	"i-sticky-item": "../../../assets/libs/iview/sticky-item/index",
+        "i-swipeout": "../../../assets/libs/iview/swipeout/index",
         "wux-avatar": "../../../assets/libs/wux/avatar/index",
         "wux-media": "../../../assets/libs/wux/media/index",
         "wux-grids": "../../../assets/libs/wux/grids/index",
