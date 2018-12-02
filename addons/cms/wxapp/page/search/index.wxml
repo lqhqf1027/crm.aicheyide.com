@@ -2,7 +2,7 @@
     <view class="wux-search-bar__form">
         <view class="wux-search-bar__box">
             <icon class="wux-search-bar__search" type="search" color="#B2B2B2" size="14" />
-            <input type="text" class="wux-search-bar__input" bindinput="onChange" bindconfirm="onConfirm" />
+            <input type="text" class="wux-search-bar__input" value="{{ inputVal }}" bindinput="onChange" bindconfirm="onConfirm" />
         </view>
     </view>
     <view class="wux-search-bar__cancel" bindtap="onCancel">取消</view>
@@ -13,7 +13,9 @@
         <view class="cell-title">新车</view>
     </wux-cell>
     <block wx:for="{{ new }}" wx:key="">
-        <wux-cell title="{{ item.name }}" data-value="{{ item }}" bind:click="onClick" />
+        <wux-cell data-value="{{ item }}" bind:click="onClick">
+            <rich-text nodes="{{ common.getRichText(item.name, inputVal) }}"></rich-text>
+        </wux-cell>
     </block>
 </wux-cell-group>
 
@@ -22,7 +24,9 @@
         <view class="cell-title">二手车</view>
     </wux-cell>
     <block wx:for="{{ used }}" wx:key="">
-        <wux-cell title="{{ item.name }}" data-value="{{ item }}" bind:click="onClick" />
+        <wux-cell data-value="{{ item }}" bind:click="onClick">
+            <rich-text nodes="{{ common.getRichText(item.name, inputVal) }}"></rich-text>
+        </wux-cell>
     </block>
 </wux-cell-group>
 
@@ -31,6 +35,18 @@
         <view class="cell-title">新能源物流车</view>
     </wux-cell>
     <block wx:for="{{ logistics }}" wx:key="">
-        <wux-cell title="{{ item.name }}" data-value="{{ item }}" bind:click="onClick" />
+        <wux-cell data-value="{{ item }}" bind:click="onClick">
+            <rich-text nodes="{{ common.getRichText(item.name, inputVal) }}"></rich-text>
+        </wux-cell>
     </block>
 </wux-cell-group>
+
+<wxs module="common">
+    module.exports = {
+        getRichText: function(str, text) {
+            if (!str || !text) return ''
+            if (str && !text) return str
+            return str.replace(getRegExp(text), '<span style="color: #ff0000">' + text + '</span>')
+        },
+    }
+</wxs>
