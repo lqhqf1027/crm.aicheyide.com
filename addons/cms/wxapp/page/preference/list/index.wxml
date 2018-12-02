@@ -54,7 +54,7 @@
         <view slot="body">
             <wux-grids bordered="{{ false }}" col="5">
                 <block wx:for="{{ brandList }}" wx:key="" wx:if="{{ index < 9 }}">
-                    <wux-grid thumb="{{ item.brand_logoimage }}" data-id="{{ item.id }}" data-type="{{ item.type }}" bind:click="onBrandPlan">
+                    <wux-grid thumb="{{ globalData.config.upload.cdnurl + item.brand_logoimage }}" data-id="{{ item.id }}" data-type="{{ item.type }}" bind:click="onBrandPlan">
                         <view class="grid__name">{{ item.name }}</view>
                     </wux-grid>
                 </block>

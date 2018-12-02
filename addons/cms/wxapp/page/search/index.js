@@ -35,13 +35,13 @@ Page({
             app.request('/share/searchModels', { queryModels }, (data, ret) => {
                 console.log(data)
                 this.setData({
-                    new: data && data.new,
-                    used: data && data.used,
-                    logistics: data && data.logistics,
+                    new: data && data.searchModel.new,
+                    used: data && data.searchModel.used,
+                    logistics: data && data.searchModel.logistics,
                 })
             }, (data, ret) => {
                 console.log(data)
-                    // app.error(ret.msg)
+                app.error(ret.msg)
             })
         }, 250)
     },

@@ -168,6 +168,10 @@ Page({
         }
     },
     onShow: function() {
+        const { style } = wx.getStorageSync('searchVal') || {}
+        this.getList(style)
+    },
+    onPullDownRefresh() {
         this.getList()
     },
     setGlobalData(cb) {
@@ -241,28 +245,28 @@ Page({
 
         this.setData({ carBrandList })
     },
-    getList() {
+    getList(cartype = this.data.searchVal.style) {
         const city = wx.getStorageSync('city')
 
         this.setData({
             city,
         })
 
-        app.request('/carselection/index', { city_id: city.id }, (data, ret) => {
+        app.request('/carselection/index', { city_id: city.id, cartype }, (data, ret) => {
             console.log(data)
 
-            // const tabs = data.carSelectList.map((n) => ({ car_type_name: n.car_type_name, type: n.type }))
+            let carSelectList = [data]
             let logisticsList = []
             let newcarList = []
             let usedcarList = []
             let brandList = {}
 
-            if (data.carSelectList.length > 0) {
-                data.carSelectList.forEach((n) => {
+            if (carSelectList.length > 0) {
+                carSelectList.forEach((n) => {
                     console.log(n)
                     brandList[n.type] = {}
                     if (n.type === 'new') {
-                        n.newCarList.forEach((m) => {
+                        n.carList.forEach((m) => {
                             if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
                                 if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
                                     brandList[n.type][m.brand_initials].push({
@@ -274,7 +278,7 @@ Page({
                             newcarList = [...newcarList, ...m.planList.map((v) => ({...v, brand_id: m.id }))]
                         })
                     } else if (n.type === 'used') {
-                        n.usedCarList.forEach((m) => {
+                        n.carList.forEach((m) => {
                             if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
                                 if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
                                     brandList[n.type][m.brand_initials].push({
@@ -286,7 +290,7 @@ Page({
                             usedcarList = [...usedcarList, ...m.planList.map((v) => ({...v, brand_id: m.id }))]
                         })
                     } else if (n.type === 'logistics') {
-                        n.logisticsCarList.forEach((m) => {
+                        n.carList.forEach((m) => {
                             if (brandList[n.type][m.brand_initials] = brandList[n.type][m.brand_initials] || []) {
                                 if (!brandList[n.type][m.brand_initials].map((n) => n.id).includes(m.id)) {
                                     brandList[n.type][m.brand_initials].push({
@@ -303,7 +307,6 @@ Page({
 
             this.setData({
                 brandList,
-                // tabs,
                 logisticsList,
                 newcarList,
                 usedcarList,
@@ -321,6 +324,8 @@ Page({
                     },
                 })
             })
+
+            wx.stopPullDownRefresh()
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
@@ -339,7 +344,8 @@ Page({
             items,
             searchVal,
             backdrop: false,
-        }, this.setCars)
+            list: [],
+        }, () => this.getList(style))
     },
     onChange(e) {
         console.log(e)
@@ -365,7 +371,7 @@ Page({
 
         // 按名称过滤
         if (name) {
-            list = list.filter((n) => n.models_name && n.models_name.indexOf(name) !== -1)
+            list = list.filter((n) => n.models && n.models.name.indexOf(name) !== -1)
         }
 
         // 按品牌过滤
