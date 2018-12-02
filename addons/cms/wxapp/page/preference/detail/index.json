@@ -1,6 +1,7 @@
 {
     "navigationBarTitleText": "车辆详情",
     "usingComponents": {
+    	"wux-animation-group": "../../../assets/libs/wux/animation-group/index",
     	"wux-cell-group": "../../../assets/libs/wux/cell-group/index",
     	"wux-cell": "../../../assets/libs/wux/cell/index",
     	"wux-media": "../../../assets/libs/wux/media/index",
