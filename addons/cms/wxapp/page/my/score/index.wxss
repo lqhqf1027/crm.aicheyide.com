@@ -21,7 +21,7 @@ swiper {
 .title {
 	font-size: 28rpx;
 	color: #333;
-	margin-top: 20rpx;
+	margin-bottom: 20rpx;
 }
 
 .score {
