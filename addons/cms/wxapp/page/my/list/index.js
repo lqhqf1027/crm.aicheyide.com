@@ -129,6 +129,11 @@ Page({
             url: '/page/index/index',
         })
     },
+    toScore() {
+        wx.navigateTo({
+            url: '/page/my/score/index',
+        })
+    },
     integral() {
         app.integral('sign', function(data) {
             app.success(data)
