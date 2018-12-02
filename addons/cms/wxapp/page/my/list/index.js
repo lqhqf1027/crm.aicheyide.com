@@ -44,6 +44,17 @@ Page({
     },
     onSwipeout(e) {
         console.log('onSwipeout', e)
+        const { id, type } = e.currentTarget.dataset
+
+        app.request('/share/collectionInterface', { plan_id: id, cartype: type, identification: 1 }, (data, ret) => {
+            console.log(data)
+            this.getInfo()
+            app.success(ret.msg)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+
         this.setData({ toggle: !this.data.toggle })
     },
     login: function() {
