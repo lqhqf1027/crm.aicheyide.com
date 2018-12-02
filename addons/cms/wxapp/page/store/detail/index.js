@@ -150,12 +150,39 @@ Page({
         brandList: {},
         carBrandList: [],
         searchVal: {...defaultSearchValue },
-
         globalData: app.globalData,
         info: {},
         logic: [],
         plans: [],
+        backtop: false,
     },
+    makePhoneCall() {
+        const { phone } = this.data.info || {}
+
+        if (!phone) return
+
+        wx.makePhoneCall({
+            phoneNumber: phone,
+        })
+    },
+    onPageScroll(e) {
+        this.setData({
+            backtop : e.scrollTop > 100,
+        })
+    },
+    backtop() {
+        this.setData({ backtop: false })
+        wx.pageScrollTo({
+            scrollTop: 0,
+            duration: 300,
+        })
+    },
+    goHome() {
+        wx.switchTab({
+            url: '/page/preference/list/index',
+        })
+    },
+    onShareAppMessage() {},
     onLoad(options) {
         console.log(options)
         this.options = options

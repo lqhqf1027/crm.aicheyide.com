@@ -2,7 +2,7 @@
 	<image class="store__image" src="{{ globalData.config.upload.cdnurl + info.store_img[0] }}" />
 	<view class="store__card wux-mt--10">
 		<view class="store__title">{{ info.store_name }}</view>
-		<view class="store__desc">客服电话：{{ info.phone }}</view>
+		<view class="store__desc" bindtap="makePhoneCall">客服电话：{{ info.phone }}</view>
 		<view class="store__desc">工作时间：周一至周日00:00 ~24:00</view>
 		<view class="store__desc">门店地址：{{ info.store_address }}</view>
 		<map class="store__map" longitude="{{ info.longitude }}" latitude="{{ info.latitude }}" />
@@ -126,6 +126,20 @@
         <view class="wish__ft"></view>
     </view>
 </view>
+
+<wux-animation-group in="{{ backtop }}" class-names="wux-animate--fadeIn">
+    <view class="backtop backtop--qa">
+        <button class="button-clear" open-type="contact">
+            <view class="fa fa-comment"></view>
+        </button>
+    </view>
+    <view class="backtop backtop--home" bindtap="goHome">
+        <view class="fa fa-home"></view>
+    </view>
+    <view class="backtop" bindtap="backtop">
+        <view class="fa fa-arrow-up"></view>
+    </view>
+</wux-animation-group>
 
 <wxs module="common">
     module.exports = {
