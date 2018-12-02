@@ -1,5 +1,6 @@
 {
     "navigationBarTitleText": "选车",
+    "enablePullDownRefresh": true,
     "usingComponents": {
         "wux-animation-group": "../../assets/libs/wux/animation-group/index",
         "wux-cell-group": "../../assets/libs/wux/cell-group/index",

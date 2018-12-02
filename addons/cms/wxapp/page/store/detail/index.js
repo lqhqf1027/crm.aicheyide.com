@@ -190,7 +190,7 @@ Page({
     onLoad(options) {
         console.log(options)
         this.options = options
-        // this.getDetail()
+        this.getDetail()
     },
     getDetail() {
         const store_id = this.options.id
