@@ -11,6 +11,15 @@ Page({
             score: 0,
             level: 0
         },
+        actions: [
+            {
+                name: '取消收藏',
+                width: 100,
+                color: '#fff',
+                background: '#ff6740',
+            },
+        ],
+        toggle: false,
         pickup: {},
         collection: {},
         subscribe: {},
@@ -32,6 +41,10 @@ Page({
     },
     onPullDownRefresh() {
         this.getInfo()
+    },
+    onSwipeout(e) {
+        console.log('onSwipeout', e)
+        this.setData({ toggle: !this.data.toggle })
     },
     login: function() {
         var that = this;
@@ -130,6 +143,7 @@ Page({
                 couponCount: data.couponCount,
                 score: data.score,
                 sign: data.sign,
+                toggle: !this.data.toggle,
             })
             wx.stopPullDownRefresh()
         }, (data, ret) => {

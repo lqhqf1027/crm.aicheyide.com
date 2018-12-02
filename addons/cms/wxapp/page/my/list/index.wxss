@@ -1,3 +1,7 @@
+.i-swipeout-demo-item {
+    border: none !important;
+}
+
 .header {
     display: flex;
     height: 170rpx;
