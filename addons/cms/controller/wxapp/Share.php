@@ -31,13 +31,12 @@ class Share extends Base
      */
     public function plan_details()
     {
-        $this->success('',User::getBynickname('gxabc'));
         $plan_id = $this->request->post('plan_id');                   //参数：方案ID
         $user_id = $this->request->post('user_id');                   //参数：用户ID
         $cartype = $this->request->post('cartype');                   //车辆类型
 
         if (!$plan_id || !$user_id || !$cartype) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
         $data = null;
         switch ($cartype) {
@@ -74,11 +73,11 @@ class Share extends Base
         $plans = PlanAcar::field('id,models_id,payment,monthly,nperlist,modelsimages,models_main_images,
 specialimages,popularity')
             ->with(['models' => function ($models) {
-                $models->withField('name,vehicle_configuration,price');
+                $models->withField('name,models_name,vehicle_configuration,price');
             }, 'label' => function ($label) {
                 $label->withField('name,lableimages,rotation_angle');
             }, 'companystore' => function ($companystore) {
-                $companystore->withField('store_name,store_address,phone');
+                $companystore->withField('store_name,store_address,phone,longitude,latitude');
             }])->find([$plan_id]);
 
         //方案标签图片加入CDN
@@ -87,7 +86,7 @@ specialimages,popularity')
         }
 
         $plans['models']['vehicle_configuration'] = json_decode($plans['models']['vehicle_configuration'], true);
-
+        $plans['models']['name'] = $plans['models']['name'] . ' ' . $plans['models']['models_name'];
         $plans['models_main_images'] = $plans['models_main_images'] ? Config::get('upload')['cdnurl'] . $plans['models_main_images'] : '';
         $plans['modelsimages'] = $plans['modelsimages'] ? Config::get('upload')['cdnurl'] . $plans['modelsimages'] : '';
         $plans['specialimages'] = $plans['specialimages'] ? Config::get('upload')['cdnurl'] . $plans['specialimages'] : '';
@@ -122,7 +121,7 @@ specialimages,popularity')
                 if ($k > 7) {
                     break;
                 }
-
+                $allModel[$v]['type'] = 'new';
                 $allModel[$v]['models_main_images'] = Config::get('upload')['cdnurl'] . $allModel[$v]['models_main_images'];
                 $reallyOther[] = $allModel[$v];
             }
@@ -157,11 +156,13 @@ specialimages,popularity')
        daypaymen,car_licensedate,emission_standard,emission_load,speed_changing_box,the_transfer_record,
        expirydate,annualverificationdate,businessdate,modelsimages,models_main_images')
             ->with(['models' => function ($q) {
-                $q->withField('name,vehicle_configuration,price');
+                $q->withField('name,models_name,vehicle_configuration,price');
             }, 'companystore' => function ($q) {
                 $q->withField('id,city_id,store_name,store_address,phone,longitude,latitude');
             }])->where('shelfismenu', 1)->find($plan_id);
 
+        $info['models']['name'] = $info['models']['name'] . ' ' . $info['models']['models_name'];
+        unset($info['models']['models_name']);
 
         $info['modelsimages'] = $info['modelsimages'] ? Config::get('upload')['cdnurl'] . $info['modelsimages'] : null;
         $info['models_main_images'] = $info['models_main_images'] ? Config::get('upload')['cdnurl'] . $info['models_main_images'] : null;
@@ -172,7 +173,6 @@ specialimages,popularity')
                 ->find($info['companystore']['city_id'])['cities_name'];
         }
         unset($info['companystore']['city_id']);
-
         //是否点赞丶收藏丶预约
         $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
 
@@ -247,7 +247,7 @@ specialimages,popularity')
         $cities_name = $this->request->post('cities_name');
 
         if (!$cities_name) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
 
         //获取搜索的数据
@@ -275,6 +275,10 @@ specialimages,popularity')
     {
         $user_id = $this->request->post('user_id');
 
+        if (!$user_id) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+
         $shareScore = intval(json_decode(self::ConfigData(['group' => 'integral'])['value'], true)['share']);
 
         $data = [
@@ -286,7 +290,7 @@ specialimages,popularity')
         $res = self::integral($user_id, $shareScore);
 
         if ($res) {
-            Fabulous::create($data) ? $this->success('分享成功,添加积分:' . $shareScore, $shareScore) : $this->error();
+            Fabulous::create($data) ? $this->success('分享成功,积分+:' . $shareScore, $shareScore) : $this->error();
 
         } else {
             $this->error();
@@ -304,7 +308,7 @@ specialimages,popularity')
         $cartype = $this->request->post('cartype');
 
         if (!$user_id || !$plan_id || !$cartype) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
         $fabulousScore = intval(json_decode(self::ConfigData(['group' => 'integral'])['value'], true)['fabulous']);
 
@@ -324,7 +328,7 @@ specialimages,popularity')
 
         $integral = self::integral($user_id, $fabulousScore);
 
-        $integral ? $this->success('点赞成功,添加积分:' . $integral, $integral) : $this->error('添加积分失败');
+        $integral ? $this->success('点赞成功,积分+:' . $integral, $integral) : $this->error('添加积分失败');
 
     }
 
@@ -334,13 +338,34 @@ specialimages,popularity')
      */
     public function collectionInterface()
     {
+        //用户ID
         $user_id = $this->request->post('user_id');
+        //方案ID
         $plan_id = $this->request->post('plan_id');
+        //车辆类型
         $cartype = $this->request->post('cartype');
+        //是否删除
+        $identification = $this->request->post('identification');
 
-        if (!$user_id || !$plan_id || !$cartype) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+        if (!in_array($identification, [0, 1])) {
+            $this->error('identification参数缺少或错误，请传入1或者0');
         }
+        if (!$user_id || !$plan_id || !$cartype) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+
+        //删除该方案的收藏
+        if ($identification) {
+            $plan_field = $this->getQueryPlan($cartype);
+            $res = Collection::destroy([
+                'user_id' => $user_id,
+                $plan_field => $plan_id
+            ]);
+
+            $res ? $this->success('取消收藏成功', 'success') : $this->error('取消收藏失败');
+        }
+
+
         $res = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'cms_collection');
 
         switch ($res['errorCode']) {
@@ -368,7 +393,7 @@ specialimages,popularity')
         $cartype = $this->request->post('cartype');
 
         if (!$user_id || !$plan_id || !$cartype) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
 
         $res = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'subscribe');
@@ -488,7 +513,7 @@ specialimages,popularity')
         $queryModels = $this->request->post('queryModels');
 
         if (!$queryModels) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
 
         //新车车型
@@ -516,7 +541,7 @@ specialimages,popularity')
     public function getModels($queryModels, $withTable)
     {
         //模糊查询对应车型
-        $models = Models::field('id,name')
+        $models = Models::field('id,name,models_name')
             ->with([$withTable => function ($query) use ($withTable) {
                 $where = $withTable == 'secondcarplan' ? ['shelfismenu' => 1] : ['ismenu' => 1];
                 $query->where($where)->withField('id');
@@ -549,7 +574,8 @@ specialimages,popularity')
             } else {
                 array_push($check, $v['id']);
             }
-            unset($v[$withTable]);
+            $v['name'] = $v['name'] . ' ' . $v['models_name'];
+            unset($v[$withTable], $v['models_name']);
             $v['type'] = $type;
             $duplicate_models[] = $v;
 
@@ -611,13 +637,12 @@ specialimages,popularity')
                     $order = $withPlan == 'logisticsCount' ? '' : 'weigh desc';
 
                     $query->where($where)->order($order)->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id,price');
+                        $models->withField('id,name,brand_id,price,models_name');
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->select($city_id ? $city_id : null);
-
 
 
         foreach ($info as $k => $v) {
@@ -681,6 +706,11 @@ specialimages,popularity')
                         }
 
                     }
+                    if ($vv['popularity']) {
+                        $vv['popularity'] = floatval($vv['popularity']) * 100;
+                    }
+                    $vv['models']['name'] = $vv['models']['name'] . ' ' . $vv['models']['models_name'];
+                    unset($vv['models']['models_name']);
                     $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
                     $data = $vv['label'];
                     $vv['label'] = $data;
@@ -705,7 +735,7 @@ specialimages,popularity')
         }
 
         //如果品牌列表没有【planList】键，表示该城市门店无方案
-        if(!isset($brand[0]['planList'])){
+        if (!isset($brand[0]['planList'])) {
             return [];
         }
         //去除没用的品牌

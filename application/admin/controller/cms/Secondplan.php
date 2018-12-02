@@ -104,7 +104,7 @@ class Secondplan extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('licenseplatenumber',true);
             $total = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 },'label'=>function($query){
                     $query->withField('name,lableimages');
                 },'companystore'=>function($query){
@@ -117,7 +117,7 @@ class Secondplan extends Backend
 
             $list = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 },'label'=>function($query){
                     $query->withField('name,lableimages');
                 },'companystore'=>function($query){
@@ -138,7 +138,7 @@ class Secondplan extends Backend
                     'engine_number', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
                     'createtime', 'updatetime', 'status_data', 'department', 'admin_name', 'modelsimages', 'models_main_images','daypaymen','weigh','store_name']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['label']);
                 $row->getRelation('label')->visible(['name', 'lableimages']);
                 $row->visible(['companystore']);
@@ -155,6 +155,10 @@ class Secondplan extends Backend
                             $this->model->where('licenseplatenumber', $v['licenseplatenumber'])->setField(['daypaymen' => $daypaymen]);
                         }
                     }   
+                }
+
+                if ($list[$key]['models']['models_name']) {
+                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
                 }
 
             }

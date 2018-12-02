@@ -107,7 +107,7 @@ class Newplan extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('models.name', true);
             $total = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'schemecategory' => function ($query) {
@@ -128,7 +128,7 @@ class Newplan extends Backend
 
             $list = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'schemecategory' => function ($query) {
@@ -155,7 +155,7 @@ class Newplan extends Backend
                     'updatetime', 'category_id', 'recommendismenu', 'flashviewismenu', 'specialismenu', 'subjectismenu', 'specialimages', 'models_main_images', 'modelsimages', 'weigh',
                     'store_name']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['schemecategory']);
@@ -171,10 +171,16 @@ class Newplan extends Backend
                 $list[$key]['brand_name'] = array_keys(self::getBrandName($row['id'])); //获取品牌
                 $list[$key]['brand_log'] = Config::get('upload')['cdnurl'] . array_values(self::getBrandName($row['id']))[0]; //获取logo图片
                 $list[$key]['store_name'] = $this->getStoreName($row['store_id']); //门店
+                
+                if ($list[$key]['models']['models_name']) {
+                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
+                }
 
 
             }
             $list = collection($list)->toArray();
+            // pr($list);
+            // die;
             $result = array("total" => $total, "rows" => $list);
             Session::set('row', $list);
             return json($result);

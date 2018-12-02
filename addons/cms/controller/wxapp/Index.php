@@ -33,9 +33,8 @@ class Index extends Base
     public function index()
     {
         $city_id = $this->request->post('city_id');                              //参数：城市ID
-
         if (!$city_id) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
 
         //预约缓存
@@ -85,10 +84,10 @@ class Index extends Base
         $city_id = $this->request->post('city_id');
 
         if (!$city_id || !$brand_id) {
-            $this->error('参数错误或缺失参数,请求失败', 'error');
+            $this->error('缺少参数,请求失败', 'error');
         }
 
-        $plans = Models::field('name')
+        $plans = Models::field('name,models_name')
             ->with(['brand' => function ($query) use ($brand_id) {
                 $query->where('brand.id', $brand_id)->withField('id');
             }, 'planacar' => function ($query) {
@@ -109,7 +108,7 @@ class Index extends Base
                 $v['planacar']['city'] = companyStoreModel::get($v['planacar']['store_id'], ['city' => function ($query) {
                     $query->withField('id,cities_name');
                 }])['city'];
-
+                $v['name'] = $v['name'].' '.$v['models_name'];
                 $data = ['id' => $v['planacar']['id'], 'models_main_images' => $v['planacar']['models_main_images'],
                     'models_name' => $v['name'], 'payment' => $v['planacar']['payment'], 'monthly' => $v['planacar']['monthly'],
                     'city' => $v['planacar']['city'],'type'=>'new'];
@@ -177,11 +176,7 @@ class Index extends Base
 
         $brandList = [];                                                      //品牌列表
         foreach ($brand as $k => $v) {
-
-            $v['brand']['brand_logoimage'] = Config::get('upload')['cdnurl'] . $v['brand']['brand_logoimage'];
-
             $brandList[] = $v['brand'];
-
         }
 
         $brandList = array_values(array_unique($brandList));

@@ -116,7 +116,7 @@ class CompanyStore extends Model
             $q->field('id,display_diagramimages,user_id,limit_collar')
                 ->where([
                     'store_ids' => ['like', '%,' . $store_id . ',%'],
-                    'user_id' => ['like', '%,' . $user_id . ',%'],
+//                    'user_id' => ['like', '%,' . $user_id . ',%'],
                     'ismenu' => 1,//正常上架状态
                     'release_datetime' => ['GT', time()],//领用截至日期小于当前时间
                     'circulation' => ['GT', 0], // 发放总量大于0
