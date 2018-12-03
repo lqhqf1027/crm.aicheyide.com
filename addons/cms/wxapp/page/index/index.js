@@ -259,7 +259,17 @@ Page({
         // 判断是否同一城市下，取其缓存
         if (noChanged) {
             if (this.data.brandList[cartype]) {
-                this.setCars({...this.data.searchVal, style: cartype})
+                wx.getStorage({
+                    key: 'searchVal',
+                    success: ({ data }) => {
+                        console.log(data)
+                        wx.removeStorageSync('searchVal')
+                        this.setCars({...this.data.searchVal, ...data })
+                    },
+                    fail: () => {
+                        this.setCars()
+                    },
+                })
                 return
             }
         } else {
