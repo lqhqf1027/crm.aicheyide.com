@@ -157,8 +157,8 @@ class Secondplan extends Backend
                     }   
                 }
 
-                if ($list[$key]['models']['models_name']) {
-                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
                 }
 
             }
