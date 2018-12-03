@@ -37,9 +37,7 @@ class My extends Base
             $this->error('缺少参数,请求失败', 'error');
         }
         //积分
-        $score = User::get(function ($query) use ($user_id) {
-            $query->where('id', $user_id)->field('score');
-        })['score'];
+        $score = $this->scores($user_id);
 
         //是否签到
         $sign = $this->getSign($user_id);
@@ -119,7 +117,6 @@ class My extends Base
 
             $insert = ['user_sign_id' => $user['id'], 'sign_time' => $data['lastModifyTime']];
 
-
         }
         $insert['score'] = $signScore;
         $this->insertSignRecord($insert);
@@ -137,6 +134,13 @@ class My extends Base
     {
         return Db::name('cms_sign_record')
             ->insert($data);
+    }
+
+    public function scores($user_id)
+    {
+        return User::get(function ($query) use ($user_id) {
+            $query->where('id', $user_id)->field('score');
+        })['score'];
     }
 
     /**
@@ -159,13 +163,14 @@ class My extends Base
             ->order('a.sign_time desc')
             ->select();
 
-        $share = $this->fabulousData($user_id, 'share');
+//        $share = $this->fabulousData($user_id, 'share');
 
         $this->success('', [
             'integral' => [
+                'currentScore' => $this->scores($user_id),
                 ['type'=>'fabulous','name'=>'点赞','detailed' => $fabulous],
                 ['type'=>'sign','name'=>'签到','detailed' => $sign],
-                ['type'=>'share','name'=>'分享','detailed' => $share]
+//                ['type'=>'share','name'=>'分享','detailed' => $share]
             ]
         ]);
     }

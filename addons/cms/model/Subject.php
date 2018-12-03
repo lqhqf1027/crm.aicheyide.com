@@ -20,6 +20,11 @@ class Subject extends Model
     protected $append = [
 
     ];
+
+    public function getPlanIdAttr($value)
+    {
+        return json_decode($value,true);
+    }
     
 
     

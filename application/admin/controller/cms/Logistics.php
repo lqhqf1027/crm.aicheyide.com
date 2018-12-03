@@ -68,7 +68,10 @@ class Logistics extends Backend
                     ->select();
 
             foreach ($list as $key => $row) {
-    
+                
+                if ($list[$key]['models']['models_name']) {
+                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
+                }
                 
             }
             $list = collection($list)->toArray();

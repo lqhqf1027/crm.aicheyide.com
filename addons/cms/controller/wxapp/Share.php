@@ -80,6 +80,9 @@ specialimages,popularity')
                 $companystore->withField('store_name,store_address,phone,longitude,latitude');
             }])->find([$plan_id]);
 
+        //用户ID
+        $plans['users'] = $this->userPhone($user_id);
+
         //方案标签图片加入CDN
         if ($plans['label'] && $plans['label']['lableimages']) {
             $plans['label']['lableimages'] = Config::get('upload')['cdnurl'] . $plans['label']['lableimages'];
@@ -139,6 +142,15 @@ specialimages,popularity')
 
     }
 
+    public function userPhone($user_id)
+    {
+        $users = User::get(function ($query) use ($user_id) {
+            $query->where('id', $user_id)->field('id,mobile');
+        })->toArray();
+        unset($users['url']);
+        return $users;
+    }
+
     /**
      * 二手车详情
      * @param $plan_id     方案ID
@@ -163,6 +175,9 @@ specialimages,popularity')
 
         $info['models']['name'] = $info['models']['name'] . ' ' . $info['models']['models_name'];
         unset($info['models']['models_name']);
+
+        //用户信息
+        $info['users'] = $this->userPhone($user_id);
 
         $info['modelsimages'] = $info['modelsimages'] ? Config::get('upload')['cdnurl'] . $info['modelsimages'] : null;
         $info['models_main_images'] = $info['models_main_images'] ? Config::get('upload')['cdnurl'] . $info['models_main_images'] : null;
@@ -391,13 +406,19 @@ specialimages,popularity')
         $user_id = $this->request->post('user_id');
         $plan_id = $this->request->post('plan_id');
         $cartype = $this->request->post('cartype');
+        $mobile = $this->request->post('mobile');
 
         if (!$user_id || !$plan_id || !$cartype) {
             $this->error('缺少参数,请求失败', 'error');
         }
 
-        $res = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'subscribe');
+        if ($mobile) {
+            User::where('id', $user_id)->update([
+                'mobile' => $mobile
+            ]);
+        }
 
+        $res = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'subscribe');
 
         switch ($res['errorCode']) {
             case '1':

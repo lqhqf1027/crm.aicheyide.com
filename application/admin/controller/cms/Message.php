@@ -93,8 +93,8 @@ class Message extends Backend
             if ($params['content1']) {
                 $params['content'] = $params['content1'];
             }
-            pr($params);
-            die;
+            // pr($params);
+            // die;
             if ($params) {
                 try {
                     //是否采用模型验证

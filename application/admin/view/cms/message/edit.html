@@ -12,13 +12,49 @@
             
             <div class="radio">
             {foreach name="analysisList" item="vo"}
-            <label for="row[analysis]-{$key}"><input id="row[analysis]-{$key}" name="row[analysis]" type="radio" value="{$key}" {in name="key" value="$row.analysis"}checked{/in} onchange="changeFun(this)"/> {$vo}</label> 
+            <label for="row[analysis]-{$key}"><input id="row[analysis]-{$key}" class="analysis" name="row[analysis]" type="radio" value="{$key}" {in name="key" value="$row.analysis"}checked{/in} onchange="changeFun(this)"/> {$vo}</label> 
             {/foreach}
             </div>
 
         </div>
     </div>
+    <div id="introduce-view" style="display: none">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <textarea id="c-content" class="form-control editor form-control" rows="5" name="row[content1]" cols="50"></textarea>
+            </div>
+        </div>
+    </div>
+    <div id="introduce" style="display: none">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
+            <div class="col-xs-12 col-sm-8">
+                <textarea id="c-content1" class="form-control form-control" rows="5" name="row[content]" cols="50"></textarea>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
+ 
+        var introduce = document.getElementById('introduce-view');
+        var introduce1 = document.getElementById('introduce');
+        
+        if ("{$row.analysis}" == '1') {
+
+            introduce.style.setProperty('display', 'block');
+            introduce1.style.setProperty('display', 'none');
+            $('#c-content').val("{$row.content}");
+            if ($('#c-content').val() !== "{$row.content}") {
+                $('#c-content').val("");
+            }
+
+        } else {
+
+            introduce1.style.setProperty('display', 'block');
+            introduce.style.setProperty('display', 'none');
+            $('#c-content1').val("{$row.content}");
+
+        }
 
         function changeFun(that) {
             var introduce = document.getElementById('introduce-view');
@@ -41,22 +77,6 @@
         }
 
     </script>
-    <div id="introduce-view" style="display: none">
-        <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
-            <div class="col-xs-12 col-sm-8">
-                <textarea id="c-content" class="form-control editor form-control" rows="5" name="row[content1]" cols="50"></textarea>
-            </div>
-        </div>
-    </div>
-    <div id="introduce" style="display: none">
-        <div class="form-group">
-            <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
-            <div class="col-xs-12 col-sm-8">
-                <textarea id="c-content1" class="form-control form-control" rows="5" name="row[content]" cols="50"></textarea>
-            </div>
-        </div>
-    </div>
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
