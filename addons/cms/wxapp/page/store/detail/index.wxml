@@ -1,5 +1,5 @@
 <view class="store">
-	<image class="store__image" src="{{ globalData.config.upload.cdnurl + info.store_img[0] }}" />
+	<image lazy-load class="store__image" src="{{ globalData.config.upload.cdnurl + info.store_img[0] }}" />
 	<view class="store__card wux-mt--10">
 		<view class="store__title">{{ info.store_name }}</view>
 		<view class="store__desc" bindtap="makePhoneCall">客服电话：{{ info.phone }}</view>
@@ -9,7 +9,7 @@
 	</view>
 	<block wx:for="{{ logic }}" wx:key="" wx:if="{{ logic.length }}">
 		<view class="store__card wux-mt--10">
-			<image class="store__logic" src="{{ globalData.config.upload.cdnurl + item.display_diagramimages }}" />
+			<image lazy-load class="store__logic" src="{{ globalData.config.upload.cdnurl + item.display_diagramimages }}" />
 		</view>
 	</block>
 	
@@ -93,14 +93,19 @@
     </view>
     <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style !== 'used' }}">
         <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
-            <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
+            <image lazy-load class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
             <view class="car__title">{{ searchVal.style == 'new' ? item.models.name : item.name }}</view>
             <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2" wx:if="{{ item.models }}">指导价 {{ item.models.price / 10000 }} W</view>
             <image class="car__label" src="{{ globalData.config.upload.cdnurl + item.label.lableimages }}" wx:if="{{ item.label }}" />
             <view class="wux-clearfix">
                 <view class="car__title car__title--payment wux-pull-left wux-mr--20 wux-mt--10 {{ item.label && item.label.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
                 <view class="car__title car__title--monthly wux-pull-left wux-mt--10">月供 {{ item.monthly }} 元</view>
-                <view class="car__title car__title--monthly wux-pull-right wux-mt--10" wx:if="{{ item.popularity }}">{{ item.popularity || 0 }}</view>
+                <view class="car__title car__title--monthly wux-pull-right wux-mt--10">
+                    <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
+                </view>
+                <view class="car__title car__title--monthly wux-pull-right wux-mr--10 wux-mt--10">
+                    <view class="popular"></view> {{ (item.popularity || 0) / 10000 }} W
+                </view>
             </view>
         </view>
     </block>

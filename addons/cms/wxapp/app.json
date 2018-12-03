@@ -4,6 +4,7 @@
         "page/preference/detail/index",
         "page/preference/config/index",
         "page/preference/plan/index",
+        "page/preference/special/index",
         "page/index/index",
         "page/city/index",
         "page/brand/index",

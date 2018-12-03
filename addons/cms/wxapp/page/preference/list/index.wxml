@@ -123,7 +123,7 @@
                 <view class="card__more" bindtap="toMore">MORE+</view>
             </view>
             <view slot="body">
-                <image class="card__cover wux-mb--10" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" />
+                <image class="card__cover wux-mb--10" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial" />
                 <swiper indicator-dots indicator-color="#d5d5d5" indicator-active-color="#da8103" display-multiple-items="3" bindchange="bindchange">
                     <block wx:for="{{ card.plan }}" wx:key="">
                         <swiper-item class="swiper-item">
@@ -145,7 +145,7 @@
         <view class="wux-mt--10 scroll-y" wx:else>
             <wux-row>
                 <wux-col span="6">
-                    <image class="card__cover" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" />
+                    <image class="card__cover" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial" />
                 </wux-col>
                 <wux-col span="6">
                     <wux-card full bordered="{{ false }}" wux-class="card__scroll" wux-header-class="card__header">

@@ -119,6 +119,13 @@ Page({
             app.error(ret.msg)
         })
     },
+    onSpecial(e) {
+        const { id, title } = e.currentTarget.dataset
+
+        wx.navigateTo({
+            url: `/page/preference/special/index?id=${id}&title=${title}`,
+        })
+    },
     onOpenDetail(e) {
         const { id, type } = e.currentTarget.dataset
 
