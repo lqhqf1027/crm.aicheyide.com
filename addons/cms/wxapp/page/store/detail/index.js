@@ -194,19 +194,36 @@ Page({
         this.getList(style)
     },
     onPullDownRefresh() {
-        this.getList()
+        this.getList(this.data.searchVal.style, true)
     },
-    getList(cartype = this.data.searchVal.style) {
+    /**
+     * 门店详情接口
+     * @param {String} 车辆类型
+     * @param {Boolean} 是否强制更新
+     */
+    getList(cartype = this.data.searchVal.style, isForce) {
         const store_id = this.options.id
+        const noChanged = !isForce
 
+        if (noChanged) {
+            if (this.data.brandList[cartype]) {
+                this.setCars({...this.data.searchVal, style: cartype})
+                return
+            }
+        } else {
+            this.setData({
+                brandList: {},
+            })
+        }
+        
         app.request('/store/store_details', { store_id, cartype }, (data, ret) => {
             console.log(data)
 
             let carSelectList = [data.plans]
-            let logisticsList = []
-            let newcarList = []
-            let usedcarList = []
-            let brandList = {}
+            let logisticsList = (!noChanged || cartype === 'logistics') ? [] : this.data.logisticsList
+            let newcarList = (!noChanged || cartype === 'new') ? [] : this.data.newcarList
+            let usedcarList = (!noChanged || cartype === 'used') ? [] : this.data.usedcarList
+            let brandList = this.data.brandList || {}
 
             if (carSelectList.length > 0) {
                 carSelectList.forEach((n) => {
