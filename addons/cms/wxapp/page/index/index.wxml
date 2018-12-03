@@ -107,7 +107,12 @@
             <view class="wux-clearfix">
                 <view class="car__title car__title--payment wux-pull-left wux-mr--20 wux-mt--10 {{ item.label && item.label.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
                 <view class="car__title car__title--monthly wux-pull-left wux-mt--10">月供 {{ item.monthly }} 元</view>
-                <view class="car__title car__title--monthly wux-pull-right wux-mt--10" wx:if="{{ item.popularity }}">{{ item.popularity || 0 }}</view>
+                <view class="car__title car__title--monthly wux-pull-right wux-mt--10">
+                    <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
+                </view>
+                <view class="car__title car__title--monthly wux-pull-right wux-mr--10 wux-mt--10">
+                    <view class="popular"></view> {{ (item.popularity || 0) / 10000 }} W
+                </view>
             </view>
         </view>
     </block>
