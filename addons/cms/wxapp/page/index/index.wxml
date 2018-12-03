@@ -100,7 +100,7 @@
     </view>
     <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style !== 'used' }}">
         <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
-            <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
+            <image lazy-load class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
             <view class="car__title">{{ searchVal.style == 'new' ? item.models.name : item.name }}</view>
             <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2" wx:if="{{ item.models }}">指导价 {{ item.models.price / 10000 }} W</view>
             <image class="car__label" src="{{ globalData.config.upload.cdnurl + item.label.lableimages }}" wx:if="{{ item.label }}" />
