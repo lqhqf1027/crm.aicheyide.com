@@ -76,7 +76,7 @@ class CompanyStore extends Model
     public function usedcarCount()
     {
         return $this->hasMany('UsedCar', 'store_id', 'id')
-            ->field('id,store_id,kilometres,newpayment,models_main_images,car_licensedate,shelfismenu');
+            ->field('id,store_id,kilometres,newpayment,models_main_images,car_licensedate,shelfismenu,popularity');
     }
 
     /**
