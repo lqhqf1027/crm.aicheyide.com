@@ -74,10 +74,14 @@
 
     <wux-cell-group wux-class="wux-mt--10">
         <wux-cell hover-class="none">
-            <image class="plan-image" src="https://static.aicheyide.com/ucuj/plan_details/4f6bd7b5e29a81d4440391d2831d36c.jpg" style="{{ planImageStyle.info }}" data-type="info" bindload="onPlanImageLoad" />
+            <image class="plan-image" src="https://static.aicheyide.com/ucuj/plan_details/ac96f22a8dc1e8790a65e45ef4fc3ca.png" style="{{ planImageStyle.info }}" data-type="info" bindload="onPlanImageLoad" />
         </wux-cell>
     </wux-cell-group>
-
+ <wux-cell-group wux-class="wux-mt--10">
+        <wux-cell hover-class="none">
+            <image class="plan-image" src="https://static.aicheyide.com/ucuj/plan_details/532ca05d84784e0e41c57f28b7ba8e9.png" style="{{ planImageStyle.info }}" data-type="info" bindload="onPlanImageLoad" />
+        </wux-cell>
+    </wux-cell-group>
     <view class="guesslike" wx:if="{{ guesslike.length }}">
         <view class="guesslike-title">猜你喜欢</view>
         <view class="guesslike-content">
@@ -152,7 +156,7 @@
             <view class="title">门店地址</view>
         </wux-cell>
         <wux-cell hover-class="none">
-            <wux-media thumb="http://pbqg2m54r.bkt.clouddn.com/logo.png" thumbStyle="border-radius: 50%" title="{{ plan.companystore.store_name }}" label="{{ plan.companystore.store_address }}"></wux-media>
+            <wux-media thumb="https://static.aicheyide.com/ucuj/Brand/logo/859694614246574276.png" thumbStyle="border-radius: 50%" title="{{ plan.companystore.store_name }}" label="{{ plan.companystore.store_address }}"></wux-media>
         </wux-cell>
     </wux-cell-group>
 

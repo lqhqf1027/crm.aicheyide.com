@@ -275,7 +275,7 @@ image.quiet {
     /*width: 100%;*/
     /*width: 300rpx;*/
     /*height: 180rpx;*/
-    background-color: #f2f2f2;
+    /* background-color: #f2f2f2; */
     box-sizing: border-box;
     margin-right: 20rpx;
 }
@@ -294,7 +294,7 @@ image.quiet {
     display: block;
     width: 200rpx;
     height: 130rpx;
-    background-color: #fff;
+    background-color: #f8f8f8;
 }
 
 .card__cover {
@@ -346,7 +346,7 @@ image.quiet {
 .payment-tag {
     font-size: 24rpx !important;
     color: #666 !important;
-    background-color: #fff !important;
+    background-color: #f8f8f8 !important;
     border-radius: 50rpx !important;
     margin-right: 20rpx !important;
 }
