@@ -4,6 +4,7 @@ namespace app\admin\controller\banking;
 
 use app\common\controller\Backend;
 use think\Db;
+use app\admin\model\Exchangeplatformtabs as Driver;
 
 
 /**
@@ -18,7 +19,7 @@ class Exchangeplatformtabs extends Backend
     protected $model = null;
     protected $dataLimit = false; //表示不启用，显示所有数据
     protected $searchFields = 'username,licensenumber,frame_number';
-    protected $noNeedRight = ['index', 'new_car', 'yue_da_car', 'other_car', 'nanchong_driver', 'edit', 'change_platform', 'batch_change_platform', 'details', 'loan'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {
@@ -255,7 +256,6 @@ class Exchangeplatformtabs extends Backend
                 }
             }
 
-
             if ($params) {
                 try {
                     //是否采用模型验证
@@ -281,6 +281,28 @@ class Exchangeplatformtabs extends Backend
                     Db::name("car_new_inventory")
                         ->where("id", $data['car_new_inventory_id'])
                         ->setField("licensenumber", $params['licensenumber']);
+                    //添加到外部apply数据库中
+                    if ($params['licensenumber']) {
+                        $driver = Driver::select();
+                        foreach ($driver as $k => $v) {
+
+                            $driver_licensenumber[] = $v['license_plate_number'];
+                        }
+                        
+                        // pr($driver_licensenumber);
+                        // die;
+                        if (in_array($params['licensenumber'], $driver_licensenumber)) {
+
+                        }
+                        else{
+                            
+                            $driver_info = Db::name('car_new_inventory')->where('licensenumber',$params['licensenumber'])->find();
+                        
+                            $data123 = Driver::create(['license_plate_number' => $params['licensenumber'], 'vin' => $driver_info['frame_number'], 'engine_no' => $driver_info['engine_number']]);
+                               
+                        }
+                       
+                    }
 
                     if ($data['car_new_inventory_id'] && !$check_licensenumber) {
 
