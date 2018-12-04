@@ -6,7 +6,7 @@ page {
 
 .container {
     height: 100%;
-    background-color: #fdc22a;
+    background-color: #687ae2;
     padding: 50rpx 20rpx 0;
     box-sizing: border-box;
 }
@@ -20,7 +20,7 @@ page {
 .plans-title {
     font-size: 28rpx;
     text-align: center;
-    color: #fdc22a;
+    color: #687ae2;
     margin-top: 20rpx;
 }
 

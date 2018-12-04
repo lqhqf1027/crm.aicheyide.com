@@ -90,7 +90,7 @@
             <view class="grid__name">我的消息</view>
         </wux-grid>
         <wux-grid thumb="/assets/images/service.png">
-            <view class="grid__name">我的客户</view>
+            <view class="grid__name">我的客服</view>
         </wux-grid>
     </wux-grids>
     <view class="wish">
