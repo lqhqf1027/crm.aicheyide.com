@@ -78,7 +78,7 @@ specialimages,popularity')
             }, 'label' => function ($label) {
                 $label->withField('name,lableimages,rotation_angle');
             }, 'companystore' => function ($companystore) {
-                $companystore->withField('city_id,store_name,store_address,phone,longitude,latitude');
+                $companystore->withField('id,city_id,store_name,store_address,phone,longitude,latitude');
             }])->find([$plan_id]);
 
         //用户ID

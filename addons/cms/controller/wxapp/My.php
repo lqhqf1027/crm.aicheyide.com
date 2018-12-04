@@ -167,11 +167,11 @@ class My extends Base
 
         $this->success('', [
             'integral' => [
-                'currentScore' => $this->scores($user_id),
                 ['type'=>'fabulous','name'=>'点赞','detailed' => $fabulous],
                 ['type'=>'sign','name'=>'签到','detailed' => $sign],
 //                ['type'=>'share','name'=>'分享','detailed' => $share]
-            ]
+            ],
+            'currentScore' => $this->scores($user_id)
         ]);
     }
 
