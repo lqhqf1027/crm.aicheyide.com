@@ -235,10 +235,11 @@
 </view>
 
 <view class="bottom">
-    <view class="bottom-icon">
-        <button class="button-clear" open-type="share">
+    <view class="bottom-icon bottom-store" bindtap="toStore">
+        <image src="https://static.aicheyide.com/ucuj/plan_details/2342343.png" style="width: 54rpx; height: 54rpx" />
+        <!-- <button class="button-clear" open-type="share">
             <icon class="fa fa-share-square"></icon>
-        </button>
+        </button> -->
     </view>
     <view class="bottom-icon {{ plan && plan.collection === 1 ? 'bottom-icon--active' : '' }}" bindtap="collectionInterface">
         <icon class="fa fa-star"></icon>
@@ -251,7 +252,9 @@
     </view>
     <view class="bottom-btn wux-balanced--bg" bindtap="makePhoneCall" wx:if="{{ type === 'used' }}">咨询车况</view>
     <view class="bottom-btn wux-balanced--bg" bindtap="makePhoneCall" wx:else>询问底价</view>
-    <view class="bottom-btn" bindtap="clickAppointment">立即预约</view>
+    <view class="bottom-btn {{ plan && plan.appointment === 1 ? 'disabled' : '' }}" bindtap="clickAppointment">
+        {{ plan && plan.appointment === 1 ? '已预约' : '立即预约' }}
+    </view>
 </view>
 
 <wux-animation-group in="{{ backtop }}" class-names="wux-animate--fadeIn">

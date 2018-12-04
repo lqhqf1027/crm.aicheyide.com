@@ -20,12 +20,14 @@ Page({
         this.switchTab(e.detail.value)
     },
     getList(queryModels) {
+        const city = wx.getStorageSync('city')
+
         if (this.timeout) {
             clearTimeout(this.timeout)
             this.timeout = null
         }
 
-        if (!queryModels) {
+        if (!queryModels || !city) {
             this.setData({
                 new: [],
                 used: []
@@ -34,7 +36,7 @@ Page({
         }
 
         this.timeout = setTimeout(() => {
-            app.request('/share/searchModels', { queryModels }, (data, ret) => {
+            app.request('/share/searchModels', { city_id: city.id, queryModels }, (data, ret) => {
                 console.log(data)
                 this.setData({
                     new: data && data.searchModel.new,

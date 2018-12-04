@@ -423,6 +423,13 @@
     color: #ff9a18;
 }
 
+.bottom-store {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
 .bottom-btn {
     width: 200rpx;
     height: 100%;
@@ -434,4 +441,8 @@
     /*border-radius: 36rpx;*/
     color: #fff;
     background-color: #3f51b5;
+}
+
+.bottom-btn.disabled {
+    opacity: .4;
 }

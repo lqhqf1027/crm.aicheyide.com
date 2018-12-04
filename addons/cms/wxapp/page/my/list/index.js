@@ -176,6 +176,7 @@ Page({
 
         app.request('/my/signIn', { user_id }, (data, ret) => {
             console.log(data)
+            this.getInfo()
             app.success(ret.msg)
         }, (data, ret) => {
             console.log(data)

@@ -172,7 +172,7 @@ Page({
         wx.getSystemInfo({
             success: (res) => {
                 this.setData({
-                    deviceHeight: res.windowHeight,
+                    deviceHeight: res.windowHeight - 20 + 'px',
                 })
             }
         })

@@ -188,5 +188,14 @@ Page({
             url: '/page/preference/list/index',
         })
     },
+    toStore() {
+        const { id } = this.data.plan.store_id
+
+        if (!id) return
+
+        wx.navigateTo({
+            url: `/page/store/detail/index?id=${id}`,
+        })
+    },
     onShareAppMessage() {},
 })
