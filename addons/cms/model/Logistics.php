@@ -75,4 +75,13 @@ class Logistics extends Model
     {
         return $this->belongsTo('Models', 'models_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
+
+    /**
+     * 关联门店
+     * @return \think\model\relation\BelongsTo
+     */
+    public function companystore()
+    {
+        return $this->belongsTo('CompanyStore','store_id','id',[],'LEFT')->setEagerlyType(0);
+    }
 }

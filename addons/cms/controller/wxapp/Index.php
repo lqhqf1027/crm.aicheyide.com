@@ -307,7 +307,7 @@ class Index extends Base
             $this->error('缺少参数,请求失败', 'error');
         }
         $subject = Subject::get(function ($q) use ($special_id) {
-            $q->where('id', $special_id)->field('id,title,coverimages,plan_id');
+            $q->where('id', $special_id)->field('id,title,coverimages,plan_id,vertical_coverimages');
         });
 
         $plan_ids = [];
@@ -321,7 +321,7 @@ class Index extends Base
             ->with(['companystore' => function ($company) {
                 $company->withField('id,city_id');
             }, 'models' => function ($models) {
-                $models->withField('id,name');
+                $models->withField('id,name,models_name');
             }, 'label' => function ($label) {
                 $label->withField('id,name,lableimages,rotation_angle');
             }])->where('ismenu', 1)->select($plan_ids);
@@ -334,8 +334,9 @@ class Index extends Base
             } else {
                 $v['cities_name'] = null;
             }
+            $v['models']['name'] = $v['models']['name'].' '.$v['models']['models_name'];
 
-            unset($v['companystore']);
+            unset($v['companystore'],$v['models']['models_name']);
         }
 
         $subject['planList'] = $all;
