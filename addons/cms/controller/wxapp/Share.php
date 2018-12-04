@@ -9,6 +9,7 @@
 namespace addons\cms\controller\wxapp;
 
 use addons\cms\model\Brand;
+use addons\cms\model\Logistics;
 use think\Cache;
 use think\Db;
 use think\Config;
@@ -77,7 +78,7 @@ specialimages,popularity')
             }, 'label' => function ($label) {
                 $label->withField('name,lableimages,rotation_angle');
             }, 'companystore' => function ($companystore) {
-                $companystore->withField('store_name,store_address,phone,longitude,latitude');
+                $companystore->withField('city_id,store_name,store_address,phone,longitude,latitude');
             }])->find([$plan_id]);
 
         //用户ID
@@ -94,7 +95,7 @@ specialimages,popularity')
         $plans['modelsimages'] = $plans['modelsimages'] ? Config::get('upload')['cdnurl'] . $plans['modelsimages'] : '';
         $plans['specialimages'] = $plans['specialimages'] ? Config::get('upload')['cdnurl'] . $plans['specialimages'] : '';
         //查看同城市同车型不同的方案
-        $different_schemes = $this->getPlans($plans['models_id'], Cache::get('city_id'), $plan_id);
+        $different_schemes = $this->getPlans($plans['models_id'], $plans['companystore']['city_id'], $plan_id);
 
         //查看其它方案的属性名
         if ($different_schemes) {
@@ -109,8 +110,8 @@ specialimages,popularity')
         }
 
         //获取其他方案
-        $allModel = $this->getPlans('', '', $plan_id);
-
+        $allModel = $this->getPlans('', $plans['companystore']['city_id'], $plan_id);
+        unset($plans['companystore']['city_id']);
         $reallyOther = null;
 
         //如果有其他方案，随机得到其他的方案
@@ -198,8 +199,74 @@ specialimages,popularity')
 
     public function logistics_details($plan_id, $user_id, $cartype)
     {
+        $info = Logistics::field('id,payment,monthly,nperlist,models_main_images,modelsimages')
+            ->with(['companystore' => function ($store) {
+                $store->withField('id,store_name,store_address,phone,store_img,longitude,latitude,city_id');
+            }, 'label' => function ($label) {
+                $label->withField('id,name,lableimages,rotation_angle');
+            }, 'models' => function ($models) {
+                $models->withField('id,name,vehicle_configuration,price,models_name');
+            }])->find($plan_id);
+
+        if ($info['models']['vehicle_configuration']) {
+            $info['models']['vehicle_configuration'] = json_decode($info['models']['vehicle_configuration'], true);
+        }
+
+        $info['models_main_images'] = $info['models_main_images']?Config::get('upload')['cdnurl'] .$info['models_main_images']:'';
+        $info['modelsimages'] =$info['modelsimages']?Config::get('upload')['cdnurl'] .$info['modelsimages']:'';
+        $info['label']['lableimages'] = $info['label']['lableimages']?Config::get('upload')['cdnurl'] .$info['label']['lableimages']:'';
+
+            $info['different_chemes'] = $this->logisticsPlans($info['models']['id'], $plan_id, $info['companystore']['city_id']);
+
+        //是否点赞丶收藏丶预约
+        $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
+
+        $guessLike = $this->logisticsPlans('', $plan_id, $info['companystore']['city_id']);
+
+        if ($guessLike) {
+            $keys = array_keys($guessLike);
+            $guess = [];
+            shuffle($keys);
+
+            foreach ($keys as $k => $v) {
+                if ($k > 7) {
+                    break;
+                }
+
+                $guess[] = $guessLike[$v];
+            }
+            $guessLike = $guess;
+        }
+
+        $info['guessYouLike'] = $guessLike;
+
+        unset($info['companystore']['city_id']);
+
+        $info = array_merge($info->toArray(), $collectionFabulousAppointment);
+        return $info;
 
     }
+
+    public function logisticsPlans($models_id, $plan_id, $city_id)
+    {
+        $plans = Logistics::field('id,payment,monthly,models_main_images')
+            ->with(['models' => function ($q) use ($models_id) {
+                $q->where(['models.id' => $models_id ? $models_id : ['neq', 'null']])->withField('id,name,price');
+            }, 'companystore' => function ($store) use ($city_id) {
+                $store->where('companystore.city_id', $city_id)->withField('id');
+            }])->where([
+                'ismenu' => 1,
+                'logistics.id' => ['neq', $plan_id]
+            ])->select();
+
+        foreach ($plans as $k => $v) {
+            unset($v['companystore']);
+        }
+
+        return $plans;
+
+    }
+
 
     /**
      * 判断用户是否点赞丶收藏丶预约该方案
@@ -340,6 +407,23 @@ specialimages,popularity')
                 break;
         }
 
+        $tables = null;
+        switch ($cartype) {
+            case 'new':
+                $tables = new PlanAcar();
+                break;
+            case 'used':
+                $tables = new SecondcarRentalModelsInfo();
+                break;
+            case 'logistics':
+                $tables = new Logistics();
+                break;
+            default:
+                $this->error('cartype参数错误');
+        }
+
+        //人气值加100
+        $tables->where('id', $plan_id)->setInc('popularity', 100);
 
         $integral = self::integral($user_id, $fabulousScore);
 
@@ -478,7 +562,6 @@ specialimages,popularity')
                 ->find();
         }
 
-
         if ($tableName == 'subscribe') {
             $data['cartype'] = $cartype;
         }
@@ -489,7 +572,6 @@ specialimages,popularity')
 
         return $tables->create($data) ? ['errorCode' => 0] : ['errorCode' => 2];
     }
-
 
     /**
      *添加积分
@@ -532,21 +614,21 @@ specialimages,popularity')
     {
 
         $queryModels = $this->request->post('queryModels');
+        $city_id = $this->request->post('city_id');
 
-        if (!$queryModels) {
+        if (!$queryModels || !$city_id) {
             $this->error('缺少参数,请求失败', 'error');
         }
 
         //新车车型
-        $new_models = $this->getModels($queryModels, 'planacar');
+        $new_models = $this->getModels($queryModels, 'planacarIndex', $city_id);
         //二手车车型
-        $used_models = $this->getModels($queryModels, 'secondcarplan');
-        //新能源车型
-        $logistics = $this->getModels($queryModels, 'logistics');
+        $used_models = $this->getModels($queryModels, 'usedcarCount', $city_id);
+//      //新能源车型
+        $logistics = $this->getModels($queryModels, 'logisticsCount', $city_id);
 
         $data = ['searchModel' => ['new' => $new_models, 'used' => $used_models, 'logistics' => $logistics]];
-
-        $this->success('请求成功', $data);
+        $this->success('', $data);
 
     }
 
@@ -559,50 +641,102 @@ specialimages,popularity')
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getModels($queryModels, $withTable)
+    public function getModels($queryModels, $withTable, $city_id)
     {
         //模糊查询对应车型
-        $models = Models::field('id,name,models_name')
-            ->with([$withTable => function ($query) use ($withTable) {
-                $where = $withTable == 'secondcarplan' ? ['shelfismenu' => 1] : ['ismenu' => 1];
-                $query->where($where)->withField('id');
-            }])->where(function ($query) use ($queryModels) {
-                $query->where([
-                    'models.status' => 'normal',
-                    'name' => ['like', '%' . $queryModels . '%']
-                ]);
-            })->select();
+//        $models = Models::field('id,name,models_name')
+//            ->with([$withTable => function ($query) use ($withTable) {
+//                $where = $withTable == 'secondcarplan' ? ['shelfismenu' => 1] : ['ismenu' => 1];
+//                $query->where($where)->withField('id');
+//            }])->where(function ($query) use ($queryModels) {
+//                $query->where([
+//                    'models.status' => 'normal',
+//                    'name' => ['like', '%' . $queryModels . '%']
+//                ]);
+//            })->select();
 
-        $type = null;
+        $models = Cities::field('id,cities_name')
+            ->with(['storeList' => function ($store) use ($withTable, $queryModels) {
+                $store->where('statuss', 'normal')->with([$withTable => function ($plan) use ($withTable, $queryModels) {
+                    $where = $withTable == 'usedcarCount' ? ['shelfismenu' => 1] : ['ismenu' => 1];
+                    $plan->where($where)->with(['models' => function ($models) use ($queryModels) {
+                        $models->where([
+                            'name' => ['like', '%' . $queryModels . '%']
+                        ])->whereOr([
+                                'first_word' => $queryModels
+                            ]
+                        )->withField('id,name,models_name');
+                    }]);
+                }]);
+            }])->find($city_id);
+
         switch ($withTable) {
-            case 'planacar':
-                $type = 'new';
+            case 'planacarIndex':
+                $planKey = 'planacar_index';
                 break;
-            case 'secondcarplan':
-                $type = 'used';
+            case 'usedcarCount':
+                $planKey = 'usedcar_count';
                 break;
-            case 'logistics':
-                $type = 'logistics';
+            case 'logisticsCount':
+                $planKey = 'logistics_count';
+                break;
+            default:
+                $planKey = null;
                 break;
         }
 
-        $check = [];
-        $duplicate_models = [];
-        //根据车型名称去重
-        foreach ($models as $k => $v) {
-            if (in_array($v['id'], $check)) {
-                continue;
-            } else {
-                array_push($check, $v['id']);
+        $check = $relModels = [];
+
+        foreach ($models['store_list'] as $k => $v) {
+            if ($v[$planKey]) {
+                foreach ($v[$planKey] as $key => $value) {
+                    if (in_array($value['models']['id'], $check)) {
+                        continue;
+                    } else {
+                        $check[] = $value['models']['id'];
+                    }
+                    $value['models']['name'] = $value['models']['name'] . ' ' . $value['models']['models_name'];
+                    unset($value['models']['models_name']);
+                    $value['models']['city'] = ['id' => $models['id'], 'cities_name' => $models['cities_name']];
+                    $value['models']['type'] = $value['type'];
+                    $relModels[] = $value['models'];
+                }
             }
-            $v['name'] = $v['name'] . ' ' . $v['models_name'];
-            unset($v[$withTable], $v['models_name']);
-            $v['type'] = $type;
-            $duplicate_models[] = $v;
-
         }
 
-        return $duplicate_models;
+        return $relModels;
+
+
+//        $type = null;
+//        switch ($withTable) {
+//            case 'planacar':
+//                $type = 'new';
+//                break;
+//            case 'secondcarplan':
+//                $type = 'used';
+//                break;
+//            case 'logistics':
+//                $type = 'logistics';
+//                break;
+//        }
+//
+//        $check = [];
+//        $duplicate_models = [];
+//        //根据车型名称去重
+//        foreach ($models as $k => $v) {
+//            if (in_array($v['id'], $check)) {
+//                continue;
+//            } else {
+//                array_push($check, $v['id']);
+//            }
+//            $v['name'] = $v['name'] . ' ' . $v['models_name'];
+//            unset($v[$withTable], $v['models_name']);
+//            $v['type'] = $type;
+//            $duplicate_models[] = $v;
+//
+//        }
+//
+//        return $duplicate_models;
     }
 
 
