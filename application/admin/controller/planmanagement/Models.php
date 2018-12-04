@@ -5,6 +5,7 @@ namespace app\admin\controller\planmanagement;
 use app\common\controller\Backend;
 use think\Db;
 use think\Session;
+use fast\Py;
 /**
  * 车型列管理
  *
@@ -269,7 +270,14 @@ class Models extends Backend
                 $params['vehicle_configuration'] = $data['vehicle_configuration'];
                 //厂商指导价
                 $params['price'] = $data['price'];
+                // 车型拼音
+                $params['pinyin'] = Py::getPinyin($params['name']);
+                // 车型首字母
+                $params['first_word'] = substr(Py::getShortPinyin($params['name']),0,1);
+                // 车型拼音首字母简写
+                $params['short_cut'] = Py::getShortPinyin($params['name']);
                 // pr($params);
+
                 // die;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -329,6 +337,16 @@ class Models extends Backend
                 $params['vehicle_configuration'] = $data['vehicle_configuration'];
                 //厂商指导价
                 $params['price'] = $data['price'];
+
+                // 车型拼音
+                $params['pinyin'] = Py::getPinyin($params['name']);
+                // 车型首字母
+                $params['first_word'] = substr(Py::getShortPinyin($params['name']),0,1);
+                // 车型拼音首字母简写
+                $params['short_cut'] = Py::getShortPinyin($params['name']);
+                // pr($params);
+
+                // die;
 
                 try {
                     //是否采用模型验证
