@@ -2,6 +2,7 @@ const app = getApp()
 
 Page({
     data: {
+        currentScore: 0,
         integral: [],
         key: 'fabulous',
         index: 0,
@@ -19,6 +20,7 @@ Page({
             console.log(data)
             this.setData({
                 integral: data && data.integral,
+                currentScore: data && data.currentScore,
             })
             wx.stopPullDownRefresh()
         }, (data, ret) => {

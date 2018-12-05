@@ -1,5 +1,5 @@
 <view class="header">
-	<view class="title">当前可用积分 <text class="score">100</text></view>
+	<view class="title">当前可用积分 <text class="score">{{ currentScore }}</text></view>
 	<view class="label">积分可通过点赞、签到等方式获取。可用积分兑换活动奖品、购车券、现金等奖励！！！</view>
 </view>
 <wux-tabs theme="positive" current="{{ key }}" controlled bind:change="onChange">
