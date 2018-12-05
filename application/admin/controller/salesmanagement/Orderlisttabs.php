@@ -1071,12 +1071,13 @@ class Orderlisttabs extends Backend
                 ])
                 //   ->where('sales_id', NULL)
                 //   ->whereOr('sales_id', $this->auth->id)
-                ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.sales_id,a.note,b.name as models_name,b.id as models_id,s.category_note')
+                ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.sales_id,a.note,b.models_name as model_name,b.name as models_name,b.id as models_id,s.category_note')
                 ->order('id desc')
                 ->select();
             foreach ($result as $k => $v) {
 
                 $result[$k]['downpayment'] = $v['payment'] + $v['monthly'] + $v['margin'] + $v['gps'];
+                $result[$k]['models_name'] = $v['models_name'] . " " . $v['model_name'];
                 $result[$k]['admin_id'] = $this->auth->id;
             }
 
@@ -1113,7 +1114,7 @@ class Orderlisttabs extends Backend
             ])
             // ->where('sales_id', NULL)
             // ->whereOr('sales_id', $this->auth->id)
-            ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,a.sales_id,b.name as models_name,b.id as models_id,s.category_note')
+            ->field('a.id,a.payment,a.monthly,a.nperlist,a.margin,a.tail_section,a.gps,a.note,a.sales_id,b.models_name as model_name,b.name as models_name,b.id as models_id,s.category_note')
             ->limit($limit_number, 15)
             ->order('id desc')
             ->select();
@@ -1122,6 +1123,7 @@ class Orderlisttabs extends Backend
 
             $result[$k]['downpayment'] = $v['payment'] + $v['monthly'] + $v['margin'] + $v['gps'];
             $result[$k]['admin_id'] = $this->auth->id;
+            $result[$k]['models_name'] = $v['models_name'] . " " . $v['model_name'];
         }
 
         echo json_encode($result);
@@ -1879,12 +1881,12 @@ class Orderlisttabs extends Backend
 
         $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.id,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.licenseplatenumber,b.bond')
+                ->field('a.id,a.models_name as model_name,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.licenseplatenumber,b.bond')
                 ->where(['b.status_data' => '', 'b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
         foreach ((array)$sql as $bValue) {
-            $bValue['models_name'] = $bValue['models_name'] . '---车牌号：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数' . $bValue['periods'] . '，' .'保证金'.$bValue['bond'].'，'. '全款方案总价（元）' . $bValue['totalprices'] . '】';
+            $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '---车牌号：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数' . $bValue['periods'] . '，' .'保证金'.$bValue['bond'].'，'. '全款方案总价（元）' . $bValue['totalprices'] . '】';
             $newB[] = $bValue;
         }
         $data  =  $newB;

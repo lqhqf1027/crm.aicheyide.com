@@ -20,8 +20,8 @@ class Customertabs extends Backend
 {
 
     protected $model = null;
-    protected $noNeedRight = [ 'dstribution', 'distribution', 'download', 'import', 'export', 'allocationexport', 'feedbackexport', 'index', 'del'
-    ,'headline','baidu','same_city','music','add_headline','add_baidu','add_same_city','add_music','download_same'];
+    protected $noNeedRight = ['dstribution', 'distribution', 'download', 'import', 'export', 'allocationexport', 'feedbackexport', 'index', 'del'
+        , 'headline', 'baidu', 'same_city', 'music', 'add_headline', 'add_baidu', 'add_same_city', 'add_music', 'download_same'];
 
 
     public function _initialize()
@@ -51,7 +51,6 @@ class Customertabs extends Backend
     }
 
 
-
     /**今日头条
      * @return string|\think\response\Json
      * @throws \think\Exception
@@ -66,20 +65,17 @@ class Customertabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $use_id = Db::name('platform')
-            ->where('name','今日头条')
-            ->value('id');
+            $use_id = $this->getUserId('今日头条');
 
             $result = $this->getInformation($use_id);
 
-            foreach ($result['rows'] as $k=>$v){
+            foreach ($result['rows'] as $k => $v) {
                 $result['rows'][$k]['feedback_content'] = $this->tableShowF_d($v['id']);
             }
             return json($result);
         }
         return $this->view->fetch();
     }
-
 
 
     /**百度
@@ -95,19 +91,16 @@ class Customertabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $use_id = Db::name('platform')
-                ->where('name','百度')
-                ->value('id');
+            $use_id = $this->getUserId('百度');
 
             $result = $this->getInformation($use_id);
-            foreach ($result['rows'] as $k=>$v){
+            foreach ($result['rows'] as $k => $v) {
                 $result['rows'][$k]['feedback_content'] = $this->tableShowF_d($v['id']);
             }
             return json($result);
         }
         return $this->view->fetch();
     }
-
 
 
     /**58同城
@@ -123,12 +116,10 @@ class Customertabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $use_id = Db::name('platform')
-                ->where('name','58同城')
-                ->value('id');
+            $use_id = $this->getUserId('58同城');;
 
             $result = $this->getInformation($use_id);
-            foreach ($result['rows'] as $k=>$v){
+            foreach ($result['rows'] as $k => $v) {
                 $result['rows'][$k]['feedback_content'] = $this->tableShowF_d($v['id']);
             }
 
@@ -136,7 +127,6 @@ class Customertabs extends Backend
         }
         return $this->view->fetch();
     }
-
 
 
     /**抖音
@@ -152,12 +142,10 @@ class Customertabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $use_id = Db::name('platform')
-                ->where('name','抖音')
-                ->value('id');
+            $use_id = $this->getUserId('抖音');
 
             $result = $this->getInformation($use_id);
-            foreach ($result['rows'] as $k=>$v){
+            foreach ($result['rows'] as $k => $v) {
                 $result['rows'][$k]['feedback_content'] = $this->tableShowF_d($v['id']);
             }
             return json($result);
@@ -173,48 +161,53 @@ class Customertabs extends Backend
     public function getInformation($platform_id)
     {
 
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams('username',true);
-            $total = $this->model
-                ->with(['platform','backoffice'=>function ($query){
-                    $query->withField(['nickname', 'avatar']);
-                },'admin'=>function($quyer){
-                    $quyer->withField(['nickname', 'avatar','rule_message']);
-                }])
-                ->where($where)
-                ->where([
-                    'platform_id'=>$platform_id,
-                ])
-                ->order($sort, $order)
-                ->count();
+        //如果发送的来源是Selectpage，则转发到Selectpage
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
+        $total = $this->model
+            ->with(['platform', 'backoffice' => function ($query) {
+                $query->withField(['nickname', 'avatar']);
+            }, 'admin' => function ($quyer) {
+                $quyer->withField(['nickname', 'avatar', 'rule_message']);
+            }])
+            ->where($where)
+            ->where([
+                'platform_id' => $platform_id,
+            ])
+            ->order($sort, $order)
+            ->count();
 
-            $list = $this->model
-                ->with(['platform','backoffice'=>function ($query){
-                    $query->withField(['nickname', 'avatar']);
-                },'admin'=>function($quyer){
-                    $quyer->withField(['nickname', 'avatar','rule_message']);
-                }])
-                ->where($where)
-                ->where([
-                    'platform_id'=>$platform_id,
-                ])
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-            $list = collection($list)->toArray();
-            foreach ($list as $key=>$value){
-                    $list[$key]['admin']['avatar_url'] = Config::get('upload')['cdnurl'];
-            }
+        $list = $this->model
+            ->with(['platform', 'backoffice' => function ($query) {
+                $query->withField(['nickname', 'avatar']);
+            }, 'admin' => function ($quyer) {
+                $quyer->withField(['nickname', 'avatar', 'rule_message']);
+            }])
+            ->where($where)
+            ->where([
+                'platform_id' => $platform_id,
+            ])
+            ->order($sort, $order)
+            ->limit($offset, $limit)
+            ->select();
+        $list = collection($list)->toArray();
+        foreach ($list as $key => $value) {
+            $list[$key]['admin']['avatar_url'] = Config::get('upload')['cdnurl'];
+        }
         $result = array("total" => $total, "rows" => $list);
 
-            return $result;
+        return $result;
 
     }
 
-
+    public function getUserId($name)
+    {
+        return Db::name('platform')
+            ->where('name', $name)
+            ->value('id');
+    }
 
 
     /**今日头条添加
@@ -227,9 +220,8 @@ class Customertabs extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
 
-                $use_id = Db::name('platform')
-                    ->where('name','今日头条')
-                    ->value('id');
+                $use_id = $this->getUserId('今日头条');
+
                 $params['platform_id'] = $use_id;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -257,7 +249,6 @@ class Customertabs extends Backend
         }
         return $this->view->fetch();
     }
-
 
 
     /**百度添加
@@ -270,9 +261,8 @@ class Customertabs extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
 
-                $use_id = Db::name('platform')
-                    ->where('name','百度')
-                    ->value('id');
+                $use_id = $this->getUserId('百度');
+
                 $params['platform_id'] = $use_id;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -302,7 +292,6 @@ class Customertabs extends Backend
     }
 
 
-
     /**58同城添加
      * @return string
      * @throws \think\Exception
@@ -313,9 +302,8 @@ class Customertabs extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
 
-                $use_id = Db::name('platform')
-                    ->where('name','58同城')
-                    ->value('id');
+                $use_id = $this->getUserId('58同城');
+
                 $params['platform_id'] = $use_id;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -346,7 +334,6 @@ class Customertabs extends Backend
     }
 
 
-
     /**抖音添加
      * @return string
      * @throws \think\Exception
@@ -357,9 +344,8 @@ class Customertabs extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
 
-                $use_id = Db::name('platform')
-                    ->where('name','抖音')
-                    ->value('id');
+                $use_id = $this->getUserId('抖音');
+
                 $params['platform_id'] = $use_id;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
                     $params[$this->dataLimitField] = $this->auth->id;
@@ -404,7 +390,7 @@ class Customertabs extends Backend
         $id = $this->model->get(['id' => $ids]);
         $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
             $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24')
-            ->where('status','normal');
+                ->where('status', 'normal');
         })->select();
 
         $backofficeList = array();
@@ -486,7 +472,7 @@ class Customertabs extends Backend
 
         $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
             $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24')
-            ->where('status','normal');
+                ->where('status', 'normal');
         })->select();
         $backofficeList = array();
         foreach ($backoffice as $k => $v) {
@@ -560,7 +546,6 @@ class Customertabs extends Backend
     }
 
 
-
     /**下载导入模板
      * @throws \PHPExcel_Exception
      * @throws \PHPExcel_Reader_Exception
@@ -606,7 +591,6 @@ class Customertabs extends Backend
     }
 
 
-
     /**下载导入模板---58同城
      * @throws \PHPExcel_Exception
      * @throws \PHPExcel_Reader_Exception
@@ -631,7 +615,7 @@ class Customertabs extends Backend
         ->setCellValue('A' . $myrow, '所属平台')
             ->setCellValue('B' . $myrow, '姓名')
             ->setCellValue('C' . $myrow, '联系电话')
-         ->setCellValue('D' . $myrow, '失效时间');
+            ->setCellValue('D' . $myrow, '失效时间');
         // ->setCellValue('F' . $myrow, '性别');
 
         //浏览器交互 导出
@@ -650,7 +634,6 @@ class Customertabs extends Backend
         $objWriter->save('php://output');
         exit;
     }
-
 
 
     /**导入新客户信息
@@ -748,7 +731,6 @@ class Customertabs extends Backend
     }
 
 
-
     /**
      * 删除
      */
@@ -774,7 +756,6 @@ class Customertabs extends Backend
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
-
 
 
 }

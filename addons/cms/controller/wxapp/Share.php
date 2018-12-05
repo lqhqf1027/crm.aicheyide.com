@@ -22,10 +22,22 @@ use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
 use app\common\model\User;
 use addons\cms\model\SecondcarRentalModelsInfo;
+use fast\Http;
+use GuzzleHttp\Client;
 
 class Share extends Base
 {
     protected $noNeedLogin = '*';
+    /**
+     * 云之讯短信发送模板
+     * @var array
+     */
+    protected static $Ucpass = [
+        'accountsid' => 'ffc7d537e8eb86b6ffa3fab06c77fc02',
+        'token' => '894cfaaf869767dce526a6eba54ffe52',
+        'appid' => '33553da944fb487089dadb16a37c53cc',
+        'templateid' => '405684',
+    ];
 
     /**
      * 方案详情接口
@@ -58,241 +70,6 @@ class Share extends Base
 
     }
 
-    /**
-     * 新车详情
-     * @param $plan_id     方案ID
-     * @param $user_id     用户ID
-     * @param $cartype     车辆类型
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function newcar_details($plan_id, $user_id, $cartype)
-    {
-        //获取该方案的详细信息
-        $plans = PlanAcar::field('id,models_id,payment,monthly,nperlist,modelsimages,models_main_images,
-specialimages,popularity')
-            ->with(['models' => function ($models) {
-                $models->withField('name,models_name,vehicle_configuration,price');
-            }, 'label' => function ($label) {
-                $label->withField('name,lableimages,rotation_angle');
-            }, 'companystore' => function ($companystore) {
-                $companystore->withField('city_id,store_name,store_address,phone,longitude,latitude');
-            }])->find([$plan_id]);
-
-        //用户ID
-        $plans['users'] = $this->userPhone($user_id);
-
-        //方案标签图片加入CDN
-        if ($plans['label'] && $plans['label']['lableimages']) {
-            $plans['label']['lableimages'] = Config::get('upload')['cdnurl'] . $plans['label']['lableimages'];
-        }
-
-        $plans['models']['vehicle_configuration'] = json_decode($plans['models']['vehicle_configuration'], true);
-        $plans['models']['name'] = $plans['models']['name'] . ' ' . $plans['models']['models_name'];
-        $plans['models_main_images'] = $plans['models_main_images'] ? Config::get('upload')['cdnurl'] . $plans['models_main_images'] : '';
-        $plans['modelsimages'] = $plans['modelsimages'] ? Config::get('upload')['cdnurl'] . $plans['modelsimages'] : '';
-        $plans['specialimages'] = $plans['specialimages'] ? Config::get('upload')['cdnurl'] . $plans['specialimages'] : '';
-        //查看同城市同车型不同的方案
-        $different_schemes = $this->getPlans($plans['models_id'], $plans['companystore']['city_id'], $plan_id);
-
-        //查看其它方案的属性名
-        if ($different_schemes) {
-            //为其他方案封面图片加入CDN
-            foreach ($different_schemes as $k => $v) {
-                $different_schemes[$k]['models_main_images'] = Config::get('upload')['cdnurl'] . $different_schemes[$k]['models_main_images'];
-                $different_schemes[$k]['type'] = 'new';
-            }
-            $plans['different_schemes'] = $different_schemes;
-        } else {
-            $plans['different_schemes'] = null;
-        }
-
-        //获取其他方案
-        $allModel = $this->getPlans('', $plans['companystore']['city_id'], $plan_id);
-        unset($plans['companystore']['city_id']);
-        $reallyOther = null;
-
-        //如果有其他方案，随机得到其他的方案
-        if ($allModel) {
-            $reallyOther = [];
-            $keys = array_keys($allModel);
-
-            shuffle($keys);
-
-            foreach ($keys as $k => $v) {
-                if ($k > 7) {
-                    break;
-                }
-                $allModel[$v]['type'] = 'new';
-                $allModel[$v]['models_main_images'] = Config::get('upload')['cdnurl'] . $allModel[$v]['models_main_images'];
-                $reallyOther[] = $allModel[$v];
-            }
-        }
-
-        //是否点赞丶收藏丶预约
-        $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
-
-        $plans = array_merge($plans->toArray(), $collectionFabulousAppointment);
-
-        return [
-            'plan' => $plans,
-            'guesslike' => $reallyOther
-        ];
-
-    }
-
-    public function userPhone($user_id)
-    {
-        $users = User::get(function ($query) use ($user_id) {
-            $query->where('id', $user_id)->field('id,mobile');
-        })->toArray();
-        unset($users['url']);
-        return $users;
-    }
-
-    /**
-     * 二手车详情
-     * @param $plan_id     方案ID
-     * @param $user_id     用户ID
-     * @param $cartype     车辆类型
-     * @return array
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function used_details($plan_id, $user_id, $cartype)
-    {
-        $info = SecondcarRentalModelsInfo::field('id,kilometres,totalprices,newpayment,monthlypaymen,periods,
-       daypaymen,car_licensedate,emission_standard,emission_load,speed_changing_box,the_transfer_record,
-       expirydate,annualverificationdate,businessdate,modelsimages,models_main_images')
-            ->with(['models' => function ($q) {
-                $q->withField('name,models_name,vehicle_configuration,price');
-            }, 'companystore' => function ($q) {
-                $q->withField('id,city_id,store_name,store_address,phone,longitude,latitude');
-            }])->where('shelfismenu', 1)->find($plan_id);
-
-        $info['models']['name'] = $info['models']['name'] . ' ' . $info['models']['models_name'];
-        unset($info['models']['models_name']);
-
-        //用户信息
-        $info['users'] = $this->userPhone($user_id);
-
-        $info['modelsimages'] = $info['modelsimages'] ? Config::get('upload')['cdnurl'] . $info['modelsimages'] : null;
-        $info['models_main_images'] = $info['models_main_images'] ? Config::get('upload')['cdnurl'] . $info['models_main_images'] : null;
-
-        $info['companystore']['cities_name'] = null;
-        if ($info['companystore']['city_id']) {
-            $info['companystore']['cities_name'] = Cities::field('cities_name')
-                ->find($info['companystore']['city_id'])['cities_name'];
-        }
-        unset($info['companystore']['city_id']);
-        //是否点赞丶收藏丶预约
-        $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
-
-        $info = array_merge($info->toArray(), $collectionFabulousAppointment);
-
-        return ['plan' => $info];
-    }
-
-    public function logistics_details($plan_id, $user_id, $cartype)
-    {
-        $info = Logistics::field('id,payment,monthly,nperlist,models_main_images,modelsimages')
-            ->with(['companystore' => function ($store) {
-                $store->withField('id,store_name,store_address,phone,store_img,longitude,latitude,city_id');
-            }, 'label' => function ($label) {
-                $label->withField('id,name,lableimages,rotation_angle');
-            }, 'models' => function ($models) {
-                $models->withField('id,name,vehicle_configuration,price,models_name');
-            }])->find($plan_id);
-
-        if ($info['models']['vehicle_configuration']) {
-            $info['models']['vehicle_configuration'] = json_decode($info['models']['vehicle_configuration'], true);
-        }
-
-        $info['models_main_images'] = $info['models_main_images']?Config::get('upload')['cdnurl'] .$info['models_main_images']:'';
-        $info['modelsimages'] =$info['modelsimages']?Config::get('upload')['cdnurl'] .$info['modelsimages']:'';
-        $info['label']['lableimages'] = $info['label']['lableimages']?Config::get('upload')['cdnurl'] .$info['label']['lableimages']:'';
-
-            $info['different_chemes'] = $this->logisticsPlans($info['models']['id'], $plan_id, $info['companystore']['city_id']);
-
-        //是否点赞丶收藏丶预约
-        $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
-
-        $guessLike = $this->logisticsPlans('', $plan_id, $info['companystore']['city_id']);
-
-        if ($guessLike) {
-            $keys = array_keys($guessLike);
-            $guess = [];
-            shuffle($keys);
-
-            foreach ($keys as $k => $v) {
-                if ($k > 7) {
-                    break;
-                }
-
-                $guess[] = $guessLike[$v];
-            }
-            $guessLike = $guess;
-        }
-
-        $info['guessYouLike'] = $guessLike;
-
-        unset($info['companystore']['city_id']);
-
-        $info = array_merge($info->toArray(), $collectionFabulousAppointment);
-        return $info;
-
-    }
-
-    public function logisticsPlans($models_id, $plan_id, $city_id)
-    {
-        $plans = Logistics::field('id,payment,monthly,models_main_images')
-            ->with(['models' => function ($q) use ($models_id) {
-                $q->where(['models.id' => $models_id ? $models_id : ['neq', 'null']])->withField('id,name,price');
-            }, 'companystore' => function ($store) use ($city_id) {
-                $store->where('companystore.city_id', $city_id)->withField('id');
-            }])->where([
-                'ismenu' => 1,
-                'logistics.id' => ['neq', $plan_id]
-            ])->select();
-
-        foreach ($plans as $k => $v) {
-            unset($v['companystore']);
-        }
-
-        return $plans;
-
-    }
-
-
-    /**
-     * 判断用户是否点赞丶收藏丶预约该方案
-     * @param $user_id      用户ID
-     * @param $plan_id      方案ID
-     * @param $cartype      车辆类型
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function collectionFabulousAppointment($user_id, $plan_id, $cartype)
-    {
-        $plans = [];
-        //判断用户是否点赞该方案
-        $collection = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'cms_collection', true);
-        //判断用户是否收藏该方案
-        $fabulous = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'cms_fabulous', true);
-        //判断用户是否预约该方案
-        $appointment = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'subscribe', true);
-        $plans['collection'] = $collection ? 1 : 0;
-        $plans['fabulous'] = $fabulous ? 1 : 0;
-        $plans['appointment'] = $appointment ? 1 : 0;
-
-        return $plans;
-    }
 
     /**
      * 省份-城市接口
@@ -491,11 +268,24 @@ specialimages,popularity')
         $plan_id = $this->request->post('plan_id');
         $cartype = $this->request->post('cartype');
         $mobile = $this->request->post('mobile');
+        $code = $this->request->post('code');
 
         if (!$user_id || !$plan_id || !$cartype) {
             $this->error('缺少参数,请求失败', 'error');
         }
 
+        if ($code) {
+            $userInfo = Db::name('cms_login_info')
+                ->where(['user_id' => $user_id, 'login_state' => 0])->find();
+            if (!$userInfo || $code != $userInfo['login_code']) {
+                $this->error('验证码输入错误');
+            } else if (intval($userInfo['login_time ']) + 180 < time()) {
+                $this->error('验证码已过期，请重新发送');
+            }
+
+        }
+
+        //如果是手机授权，手机号码更新到用户表
         if ($mobile) {
             User::where('id', $user_id)->update([
                 'mobile' => $mobile
@@ -517,6 +307,292 @@ specialimages,popularity')
                 }
                 $this->success('预约成功', 'success');
         }
+    }
+
+    /**
+     * 搜索车型接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function searchModels()
+    {
+
+        $queryModels = $this->request->post('queryModels');
+        $city_id = $this->request->post('city_id');
+
+        if (!$queryModels || !$city_id) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+
+        //新车车型
+        $new_models = $this->getModels($queryModels, 'planacarIndex', $city_id);
+        //二手车车型
+        $used_models = $this->getModels($queryModels, 'usedcarCount', $city_id);
+//      //新能源车型
+        $logistics = $this->getModels($queryModels, 'logisticsCount', $city_id);
+
+        $data = ['searchModel' => ['new' => $new_models, 'used' => $used_models, 'logistics' => $logistics]];
+        $this->success('', $data);
+
+    }
+
+
+    /**
+     * 新车详情
+     * @param $plan_id     方案ID
+     * @param $user_id     用户ID
+     * @param $cartype     车辆类型
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function newcar_details($plan_id, $user_id, $cartype)
+    {
+        //获取该方案的详细信息
+        $plans = PlanAcar::field('id,models_id,payment,monthly,nperlist,modelsimages,models_main_images,
+specialimages,popularity')
+            ->with(['models' => function ($models) {
+                $models->withField('name,models_name,vehicle_configuration,price');
+            }, 'label' => function ($label) {
+                $label->withField('name,lableimages,rotation_angle');
+            }, 'companystore' => function ($companystore) {
+                $companystore->withField('id,city_id,store_name,store_address,phone,longitude,latitude');
+            }])->find([$plan_id]);
+
+        //用户ID
+        $plans['users'] = $this->userPhone($user_id);
+
+        //方案标签图片加入CDN
+        if ($plans['label'] && $plans['label']['lableimages']) {
+            $plans['label']['lableimages'] = Config::get('upload')['cdnurl'] . $plans['label']['lableimages'];
+        }
+
+        $plans['models']['vehicle_configuration'] = json_decode($plans['models']['vehicle_configuration'], true);
+        $plans['models']['name'] = $plans['models']['name'] . ' ' . $plans['models']['models_name'];
+        $plans['models_main_images'] = $plans['models_main_images'] ? Config::get('upload')['cdnurl'] . $plans['models_main_images'] : '';
+        $plans['modelsimages'] = $plans['modelsimages'] ? Config::get('upload')['cdnurl'] . $plans['modelsimages'] : '';
+        $plans['specialimages'] = $plans['specialimages'] ? Config::get('upload')['cdnurl'] . $plans['specialimages'] : '';
+        //查看同城市同车型不同的方案
+        $different_schemes = $this->getPlans($plans['models_id'], $plans['companystore']['city_id'], $plan_id);
+
+        //查看其它方案的属性名
+        if ($different_schemes) {
+            //为其他方案封面图片加入CDN
+            foreach ($different_schemes as $k => $v) {
+                $different_schemes[$k]['models_main_images'] = Config::get('upload')['cdnurl'] . $different_schemes[$k]['models_main_images'];
+                $different_schemes[$k]['type'] = 'new';
+            }
+            $plans['different_schemes'] = $different_schemes;
+        } else {
+            $plans['different_schemes'] = null;
+        }
+
+        //获取其他方案
+        $allModel = $this->getPlans('', $plans['companystore']['city_id'], $plan_id);
+        unset($plans['companystore']['city_id']);
+        $reallyOther = null;
+
+        //如果有其他方案，随机得到其他的方案
+        if ($allModel) {
+            $reallyOther = [];
+            $keys = array_keys($allModel);
+
+            shuffle($keys);
+
+            foreach ($keys as $k => $v) {
+                if ($k > 7) {
+                    break;
+                }
+                $allModel[$v]['type'] = 'new';
+                $allModel[$v]['models_main_images'] = Config::get('upload')['cdnurl'] . $allModel[$v]['models_main_images'];
+                $reallyOther[] = $allModel[$v];
+            }
+        }
+
+        //是否点赞丶收藏丶预约
+        $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
+
+        $plans = array_merge($plans->toArray(), $collectionFabulousAppointment);
+
+        return [
+            'plan' => $plans,
+            'guesslike' => $reallyOther
+        ];
+
+    }
+
+    /**
+     * 二手车详情
+     * @param $plan_id     方案ID
+     * @param $user_id     用户ID
+     * @param $cartype     车辆类型
+     * @return array
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function used_details($plan_id, $user_id, $cartype)
+    {
+        $info = SecondcarRentalModelsInfo::field('id,kilometres,totalprices,newpayment,monthlypaymen,periods,
+       daypaymen,car_licensedate,emission_standard,emission_load,speed_changing_box,the_transfer_record,
+       expirydate,annualverificationdate,businessdate,modelsimages,models_main_images')
+            ->with(['models' => function ($q) {
+                $q->withField('name,models_name,vehicle_configuration,price');
+            }, 'companystore' => function ($q) {
+                $q->withField('id,city_id,store_name,store_address,phone,longitude,latitude');
+            }])->where('shelfismenu', 1)->find($plan_id);
+
+        $info['models']['name'] = $info['models']['name'] . ' ' . $info['models']['models_name'];
+        unset($info['models']['models_name']);
+
+        //用户信息
+        $info['users'] = $this->userPhone($user_id);
+
+        $info['modelsimages'] = $info['modelsimages'] ? Config::get('upload')['cdnurl'] . $info['modelsimages'] : null;
+        $info['models_main_images'] = $info['models_main_images'] ? Config::get('upload')['cdnurl'] . $info['models_main_images'] : null;
+
+        $info['companystore']['cities_name'] = null;
+        if ($info['companystore']['city_id']) {
+            $info['companystore']['cities_name'] = Cities::field('cities_name')
+                ->find($info['companystore']['city_id'])['cities_name'];
+        }
+        unset($info['companystore']['city_id']);
+        //是否点赞丶收藏丶预约
+        $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
+
+        $info = array_merge($info->toArray(), $collectionFabulousAppointment);
+
+        return ['plan' => $info];
+    }
+
+    public function logistics_details($plan_id, $user_id, $cartype)
+    {
+        $info = Logistics::field('id,payment,monthly,nperlist,models_main_images,modelsimages')
+            ->with(['companystore' => function ($store) {
+                $store->withField('id,store_name,store_address,phone,store_img,longitude,latitude,city_id');
+            }, 'label' => function ($label) {
+                $label->withField('id,name,lableimages,rotation_angle');
+            }, 'models' => function ($models) {
+                $models->withField('id,name,vehicle_configuration,price,models_name');
+            }])->find($plan_id);
+
+        if ($info['models']['vehicle_configuration']) {
+            $info['models']['vehicle_configuration'] = json_decode($info['models']['vehicle_configuration'], true);
+        }
+
+        //用户ID
+        $info['users'] = $this->userPhone($user_id);
+
+        $info['models_main_images'] = $info['models_main_images'] ? Config::get('upload')['cdnurl'] . $info['models_main_images'] : '';
+        $info['modelsimages'] = $info['modelsimages'] ? Config::get('upload')['cdnurl'] . $info['modelsimages'] : '';
+        $info['label']['lableimages'] = $info['label']['lableimages'] ? Config::get('upload')['cdnurl'] . $info['label']['lableimages'] : '';
+
+
+        $info['different_chemes'] = $this->logisticsPlans($info['models']['id'], $plan_id, $info['companystore']['city_id']);
+
+        //是否点赞丶收藏丶预约
+        $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
+
+        $guessLike = $this->logisticsPlans('', $plan_id, $info['companystore']['city_id']);
+
+        if ($guessLike) {
+            $keys = array_keys($guessLike);
+            $guess = [];
+            shuffle($keys);
+
+            foreach ($keys as $k => $v) {
+                if ($k > 7) {
+                    break;
+                }
+
+                $guess[] = $guessLike[$v];
+            }
+            $guessLike = $guess;
+        }
+
+//        $info['guessYouLike'] = $guessLike;
+
+        unset($info['companystore']['city_id']);
+
+        $info = array_merge($info->toArray(), $collectionFabulousAppointment);
+        return ['plan' => $info, 'guesslike' => $guessLike];
+
+    }
+
+    /**
+     * 用户电话
+     * @param $user_id
+     * @return array
+     * @throws \think\Exception
+     * @throws \think\exception\DbException
+     */
+    public function userPhone($user_id)
+    {
+        $users = User::get(function ($query) use ($user_id) {
+            $query->where('id', $user_id)->field('id,mobile');
+        })->toArray();
+        unset($users['url']);
+        return $users;
+    }
+
+    /**
+     * 新能源的其他方案
+     * @param $models_id      车型ID
+     * @param $plan_id        方案ID
+     * @param $city_id        城市ID
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function logisticsPlans($models_id, $plan_id, $city_id)
+    {
+        $plans = Logistics::field('id,payment,monthly,models_main_images')
+            ->with(['models' => function ($q) use ($models_id) {
+                $q->where(['models.id' => $models_id ? $models_id : ['neq', 'null']])->withField('id,name,price');
+            }, 'companystore' => function ($store) use ($city_id) {
+                $store->where('companystore.city_id', $city_id)->withField('id');
+            }])->where([
+                'ismenu' => 1,
+                'logistics.id' => ['neq', $plan_id]
+            ])->select();
+
+        foreach ($plans as $k => $v) {
+            unset($v['companystore']);
+        }
+
+        return $plans;
+
+    }
+
+
+    /**
+     * 判断用户是否点赞丶收藏丶预约该方案
+     * @param $user_id      用户ID
+     * @param $plan_id      方案ID
+     * @param $cartype      车辆类型
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function collectionFabulousAppointment($user_id, $plan_id, $cartype)
+    {
+        $plans = [];
+        //判断用户是否点赞该方案
+        $collection = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'cms_collection', true);
+        //判断用户是否收藏该方案
+        $fabulous = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'cms_fabulous', true);
+        //判断用户是否预约该方案
+        $appointment = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'subscribe', true);
+        $plans['collection'] = $collection ? 1 : 0;
+        $plans['fabulous'] = $fabulous ? 1 : 0;
+        $plans['appointment'] = $appointment ? 1 : 0;
+
+        return $plans;
     }
 
     /**
@@ -604,33 +680,6 @@ specialimages,popularity')
             ->find();
     }
 
-    /**
-     * 搜索车型接口
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function searchModels()
-    {
-
-        $queryModels = $this->request->post('queryModels');
-        $city_id = $this->request->post('city_id');
-
-        if (!$queryModels || !$city_id) {
-            $this->error('缺少参数,请求失败', 'error');
-        }
-
-        //新车车型
-        $new_models = $this->getModels($queryModels, 'planacarIndex', $city_id);
-        //二手车车型
-        $used_models = $this->getModels($queryModels, 'usedcarCount', $city_id);
-//      //新能源车型
-        $logistics = $this->getModels($queryModels, 'logisticsCount', $city_id);
-
-        $data = ['searchModel' => ['new' => $new_models, 'used' => $used_models, 'logistics' => $logistics]];
-        $this->success('', $data);
-
-    }
 
     /**
      * 模糊查询得到新车或者二手车的车型
@@ -643,17 +692,6 @@ specialimages,popularity')
      */
     public function getModels($queryModels, $withTable, $city_id)
     {
-        //模糊查询对应车型
-//        $models = Models::field('id,name,models_name')
-//            ->with([$withTable => function ($query) use ($withTable) {
-//                $where = $withTable == 'secondcarplan' ? ['shelfismenu' => 1] : ['ismenu' => 1];
-//                $query->where($where)->withField('id');
-//            }])->where(function ($query) use ($queryModels) {
-//                $query->where([
-//                    'models.status' => 'normal',
-//                    'name' => ['like', '%' . $queryModels . '%']
-//                ]);
-//            })->select();
 
         $models = Cities::field('id,cities_name')
             ->with(['storeList' => function ($store) use ($withTable, $queryModels) {
@@ -706,37 +744,6 @@ specialimages,popularity')
 
         return $relModels;
 
-
-//        $type = null;
-//        switch ($withTable) {
-//            case 'planacar':
-//                $type = 'new';
-//                break;
-//            case 'secondcarplan':
-//                $type = 'used';
-//                break;
-//            case 'logistics':
-//                $type = 'logistics';
-//                break;
-//        }
-//
-//        $check = [];
-//        $duplicate_models = [];
-//        //根据车型名称去重
-//        foreach ($models as $k => $v) {
-//            if (in_array($v['id'], $check)) {
-//                continue;
-//            } else {
-//                array_push($check, $v['id']);
-//            }
-//            $v['name'] = $v['name'] . ' ' . $v['models_name'];
-//            unset($v[$withTable], $v['models_name']);
-//            $v['type'] = $type;
-//            $duplicate_models[] = $v;
-//
-//        }
-//
-//        return $duplicate_models;
     }
 
 
@@ -1004,5 +1011,94 @@ specialimages,popularity')
 
         return $planField;
     }
+
+
+    /**
+     *  发送验证码
+     * @return mixed
+     */
+    public function sendMessage()
+    {
+        $mobile = $this->request->post('mobile');
+        $user_id = $this->request->post('user_id');
+        if (!$mobile || !$user_id) $this->error('参数缺失或格式错误');
+        if (!checkPhoneNumberValidate($mobile)) $this->error('手机号格式错误', $mobile);
+        $authnum = '';
+        //随机生成四位数验证码
+        $list = explode(",", "0,1,2,3,4,5,6,7,8,9");
+        for ($i = 0; $i < 4; $i++) {
+            $randnum = rand(0, 9);
+            $authnum .= $list[$randnum];
+        }
+
+        $url = 'http://open.ucpaas.com/ol/sms/sendsms';
+        $client = new Client();
+        $response = $client->request('POST', $url, [
+            'json' => [
+                'sid' => self::$Ucpass['accountsid'],
+                'token' => self::$Ucpass['token'],
+                'appid' => self::$Ucpass['appid'],
+                'templateid' => self::$Ucpass['templateid'],
+                'param' => $authnum,
+                'mobile' => $mobile,
+                'uid' => $user_id
+            ]
+        ]);
+        if ($response) {
+            $result = json_decode($response->getBody(), true);
+            $num = '';
+            if ($result['code'] == '000000') {
+                //查询当前手机号，如果存在更新他的的请求次数与 请求时间
+                $getPhone = Db::name('cms_login_info')->where(['login_phone' => $mobile])->find();
+                if ($getPhone) {
+                    $num = $getPhone['login_num'];
+                    ++$num;
+                    Db::name('cms_login_info')->update([
+                        'login_time' => strtotime($result['create_date']),
+                        'login_code' => $authnum,
+                        'login_num' => $num,
+                        'login_phone' => $mobile,
+                        'id' => $getPhone['id'],
+                        'login_state' => 0,
+                        'user_id' => $user_id
+                    ]) ? $this->success('发送成功') : $this->error('发送失败');
+
+                } else {
+                    //否则新增当前用户到登陆表
+                    Db::name('cms_login_info')->insert([
+                        'login_time' => strtotime($result['create_date']),
+                        'login_code' => $authnum,
+                        'login_num' => 1,
+                        'login_phone' => $mobile,
+                        'login_state' => 0,
+                        'user_id' => $user_id
+                    ]) ? $this->success('发送成功') : $this->error('发送失败');
+                }
+            } else {
+                $this->error($result['msg'], $result);
+            }
+        } else {
+            $err = json_decode($response->getBody(), true);
+            $this->error($err['msg'], $err);
+        }
+
+
+    }
+
+    public static function object_to_array($obj)
+    {
+        $obj = (array)$obj;
+        foreach ($obj as $k => $v) {
+            if (gettype($v) == 'resource') {
+                return;
+            }
+            if (gettype($v) == 'object' || gettype($v) == 'array') {
+                $obj[$k] = (array)object_to_array($v);
+            }
+        }
+
+        return $obj;
+    }
+
 
 }
