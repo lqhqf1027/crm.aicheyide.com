@@ -294,7 +294,7 @@ class Secondvehicleinformation extends Backend
     {
 
         $models = Db::name("models")
-            ->field("id as models_id,name as models_name,brand_id")
+            ->field("id as models_id,models_name as model_name,name as models_name,brand_id")
             ->select();
             
         //品牌下没有车型，就不显示在下拉列表
@@ -316,7 +316,7 @@ class Secondvehicleinformation extends Backend
             foreach ($models as $key => $value) {
 
                 if ($v['id'] == $value['brand_id']) {
-
+                    $value['models_name'] = $value['models_name'] . " " . $value['model_name'];
                     array_push($brand[$k]['models'], $value);
                 }
             }
