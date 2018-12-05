@@ -111,7 +111,7 @@
                     <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
                 </view>
                 <view class=" car__title--monthly wux-pull-right wux-mr--10  ">
-                    <view class="popular"></view> {{ (item.popularity || 0) / 10000 }} 
+                    <view class="popular"></view> {{ common.getDistance(item.popularity) }}
                 </view>
             </view>
         </view>
@@ -119,7 +119,7 @@
     <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style === 'used' }}">
         <wux-media wux-class="media" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ globalData.config.upload.cdnurl + item.models_main_images }}" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
             <view class="media__title wux-ellipsis--l2">{{ item.models.name }}</view>
-            <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ item.car_licensedate + '/' + item.kilometres / 10000 + 'W公里' }}</view>
+            <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(item.car_licensedate) + '/' + common.getDistance(item.kilometres) + '公里' }}</view>
             <view class="wux-clearfix">
                 <view class="blod media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ item.models.price }}">{{ item.models.price / 10000 }} 万</view>
                 <view class="blod media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ item.newpayment / 10000 }} 万</view>
@@ -168,6 +168,24 @@
                 return '月供' + reslut.label
             }
             return '月供' + value + '元'
+        },
+        getDateString: function(value) {
+            if (!value) return ''
+            return value.substring(0, 7)
+        },
+        getDistance: function(value) {
+            var p1 = arguments[1] || 'K'
+            var p2 = arguments[2] || 'W'
+            if (!value) return 0
+            if (value < 1000) {
+                return value
+            } else if (value >= 1000 && value < 10000) {
+                value = value / 1000
+                return value.toFixed(2) + 'K'
+            } else if (value >= 10000) {
+                value = value / 10000
+                return value.toFixed(2) + p2
+            }
         },
     }
 </wxs>

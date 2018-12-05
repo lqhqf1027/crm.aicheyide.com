@@ -17,7 +17,7 @@
                                                 <view class="fa fa-map-marker"></view> {{ card.city.cities_name }}
                                             </view>
                                             <view class="media__desc wux-pull-right wux-mr--10">
-                                                <view class="popular"></view> {{ (item.popularity || 0) / 10000 }} W
+                                                <view class="popular"></view> {{ common.getDistance(item.popularity) }}
                                             </view>
                                         </view>
                                     </wux-media>
@@ -36,7 +36,7 @@
                                 <view slot="content">
                                     <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ config.upload.cdnurl + card.models_main_images }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
                                         <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
-                                        <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ card.car_licensedate + '/' + card.kilometres / 10000 + 'W公里' }}</view>
+                                        <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(card.car_licensedate) + '/' + common.getDistance(card.kilometres) + '公里' }}</view>
                                         <view class="wux-clearfix" style='height:50rpx;line-height:50rpx'>
                                             <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ card.models.price }}">{{ card.models.price / 10000 }} 万</view>
                                             <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ card.newpayment / 10000 }} 万</view>
@@ -104,3 +104,26 @@
     </view>
     <view class="footer">©成都君忆汽车服务有限公司 • All Rights Reserved </view>
 </view>
+
+<wxs module="common">
+    module.exports = {
+        getDateString: function(value) {
+            if (!value) return ''
+            return value.substring(0, 7)
+        },
+        getDistance: function(value) {
+            var p1 = arguments[1] || 'K'
+            var p2 = arguments[2] || 'W'
+            if (!value) return 0
+            if (value < 1000) {
+                return value
+            } else if (value >= 1000 && value < 10000) {
+                value = value / 1000
+                return value.toFixed(2) + p1
+            } else if (value >= 10000) {
+                value = value / 10000
+                return value.toFixed(2) + p2
+            }
+        },
+    }
+</wxs>

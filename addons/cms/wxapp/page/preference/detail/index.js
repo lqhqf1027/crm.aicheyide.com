@@ -1,4 +1,5 @@
 const app = getApp()
+const isTel = (value) => /^1[3456789]\d{9}$/.test(value)
 const dateDiff = (start = '', end = '') => {
     let str = ''
     const a = new Date(start).valueOf()
@@ -30,6 +31,8 @@ Page({
         vehicle_configuration: {},
         planImageStyle: {},
         backtop: false,
+        popupVisible: false,
+        codeText: '获取验证码',
     },
     onLoad(options) {
         console.log(options)
@@ -131,22 +134,128 @@ Page({
             app.error(ret.msg)
         })
     },
+    getPhoneNumber(e) {
+        console.log(e)
+
+        // 取消操作
+        if (e.detail.errMsg !== 'getPhoneNumber:ok') {
+            this.setData({ popupVisible: true })
+            return
+        }
+    },
     clickAppointment() {
+        const hasMobile = !!this.data.plan.users.mobile
+        const { code, mobile } = this.data
+
+        // 判断是否已预约
         if (this.data.plan.appointment === 1) {
             return app.info('已预约')
         }
 
+        // 验证手机号码
+        if (!hasMobile) {
+            if (!mobile) {
+                wx.showToast({ title: '请输入手机号码', icon: 'none' })
+                return
+            } else if (!isTel(mobile)) {
+                wx.showToast({ title: '请输入 11 位手机号码', icon: 'none' })
+                return
+            } else if (!code) {
+                wx.showToast({ title: '请输入验证码', icon: 'none' })
+                return
+            }
+        }
+
         const plan_id = this.options.id
         const cartype = this.options.type
+        const params = {
+            plan_id,
+            cartype,
+        }
 
-        app.request('/share/clickAppointment', { plan_id, cartype }, (data, ret) => {
+        // 设置参数
+        if (hasMobile) {
+            params.mobile = this.data.plan.users.mobile
+        } else {
+            params.mobile = mobile
+            params.code = code
+        }
+
+        // 发起请求
+        app.request('/share/clickAppointment', params, (data, ret) => {
             console.log(data)
-            this.setData({ 'plan.appointment': 1 })
+            this.setData({
+                'plan.appointment': 1,
+                'plan.users.mobile': params.mobile,
+                popupVisible: false,
+            })
             app.success(ret.msg)
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
         })
+    },
+    onPopupClose() {
+        this.setData({ popupVisible: false })
+    },
+    onChange(e) {
+        const { model } = e.currentTarget.dataset
+
+        this.setData({ [model]: e.detail.value })
+    },
+    /**
+     * 发送验证码
+     * @param {number} mobile 手机号
+     */
+    sendSMS(mobile) {
+        app.request('/share/sendMessage', { mobile }, (data, ret) => {
+            console.log(data)
+            app.success(ret.msg)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
+    /**
+     * 获取验证码
+     */
+    getCode() {
+        if (this.disabled || this.timeout)  return
+
+        // 验证手机号码
+        if (!this.data.mobile) {
+            wx.showToast({ title: '请输入手机号码', icon: 'none' })
+            return
+        } else if (!isTel(this.data.mobile)) {
+            wx.showToast({ title: '请输入 11 位手机号码', icon: 'none' })
+            return
+        }
+
+        // 倒计时
+        this.renderCodeText()
+
+        // 发送验证码
+        this.sendSMS(this.data.mobile)
+    },
+    /**
+     * 60s倒计时
+     * @param {number} [num=60] 倒计时时间
+     */
+    renderCodeText(num = 60) {
+        this.disabled = num !== 0
+
+        if (num <= 0) {
+            clearTimeout(this.timeout)
+            this.timeout = null
+            this.setData({ codeText: '重新发送' })
+            return
+        }
+
+        this.setData({ codeText: `${num--} 秒` })
+
+        this.timeout = setTimeout(() => {
+            this.renderCodeText(num)
+        }, 1000)
     },
     alert1() {
         wx.showModal({

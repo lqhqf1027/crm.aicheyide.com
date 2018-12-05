@@ -11,8 +11,31 @@
             	<view class="fa fa-map-marker"></view> {{ item.cities_name }}
         	</view>
             <view class=" car__title--monthly wux-pull-right wux-mr--10">
-                <view class="popular"></view> {{ (item.popularity || 0) / 10000 }} W
+                <view class="popular"></view> {{ common.getDistance(item.popularity) }}
             </view>
         </view>
     </view>
 </block>
+
+<wxs module="common">
+    module.exports = {
+        getDateString: function(value) {
+            if (!value) return ''
+            return value.substring(0, 7)
+        },
+        getDistance: function(value) {
+            var p1 = arguments[1] || 'K'
+            var p2 = arguments[2] || 'W'
+            if (!value) return 0
+            if (value < 1000) {
+                return value
+            } else if (value >= 1000 && value < 10000) {
+                value = value / 1000
+                return value.toFixed(2) + p1
+            } else if (value >= 10000) {
+                value = value / 10000
+                return value.toFixed(2) + p2
+            }
+        },
+    }
+</wxs>

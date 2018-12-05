@@ -252,11 +252,15 @@
     </view>
     <view class="bottom-btn wux-balanced--bg" bindtap="makePhoneCall" wx:if="{{ type === 'used' }}">咨询车况</view>
     <view class="bottom-btn wux-balanced--bg" bindtap="makePhoneCall" wx:else>询问底价</view>
-    <view class="bottom-btn {{ plan && plan.appointment === 1 ? 'disabled' : '' }}" bindtap="clickAppointment">
-        {{ plan && plan.appointment === 1 ? '已预约' : '立即预约' }}
-    </view>
+    
+    <button class="button-clear" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" wx:if="{{ plan && plan.appointment !== 1 && !plan.users.mobile }}">
+        <view class="bottom-btn">立即预约</view>
+    </button>
+    <view class="bottom-btn has-mobile" wx:elif="{{ plan && plan.appointment !== 1 && plan.users.mobile }}" bindtap="clickAppointment">立即预约</view>
+    <view class="bottom-btn disabled" wx:else>已预约</view>
 </view>
 
+<!-- 悬浮按钮 -->
 <wux-animation-group in="{{ backtop }}" class-names="wux-animate--fadeIn">
     <view class="backtop backtop--qa">
         <button class="button-clear" open-type="contact">
@@ -270,6 +274,26 @@
         <view class="fa fa-arrow-up"></view>
     </view>
 </wux-animation-group>
+
+<!-- 预约弹窗 -->
+<wux-popup closable position="bottom" visible="{{ popupVisible }}" bind:close="onPopupClose">
+    <view class="popup-inner">
+        <view class="popup-title">立即预约</view>
+        <wux-cell-group>
+            <wux-cell hover-class="none">
+                <wux-input bind:change="onChange" data-model="mobile" value="{{ mobile }}" controlled type="number" maxlength="11" label="手机号" placeholder="请输入手机号码" />
+            </wux-cell>
+            <wux-cell hover-class="none">
+                <wux-input bind:change="onChange" data-model="code" value="{{ code }}" controlled type="number" maxlength="11" label="验证码" placeholder="请输入验证码">
+                    <view slot="footer" class="vcode" bindtap="getCode">{{ codeText }}</view>
+                </wux-input>
+            </wux-cell>
+            <wux-cell hover-class="none" bind:click="clickAppointment">
+                <view class="bottom-btn">立即预约</view>
+            </wux-cell>
+        </wux-cell-group>
+    </view>
+</wux-popup>
 
 <wxs module="common">
     module.exports = {
