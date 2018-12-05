@@ -24,7 +24,9 @@
         "phpmailer/phpmailer": "^5.2",
         "karsonzhang/fastadmin-addons": "~1.1.4",
         "overtrue/pinyin": "~3.0",
-        "phpoffice/phpexcel": "^1.8"
+        "phpoffice/phpexcel": "^1.8",
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/psr-http-message-bridge": "^1.1"
     },
     "config": {
         "preferred-install": "dist"

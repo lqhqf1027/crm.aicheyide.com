@@ -22,10 +22,22 @@ use addons\cms\model\PlanAcar;
 use app\common\model\Addon;
 use app\common\model\User;
 use addons\cms\model\SecondcarRentalModelsInfo;
+use fast\Http;
+use GuzzleHttp\Client;
 
 class Share extends Base
 {
     protected $noNeedLogin = '*';
+    /**
+     * 云之讯短信发送模板
+     * @var array
+     */
+    protected static $Ucpass = [
+        'accountsid' => 'ffc7d537e8eb86b6ffa3fab06c77fc02',
+        'token' => '894cfaaf869767dce526a6eba54ffe52',
+        'appid' => '33553da944fb487089dadb16a37c53cc',
+        'templateid' => '405684',
+    ];
 
     /**
      * 方案详情接口
@@ -464,6 +476,7 @@ specialimages,popularity')
         $info['models_main_images'] = $info['models_main_images'] ? Config::get('upload')['cdnurl'] . $info['models_main_images'] : '';
         $info['modelsimages'] = $info['modelsimages'] ? Config::get('upload')['cdnurl'] . $info['modelsimages'] : '';
         $info['label']['lableimages'] = $info['label']['lableimages'] ? Config::get('upload')['cdnurl'] . $info['label']['lableimages'] : '';
+
 
         $info['different_chemes'] = $this->logisticsPlans($info['models']['id'], $plan_id, $info['companystore']['city_id']);
 
@@ -985,6 +998,96 @@ specialimages,popularity')
 
         return $planField;
     }
+
+
+    /**
+     *  发送验证码
+     * @return mixed
+     */
+    public function sendMessage()
+    {
+        $mobile = $this->request->post('mobile');
+        $user_id = $this->request->post('user_id');
+        if (!$mobile || !$user_id) $this->error('参数缺失或格式错误');
+        if (!checkPhoneNumberValidate($mobile)) $this->error('手机号格式错误', $mobile);
+        $authnum = '';
+        //随机生成四位数验证码
+        $list = explode(",", "0,1,2,3,4,5,6,7,8,9");
+        for ($i = 0; $i < 4; $i++) {
+            $randnum = rand(0, 9);
+            $authnum .= $list[$randnum];
+        }
+
+        $url = 'http://open.ucpaas.com/ol/sms/sendsms';
+        $client = new Client();
+        $response = $client->request('POST', $url, [
+            'json' => [
+                'sid' => self::$Ucpass['accountsid'],
+                'token' => self::$Ucpass['token'],
+                'appid' => self::$Ucpass['appid'],
+                'templateid' => self::$Ucpass['templateid'],
+                'param' => $authnum,
+                'mobile' => $mobile,
+                'uid' => $user_id
+            ]
+        ]);
+        if ($response) {
+            $result = json_decode($response->getBody(), true);
+            $num = '';
+            if ($result['code'] == '000000') {
+                //查询当前手机号，如果存在更新他的的请求次数与 请求时间
+                $getPhone = Db::name('cms_login_info')->where(['login_phone' => $mobile])->find();
+                if ($getPhone) {
+                    $num = $getPhone['login_num'];
+                    ++$num;
+                    Db::name('cms_login_info')->update([
+                        'login_time' => strtotime($result['create_date']),
+                        'login_code' => $authnum,
+                        'login_num' => $num,
+                        'login_phone' => $mobile,
+                        'id' => $getPhone['id'],
+                        'login_state' => 0,
+                        'user_id' => $user_id
+                    ]) ? $this->success('短信发送成功') : $this->error('短信发送失败');
+
+                } else {
+                    //否则新增当前用户到登陆表
+                    Db::name('cms_login_info')->insert([
+                        'login_time' => strtotime($result['create_date']),
+                        'login_code' => $authnum,
+                        'login_num' => 1,
+                        'login_phone' => $mobile,
+                        'login_state' => 0,
+                        'user_id' => $user_id
+                    ]) ? $this->success('短信发送成功') : $this->error('短信发送失败');
+                }
+            }
+            else{
+                $this->error($result['msg'], $result);
+            }
+        } else {
+            $err = json_decode($response->getBody(), true);
+            $this->error($err['msg'], $err);
+        }
+
+
+    }
+
+    public static function object_to_array($obj)
+    {
+        $obj = (array)$obj;
+        foreach ($obj as $k => $v) {
+            if (gettype($v) == 'resource') {
+                return;
+            }
+            if (gettype($v) == 'object' || gettype($v) == 'array') {
+                $obj[$k] = (array)object_to_array($v);
+            }
+        }
+
+        return $obj;
+    }
+
 
 
 
