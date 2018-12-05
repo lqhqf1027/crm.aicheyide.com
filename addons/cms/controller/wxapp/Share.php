@@ -268,11 +268,24 @@ class Share extends Base
         $plan_id = $this->request->post('plan_id');
         $cartype = $this->request->post('cartype');
         $mobile = $this->request->post('mobile');
+        $code = $this->request->post('code');
 
         if (!$user_id || !$plan_id || !$cartype) {
             $this->error('缺少参数,请求失败', 'error');
         }
 
+        if ($code) {
+            $userInfo = Db::name('cms_login_info')
+                ->where(['user_id' => $user_id, 'login_state' => 0])->find();
+            if (!$userInfo || $code != $userInfo['login_code']) {
+                $this->error('验证码输入错误');
+            } else if (intval($userInfo['login_time ']) + 180 < time()) {
+                $this->error('验证码已过期，请重新发送');
+            }
+
+        }
+
+        //如果是手机授权，手机号码更新到用户表
         if ($mobile) {
             User::where('id', $user_id)->update([
                 'mobile' => $mobile
@@ -581,6 +594,7 @@ specialimages,popularity')
 
         return $plans;
     }
+
     /**
      * 查询或者新增点赞丶收藏丶预约
      * @param $user_id
@@ -665,7 +679,6 @@ specialimages,popularity')
             ->where($where)
             ->find();
     }
-
 
 
     /**
@@ -1048,7 +1061,7 @@ specialimages,popularity')
                         'id' => $getPhone['id'],
                         'login_state' => 0,
                         'user_id' => $user_id
-                    ]) ? $this->success('短信发送成功') : $this->error('短信发送失败');
+                    ]) ? $this->success('发送成功') : $this->error('发送失败');
 
                 } else {
                     //否则新增当前用户到登陆表
@@ -1059,10 +1072,9 @@ specialimages,popularity')
                         'login_phone' => $mobile,
                         'login_state' => 0,
                         'user_id' => $user_id
-                    ]) ? $this->success('短信发送成功') : $this->error('短信发送失败');
+                    ]) ? $this->success('发送成功') : $this->error('发送失败');
                 }
-            }
-            else{
+            } else {
                 $this->error($result['msg'], $result);
             }
         } else {
@@ -1087,9 +1099,6 @@ specialimages,popularity')
 
         return $obj;
     }
-
-
-
 
 
 }
