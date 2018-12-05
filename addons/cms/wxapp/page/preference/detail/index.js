@@ -189,7 +189,7 @@ Page({
         })
     },
     toStore() {
-        const { id } = this.data.plan.store_id
+        const { id } = this.data.plan.companystore || {}
 
         if (!id) return
 
