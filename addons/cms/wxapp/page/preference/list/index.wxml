@@ -26,8 +26,7 @@
         <swiper class="swiperClass" autoplay interval="2000" duration="1000" circular>
             <block wx:for="{{globalData.bannerList}}" wx:key="{{index}}">
                 <swiper-item>
-                    <image src="{{item.image}}" class="slide-image" mode="aspectFill">
-                    </image>
+                    <image src="{{ item.image }}" class="slide-image" mode="aspectFill" data-title="{{ item.title }}" bindtap="onImage" />
                 </swiper-item>
             </block>
         </swiper>

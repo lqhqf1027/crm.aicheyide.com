@@ -177,6 +177,29 @@ Page({
             }
         })
     },
+    onImage(e) {
+        const { title } = e.currentTarget.dataset
+        console.log(title)
+
+        if (title === '疯狂汽车节') {
+            wx.navigateTo({
+                url: '/page/preference/image/index',
+            })
+        } else if (title === '千元购车') {
+            wx.setStorage({
+                key: 'searchVal',
+                data: {
+                    payment: [1, 10], // 首付1000~10000以内
+                    style: 'new',
+                },
+                success() {
+                    wx.switchTab({
+                        url: '/page/index/index',
+                    })
+                },
+            })
+        }
+    },
     getList() {
         var that = this
         var city = wx.getStorageSync('city')

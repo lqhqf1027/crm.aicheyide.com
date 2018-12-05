@@ -77,7 +77,7 @@
             <image class="plan-image" src="https://static.aicheyide.com/ucuj/plan_details/ac96f22a8dc1e8790a65e45ef4fc3ca.png" style="{{ planImageStyle.info }}" data-type="info" bindload="onPlanImageLoad" />
         </wux-cell>
     </wux-cell-group>
- <wux-cell-group wux-class="wux-mt--10">
+    <wux-cell-group wux-class="wux-mt--10">
         <wux-cell hover-class="none">
             <image class="plan-image" src="https://static.aicheyide.com/ucuj/plan_details/532ca05d84784e0e41c57f28b7ba8e9.png" style="{{ planImageStyle.info }}" data-type="info" bindload="onPlanImageLoad" />
         </wux-cell>
@@ -223,7 +223,7 @@
             <view class="title">车型亮点</view>
         </wux-cell>
         <wux-cell hover-class="none">
-            <image class="plan-image" src="{{ plan.modelsimages }}" style="{{ planImageStyle }}" bindload="onPlanImageLoad" />
+            <image class="plan-image" src="{{ plan.modelsimages }}" style="{{ planImageStyle.def }}" data-type="def" bindload="onPlanImageLoad" />
         </wux-cell>
     </wux-cell-group>
 
