@@ -209,6 +209,10 @@ image.quiet {
     padding: 0 30rpx !important;
 }
 
+.card__body {
+    padding: 30rpx 0 12rpx !important;
+}
+
 .card__content {
     position: relative;
     width: 100%;
@@ -260,6 +264,8 @@ image.quiet {
     height: 164rpx;
 }
 
+.car__box .car__title--payment,
+.car__box .car__title--monthly,
 .scroll-y .car__title--payment,
 .scroll-y .car__title--monthly {
     font-size: 20rpx;
@@ -267,6 +273,15 @@ image.quiet {
 
 .car__box {
     padding-right: 20rpx;
+}
+
+.car__box .car {
+    width: 300rpx;
+}
+
+.car__box .car__image {
+    width: 280rpx;
+    height: 182rpx;
 }
 
 .car {

@@ -92,12 +92,12 @@
         </block>
     </view>
     <!-- 为你推荐 -->
-    <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ carType.new.recommendList && carType.new.recommendList.length }}">
+    <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-body-class="card__body" wx:if="{{ carType.new.recommendList && carType.new.recommendList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_2.png" />
             <view class="card__more" bindtap="toMore">MORE+</view>
         </view>
-        <swiper slot="body" style="height: 220rpx" display-multiple-items="3" bindchange="bindchange">
+        <swiper slot="body" style="height: 270rpx" display-multiple-items="2.5" bindchange="bindchange">
             <block wx:for="{{ carType.new.recommendList }}" wx:key="">
                 <swiper-item class="swiper-item">
                     <view class="car__box">
@@ -116,14 +116,14 @@
     </wux-card>
     <!-- 专题特卖 -->
     <block wx:for="{{ carType.new.specialList }}" wx:for-item="card" wx:key="" wx:if="{{ carType.new.specialList && carType.new.specialList.length }}">
-        <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ index % 2 === 0 }}">
+        <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-body-class="card__body" wx:if="{{ index % 2 === 0 }}">
             <view class="card__content">
                 <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_3.png" />
                 <view class="card__more" bindtap="toMore">MORE+</view>
             </view>
             <view slot="body">
                 <image class="card__cover wux-mb--10" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial" />
-                <swiper style="height: 220rpx" display-multiple-items="3" bindchange="bindchange">
+                <swiper style="height: 270rpx" display-multiple-items="2.5" bindchange="bindchange">
                     <block wx:for="{{ card.plan }}" wx:key="">
                         <swiper-item class="swiper-item">
                             <view class="car__box">

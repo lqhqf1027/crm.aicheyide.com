@@ -7,7 +7,7 @@
         <view class="wux-card__extra" wx:if="{{ extra }}">{{ extra }}</view>
         <slot></slot>
     </view>
-    <view class="wux-card__bd">
+    <view class="wux-card__bd wux-body-class">
         <slot name="body"></slot>
     </view>
     <view class="wux-card__ft">
