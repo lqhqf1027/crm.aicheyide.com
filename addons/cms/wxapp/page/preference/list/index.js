@@ -61,16 +61,13 @@ Page({
         }
 
         app.request('/common/init', {}, function(data, ret) {
-            app.globalData.config = data.config;
-            app.globalData.indexTabList = data.indexTabList;
-            app.globalData.newsTabList = data.newsTabList;
-            app.globalData.productTabList = data.productTabList;
+            app.globalData.config = data.config; 
             app.globalData.bannerList = data.bannerList;
-
+          console.log(data.bannerList);
             //如果需要一进入小程序就要求授权登录,可在这里发起调用
-            app.check(function(ret) {
-                callback()
-            });
+            // app.check(function(ret) {
+            //     callback()
+            // });
         }, function(data, ret) {
             app.error(ret.msg);
         });
