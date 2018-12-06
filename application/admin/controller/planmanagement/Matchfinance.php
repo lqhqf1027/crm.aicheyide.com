@@ -64,7 +64,7 @@ class Matchfinance extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'newinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
@@ -80,7 +80,7 @@ class Matchfinance extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['nickname', 'id', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'newinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
@@ -97,10 +97,15 @@ class Matchfinance extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['newinventory']);
                 $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
                 $list[$k]['deposit_contractimages'] = Config::get('upload')['cdnurl'].$row['deposit_contractimages'];
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
 
@@ -145,7 +150,7 @@ class Matchfinance extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
@@ -159,7 +164,7 @@ class Matchfinance extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['nickname', 'id', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
@@ -174,9 +179,14 @@ class Matchfinance extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
 
                 $list[$k]['deposit_contractimages']=Config::get('upload')['cdnurl'].$row['deposit_contractimages'];
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
 

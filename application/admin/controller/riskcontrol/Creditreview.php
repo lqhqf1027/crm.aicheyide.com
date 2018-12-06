@@ -99,7 +99,7 @@ class Creditreview extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'],
@@ -114,7 +114,7 @@ class Creditreview extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->where('review_the_data', ['=', 'is_reviewing_true'], ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'conclude_the_contract'],
@@ -131,6 +131,10 @@ class Creditreview extends Backend
                 $row->getRelation('admin')->visible(['id', 'avatar', 'nickname']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name']);
+                
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
             }
 
             $list = collection($list)->toArray();
@@ -192,7 +196,7 @@ class Creditreview extends Backend
                 ->with(['admin' => function ($query) {
                     $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }, 'carrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin');
                 }])
@@ -205,7 +209,7 @@ class Creditreview extends Backend
                 ->with(['admin' => function ($query) {
                     $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }, 'carrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin');
                 }])
@@ -213,12 +217,17 @@ class Creditreview extends Backend
                 ->order($sort, $order)
                 ->where('review_the_data', ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_nopass'], ['=', 'is_reviewing_control'], ['=', 'for_the_car'], ['=', 'collection_data'], 'or')
                 ->select();
-            foreach ($list as $row) {
+            foreach ($list as $k => $row) {
                 $row->visible(['id', 'plan_car_rental_name', 'order_no', 'createtime', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'review_the_data']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id', 'avatar', 'nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
             $list = collection($list)->toArray();
 
@@ -286,7 +295,7 @@ class Creditreview extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'collection_data'], 'or')
@@ -300,7 +309,7 @@ class Creditreview extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'avatar', 'nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->where('review_the_data', ['=', 'for_the_car'], ['=', 'is_reviewing_pass'], ['=', 'is_reviewing_control'], ['=', 'not_through'], ['=', 'the_car'], ['=', 'collection_data'], 'or')
@@ -315,7 +324,11 @@ class Creditreview extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id', 'avatar', 'nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
 
             }
 
@@ -689,6 +702,50 @@ class Creditreview extends Backend
         }
     }
 
+    /**
+     * 库存
+     */
+    public function recyclebin()
+    {
+        $this->model = model('CarNewInventory');
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('models.name', true);
+            $total = $this->model
+                ->with(['models' => function ($query) {
+                    $query->withField('name,models_name');
+                }])
+                ->where($where)
+                ->where("statuss", 1)
+                ->order($sort, $order)
+                ->count();
+
+            $list = $this->model
+                ->with(['models' => function ($query) {
+                    $query->withField('name,models_name');
+                }])
+                ->where($where)
+                ->where("statuss", 1)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
+                
+            //展示的信息
+            foreach ($list as $key=>$row) {
+
+                if ($list[$key]['models']['models_name']) {
+                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
+                }
+
+            }
+            
+            $result = array("total" => $total, "rows" => $list);
+
+            return json($result); 
+        }
+        return $this->view->fetch();
+    }
 
     /**
      * 选择库存车
@@ -722,10 +779,6 @@ class Creditreview extends Backend
             $result = Db::name('sales_order')->where('id', $ids)->find();
 
             $models_name = Db::name('models')->where('id', $result['models_id'])->value('name');
-
-//            $channel = "demo-newchoose_stock";
-//            $content = "客户：" . $result['username'] . "对车型：" . $models_name . "的购买，已经匹配完库存车";
-//            goeary_push($channel, $content);
 
             $data = newchoose_stock($models_name, $result['username']);
             // var_dump($data);

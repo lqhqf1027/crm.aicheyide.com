@@ -48,7 +48,7 @@ class Newnventory extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $total = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -56,7 +56,7 @@ class Newnventory extends Backend
 
             $list = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -67,7 +67,12 @@ class Newnventory extends Backend
                 // $list[$key]['aaa'] = 11;
                 $row->visible(['id', 'carnumber', 'reservecar','open_fare', 'licensenumber', 'presentationcondition', 'note', 'frame_number', 'engine_number', 'household', '4s_shop', 'createtime', 'updatetime','the_car_username']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']); 
+                $row->getRelation('models')->visible(['name', 'models_name']); 
+
+                if ($list[$key]['models']['models_name']) {
+                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
+                }
+
                 foreach((array)$this->getOrderName($row['id']) as $k=>$v){
                     foreach($v as $rows){
                         if($rows['licensenumber']==$row['licensenumber']){
@@ -249,7 +254,7 @@ class Newnventory extends Backend
     {
 
         $models = Db::name("models")
-            ->field("id as models_id,name as models_name,brand_id")
+            ->field("id as models_id,models_name as model_name,name as models_name,brand_id")
             ->select();
             
         //品牌下没有车型，就不显示在下拉列表
@@ -268,7 +273,7 @@ class Newnventory extends Backend
             foreach ($models as $key => $value) {
 
                 if ($v['id'] == $value['brand_id']) {
-
+                    $value['models_name'] = $value['models_name'] . " " . $value['model_name'];
                     array_push($brand[$k]['models'], $value);
                 }
             }

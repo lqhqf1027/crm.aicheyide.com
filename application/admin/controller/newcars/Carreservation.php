@@ -50,7 +50,7 @@ class Carreservation extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id','avatar','nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'newinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
@@ -67,7 +67,7 @@ class Carreservation extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id','avatar','nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'newinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
@@ -84,9 +84,14 @@ class Carreservation extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id','avatar','nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['newinventory']);
                 $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
 
@@ -131,7 +136,7 @@ class Carreservation extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id','avatar','nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'newinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
@@ -148,7 +153,7 @@ class Carreservation extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id','avatar','nickname']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'newinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,household,4s_shop');
                 }])
@@ -165,9 +170,14 @@ class Carreservation extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id','avatar','nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['newinventory']);
                 $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
 

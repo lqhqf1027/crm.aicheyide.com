@@ -66,7 +66,7 @@ class Takesecondcar extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->where("review_the_data", ["=", "for_the_car"], ["=", "the_car"], "or")
@@ -80,7 +80,7 @@ class Takesecondcar extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['nickname', 'avatar', 'id']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->where("review_the_data", ["=", "for_the_car"], ["=", "the_car"], "or")
@@ -94,7 +94,12 @@ class Takesecondcar extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'avatar', 'id']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
             $list = collection($list)->toArray();
