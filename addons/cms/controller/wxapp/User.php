@@ -88,7 +88,7 @@ class User extends Base
                 $ret = Service::connect($platform, $result, $extend);
                 if ($ret) {
                     $auth = Auth::instance();
-                    $this->success("登录成功", ['userInfo' => $auth->getUserinfo()]);
+                    $this->success("登录成功", ['userInfo' => $auth->getUserinfo(),'openid'=>$json['openid'],'session_key'=>$json['session_key']]);
                 } else {
                     $this->error("连接失败");
                 }
