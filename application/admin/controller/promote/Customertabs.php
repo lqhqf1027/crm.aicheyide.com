@@ -2,6 +2,7 @@
 
 namespace app\admin\controller\promote;
 
+use app\admin\model\Admin;
 use app\common\controller\Backend;
 use app\admin\controller\wechat\WechatMessage;
 use app\admin\model\Admin as adminModel;
@@ -9,6 +10,7 @@ use app\common\library\Email;
 // use app\admin\controller\wechat\Wechatuser;
 use think\Db;
 use think\Config;
+
 
 /**
  * 多表格示例
@@ -65,7 +67,7 @@ class Customertabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $use_id = $this->getUserId('今日头条');
+            $use_id = $this->getPlatId('今日头条');
 
             $result = $this->getInformation($use_id);
 
@@ -91,7 +93,7 @@ class Customertabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $use_id = $this->getUserId('百度');
+            $use_id = $this->getPlatId('百度');
 
             $result = $this->getInformation($use_id);
             foreach ($result['rows'] as $k => $v) {
@@ -116,7 +118,7 @@ class Customertabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $use_id = $this->getUserId('58同城');;
+            $use_id = $this->getPlatId('58同城');;
 
             $result = $this->getInformation($use_id);
             foreach ($result['rows'] as $k => $v) {
@@ -142,7 +144,7 @@ class Customertabs extends Backend
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
 
-            $use_id = $this->getUserId('抖音');
+            $use_id = $this->getPlatId('抖音');
 
             $result = $this->getInformation($use_id);
             foreach ($result['rows'] as $k => $v) {
@@ -202,14 +204,6 @@ class Customertabs extends Backend
 
     }
 
-    public function getUserId($name)
-    {
-        return Db::name('platform')
-            ->where('name', $name)
-            ->value('id');
-    }
-
-
     /**今日头条添加
      * @return string
      * @throws \think\Exception
@@ -220,7 +214,7 @@ class Customertabs extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
 
-                $use_id = $this->getUserId('今日头条');
+                $use_id = $this->getPlatId('今日头条');
 
                 $params['platform_id'] = $use_id;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
@@ -261,7 +255,7 @@ class Customertabs extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
 
-                $use_id = $this->getUserId('百度');
+                $use_id = $this->getPlatId('百度');
 
                 $params['platform_id'] = $use_id;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
@@ -302,7 +296,7 @@ class Customertabs extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
 
-                $use_id = $this->getUserId('58同城');
+                $use_id = $this->getPlatId('58同城');
 
                 $params['platform_id'] = $use_id;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
@@ -344,7 +338,7 @@ class Customertabs extends Backend
             $params = $this->request->post("row/a");
             if ($params) {
 
-                $use_id = $this->getUserId('抖音');
+                $use_id = $this->getPlatId('抖音');
 
                 $params['platform_id'] = $use_id;
                 if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
@@ -375,6 +369,18 @@ class Customertabs extends Backend
     }
 
 
+    /**
+     * 获取平台ID
+     * @param $name
+     * @return mixed
+     */
+    public function getPlatId($name)
+    {
+        return Db::name('platform')
+            ->where('name', $name)
+            ->value('id');
+    }
+
     /**单个分配给内勤
      * @param null $ids
      * @return string
@@ -388,52 +394,25 @@ class Customertabs extends Backend
         $this->model = model('CustomerResource');
 
         $id = $this->model->get(['id' => $ids]);
-        $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24')
-                ->where('status', 'normal');
-        })->select();
+        $backoffice = $this->getBackOffice();
 
-        $backofficeList = array();
-        $realList = array();
-        foreach ($backoffice as $k => $v) {
-            switch ($v['rule_message']) {
-                case 'message20':
-                    $backofficeList['message20']['nickname'] = $v['nickname'];
-                    $backofficeList['message20']['id'] = $v['id'];
-                    break;
-                case 'message13':
-                    $backofficeList['message13']['nickname'] = $v['nickname'];
-                    $backofficeList['message13']['id'] = $v['id'];
-                    break;
-                case 'message24':
-                    $backofficeList['message24']['nickname'] = $v['nickname'];
-                    $backofficeList['message24']['id'] = $v['id'];
-                    break;
-            }
-            $realList[$v['id']] = $v['nickname'];
+        $this->view->assign([
+            'backofficeList'=> $backoffice[0],
+            'realList'=> $backoffice[1]
+        ]);
 
-        }
-
-        $this->view->assign('backofficeList', $backofficeList);
-        $this->view->assign('realList', $realList);
         $this->assignconfig('id', $id->id);
 
         if ($this->request->isPost()) {
 
             $params = $this->request->post('row/a');
-
-            $time = time();
-            $result = $this->model->save(['backoffice_id' => $params['backoffice_id'], 'distributinternaltime' => $time], function ($query) use ($id) {
+            $params['distributinternaltime'] = time();
+            $result = $this->model->save($params, function ($query) use ($id) {
                 $query->where('id', $id->id);
             });
             if ($result) {
-//                $channel = "demo-platform";
-//                $content = "你有推广平台给你分配的新客户，请登录后台进行处理"."|".$params['backoffice_id'];
-//                goeary_push($channel, $content);
-
                 $data = dstribution_inform();
-                // var_dump($data);
-                // die;
+
                 $email = new Email;
                 // $receiver = "haoqifei@cdjycra.club";
                 $receiver = DB::name('admin')->where('id', $params['backoffice_id'])->value('email');
@@ -470,42 +449,18 @@ class Customertabs extends Backend
 
         $this->model = model('CustomerResource');
 
-        $backoffice = Db::name('admin')->field('id,nickname,rule_message')->where(function ($query) {
-            $query->where('rule_message', 'message20')->whereOr('rule_message', 'message13')->whereOr('rule_message', 'message24')
-                ->where('status', 'normal');
-        })->select();
-        $backofficeList = array();
-        foreach ($backoffice as $k => $v) {
-            switch ($v['rule_message']) {
-                case 'message20':
-                    $backofficeList['message20']['nickname'] = $v['nickname'];
-                    $backofficeList['message20']['id'] = $v['id'];
-                    break;
-                case 'message13':
-                    $backofficeList['message13']['nickname'] = $v['nickname'];
-                    $backofficeList['message13']['id'] = $v['id'];
-                    break;
-                case 'message24':
-                    $backofficeList['message24']['nickname'] = $v['nickname'];
-                    $backofficeList['message24']['id'] = $v['id'];
-                    break;
-            }
-        }
+        $backoffice = $this->getBackOffice();
 
-        $this->view->assign('backofficeList', $backofficeList);
+        $this->view->assign('backofficeList', $backoffice[0]);
 
         if ($this->request->isPost()) {
 
             $params = $this->request->post('row/a');
-            $time = time();
-            $result = $this->model->save(['backoffice_id' => $params['backoffice_id'], 'distributinternaltime' => $time], function ($query) use ($ids) {
+            $params['distributinternaltime'] = time();
+            $result = $this->model->save($params, function ($query) use ($ids) {
                 $query->where('id', 'in', $ids);
             });
             if ($result) {
-
-//                $channel = "demo-platform";
-//                $content = "你有推广平台给你分配的新客户，请注意查看"."|".$params['backoffice_id'];
-//                goeary_push($channel, $content);
 
                 $data = dstribution_inform();
 
@@ -527,6 +482,32 @@ class Customertabs extends Backend
             }
         }
         return $this->view->fetch();
+    }
+
+    /**
+     * 获取所有的内勤
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getBackOffice()
+    {
+        $backoffice = collection(Admin::field('id,nickname,rule_message')->where(function ($query) {
+            $query->where([
+                'rule_message' => ['in', ['message20', 'message13', 'message24']],
+                'status' => 'normal'
+            ]);
+        })->select())->toArray();
+
+        $backofficeList = array();
+        $realList = array();
+        foreach ($backoffice as $k => $v) {
+            $backofficeList[$v['rule_message']] = ['nickname' => $v['nickname'], 'id' => $v['id']];
+            $realList[$v['id']] = $v['nickname'];
+        }
+
+        return [$backofficeList,$realList];
     }
 
     /**
