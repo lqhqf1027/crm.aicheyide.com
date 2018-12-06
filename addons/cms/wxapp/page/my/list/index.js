@@ -6,7 +6,7 @@ Page({
         userInfo: {
             id: 0,
             avatar: '/assets/images/avatar.png',
-            nickname: '游客',
+            nickname: '',
             balance: 0,
             score: 0,
             level: 0
@@ -110,6 +110,20 @@ Page({
             }
         });
     },
+    bindGetUserInfo(e) {
+        console.log(e.detail);
+        if (e.detail.errMsg != 'getUserInfo:ok') {
+            wx.showModal({
+                title: '温馨提示',
+                content: '你拒绝了授权登录,为了更好的为你提供服务,请重新进行登录',
+            })
+        } else {
+            app.login(() => {
+                this.setData({ userInfo: app.globalData.userInfo })
+                this.getInfo()
+            });
+        }
+    },
     onPageScroll(e) {
         this.setData({
             scrollTop : e.scrollTop,
@@ -170,9 +184,7 @@ Page({
             return app.info('已签到')
         }
 
-        const user_id = app.globalData.userInfo.id
-
-        app.request('/my/signIn', { user_id }, (data, ret) => {
+        app.request('/my/signIn', {}, (data, ret) => {
             console.log(data)
             this.getInfo()
             app.success(ret.msg)

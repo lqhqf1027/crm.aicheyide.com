@@ -9,16 +9,14 @@ Page({
         key: 'fabulous',
         index: 0,
     },
-	onLoad() {
+	onShow() {
 		this.getList()
 	},
     onPullDownRefresh() {
         this.getList()
     },
 	getList() {
-        const user_id = app.globalData.userInfo.id
-
-        app.request('/my/myScore', { user_id }, (data, ret) => {
+        app.request('/my/myScore', {}, (data, ret) => {
             console.log(data)
             this.setData({
                 integral: data && data.integral.map((n) => {

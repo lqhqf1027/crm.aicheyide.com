@@ -89,7 +89,7 @@ App({
                     wx.getUserInfo({
                         success: function(ures) {
                             wx.request({
-                                url: that.apiUrl + 'user/login',
+                                url: that.apiUrl + 'user/login?noAuth=1',
                                 data: {
                                     code: res.code,
                                     rawData: ures.rawData,
@@ -103,6 +103,7 @@ App({
                                     var response = lres.data
                                     if (response.code == 1) {
                                         that.globalData.userInfo = response.data.userInfo;
+                                        that.globalData.session_key = response.data.session_key
                                         wx.setStorageSync('token', response.data.userInfo.token);
                                         typeof cb == "function" && cb(that.globalData.userInfo);
                                     } else {
@@ -124,7 +125,7 @@ App({
         });
     },
     //显示登录或授权提示
-    showLoginModal: function(cb) {
+    showLoginModal: function(cb, fail) {
         var that = this;
         if (!that.globalData.userInfo) {
             //获取用户信息
@@ -141,6 +142,9 @@ App({
                                     that.login(cb);
                                 } else {
                                     console.log('用户暂不登录');
+                                    if (typeof fail === 'function') {
+                                        fail.call(this, res)
+                                    }
                                 }
                             }
                         });
@@ -163,6 +167,9 @@ App({
                                     });
                                 } else {
                                     console.log('用户暂不授权');
+                                    if (typeof fail === 'function') {
+                                        fail.call(this, res)
+                                    }
                                 }
                             }
                         });
@@ -176,14 +183,30 @@ App({
     //发起网络请求
     request: function(url, data, success, error) {
         var that = this;
+        var userInfo = this.globalData.userInfo || {};
         if (typeof data == 'function') {
             success = data;
             error = success;
             data = {};
         }
-        if (this.globalData.userInfo) {
-            data['user_id'] = this.globalData.userInfo.id;
-            data['token'] = this.globalData.userInfo.token;
+        if (userInfo) {
+            data['user_id'] = userInfo.id;
+            data['token'] = userInfo.token;
+
+            // 判断是否需要授权，显示登录或授权提示
+            if (!userInfo.id && url.indexOf('noAuth') === -1) {
+                that.showLoginModal(function success() {
+                    // 刷新我的页面
+                    var ctx = getCurrentPages()[getCurrentPages().length - 1]
+                    if (ctx && ctx.route === 'page/my/list/index') {
+                        ctx.onShow()
+                    }
+                }, function fail() {
+                    // 返回上一页面
+                    wx.navigateBack()
+                });
+                return;
+            }
         }
         //移除最前的/
         while (url.charAt(0) === '/')

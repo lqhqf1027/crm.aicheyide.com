@@ -38,6 +38,8 @@ Page({
         console.log(options)
         this.options = options
         this.setData({ type: options.type })
+    },
+    onShow() {
         this.getDetail()
     },
     getDetail() {
@@ -142,10 +144,19 @@ Page({
             this.setData({ popupVisible: true })
             return
         }
+
+        // 成功操作
+        this.clickAppointment(e.detail)
     },
-    clickAppointment() {
+    clickAppointment(extParams) {
         const hasMobile = !!this.data.plan.users.mobile
         const { code, mobile } = this.data
+        const plan_id = this.options.id
+        const cartype = this.options.type
+        const params = {
+            plan_id,
+            cartype,
+        }
 
         // 判断是否已预约
         if (this.data.plan.appointment === 1) {
@@ -153,7 +164,7 @@ Page({
         }
 
         // 验证手机号码
-        if (!hasMobile) {
+        if (!hasMobile && !extParams) {
             if (!mobile) {
                 wx.showToast({ title: '请输入手机号码', icon: 'none' })
                 return
@@ -164,21 +175,16 @@ Page({
                 wx.showToast({ title: '请输入验证码', icon: 'none' })
                 return
             }
-        }
 
-        const plan_id = this.options.id
-        const cartype = this.options.type
-        const params = {
-            plan_id,
-            cartype,
-        }
-
-        // 设置参数
-        if (hasMobile) {
-            params.mobile = this.data.plan.users.mobile
-        } else {
+            // 设置参数
             params.mobile = mobile
             params.code = code
+        }
+
+        if (!hasMobile && extParams) {
+            params.iv = extParams.iv
+            params.encryptedData = extParams.encryptedData
+            params.sessionKey = app.globalData.session_key
         }
 
         // 发起请求

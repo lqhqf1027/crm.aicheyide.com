@@ -63,7 +63,8 @@
     <view class="header">
         <view class="userinfo">
             <wux-avatar wux-class="avatar" src="{{ userInfo.avatar }}" />
-            <view class="wux-mt--10">{{ userInfo.nickname }}</view>
+            <view class="wux-mt--10" wx:if="{{ userInfo.nickname }}">{{ userInfo.nickname }}</view>
+            <button class="button-clear wux-mt--10" open-type="getUserInfo" bind:getuserinfo="bindGetUserInfo" wx:else>立即登录</button>
         </view>
         <view class="other">
             <view class="sign" bindtap="signIn">立即签到</view>

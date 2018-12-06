@@ -12,7 +12,7 @@ Page({
         this.getList()
     },
     getList() {
-        app.request('/store/store_show', {}, (data, ret) => {
+        app.request('/store/store_show?noAuth=1', {}, (data, ret) => {
             console.log(data)
 
             let list = []

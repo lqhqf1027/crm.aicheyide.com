@@ -36,7 +36,7 @@ Page({
         }
 
         this.timeout = setTimeout(() => {
-            app.request('/share/searchModels', { city_id: city.id, queryModels }, (data, ret) => {
+            app.request('/share/searchModels?noAuth=1', { city_id: city.id, queryModels }, (data, ret) => {
                 console.log(data)
                 this.setData({
                     new: data && data.searchModel.new,
