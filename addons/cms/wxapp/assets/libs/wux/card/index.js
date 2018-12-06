@@ -1,5 +1,5 @@
 Component({
-    externalClasses: ['wux-class', 'wux-header-class'],
+    externalClasses: ['wux-class', 'wux-header-class', 'wux-body-class'],
     options: {
         multipleSlots: true,
     },

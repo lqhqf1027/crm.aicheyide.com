@@ -1,24 +1,31 @@
+import timeago from '../../../utils/timeago'
+
 const app = getApp()
 
 Page({
     data: {
+        currentScore: 0,
         integral: [],
         key: 'fabulous',
         index: 0,
     },
-	onLoad() {
+	onShow() {
 		this.getList()
 	},
     onPullDownRefresh() {
         this.getList()
     },
 	getList() {
-        const user_id = app.globalData.userInfo.id
-
-        app.request('/my/myScore', { user_id }, (data, ret) => {
+        app.request('/my/myScore', {}, (data, ret) => {
             console.log(data)
             this.setData({
-                integral: data && data.integral,
+                integral: data && data.integral.map((n) => {
+                    return {
+                        ...n,
+                        detailed: n.detailed.map((m) => ({ ...m, timeago: timeago((m.fabuloustime || m.sign_time) * 1000) }))
+                    }
+                }),
+                currentScore: data && data.currentScore,
             })
             wx.stopPullDownRefresh()
         }, (data, ret) => {

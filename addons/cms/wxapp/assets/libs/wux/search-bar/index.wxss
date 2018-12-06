@@ -62,6 +62,9 @@
   background: 0 0
 }
 .wux-search-bar__label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 2rpx;
   right: 2rpx;

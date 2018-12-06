@@ -44,30 +44,56 @@ Page({
         }
     },
     onShow: function() {
-        this.setGlobalData(this.getList)
+        this.setGlobalData()
     },
     setGlobalData(cb) {
         var that = this;
-        var callback = function() {
-            that.setData({
-                globalData: app.globalData,
-            })
-            typeof cb == "function" && cb(app.globalData)
+        var city = wx.getStorageSync('city')
+
+        // 判断是否同一城市下，取其缓存
+        if (city && city.id === this.data.city.id) {
+            if (this.data.brandList && this.data.brandList.length) {
+                return
+            }
         }
 
-        if (app.globalData.userInfo) {
-            callback()
-            return
-        }
+        this.setData({
+            city,
+        })
 
-        app.request('/common/init', {}, function(data, ret) {
+        // var callback = function() {
+        //     that.setData({
+        //         globalData: app.globalData,
+        //     })
+        //     typeof cb == "function" && cb(app.globalData)
+        // }
+
+        // if (app.globalData.userInfo) {
+        //     callback()
+        //     return
+        // }
+
+        app.request('/common/init?noAuth=1', { city_id: city.id }, function(data, ret) {
             app.globalData.config = data.config; 
             app.globalData.bannerList = data.bannerList;
-          console.log(data.bannerList);
+            
+            that.setData({
+                globalData: app.globalData,
+                appointment: data.appointment.map((n) => {
+                    const mobile = n.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+                    const content = `${mobile} 成功下单 ${n.models_name}`
+
+                    return {...n, content }
+                }),
+                brandList: data.brandList,
+                carType: data.carType,
+                shares: data.shares,
+            })
+
             //如果需要一进入小程序就要求授权登录,可在这里发起调用
-            app.check(function(ret) {
-                callback()
-            });
+            // app.check(function(ret) {
+            //     callback()
+            // });
         }, function(data, ret) {
             app.error(ret.msg);
         });
@@ -104,7 +130,7 @@ Page({
             city,
         })
 
-        app.request('/index/brandPlan', { city_id: city.id, brand_id: id }, function(data, ret) {
+        app.request('/index/brandPlan?noAuth=1', { city_id: city.id, brand_id: id }, function(data, ret) {
             console.log(data)
             that.setData({
                 visible: true,
@@ -169,10 +195,33 @@ Page({
         wx.getSystemInfo({
             success: (res) => {
                 this.setData({
-                    deviceHeight: res.windowHeight,
+                    deviceHeight: res.windowHeight - 20 + 'px',
                 })
             }
         })
+    },
+    onImage(e) {
+        const { title } = e.currentTarget.dataset
+        console.log(title)
+
+        if (title === '疯狂汽车节') {
+            wx.navigateTo({
+                url: '/page/preference/image/index',
+            })
+        } else if (title === '千元购车') {
+            wx.setStorage({
+                key: 'searchVal',
+                data: {
+                    payment: [1, 10], // 首付1000~10000以内
+                    style: 'new',
+                },
+                success() {
+                    wx.switchTab({
+                        url: '/page/index/index',
+                    })
+                },
+            })
+        }
     },
     getList() {
         var that = this

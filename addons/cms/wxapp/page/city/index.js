@@ -25,7 +25,7 @@ Page({
     getList() {
         const that = this
 
-        app.request('/share/cityList', {}, function(data, ret) {
+        app.request('/share/cityList?noAuth=1', {}, function(data, ret) {
             console.log(data)
 
             let cities = []

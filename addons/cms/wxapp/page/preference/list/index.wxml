@@ -5,8 +5,8 @@
             {{ city.cities_name }}
             <icon class="fa fa-angle-down"></icon>
         </view>
-        <view class="page_hd_search">
-            <view class="searchbar" bindtap="onSearch">
+        <view class="page_hd_search" bindtap="onSearch">
+            <view class="searchbar">
                 <icon class="wux-search-bar__search" type="search" color="#B2B2B2" size="14" /> 搜台好车
             </view>
         </view>
@@ -26,8 +26,7 @@
         <swiper class="swiperClass" autoplay interval="2000" duration="1000" circular>
             <block wx:for="{{globalData.bannerList}}" wx:key="{{index}}">
                 <swiper-item>
-                    <image src="{{item.image}}" class="slide-image" mode="aspectFill">
-                    </image>
+                    <image src="{{ globalData.config.upload.cdnurl + item.image }}" class="slide-image" mode="aspectFill" data-title="{{ item.title }}" bindtap="onImage" />
                 </swiper-item>
             </block>
         </swiper>
@@ -68,7 +67,7 @@
     </wux-card>
     <wux-popup position="right" visible="{{ visible && brandPlan[brand_id] && brandPlan[brand_id].length }}" bind:close="onClose">
         <view class="brandPlan">
-            <scroll-view scroll-y style="height: {{ deviceHeight + 'px' }}">
+            <scroll-view scroll-y style="height: {{ deviceHeight }}">
                 <block wx:for="{{ brandPlan[brand_id] }}" wx:key="">
                     <wux-media wux-class="brandPlan__media" thumb="{{ item.models_main_images }}" thumbStyle="width: 200rpx; height: 120rpx" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
                         <view class="brandPlan__title wux-ellipsis wux-text--left">{{ item.models_name }}</view>
@@ -93,12 +92,12 @@
         </block>
     </view>
     <!-- 为你推荐 -->
-    <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ carType.new.recommendList && carType.new.recommendList.length }}">
+    <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-body-class="card__body" wx:if="{{ carType.new.recommendList && carType.new.recommendList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_2.png" />
             <view class="card__more" bindtap="toMore">MORE+</view>
         </view>
-        <swiper slot="body" indicator-dots indicator-color="#d5d5d5" indicator-active-color="#da8103" display-multiple-items="3" bindchange="bindchange">
+        <swiper slot="body" style="height: 260rpx" display-multiple-items="2.5" bindchange="bindchange">
             <block wx:for="{{ carType.new.recommendList }}" wx:key="">
                 <swiper-item class="swiper-item">
                     <view class="car__box">
@@ -117,14 +116,14 @@
     </wux-card>
     <!-- 专题特卖 -->
     <block wx:for="{{ carType.new.specialList }}" wx:for-item="card" wx:key="" wx:if="{{ carType.new.specialList && carType.new.specialList.length }}">
-        <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ index % 2 === 0 }}">
+        <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-body-class="card__body" wx:if="{{ index % 2 === 0 }}">
             <view class="card__content">
                 <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_3.png" />
                 <view class="card__more" bindtap="toMore">MORE+</view>
             </view>
             <view slot="body">
                 <image class="card__cover wux-mb--10" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial" />
-                <swiper indicator-dots indicator-color="#d5d5d5" indicator-active-color="#da8103" display-multiple-items="3" bindchange="bindchange">
+                <swiper style="height: 260rpx" display-multiple-items="2.5" bindchange="bindchange">
                     <block wx:for="{{ card.plan }}" wx:key="">
                         <swiper-item class="swiper-item">
                             <view class="car__box">

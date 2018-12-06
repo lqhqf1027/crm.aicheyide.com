@@ -24,7 +24,47 @@ swiper {
 	margin-bottom: 20rpx;
 }
 
-.score {
+.count {
 	font-size: 36rpx;
 	margin-left: 20rpx;
+}
+
+.score {
+	padding: 20rpx 30rpx;
+	position: relative;
+	background: #fff
+}
+
+.score:after {
+	content: " ";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	height: 2rpx;
+	border-bottom: 2rpx solid #d9d9d9;
+	color: #d9d9d9;
+	transform-origin: 0 100%;
+	transform: scaleY(.5);
+	left: 30rpx
+}
+
+.score__inner {
+	display: flex;
+}
+
+.score__bd {
+	-ms-flex: 1;
+	flex: 1
+}
+
+.score__ft {
+	text-align: right;
+	color: grey
+}
+
+.score__extra {
+	margin-top: 6rpx;
+	text-align: left;
+	color: grey
 }

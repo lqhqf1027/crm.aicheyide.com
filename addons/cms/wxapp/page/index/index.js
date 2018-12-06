@@ -282,7 +282,7 @@ Page({
             city,
         })
 
-        app.request('/carselection/index', { city_id: city.id, cartype }, (data, ret) => {
+        app.request('/carselection/index?noAuth=1', { city_id: city.id, cartype }, (data, ret) => {
             console.log(data)
 
             let carSelectList = [data]

@@ -1,5 +1,28 @@
 /* page/preference/detail/index.wxss */
 
+.popup-inner {
+    position: relative;
+    text-align: left !important;
+}
+
+.popup-inner .vcode {
+    padding: 0 10rpx;
+    color: #33cd5f;
+}
+
+.popup-inner .bottom-btn {
+    width: 100%;
+    line-height: 80rpx;
+    border-radius: 80rpx;
+}
+
+.popup-title {
+    font-size: 28rpx;
+    color: #333;
+    text-align: center;
+    padding: 30rpx;
+}
+
 .backtop {
     position: fixed;
     bottom: 200rpx;
@@ -423,6 +446,13 @@
     color: #ff9a18;
 }
 
+.bottom-store {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
 .bottom-btn {
     width: 200rpx;
     height: 100%;
@@ -434,4 +464,8 @@
     /*border-radius: 36rpx;*/
     color: #fff;
     background-color: #3f51b5;
+}
+
+.bottom-btn.disabled {
+    opacity: .4;
 }
