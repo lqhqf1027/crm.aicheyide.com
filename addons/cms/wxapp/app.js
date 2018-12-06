@@ -319,10 +319,7 @@ App({
     //全局信息
     globalData: {
         userInfo: null,
-        config: null,
-        indexTabList: [],
-        newsTabList: [],
-        productTabList: [],
+        config: null, 
         city: {
             cities_name: '成都',
             id: 38,

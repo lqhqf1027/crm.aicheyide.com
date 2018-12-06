@@ -63,7 +63,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField(['id','avatar','nickname']);
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("review_the_data", "send_car_tube")
@@ -78,7 +78,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField(['id','avatar','nickname']);
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("review_the_data", "send_car_tube")
@@ -93,7 +93,12 @@ class Carreservation extends Backend
                     $row->visible(['admin']);
                     $row->getRelation('admin')->visible(['id','avatar','nickname']);
                     $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
+                    $row->getRelation('models')->visible(['name', 'models_name']);
+
+                    if ($list[$k]['models']['models_name']) {
+                        $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                    }
+
             }
 
             $list = collection($list)->toArray();
@@ -140,7 +145,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField(['id','avatar','nickname']);
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
@@ -155,7 +160,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField(['id','avatar','nickname']);
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
@@ -170,7 +175,11 @@ class Carreservation extends Backend
                     $row->visible(['admin']);
                     $row->getRelation('admin')->visible(['id','avatar','nickname']);
                     $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
+                    $row->getRelation('models')->visible(['name', 'models_name']);
+
+                    if ($list[$k]['models']['models_name']) {
+                        $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                    }
                     
             }
 

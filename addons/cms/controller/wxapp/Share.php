@@ -264,24 +264,40 @@ class Share extends Base
      */
     public function clickAppointment()
     {
+        //必传
         $user_id = $this->request->post('user_id');
         $plan_id = $this->request->post('plan_id');
         $cartype = $this->request->post('cartype');
+        //如果是走的手机号码验证 必须传递 mobile  和code参数
         $mobile = $this->request->post('mobile');
         $code = $this->request->post('code');
-
+        //如果是手机号码授权  必须传递 iv 、encryptedData 、 sessionKey参数
+        $iv = $this->request->post('iv');
+        $encryptedData = $this->request->post('encryptedData');
+        $sessionKey = $this->request->post('sessionKey');
+        //解密手机号
+        if ($sessionKey && $iv && $sessionKey) {
+            $pc = new WxBizDataCrypt('wxf789595e37da2838',$sessionKey);
+            $result = $pc->decryptData($encryptedData, $iv, $data );
+            if($result==0){
+                $mobile =  json_decode($data, true)['phoneNumber'];
+            }else{
+                $this->error('手机号解密失败', 'error');
+            }
+            return;
+        } 
         if (!$user_id || !$plan_id || !$cartype) {
             $this->error('缺少参数,请求失败', 'error');
         }
-
         if ($code) {
             $userInfo = Db::name('cms_login_info')
                 ->where(['user_id' => $user_id, 'login_state' => 0])->find();
             if (!$userInfo || $code != $userInfo['login_code']) {
                 $this->error('验证码输入错误');
-            } else if (intval($userInfo['login_time ']) + 180 < time()) {
-                $this->error('验证码已过期，请重新发送');
             }
+//            else if (intval($userInfo['login_time ']) + 180 < time()) {
+//                $this->error('验证码已过期，请重新发送');
+//            }
 
         }
 
@@ -335,6 +351,29 @@ class Share extends Base
         $data = ['searchModel' => ['new' => $new_models, 'used' => $used_models, 'logistics' => $logistics]];
         $this->success('', $data);
 
+    }
+
+    /**
+     * 心愿单接口
+     */
+    public function wishList()
+    {
+        $user_id = $this->request->post('user_id');
+        $fill_models = $this->request->post('fill_models');
+        $expectant_city = $this->request->post('expectant_city');
+
+        if (!$user_id || !$fill_models || !$expectant_city) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+
+        $res = Db::name('cms_wishlist')->insert([
+            'user_id' => $user_id,
+            'fill_models' => $fill_models,
+            'expectant_city' => $expectant_city,
+            'createtime' => time()
+        ]);
+
+        $res?$this->success('提交心愿单成功','success'):$this->error('提交心愿单失败');
     }
 
 

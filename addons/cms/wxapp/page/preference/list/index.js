@@ -91,9 +91,9 @@ Page({
             })
 
             //如果需要一进入小程序就要求授权登录,可在这里发起调用
-            // app.check(function(ret) {
-            //     callback()
-            // });
+            app.check(function(ret) {
+                callback()
+            });
         }, function(data, ret) {
             app.error(ret.msg);
         });

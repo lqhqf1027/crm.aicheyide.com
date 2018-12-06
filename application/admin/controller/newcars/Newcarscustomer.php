@@ -80,7 +80,7 @@ class Newcarscustomer extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->where(function ($query) {
@@ -97,7 +97,7 @@ class Newcarscustomer extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->where(function ($query) {
@@ -115,7 +115,11 @@ class Newcarscustomer extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
 
             }
 
@@ -163,7 +167,7 @@ class Newcarscustomer extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'newinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,licensenumber,household,4s_shop');
                 }])
@@ -182,7 +186,7 @@ class Newcarscustomer extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'newinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,licensenumber,household,4s_shop');
                 }])
@@ -201,9 +205,14 @@ class Newcarscustomer extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['newinventory']);
                 $row->getRelation('newinventory')->visible(['frame_number', 'licensenumber', 'engine_number', 'household', '4s_shop']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
 

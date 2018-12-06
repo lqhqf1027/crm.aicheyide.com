@@ -46,7 +46,7 @@ class Secondhandcarcustomer extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where('review_the_data', 'the_car')
@@ -60,7 +60,7 @@ class Secondhandcarcustomer extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField(['nickname','id','avatar']);
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where('review_the_data', 'the_car')
@@ -74,7 +74,12 @@ class Secondhandcarcustomer extends Backend
                     $row->visible(['admin']);
                     $row->getRelation('admin')->visible(['id','avatar','nickname']);
                     $row->visible(['models']);
-                    $row->getRelation('models')->visible(['name']);
+                    $row->getRelation('models')->visible(['name', 'models_name']);
+
+                    if ($list[$k]['models']['models_name']) {
+                        $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                    }
+    
                 }
             
 

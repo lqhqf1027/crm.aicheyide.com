@@ -66,7 +66,7 @@ class Vehicleinformation extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['nickname', 'id', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->where(function ($query) {
@@ -83,7 +83,7 @@ class Vehicleinformation extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['nickname', 'id', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }])
                 ->where($where)
                 ->where(function ($query) {
@@ -100,7 +100,11 @@ class Vehicleinformation extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname', 'id', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
 
             }
 
@@ -148,7 +152,7 @@ class Vehicleinformation extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'carnewinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,licensenumber,household,4s_shop');
                 }])
@@ -167,7 +171,7 @@ class Vehicleinformation extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'carnewinventory' => function ($query) {
                     $query->withField('frame_number,engine_number,licensenumber,household,4s_shop');
                 }])
@@ -186,9 +190,13 @@ class Vehicleinformation extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['carnewinventory']);
                 $row->getRelation('carnewinventory')->visible(['frame_number', 'licensenumber', 'engine_number', 'household', '4s_shop']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
 
             }
 

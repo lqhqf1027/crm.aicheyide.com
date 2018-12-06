@@ -88,7 +88,13 @@ class Secondvehicleinformation extends Backend
                     'engine_number', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
                     'createtime', 'updatetime', 'status_data', 'department', 'admin_name']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+                
+                if($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+                
+                
                 foreach ((array)$data as $key => $value){
                     foreach ($value as $v){
                         if($v['licenseplatenumber'] == $row['licenseplatenumber']){
