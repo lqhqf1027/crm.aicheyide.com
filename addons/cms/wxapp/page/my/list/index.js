@@ -147,9 +147,7 @@ Page({
         })
     },
     getInfo() {
-        const user_id = app.globalData.userInfo.id
-
-        app.request('/my/index', { user_id }, (data, ret) => {
+        app.request('/my/index', {}, (data, ret) => {
             console.log(data)
             this.setData({
                 'collection.carSelectList': data.collection && data.collection.carSelectList,

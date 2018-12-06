@@ -74,7 +74,7 @@ App({
                     that.showLoginModal(cb);
                 }
             });
-            this.login(cb);
+            // this.login(cb);
         }
     },
     //登录

@@ -97,7 +97,7 @@
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_2.png" />
             <view class="card__more" bindtap="toMore">MORE+</view>
         </view>
-        <swiper slot="body" style="height: 270rpx" display-multiple-items="2.5" bindchange="bindchange">
+        <swiper slot="body" style="height: 260rpx" display-multiple-items="2.5" bindchange="bindchange">
             <block wx:for="{{ carType.new.recommendList }}" wx:key="">
                 <swiper-item class="swiper-item">
                     <view class="car__box">
@@ -123,7 +123,7 @@
             </view>
             <view slot="body">
                 <image class="card__cover wux-mb--10" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial" />
-                <swiper style="height: 270rpx" display-multiple-items="2.5" bindchange="bindchange">
+                <swiper style="height: 260rpx" display-multiple-items="2.5" bindchange="bindchange">
                     <block wx:for="{{ card.plan }}" wx:key="">
                         <swiper-item class="swiper-item">
                             <view class="car__box">

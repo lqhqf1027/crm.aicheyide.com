@@ -281,7 +281,7 @@ image.quiet {
 
 .car__box .car__image {
     width: 280rpx;
-    height: 182rpx;
+    height: 164rpx;
 }
 
 .car {
