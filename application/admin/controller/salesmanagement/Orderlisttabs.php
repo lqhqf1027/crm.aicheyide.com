@@ -182,7 +182,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber');
                 }])
@@ -197,7 +197,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }, 'newinventory' => function ($query) {
                     $query->withField('licensenumber');
                 }])
@@ -214,9 +214,14 @@ class Orderlisttabs extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['newinventory']);
                 $row->getRelation('newinventory')->visible(['licensenumber']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
 
@@ -264,7 +269,7 @@ class Orderlisttabs extends Backend
                 ->with(['admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }, 'carrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin');
                 }])
@@ -276,7 +281,7 @@ class Orderlisttabs extends Backend
                 ->with(['admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }, 'carrentalmodelsinfo' => function ($query) {
                     $query->withField('licenseplatenumber,vin');
                 }])
@@ -290,14 +295,24 @@ class Orderlisttabs extends Backend
                 $v->visible(['admin']);
                 $v->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $v->visible(['models']);
-                $v->getRelation('models')->visible(['name']);
+                $v->getRelation('models')->visible(['name', 'models_name']);
                 $v->visible(['carrentalmodelsinfo']);
                 $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber', 'vin']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+                
+                $department = Db::name('auth_group_access')
+                    ->alias('a')
+                    ->join('auth_group b', 'a.group_id = b.id')
+                    ->where('a.uid', $v['admin']['id'])
+                    ->value('b.name');
+                $list[$k]['admin']['department'] = $department;
+
             }
 
-
             $list = collection($list)->toArray();
-
             foreach ($list as $k => $v) {
                 $department = Db::name('auth_group_access')
                     ->alias('a')
@@ -305,7 +320,9 @@ class Orderlisttabs extends Backend
                     ->where('a.uid', $v['admin']['id'])
                     ->value('b.name');
                 $list[$k]['admin']['department'] = $department;
+
             }
+
             $result = array("total" => $total, "rows" => $list);
             return json($result);
         }
@@ -345,7 +362,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -358,7 +375,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -372,7 +389,11 @@ class Orderlisttabs extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
             }
 
 
@@ -421,7 +442,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -434,7 +455,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -448,7 +469,12 @@ class Orderlisttabs extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
 
@@ -497,7 +523,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -510,7 +536,7 @@ class Orderlisttabs extends Backend
                 }, 'admin' => function ($query) {
                     $query->withField(['id', 'nickname', 'avatar']);
                 }, 'models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -524,7 +550,12 @@ class Orderlisttabs extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['id', 'nickname', 'avatar']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
 
@@ -1147,10 +1178,10 @@ class Orderlisttabs extends Backend
             $plan_id = json_decode($plan_id, true);
             $sql = Db::name('models')->alias('a')
                 ->join('plan_acar b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id,b.models_id,b.sales_id')
+                ->field('a.models_name as model_name,a.name as models_name,b.id,b.payment,b.monthly,b.gps,b.tail_section,b.margin,b.category_id,b.models_id,b.sales_id')
                 ->where(['b.ismenu' => 1, 'b.id' => $plan_id])
                 ->find();
-            $plan_name = $sql['models_name'] . '【首付' . $sql['payment'] . '，' . '月供' . $sql['monthly'] . '，' . 'GPS ' . $sql['gps'] . '，' . '尾款 ' . $sql['tail_section'] . '，' . '保证金' . $sql['margin'] . '】';
+            $plan_name = $sql['models_name'] . " " . $sql['model_name'] . '【首付' . $sql['payment'] . '，' . '月供' . $sql['monthly'] . '，' . 'GPS ' . $sql['gps'] . '，' . '尾款 ' . $sql['tail_section'] . '，' . '保证金' . $sql['margin'] . '】';
 
             Session::set('plan_id', $plan_id);
             Session::set('plan_name', $plan_name);
@@ -1175,12 +1206,14 @@ class Orderlisttabs extends Backend
                 $result = Db::name('sales_order')->alias('a')
                     ->join('plan_acar b', 'a.plan_acar_name = b.id')
                     ->join('models c', 'c.id=b.models_id')
-                    ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.name as models_name')
+                    ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.models_name as model_name,c.name as models_name')
                     ->where(['a.id' => $row['id']])
                     ->find();
             }
 
             $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
+
+            $result['models_name'] = $result['models_name'] . " " . $result['model_name'];
 
             $category = DB::name('scheme_category')->field('id,name')->select();
 
@@ -1258,12 +1291,14 @@ class Orderlisttabs extends Backend
                 $result = Db::name('sales_order')->alias('a')
                     ->join('plan_acar b', 'a.plan_acar_name = b.id')
                     ->join('models c', 'c.id=b.models_id')
-                    ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.name as models_name')
+                    ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.models_name as model_name,c.name as models_name')
                     ->where(['a.id' => $row['id']])
                     ->find();
             }
 
             $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
+
+            $result['models_name'] = $result['models_name'] . " " . $result['model_name'];
 
             $category = DB::name('scheme_category')->field('id,name')->select();
 
@@ -1324,12 +1359,14 @@ class Orderlisttabs extends Backend
             $result = Db::name('sales_order')->alias('a')
                 ->join('plan_acar b', 'a.plan_acar_name = b.id')
                 ->join('models c', 'c.id=b.models_id')
-                ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.name as models_name')
+                ->field('b.id as plan_id,b.category_id as category_id,b.payment,b.monthly,b.nperlist,b.gps,b.margin,b.tail_section,c.models_name as model_name,c.name as models_name')
                 ->where(['a.id' => $row['id']])
                 ->find();
         }
 
         $result['downpayment'] = $result['payment'] + $result['monthly'] + $result['gps'] + $result['margin'];
+
+        $result['models_name'] = $result['models_name'] . " " . $result['model_name'];
 
         $category = Db::name('scheme_category')->field('id,name')->select();
 
@@ -1417,11 +1454,12 @@ class Orderlisttabs extends Backend
 
         $result = Db::name('car_rental_models_info')->alias('a')
             ->join('models b', 'b.id=a.models_id')
-            ->field('a.id,a.licenseplatenumber,a.kilometres,a.Parkingposition,a.companyaccount,a.cashpledge,a.threemonths,a.sixmonths,a.manysixmonths,a.note,b.name as models_name')
+            ->field('a.id,a.licenseplatenumber,a.kilometres,a.Parkingposition,a.companyaccount,a.cashpledge,a.threemonths,a.sixmonths,a.manysixmonths,a.note,b.models_name as model_name,b.name as models_name')
             ->where('a.status_data', '')
             ->where('a.shelfismenu', '=', '1')
             ->select();
-
+        // pr($result);
+        // die;
         $this->view->assign('result', $result);
 
         if ($this->request->isPost()) {
@@ -1554,11 +1592,11 @@ class Orderlisttabs extends Backend
 
             $sql = Db::name('models')->alias('a')
                 ->join('car_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.id,b.licenseplatenumber,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,a.name as models_name')
+                ->field('a.id,b.licenseplatenumber,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,a.models_name as model_name,a.name as models_name')
                 ->where(['b.id' => $plan_id])
                 ->find();
 
-            $plan_name = $sql['models_name'] . '【押金' . $sql['cashpledge'] . '，' . '3月内租金（元）' . $sql['threemonths'] . '，' . '6月内租金（元） ' . $sql['sixmonths'] . '，' . '6月以上租金（元） ' . $sql['manysixmonths'] . '】';
+            $plan_name = $sql['models_name'] . " " . $sql['model_name'] . '【押金' . $sql['cashpledge'] . '，' . '3月内租金（元）' . $sql['threemonths'] . '，' . '6月内租金（元） ' . $sql['sixmonths'] . '，' . '6月以上租金（元） ' . $sql['manysixmonths'] . '】';
 
             Session::set('plan_id', $plan_id);
 
@@ -1586,10 +1624,11 @@ class Orderlisttabs extends Backend
             $result = DB::name('rental_order')->alias('a')
                 ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
                 ->join('models c', 'c.id=b.models_id')
-                ->field('a.id,a.username,a.plan_car_rental_name,a.phone,a.deposit_receiptimages,a.down_payment,a.plan_name,b.licenseplatenumber,b.kilometres,b.Parkingposition,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,c.name as models_name')
+                ->field('a.id,a.username,a.plan_car_rental_name,a.phone,a.deposit_receiptimages,a.down_payment,a.plan_name,b.licenseplatenumber,b.kilometres,b.Parkingposition,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,c.models_name as model_name,c.name as models_name')
                 ->where('a.id', $row['id'])
                 ->find();
         }
+        $result['models_name'] = $result['models_name'] . " " . $result['model_name'];
 
         $this->view->assign('result', $result);
 
@@ -1657,10 +1696,12 @@ class Orderlisttabs extends Backend
             $result = DB::name('rental_order')->alias('a')
                 ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
                 ->join('models c', 'c.id=b.models_id')
-                ->field('a.id,a.username,a.plan_car_rental_name,a.phone,a.deposit_receiptimages,a.down_payment,a.plan_name,b.licenseplatenumber,b.kilometres,b.Parkingposition,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,c.name as models_name')
+                ->field('a.id,a.username,a.plan_car_rental_name,a.phone,a.deposit_receiptimages,a.down_payment,a.plan_name,b.licenseplatenumber,b.kilometres,b.Parkingposition,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,c.models_name as model_name,c.name as models_name')
                 ->where('a.id', $row['id'])
                 ->find();
         }
+
+        $result['models_name'] = $result['models_name'] . " " . $result['model_name'];
 
         $this->view->assign('result', $result);
 
@@ -1708,10 +1749,12 @@ class Orderlisttabs extends Backend
             $result = DB::name('rental_order')->alias('a')
                 ->join('car_rental_models_info b', 'b.id=a.plan_car_rental_name')
                 ->join('models c', 'c.id=b.models_id')
-                ->field('a.id,a.username,a.plan_car_rental_name,a.phone,a.deposit_receiptimages,a.down_payment,a.plan_name,b.licenseplatenumber,b.kilometres,b.Parkingposition,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,c.name as models_name')
+                ->field('a.id,a.username,a.plan_car_rental_name,a.phone,a.deposit_receiptimages,a.down_payment,a.plan_name,b.licenseplatenumber,b.kilometres,b.Parkingposition,b.companyaccount,b.cashpledge,b.threemonths,b.sixmonths,b.manysixmonths,b.note,c.models_name as model_name,c.name as models_name')
                 ->where('a.id', $row['id'])
                 ->find();
         }
+
+        $result['models_name'] = $result['models_name'] . " " . $result['model_name'];
 
         $this->view->assign('result', $result);
 
@@ -1984,13 +2027,13 @@ class Orderlisttabs extends Backend
         
         $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
+                ->field('a.models_name as model_name,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
                 ->where(['b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
            
         foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
         }
            
@@ -2117,13 +2160,13 @@ class Orderlisttabs extends Backend
             
             $sql = Db::name('models')->alias('a')
                     ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                    ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
+                    ->field('a.models_name as model_name,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
                     ->where(['b.shelfismenu' => 1])
                     ->whereOr('sales_id', $this->auth->id)
                     ->select();
                
             foreach ((array)$sql as $bValue) {
-                    $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
+                    $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                     $newB[] = $bValue;
             }
             
@@ -2211,13 +2254,13 @@ class Orderlisttabs extends Backend
             
             $sql = Db::name('models')->alias('a')
                     ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                    ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
+                    ->field('a.models_name as model_name,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
                     ->where(['b.shelfismenu' => 1])
                     ->whereOr('sales_id', $this->auth->id)
                     ->select();
                 
             foreach ((array)$sql as $bValue) {
-                    $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
+                    $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                     $newB[] = $bValue;
             }
             $data = $newB;    
@@ -2285,13 +2328,13 @@ class Orderlisttabs extends Backend
         
         $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
+                ->field('a.models_name as model_name,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.licenseplatenumber')
                 ->where(['b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
            
         foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
         }
         $data = $newB;
@@ -2371,13 +2414,13 @@ class Orderlisttabs extends Backend
         
         $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.id,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.licenseplatenumber')
+                ->field('a.id,a.models_name as model_name,a.name as models_name,b.id,b.newpayment,b.monthlypaymen,b.periods,b.totalprices,b.bond,b.licenseplatenumber')
                 ->where(['b.shelfismenu' => 1])
                 ->whereOr('sales_id', $this->auth->id)
                 ->select();
            
         foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【新首付' . $bValue['newpayment'] . '，' . '月供' . $bValue['monthlypaymen'] . '，' . '期数（月）' . $bValue['periods'] . '，' . '总价（元）' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
         }
         $data = $newB;
@@ -2489,12 +2532,12 @@ class Orderlisttabs extends Backend
        
         $sql = Db::name('models')->alias('a')
                 ->join('plan_full b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.full_total_price')
+                ->field('a.models_name as model_name,a.name as models_name,b.id,b.full_total_price')
                 ->where(['b.ismenu' => 1])
                 ->select();
            
         foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '【全款总价' . $bValue['full_total_price'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '【全款总价' . $bValue['full_total_price'] . '】';
                 $newB[] = $bValue;
         }
         $data = $newB;
@@ -2596,12 +2639,12 @@ class Orderlisttabs extends Backend
        
         $sql = Db::name('models')->alias('a')
                 ->join('plan_full b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.full_total_price')
+                ->field('a.models_name as model_name,a.name as models_name,b.id,b.full_total_price')
                 ->where(['b.ismenu' => 1])
                 ->select();
             
         foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '【全款总价' . $bValue['full_total_price'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '【全款总价' . $bValue['full_total_price'] . '】';
                 $newB[] = $bValue;
         }
 
@@ -2756,12 +2799,12 @@ class Orderlisttabs extends Backend
         
         $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.totalprices,b.licenseplatenumber')
+                ->field('a.models_name as model_name,a.name as models_name,b.id,b.totalprices,b.licenseplatenumber')
                 ->where(['b.status_data' => '', 'b.shelfismenu' => 1])
                 ->select();
             
         foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【全款总价' . $bValue['totalprices'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【全款总价' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
         }
 
@@ -2947,12 +2990,12 @@ class Orderlisttabs extends Backend
 
         $sql = Db::name('models')->alias('a')
                 ->join('secondcar_rental_models_info b', 'b.models_id=a.id')
-                ->field('a.name as models_name,b.id,b.totalprices,b.licenseplatenumber')
+                ->field('a.models_name as model_name,a.name as models_name,b.id,b.totalprices,b.licenseplatenumber')
                 ->where(['b.status_data' => '', 'b.shelfismenu' => 1])
                 ->select();
             
         foreach ((array)$sql as $bValue) {
-                $bValue['models_name'] = $bValue['models_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【全款总价' . $bValue['totalprices'] . '】';
+                $bValue['models_name'] = $bValue['models_name'] . " " . $bValue['model_name'] . '---车牌号为：' . $bValue['licenseplatenumber'] . '【全款总价' . $bValue['totalprices'] . '】';
                 $newB[] = $bValue;
         }
 

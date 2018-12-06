@@ -51,7 +51,7 @@ class Vehicleinformation extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams("username", true);
             $total = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }, 'sales' => function ($query) {
                     $query->withField('nickname');
                 }])
@@ -62,7 +62,7 @@ class Vehicleinformation extends Backend
 
             $list = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField(['name', 'models_name']);
                 }, 'sales' => function ($query) {
                     $query->withField('nickname');
                 }])
@@ -89,7 +89,12 @@ class Vehicleinformation extends Backend
                     'engine_no', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
                     'status_data', 'department', 'admin_name']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
                 foreach ((array)$data as $key => $value) {
                     if ($value['plan_car_rental_name'] == $row['id']) {
                         $department = Db::name('auth_group_access')
@@ -575,7 +580,7 @@ class Vehicleinformation extends Backend
     {
 
         $models = Db::name("models")
-            ->field("id as models_id,name as models_name,brand_id")
+            ->field("id as models_id,models_name as model_name,name as models_name,brand_id")
             ->select();
             
         //品牌下没有车型，就不显示在下拉列表
@@ -597,7 +602,7 @@ class Vehicleinformation extends Backend
             foreach ($models as $key => $value) {
 
                 if ($v['id'] == $value['brand_id']) {
-
+                    $value['models_name'] = $value['models_name'] . " " . $value['model_name'];
                     array_push($brand[$k]['models'], $value);
                 }
             }

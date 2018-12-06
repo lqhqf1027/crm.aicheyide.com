@@ -58,7 +58,7 @@ class Rentcarscustomer extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username,carrentalmodelsinfo.licenseplatenumber', true);
             $total = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField("name");
+                    $query->withField("name,models_name");
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -71,7 +71,7 @@ class Rentcarscustomer extends Backend
 
             $list = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField("name");
+                    $query->withField("name,models_name");
                 }, 'admin' => function ($query) {
                     $query->withField('id,nickname,avatar');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -87,6 +87,10 @@ class Rentcarscustomer extends Backend
             $list = collection($list)->toArray();
 
             foreach ($list as $k => $v) {
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
                 $department = Db::name('auth_group_access')
                     ->alias('a')
                     ->join('auth_group b', 'a.group_id = b.id')
@@ -123,7 +127,7 @@ class Rentcarscustomer extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
             $total = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField("name");
+                    $query->withField("name,models_name");
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -136,7 +140,7 @@ class Rentcarscustomer extends Backend
 
             $list = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField("name");
+                    $query->withField("name,models_name");
                 }, 'admin' => function ($query) {
                     $query->withField('id,nickname,avatar');
                 }, 'carrentalmodelsinfo' => function ($query) {
@@ -152,6 +156,11 @@ class Rentcarscustomer extends Backend
             $list = collection($list)->toArray();
 
             foreach ($list as $k => $v) {
+                
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
                 $department = Db::name('auth_group_access')
                     ->alias('a')
                     ->join('auth_group b', 'a.group_id = b.id')

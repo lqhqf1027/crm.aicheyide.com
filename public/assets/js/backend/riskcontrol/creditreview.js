@@ -382,6 +382,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                                         icon: 'fa fa-arrows',
                                         extend: 'data-toggle="tooltip"',
                                         classname: 'btn btn-xs btn-danger btn-dialog btn-chooseStock',
+                                        url: 'riskcontrol/creditreview/recyclebin',
 
                                         hidden: function (row) {
                                             if (row.review_the_data == 'tube_into_stock') {
@@ -1348,34 +1349,74 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                 })
 
             },
+            
+        },
+        //新车库存
+        recyclebin: function () {
+
+            // 初始化表格参数配置
+            Table.api.init({
+                extend: {
+                    'dragsort_url': ''
+                }
+            });
+    
+            var table = $("#table");
+            $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:车型";};
+            // 初始化表格
+            table.bootstrapTable({
+                url: 'riskcontrol/creditreview/recyclebin',
+                pk: 'id',
+                sortName: 'id',
+                toolbar: '#toolbar',
+                columns: [
+                    [
+                        {checkbox: true},
+                        {field: 'id', title: __('Id'),operate:false},
+                        {field: 'models.name', title: __('车型名称')},
+                        {field: 'licensenumber', title: __('车牌号')},
+                        {field: 'frame_number', title: __('车架号')},
+                        {field: 'engine_number', title: __('发动机号')},
+                        {field: 'household', title: __('所属户')},
+                        {field: '4s_shop', title: __('4S店')},
+                        {field: 'note', title: __('备注'),operate:false},
+                    ]
+                ] 
+                });
+    
+                // 为表格绑定事件
+                Table.api.bindevent(table);
+
+                
+    
         },
 
         add: function () {
             Controller.api.bindevent();
 
         },
-        choosestock: function () {
+        // choosestock: function () {
 
-            Table.api.init({});
-            Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
+        //     Table.api.init({});
+        //     Form.api.bindevent($("form[role=form]"), function (data, ret) {
+        //         //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
 
-                // console.log(data);
-                // newAllocationNum = parseInt($('#badge_new_allocation').text());
-                // num = parseInt(data);
-                // $('#badge_new_allocation').text(num+newAllocationNum); 
-                Fast.api.close(data);//这里是重点
+        //         // console.log(data);
+        //         // newAllocationNum = parseInt($('#badge_new_allocation').text());
+        //         // num = parseInt(data);
+        //         // $('#badge_new_allocation').text(num+newAllocationNum); 
+        //         Fast.api.close(data);//这里是重点
 
-                Toastr.success("成功");//这个可有可无
-            }, function (data, ret) {
-                // console.log(data);
+        //         Toastr.success("成功");//这个可有可无
+        //     }, function (data, ret) {
+        //         // console.log(data);
 
-                Toastr.success("失败");
+        //         Toastr.success("失败");
 
-            });
-            // Controller.api.bindevent();
+        //     });
+        //     // Controller.api.bindevent();
 
-        },
+        // },
         auditedit: function () {
 
             Table.api.init({});
@@ -1678,9 +1719,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                         var url = 'riskcontrol/creditreview/choosestock';
                         Fast.api.open(Table.api.replaceurl(url, row, table), __('选择库存车'), $(this).data() || {
                             callback: function (value) {
-                                //    在这里可以接收弹出层中使用`Fast.api.close(data)`进行回传的数据
+
+                            }, success: function (ret) {
                             }
                         })
+                        
                     },
 
                     /**

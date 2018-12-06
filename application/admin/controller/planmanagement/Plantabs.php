@@ -65,7 +65,7 @@ class Plantabs extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('models.name', true);
             $total = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 },'financialplatform'=>function($query){
@@ -78,7 +78,7 @@ class Plantabs extends Backend
 
             $list = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name');
+                    $query->withField('name,models_name');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'schemecategory' => function ($query) {
@@ -97,7 +97,7 @@ class Plantabs extends Backend
 
                 $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance', 'category_id','sales_id']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['schemecategory']);
@@ -107,6 +107,10 @@ class Plantabs extends Backend
                 $list[$key]['brand_name'] = array_keys(self::getBrandName($row['id'])); //获取品牌
                 $list[$key]['brand_log'] =Config::get('upload')['cdnurl'].array_values(self::getBrandName($row['id']))[0]; //获取logo图片
                 $list[$key]['match_plan'] = in_array($row['id'], $sales_order_data) == $row['id'] ? 'match_success' : 'match_error'; //返回是否与方案id匹配
+
+                if ($list[$key]['models']['models_name']) {
+                    $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
+                }
 
             }
             $list = collection($list)->toArray();

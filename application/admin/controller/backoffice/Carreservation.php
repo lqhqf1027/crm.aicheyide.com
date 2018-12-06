@@ -62,7 +62,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }, 'newinventory' => function ($query) {
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
@@ -77,7 +77,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }, 'newinventory' => function ($query) {
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
@@ -96,7 +96,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }, 'newinventory' => function ($query) {
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
@@ -118,7 +118,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }, 'newinventory' => function ($query) {
                         $query->withField('frame_number,engine_number,household,4s_shop');
                     }])
@@ -147,9 +147,13 @@ class Carreservation extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['newinventory']);
                 $row->getRelation('newinventory')->visible(['frame_number', 'engine_number', 'household', '4s_shop']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
 
             }
 
@@ -192,7 +196,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
@@ -207,7 +211,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
@@ -223,7 +227,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where(function ($query) use ($can_use_id){
@@ -245,7 +249,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where(function ($query) use ($can_use_id){
@@ -270,7 +274,12 @@ class Carreservation extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
             $list = collection($list)->toArray();
@@ -312,7 +321,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
@@ -326,7 +335,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
@@ -344,7 +353,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where(function ($query) use ($can_use_id){
@@ -365,7 +374,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where(function ($query) use ($can_use_id){
@@ -390,7 +399,12 @@ class Carreservation extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
             $list = collection($list)->toArray();
@@ -430,7 +444,7 @@ class Carreservation extends Backend
                     ->with(['admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }, 'carrentalmodelsinfo' => function ($query) {
                         $query->withField('licenseplatenumber,vin');
                     }])
@@ -442,7 +456,7 @@ class Carreservation extends Backend
                     ->with(['admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }, 'carrentalmodelsinfo' => function ($query) {
                         $query->withField('licenseplatenumber,vin');
                     }])
@@ -456,7 +470,7 @@ class Carreservation extends Backend
                     ->with(['admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }, 'carrentalmodelsinfo' => function ($query) {
                         $query->withField('licenseplatenumber,vin');
                     }])
@@ -476,7 +490,7 @@ class Carreservation extends Backend
                     ->with(['admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }, 'carrentalmodelsinfo' => function ($query) {
                         $query->withField('licenseplatenumber,vin');
                     }])
@@ -500,9 +514,13 @@ class Carreservation extends Backend
                 $v->visible(['admin']);
                 $v->getRelation('admin')->visible(['nickname']);
                 $v->visible(['models']);
-                $v->getRelation('models')->visible(['name']);
+                $v->getRelation('models')->visible(['name', 'models_name']);
                 $v->visible(['carrentalmodelsinfo']);
                 $v->getRelation('carrentalmodelsinfo')->visible(['licenseplatenumber', 'vin']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
 
             }
 
@@ -544,7 +562,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
@@ -558,7 +576,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where("backoffice_id", "not null")
@@ -576,7 +594,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where(function ($query) use ($can_use_id){
@@ -597,7 +615,7 @@ class Carreservation extends Backend
                     }, 'admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
-                        $query->withField('name');
+                        $query->withField('name,models_name');
                     }])
                     ->where($where)
                     ->where(function ($query) use ($can_use_id){
@@ -622,7 +640,12 @@ class Carreservation extends Backend
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
+                $row->getRelation('models')->visible(['name', 'models_name']);
+
+                if ($list[$k]['models']['models_name']) {
+                    $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
+                }
+
             }
 
             $list = collection($list)->toArray();
