@@ -337,6 +337,29 @@ class Share extends Base
 
     }
 
+    /**
+     * 心愿单接口
+     */
+    public function wishList()
+    {
+        $user_id = $this->request->post('user_id');
+        $fill_models = $this->request->post('fill_models');
+        $expectant_city = $this->request->post('expectant_city');
+
+        if (!$user_id || !$fill_models || !$expectant_city) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+
+        $res = Db::name('cms_wishlist')->insert([
+            'user_id' => $user_id,
+            'fill_models' => $fill_models,
+            'expectant_city' => $expectant_city,
+            'createtime' => time()
+        ]);
+
+        $res?$this->success('提交心愿单成功','success'):$this->error('提交心愿单失败');
+    }
+
 
     /**
      * 新车详情

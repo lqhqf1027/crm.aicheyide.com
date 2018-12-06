@@ -174,7 +174,7 @@ class Index extends Base
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getBrand()
+    public static function getBrand()
     {
         $brand = Models::with(['brand' => function ($brand) {
             $brand->where('status', 'normal')->withField('id,name,brand_logoimage');
@@ -213,7 +213,7 @@ class Index extends Base
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getAllStylePlan($city_id)
+    public static function getAllStylePlan($city_id)
     {
 
         //得到品牌-方案数组
@@ -352,7 +352,7 @@ class Index extends Base
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function appointment()
+    public static function appointment()
     {
 
         $appointment = Subscribe::field('id')
@@ -377,7 +377,7 @@ class Index extends Base
             if ($v['energyplan']['models_id']) {
                 $models_id = $v['energyplan']['models_id'];
             }
-            $appointment[$k]['models_name'] = $this->modelsName($models_id);
+            $appointment[$k]['models_name'] = self::modelsName($models_id);
             $appointment[$k]['mobile'] = $v['user']['mobile'];
             $appointment[$k]['avatar'] = $v['user']['avatar'];
             unset($appointment[$k]['user'], $appointment[$k]['newplan'], $appointment[$k]['usedplan'],

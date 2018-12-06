@@ -7,6 +7,8 @@ use addons\cms\model\Channel;
 use app\common\model\Addon;
 use think\Config;
 use think\Db;
+use think\Cache;
+
 /**
  * 公共
  */
@@ -25,12 +27,25 @@ class Common extends Base
      */
     public function init()
     {
+        $city_id = $this->request->post('city_id');                              //参数：城市ID
+        if (!$city_id) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+
+        //预约缓存
+        if (!Cache::get('appointment')) {
+            Cache::set('appointment', Index::appointment());
+        }
+
+        //返回所有类型的方案
+        $useful = Index::getAllStylePlan($city_id);
+
         //焦点图
         $bannerList = [];
 //        $list = Block::getBlockList(['name' => 'focus', 'row' => 5]);
-        $list = Db::name('cms_block')->where(['name'=>'focus','status'=>'normal'])->select();
+        $list = Db::name('cms_block')->where(['name' => 'focus', 'status' => 'normal'])->select();
         foreach ($list as $index => $item) {
-            $bannerList[] = ['image' => cdnurl($item['image'], true), 'url' => '/', 'title' => $item['title']];
+            $bannerList[] = ['id'=>$item['id'],'image' => $item['image'], 'url' => '/', 'title' => $item['title']];
         }
 
 
@@ -43,8 +58,24 @@ class Common extends Base
         ];
 
         $data = [
-            'bannerList'     => $bannerList,
-            'config'         => $config
+            'carType' => [
+                'new' => [
+                    //为你推荐
+                    'recommendList' => $useful['recommendList'],
+                    //专题
+                    'specialList' => $useful['specialList'],
+                    //专场
+                    'specialfieldList' => $useful['specialfieldList']
+                ],
+            ],
+            'bannerList' => $bannerList,
+            'config' => $config,
+            //品牌
+            'brandList' => Index::getBrand(),
+            //分享
+            'shares' => Share::getConfigShare(),
+            //预约
+            'appointment' => Cache::get('appointment')
         ];
         $this->success('', $data);
 
