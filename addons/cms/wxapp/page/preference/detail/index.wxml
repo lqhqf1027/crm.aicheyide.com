@@ -1,3 +1,4 @@
+<!-- <include src="../../template/mdk_temp.wxml" /> -->
 <view class="container" wx:if="{{ type !== 'used' }}">
     <view class="card">
         <image class="card__image" src="{{ plan.models_main_images }}" wx:if="{{ plan.models_main_images }}" />
@@ -45,7 +46,7 @@
             <view class="title">门店地址</view>
         </wux-cell>
         <wux-cell hover-class="none">
-            <wux-media thumb="http://pbqg2m54r.bkt.clouddn.com/logo.png" thumbStyle="border-radius: 50%" title="{{ plan.companystore.store_name }}" label="{{ plan.companystore.store_address }}"></wux-media>
+            <wux-media thumb="https://static.aicheyide.com/ucuj/store/logo/859694614246574276.png" thumbStyle="border-radius: 50%" title="{{ plan.companystore.store_name }}" label="{{ plan.companystore.store_address }}"></wux-media>
         </wux-cell>
     </wux-cell-group>
 
