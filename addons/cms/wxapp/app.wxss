@@ -1,5 +1,8 @@
 @import "assets/styles/font-awesome.wxss";
 @import "assets/libs/wux/styles/index.wxss";
+ /* 客服系统高级配置扩展 */ 
+@import "page/template/mdk_temp.wxss";
+
 page {
     background-color: #f2f2f2;
     font-size: 14px;
