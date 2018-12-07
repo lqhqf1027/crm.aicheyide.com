@@ -381,7 +381,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                                         title: '选择库存车',
                                         icon: 'fa fa-arrows',
                                         extend: 'data-toggle="tooltip"',
-                                        classname: 'btn btn-xs btn-danger btn-dialog btn-chooseStock',
+                                        classname: 'btn btn-xs btn-danger btn-dialog btn-choosestock',
                                         url: 'riskcontrol/creditreview/recyclebin',
 
                                         hidden: function (row) {
@@ -771,6 +771,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                 });
                 //数据实时统计
                 newcarAudit.on('load-success.bs.table', function (e, data) {
+                    $(".btn-choosestock").data("area", ["95%", "95%"]);
                     $(".btn-newauditResult").data("area", ["95%", "95%"]);
                     $(".btn-auditedit").data("area", ["95%", "95%"]);
                     $(".btn-bigData").data("area", ["95%", "95%"]);
@@ -1371,7 +1372,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                 toolbar: '#toolbar',
                 columns: [
                     [
-                        {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
                         {field: 'models.name', title: __('车型名称')},
                         {field: 'licensenumber', title: __('车牌号')},
@@ -1380,6 +1380,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                         {field: 'household', title: __('所属户')},
                         {field: '4s_shop', title: __('4S店')},
                         {field: 'note', title: __('备注'),operate:false},
+                        {
+                            field: 'operate', title: __('Operate'), table: table,
+                            buttons: [
+                                {
+                                    name: 'auditedit',
+                                    text: '选择匹配',
+                                    icon: 'fa fa-pencil',
+                                    extend: 'data-toggle="tooltip"',
+                                    title: __('选择匹配'),
+                                    classname: 'btn btn-xs btn-success btn-dialog btn-choose',
+                                },
+
+                            ],
+                            events: Controller.api.events.operate,
+
+                            formatter: Controller.api.formatter.operate
+
+                        }
                     ]
                 ] 
                 });
@@ -1695,6 +1713,45 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-t
                                     return false;
                                 });
 
+
+                            }
+                        );
+
+                    },
+
+                    /**
+                     * 选择库存车
+                     * @param e
+                     * @param value
+                     * @param row
+                     * @param index
+                     */
+                    'click .btn-choose': function (e, value, row, index) {
+
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var that = this;
+                        Layer.confirm(
+                            __("选择匹配的车型是：" + row.models.name + "，是否确认匹配"),
+                            {icon: 3, title: __('Warning'), shadeClose: true},
+
+                            function (index) {
+                                var table = $(that).closest('table');
+                                var options = table.bootstrapTable('getOptions');
+                                var ids = $('#hidden1').val();
+                                Fast.api.ajax({
+                                    url: 'riskcontrol/creditreview/choose',
+                                    data: {id: row[options.pk], ids:ids}
+                                }, function (data, ret) {
+                                    parent.$('#toolbar1 .btn-refresh', parent.document).trigger('click')
+                                    Layer.close(index);
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index);
+                                    return false;
+                                }, function (data, ret) {
+                                    //失败的回调
+                                    return false;
+                                });
 
                             }
                         );
