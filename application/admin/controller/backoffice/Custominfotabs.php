@@ -33,11 +33,9 @@ class Custominfotabs extends Backend
      * 得到可行管理员ID
      * @return array
      */
-    public function getUserId()
+    public static function getUserId()
     {
-        $this->model = model("Admin");
-        $back = $this->model
-            ->where("rule_message", 'in', ['message13', 'message20', 'message24'])
+        $back = Admin::where("rule_message", 'in', ['message13', 'message20', 'message24'])
             ->field("id")
             ->select();
 
@@ -52,7 +50,7 @@ class Custominfotabs extends Backend
             array_push($backArray['back'], $value['id']);
         }
 
-        $superAdmin = $this->model->where("rule_message", "message21")
+        $superAdmin = Admin::where("rule_message", "message21")
             ->field("id")
             ->select();
 
@@ -269,9 +267,7 @@ class Custominfotabs extends Backend
     {
         $this->model = model('CustomerResource');
         $id = $this->model->get(['id' => $ids]);
-
         $saleList = $this->salesList();
-
         $this->view->assign([
             'firstSale' => $saleList['message8'] ? $saleList['message8'] : null,
             'secondSale' => $saleList['message9'] ? $saleList['message9'] : null,
@@ -411,7 +407,7 @@ class Custominfotabs extends Backend
 
     }
 
-    public function getAdmin($where)
+    public static function getAdmin($where)
     {
         return Db::name('admin')
             ->where($where)

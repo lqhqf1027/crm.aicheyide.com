@@ -51,7 +51,7 @@ class Depositmanage extends Backend
      */
     public function new_car()
     {
-        $current = $this->current_login();
+        $current = Custominfotabs::getUserId();
 
         $this->model = model('SalesOrder');
         //设置过滤方法
@@ -127,7 +127,7 @@ class Depositmanage extends Backend
      */
     public function used_car()
     {
-        $current = $this->current_login();
+        $current = Custominfotabs::getUserId();
         $this->model = model('SecondSalesOrder');
         //设置过滤方法
         $this->request->filter(['strip_tags']);
@@ -202,7 +202,7 @@ class Depositmanage extends Backend
      */
     public function rent_car()
     {
-        $current = $this->current_login();
+        $current = Custominfotabs::getUserId();
         $this->model = model('RentalOrder');
         //设置过滤方法
         $this->request->filter(['strip_tags']);
@@ -265,7 +265,7 @@ class Depositmanage extends Backend
      */
     public function full_car()
     {
-        $current = $this->current_login();
+        $current = Custominfotabs::getUserId();
 
         $this->model = model('FullParmentOrder');
         //设置过滤方法
@@ -342,10 +342,7 @@ class Depositmanage extends Backend
      */
     public function edit($ids = NULL)
     {
-        $order_info = Db::name('sales_order')
-            ->where('id', $ids)
-            ->field('customer_downpayment_id,bond')
-            ->find();
+        $order_info = $this->getSaleOrderData($ids);
 
         if ($order_info['customer_downpayment_id']) {
             $row = $this->getDownPayMent([
@@ -401,6 +398,14 @@ class Depositmanage extends Backend
         return $this->view->fetch();
     }
 
+    public function getSaleOrderData($ids)
+    {
+        return Db::name('sales_order')
+            ->where('id', $ids)
+            ->field('customer_downpayment_id,bond')
+            ->find();
+    }
+
 
     /**
      * 二手车定金编辑
@@ -413,10 +418,7 @@ class Depositmanage extends Backend
      */
     public function edit_used($ids = NULL)
     {
-        $order_info = Db::name('second_sales_order')
-            ->where('id', $ids)
-            ->field('customer_downpayment_id,bond')
-            ->find();
+        $order_info = $this->getSaleOrderData($ids);
 
         if ($order_info['customer_downpayment_id']) {
             $row = $this->getDownPayMent([
@@ -486,10 +488,7 @@ class Depositmanage extends Backend
      */
     public function edit_rent($ids = NULL)
     {
-        $order_info = Db::name('rental_order')
-            ->where('id', $ids)
-            ->field('customer_downpayment_id,bond')
-            ->find();
+        $order_info = $this->getSaleOrderData($ids);
 
         if ($order_info['customer_downpayment_id']) {
             $row = $this->getDownPayMent([
@@ -556,10 +555,7 @@ class Depositmanage extends Backend
      */
     public function edit_full($ids = NULL)
     {
-        $order_info = Db::name('full_parment_order')
-            ->where('id', $ids)
-            ->field('customer_downpayment_id,bond')
-            ->find();
+        $order_info = $this->getSaleOrderData($ids);
 
         if ($order_info['customer_downpayment_id']) {
             $row = $this->getDownPayMent([
@@ -633,41 +629,6 @@ class Depositmanage extends Backend
     }
 
 
-    /**当前登录
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function current_login()
-    {
-        $this->model = model("Admin");
-        $back = $this->model
-            ->where("rule_message", 'in', ["message13", 'message20', 'message24'])
-            ->field("id")
-            ->select();
-
-        $backArray = array();
-        $backArray['back'] = array();
-        $backArray['admin'] = array();
-        $backArray['manager'] = Db::name('admin')
-            ->where('rule_message', 'in', ['message3', 'message4', 'message22'])
-            ->column('id');
-
-        foreach ($back as $value) {
-            array_push($backArray['back'], $value['id']);
-        }
-
-        $superAdmin = $this->model->where("rule_message", "message21")
-            ->field("id")
-            ->select();
-
-        foreach ($superAdmin as $value) {
-            array_push($backArray['admin'], $value['id']);
-        }
-
-        return $backArray;
-    }
 
     /**
      * 如是内勤登录，得到对应部门销售的信息
@@ -682,22 +643,19 @@ class Depositmanage extends Backend
         switch ($message) {
             case 'message3':
             case 'message13':
-                return Db::name('admin')
-                    ->where('rule_message', 'message8')
-                    ->where('status', 'normal')
-                    ->column('id');
+                return Custominfotabs::getAdmin([
+                    'rule_message' => 'message8',
+                ]);
             case 'message4':
             case 'message20':
-                return Db::name('admin')
-                    ->where('rule_message', 'message9')
-                    ->where('status', 'normal')
-                    ->column('id');
+                return Custominfotabs::getAdmin([
+                    'rule_message' => 'message9',
+                ]);
             case 'message22':
             case 'message24':
-                return Db::name('admin')
-                    ->where('rule_message', 'message23')
-                    ->where('status', 'normal')
-                    ->column('id');
+                return Custominfotabs::getAdmin([
+                    'rule_message' => 'message23',
+                ]);
         }
 
     }
