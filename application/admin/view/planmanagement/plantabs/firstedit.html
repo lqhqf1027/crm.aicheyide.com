@@ -1,6 +1,26 @@
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
+        <div class="col-xs-12 col-sm-8">
+        
+                <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
+                    
+                    <option value="" style="display: none">未选择任何项</option>
+                    {foreach name="$store" item="vo"}
+                    {eq name="$vo.id" value="$row.store_id"}
+                    <option value="{$vo.id}" selected>{$vo.store_name}</option>
+                    {else /}
+                    <option value="{$vo.id}">{$vo.store_name}</option>
+                    {/eq}
+                    {/foreach}
+                
+                </select>
+            
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择销售方案类型')}:</label>
         <div class="col-xs-12 col-sm-8">
 

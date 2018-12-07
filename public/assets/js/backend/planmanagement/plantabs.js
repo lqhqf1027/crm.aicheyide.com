@@ -3,31 +3,37 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     var Controller = {
         index: function () {
             // 初始化表格参数配置
-            Table.api.init({});
+            Table.api.init({
 
-            //绑定事件
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                var panel = $($(this).attr("href"));
-                if (panel.size() > 0) {
-                    Controller.table[panel.attr("id")].call(this);
-                    $(this).on('click', function (e) {
-                        $($(this).attr("href")).find(".btn-refresh").trigger("click");
-                    });
-                }
-                //移除绑定的事件
-                $(this).unbind('shown.bs.tab');
+                extend: {
+                    index_url: 'plan/planacar/index',
+                    add_url: 'planmanagement/plantabs/firstadd',
+                    edit_url: 'planmanagement/plantabs/firstedit',
+                    del_url: 'planmanagement/plantabs/firstdel',
+                    multi_url: 'planmanagement/plantabs/firstmulti',
+                    import_url: 'planmanagement/plantabs/import',
+                    table: 'plan_acar',
+                },
+
             });
 
-            //必须默认触发shown.bs.tab事件
-            $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
-        },
-        table: {
-            /**
-             * （以租代购）新车
-             */
-            first: function () {
+            // //绑定事件
+            // $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            //     var panel = $($(this).attr("href"));
+            //     if (panel.size() > 0) {
+            //         Controller.table[panel.attr("id")].call(this);
+            //         $(this).on('click', function (e) {
+            //             $($(this).attr("href")).find(".btn-refresh").trigger("click");
+            //         });
+            //     }
+            //     //移除绑定的事件
+            //     $(this).unbind('shown.bs.tab');
+            // });
 
-                var table1 = $("#table1");
+            // //必须默认触发shown.bs.tab事件
+            // $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
+
+            var table1 = $("#table1");
                 table1.on('load-success.bs.table', function (e, data) {
                     var arr = data.rows;
                     // console.log(arr);
@@ -49,15 +55,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 // 初始化表格
                 table1.bootstrapTable({
                     url: 'planmanagement/plantabs/table1',
-                    extend: {
-                        index_url: 'plan/planacar/index',
-                        add_url: 'planmanagement/plantabs/firstadd',
-                        edit_url: 'planmanagement/plantabs/firstedit',
-                        del_url: 'planmanagement/plantabs/firstdel',
-                        multi_url: 'planmanagement/plantabs/firstmulti',
-                        import_url: 'planmanagement/plantabs/import',
-                        table: 'plan_acar',
-                    },
                     toolbar: '#toolbar1',
                     pk: 'id',
                     sortName: 'id',
@@ -169,75 +166,63 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 });
 
-
-            },
-
-            /**
-             * 全款车
-             */
-            planfull: function () {
-                // 表格3
-                var table3 = $("#table3");
-                table3.bootstrapTable({
-                    url: 'planmanagement/plantabs/table3',
-                    extend: {
-                        index_url: 'plan/planfull/index',
-                        add_url: 'planmanagement/plantabs/fulladd',
-                        edit_url: 'planmanagement/plantabs/fulledit',
-                        del_url: 'planmanagement/plantabs/fulldel',
-                        multi_url: 'planmanagement/plantabs/fullmulti',
-                        table: 'plan_full',
-                    },
-                    toolbar: '#toolbar3',
-                    pk: 'id',
-                    sortName: 'id',
-                    columns: [
-                        [
-                            {
-                                checkbox: true, formatter: function (v, r, i) {
-                                    return r.match_plan === 'match_success' ? {disabled: true} : {disabled: false};
-                                }
-                            },
-                            {field: 'id', title: __('Id')},
-                            {
-                                field: 'models.name', title: '销售车型', formatter: function (v, r, i) {
-
-                                    return v != null ? r.brand_name + '-' + v : v;
-                                }
-                            },
-
-                            {field: 'full_total_price', title: __('Full_total_price'), operate: 'BETWEEN'},
-                            {field: 'margin', title: __('保证金（元）'), operate: 'BETWEEN'},
-
-                            {
-                                field: 'createtime',
-                                title: __('Createtime'),
-                                operate: 'RANGE',
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {
-                                field: 'updatetime',
-                                title: __('Updatetime'),
-                                operate: 'RANGE',
-                                addclass: 'datetimerange',
-                                formatter: Table.api.formatter.datetime
-                            },
-                            {field: 'ismenu', title: __('Ismenu'), formatter: Controller.api.formatter.toggle},
-
-                            {
-                                field: 'operate',
-                                title: __('Operate'),
-                                table: table3,
-                                events: Table.api.events.operate,
-                                formatter: Controller.api.operate
-                            }
-                        ]
-                    ]
+                $(document).on("click", "a.btn-channel", function () {
+                    $("#archivespanel").toggleClass("col-md-9", $("#channelbar").hasClass("hidden"));
+                    $("#channelbar").toggleClass("hidden");
                 });
-                // 为表格3绑定事件
-                Table.api.bindevent(table3);
-            }
+
+                require(['jstree'], function () {
+                    //全选和展开
+                    $(document).on("click", "#checkall", function () {
+                        $("#channeltree").jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
+                    });
+                    $(document).on("click", "#expandall", function () {
+                        $("#channeltree").jstree($(this).prop("checked") ? "open_all" : "close_all");
+                    });
+                    $('#channeltree').on("changed.jstree", function (e, data) {
+                        console.log(data);
+                        console.log(data.selected);
+                        var options = table1.bootstrapTable('getOptions');
+                        options.pageNumber = 1;
+                        options.queryParams = function (params) {
+                            params.filter = JSON.stringify(data.selected.length > 0 ? {store_id: data.selected.join(",")} : {});
+                            params.op = JSON.stringify(data.selected.length > 0 ? {store_id: 'in'} : {});
+                            return params;
+                        };
+                        table1.bootstrapTable('refresh', {});
+                        return false;
+                    });
+                    $('#channeltree').jstree({
+                        "themes": {
+                            "stripes": true
+                        },
+                        "checkbox": {
+                            "keep_selected_style": false,
+                        },
+                        "types": {
+                            "channel": {
+                                "icon": "fa fa-th",
+                            },
+                            "list": {
+                                "icon": "fa fa-list",
+                            },
+                            "link": {
+                                "icon": "fa fa-link",
+                            },
+                            "disabled": {
+                                "check_node": false,
+                                "uncheck_node": false
+                            }
+                        },
+                        'plugins': ["types", "checkbox"],
+                        "core": {
+                            "multiple": true,
+                            'check_callback': true,
+                            "data": Config.storeList
+                        }
+                    });
+                });
+
         },
         add: function () {
 
@@ -314,22 +299,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             Controller.api.bindevent();
         },
-        fulledit: function () {
-            // $(".btn-add").data("area", ["300px","200px"]);
-            Table.api.init({});
-            Form.api.bindevent($("form[role=form]"), function (data, ret) {
-                //这里是表单提交处理成功后的回调函数，接收来自php的返回数据
-
-                Fast.api.close(data);//这里是重点
-                // console.log(data);
-                // Toastr.success("成功");//这个可有可无
-            }, function (data, ret) {
-                // console.log(data);
-                Toastr.success("失败");
-            });
-
-            Controller.api.bindevent();
-        },
+       
         //导入以租代购（新车）方案
         import_first_plan: function () {
             require(['upload'], function (Upload) {
@@ -352,9 +322,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             Controller.api.bindevent();
         },
-        fulladd: function () {
-            Controller.api.bindevent();
-        },
+       
         /**
          *   字符串按照指定长度换行
          * @param s   字符串

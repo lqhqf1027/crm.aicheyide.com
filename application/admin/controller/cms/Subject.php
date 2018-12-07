@@ -33,4 +33,41 @@ class Subject extends Backend
      */
     
 
+    /**
+    * 城市
+    */
+   public function city()
+   {
+        $this->model = new \app\admin\model\Cities;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax()) {
+            
+            //主键
+            $primarykey = $this->request->request('keyField');
+            //主键值
+            $primaryvalue = $this->request->request('keyValue');
+            
+            // pr($primaryvalue);
+            // die;
+            if ($primaryvalue) {
+                $list = $this->model->where('pid', 'NEQ', 0)->where('id', $primaryvalue)->where('status', 'normal')->field('id, cities_name as name')->select();
+
+                $result = array("list" => $list);
+
+                return json($result);
+            }
+            else{
+                $list = $this->model->where('pid', 'NEQ', 0)->where('status', 'normal')->field('id, cities_name as name')->select();
+
+                $result = array("list" => $list);
+
+                return json($result);
+            }
+            
+        }
+
+    }
+
+
 }

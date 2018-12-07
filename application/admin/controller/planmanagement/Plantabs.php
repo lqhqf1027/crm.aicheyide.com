@@ -9,6 +9,9 @@ use think\Config;
 use think\Db;
 use think\Session;
 use think\Cache;
+
+use app\admin\model\CompanyStore;
+use app\admin\model\Cities;
 /**
  * 多表格示例
  *
@@ -26,6 +29,52 @@ class Plantabs extends Backend
     public function _initialize()
     {
         parent::_initialize();
+
+        $storeList = [];
+        $disabledIds = [];
+        $cities_all = collection(Cities::where('pid', 'NEQ', '0')->order("id desc")->field(['id,cities_name as name'])->select())->toArray();
+        $store_all = collection(CompanyStore::order("id desc")->field(['id, city_id, store_name as name'])->select())->toArray();
+        $all = array_merge($cities_all, $store_all);
+        // pr($all);
+        // die;
+        foreach ($all as $k => $v) {
+
+            $state = ['opened' => true];
+
+            if (!$v['city_id']) {
+            
+                $disabledIds[] = $v['id'];
+                $storeList[] = [
+                    'id'     => $v['id'],
+                    'parent' => '#',
+                    'text'   => __($v['name']),
+                    'state'  => $state
+                ];
+            }
+
+            foreach ($cities_all as $key => $value) {
+                
+                if ($v['city_id'] == $value['id']) {
+                    
+                    $storeList[] = [
+                        'id'     => $v['id'],
+                        'parent' => $value['id'],
+                        'text'   => __($v['name']),
+                        'state'  => $state
+                    ];
+                }
+                   
+            }
+            
+        }
+        // pr($storeList);
+        // die;
+        // $tree = Tree::instance()->init($all, 'city_id');
+        // $storeOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
+        // pr($storeOptions);
+        // die;
+        // $this->view->assign('storeOptions', $storeOptions);
+        $this->assignconfig('storeList', $storeList);
 
     }
 
@@ -136,18 +185,6 @@ class Plantabs extends Backend
     }
 
     /**
-     * Notes:获取已签单的全款方案id
-     * User: glen9
-     * Date: 2018/10/11
-     * Time: 23:43
-     * @return array
-     */
-    public static function matchingFullParmentOrder()
-    {
-        return array_unique(Db::name('full_parment_order')->column('plan_plan_full_name'));
-    }
-
-    /**
      * 关联品牌名称
      * @param $plan_id 方案id
      * @return false|\PDOStatement|string|\think\Collection
@@ -172,61 +209,7 @@ class Plantabs extends Backend
             ->value('c.name');
     }
 
-    /**
-     * Notes:全款
-     * User: glen9
-     * Date: 2018/9/6
-     * Time: 22:00
-     * @return string|\think\response\Json
-     * @throws \think\Exception
-     */
-    public function table3()
-    {
-        $this->model = model('PlanFull');
-        $this->view->assign("ismenuList", $this->model->getIsmenuList());
-        //当前是否为关联查询
-        $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
-            if ($this->request->request('keyField')) {
-                return $this->selectpage();
-            }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
-            $total = $this->model
-                ->with(['models'])
-                ->where($where)
-                ->order($sort, $order)
-                ->count();
-
-            $list = $this->model
-                ->with(['models'])
-                ->where($where)
-                ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
-
-            foreach ($list as $row) {
-                $row->visible(['id', 'models_id', 'full_total_price', 'margin', 'ismenu', 'createtime', 'updatetime']);
-                $row->visible(['models']);
-                $row->getRelation('models')->visible(['name']);
-            }
-            $full_order_data = self::matchingFullParmentOrder();
-            $list = collection($list)->toArray();
-            foreach ((array)$list as $key => $value) {
-                $list[$key]['brand_name'] = $this->getFullBrandName($value['id']);
-
-                   $list[$key]['match_plan'] = in_array($value['id'], $full_order_data) == $value['id'] ? 'match_success' : 'match_error'; //返回是否与方案id匹配
-            }
-
-            $result = array("total" => $total, "rows" => $list);
-
-            return json($result);
-        }
-        return $this->view->fetch('index');
-    }
-
+   
 
     /**
      * 新车编辑
@@ -277,6 +260,7 @@ class Plantabs extends Backend
             'working_insurance_list' => $this->working_insurance(),
             'sales' => $this->getSales(),
             'category' => $this->getCategory(),
+            'store' => $this->getStore(),
             "car_models" => $this->getInfo(),
             'financial' => $financial,
             "nperlistList" => $this->model->getNperlistList()
@@ -333,6 +317,19 @@ class Plantabs extends Backend
     public function getCategory()
     {
         $res = Db::name("scheme_category")->select();
+
+        return $res;
+    }
+
+    /**得到门店
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getStore()
+    {
+        $res = Db::name("cms_company_store")->where('statuss', 'normal')->select();
 
         return $res;
     }
@@ -396,111 +393,6 @@ class Plantabs extends Backend
         }
         $this->error(__('Parameter %s can not be empty', 'ids'));
     }
-
-
-    /**
-     * 全款编辑
-     */
-    public function fulledit($ids = NULL)
-    {
-        $this->model = model('PlanFull');
-        $row = $this->model->get($ids);
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
-        if ($this->request->isPost()) {
-            $params = $this->request->post("row/a");
-            if ($params) {
-                try {
-                    //是否采用模型验证
-                    if ($this->modelValidate) {
-                        $name = basename(str_replace('\\', '/', get_class($this->model)));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : true) : $this->modelValidate;
-                        $row->validate($validate);
-                    }
-                    $result = $row->allowField(true)->save($params);
-                    if ($result !== false) {
-                        $this->success();
-                    } else {
-                        $this->error($row->getError());
-                    }
-                } catch (\think\exception\PDOException $e) {
-                    $this->error($e->getMessage());
-                } catch (\think\Exception $e) {
-                    $this->error($e->getMessage());
-                }
-            }
-            $this->error(__('Parameter %s can not be empty', ''));
-        }
-        $this->view->assign("row", $row);
-        return $this->view->fetch();
-    }
-
-    /**
-     * 全款车删除
-     */
-    public function fulldel($ids = "")
-    {
-        $this->model = model('PlanFull');
-        if ($ids) {
-            $pk = $this->model->getPk();
-            $adminIds = $this->getDataLimitAdminIds();
-            if (is_array($adminIds)) {
-                $count = $this->model->where($this->dataLimitField, 'in', $adminIds);
-            }
-            $list = $this->model->where($pk, 'in', $ids)->select();
-            $count = 0;
-            foreach ($list as $k => $v) {
-                $count += $v->delete();
-            }
-            if ($count) {
-                $this->success();
-            } else {
-                $this->error(__('No rows were deleted'));
-            }
-        }
-        $this->error(__('Parameter %s can not be empty', 'ids'));
-    }
-
-    /**
-     * 批量更新
-     */
-    public function fullmulti($ids = "")
-    {
-        $this->model = model('PlanFull');
-        $ids = $ids ? $ids : $this->request->param("ids");
-        if ($ids) {
-            if ($this->request->has('params')) {
-                parse_str($this->request->post("params"), $values);
-                $values = array_intersect_key($values, array_flip(is_array($this->multiFields) ? $this->multiFields : explode(',', $this->multiFields)));
-                if ($values) {
-                    $adminIds = $this->getDataLimitAdminIds();
-                    if (is_array($adminIds)) {
-                        $this->model->where($this->dataLimitField, 'in', $adminIds);
-                    }
-                    $count = 0;
-                    $list = $this->model->where($this->model->getPk(), 'in', $ids)->select();
-                    foreach ($list as $index => $item) {
-                        $count += $item->allowField(true)->isUpdate(true)->save($values);
-                    }
-                    if ($count) {
-                        $this->success();
-                    } else {
-                        $this->error(__('No rows were updated'));
-                    }
-                } else {
-                    $this->error(__('You have no permission'));
-                }
-            }
-        }
-        $this->error(__('Parameter %s can not be empty', 'ids'));
-    }
-
 
     /**车型对应车辆
      * @return false|\PDOStatement|string|\think\Collection
@@ -594,6 +486,7 @@ class Plantabs extends Backend
         $this->view->assign([
             'sales' => $this->getSales(),
             'category' => $this->getCategory(),
+            'store' => $this->getStore(),
             'financial' => $financial,
             'car_models' => $this->getInfo(),
             'nperlistList' => $this->model->getNperlistList()
@@ -652,42 +545,6 @@ class Plantabs extends Backend
                             }
                         }
 
-                        $this->success();
-                    } else {
-                        $this->error($this->model->getError());
-                    }
-                } catch (\think\exception\PDOException $e) {
-                    $this->error($e->getMessage());
-                } catch (\think\Exception $e) {
-                    $this->error($e->getMessage());
-                }
-            }
-            $this->error(__('Parameter %s can not be empty', ''));
-        }
-        return $this->view->fetch();
-    }
-
-    /**
-     * 全款车添加
-     */
-    public function fulladd()
-    {
-        $this->model = model("PlanFull");
-        if ($this->request->isPost()) {
-            $params = $this->request->post("row/a");
-            if ($params) {
-                if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
-                    $params[$this->dataLimitField] = $this->auth->id;
-                }
-                try {
-                    //是否采用模型验证
-                    if ($this->modelValidate) {
-                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : true) : $this->modelValidate;
-                        $this->model->validate($validate);
-                    }
-                    $result = $this->model->allowField(true)->save($params);
-                    if ($result !== false) {
                         $this->success();
                     } else {
                         $this->error($this->model->getError());
