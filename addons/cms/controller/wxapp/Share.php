@@ -277,15 +277,15 @@ class Share extends Base
         $sessionKey = $this->request->post('sessionKey');
         //解密手机号
         if ($sessionKey && $iv && $sessionKey) {
-            $pc = new WxBizDataCrypt('wxf789595e37da2838',$sessionKey);
-            $result = $pc->decryptData($encryptedData, $iv, $data );
-            if($result==0){
-                $mobile =  json_decode($data, true)['phoneNumber'];
-            }else{
+            $pc = new WxBizDataCrypt('wxf789595e37da2838', $sessionKey);
+            $result = $pc->decryptData($encryptedData, $iv, $data);
+            if ($result == 0) {
+                $mobile = json_decode($data, true)['phoneNumber'];
+            } else {
                 $this->error('手机号解密失败', 'error');
             }
             return;
-        } 
+        }
         if (!$user_id || !$plan_id || !$cartype) {
             $this->error('缺少参数,请求失败', 'error');
         }
@@ -373,7 +373,7 @@ class Share extends Base
             'createtime' => time()
         ]);
 
-        $res?$this->success('提交心愿单成功','success'):$this->error('提交心愿单失败');
+        $res ? $this->success('提交心愿单成功', 'success') : $this->error('提交心愿单失败');
     }
 
 
@@ -436,18 +436,19 @@ specialimages,popularity')
         //如果有其他方案，随机得到其他的方案
         if ($allModel) {
             $reallyOther = [];
-            $keys = array_keys($allModel);
 
-            shuffle($keys);
+            shuffle($allModel);
 
-            foreach ($keys as $k => $v) {
+            foreach ($allModel as $k => $v) {
                 if ($k > 7) {
                     break;
                 }
-                $allModel[$v]['type'] = 'new';
-                $allModel[$v]['models_main_images'] = Config::get('upload')['cdnurl'] . $allModel[$v]['models_main_images'];
-                $reallyOther[] = $allModel[$v];
+                $v['type'] = 'new';
+                $v['models_main_images'] = Config::get('upload')['cdnurl'] . $v['models_main_images'];
+                $reallyOther[] = $v;
             }
+
+
         }
 
         //是否点赞丶收藏丶预约
@@ -538,21 +539,18 @@ specialimages,popularity')
         $guessLike = $this->logisticsPlans('', $plan_id, $info['companystore']['city_id']);
 
         if ($guessLike) {
-            $keys = array_keys($guessLike);
             $guess = [];
-            shuffle($keys);
+            shuffle($guessLike);
 
-            foreach ($keys as $k => $v) {
+            foreach ($guessLike as $k => $v) {
                 if ($k > 7) {
                     break;
                 }
 
-                $guess[] = $guessLike[$v];
+                $guess[] = $v;
             }
             $guessLike = $guess;
         }
-
-//        $info['guessYouLike'] = $guessLike;
 
         unset($info['companystore']['city_id']);
 
@@ -699,7 +697,6 @@ specialimages,popularity')
     {
         $res = User::where('id', $user_id)
             ->setInc('score', $score);
-
         return $res ? 1 : 0;
 
     }
