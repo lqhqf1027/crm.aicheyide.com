@@ -8,6 +8,9 @@ use think\Db;
 
 use think\Cache;
 
+use app\admin\model\CompanyStore;
+use app\admin\model\Cities;
+
 
 /**
  * 二手车管理车辆信息
@@ -30,6 +33,52 @@ class Secondvehicleinformation extends Backend
         parent::_initialize();
         $this->model = model('SecondcarRentalModelsInfo');
         $this->view->assign("shelfismenuList", $this->model->getShelfismenuList());
+
+        $storeList = [];
+        $disabledIds = [];
+        $cities_all = collection(Cities::where('pid', 'NEQ', '0')->order("id desc")->field(['id,cities_name as name'])->select())->toArray();
+        $store_all = collection(CompanyStore::order("id desc")->field(['id, city_id, store_name as name'])->select())->toArray();
+        $all = array_merge($cities_all, $store_all);
+        // pr($all);
+        // die;
+        foreach ($all as $k => $v) {
+
+            $state = ['opened' => true];
+
+            if (!$v['city_id']) {
+            
+                $disabledIds[] = $v['id'];
+                $storeList[] = [
+                    'id'     => $v['id'],
+                    'parent' => '#',
+                    'text'   => __($v['name']),
+                    'state'  => $state
+                ];
+            }
+
+            foreach ($cities_all as $key => $value) {
+                
+                if ($v['city_id'] == $value['id']) {
+                    
+                    $storeList[] = [
+                        'id'     => $v['id'],
+                        'parent' => $value['id'],
+                        'text'   => __($v['name']),
+                        'state'  => $state
+                    ];
+                }
+                   
+            }
+            
+        }
+        // pr($storeList);
+        // die;
+        // $tree = Tree::instance()->init($all, 'city_id');
+        // $storeOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
+        // pr($storeOptions);
+        // die;
+        // $this->view->assign('storeOptions', $storeOptions);
+        $this->assignconfig('storeList', $storeList);
     }
 
 
@@ -256,7 +305,10 @@ class Secondvehicleinformation extends Backend
      */
     public function add()
     {
-        $this->view->assign("car_models", $this->getInfo());
+        $this->view->assign([
+            'store' => $this->getStore(),
+            'car_models' => $this->getInfo()
+        ]);
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
             if ($params) {
@@ -288,6 +340,19 @@ class Secondvehicleinformation extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
         return $this->view->fetch();
+    }
+
+    /**得到门店
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getStore()
+    {
+        $res = Db::name("cms_company_store")->where('statuss', 'normal')->select();
+
+        return $res;
     }
 
     /**车型对应车辆
@@ -338,7 +403,6 @@ class Secondvehicleinformation extends Backend
      */
     public function edit($ids = NULL)
     {   
-        $this->view->assign("car_models", $this->getInfo());
         $row = $this->model->get($ids);
         if (!$row)
             $this->error(__('No Results were found'));
@@ -372,7 +436,11 @@ class Secondvehicleinformation extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $this->view->assign("row", $row);
+        $this->view->assign([
+            'store' => $this->getStore(),
+            'car_models' => $this->getInfo(),
+            'row' => $row
+        ]);
         return $this->view->fetch();
     }
 

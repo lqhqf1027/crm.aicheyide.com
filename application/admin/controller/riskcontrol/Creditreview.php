@@ -568,10 +568,6 @@ class Creditreview extends Backend
 
             if ($result !== false) {
 
-//                $channel = "demo-newpass_finance";
-//                $content = "你发起的客户：" . $username . "对车型：" . $models_name . "的购买，已经通过风控审核，请及时通知客户进行签订金融合同";
-//                goeary_push($channel, $content. "|" . $admin_id);
-
                 $data = newpass_finance($models_name, $username);
                 // var_dump($data);
                 // die;
@@ -619,10 +615,6 @@ class Creditreview extends Backend
             $username = $this->model->where('id', $id)->value('username');
 
             if ($result !== false) {
-
-//                $channel = "demo-newcontrol_tube";
-//                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，已经签订金融合同，可以进行录入库存";
-//                goeary_push($channel, $content);
 
                 $data = newcontrol_tube($models_name, $username);
                 // var_dump($data);
@@ -673,10 +665,6 @@ class Creditreview extends Backend
 
             if ($result !== false) {
 
-//                $channel = "demo-newcontrol_tube_finance";
-//                $content = "客户：" . $username . "对车型：" . $models_name . "的购买，审核已通过，可以进行录入库存";
-//                goeary_push($channel, $content);
-
                 $data = newcontrol_tube_finance($models_name, $username);
                 // var_dump($data);
                 // die;
@@ -703,9 +691,9 @@ class Creditreview extends Backend
     }
 
     /**
-     * 库存
+     * 展示可选库存车
      */
-    public function recyclebin()
+    public function recyclebin($ids = null)
     {
         $this->model = model('CarNewInventory');
         //设置过滤方法
@@ -744,7 +732,163 @@ class Creditreview extends Backend
 
             return json($result); 
         }
+        $this->view->assign('sales_order_id', $ids);
         return $this->view->fetch();
+    }
+
+    /**
+     * 选择车辆
+     */
+    public function choose()
+    {
+        if ($this->request->isAjax()) {
+
+            $id = $this->request->post('id');
+            $ids = $this->request->post('ids');
+            // pr($id);
+            // pr($ids);
+            // die;
+            Db::name("sales_order")
+                ->where("id", $ids)
+                ->update([
+                    'car_new_inventory_id' => $id,
+                    'review_the_data' => "take_the_car",
+                    'delivery_datetime' => time()
+                ]);
+
+            Db::name("car_new_inventory")
+                ->where("id", $id)
+                ->setField("statuss", 0);
+
+            $result = Db::name('sales_order')->where('id', $ids)->find();
+
+            $models_name = Db::name('models')->where('id', $result['models_id'])->value('name');
+
+            $data = newchoose_stock($models_name, $result['username']);
+            // var_dump($data);
+            // die;
+            $email = new Email;
+            // $receiver = "haoqifei@cdjycra.club";
+            $receiver = Db::name('admin')->where('rule_message', 'message14')->value('email');
+            $result_s = $email
+                ->to($receiver)
+                ->subject($data['subject'])
+                ->message($data['message'])
+                ->send();
+
+            //金融平台
+            $financial_name = $result['financial_name'];
+
+            if ($financial_name == "一汽租赁") {
+
+                if ($result_s) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+            } else {
+
+                $data = newpass_finance($models_name, $result['username']);
+                // var_dump($data);
+                // die;
+                $email = new Email;
+                // $receiver = "haoqifei@cdjycra.club";
+                $receiver = Db::name('admin')->where('id', $result['admin_id'])->value('email');
+                $result_ss = $email
+                    ->to($receiver)
+                    ->subject($data['subject'])
+                    ->message($data['message'])
+                    ->send();
+                if ($result_ss) {
+                    $this->success();
+                } else {
+                    $this->error('邮箱发送失败');
+                }
+
+            }
+
+
+            //介绍人
+
+            $order_info = Db::name("sales_order")
+                ->where("id", $ids)
+                ->field("customer_source,turn_to_introduce_name,turn_to_introduce_phone,turn_to_introduce_card,admin_id,models_id,username,phone")
+                ->find();
+
+            if ($order_info['customer_source'] == "turn_to_introduce") {
+
+                $insert_data = [
+                    'models_id' => $order_info['models_id'],
+                    'admin_id' => $order_info['admin_id'],
+                    'referee_name' => $order_info['turn_to_introduce_name'],
+                    'referee_phone' => $order_info['turn_to_introduce_phone'],
+                    'referee_idcard' => $order_info['turn_to_introduce_card'],
+                    'customer_name' => $order_info['username'],
+                    'customer_phone' => $order_info['phone'],
+                    'buy_way' => '新车'
+                ];
+
+                Db::name("referee")->insert($insert_data);
+
+                $last_id = Db::name("referee")->getLastInsID();
+
+                Db::name("sales_order")
+                    ->where("id", $ids)
+                    ->setField("referee_id", $last_id);
+            }
+
+            $this->success('', '', $ids);
+
+        }
+
+        $seventtime = \fast\Date::unixtime('month', -6);
+        $newonesales = $newtwosales = $newthreesales = [];
+        for ($i = 0; $i < 8; $i++) {
+            $month = date("Y-m", $seventtime + ($i * 86400 * 30));
+            //销售一部
+            $one_sales = DB::name('auth_group_access')->where('group_id', '18')->select();
+            foreach ($one_sales as $k => $v) {
+                $one_admin[] = $v['uid'];
+            }
+            $newonetake = Db::name('sales_order')
+                ->where('review_the_data', 'the_car')
+                ->where('admin_id', 'in', $one_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
+            //销售二部
+            $two_sales = DB::name('auth_group_access')->where('group_id', '22')->field('uid')->select();
+            foreach ($two_sales as $k => $v) {
+                $two_admin[] = $v['uid'];
+            }
+            $newtwotake = Db::name('sales_order')
+                ->where('review_the_data', 'the_car')
+                ->where('admin_id', 'in', $two_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
+            //销售三部
+            $three_sales = DB::name('auth_group_access')->where('group_id', '37')->field('uid')->select();
+            foreach ($three_sales as $k => $v) {
+                $three_admin[] = $v['uid'];
+            }
+            $newthreetake = Db::name('sales_order')
+                ->where('review_the_data', 'the_car')
+                ->where('admin_id', 'in', $three_admin)
+                ->where('delivery_datetime', 'between', [$seventtime + ($i * 86400 * 30), $seventtime + (($i + 1) * 86400 * 30)])
+                ->count();
+            //销售一部
+            $newonesales[$month] = $newonetake;
+            //销售二部
+            $newtwosales[$month] = $newtwotake;
+            //销售三部
+            $newthreesales[$month] = $newthreetake;
+        }
+        // pr($newtake);die;
+        Cache::set('newonesales', $newonesales);
+        Cache::set('newtwosales', $newtwosales);
+        Cache::set('newthreesales', $newthreesales);
+
+
     }
 
     /**
@@ -949,11 +1093,6 @@ class Creditreview extends Backend
             if ($result) {
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
-
-//                $channel = "demo-newcar_data";
-//                $content = "销售员" . $admin_nickname . "提交的新车销售单需要提供保证金";
-//                goeary_push($channel, $content . "|" . $data['admin_id']);
-
 
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
@@ -1207,11 +1346,6 @@ class Creditreview extends Backend
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
 
-//                $channel = "demo-newcar_nopass";
-//                $content = "销售员" . $admin_nickname . "提交的新车销售单没有通过风控审核";
-//                goeary_push($channel, $content . "|" . $data['admin_id']);
-
-
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');
                 //销售id
@@ -1269,10 +1403,6 @@ class Creditreview extends Backend
 
                 $data = Db::name("sales_order")->where('id', $id)->find();
                 $admin_nickname = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
-
-//                $channel = "demo-new_information";
-//                $content = "销售员" . $admin_nickname . "提交的新车单没有通过风控审核,需要补录：" . $text ."资料";
-//                goeary_push($channel, $content . "|" . $data['admin_id']);
 
                 //车型
                 $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
@@ -1367,11 +1497,6 @@ class Creditreview extends Backend
             if ($result) {
 
                 $data = Db::name("rental_order")->where('id', $id)->find();
-
-//                $channel = "demo-rental_pass";
-//                $content = "销售员" . $admin_nickname . "提交的租车单通过风控审核，可以出单提车！";
-//                goeary_push($channel, $content . "|" . $data['admin_id']);
-
 
                 //车型
                 $models_name = DB::name('models')->where('id', $data['models_id'])->value('name');

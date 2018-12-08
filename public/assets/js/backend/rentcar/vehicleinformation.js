@@ -417,7 +417,64 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(".btn-add").data("area", ["90%", "90%"]);
                 $(".btn-edit").data("area", ["90%", "90%"]);
                 
-            })
+            });
+
+            $(document).on("click", "a.btn-channel", function () {
+                $("#archivespanel").toggleClass("col-md-9", $("#channelbar").hasClass("hidden"));
+                $("#channelbar").toggleClass("hidden");
+            });
+
+            require(['jstree'], function () {
+                //全选和展开
+                $(document).on("click", "#checkall", function () {
+                    $("#channeltree").jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
+                });
+                $(document).on("click", "#expandall", function () {
+                    $("#channeltree").jstree($(this).prop("checked") ? "open_all" : "close_all");
+                });
+                $('#channeltree').on("changed.jstree", function (e, data) {
+                    console.log(data);
+                    console.log(data.selected);
+                    var options = table.bootstrapTable('getOptions');
+                    options.pageNumber = 1;
+                    options.queryParams = function (params) {
+                        params.filter = JSON.stringify(data.selected.length > 0 ? {store_id: data.selected.join(",")} : {});
+                        params.op = JSON.stringify(data.selected.length > 0 ? {store_id: 'in'} : {});
+                        return params;
+                    };
+                    table.bootstrapTable('refresh', {});
+                    return false;
+                });
+                $('#channeltree').jstree({
+                    "themes": {
+                        "stripes": true
+                    },
+                    "checkbox": {
+                        "keep_selected_style": false,
+                    },
+                    "types": {
+                        "channel": {
+                            "icon": "fa fa-th",
+                        },
+                        "list": {
+                            "icon": "fa fa-list",
+                        },
+                        "link": {
+                            "icon": "fa fa-link",
+                        },
+                        "disabled": {
+                            "check_node": false,
+                            "uncheck_node": false
+                        }
+                    },
+                    'plugins': ["types", "checkbox"],
+                    "core": {
+                        "multiple": true,
+                        'check_callback': true,
+                        "data": Config.storeList
+                    }
+                });
+            });
 
         },
         carsingle: function () {

@@ -1,4 +1,6 @@
 var Towxml = require('/assets/libs/towxml/main.js');
+//客服系统高级配置扩展
+// var stat = require('utils/mdk_stat.js');
 App({
     //请不要修改 /addons/cms/wxapp.这部分,只允许修改域名部分
     //请注意小程序只支持https

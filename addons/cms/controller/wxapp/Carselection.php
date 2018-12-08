@@ -35,7 +35,7 @@ class Carselection extends Base
                 $type_name = '新车';
                 break;
             case 'used':
-                $plans =  Share::getVariousTypePlan($city_id, false, 'usedcarCount', 'used');
+                $plans =  Share::getVariousTypePlan($city_id, true, 'usedcarCount', 'used');
                 $type_name = '二手车';
                 break;
             case 'logistics':
@@ -47,14 +47,6 @@ class Carselection extends Base
         }
 
         $planList = ['type' => $cartype, 'car_type_name' => $type_name, 'carList' => $plans];
-
-//        $usedcarList = Share::getVariousTypePlan($city_id, false, 'usedcarCount', 'used');
-//        $usedcarList = ['type' => 'used', 'car_type_name' => '二手车', 'usedCarList' => $usedcarList];
-//
-//        $logisticsList = Share::getVariousTypePlan($city_id, true, 'logisticsCount', 'logistics');
-//        $logisticsList = ['type' => 'logistics', 'car_type_name' => '新能源车', 'logisticsCarList' => $logisticsList];
-
-
 
         $this->success('请求成功', $planList);
 

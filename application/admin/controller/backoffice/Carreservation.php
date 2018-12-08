@@ -55,89 +55,61 @@ class Carreservation extends Backend
 
             $can_use_id = $this->getUserId();
 
-            if (in_array($this->auth->id, $can_use_id['admin'])) {
-                $total = $this->model
-                    ->with(['planacar' => function ($query) {
-                        $query->withField('payment,monthly,nperlist,margin,tail_section,gps,total_payment');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }, 'newinventory' => function ($query) {
-                        $query->withField('frame_number,engine_number,household,4s_shop');
-                    }])
-                    ->where($where)
-                    ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->count();
-                $list = $this->model
-                    ->with(['planacar' => function ($query) {
-                        $query->withField('payment,monthly,nperlist,margin,tail_section,gps,total_payment');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }, 'newinventory' => function ($query) {
-                        $query->withField('frame_number,engine_number,household,4s_shop');
-                    }])
-                    ->where($where)
-                    ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
-
-
-            } else if (in_array($this->auth->id, $can_use_id['backoffice']) || in_array($this->auth->id, $can_use_id['manager'])) {
-                $total = $this->model
-                    ->with(['planacar' => function ($query) {
-                        $query->withField('payment,monthly,nperlist,margin,tail_section,gps,total_payment');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }, 'newinventory' => function ($query) {
-                        $query->withField('frame_number,engine_number,household,4s_shop');
-                    }])
-                    ->where($where)
-                    ->where(function ($query) use ($can_use_id){
-                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
-                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                              $all_sale = $this->sales_name();
-                              $query->where('backoffice_id','in',$all_sale);
-                        }
-                    })
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->count();
-                $list = $this->model
-                    ->with(['planacar' => function ($query) {
-                        $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }, 'newinventory' => function ($query) {
-                        $query->withField('frame_number,engine_number,household,4s_shop');
-                    }])
-                    ->where($where)
-                    ->where(function ($query) use ($can_use_id){
-                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
-                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
-                        }
-                    })
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
-
-
-            }
+            $total = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps,total_payment');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name,models_name');
+                }, 'newinventory' => function ($query) {
+                    $query->withField('frame_number,engine_number,household,4s_shop');
+                }])
+                ->where($where)
+                ->where(function ($query) use ($can_use_id){
+                    $back = null;
+                    if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                        $back = $this->auth->id;
+                    }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                        $back = ['in',$this->sales_name()];
+                    }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                        $back = ['neq','null'];
+                    }
+                    $query->where([
+                        'backoffice_id' => $back,
+                        "review_the_data"=>["NEQ", "send_to_internal"]
+                    ]);
+                })
+                ->order($sort, $order)
+                ->count();
+            $list = $this->model
+                ->with(['planacar' => function ($query) {
+                    $query->withField('payment,monthly,nperlist,margin,tail_section,gps');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name,models_name');
+                }, 'newinventory' => function ($query) {
+                    $query->withField('frame_number,engine_number,household,4s_shop');
+                }])
+                ->where($where)
+                ->where(function ($query) use ($can_use_id){
+                    $back = null;
+                    if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                        $back = $this->auth->id;
+                    }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                        $back = ['in',$this->sales_name()];
+                    }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                        $back = ['neq','null'];
+                    }
+                    $query->where([
+                        'backoffice_id' => $back,
+                        "review_the_data"=>["NEQ", "send_to_internal"]
+                    ]);
+                })
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
             foreach ($list as $k => $row) {
 
@@ -188,84 +160,60 @@ class Carreservation extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
 
             $can_use_id = $this->getUserId();
-            if (in_array($this->auth->id, $can_use_id['admin'])) {
 
-                $total = $this->model
-                    ->with(['plansecond' => function ($query) {
-                        $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "NEQ", "is_reviewing")
-                    ->order($sort, $order)
-                    ->count();
-
-
-                $list = $this->model
-                    ->with(['plansecond' => function ($query) {
-                        $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "NEQ", "is_reviewing")
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
-
-            } else if (in_array($this->auth->id, $can_use_id['backoffice']) || in_array($this->auth->id, $can_use_id['manager'])) {
-                $total = $this->model
-                    ->with(['plansecond' => function ($query) {
-                        $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where(function ($query) use ($can_use_id){
-                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
-                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
-                        }
-                    })
-                    ->where("review_the_data", "NEQ", "is_reviewing")
-                    ->order($sort, $order)
-                    ->count();
+            $total = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name,models_name');
+                }])
+                ->where($where)
+                ->where(function ($query) use ($can_use_id){
+                    $back = null;
+                    if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                        $back = $this->auth->id;
+                    }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                        $back = ['in',$this->sales_name()];
+                    }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                        $back = ['neq','null'];
+                    }
+                    $query->where([
+                        'backoffice_id' => $back,
+                        "review_the_data"=>["NEQ", "is_reviewing"]
+                    ]);
+                })
+                ->order($sort, $order)
+                ->count();
 
 
-                $list = $this->model
-                    ->with(['plansecond' => function ($query) {
-                        $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where(function ($query) use ($can_use_id){
-                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
-                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
-                        }
-                    })
-                    ->where("review_the_data", "NEQ", "is_reviewing")
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
-
-            }
+            $list = $this->model
+                ->with(['plansecond' => function ($query) {
+                    $query->withField('companyaccount,newpayment,monthlypaymen,periods,totalprices,bond,tailmoney');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name,models_name');
+                }])
+                ->where($where)
+                ->where(function ($query) use ($can_use_id){
+                    $back = null;
+                    if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                        $back = $this->auth->id;
+                    }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                        $back = ['in',$this->sales_name()];
+                    }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                        $back = ['neq','null'];
+                    }
+                    $query->where([
+                        'backoffice_id' => $back,
+                        "review_the_data"=>["NEQ", "is_reviewing"]
+                    ]);
+                })
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
             foreach ($list as $k => $row) {
                 $row->visible(['id', 'order_no', 'username', 'city', 'detailed_address', 'createtime', 'phone', 'id_card', 'amount_collected', 'downpayment', 'review_the_data']);
@@ -314,83 +262,59 @@ class Carreservation extends Backend
 
             $can_use_id = $this->getUserId();
 
-            if (in_array($this->auth->id, $can_use_id['admin'])) {
-                $total = $this->model
-                    ->with(['planfull' => function ($query) {
-                        $query->withField('full_total_price');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->count();
+            $total = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name,models_name');
+                }])
+                ->where($where)
+                ->where(function ($query) use ($can_use_id){
+                    $back = null;
+                    if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                        $back = $this->auth->id;
+                    }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                        $back = ['in',$this->sales_name()];
+                    }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                        $back = ['neq','null'];
+                    }
+                    $query->where([
+                        'backoffice_id' => $back,
+                        "review_the_data"=>["NEQ", "send_to_internal"]
+                    ]);
+                })
+                ->order($sort, $order)
+                ->count();
 
-                $list = $this->model
-                    ->with(['planfull' => function ($query) {
-                        $query->withField('full_total_price');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
+            $list = $this->model
+                ->with(['planfull' => function ($query) {
+                    $query->withField('full_total_price');
+                }, 'admin' => function ($query) {
+                    $query->withField('nickname');
+                }, 'models' => function ($query) {
+                    $query->withField('name,models_name');
+                }])
+                ->where($where)
+                ->where(function ($query) use ($can_use_id){
+                    $back = null;
+                    if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                        $back = $this->auth->id;
+                    }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                        $back = ['in',$this->sales_name()];
+                    }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                        $back = ['neq','null'];
+                    }
+                    $query->where([
+                        'backoffice_id' => $back,
+                        "review_the_data"=>["NEQ", "send_to_internal"]
+                    ]);
+                })
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
 
-
-            } else if (in_array($this->auth->id, $can_use_id['backoffice']) || in_array($this->auth->id, $can_use_id['manager'])) {
-
-                $total = $this->model
-                    ->with(['planfull' => function ($query) {
-                        $query->withField('full_total_price');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where(function ($query) use ($can_use_id){
-                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
-                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
-                        }
-                    })
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->count();
-
-                $list = $this->model
-                    ->with(['planfull' => function ($query) {
-                        $query->withField('full_total_price');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where(function ($query) use ($can_use_id){
-                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
-                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
-                        }
-                    })
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
-
-            }
 
             foreach ($list as $k => $row) {
                 $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
@@ -555,40 +479,7 @@ class Carreservation extends Backend
 
             $can_use_id = $this->getUserId();
 
-            if (in_array($this->auth->id, $can_use_id['admin'])) {
-                $total = $this->model
-                    ->with(['plansecondfull' => function ($query) {
-                        $query->withField('totalprices');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->count();
-
-                $list = $this->model
-                    ->with(['plansecondfull' => function ($query) {
-                        $query->withField('totalprices');
-                    }, 'admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }])
-                    ->where($where)
-                    ->where("backoffice_id", "not null")
-                    ->where("review_the_data", "NEQ", "send_to_internal")
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
-
-
-            } else if (in_array($this->auth->id, $can_use_id['backoffice']) || in_array($this->auth->id, $can_use_id['manager'])) {
-
-                $total = $this->model
+            $total = $this->model
                     ->with(['plansecondfull' => function ($query) {
                         $query->withField('totalprices');
                     }, 'admin' => function ($query) {
@@ -598,14 +489,19 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where(function ($query) use ($can_use_id){
+                        $back = null;
                         if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
+                            $back = $this->auth->id;
                         }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
+                            $back = ['in',$this->sales_name()];
+                        }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                            $back = ['neq','null'];
                         }
+                        $query->where([
+                            'backoffice_id' => $back,
+                            "review_the_data"=>["NEQ", "send_to_internal"]
+                        ]);
                     })
-                    ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->count();
 
@@ -619,19 +515,23 @@ class Carreservation extends Backend
                     }])
                     ->where($where)
                     ->where(function ($query) use ($can_use_id){
+                        $back = null;
                         if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
+                            $back = $this->auth->id;
                         }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
+                            $back = ['in',$this->sales_name()];
+                        }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                            $back = ['neq','null'];
                         }
+                        $query->where([
+                            'backoffice_id' => $back,
+                            "review_the_data"=>["NEQ", "send_to_internal"]
+                        ]);
                     })
-                    ->where("review_the_data", "NEQ", "send_to_internal")
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
 
-            }
 
             foreach ($list as $k => $row) {
                 $row->visible(['id', 'order_no', 'detailed_address', 'city', 'username', 'genderdata', 'createtime', 'phone', 'id_card', 'amount_collected', 'review_the_data']);
@@ -668,20 +568,17 @@ class Carreservation extends Backend
 
         switch ($message){
             case 'message3':
-                return Db::name('admin')
-                    ->where('rule_message','message13')
-                    ->where('status','normal')
-                    ->column('id');
+                return Custominfotabs::getAdmin([
+                    'rule_message'=>'message13'
+                ]);
             case 'message4':
-                return Db::name('admin')
-                    ->where('rule_message','message20')
-                    ->where('status','normal')
-                    ->column('id');
+                return Custominfotabs::getAdmin([
+                    'rule_message'=>'message20'
+                ]);
             case 'message22':
-                return Db::name('admin')
-                    ->where('rule_message','message24')
-                    ->where('status','normal')
-                    ->column('id');
+                return Custominfotabs::getAdmin([
+                    'rule_message'=>'message24'
+                ]);
         }
     }
 
