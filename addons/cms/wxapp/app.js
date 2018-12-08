@@ -5,19 +5,19 @@ App({
     apiUrl: 'https://crm.aicheyide.com/addons/cms/wxapp.',
     si: 0,
     //小程序启动
-    onLaunch: function() {
-        // var that = this;
-        // that.request('/common/init', {}, function(data, ret) {
-        //     that.globalData.config = data.config;
-        //     that.globalData.indexTabList = data.indexTabList;
-        //     that.globalData.newsTabList = data.newsTabList;
-        //     that.globalData.productTabList = data.productTabList;
-
-        //     //如果需要一进入小程序就要求授权登录,可在这里发起调用
-        //     that.check(function(ret) {});
-        // }, function(data, ret) {
-        //     that.error(ret.msg);
-        // });
+    onLaunch: function() {},
+    // set globalData
+    setGlobalData(data) {
+        return wx.setStorageSync('globalData', data)
+    },
+    // get globalData
+    getGlobalData() {
+        return wx.getStorageSync('globalData')
+    },
+    // update globalData
+    updateGlobalData(data) {
+        var globalData = this.getGlobalData() || {}
+        return wx.getStorageSync('globalData', Object.assign({}, globalData, data))
     },
     //投票
     vote: function(event, cb) {
@@ -50,8 +50,8 @@ App({
     //判断是否登录
     check: function(cb) {
         var that = this;
-        if (this.globalData.userInfo) {
-            typeof cb == "function" && cb(this.globalData.userInfo);
+        if (that.getGlobalData().userInfo) {
+            typeof cb == "function" && cb(that.getGlobalData().userInfo);
         } else {
             wx.getSetting({
                 success: function(res) {
@@ -74,7 +74,6 @@ App({
                     that.showLoginModal(cb);
                 }
             });
-            // this.login(cb);
         }
     },
     //登录
@@ -102,12 +101,12 @@ App({
                                 success: function(lres) {
                                     var response = lres.data
                                     if (response.code == 1) {
-                                        that.globalData.userInfo = response.data.userInfo;
-                                        that.globalData.session_key = response.data.session_key
+                                        that.updateGlobalData(response.data)
                                         wx.setStorageSync('token', response.data.userInfo.token);
-                                        typeof cb == "function" && cb(that.globalData.userInfo);
+                                        typeof cb == "function" && cb(response.data.userInfo);
                                     } else {
                                         wx.setStorageSync('token', '');
+                                        wx.setStorageSync('globalData', '');
                                         console.log("用户登录失败")
                                         that.showLoginModal(cb);
                                     }
@@ -124,10 +123,16 @@ App({
             }
         });
     },
-    //显示登录或授权提示
-    showLoginModal: function(cb, fail) {
+    /**
+     * 显示登录或授权提示
+     * @param    {Function} cb [接口调用成功的回调函数]
+     * @param    {Function} fail [接口调用失败的回调函数]
+     * @param    {Boolean} isForce [是否强制显示登录或授权提示]
+     * @return   {[type]} [description]
+     */
+    showLoginModal: function(cb, fail, isForce) {
         var that = this;
-        if (!that.globalData.userInfo) {
+        if (!that.getGlobalData().userInfo || isForce) {
             //获取用户信息
             wx.getSetting({
                 success: function(sres) {
@@ -177,18 +182,20 @@ App({
                 }
             });
         } else {
-            typeof cb == "function" && cb(that.globalData.userInfo);
+            typeof cb == "function" && cb(that.getGlobalData().userInfo);
         }
     },
     //发起网络请求
     request: function(url, data, success, error) {
         var that = this;
-        var userInfo = this.globalData.userInfo || {};
+        var userInfo = that.getGlobalData().userInfo || {};
         if (typeof data == 'function') {
             success = data;
             error = success;
             data = {};
         }
+
+        // check userInfo
         if (userInfo) {
             data['user_id'] = userInfo.id;
             data['token'] = userInfo.token;
@@ -196,10 +203,10 @@ App({
             // 判断是否需要授权，显示登录或授权提示
             if (!userInfo.id && url.indexOf('noAuth') === -1) {
                 that.showLoginModal(function success() {
-                    // 刷新我的页面
+                    // 判断是否需要刷新当前页面
                     var ctx = getCurrentPages()[getCurrentPages().length - 1]
-                    if (ctx && ctx.route === 'page/my/list/index') {
-                        ctx.onShow()
+                    if (ctx && typeof ctx.onRefresh === 'function') {
+                        ctx.onRefresh()
                     }
                 }, function fail() {
                     // 返回上一页面
@@ -318,7 +325,7 @@ App({
     towxml: new Towxml(),
     //全局信息
     globalData: {
-        userInfo: null,
+        // userInfo: null,
         config: null,
         indexTabList: [],
         newsTabList: [],

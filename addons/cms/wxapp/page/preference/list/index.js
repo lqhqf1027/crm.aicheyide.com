@@ -61,18 +61,6 @@ Page({
             city,
         })
 
-        // var callback = function() {
-        //     that.setData({
-        //         globalData: app.globalData,
-        //     })
-        //     typeof cb == "function" && cb(app.globalData)
-        // }
-
-        // if (app.globalData.userInfo) {
-        //     callback()
-        //     return
-        // }
-
         app.request('/common/init?noAuth=1', { city_id: city.id }, function(data, ret) {
             app.globalData.config = data.config; 
             app.globalData.bannerList = data.bannerList;

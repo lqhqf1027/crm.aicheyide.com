@@ -9,6 +9,9 @@ Page({
         this.options = options
         this.getDetail()
     },
+    onRefresh() {
+        this.getDetail()
+    },
     getDetail() {
         const plan_id = this.options.id
         const cartype = this.options.type
