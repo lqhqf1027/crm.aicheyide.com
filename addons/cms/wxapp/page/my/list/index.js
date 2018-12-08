@@ -40,7 +40,7 @@ Page({
         that.getInfo();
     },
     onPullDownRefresh() {
-        this.getInfo()
+        this.onShow()
     },
     onRefresh() {
         this.getInfo()
