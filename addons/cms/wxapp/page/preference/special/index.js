@@ -18,6 +18,9 @@ Page({
 			title: decodeURIComponent(this.options.title),
 		})
     },
+    onRefresh() {
+        this.getDetail()
+    },
     getDetail() {
         const special_id = this.options.id
 

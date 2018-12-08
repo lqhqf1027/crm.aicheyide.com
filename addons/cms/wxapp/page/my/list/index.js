@@ -34,12 +34,15 @@ Page({
     },
     onShow: function() {
         var that = this;
-        if (app.globalData.userInfo) {
-            that.setData({ userInfo: app.globalData.userInfo, isWxapp: that.isWxapp() });
+        if (app.getGlobalData().userInfo) {
+            that.setData({ userInfo: app.getGlobalData().userInfo, isWxapp: that.isWxapp() });
         }
         that.getInfo();
     },
     onPullDownRefresh() {
+        this.getInfo()
+    },
+    onRefresh() {
         this.getInfo()
     },
     onSwipeout(e) {
@@ -60,11 +63,11 @@ Page({
     login: function() {
         var that = this;
         app.login(function() {
-            that.setData({ userInfo: app.globalData.userInfo, isWxapp: that.isWxapp() });
+            that.setData({ userInfo: app.getGlobalData().userInfo, isWxapp: that.isWxapp() });
         });
     },
     isWxapp: function() {
-        return app.globalData.userInfo ? app.globalData.userInfo.username.match(/^u\d+$/) : true;
+        return app.getGlobalData().userInfo ? app.getGlobalData().userInfo.username.match(/^u\d+$/) : true;
     },
     showTips: function(event) {
         var tips = {
@@ -96,7 +99,8 @@ Page({
                         if (data.code == 200) {
                             app.request("/user/avatar", { avatar: data.url }, function(data, ret) {
                                 app.success('头像上传成功!');
-                                app.globalData.userInfo = data.userInfo;
+                                // app.globalData.userInfo = data.userInfo;
+                                app.updateGlobalData({ userInfo });
                                 that.setData({ userInfo: data.userInfo, isWxapp: that.isWxapp() });
                             }, function(data, ret) {
                                 app.error(ret.msg);
@@ -119,7 +123,7 @@ Page({
             })
         } else {
             app.login(() => {
-                this.setData({ userInfo: app.globalData.userInfo })
+                this.setData({ userInfo: app.getGlobalData().userInfo })
                 this.getInfo()
             });
         }

@@ -15,6 +15,9 @@ Page({
     onPullDownRefresh() {
         this.getList()
     },
+    onRefresh() {
+        this.getList()
+    },
 	getList() {
         app.request('/my/myScore', {}, (data, ret) => {
             console.log(data)

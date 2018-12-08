@@ -42,6 +42,9 @@ Page({
     onShow() {
         this.getDetail()
     },
+    onRefresh() {
+        this.getDetail()
+    },
     getDetail() {
         const plan_id = this.options.id
         const cartype = this.options.type
@@ -148,6 +151,21 @@ Page({
         // 成功操作
         this.clickAppointment(e.detail)
     },
+    appointment(params) {
+        // 发起请求
+        app.request('/share/clickAppointment', params, (data, ret) => {
+            console.log(data)
+            this.setData({
+                'plan.appointment': 1,
+                'plan.users.mobile': params.mobile || this.data.plan.users.mobile,
+                popupVisible: false,
+            })
+            app.success(ret.msg)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
     clickAppointment(extParams) {
         const hasMobile = !!this.data.plan.users.mobile
         const { code, mobile } = this.data
@@ -181,25 +199,26 @@ Page({
             params.code = code
         }
 
+        // 获取用户手机号
         if (!hasMobile && extParams) {
             params.iv = extParams.iv
             params.encryptedData = extParams.encryptedData
-            params.sessionKey = app.globalData.session_key
+            params.sessionKey = app.getGlobalData().session_key
+
+            // 登录态检查
+            wx.checkSession({
+                success: () => {                    
+                    this.appointment(params)
+                },
+                fail: () => {
+                    app.showLoginModal(function(){}, function(){}, true)
+                },
+            })
+
+            return
         }
 
-        // 发起请求
-        app.request('/share/clickAppointment', params, (data, ret) => {
-            console.log(data)
-            this.setData({
-                'plan.appointment': 1,
-                'plan.users.mobile': params.mobile,
-                popupVisible: false,
-            })
-            app.success(ret.msg)
-        }, (data, ret) => {
-            console.log(data)
-            app.error(ret.msg)
-        })
+        this.appointment(params)
     },
     onPopupClose() {
         this.setData({ popupVisible: false })

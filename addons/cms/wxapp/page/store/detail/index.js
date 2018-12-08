@@ -196,6 +196,9 @@ Page({
     onPullDownRefresh() {
         this.getList(this.data.searchVal.style, true)
     },
+    onRefresh() {
+        this.onPullDownRefresh()
+    },
     /**
      * 门店详情接口
      * @param {String} 车辆类型
