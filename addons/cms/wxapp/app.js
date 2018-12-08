@@ -10,16 +10,15 @@ App({
     onLaunch: function() {},
     // set globalData
     setGlobalData(data) {
-        return wx.setStorageSync('globalData', data)
+        return wx.setStorageSync('globalData', data || {})
     },
     // get globalData
     getGlobalData() {
-        return wx.getStorageSync('globalData')
+        return wx.getStorageSync('globalData') || {}
     },
     // update globalData
     updateGlobalData(data) {
-        var globalData = this.getGlobalData() || {}
-        return wx.getStorageSync('globalData', Object.assign({}, globalData, data))
+        return this.setGlobalData(Object.assign({}, this.getGlobalData(), data || {}))
     },
     //投票
     vote: function(event, cb) {
