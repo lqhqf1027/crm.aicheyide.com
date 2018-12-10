@@ -15,22 +15,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
 
             var table = $("#table");
-
+            $.fn.bootstrapTable.locales[Table.defaults.locale]['formatSearch'] = function(){return "快速搜索:门店名称";};
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
+                searchFormVisible: true,
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('ID')},
                         {field: 'store_name', title: __('Store_name')},
+                        {field: 'city.cities_name', title: __('所属城市')},
+
                         {field: 'store_address', title: __('Store_address')},
-                        {field: 'city.cities_name', title: __('City.name')},
                         {field: 'phone', title: __('Phone')},
-                        {field: 'store_img', title: __('Store_img'),formatter:Table.api.formatter.images},
-                        {field: 'store_qrcode', title: __('Store_qrcode'),formatter:Table.api.formatter.image},
+                        {field: 'store_img', title: __('Store_img'),formatter:Table.api.formatter.images,operate: false},
+                        {field: 'store_qrcode', title: __('Store_qrcode'),formatter:Table.api.formatter.image,operate: false},
                         {field: 'planacar', title: __('正在销售方案车辆（台）'),formatter:function (v,r,i) {
                                 return v.length>0? '<strong class="text-danger">'+v.length+'</strong>':' ';
                             }},
@@ -42,7 +44,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
             });
 
-            
+
             // 绑定TAB事件
             $('.panel-heading a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var field = $(this).closest("ul").data("field");
