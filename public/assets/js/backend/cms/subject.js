@@ -27,16 +27,36 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id')},
                         {field: 'title', title: __('Title')},
                         {field: 'coverimages', title: __('Coverimages'), formatter: Table.api.formatter.images},
-                        {field: 'vertical_coverimages', title: __('竖版详情图'), formatter: Table.api.formatter.images},
-                        {field: 'shelfismenu', title: __('Shelfismenu'), formatter: Controller.api.formatter.toggle,searchList:{"1":"是","0":"否"}},
+                        {field: 'shelfismenu', title: __('Shelfismenu'), searchList: {"1":__('Yes'),"0":__('No')}, formatter: Table.api.formatter.normal},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
+                        {field: 'plan_id', title: __('Plan_id')},
+                        {field: 'city_id', title: __('City_id')},
+                        {field: 'vertical_coverimages', title: __('Vertical_coverimages'), formatter: Table.api.formatter.images},
+                        {field: 'status', title: __('Status'), searchList: {"normal":__('Normal'),"hidden":__('Hidden')}, formatter: Table.api.formatter.status},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
             });
 
             
+            // 绑定TAB事件
+            $('.panel-heading a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var field = $(this).closest("ul").data("field");
+                var value = $(this).data("value");
+                var options = table.bootstrapTable('getOptions');
+                options.pageNumber = 1;
+                options.queryParams = function (params) {
+                    var filter = {};
+                    if (value !== '') {
+                        filter[field] = value;
+                    }
+                    params.filter = JSON.stringify(filter);
+                    return params;
+                };
+                table.bootstrapTable('refresh', {});
+                return false;
+            });
 
             // 为表格绑定事件
             Table.api.bindevent(table);
@@ -49,35 +69,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         api: {
             bindevent: function () {
-                $(document).on('click', "input[name='row[shelfismenu]']", function () {
-                    var name = $("input[name='row[name]']");
-                    name.prop("placeholder", $(this).val() == 1 ? name.data("placeholder-menu") : name.data("placeholder-node"));
-                });
-                $("input[name='row[shelfismenu]']:checked").trigger("click");
                 Form.api.bindevent($("form[role=form]"));
-            },
-            formatter: {
-                operate: function (value, row, index) {
-
-                    var table = this.table;
-                    // 操作配置
-                    var options = table ? table.bootstrapTable('getOptions') : {};
-                    // 默认按钮组
-                    var buttons = $.extend([], this.buttons || []);
-
-                    return Table.api.buttonlink(this, buttons, value, row, index, 'operate');
-                },
-                toggle: function (value, row, index) {
-                    
-                    var color = typeof this.color !== 'undefined' ? this.color : 'success';
-                    var yes = typeof this.yes !== 'undefined' ? this.yes : 1;
-                    var no = typeof this.no !== 'undefined' ? this.no : 0;
-                    return "<a href='javascript:;' data-toggle='tooltip' title='" + __('Click to toggle') + "' class='btn-change' data-id='"
-                            + row.id + "' data-params='" + this.field + "=" + (value ? no : yes) + "'><i class='fa fa-toggle-on " + (value == yes ? 'text-' + color : 'fa-flip-horizontal text-gray') + " fa-2x'></i></a>";
-                   
-                    
-                }
-
             }
         }
     };

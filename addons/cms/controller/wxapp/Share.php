@@ -199,8 +199,8 @@ class Share extends Base
                 $this->error('cartype参数错误');
         }
 
-        //人气值加100
-        $tables->where('id', $plan_id)->setInc('popularity', 100);
+        //人气值加1000
+        $tables->where('id', $plan_id)->setInc('popularity', 1000);
 
         $integral = self::integral($user_id, $fabulousScore);
 
@@ -284,7 +284,6 @@ class Share extends Base
             } else {
                 $this->error('手机号解密失败', 'error');
             }
-            return;
         }
         if (!$user_id || !$plan_id || !$cartype) {
             $this->error('缺少参数,请求失败', 'error');

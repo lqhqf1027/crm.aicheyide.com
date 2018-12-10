@@ -39,20 +39,9 @@ class My extends Base
         //积分
         $score = $this->scores($user_id);
 
-        //是否签到
-        $sign = $this->getSign($user_id);
+        $sign = $this->checkSignTime($user_id, 'today');
 
-        if ($sign) {
-            //今天0点的时间
-            $beginToday = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-            if ($sign['lastModifyTime'] < $beginToday) {
-                $sign = 0;
-            } else {
-                $sign = 1;
-            }
-        } else {
-            $sign = 0;
-        }
+        $sign = $sign ? 1 : 0;
 
         //可用优惠券数量
         $coupon = Coupon::where([
@@ -69,6 +58,13 @@ class My extends Base
         $collections = $this->collectionIndex($user_id, 'collections');
 
         $this->success('请求成功', ['sign' => $sign, 'score' => $score, 'couponCount' => $coupon, 'collection' => $collections, 'subscribe' => $subscribe]);
+    }
+
+    public function checkSignTime($user_id, $condition)
+    {
+        return UserSign::where('user_id', $user_id)
+            ->whereTime('lastModifyTime', $condition)
+            ->find();
     }
 
     /**
@@ -103,12 +99,12 @@ class My extends Base
             $beginYesterday = mktime(0, 0, 0, date('m'), date('d') - 1, date('Y'));
 
             $data = [];
-            //上次签到时间小于昨天0点时间，就终止连续签到
-            if ($user['lastModifyTime'] < $beginYesterday) {
-                $data['continuitycount'] = 1;
-            } else {
-                $data['continuitycount'] = intval($user['continuitycount']) + 1;
-            }
+
+            //判断昨天有没有签到，得到是否连续签到
+            $checkLastSign = $this->checkSignTime($user_id, 'yesterday');
+
+            $data['continuitycount'] = $checkLastSign ? intval($user['continuitycount']) + 1 : 1;
+
             $data['signcount'] = intval($user['signcount']) + 1;
             $data['lastModifyTime'] = time();
 
@@ -167,8 +163,8 @@ class My extends Base
 
         $this->success('', [
             'integral' => [
-                ['type'=>'fabulous','name'=>'点赞','detailed' => $fabulous],
-                ['type'=>'sign','name'=>'签到','detailed' => $sign],
+                ['type' => 'fabulous', 'name' => '点赞', 'detailed' => $fabulous],
+                ['type' => 'sign', 'name' => '签到', 'detailed' => $sign],
 //                ['type'=>'share','name'=>'分享','detailed' => $share]
             ],
             'currentScore' => $this->scores($user_id)
@@ -236,6 +232,7 @@ class My extends Base
                 }]);
             }])->select();
 
+
         $newCollect = [];
         $usdCollect = [];
         $logisticsCollect = [];
@@ -244,7 +241,6 @@ class My extends Base
                 unset($info[$k]);
                 continue;
             }
-
             foreach ($v['store_list'] as $key => $value) {
                 if (!$value['planacar_index'] && !$value['usedcar_count'] && !$value['logistics_count']) {
                     continue;
@@ -252,27 +248,27 @@ class My extends Base
 
                 if ($value['planacar_index']) {
                     foreach ($value['planacar_index'] as $kk => $vv) {
-                        $vv['models']['name'] = $vv['models']['name'].' '.$vv['models']['models_name'];
+                        $vv['models']['name'] = $vv['models']['name'] . ' ' . $vv['models']['models_name'];
                         $vv['city'] = ['id' => $v['id'], 'cities_name' => $v['cities_name']];
-                        unset($vv['recommendismenu'], $vv['specialismenu'], $vv['specialimages'], $vv['store_id'],$vv['models']['models_name']);
+                        unset($vv['recommendismenu'], $vv['specialismenu'], $vv['specialimages'], $vv['store_id'], $vv['models']['models_name']);
                         $newCollect[] = $vv;
                     }
                 }
 
                 if ($value['usedcar_count']) {
                     foreach ($value['usedcar_count'] as $kk => $vv) {
-                        $vv['models']['name'] = $vv['models']['name'].' '.$vv['models']['models_name'];
+                        $vv['models']['name'] = $vv['models']['name'] . ' ' . $vv['models']['models_name'];
                         $vv['city'] = ['id' => $v['id'], 'cities_name' => $v['cities_name']];
-                        unset($vv['store_id'],$vv['models']['models_name']);
+                        unset($vv['store_id'], $vv['models']['models_name']);
                         $usdCollect[] = $vv;
                     }
                 }
 
                 if ($value['logistics_count']) {
                     foreach ($value['logistics_count'] as $kk => $vv) {
-                        $vv['models']['name'] = $vv['models']['name'].' '.$vv['models']['models_name'];
+                        $vv['models']['name'] = $vv['models']['name'] . ' ' . $vv['models']['models_name'];
                         $vv['city'] = ['id' => $v['id'], 'cities_name' => $v['cities_name']];
-                        unset($vv['store_id'], $vv['brand_id'],$vv['models']['models_name']);
+                        unset($vv['store_id'], $vv['brand_id'], $vv['models']['models_name']);
                         $logisticsCollect[] = $vv;
                     }
                 }
@@ -284,19 +280,83 @@ class My extends Base
             [
                 'type' => 'new',
                 'type_name' => '新车',
-                'planList' =>array_reverse($newCollect)
+                'planList' => $newCollect ? $this->arraySort($newCollect) : $newCollect
             ],
             [
                 'type' => 'used',
                 'type_name' => '二手车',
-                'planList' => array_reverse($usdCollect)
+                'planList' => $usdCollect ? $this->arraySort($usdCollect) : $usdCollect
             ],
             [
                 'type' => 'logistics',
                 'type_name' => '新能源车',
-                'planList' =>array_reverse($logisticsCollect)
+                'planList' => $logisticsCollect ? $this->arraySort($logisticsCollect) : $logisticsCollect
             ]
         ]];
+    }
+
+    /**
+     *
+     * @param $arrays
+     * @return array
+     */
+    public function arraySort($arrays)
+    {
+        $arr = array();
+        foreach ($arrays as $k => $v) {
+            $arr[] = $v['collections']['id'];
+        }
+        rsort($arr);
+
+        $newArr = [];
+        foreach ($arr as $v) {
+            foreach ($arrays as $key => $value) {
+                if ($value['collections']['id'] == $v) {
+                    $newArr[] = $value;
+                }
+            }
+        }
+
+        return $newArr;
+    }
+
+
+    public function coupons()
+    {
+        $user_id = $this->request->post('user_id');
+
+        $notUsed = $this->getCoupon($user_id,[
+            'ismenu' => 1,
+            'validity_datetime' => ['GT', time()],
+            'user_id' => ['like', '%,' . $user_id . ',%'],
+            'use_id' => ['not like', '%,' . $user_id . ',%']
+        ]);
+
+        $used = $this->getCoupon($user_id,[
+            'ismenu' => 1,
+            'validity_datetime' => ['GT', time()],
+            'user_id' => ['like', '%,' . $user_id . ',%'],
+            'use_id' => ['like', '%,' . $user_id . ',%']
+        ]);
+
+        $this->success(['1'=>$notUsed,'2'=>$used]);
+    }
+
+    public function getCoupon($user_id,$where)
+    {
+        $coupons = Coupon::where($where)
+            ->order('validity_datetime')
+            ->field('id,coupon_name,display_diagramimages,coupon_amount,threshold,models_ids,createtime,
+            validity_datetime,user_id')
+            ->select();
+
+        foreach ($coupons as $k => $v) {
+            $filter = array_count_values(array_filter(explode(',', $v['user_id'])));
+            $v['coupon_count'] = $filter[$user_id];
+            unset($v['user_id']);
+        }
+
+        return $coupons;
     }
 
     /**

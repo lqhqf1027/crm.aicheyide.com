@@ -15,14 +15,13 @@ use app\admin\model\Cities;
  */
 class Shop extends Backend
 {
-    
+
     /**
      * Store模型对象
      * @var \app\admin\model\cms\company\Store
      */
     protected $model = null;
     protected static $key = "7cd2a3dc6f7174c013693bc9d7c24e58";
-
     public function _initialize()
     {
         parent::_initialize();
@@ -36,7 +35,7 @@ class Shop extends Backend
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-    
+
 
     /**
      * 查看
@@ -44,7 +43,7 @@ class Shop extends Backend
     public function index()
     {
         //当前是否为关联查询
-        $this->relationSearch = true;
+//        $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax())
@@ -54,22 +53,22 @@ class Shop extends Backend
             {
                 return $this->selectpage();
             }
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams('store_name',true);
             $total = $this->model
-                    ->with(['city'])
-                    ->where($where)
-                    ->order($sort, $order)
-                    ->count();
+                ->with(['city'])
+                ->where($where)
+                ->order($sort, $order)
+                ->count();
 
             $list = $this->model
-                    ->with(['city'])
-                    ->with(['planacar' => function ($query) {
-                        $query->where(['ismenu' => 1, 'acar_status' => 1]);
-                    }])
-                    ->where($where)
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
+                ->with(['city'])
+                ->with(['planacar' => function ($query) {
+                    $query->where(['ismenu' => 1, 'acar_status' => 1]);
+                }])
+                ->where($where)
+                ->order($sort, $order)
+                ->limit($offset, $limit)
+                ->select();
             $list = collection($list)->toArray();
 
             $result = array("total" => $total, "rows" => $list);
@@ -181,7 +180,7 @@ class Shop extends Backend
                     if ($result !== false) {
                         //城市与门店的开启与关闭
                         $this->getStore($ids);
-                       
+
                         $this->success();
                     } else {
                         $this->error($row->getError());
@@ -209,7 +208,7 @@ class Shop extends Backend
         // die;
         //关闭门店
         if ($result->statuss == 'hidden') {
-            
+
             $data = CompanyStore::where(['city_id' => $result->city_id, 'statuss' => 'normal'])->select();
             if (!$data) {
                 Cities::update(['id' => $result->city_id, 'status' => 'hidden']);
@@ -224,9 +223,9 @@ class Shop extends Backend
                 Cities::update(['id' => $result->city_id, 'status' => 'normal']);
             }
             //开启门店下的方案
-           PlanAcar::where('store_id', $result->id)->setField(['acar_status' => 1, 'ismenu' => 1]);
+            PlanAcar::where('store_id', $result->id)->setField(['acar_status' => 1, 'ismenu' => 1]);
         }
-        
+
     }
 
     public function selectpage()
