@@ -149,7 +149,7 @@ Page({
         }
 
         // 成功操作
-        this.clickAppointment(e.detail)
+        this.clickAppointment(e.detail, true)
     },
     appointment(params) {
         // 发起请求
@@ -166,7 +166,7 @@ Page({
             app.error(ret.msg)
         })
     },
-    clickAppointment(extParams) {
+    clickAppointment(extParams, isForce) {
         const hasMobile = !!this.data.plan.users.mobile
         const { code, mobile } = this.data
         const plan_id = this.options.id
@@ -200,7 +200,7 @@ Page({
         }
 
         // 获取用户手机号
-        if (!hasMobile && extParams) {
+        if (!hasMobile && extParams && isForce) {
             params.iv = extParams.iv
             params.encryptedData = extParams.encryptedData
             params.sessionKey = app.getGlobalData().session_key
