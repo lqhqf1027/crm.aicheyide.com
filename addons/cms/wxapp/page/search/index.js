@@ -97,7 +97,7 @@ Page({
         const { name, style, type } = value
 
         this.setData({
-            searchModels: this.updateSearchModels(this.data.inputVal),
+            searchModels: this.updateSearchModels(name),
         })
         this.switchTab(name, type || style)
     },
