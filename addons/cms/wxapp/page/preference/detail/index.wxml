@@ -1,7 +1,7 @@
 <!-- <include src="../../template/mdk_temp.wxml" /> -->
 <view class="container" wx:if="{{ type !== 'used' }}">
     <view class="card">
-        <image class="card__image" src="{{ plan.models_main_images }}" wx:if="{{ plan.models_main_images }}" />
+        <image class="card__image" src="{{ plan.models_main_images || globalData.empty_carimg }}" />
         <view class="card__extra">车辆图片仅供参考 以配置描述为准</view>
         <view class="card__title wux-mt--10">{{ plan.models.name }}</view>
         <image class="card__label" src="{{ plan.label.lableimages }}" wx:if="{{ plan.label }}" />
