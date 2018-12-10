@@ -89,7 +89,7 @@
             <scroll-view scroll-x class="guesslike-srcoll">
                 <block wx:for="{{ guesslike }}" wx:key="">
                     <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
-                        <image class="car__image" src="{{ item.models_main_images }}" />
+                        <image class="car__image" src="{{ item.models_main_images ? item.models_main_images : globalData.empty_carimg }}" />
                         <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                         <view class="wux-clearfix">
                             <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>

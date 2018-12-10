@@ -16,7 +16,7 @@
     <wux-cell-group wux-class="wux-mt--0">
         <wux-cell hover-class="none">
             <block wx:for="{{ searchModels }}" wx:key="">
-                <wux-tag data-name="{{ item }}" bind:click="onSelect">{{ item }}</wux-tag>
+                <wux-tag wux-class="tag" data-name="{{ item }}" bind:click="onSelect">{{ item }}</wux-tag>
             </block>
         </wux-cell>
     </wux-cell-group>
