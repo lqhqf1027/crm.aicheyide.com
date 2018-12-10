@@ -8,6 +8,7 @@
 
 namespace addons\cms\controller\wxapp;
 
+use addons\cms\model\Coupon;
 use think\Cache;
 use think\console\command\make\Model;
 use think\Db;
@@ -115,18 +116,18 @@ class Store extends Base
         $result['info'] = $store_info;
         $result['logic'] = $isLogic;
 
-        $plans =$type_name = null;
-        switch ($cartype){
+        $plans = $type_name = null;
+        switch ($cartype) {
             case 'new':
-                $plans =  Share::getVariousTypePlan('', true, 'planacarIndex', 'new',$store_id);
+                $plans = Share::getVariousTypePlan('', true, 'planacarIndex', 'new', $store_id);
                 $type_name = '新车';
                 break;
             case 'used':
-                $plans =  Share::getVariousTypePlan('', false, 'usedcarCount', 'used',$store_id);
+                $plans = Share::getVariousTypePlan('', false, 'usedcarCount', 'used', $store_id);
                 $type_name = '二手车';
                 break;
             case 'logistics':
-                $plans =  Share::getVariousTypePlan('', true, 'logisticsCount', 'logistics',$store_id);
+                $plans = Share::getVariousTypePlan('', true, 'logisticsCount', 'logistics', $store_id);
                 $type_name = '新能源车';
                 break;
             default:
@@ -137,6 +138,43 @@ class Store extends Base
 
 
         $this->success('请求成功', $result);
+    }
+
+    /**
+     * 领取优惠券接口
+     */
+    public function receiveCoupons()
+    {
+        $user_id = $this->request->post('user_id');
+        $coupon_id = $this->request->post('coupon_id');
+
+        if (!$coupon_id || !$user_id) {
+            $this->error('参数错误或缺失参数,请求失败', 'error');
+        }
+
+        $coupon_received = Coupon::where([
+            'id'=>$coupon_id,
+            'remaining_amount' =>['GT',0]
+        ])
+        ->field('user_id,limit_collar')
+        ->find();
+
+        if(!$coupon_received){
+            $this->error('优惠券已发放完了');
+        }
+
+        $user_id_arr = array_count_values(array_filter(explode(',',$coupon_received['user_id'])));
+
+        if($user_id_arr[$user_id] && $user_id_arr[$user_id]>=$coupon_received['limit_collar']){
+              $this->error('该优惠券您已经领取最大限制:'.$coupon_received['limit_collar'],$coupon_received['limit_collar']);
+        }
+
+        $res = Coupon::update([
+            'id' =>$coupon_id,
+            'user_id' => $coupon_received['user_id'].$user_id.','
+        ]);
+
+        $res?$this->success('领取优惠券成功'):$this->error('领取优惠券失败');
     }
 
 
