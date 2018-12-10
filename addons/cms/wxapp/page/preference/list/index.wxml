@@ -37,7 +37,7 @@
             <block wx:for="{{ appointment }}" wx:key="">
                 <swiper-item>
                     <view class="notice-inner">
-                        <wux-avatar wux-class="notice-avatar" src="{{ item.avatar }}" />
+                        <wux-avatar wux-class="notice-avatar" src="{{ item.avatar }}" wx:if="{{ item.avatar }}" />
                         <view class="wux-ellipsis">{{ item.content }}</view>
                     </view>
                 </swiper-item>

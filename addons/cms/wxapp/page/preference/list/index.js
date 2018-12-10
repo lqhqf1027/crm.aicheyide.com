@@ -68,7 +68,7 @@ Page({
             that.setData({
                 globalData: app.globalData,
                 appointment: data.appointment.map((n) => {
-                    const mobile = n.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+                    const mobile = n.mobile ? n.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') : ''
                     const content = `${mobile} 成功下单 ${n.models_name}`
 
                     return {...n, content }
@@ -223,7 +223,7 @@ Page({
             console.log(data)
             that.setData({
                 appointment: data.appointment.map((n) => {
-                    const mobile = n.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+                    const mobile = n.mobile ? n.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') : ''
                     const content = `${mobile} 成功下单 ${n.models_name}`
 
                     return {...n, content }
