@@ -8,6 +8,20 @@
     <view class="wux-search-bar__cancel" bindtap="onCancel">取消</view>
 </view>
 
+<block wx:if="{{ !inputVal && searchModels.length }}">
+    <view class="search">
+        <view class="title">历史搜索</view>
+        <icon type="clear" color="#B2B2B2" size="14" bindtap="onClear" />
+    </view>
+    <wux-cell-group wux-class="wux-mt--0">
+        <wux-cell hover-class="none">
+            <block wx:for="{{ searchModels }}" wx:key="">
+                <wux-tag data-name="{{ item }}" bind:click="onSelect">{{ item }}</wux-tag>
+            </block>
+        </wux-cell>
+    </wux-cell-group>
+</block>
+
 <wux-cell-group wux-class="wux-mt--0" wx:if="{{ new.length }}">
     <wux-cell hover-class="none">
         <view class="cell-title">新车</view>
