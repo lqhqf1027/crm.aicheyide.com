@@ -316,12 +316,19 @@ Page({
         this.setData({ carBrandList })
     },
     setFilter(style) {
-        const items = [...defaultItems]
+        let items = [...defaultItems]
         const searchVal = {...defaultSearchValue, style }
-
+        
         if (style === 'used') {
-            items[0].children.splice(2, 1)
-            items.pop()
+            items = items.filter((n) => n.value !== '4').map((n) => {
+                if (n.value === '1') {
+                    return Object.assign({}, n, {
+                        children: n.children.filter((m) => m.value !== '13'),
+                    })
+                }
+                
+                return n
+            })
         }
 
         this.setData({
