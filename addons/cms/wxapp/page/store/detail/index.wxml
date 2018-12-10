@@ -110,7 +110,7 @@
                     <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
                 </view>
                 <view class=" car__title--monthly wux-pull-right wux-mr--10 ">
-                    <view class="popular"></view> {{ common.getDistance(item.popularity) }}
+                    <view class="popular"></view> {{ common.getDistance(item.popularity, 1) }}
                 </view>
             </view>
         </view>
@@ -188,17 +188,18 @@
             return value.substring(0, 7)
         },
         getDistance: function(value) {
-            var p1 = arguments[1] || 'K'
-            var p2 = arguments[2] || 'W'
+            var p1 = arguments[1] || 2
+            var p2 = arguments[2] || 'K'
+            var p3 = arguments[3] || 'W'
             if (!value) return 0
             if (value < 1000) {
                 return value
             } else if (value >= 1000 && value < 10000) {
                 value = value / 1000
-                return value.toFixed(2) + p1
+                return value.toFixed(p1) + p2
             } else if (value >= 10000) {
                 value = value / 10000
-                return value.toFixed(2) + p2
+                return value.toFixed(p1) + p3
             }
         },
     }
