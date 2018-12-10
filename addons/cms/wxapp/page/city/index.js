@@ -3,23 +3,7 @@ const app = getApp()
 Page({
     data: {
         cities: [],
-        citys: [],
-        tags: [{
-            cities_name: '成都',
-            id: 38,
-        }, {
-            cities_name: '南充',
-            id: 39,
-        }, {
-            cities_name: '西安',
-            id: 41,
-        }, {
-            cities_name: '昆明',
-            id: 35,
-        }, {
-            cities_name: '银川',
-            id: 40,
-        }],
+        tags: [],
         inputValue: '',
     },
     getList() {
@@ -29,6 +13,7 @@ Page({
             console.log(data)
 
             let cities = []
+            let tags = []
             const words = Object.keys(data)
 
             words.forEach((item, index) => {
@@ -38,9 +23,22 @@ Page({
                 }
             })
 
+            for (let i = 0; i < cities.length; i++) {
+                for (let j = 0; j < cities[i]['list'].length; j++) {
+                    for (let k = 0; k < cities[i]['list'][j]['citys'].length; k++) {
+                        if (tags.length < 5) {
+                            tags.push(cities[i]['list'][j]['citys'][k])
+                        } else {
+                            break
+                        }
+                    }
+                }
+            }
+
             console.log(cities)
 
             that.setData({
+                tags,
                 cities,
             })
 
