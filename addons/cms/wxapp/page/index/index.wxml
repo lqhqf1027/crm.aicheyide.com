@@ -100,7 +100,7 @@
     </view>
     <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style !== 'used' }}">
         <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
-            <image lazy-load class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" wx:if="{{ item.models_main_images }}" />
+            <image lazy-load class="car__image" src="{{ item.models_main_images ? (globalData.config.upload.cdnurl + item.models_main_images) : globalData.empty_carimg }}" />
             <view class="car__title">{{ item.models.name }}</view>
             <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2" wx:if="{{ item.models }}">厂商指导价 {{ item.models.price / 10000 }} W</view>
             <image class="car__label" src="{{ globalData.config.upload.cdnurl + item.label.lableimages }}" wx:if="{{ item.label }}" />
@@ -111,13 +111,13 @@
                     <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
                 </view>
                 <view class=" car__title--monthly wux-pull-right wux-mr--10  ">
-                    <view class="popular"></view> {{ common.getDistance(item.popularity) }}
+                    <view class="popular"></view> {{ common.getDistance(item.popularity, 1) }}
                 </view>
             </view>
         </view>
     </block>
     <block wx:for="{{ list }}" wx:key="" wx:if="{{ searchVal.style === 'used' }}">
-        <wux-media wux-class="media" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ globalData.config.upload.cdnurl + item.models_main_images }}" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
+        <wux-media wux-class="media" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ item.models_main_images ? (globalData.config.upload.cdnurl + item.models_main_images) : globalData.empty_carimg }}" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
             <view class="media__title wux-ellipsis--l2">{{ item.models.name }}</view>
             <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(item.car_licensedate) + '/' + common.getDistance(item.kilometres) + '公里' }}</view>
             <view class="wux-clearfix">
@@ -174,17 +174,18 @@
             return value.substring(0, 7)
         },
         getDistance: function(value) {
-            var p1 = arguments[1] || 'K'
-            var p2 = arguments[2] || 'W'
+            var p1 = arguments[1] || 2
+            var p2 = arguments[2] || 'K'
+            var p3 = arguments[3] || 'W'
             if (!value) return 0
             if (value < 1000) {
                 return value
             } else if (value >= 1000 && value < 10000) {
                 value = value / 1000
-                return value.toFixed(2) + 'K'
+                return value.toFixed(p1) + p2
             } else if (value >= 10000) {
                 value = value / 10000
-                return value.toFixed(2) + p2
+                return value.toFixed(p1) + p3
             }
         },
     }

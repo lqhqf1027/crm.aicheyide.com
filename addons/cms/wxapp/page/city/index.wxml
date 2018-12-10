@@ -28,7 +28,7 @@
         <view class="notfound wux-pl--20 wux-pr--20" wx:if="{{ arrowInput && inputValue.length > 0 && !searchCityList.length }}">
             <wux-divider text="暂无相关城市或未开通" />
         </view>
-        <view class="i-index-item" wx:if="{{ !(arrowInput && inputValue.length > 0) }}">
+        <view class="i-index-item" wx:if="{{ !(arrowInput && inputValue.length > 0) && tags.length > 0 }}">
             <view class="i-index-item-header">当前已开通城市：</view>
             <view class="i-index-item-content">
                 <view class="i-index-demo-item">

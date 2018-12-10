@@ -5,19 +5,61 @@ Page({
         new: [],
         used: [],
         logistics: [],
+        searchModels: [],
         inputVal: '',
+    },
+    onLoad() {
+        this.setData({
+            searchModels: this.getSearchModels(),
+        })
+    },
+    setSearchModels(data) {
+        return wx.setStorageSync('searchModels', data || [])
+    },
+    getSearchModels() {
+        return wx.getStorageSync('searchModels') || []
+    },
+    updateSearchModels(value) {
+        const index = !value ? 5 : 4
+        let searchModels = this.getSearchModels().reverse().slice(0, index).reverse()
+
+        if (value) {
+            searchModels = searchModels.filter((n) => n !== value)
+            searchModels = [...searchModels, value]
+        }
+
+        this.setSearchModels(searchModels)
+
+        return searchModels
+    },
+    onClear() {
+        this.setSearchModels()
+        this.setData({
+            searchModels: [],
+        })
     },
     onCancel() {
         wx.navigateBack()
     },
     onChange(e) {
         console.log('onChange', e)
-        this.setData({ inputVal: e.detail.value })
-        this.getList(e.detail.value)
+        const { value } = e.detail
+        this.setData({ inputVal: value })
+        this.getList(value)
     },
     onConfirm(e) {
         console.log('onConfirm', e)
-        this.switchTab(e.detail.value)
+        const { value } = e.detail
+
+        this.setData({
+            searchModels: this.updateSearchModels(value),
+        })
+        this.switchTab(value)
+    },
+    onSelect(e) {
+        const { name } = e.currentTarget.dataset
+
+        this.switchTab(name)
     },
     getList(queryModels) {
         const city = wx.getStorageSync('city')
@@ -53,6 +95,10 @@ Page({
         console.log(e)
         const { value } = e.currentTarget.dataset
         const { name, style, type } = value
+
+        this.setData({
+            searchModels: this.updateSearchModels(this.data.inputVal),
+        })
         this.switchTab(name, type || style)
     },
     switchTab(name = '', style = 'new') {

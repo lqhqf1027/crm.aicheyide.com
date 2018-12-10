@@ -33,6 +33,7 @@ Page({
         backtop: false,
         popupVisible: false,
         codeText: '获取验证码',
+        globalData: app.globalData,
     },
     onLoad(options) {
         console.log(options)
@@ -40,6 +41,7 @@ Page({
         this.setData({ type: options.type })
     },
     onShow() {
+        this.setData({ globalData: app.globalData })
         this.getDetail()
     },
     onRefresh() {

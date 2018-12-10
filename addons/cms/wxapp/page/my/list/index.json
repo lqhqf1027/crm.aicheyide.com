@@ -1,5 +1,7 @@
 {
     "navigationBarTitleText": "我的",
+    "navigationBarBackgroundColor": "#3b66bb",
+    "navigationBarTextStyle": "white",
     "enablePullDownRefresh": true,
     "usingComponents": {
     	"i-sticky": "../../../assets/libs/iview/sticky/index",

@@ -17,7 +17,7 @@
                                                 <view class="fa fa-map-marker"></view> {{ card.city.cities_name }}
                                             </view>
                                             <view class="media__desc wux-pull-right wux-mr--10">
-                                                <view class="popular"></view> {{ common.getDistance(card.popularity) }}
+                                                <view class="popular"></view> {{ common.getDistance(card.popularity, 1) }}
                                             </view>
                                         </view>
                                     </wux-media>
@@ -67,7 +67,8 @@
             <button class="button-clear wux-mt--10" open-type="getUserInfo" bind:getuserinfo="bindGetUserInfo" wx:else>立即登录</button>
         </view>
         <view class="other">
-            <view class="sign" bindtap="signIn">立即签到</view>
+            <view class="sign" bindtap="signIn" wx:if="{{ sign !== 1 }}">立即签到</view>
+            <view class="sign" wx:else>已签到</view>
             <view class="wux-mt--20">
                 <text class="score">积分：{{ score }}</text>
                 <text class="line"></text>
@@ -92,8 +93,13 @@
         <wux-grid thumb="/assets/images/message.png">
             <view class="grid__name">我的消息</view>
         </wux-grid>
-        <wux-grid thumb="/assets/images/service.png">
-            <view class="grid__name">我的客服</view>
+        <wux-grid>
+            <button class="button-clear" open-type="contact">
+                <view>
+                    <image src="/assets/images/service.png" style="width: 60rpx; height: 60rpx" />
+                    <view class="grid__name">我的客服</view>
+                </view>
+            </button>
         </wux-grid>
     </wux-grids>
     <view class="wish">
@@ -113,17 +119,18 @@
             return value.substring(0, 7)
         },
         getDistance: function(value) {
-            var p1 = arguments[1] || 'K'
-            var p2 = arguments[2] || 'W'
+            var p1 = arguments[1] || 2
+            var p2 = arguments[2] || 'K'
+            var p3 = arguments[3] || 'W'
             if (!value) return 0
             if (value < 1000) {
                 return value
             } else if (value >= 1000 && value < 10000) {
                 value = value / 1000
-                return value.toFixed(2) + p1
+                return value.toFixed(p1) + p2
             } else if (value >= 10000) {
                 value = value / 10000
-                return value.toFixed(2) + p2
+                return value.toFixed(p1) + p3
             }
         },
     }
