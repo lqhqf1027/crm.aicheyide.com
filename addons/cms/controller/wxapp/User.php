@@ -61,6 +61,7 @@ class User extends Base
         $result = Http::sendRequest("https://api.weixin.qq.com/sns/jscode2session", $params, 'GET');
         if ($result['ret']) {
             $json = (array)json_decode($result['msg'], true);
+            $this->success($json);
             if (isset($json['openid'])) {
                 //如果有传Token
                 if ($this->token) {
