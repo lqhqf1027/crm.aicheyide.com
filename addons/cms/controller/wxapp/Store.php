@@ -18,6 +18,7 @@ use addons\cms\model\Cities as citiesModel;
 use addons\cms\model\Config as configModel;
 use addons\cms\model\Models as modelsModel;
 use addons\cms\model\Brand as brandModel;
+use think\helper\Time;
 
 class Store extends Base
 {
@@ -154,24 +155,27 @@ class Store extends Base
 
         $coupon_received = Coupon::where([
             'id'=>$coupon_id,
-            'remaining_amount' =>['GT',0]
+            'remaining_amount' =>['GT',0],
+            'release_datetime' =>['GT',time()],
+            'ismenu'=>1
         ])
-        ->field('user_id,limit_collar')
+        ->field('user_id,limit_collar,remaining_amount')
         ->find();
 
         if(!$coupon_received){
-            $this->error('优惠券已发放完了');
+            $this->error('优惠券已超过领取截止日期或已发放完了');
         }
 
         $user_id_arr = array_count_values(array_filter(explode(',',$coupon_received['user_id'])));
 
         if($user_id_arr[$user_id] && $user_id_arr[$user_id]>=$coupon_received['limit_collar']){
-              $this->error('该优惠券您已经领取最大限制:'.$coupon_received['limit_collar'],$coupon_received['limit_collar']);
+              $this->error('该优惠券您只能领取:'.$coupon_received['limit_collar'].'份',$coupon_received['limit_collar']);
         }
 
         $res = Coupon::update([
             'id' =>$coupon_id,
-            'user_id' => $coupon_received['user_id'].$user_id.','
+            'user_id' => $coupon_received['user_id'].$user_id.',',
+            'remaining_amount' => intval($coupon_received['remaining_amount'])-1
         ]);
 
         $res?$this->success('领取优惠券成功'):$this->error('领取优惠券失败');
