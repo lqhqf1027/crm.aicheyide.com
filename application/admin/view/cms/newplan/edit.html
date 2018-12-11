@@ -5,27 +5,17 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <input id="c-store_id" data-rule="required" data-source="store/shop/selectpage"
+            <input id="c-store_id" data-rule="required" data-source="cms/newplan/getStore"
                    class="form-control selectpage form-control" data-field="store_name" name="row[store_id]" type="text"
                    value="{$row.store_id}" disabled>
 
         </div>
     </div>
 
-
-    <!--<div class="form-group">-->
-    <!--<label class="control-label col-xs-12 col-sm-2">{:__('选择专题标题')}:</label>-->
-    <!--<div class="col-xs-12 col-sm-8">-->
-
-    <!--<input id="c-subject_id" data-rule="required" data-field="title" data-source="cms/Subject/index" data-params="" value="{$row.subject_id}" class="form-control selectpage"  name="row[subject_id]" type="text">-->
-
-    <!--</div>-->
-    <!--</div>-->
-
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择专题标题')}:</label>
         <div class="col-xs-12 col-sm-8" id="test">
-            <select id="c-subject_id" data-rule="required" class="form-control" name="row[subject_id]">
+            <select id="c-subject_id" class="form-control" name="row[subject_id]">
                 {empty name="subject"}
                 <option value="" >该城市暂无专题</option>
                 {else /}

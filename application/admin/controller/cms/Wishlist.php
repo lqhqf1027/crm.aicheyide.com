@@ -64,7 +64,7 @@ class Wishlist extends Backend
 
             foreach ($list as $row) {
                 
-                
+                $row->getRelation('user')->visible(['nickname']);
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);

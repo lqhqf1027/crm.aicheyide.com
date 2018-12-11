@@ -15,6 +15,7 @@ use think\Db;
 use fast\Tree;
 use think\db\Query;
 
+
 /**
  * 多表格示例
  *
@@ -275,8 +276,6 @@ class Newplan extends Backend
         }
         $this->view->assign([
             "row" => $row,
-            'label' => $this->getLabel(),
-            'store' => $this->getStore(),
             'subject'=>$this->getSubject($row['store_id'])
         ]);
 
@@ -321,61 +320,20 @@ class Newplan extends Backend
         return $subject;
     }
 
-    //标签名称
-    public function getLabel()
-    {
-        $result = Db::name('cms_label')->select();
-
-        return $result;
-    }
-
     //门店名称
-
     public function getStore()
     {
-        $result = Db::name('cms_company_store')->select();
-
-        return $result;
-
-    }
-
-    public function getStores()
-    {
         $this->model = model('CompanyStore');
         // //当前是否为关联查询
         // $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-
-            $list = $this->model->field('id,store_name as name')->select();
-
-            $result = array("list" => $list);
-
-            return json($result);
-        }
-    }
-
-    public function getSpecial()
-    {
-        $this->model = model('CompanyStore');
-        // //当前是否为关联查询
-        // $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            $store_id = $this->request->post('store_id');
-            $city_id = $this->model->field('id,city_id')->find([$store_id]);
-
-            $city_id = $city_id['city_id'];
-
-            $list = model('Subject')
-                ->field('id,title as name')
-                ->where('city_id', $city_id)
-                ->select();
-            $result = array("list" => $list);
-
-            return json($result);
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
         }
     }
 
