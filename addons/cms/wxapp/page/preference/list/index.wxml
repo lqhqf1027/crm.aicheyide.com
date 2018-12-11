@@ -138,6 +138,12 @@
                             </view>
                         </swiper-item>
                     </block>
+                    <swiper-item class="swiper-item">
+                        <view class="car__more" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial">
+                            <view>查看更多</view>
+                            <view class="car__text">See More</view>
+                        </view>
+                    </swiper-item>
                 </swiper>
             </view>
         </wux-card>
@@ -159,6 +165,12 @@
                                     </view>
                                 </view>
                             </block>
+                            <view class="car">
+                                <view class="car__more" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial">
+                                    <view>查看更多</view>
+                                    <view class="car__text">See More</view>
+                                </view>
+                            </view>
                         </scroll-view>
                     </wux-card>
                 </wux-col>

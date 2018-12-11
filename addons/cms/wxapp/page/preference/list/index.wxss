@@ -337,6 +337,26 @@ image.quiet {
     color: rgba(193, 195, 200, 1);
 }
 
+.car__more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #f8f8f8;
+}
+
+.car__text {
+    font-size: 24rpx;
+    color: #696969;
+    margin-top: 12rpx;
+}
+
+.scroll-y .car__more {
+    height: 258rpx;
+}
+
 .grid__more {
     color: #3b66bb;
 }
