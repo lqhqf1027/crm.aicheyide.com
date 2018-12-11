@@ -3690,10 +3690,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         newreserve:function(){
 
             //门店
+            $(document).on("change", "#c-city_id", function () {
+
+                $('#c-store_ids_text').val('');
+            });
             $("#c-store_ids").data("params", function (obj) {
 
                 return {custom: {city_id: $('#c-city_id').val()}};
 
+            });
+            $(document).on("change", "#c-store_ids", function () {
+
+                $('#c-category_id_text').val('');
             });
             //门店下类别
             $("#c-category_id").data("params", function (obj) {

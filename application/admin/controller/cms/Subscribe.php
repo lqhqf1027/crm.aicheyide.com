@@ -21,7 +21,7 @@ class Subscribe extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \addons\cms\model\Subscribe;
+        $this->model = new \app\admin\model\Subscribe;
         $this->view->assign("stateList", $this->model->getStateList());
     }
 
@@ -62,7 +62,7 @@ class Subscribe extends Backend
                 }, 'usedplan' => function ($query) {
                     $query->withField('newpayment,monthlypaymen,periods,models_id,store_id');
                 }, 'energyplan' => function ($query) {
-                    $query->withField('payment,monthly,nperlist,name');
+                    $query->withField('payment,monthly,nperlist,models_id');
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -85,9 +85,9 @@ class Subscribe extends Backend
                     $list[$k]['plan']['models_name'] = $this->getModels($v['usedplan']['models_id']);
                     $list[$k]['plan']['company_name'] = $this->getStore($v['usedplan']['store_id']);
                 }
-                if ($v['energyplan']['name']) {
+                if ($v['energyplan']['payment']) {
                     $list[$k]['plan'] = $v['energyplan'];
-                    $list[$k]['plan']['models_name'] = $v['energyplan']['name'];
+                    $list[$k]['plan']['models_name'] = $this->getModels($v['energyplan']['models_id']);
                     $list[$k]['plan']['company_name'] = $this->getStore($v['energyplan']['store_id']);
                 }
 
