@@ -9,6 +9,7 @@ use addons\cms\model\Fabulous;
 use addons\cms\model\Page;
 use addons\cms\model\User;
 use addons\cms\model\UserSign;
+use addons\cms\model\Message;
 use app\common\model\Addon;
 use think\Db;
 
@@ -43,12 +44,14 @@ class My extends Base
 
         $sign = $sign ? 1 : 0;
 
-        //可用优惠券数量
-        $coupon = Coupon::where([
+        $messageCount = Message::where([
             'ismenu' => 1,
-            'validity_datetime' => ['GT', time()],
-            'user_id' => ['like', '%,' . $user_id . ',%'],
             'use_id' => ['not like', '%,' . $user_id . ',%']
+        ])->count();
+
+        //拥有优惠券数量
+        $coupon = Coupon::where([
+            'user_id' => ['like', '%,' . $user_id . ',%'],
         ])->count();
 
         //我的预约
@@ -57,7 +60,13 @@ class My extends Base
         //我的收藏
         $collections = $this->collectionIndex($user_id, 'collections');
 
-        $this->success('请求成功', ['sign' => $sign, 'score' => $score, 'couponCount' => $coupon, 'collection' => $collections, 'subscribe' => $subscribe]);
+        $this->success('请求成功', ['sign' => $sign,
+            'score' => $score,
+            'couponCount' => $coupon,
+            'messageCount' => $messageCount,
+            'collection' => $collections,
+            'subscribe' => $subscribe
+        ]);
     }
 
     public function checkSignTime($user_id, $condition)
@@ -95,9 +104,6 @@ class My extends Base
             ];
 
         } else {
-            //昨天0点时间
-            $beginYesterday = mktime(0, 0, 0, date('m'), date('d') - 1, date('Y'));
-
             $data = [];
 
             //判断昨天有没有签到，得到是否连续签到
@@ -159,7 +165,6 @@ class My extends Base
             ->order('a.sign_time desc')
             ->select();
 
-//        $share = $this->fabulousData($user_id, 'share');
 
         $this->success('', [
             'integral' => [
@@ -169,6 +174,61 @@ class My extends Base
             ],
             'currentScore' => $this->scores($user_id)
         ]);
+    }
+
+    /**
+     * 消息列表接口
+     * @throws \think\exception\DbException
+     */
+    public function messageList()
+    {
+        $user_id = $this->request->post('user_id');
+
+        if (!$user_id) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+        $message = Message::all(function ($q) {
+            $q->where('ismenu', 1)->order('createtime desc')->field('id,title,createtime,use_id');
+        });
+
+        foreach ($message as $k => $v) {
+            $v['isRead'] = 0;
+
+            if (strpos($v['use_id'], ',' . $user_id . ',') !== false) {
+                $v['isRead'] = 1;
+            }
+            unset($v['use_id']);
+        }
+
+        $this->success('请求成功', ['messageList' => $message]);
+    }
+
+    /**
+     * 消息详情接口
+     * @throws \think\exception\DbException
+     */
+    public function messageDetails()
+    {
+        $user_id = $this->request->post('user_id');
+        $message_id = $this->request->post('message_id');
+        $isRead = $this->request->post('isRead');
+
+        if (!$user_id || !$message_id || !$isRead) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
+        $message = Message::get(function ($q) use ($message_id) {
+            $q->where('id', $message_id)->field('id,title,content,analysis,createtime,use_id');
+        });
+
+        if (!$isRead) {
+            $updateUses = $message['use_id'] == '' ? ',' . $user_id . ',' : $message['use_id'] . $user_id . ',';
+
+            //如果未读,更新为已读
+            Message::where('id', $message_id)->setField('use_id', $updateUses);
+        }
+        unset($message['use_id']);
+
+        $this->success('请求成功', ['messageDetails' => $message]);
     }
 
     /**
@@ -296,7 +356,7 @@ class My extends Base
     }
 
     /**
-     *
+     *数组根据收藏ID排序
      * @param $arrays
      * @return array
      */
@@ -321,28 +381,50 @@ class My extends Base
     }
 
 
+    /**
+     * 优惠券详情接口
+     */
     public function coupons()
     {
         $user_id = $this->request->post('user_id');
 
-        $notUsed = $this->getCoupon($user_id,[
-            'ismenu' => 1,
+        //未使用
+        $notUsed = $this->getCoupon($user_id, [
             'validity_datetime' => ['GT', time()],
             'user_id' => ['like', '%,' . $user_id . ',%'],
             'use_id' => ['not like', '%,' . $user_id . ',%']
         ]);
 
-        $used = $this->getCoupon($user_id,[
-            'ismenu' => 1,
-            'validity_datetime' => ['GT', time()],
+        //已使用
+        $used = $this->getCoupon($user_id, [
             'user_id' => ['like', '%,' . $user_id . ',%'],
             'use_id' => ['like', '%,' . $user_id . ',%']
         ]);
 
-        $this->success(['1'=>$notUsed,'2'=>$used]);
+        //已过期
+        $overdues = $this->getCoupon($user_id, [
+            'user_id' => ['like', '%,' . $user_id . ',%'],
+            'use_id' => ['not like', '%,' . $user_id . ',%'],
+            'validity_datetime' => ['LT', time()]
+        ]);
+
+        $this->success('请求成功', ['coupons' => [
+            'notUsed' => $notUsed,
+            'used' => $used,
+            'overdues' => $overdues
+        ]]);
     }
 
-    public function getCoupon($user_id,$where)
+    /**
+     * 得到满足条件的优惠券信息
+     * @param $user_id        用户ID
+     * @param $where          查询条件
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getCoupon($user_id, $where)
     {
         $coupons = Coupon::where($where)
             ->order('validity_datetime')
