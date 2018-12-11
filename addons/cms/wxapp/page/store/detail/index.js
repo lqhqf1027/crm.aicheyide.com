@@ -534,4 +534,16 @@ Page({
             }, this.setCars)
         }, 300)
     },
+    receiveCoupons(e) {
+        const { id } = e.currentTarget.dataset
+
+        app.request('/store/receiveCoupons', { coupon_id: id }, (data, ret) => {
+            console.log(data)
+            this.onRefresh()
+            app.success(ret.msg)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
 })

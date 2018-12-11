@@ -15,7 +15,7 @@
 	</view>
 	<block wx:for="{{ logic }}" wx:key="" wx:if="{{ logic.length }}">
 		<view class="store__card wux-mt--10">
-			<image lazy-load class="store__logic" src="{{ globalData.config.upload.cdnurl + item.display_diagramimages }}" />
+			<image lazy-load class="store__logic" src="{{ globalData.config.upload.cdnurl + item.display_diagramimages }}" data-id="{{ item.id }}" bindtap="receiveCoupons" />
 		</view>
 	</block>
 	
