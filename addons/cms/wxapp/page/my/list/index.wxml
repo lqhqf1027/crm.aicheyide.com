@@ -38,7 +38,7 @@
                                         <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
                                         <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(card.car_licensedate) + '/' + common.getDistance(card.kilometres) + '公里' }}</view>
                                         <view class="wux-clearfix" style='height:50rpx;line-height:50rpx'>
-                                            <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ card.models.totalprices }}">{{ card.models.totalprices / 10000 }} 万</view>
+                                            <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ card.totalprices }}">{{ card.totalprices / 10000 }} 万</view>
                                             <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ card.newpayment / 10000 }} 万</view>
                                             <view class="media__desc wux-pull-right">
                                                 <view class="fa fa-map-marker"></view> {{ card.city.cities_name }}
