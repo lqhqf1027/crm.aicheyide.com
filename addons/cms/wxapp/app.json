@@ -13,8 +13,11 @@
         "page/news/list/index",
         "page/store/list/index",
         "page/store/detail/index",
+        "page/message/list/index",
+        "page/message/detail/index",
         "page/my/list/index",
         "page/my/score/index",
+        "page/my/coupon/index",
         "page/my/setting/index"
     ],
     "window": {

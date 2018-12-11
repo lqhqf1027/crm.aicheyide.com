@@ -38,7 +38,7 @@
                                         <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
                                         <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(card.car_licensedate) + '/' + common.getDistance(card.kilometres) + '公里' }}</view>
                                         <view class="wux-clearfix" style='height:50rpx;line-height:50rpx'>
-                                            <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ card.models.price }}">{{ card.models.price / 10000 }} 万</view>
+                                            <view class="media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ card.models.totalprices }}">{{ card.models.totalprices / 10000 }} 万</view>
                                             <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ card.newpayment / 10000 }} 万</view>
                                             <view class="media__desc wux-pull-right">
                                                 <view class="fa fa-map-marker"></view> {{ card.city.cities_name }}
@@ -54,7 +54,7 @@
         </block>
     </i-sticky>
     <view class="notfound" wx:if="{{ !hasList }}">
-        <view class="notfound__title">您还没有收藏宝贝哦~</view>
+        <view class="notfound__title">暂无记录~</view>
         <view class="notfound__button" bindtap="toMore">去逛逛</view>
     </view>
 </template>
@@ -70,9 +70,9 @@
             <view class="sign" bindtap="signIn" wx:if="{{ sign !== 1 }}">立即签到</view>
             <view class="sign" wx:else>已签到</view>
             <view class="wux-mt--20">
-                <text class="score">积分：{{ score }}</text>
+                <text class="score" bindtap="toScore">积分：{{ score }}</text>
                 <text class="line"></text>
-                <text class="coupon">优惠券：{{ couponCount }}</text>
+                <text class="coupon" bindtap="toCoupon">优惠券：{{ couponCount }}</text>
             </view>
         </view>
     </view>
@@ -90,8 +90,11 @@
         <wux-grid thumb="/assets/images/score.png" bindtap="toScore">
             <view class="grid__name">我的积分</view>
         </wux-grid>
-        <wux-grid thumb="/assets/images/message.png">
-            <view class="grid__name">我的消息</view>
+        <wux-grid bindtap="toMessage">
+            <wux-badge count="{{ messageCount }}">
+                <image src="/assets/images/message.png" style="width: 60rpx; height: 60rpx" />
+                <view class="grid__name">我的消息</view>
+            </wux-badge>
         </wux-grid>
         <wux-grid>
             <button class="button-clear" open-type="contact">
@@ -102,14 +105,14 @@
             </button>
         </wux-grid>
     </wux-grids>
-    <view class="wish">
+    <!-- <view class="wish">
         <view class="wish__hd">
             <image class="wish__image" src="/assets/images/upload.png"></image>
         </view>
         <view class="wish__bd">关于友车有家</view>
         <view class="wish__ft"></view>
-    </view>
-    <view class="footer">©成都君忆汽车服务有限公司 • All Rights Reserved </view>
+    </view> -->
+    <view class="footer wux-mt--20">©成都君忆汽车服务有限公司 • All Rights Reserved </view>
 </view>
 
 <wxs module="common">

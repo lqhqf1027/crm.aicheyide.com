@@ -24,6 +24,7 @@ Page({
         collection: {},
         subscribe: {},
         couponCount: 0,
+        messageCount: 0,
         score: 0,
         sign: 0,
         style: 'collection',
@@ -152,6 +153,16 @@ Page({
             url: '/page/my/score/index',
         })
     },
+    toMessage() {
+        wx.navigateTo({
+            url: '/page/message/list/index',
+        })
+    },
+    toCoupon() {
+        wx.navigateTo({
+            url: '/page/my/coupon/index',
+        })
+    },
     integral() {
         app.integral('sign', function(data) {
             app.success(data)
@@ -173,6 +184,7 @@ Page({
                 'subscribe.carSelectList': data.subscribe && data.subscribe.carSelectList,
                 'subscribe.hasList': this.checkValue(data.subscribe && data.subscribe.carSelectList),
                 couponCount: data.couponCount,
+                messageCount: data.messageCount,
                 score: data.score,
                 sign: data.sign,
                 toggle: !this.data.toggle,

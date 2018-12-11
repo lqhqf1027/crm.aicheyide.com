@@ -120,7 +120,7 @@
             <view class="media__title wux-ellipsis--l2">{{ item.models.name }}</view>
             <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(item.car_licensedate) + '/' + common.getDistance(item.kilometres) + '公里' }}</view>
             <view class="wux-clearfix">
-                <view class="blod media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ item.models.price }}">{{ item.models.price / 10000 }} 万</view>
+                <view class="blod media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ item.models.totalprices }}">{{ item.models.totalprices / 10000 }} 万</view>
                 <view class="blod media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ item.newpayment / 10000 }} 万</view>
                 <view class="media__desc wux-pull-right">
                     <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
