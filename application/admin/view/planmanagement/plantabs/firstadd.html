@@ -5,15 +5,17 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-                <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
+            <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
+                <option value=" " style='display: none'>未选中任何项</option>
+                {volist name="store" id="vo" }
+                <option value=" " disabled style="background-color: #f2f2f2">{$vo.cities_name}</option>
+                {volist name="vo.store" id="store_vo"}
+                <option value="{$store_vo.store_id}">{$store_vo.store_name}</option>
+                {/volist}
+                {/volist}
 
-                    <option value="" style="display: none">未选择任何项</option>
-                    {foreach name="$store" item="vo"}
-                    <option value="{$vo.id}">{$vo.store_name}</option>
-                    {/foreach}
-        
-                </select>
-    
+            </select>
+
         </div>
     </div>
 
@@ -21,14 +23,8 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择销售方案类型')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]"
-            >
-                <option value="" style="display: none">未选择任何项</option>
-                {foreach name="$category" item="vo"}
-                <option value="{$vo.id}">{$vo.name}</option>
-                {/foreach}
-
-            </select>
+            <input id="c-category_id" data-rule="required" data-source="planmanagement/plantabs/getCategory" 
+                data-params='{"custom[store_ids]":"0"}' class="form-control selectpage form-control" name="row[category_id]" type="text" value="">
 
         </div>
     </div>

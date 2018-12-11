@@ -85,7 +85,6 @@ class Plantabs extends Backend
     {
         $this->loadlang('plan/planacar');
         $this->loadlang('plan/planusedcar');
-        $this->loadlang('plan/planfull');
         return $this->view->fetch();
     }
 
@@ -144,7 +143,7 @@ class Plantabs extends Backend
 
             foreach ($list as $key => $row) {
 
-                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance', 'category_id','sales_id']);
+                $row->visible(['id', 'payment', 'monthly', 'brand_name','brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'ismenu', 'createtime', 'updatetime', 'working_insurance', 'category_id','sales_id','store_id','city_store']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name', 'models_name']);
                 $row->visible(['admin']);
@@ -157,6 +156,16 @@ class Plantabs extends Backend
                 $list[$key]['brand_log'] =Config::get('upload')['cdnurl'].array_values(self::getBrandName($row['id']))[0]; //获取logo图片
                 $list[$key]['match_plan'] = in_array($row['id'], $sales_order_data) == $row['id'] ? 'match_success' : 'match_error'; //返回是否与方案id匹配
 
+                //城市门店
+                if ($row['store_id']) {
+                    $CompanyStore = CompanyStore::where('id', $row['store_id'])->find();
+                    $city_name = Cities::where('id', $CompanyStore['city_id'])->value('cities_name');
+                    $list[$key]['city_store'] = $city_name . "+" . $CompanyStore['store_name'];
+                }
+                else{
+                    $list[$key]['city_store'] = "暂无";
+                }
+                //车型
                 if ($list[$key]['models']['models_name']) {
                     $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
                 }
@@ -195,21 +204,9 @@ class Plantabs extends Backend
             ->join('models b', 'a.models_id = b.id')
             ->join('brand c', 'b.brand_id=c.id')
             ->where('a.id', $plan_id)
-//            ->field('c.name,c.brand_logoimage')
+           // ->field('c.name,c.brand_logoimage')
             ->column('c.name,c.brand_logoimage');
     }
-
-
-    public function getFullBrandName($plan_id)
-    {
-        return Db::name('plan_full')->alias('a')
-            ->join('models b', 'a.models_id = b.id')
-            ->join('brand c', 'b.brand_id=c.id')
-            ->where('a.id', $plan_id)
-            ->value('c.name');
-    }
-
-   
 
     /**
      * 新车编辑
@@ -218,6 +215,18 @@ class Plantabs extends Backend
     {
         $this->model = model('PlanAcar');
         $row = $this->model->get($ids);
+
+        $financial = Db::name("financial_platform")->where('status', 'normal')->select();
+        $this->view->assign([
+            'row' => $row,
+            'working_insurance_list' => $this->working_insurance(),
+            'sales' => $this->getSales(),
+            'category' => $this->getCategory(),
+            'store' => $this->getStore(),
+            'car_models' => $this->getInfo(),
+            'financial' => $financial,
+            'nperlistList' => $this->getNperlistList()
+        ]);
 
         if (!$row)
             $this->error(__('No Results were found'));
@@ -254,21 +263,17 @@ class Plantabs extends Backend
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        $financial = Db::name("financial_platform")->where('status', 'normal')->select();
-        $this->view->assign([
-            "row" => $row,
-            'working_insurance_list' => $this->working_insurance(),
-            'sales' => $this->getSales(),
-            'category' => $this->getCategory(),
-            'store' => $this->getStore(),
-            "car_models" => $this->getInfo(),
-            'financial' => $financial,
-            "nperlistList" => $this->model->getNperlistList()
-        ]);
 
         return $this->view->fetch();
     }
 
+    //期数
+    public function getNperlistList()
+    {
+        return ['12' => __('Nperlist 12'),'24' => __('Nperlist 24'),'36' => __('Nperlist 36'),'48' => __('Nperlist 48'),'60' => __('Nperlist 60')];
+    }   
+
+    //运营险
     public function working_insurance()
     {
         return ['yes' => '有', 'no' => '无'];
@@ -307,20 +312,6 @@ class Plantabs extends Backend
 
     }
 
-
-    /**得到销售方案类别信息
-     * @return false|\PDOStatement|string|\think\Collection
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function getCategory()
-    {
-        $res = Db::name("scheme_category")->select();
-
-        return $res;
-    }
-
     /**得到门店
      * @return false|\PDOStatement|string|\think\Collection
      * @throws \think\db\exception\DataNotFoundException
@@ -329,9 +320,34 @@ class Plantabs extends Backend
      */
     public function getStore()
     {
-        $res = Db::name("cms_company_store")->where('statuss', 'normal')->select();
+        $companyStore = Db::name("cms_company_store")
+            ->field("id as store_id,store_name,city_id")
+            ->select();
+            
+        //城市下没有门店，就不显示在下拉列表
+        foreach ($companyStore as $key => $value) {
+            $ids[] = $value['city_id'];
+        }
+        
+        $cities = Db::name("cms_cities")
+            ->where('pid', 'NEQ', '0')
+            ->where('id', 'in', $ids)
+            ->field("id,cities_name")
+            ->select();
 
-        return $res;
+        foreach ($cities as $k => $v) {
+            $cities[$k]['store'] = array();
+            foreach ($companyStore as $key => $value) {
+
+                if ($v['id'] == $value['city_id']) {
+                    array_push($cities[$k]['store'], $value);
+                }
+            }
+
+        }
+
+        return $cities;
+
     }
 
     /**
@@ -475,6 +491,31 @@ class Plantabs extends Backend
 
     }
 
+    /**门店下的方案类别
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getCategory()
+    {
+        $this->model = model('Schemecategory');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
+           
+        }
+
+    }
+
     /**
      * 新车添加
      */
@@ -485,7 +526,6 @@ class Plantabs extends Backend
 
         $this->view->assign([
             'sales' => $this->getSales(),
-            'category' => $this->getCategory(),
             'store' => $this->getStore(),
             'financial' => $financial,
             'car_models' => $this->getInfo(),
@@ -493,6 +533,9 @@ class Plantabs extends Backend
         ]);
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            //人气值--随机
+            $params['popularity'] = rand(1000,9999);
+            
             if (empty($params['working_insurance'])) {
                 $params['working_insurance'] = "no";
             }

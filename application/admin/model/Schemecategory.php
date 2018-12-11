@@ -21,7 +21,10 @@ class Schemecategory extends Model
 
     ];
     
-
+    public function cities()
+    {
+        return $this->belongsTo('Cities', 'city_id', 'id', [], 'LEFT')->setEagerlyType(0);
+    }
     
 
 
