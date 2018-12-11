@@ -1,5 +1,6 @@
 {
     "navigationBarTitleText": "友车友家",
+    "enablePullDownRefresh": true,
     "usingComponents": {
         "wux-popup": "../../../assets/libs/wux/popup/index",
         "wux-card": "../../../assets/libs/wux/card/index",
