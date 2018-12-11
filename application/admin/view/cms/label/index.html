@@ -21,7 +21,8 @@
                         
                     </div>
                     <table id="table" class="table table-striped table-bordered table-hover table-nowrap"
-                          
+                           data-operate-edit="{:$auth->check('cms/label/edit')}" 
+                           data-operate-del="{:$auth->check('cms/label/del')}" 
                            width="100%">
                     </table>
                 </div>

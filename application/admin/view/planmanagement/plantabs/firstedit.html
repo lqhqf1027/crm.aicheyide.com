@@ -3,20 +3,22 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
         <div class="col-xs-12 col-sm-8">
-        
-                <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
-                    
-                    <option value="" style="display: none">未选择任何项</option>
-                    {foreach name="$store" item="vo"}
-                    {eq name="$vo.id" value="$row.store_id"}
-                    <option value="{$vo.id}" selected>{$vo.store_name}</option>
-                    {else /}
-                    <option value="{$vo.id}">{$vo.store_name}</option>
-                    {/eq}
-                    {/foreach}
-                
-                </select>
-            
+
+            <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
+                <option value=" " style='display: none'>未选中任何项</option>
+                {volist name="store" id="vo" }
+                <option disabled>{$vo.cities_name}</option>
+                {volist name="vo.store" id="store_vo"}
+                {eq name="$store_vo.store_id" value="$row.store_id"}
+                <option value="{$store_vo.store_id}" selected>{$store_vo.store_name}</option>
+                {else /}
+                <option value="{$store_vo.store_id}">{$store_vo.store_name}</option>
+                {/eq}
+                {/volist}
+                {/volist}
+
+            </select>
+
         </div>
     </div>
 
@@ -24,21 +26,12 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('选择销售方案类型')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-category_id" data-rule="required" class="form-control selectpicker" name="row[category_id]">
-
-                {foreach name="$category" item="vo"}
-                {eq name="$vo.id" value="$row.category_id"}
-                <option value="{$vo.id}" selected>{$vo.name}</option>
-                {else /}
-                <option value="{$vo.id}">{$vo.name}</option>
-                {/eq}
-
-                {/foreach}
-
-            </select>
+            <input id="c-category_id" data-rule="required" data-source="planmanagement/plantabs/getCategory" 
+                data-params='{"custom[store_ids]":"{$row.store_id}"}' class="form-control selectpage form-control" name="row[category_id]" type="text" value="{$row.category_id}">
 
         </div>
     </div>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择金融平台')}:</label>
         <div class="col-xs-12 col-sm-8">

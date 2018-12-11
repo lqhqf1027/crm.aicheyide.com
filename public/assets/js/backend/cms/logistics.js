@@ -47,16 +47,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'recommendismenu', title: __('Recommendismenu'),formatter: Controller.api.formatter.toggle1,searchList:{"1":"是","0":"否"}},
                         
                         {field: 'subjectismenu', title: __('Subjectismenu'),formatter: Controller.api.formatter.toggle2,searchList:{"1":"是","0":"否"}},
-                        {field: 'subject.title', title: __('Subject.title')},
-                        {field: 'subject.coverimages', title: __('Subject.coverimages'), formatter: Table.api.formatter.images},
+                        {field: 'subject.title', title: __('专题名称')},
+                        {field: 'subject.coverimages', title: __('专题封面图片'), formatter: Table.api.formatter.images},
                         
                         {field: 'specialismenu', title: __('Specialismenu'),formatter: Controller.api.formatter.toggle3,searchList:{"1":"是","0":"否"}},
                         {field: 'specialimages', title: __('Specialimages'), formatter: Table.api.formatter.images},
                      
-                        {field: 'label.name', title: __('Label.name')},
+                        {field: 'label.name', title: __('标签名称')},
                         {field: 'label.lableimages', title: __('标签图片'), formatter: Table.api.formatter.images},
 
-                        {field: 'store.store_name', title: __('Store.store_name')},
+                        {field: 'store.store_name', title: __('门店名称')},
                         {field: 'popularity', title: __('Popularity')},
 
                         {field: 'payment', title: __('Payment'), operate:'BETWEEN'},

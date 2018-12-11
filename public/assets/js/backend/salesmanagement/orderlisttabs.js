@@ -3688,6 +3688,28 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
          * 新车预定
          */
         newreserve:function(){
+
+            //门店
+            $(document).on("change", "#c-city_id", function () {
+
+                $('#c-store_ids_text').val('');
+            });
+            $("#c-store_ids").data("params", function (obj) {
+
+                return {custom: {city_id: $('#c-city_id').val()}};
+
+            });
+            $(document).on("change", "#c-store_ids", function () {
+
+                $('#c-category_id_text').val('');
+            });
+            //门店下类别
+            $("#c-category_id").data("params", function (obj) {
+
+                return {custom: {store_id: $('#c-store_ids').val()}};
+
+            });
+
             // return;
             $("button[type='submit']").on('click',function (v) {
                if($("#c-customer_source").val()=='turn_to_introduce'){

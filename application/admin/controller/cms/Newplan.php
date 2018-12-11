@@ -15,6 +15,7 @@ use think\Db;
 use fast\Tree;
 use think\db\Query;
 
+
 /**
  * 多表格示例
  *
@@ -128,7 +129,7 @@ class Newplan extends Backend
 
             $list = $this->model
                 ->with(['models' => function ($query) {
-                    $query->withField('name,models_name');
+                    $query->withField('id,name,models_name');
                 }, 'admin' => function ($query) {
                     $query->withField('nickname');
                 }, 'schemecategory' => function ($query) {
@@ -148,14 +149,15 @@ class Newplan extends Backend
                 ->limit($offset, $limit)
                 ->select();
 
-
+            //去重
+            $models_ids = [];
             foreach ($list as $key => $row) {
 
                 $row->visible(['id', 'payment', 'monthly', 'brand_name', 'brand_log', 'match_plan', 'nperlist', 'margin', 'tail_section', 'gps', 'note', 'createtime', 'guide_price',
                     'updatetime', 'category_id', 'recommendismenu', 'flashviewismenu', 'specialismenu', 'subjectismenu', 'specialimages', 'models_main_images', 'modelsimages', 'weigh',
-                    'store_name']);
+                    'store_name','models_id']);
                 $row->visible(['models']);
-                $row->getRelation('models')->visible(['name', 'models_name']);
+                $row->getRelation('models')->visible(['id','name', 'models_name']);
                 $row->visible(['admin']);
                 $row->getRelation('admin')->visible(['nickname']);
                 $row->visible(['schemecategory']);
@@ -176,11 +178,17 @@ class Newplan extends Backend
                     $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
                 }
 
+                if (in_array($list[$key]['models_id'], $models_ids)) {
+                    unset($list[$key]);
+                }
+                else{
+                    $models_ids[] = $list[$key]['models_id'];
+                }
 
             }
+            
             $list = collection($list)->toArray();
-            // pr($list);
-            // die;
+
             $result = array("total" => $total, "rows" => $list);
             Session::set('row', $list);
             return json($result);
@@ -275,8 +283,6 @@ class Newplan extends Backend
         }
         $this->view->assign([
             "row" => $row,
-            'label' => $this->getLabel(),
-            'store' => $this->getStore(),
             'subject'=>$this->getSubject($row['store_id'])
         ]);
 
@@ -321,61 +327,20 @@ class Newplan extends Backend
         return $subject;
     }
 
-    //标签名称
-    public function getLabel()
-    {
-        $result = Db::name('cms_label')->select();
-
-        return $result;
-    }
-
     //门店名称
-
     public function getStore()
     {
-        $result = Db::name('cms_company_store')->select();
-
-        return $result;
-
-    }
-
-    public function getStores()
-    {
         $this->model = model('CompanyStore');
         // //当前是否为关联查询
         // $this->relationSearch = true;
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
-
-            $list = $this->model->field('id,store_name as name')->select();
-
-            $result = array("list" => $list);
-
-            return json($result);
-        }
-    }
-
-    public function getSpecial()
-    {
-        $this->model = model('CompanyStore');
-        // //当前是否为关联查询
-        // $this->relationSearch = true;
-        //设置过滤方法
-        $this->request->filter(['strip_tags']);
-        if ($this->request->isAjax()) {
-            $store_id = $this->request->post('store_id');
-            $city_id = $this->model->field('id,city_id')->find([$store_id]);
-
-            $city_id = $city_id['city_id'];
-
-            $list = model('Subject')
-                ->field('id,title as name')
-                ->where('city_id', $city_id)
-                ->select();
-            $result = array("list" => $list);
-
-            return json($result);
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
         }
     }
 

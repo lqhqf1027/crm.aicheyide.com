@@ -67,6 +67,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 }
                             },
                             {field: 'id', title: __('Id'), operate: false},
+                            {field: 'city_store', title: __('城市门店'), operate: false},
                             {
                                 field: 'schemecategory.name', title: __('方案类型'), formatter: function (v, r, i) {
                                     // console.log( r.schemecategory.category_note.length);
@@ -284,6 +285,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
 
         firstedit: function () {
+            
             // $(".btn-add").data("area", ["300px","200px"]);
             Table.api.init({});
             Form.api.bindevent($("form[role=form]"), function (data, ret) {
@@ -295,6 +297,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             }, function (data, ret) {
                 // console.log(data);
                 Toastr.success("失败");
+            });
+
+            //门店下的类别
+            $(document).on("change", "#c-store_id", function () {
+
+                $('#c-category_id_text').val('');
+            });
+            $("#c-category_id").data("params", function (obj) {
+
+                return {custom: {store_ids: $('#c-store_id').val()}};
+
             });
 
             Controller.api.bindevent();
@@ -319,6 +332,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         firstadd: function () {
+
+            //门店下的类别
+            $(document).on("change", "#c-store_id", function () {
+
+                $('#c-category_id_text').val('');
+            });
+
+            $("#c-category_id").data("params", function (obj) {
+
+                return {custom: {store_ids: $('#c-store_id').val()}};
+
+            });
 
             Controller.api.bindevent();
         },
