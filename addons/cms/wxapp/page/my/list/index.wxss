@@ -53,13 +53,14 @@
 }
 
 .media__desc--payment {
-    font-size: 24rpx;
+    font-size: 22rpx;
     color: rgba(229, 28, 35, 1);
+    font-weight: bold
 }
 
 .media__desc--monthly {
-    font-size: 24rpx;
-    color: rgba(193, 195, 200, 1);
+    font-size: 22rpx;
+    color:#696969;
 }
 
 .grid__name {

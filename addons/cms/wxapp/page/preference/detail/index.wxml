@@ -138,7 +138,7 @@
                 <view class="payment-grid">
                     <view class="payment-title">任意租</view>
                     <view class="payment-newpayment">
-                        <text>日租 {{ plan.daypaymen }}元/天</text>
+                        <text>日均 {{ plan.daypaymen }}元/天</text>
                         <text class="payment-label wux-ml--10">租期灵活，租期越长，优惠越高！</text>
                     </view>
                 </view>
@@ -228,16 +228,21 @@
         </wux-cell>
     </wux-cell-group>
 
+       <wux-cell-group wux-class="wux-mt--10">
+        <wux-cell hover-class="none">
+            <image class="plan-image" src="https://static.aicheyide.com/ucuj/plan_details/ac96f22a8dc1e8790a65e45ef4fc3ca.png" style="{{ planImageStyle.info }}" data-type="info" bindload="onPlanImageLoad" />
+        </wux-cell>
+    </wux-cell-group>
     <wux-cell-group wux-class="wux-mt--10">
         <wux-cell hover-class="none">
-            <image class="plan-image" src="https://static.aicheyide.com/ucuj/plan_details/4f6bd7b5e29a81d4440391d2831d36c.jpg" style="{{ planImageStyle.info }}" data-type="info" bindload="onPlanImageLoad" />
+            <image class="plan-image" src="https://static.aicheyide.com/ucuj/plan_details/532ca05d84784e0e41c57f28b7ba8e9.png" style="{{ planImageStyle.info }}" data-type="info" bindload="onPlanImageLoad" />
         </wux-cell>
     </wux-cell-group>
 </view>
 
 <view class="bottom">
     <view class="bottom-icon bottom-store" bindtap="toStore">
-        <image src="https://static.aicheyide.com/ucuj/plan_details/2342343.png" style="width: 54rpx; height: 54rpx" />
+        <image src="https://static.aicheyide.com/ucuj/plan_details/2342343.png" style="width: 58rpx; height: 58rpx" />
         <!-- <button class="button-clear" open-type="share">
             <icon class="fa fa-share-square"></icon>
         </button> -->

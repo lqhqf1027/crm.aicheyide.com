@@ -156,11 +156,12 @@
 .brandPlan__title--payment {
     font-size: 24rpx;
     color: rgba(229, 28, 35, 1);
+    font-weight: bold;
 }
 
 .brandPlan__title--monthly {
     font-size: 24rpx;
-    color: rgba(193, 195, 200, 1);
+    color: #696969
 }
 
 .brandPlan__address {
@@ -268,7 +269,8 @@ image.quiet {
 .car__box .car__title--monthly,
 .scroll-y .car__title--payment,
 .scroll-y .car__title--monthly {
-    font-size: 20rpx;
+    font-size: 22rpx;
+    font-weight: bold;
 }
 
 .car__box {
@@ -334,7 +336,7 @@ image.quiet {
 
 .car__title--monthly {
     font-size: 16rpx;
-    color: rgba(193, 195, 200, 1);
+    color: #696969;
 }
 
 .car__more {

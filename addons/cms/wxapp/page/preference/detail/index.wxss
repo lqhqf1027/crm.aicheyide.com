@@ -116,6 +116,7 @@
     text-align: left;
     font-family: PingFangSC-regular;
     margin-top: 6rpx;
+    font-weight: bold;
 }
 
 .card__title--payment {
@@ -254,6 +255,7 @@
 .payment-title {
     font-size: 26rpx;
     color: #333;
+    font-weight: bold;
 }
 
 .payment-label {
