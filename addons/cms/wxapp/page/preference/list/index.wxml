@@ -69,7 +69,7 @@
         <view class="brandPlan">
             <scroll-view scroll-y style="height: {{ deviceHeight }}">
                 <block wx:for="{{ brandPlan[brand_id] }}" wx:key="">
-                    <wux-media wux-class="brandPlan__media" thumb="{{ item.models_main_images }}" thumbStyle="width: 200rpx; height: 120rpx" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
+                    <wux-media wux-class="brandPlan__media" thumb="{{ item.models_main_images ? item.models_main_images : globalData.empty_carimg }}" thumbStyle="width: 200rpx; height: 120rpx" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
                         <view class="brandPlan__title wux-ellipsis wux-text--left">{{ item.models_name }}</view>
                         <view class="wux-clearfix">
                             <view class="brandPlan__title brandPlan__title--payment wux-pull-left wux-mt--10">首付 {{ item.payment / 10000 }} 万</view>

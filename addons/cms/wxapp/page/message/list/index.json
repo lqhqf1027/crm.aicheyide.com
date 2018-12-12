@@ -3,6 +3,7 @@
     "enablePullDownRefresh": true,
     "usingComponents": {
         "wux-cell-group": "../../../assets/libs/wux/cell-group/index",
-        "wux-cell": "../../../assets/libs/wux/cell/index"
+        "wux-cell": "../../../assets/libs/wux/cell/index",
+        "wux-prompt": "../../../assets/libs/wux/prompt/index"
     }
 }

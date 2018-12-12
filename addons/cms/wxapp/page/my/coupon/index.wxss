@@ -6,18 +6,31 @@ swiper {
 }
 
 .coupon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	position: relative;
     width: 100%;
-    height: 160rpx;
+    padding: 0 30rpx;
+    margin-top: 30rpx;
+    height: 154rpx;
     color: #fff;
-    background-color: #ff6740;
+    box-sizing: border-box;
+    /*background-color: #ff6740;*/
 }
 
 .coupon__image {
+	flex: 1;
     display: block;
     width: 100%;
     max-width: 100%;
     height: 100%;
+}
+
+.coupon__count {
+	font-size: 36rpx;
+	color: #333;
+	padding-left: 30rpx;
 }
 
 .coupon__info {

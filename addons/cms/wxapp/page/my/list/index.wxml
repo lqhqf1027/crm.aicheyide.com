@@ -86,9 +86,12 @@
         <template is="car" data="{{ ...subscribe, ...globalData, scrollTop, actions, toggle, style }}" wx:if="{{ style === 'subscribe' }}" />
         <template is="car" data="{{ ...pickup, ...globalData, scrollTop, actions, toggle, style }}" wx:if="{{ style === 'pickup' }}" />
     </view>
-    <wux-grids wux-class="wux-mt--10" bordered="{{ false }}" col="3">
+    <wux-grids wux-class="wux-mt--10" bordered="{{ false }}" col="4">
         <wux-grid thumb="/assets/images/score.png" bindtap="toScore">
             <view class="grid__name">我的积分</view>
+        </wux-grid>
+        <wux-grid thumb="/assets/images/coupon.png" bindtap="toCoupon">
+            <view class="grid__name">我的卡券</view>
         </wux-grid>
         <wux-grid bindtap="toMessage">
             <wux-badge count="{{ messageCount }}">

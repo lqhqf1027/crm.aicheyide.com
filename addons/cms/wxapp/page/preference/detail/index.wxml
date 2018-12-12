@@ -111,7 +111,7 @@
 </view>
 <view class="container" wx:else>
     <view class="card">
-        <image class="card__image" src="{{ plan.models_main_images }}" wx:if="{{ plan.models_main_images }}" />
+        <image class="card__image" src="{{ plan.models_main_images || globalData.empty_carimg }}" />
         <view class="card__title wux-mt--10">{{ plan.models.name }}</view>
         <view class="wux-clearfix">
             <view class="card__title card__title--payment wux-mr--20 wux-mt--5"><text class="totalprices">{{ plan.totalprices / 10000 }}</text> 万</view>
