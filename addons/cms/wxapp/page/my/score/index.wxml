@@ -10,7 +10,7 @@
 <swiper current="{{ index }}" bindchange="onSwiperChange" wx:if="{{ integral.length }}">
     <block wx:for="{{ integral }}" wx:key="">
         <swiper-item>
-            <view class="content">
+            <view class="content" wx:if="{{  item.detailed.length }}">
             	<wux-cell-group>
 					<block wx:for="{{ item.detailed }}" wx:for-item="cell" wx:key="">
                         <view class="score">
@@ -23,6 +23,7 @@
 					</block>
 		        </wux-cell-group>
             </view>
+            <wux-prompt visible icon="" title="暂无记录~" wx:else />
         </swiper-item>
     </block>
 </swiper>
