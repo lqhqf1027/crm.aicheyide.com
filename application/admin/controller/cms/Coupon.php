@@ -23,7 +23,7 @@ class Coupon extends Backend
     protected $model = null;
     protected $multiFields = 'ismenu';
 
-    protected $noNeedRight = ['index', 'add','edit'];
+    protected $noNeedRight = ['*'];
 
     public function _initialize()
     {
@@ -227,6 +227,7 @@ class Coupon extends Backend
             $params = $this->request->post("row/a");
             //门店
             $params['store_ids'] = ',' . $params['store_ids'] . ',';
+            $params['remaining_amount'] = $params['circulation'];
             // pr($params);
             // die;
             if ($params) {
@@ -380,6 +381,8 @@ class Coupon extends Backend
         }
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
+            $params['store_ids'] = ',' . $params['store_ids'] . ',';
+            
             if ($params) {
                 try {
                     //是否采用模型验证
