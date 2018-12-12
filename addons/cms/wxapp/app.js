@@ -1,3 +1,9 @@
+// 默认城市
+var defaultCity = {
+    cities_name: '成都',
+    id: 38,
+}
+
 //客服系统高级配置扩展
 // var stat = require('utils/mdk_stat.js');
 App({
@@ -7,6 +13,11 @@ App({
     si: 0,
     //小程序启动
     onLaunch: function() {},
+    onShow() {
+        var lastCity = wx.getStorageSync('city')
+        var city = lastCity && lastCity.id ? lastCity : defaultCity
+        this.globalData.city = city
+    },
     // set globalData
     setGlobalData(data) {
         return wx.setStorageSync('globalData', data || {})
@@ -87,6 +98,7 @@ App({
                     //发起网络请求
                     wx.getUserInfo({
                         success: function(ures) {
+                            wx.showLoading({ title: '加载中' });
                             wx.request({
                                 url: that.apiUrl + 'user/login?noAuth=1',
                                 data: {
@@ -99,6 +111,7 @@ App({
                                     "Content-Type": "application/x-www-form-urlencoded",
                                 },
                                 success: function(lres) {
+                                    wx.hideLoading();
                                     var response = lres.data
                                     if (response.code == 1) {
                                         that.updateGlobalData(response.data)
@@ -110,6 +123,9 @@ App({
                                         console.log("用户登录失败")
                                         that.showLoginModal(cb);
                                     }
+                                },
+                                fail: function() {
+                                    wx.hideLoading();
                                 }
                             });
                         },
@@ -329,10 +345,7 @@ App({
         indexTabList: [],
         newsTabList: [],
         productTabList: [],
-        city: {
-            cities_name: '成都',
-            id: 38,
-        },
+        city: defaultCity,
         empty_carimg: 'https://static.aicheyide.com/ucuj/empty_carimg/a61b35e9de2a9396470023d505c3e30.png',
     }
 })
