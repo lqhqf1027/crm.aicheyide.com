@@ -282,7 +282,7 @@ class Share extends Base
             if ($result == 0) {
                 $mobile = json_decode($data, true)['phoneNumber'];
             } else {
-                $this->error('手机号解密失败', 'error');
+                $this->error('手机号解密失败', json_decode($data, true) );
             }
         }
         if (!$user_id || !$plan_id || !$cartype) {
