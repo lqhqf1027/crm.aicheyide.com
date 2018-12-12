@@ -118,12 +118,13 @@ class CompanyStore extends Model
                     'store_ids' => ['like', '%,' . $store_id . ',%'],
 //                    'user_id' => ['like', '%,' . $user_id . ',%'],
                     'ismenu' => 1,//正常上架状态
-                    'release_datetime' => ['GT', time()],//领用截至日期小于当前时间
+//                    'release_datetime' => ['GT', time()],//领用截至日期小于当前时间
                     'circulation' => ['GT', 0], // 发放总量大于0
                     'remaining_amount' => ['GT', 0]
-                ]); // 剩余总量大于0
+                ])
+            ->where('release_datetime > :time or release_datetime is null',['time'=>time()]);
         }))->toArray();
-
+//return $isLogic;
         foreach ($isLogic as $key => $value) {
 
                    $isLogic[$key]['user_id'] = array_filter(explode(',', $value['user_id'])); //转换数组并去除空值
@@ -132,15 +133,18 @@ class CompanyStore extends Model
             //查询每人限量*张
                    if (!empty($value['limit_collar'])) {  //非空即为不限量,有具体的领用张数
 
+//                       return array_count_values($isLogic[$key]['user_id'])[$user_id];
                        //array_count_values 计算某个值出现在数组中的次数
                        //如果当前用户领用的券大于等于限领的优惠券张数 ，返回空数组，不可再领用
 //                       return array_count_values($isLogic[$key]['user_id'])[$user_id];
-                       if (array_count_values($isLogic[$key]['user_id'])[$user_id] >= $value['limit_collar']) return '';
-                       else continue;
+                       if (array_count_values($isLogic[$key]['user_id'])[$user_id] >= $value['limit_collar']){
+                           unset($isLogic[$key]);
+                       }
+
 
                    }
            }
-               return $isLogic;
+               return $isLogic?array_values($isLogic):'';
 
     }
 

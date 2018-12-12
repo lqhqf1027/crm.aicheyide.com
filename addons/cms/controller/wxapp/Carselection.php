@@ -8,7 +8,7 @@
 
 namespace addons\cms\controller\wxapp;
 use app\common\model\Addon;
-
+use addons\cms\model\User;
 class Carselection extends Base
 {
     protected $noNeedLogin = '*';
@@ -27,6 +27,7 @@ class Carselection extends Base
         if (!$city_id || !$cartype) {
             $this->error('缺少参数，请求失败', 'error');
         }
+
 
         $plans =$type_name = null;
         switch ($cartype){

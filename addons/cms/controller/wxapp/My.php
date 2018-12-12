@@ -39,6 +39,7 @@ class My extends Base
         }
         //积分
         $score = $this->scores($user_id);
+        $score = $score?$score:0;
 
         $sign = $this->checkSignTime($user_id, 'today');
 
@@ -50,9 +51,23 @@ class My extends Base
         ])->count();
 
         //拥有优惠券数量
-        $coupon = Coupon::where([
-            'user_id' => ['like', '%,' . $user_id . ',%'],
-        ])->count();
+        $coupon = Coupon::all(function ($q) use ($user_id){
+            $q->where([
+                'user_id'=>['like','%,' . $user_id . ',%'],
+                'use_id'=>['not like','%,' . $user_id . ',%'],
+//                'validity_datetime'=>['GT',time()]
+            ])
+                ->where('validity_datetime > :time or validity_datetime is null',['time'=>time()])
+                ->field('id,user_id');
+        });
+
+        $couponCount = 0;
+        if($coupon){
+            foreach ($coupon as $k=>$v){
+                $filter = array_count_values(array_filter(explode(',', $v['user_id'])));
+                $couponCount+=$filter[$user_id];
+            }
+        }
 
         //我的预约
         $subscribe = $this->collectionIndex($user_id, 'subscribe');
@@ -62,7 +77,7 @@ class My extends Base
 
         $this->success('请求成功', ['sign' => $sign,
             'score' => $score,
-            'couponCount' => $coupon,
+            'couponCount' => $couponCount,
             'messageCount' => $messageCount,
             'collection' => $collections,
             'subscribe' => $subscribe
@@ -211,8 +226,7 @@ class My extends Base
     {
         $user_id = $this->request->post('user_id');
         $message_id = $this->request->post('message_id');
-        $isRead = $this->request->post('isRead');
-
+        $isRead = $this->request->post('isRead')?1:2;
         if (!$user_id || !$message_id || !$isRead) {
             $this->error('缺少参数,请求失败', 'error');
         }
@@ -220,7 +234,7 @@ class My extends Base
             $q->where('id', $message_id)->field('id,title,content,analysis,createtime,use_id');
         });
 
-        if (!$isRead) {
+        if ($isRead==2) {
             $updateUses = $message['use_id'] == '' ? ',' . $user_id . ',' : $message['use_id'] . $user_id . ',';
 
             //如果未读,更新为已读
@@ -387,25 +401,25 @@ class My extends Base
     public function coupons()
     {
         $user_id = $this->request->post('user_id');
+        $time = time();
 
         //未使用
         $notUsed = $this->getCoupon($user_id, [
-            'validity_datetime' => ['GT', time()],
+//            'validity_datetime' => ['GT', $time],
             'user_id' => ['like', '%,' . $user_id . ',%'],
             'use_id' => ['not like', '%,' . $user_id . ',%']
-        ]);
-
+        ],'validity_datetime > '.$time.' or validity_datetime is null');
         //已使用
         $used = $this->getCoupon($user_id, [
-            'user_id' => ['like', '%,' . $user_id . ',%'],
-            'use_id' => ['like', '%,' . $user_id . ',%']
+            'user_id&use_id' => ['like', '%,' . $user_id . ',%'],
         ]);
 
         //已过期
         $overdues = $this->getCoupon($user_id, [
             'user_id' => ['like', '%,' . $user_id . ',%'],
             'use_id' => ['not like', '%,' . $user_id . ',%'],
-            'validity_datetime' => ['LT', time()]
+            'validity_datetime' => ['LT', $time],
+            'validity_datetime' =>['neq','null']
         ]);
 
         $this->success('请求成功', ['coupons' => [
@@ -424,9 +438,10 @@ class My extends Base
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getCoupon($user_id, $where)
+    public function getCoupon($user_id, $where,$else=null)
     {
         $coupons = Coupon::where($where)
+            ->where($else?$else:'')
             ->order('validity_datetime')
             ->field('id,coupon_name,display_diagramimages,coupon_amount,threshold,models_ids,createtime,
             validity_datetime,user_id')

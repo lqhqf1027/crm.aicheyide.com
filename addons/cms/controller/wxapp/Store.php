@@ -156,12 +156,12 @@ class Store extends Base
         $coupon_received = Coupon::where([
             'id'=>$coupon_id,
             'remaining_amount' =>['GT',0],
-            'release_datetime' =>['GT',time()],
+//            'release_datetime' =>['GT',time()],
             'ismenu'=>1
-        ])
+        ])->where('release_datetime > :time or release_datetime is null',['time'=>time()])
         ->field('user_id,limit_collar,remaining_amount')
         ->find();
-
+//$this->success($coupon_received);
         if(!$coupon_received){
             $this->error('优惠券已超过领取截止日期或已发放完了');
         }
@@ -174,7 +174,7 @@ class Store extends Base
 
         $res = Coupon::update([
             'id' =>$coupon_id,
-            'user_id' => $coupon_received['user_id'].$user_id.',',
+            'user_id' => $coupon_received['user_id']?$coupon_received['user_id'].$user_id.',':','.$user_id.',',
             'remaining_amount' => intval($coupon_received['remaining_amount'])-1
         ]);
 
