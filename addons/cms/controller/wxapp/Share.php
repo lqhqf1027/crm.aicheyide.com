@@ -360,8 +360,9 @@ class Share extends Base
         $user_id = $this->request->post('user_id');
         $fill_models = $this->request->post('fill_models');
         $expectant_city = $this->request->post('expectant_city');
+        $mobile = $this->request->post('mobile');
 
-        if (!$user_id || !$fill_models || !$expectant_city) {
+        if (!$fill_models || !$expectant_city ||!$mobile) {
             $this->error('缺少参数,请求失败', 'error');
         }
 
@@ -369,6 +370,7 @@ class Share extends Base
             'user_id' => $user_id,
             'fill_models' => $fill_models,
             'expectant_city' => $expectant_city,
+            'mobile' => $mobile,
             'createtime' => time()
         ]);
 
@@ -419,7 +421,6 @@ specialimages,popularity')
         if ($different_schemes) {
             //为其他方案封面图片加入CDN
             foreach ($different_schemes as $k => $v) {
-                $different_schemes[$k]['models_main_images'] = Config::get('upload')['cdnurl'] . $different_schemes[$k]['models_main_images'];
                 $different_schemes[$k]['type'] = 'new';
             }
             $plans['different_schemes'] = $different_schemes;
@@ -443,7 +444,6 @@ specialimages,popularity')
                     break;
                 }
                 $v['type'] = 'new';
-                $v['models_main_images'] = Config::get('upload')['cdnurl'] . $v['models_main_images'];
                 $reallyOther[] = $v;
             }
 
