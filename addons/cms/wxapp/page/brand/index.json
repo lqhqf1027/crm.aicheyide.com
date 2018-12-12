@@ -1,7 +1,0 @@
-{
-    "navigationBarTitleText": "选择品牌车型",
-    "usingComponents": {
-        "i-index": "../../assets/libs/iview/index/index",
-        "i-index-item": "../../assets/libs/iview/index-item/index"
-    }
-}
