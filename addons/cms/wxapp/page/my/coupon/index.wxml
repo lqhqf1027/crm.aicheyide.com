@@ -10,7 +10,7 @@
 				<block wx:for="{{ item.detailed }}" wx:for-item="cell" wx:key="">
                     <view class="coupon wux-mt--10">
                         <image class="coupon__image" src="{{ globalData.config.upload.cdnurl + cell.display_diagramimages }}" wx:if="{{ cell.display_diagramimages }}" />
-                        <view class="coupon__info">
+                        <!-- <view class="coupon__info">
                             <view class="coupon__header">
                                 <view class="coupon__amount">￥<text class="coupon__text">{{ cell.coupon_amount }}</text></view>
                                 <view class="coupon__threshold" wx:if="{{ cell.threshold }}">满{{ cell.threshold }}元使用</view>
@@ -20,7 +20,7 @@
                                 <view class="coupon__cell">· 数量：{{ cell.coupon_count }}</view>
                                 <view class="coupon__date">有效期: {{ cell.date }}</view>
                             </view>
-                        </view>
+                        </view> -->
                     </view>
 				</block>
             </view>
