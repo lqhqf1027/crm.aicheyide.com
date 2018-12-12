@@ -361,9 +361,19 @@ class Share extends Base
         $fill_models = $this->request->post('fill_models');
         $expectant_city = $this->request->post('expectant_city');
         $mobile = $this->request->post('mobile');
+        $code = $this->request->post('code');
 
-        if (!$fill_models || !$expectant_city ||!$mobile) {
+        if (!$fill_models || !$expectant_city ||!$mobile || !$code) {
             $this->error('缺少参数,请求失败', 'error');
+        }
+
+        if ($code) {
+            $userInfo = Db::name('cms_login_info')
+                ->where(['user_id' => $user_id, 'login_state' => 0])->find();
+            if (!$userInfo || $code != $userInfo['login_code']) {
+                $this->error('验证码输入错误');
+            }
+
         }
 
         $res = Db::name('cms_wishlist')->insert([
@@ -841,7 +851,6 @@ specialimages,popularity')
                 }]);
             }])->select($city_id ? $city_id : null);
 
-
         foreach ($info as $k => $v) {
             if ($v['store_list']) {
                 $info = $v;
@@ -903,9 +912,9 @@ specialimages,popularity')
                         }
 
                     }
-                    if ($vv['popularity']) {
-                        $vv['popularity'] = floatval($vv['popularity']) * 100;
-                    }
+//                    if ($vv['popularity']) {
+//                        $vv['popularity'] = floatval($vv['popularity']) * 100;
+//                    }
                     $vv['models']['name'] = $vv['models']['name'] . ' ' . $vv['models']['models_name'];
                     unset($vv['models']['models_name']);
                     $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
