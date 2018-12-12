@@ -610,6 +610,14 @@ Page({
         }, 1000)
     },
     onWish() {
+        const { userInfo } = app.getGlobalData()
+
+        // 判断是否已授权，否则提示
+        if (!userInfo || !userInfo.id) {
+            app.showLoginModal(function(){}, function(){}, true)
+            return
+        }
+
         this.setData({ wishVisible: true })
     },
     onWishClose() {

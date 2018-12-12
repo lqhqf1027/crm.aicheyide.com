@@ -1,4 +1,3 @@
-var Towxml = require('/assets/libs/towxml/main.js');
 //客服系统高级配置扩展
 // var stat = require('utils/mdk_stat.js');
 App({
@@ -323,7 +322,6 @@ App({
         }, 300);
 
     },
-    towxml: new Towxml(),
     //全局信息
     globalData: {
         // userInfo: null,
