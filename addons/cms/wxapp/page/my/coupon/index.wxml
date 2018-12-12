@@ -6,7 +6,7 @@
 <swiper current="{{ index }}" bindchange="onSwiperChange" wx:if="{{ list.length }}">
     <block wx:for="{{ list }}" wx:key="">
         <swiper-item>
-            <view class="content">
+            <view class="content" wx:if="{{  item.detailed.length }}">
 				<block wx:for="{{ item.detailed }}" wx:for-item="cell" wx:key="">
                     <view class="coupon wux-mt--10">
                         <image class="coupon__image" src="{{ globalData.config.upload.cdnurl + cell.display_diagramimages }}" wx:if="{{ cell.display_diagramimages }}" />
@@ -24,6 +24,7 @@
                     </view>
 				</block>
             </view>
+            <wux-prompt visible icon="" title="暂无记录~" wx:else />
         </swiper-item>
     </block>
 </swiper>
