@@ -6,3 +6,4 @@
 		</wux-cell>
 	</block>
 </wux-cell-group>
+<wux-prompt visible icon="" title="暂无记录~" wx:else />
