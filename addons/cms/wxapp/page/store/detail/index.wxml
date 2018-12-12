@@ -15,7 +15,7 @@
 	</view>
 	<block wx:for="{{ logic }}" wx:key="" wx:if="{{ logic.length }}">
 		<view class="store__card wux-mt--10">
-			<image lazy-load class="store__logic" src="{{ globalData.config.upload.cdnurl + item.display_diagramimages }}" />
+			<image lazy-load class="store__logic" src="{{ globalData.config.upload.cdnurl + item.display_diagramimages }}" data-id="{{ item.id }}" bindtap="receiveCoupons" />
 		</view>
 	</block>
 	
@@ -120,7 +120,7 @@
             <view class="media__title wux-ellipsis--l2">{{ item.models.name }}</view>
             <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(item.car_licensedate) + '/' + common.getDistance(item.kilometres) + '公里' }}</view>
             <view class="wux-clearfix">
-                <view class="blod media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ item.models.price }}">{{ item.models.price / 10000 }} 万</view>
+                <view class="blod media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ item.totalprices }}">{{ item.totalprices / 10000 }} 万</view>
                 <view class="blod media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ item.newpayment / 10000 }} 万</view>
                 <view class="media__desc wux-pull-right">
                     <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
@@ -129,7 +129,7 @@
         </wux-media>
     </block>
 
-    <view class="wish">
+    <view class="wish" bindtap="onWish">
         <view class="wish__hd">
             <image class="wish__image" src="/assets/images/upload.png"></image>
         </view>
@@ -151,6 +151,30 @@
         <view class="fa fa-arrow-up"></view>
     </view>
 </wux-animation-group>
+
+<wux-popup closable zIndex="2000" title="意向车型" position="center" visible="{{ wishVisible }}" bind:close="onWishClose">
+    <view class="popup-inner">
+        <wux-cell-group>
+            <wux-cell wux-class="popup-cell" hover-class="none">
+                <wux-input bind:change="onInputChange" data-model="form.expectant_city" value="{{ expectant_city }}" controlled maxlength="30" label="意向购车城市" placeholder="格式如：成都" />
+            </wux-cell>
+            <wux-cell wux-class="popup-cell" hover-class="none">
+                <wux-input bind:change="onInputChange" data-model="form.fill_models" value="{{ fill_models }}" controlled maxlength="30" label="意向车型" placeholder="请输入意向车型" />
+            </wux-cell>
+            <wux-cell wux-class="popup-cell" hover-class="none">
+                <wux-input bind:change="onInputChange" data-model="form.mobile" value="{{ mobile }}" controlled maxlength="11" type="number" label="联系电话" placeholder="请输入联系电话" />
+            </wux-cell>
+            <wux-cell wux-class="popup-cell" hover-class="none" wx:if="{{ isMobile }}">
+                <wux-input bind:change="onInputChange" data-model="form.code" value="{{ code }}" controlled maxlength="11" type="number" label="验证码" placeholder="请输入验证码">
+                    <view slot="footer" class="vcode" bindtap="getWishCode">{{ wishCodeText }}</view>
+                </wux-input>
+            </wux-cell>
+            <wux-cell wux-class="popup-cell" hover-class="none" bind:click="onSubmit">
+                <view class="bottom-btn">确定</view>
+            </wux-cell>
+        </wux-cell-group>
+    </view>
+</wux-popup>
 
 <wxs module="common">
     module.exports = {

@@ -46,12 +46,18 @@ Page({
     onShow: function() {
         this.setGlobalData()
     },
-    setGlobalData(cb) {
-        var that = this;
-        var city = wx.getStorageSync('city')
+    onPullDownRefresh() {
+        this.setGlobalData(true)
+    },
+    setGlobalData(isForce) {
+        const that = this
+        const city = wx.getStorageSync('city')
+        const noChanged = city && city.id === this.data.city.id && !isForce
+
+        console.log('noChanged', noChanged)
 
         // 判断是否同一城市下，取其缓存
-        if (city && city.id === this.data.city.id) {
+        if (noChanged) {
             if (this.data.brandList && this.data.brandList.length) {
                 return
             }
@@ -78,6 +84,8 @@ Page({
                 shares: data.shares,
             })
 
+            wx.stopPullDownRefresh()
+            
             //如果需要一进入小程序就要求授权登录,可在这里发起调用
             // app.check(function(ret) {
             //     callback()

@@ -1,4 +1,5 @@
 const app = getApp()
+const isTel = (value) => /^1[3456789]\d{9}$/.test(value)
 const defaultItems = [{
         type: 'radio',
         label: '默认排序',
@@ -155,6 +156,14 @@ Page({
         logic: [],
         plans: [],
         backtop: false,
+        wishVisible: false,
+        wishCodeText: '获取验证码',
+        form: {
+            fill_models: '',
+            expectant_city: '',
+            mobile: '',
+            code: '',
+        },
     },
     makePhoneCall() {
         const { phone } = this.data.info || {}
@@ -533,5 +542,112 @@ Page({
                 backdrop: false,
             }, this.setCars)
         }, 300)
+    },
+    receiveCoupons(e) {
+        const { id } = e.currentTarget.dataset
+
+        app.request('/store/receiveCoupons', { coupon_id: id }, (data, ret) => {
+            console.log(data)
+            this.onRefresh()
+            app.success(ret.msg)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
+    /**
+     * 发送验证码
+     * @param {number} mobile 手机号
+     */
+    sendSMS(mobile) {
+        app.request('/share/sendMessage', { mobile }, (data, ret) => {
+            console.log(data)
+            app.success(ret.msg)
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
+    },
+    /**
+     * 获取验证码
+     */
+    getWishCode() {
+        if (this.disabled || this.timeout)  return
+
+        // 验证手机号码
+        if (!this.data.form.mobile) {
+            wx.showToast({ title: '请输入联系电话', icon: 'none' })
+            return
+        } else if (!isTel(this.data.form.mobile)) {
+            wx.showToast({ title: '请输入正确的联系电话', icon: 'none' })
+            return
+        }
+
+        // 倒计时
+        this.renderWishCodeText()
+
+        // 发送验证码
+        this.sendSMS(this.data.form.mobile)
+    },
+    /**
+     * 60s倒计时
+     * @param {number} [num=60] 倒计时时间
+     */
+    renderWishCodeText(num = 60) {
+        this.disabled = num !== 0
+
+        if (num <= 0) {
+            clearTimeout(this.timeout)
+            this.timeout = null
+            this.setData({ wishCodeText: '重新发送' })
+            return
+        }
+
+        this.setData({ wishCodeText: `${num--} 秒` })
+
+        this.timeout = setTimeout(() => {
+            this.renderWishCodeText(num)
+        }, 1000)
+    },
+    onWish() {
+        this.setData({ wishVisible: true })
+    },
+    onWishClose() {
+        this.setData({ wishVisible: false })
+    },
+    onInputChange(e) {
+        const { model } = e.currentTarget.dataset
+        const { value } = e.detail
+        const isMobile = model === 'form.mobile' ? isTel(value) : isTel(this.data.form.mobile)
+
+        this.setData({ [model]: value, isMobile })
+    },
+    onSubmit() {
+        const { fill_models, expectant_city, mobile, code } = this.data.form
+
+        if (!expectant_city) {
+            wx.showToast({ title: '请输入意向购车城市', icon: 'none' })
+            return
+        } else if (!fill_models) {
+            wx.showToast({ title: '请输入意向车型', icon: 'none' })
+            return
+        } else if (!mobile) {
+            wx.showToast({ title: '请输入联系电话', icon: 'none' })
+            return
+        } else if (!isTel(mobile)) {
+            wx.showToast({ title: '请输入正确的联系电话', icon: 'none' })
+            return
+        } else if (!code) {
+            wx.showToast({ title: '请输入验证码', icon: 'none' })
+            return
+        }
+
+        app.request('/share/wishList', { fill_models, expectant_city, mobile, code }, (data, ret) => {
+            console.log(data)
+            this.onWishClose()
+        }, (data, ret) => {
+            console.log(data)
+            app.error(ret.msg)
+        })
     },
 })

@@ -5,6 +5,10 @@
     text-align: left !important;
 }
 
+.popup-inner .popup-cell {
+    padding: 20rpx 0 20rpx 30rpx !important;
+}
+
 .popup-inner .vcode {
     padding: 0 10rpx;
     color: #33cd5f;

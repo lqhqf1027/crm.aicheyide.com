@@ -48,7 +48,7 @@
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ brandList && brandList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_1.png" />
-            <view class="card__more" bindtap="toMore">MORE+</view>
+            <view class="card__more" bindtap="toMore">更多+</view>
         </view>
         <view slot="body">
             <wux-grids bordered="{{ false }}" col="5">
@@ -95,7 +95,7 @@
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-body-class="card__body" wx:if="{{ carType.new.recommendList && carType.new.recommendList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_2.png" />
-            <view class="card__more" bindtap="toMore">MORE+</view>
+            <view class="card__more" bindtap="toMore">更多+</view>
         </view>
         <swiper slot="body" style="height: 260rpx" display-multiple-items="2.5" bindchange="bindchange">
             <block wx:for="{{ carType.new.recommendList }}" wx:key="">
@@ -119,7 +119,7 @@
         <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wux-body-class="card__body" wx:if="{{ index % 2 === 0 }}">
             <view class="card__content">
                 <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_3.png" />
-                <view class="card__more" bindtap="toMore">MORE+</view>
+                <view class="card__more" bindtap="toMore">更多+</view>
             </view>
             <view slot="body">
                 <image class="card__cover wux-mb--10" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial" />
@@ -138,6 +138,12 @@
                             </view>
                         </swiper-item>
                     </block>
+                    <swiper-item class="swiper-item">
+                        <view class="car__more" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial">
+                            <view>查看更多</view>
+                            <view class="car__text">See More</view>
+                        </view>
+                    </swiper-item>
                 </swiper>
             </view>
         </wux-card>
@@ -159,6 +165,12 @@
                                     </view>
                                 </view>
                             </block>
+                            <view class="car">
+                                <view class="car__more" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial">
+                                    <view>查看更多</view>
+                                    <view class="car__text">See More</view>
+                                </view>
+                            </view>
                         </scroll-view>
                     </wux-card>
                 </wux-col>
@@ -169,7 +181,7 @@
     <wux-card full bordered="{{ false }}" wux-class="wux-mt--10" wx:if="{{ carType.new.specialfieldList && carType.new.specialfieldList.length }}">
         <view class="card__content">
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_4.png" />
-            <view class="card__more" bindtap="toMore">MORE+</view>
+            <view class="card__more" bindtap="toMore">更多+</view>
         </view>
         <swiper slot="body" class="swiperClass swiperClassNext" indicator-dots indicator-color="#d5d5d5" indicator-active-color="#da8103" autoplay interval="2000" duration="1000" circular previous-margin="50" next-margin="50">
             <block wx:for="{{ carType.new.specialfieldList }}" wx:key="">
