@@ -8,7 +8,7 @@
                         <block wx:for="{{ item.planList }}" wx:for-item="card" wx:for-index="cIndex" wx:key="">
                             <i-swipeout i-class="i-swipeout-demo-item" unclosable disabled="{{ style !== 'collection' }}" toggle="{{ toggle }}" actions="{{ actions }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bind:change="onSwipeout">
                                 <view slot="content">
-                                    <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 180rpx; background: #f1efef" thumb="{{ config.upload.cdnurl + card.models_main_images }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
+                                    <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 180rpx; background: #f1efef" thumb="{{ card.models_main_images ? (config.upload.cdnurl + card.models_main_images) : globalData.empty_carimg }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
                                         <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
                                         <view class="wux-clearfix" style='height:50rpx;line-height:50rpx'>
                                             <view class="media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ card.payment / 10000 }} 万</view>
@@ -34,7 +34,7 @@
                         <block wx:for="{{ item.planList }}" wx:for-item="card" wx:for-index="cIndex" wx:key="">
                             <i-swipeout i-class="i-swipeout-demo-item" unclosable disabled="{{ style !== 'collection' }}" toggle="{{ toggle }}" actions="{{ actions }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bind:change="onSwipeout">
                                 <view slot="content">
-                                    <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ config.upload.cdnurl + card.models_main_images }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
+                                    <wux-media wux-class="{{ cIndex === 0 ? 'media' : 'media--line' }}" thumbStyle="width: 270rpx; height: 180rpx; background: #f1efef" thumb="{{ card.models_main_images ? (config.upload.cdnurl + card.models_main_images) : globalData.empty_carimg }}" data-id="{{ card.id }}" data-type="{{ card.type }}" bindtap="onOpenDetail">
                                         <view class="media__title wux-ellipsis--l2">{{ card.models.name }}</view>
                                         <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(card.car_licensedate) + '/' + common.getDistance(card.kilometres) + '公里' }}</view>
                                         <view class="wux-clearfix" style='height:50rpx;line-height:50rpx'>

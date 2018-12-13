@@ -31,10 +31,11 @@ Page({
         scrollTop: 0,
     },
     onLoad: function() {
-        this.setData({ globalData: app.globalData })
+        
     },
     onShow: function() {
         var that = this;
+        that.setData({ globalData: app.globalData });
         if (app.getGlobalData().userInfo) {
             that.setData({ userInfo: app.getGlobalData().userInfo, isWxapp: that.isWxapp() });
         }

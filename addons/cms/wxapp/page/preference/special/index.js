@@ -8,8 +8,10 @@ Page({
     onLoad(options) {
         console.log(options)
         this.options = options
-        this.setData({ globalData: app.globalData })
         this.getDetail()
+    },
+    onShow() {
+        this.setData({ globalData: app.globalData })
     },
     onReady() {
     	if (!this.options.title) return
