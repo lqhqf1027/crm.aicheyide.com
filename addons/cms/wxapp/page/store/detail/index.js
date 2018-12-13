@@ -653,6 +653,7 @@ Page({
         app.request('/share/wishList', { fill_models, expectant_city, mobile, code }, (data, ret) => {
             console.log(data)
             this.onWishClose()
+            app.success(ret.msg)
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
