@@ -194,13 +194,12 @@ Page({
     onShareAppMessage() {},
     onLoad(options) {
         console.log(options)
-        this.options = options
-        // this.getList()
-        this.setData({ globalData: app.globalData })
+        this.options = options        
     },
     onShow() {
         const { style } = wx.getStorageSync('searchVal') || {}
         this.getList(style)
+        this.setData({ globalData: app.globalData })
     },
     onPullDownRefresh() {
         this.getList(this.data.searchVal.style, true)
