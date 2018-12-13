@@ -53,7 +53,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 var newprepareMatch = $("#newprepareMatch");
                 newprepareMatch.on('load-success.bs.table', function (e, data) {
                     // console.log(data.total);
-                    $('#badge_newprepare_match').text(data.total);
+                    // $('#badge_newprepare_match').text(data.total);
                     $('.btn-neweditone').data('area',['50%','50%']);
 
 
@@ -1041,7 +1041,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //二手车匹配金融
                 var secondprepareMatch = $("#secondprepareMatch");
                 secondprepareMatch.on('load-success.bs.table', function (e, data) {
-                    $('#badge_secondprepare_match').text(data.total);
+                    // $('#badge_secondprepare_match').text(data.total);
 
                     // secondprepareMatch.find('tbody').find('.bs-checkbox').each(function () {
                     //

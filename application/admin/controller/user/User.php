@@ -24,6 +24,23 @@ class User extends Backend
     {
         parent::_initialize();
         $this->model = model('User');
+        //总用户数量
+        $user_count = $this->model->count();
+
+        $startday = \fast\Date::unixtime('day');
+        $endday = $startday + 86400;
+        //今日登陆人数
+        $user_today = $this->model->where('logintime', 'between', [$startday, $endday])->count();
+        //今日加入人数
+        $user_join = $this->model->where('jointime', 'between', [$startday, $endday])->count();
+        //连续登陆天数大于三
+        $user_login = $this->model->where('successions', '>=', '2')->count();
+        $this->view->assign([
+            'user_count' => $user_count,
+            'user_today' => $user_today,
+            'user_join'  => $user_join,
+            'user_login' => $user_login
+        ]);
     }
 
     /**

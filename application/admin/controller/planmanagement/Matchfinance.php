@@ -29,10 +29,10 @@ class Matchfinance extends Backend
     public function index()
     {
         $total = Db::name('sales_order')
-            ->where("review_the_data", 'not in', ['send_to_internal', 'send_car_tube', 'inhouse_handling'])
+            ->where("review_the_data", '=', 'the_financial')
             ->count();
         $total1 = Db::name('second_sales_order')
-            ->where("review_the_data", 'not in', ['is_reviewing', 'is_reviewing_true', 'send_car_tube'])
+            ->where("review_the_data", '=', 'is_reviewing_finance')
             ->count();
         $this->view->assign([
             "total" => $total,
