@@ -36,8 +36,8 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "image",
-					"pathName": "page/preference/image/index",
+					"name": "index",
+					"pathName": "page/index/index",
 					"query": ""
 				}
 			]

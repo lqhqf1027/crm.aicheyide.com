@@ -17,6 +17,29 @@ App({
         var lastCity = wx.getStorageSync('city')
         var city = lastCity && lastCity.id ? lastCity : defaultCity
         this.globalData.city = city
+        this.globalData.config = wx.getStorageSync('config') || {}
+    },
+    // 判断是否存在 config 缓存
+    checkConfig(cb, page) {
+        if (page && page.route === 'page/preference/list/index') {
+            cb.call(this)
+            return
+        }
+
+        var city = wx.getStorageSync('city')
+
+        if (this.globalData.config && this.globalData.config.upload) {
+            cb.call(this)
+        } else {
+            this.request('/common/init?noAuth=1', { city_id: city.id }, (data, ret) => {
+                this.globalData.config = data.config;
+                page && page.setData({ 'globalData.config': data.config })
+                wx.setStorageSync('config', data.config)
+                if (typeof cb === 'function') {
+                    cb.call(this)
+                }
+            })
+        }
     },
     // set globalData
     setGlobalData(data) {

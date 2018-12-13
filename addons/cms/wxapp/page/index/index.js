@@ -270,7 +270,7 @@ Page({
             city,
         })
 
-        app.request('/carselection/index?noAuth=1', { city_id: city.id, cartype }, (data, ret) => {
+        const cb = () => app.request('/carselection/index?noAuth=1', { city_id: city.id, cartype }, (data, ret) => {
             console.log(data)
 
             let carSelectList = [data]
@@ -348,6 +348,8 @@ Page({
             console.log(data)
             app.error(ret.msg)
         })
+
+        app.checkConfig(cb, this)
     },
     setFilter(style) {
         let items = [...defaultItems]
