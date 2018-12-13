@@ -794,6 +794,14 @@ image.quiet {
     color: #696969;
 }
 
+.store--fixed .i-sticky-item {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 2000;
+}
+
 .store__image {
     display: block;
     width: 100%;
