@@ -67,10 +67,12 @@ Page({
             city,
         })
 
-        app.request('/common/init?noAuth=1', { city_id: city.id }, function(data, ret) {
+        const cb = () => app.request('/common/init?noAuth=1', { city_id: city.id }, function(data, ret) {
             app.globalData.config = data.config; 
             app.globalData.bannerList = data.bannerList;
             
+            wx.setStorageSync('config', data.config)
+
             that.setData({
                 globalData: app.globalData,
                 appointment: data.appointment.map((n) => {
@@ -93,6 +95,8 @@ Page({
         }, function(data, ret) {
             app.error(ret.msg);
         });
+
+        app.checkConfig(cb, this)
     },
     bindchange(e) {
         console.log(e)

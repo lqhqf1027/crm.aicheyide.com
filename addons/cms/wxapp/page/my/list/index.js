@@ -177,7 +177,7 @@ Page({
         })
     },
     getInfo() {
-        app.request('/my/index', {}, (data, ret) => {
+        const cb = () => app.request('/my/index', {}, (data, ret) => {
             console.log(data)
             this.setData({
                 'collection.carSelectList': data.collection && data.collection.carSelectList,
@@ -195,6 +195,8 @@ Page({
             console.log(data)
             app.error(ret.msg)
         })
+
+        app.checkConfig(cb, this)
     },
     signIn() {
         if (this.data.sign === 1) {

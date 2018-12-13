@@ -59,7 +59,7 @@ Page({
         const plan_id = this.options.id
         const cartype = this.options.type
 
-        app.request('/share/plan_details', { plan_id, cartype }, (data, ret) => {
+        const cb = () => app.request('/share/plan_details', { plan_id, cartype }, (data, ret) => {
             console.log(data)
             this.setData({
                 plan: data && data.plan,
@@ -71,6 +71,8 @@ Page({
             console.log(data)
             app.error(ret.msg)
         })
+
+        app.checkConfig(cb, this)
     },
     openLocation() {
         const { latitude, longitude } = this.data.plan.companystore || {}

@@ -244,13 +244,13 @@ Page({
      * @param {String} 车辆类型
      * @param {Boolean} 是否强制更新
      */
-    getList(cartype = this.data.searchVal.style, isForce, cb) {
+    getList(cartype = this.data.searchVal.style, isForce, callback) {
         const store_id = this.options.id
         const noChanged = !isForce
 
         if (noChanged) {
             if (this.data.brandList[cartype]) {
-                this.setCars({...this.data.searchVal, style: cartype}, cb)
+                this.setCars({...this.data.searchVal, style: cartype}, callback)
                 return
             }
         } else {
@@ -259,7 +259,7 @@ Page({
             })
         }
         
-        app.request('/store/store_details', { store_id, cartype }, (data, ret) => {
+        const cb = () => app.request('/store/store_details', { store_id, cartype }, (data, ret) => {
             console.log(data)
 
             let carSelectList = [data.plans]
@@ -322,7 +322,7 @@ Page({
                 allList: [...logisticsList, ...newcarList, ...usedcarList],
             }, () => {
                 this.updateDataChange()
-                this.setCars({ ...this.data.searchVal, style: cartype }, cb)
+                this.setCars({ ...this.data.searchVal, style: cartype }, callback)
             })
 
             wx.stopPullDownRefresh()
@@ -330,6 +330,8 @@ Page({
             console.log(data)
             app.error(ret.msg)
         })
+
+        app.checkConfig(cb, this)
     },
     onBrand(e) {
         const { brand } = e.currentTarget.dataset
