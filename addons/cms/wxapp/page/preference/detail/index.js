@@ -90,7 +90,10 @@ Page({
         })
     },
     openPlan() {
+        const { different_schemes } = this.data.plan
         const { id, type } = this.options
+
+        if (!different_schemes || !different_schemes.length) return
 
         wx.navigateTo({
             url: `/page/preference/plan/index?id=${id}&type=${type}`,
