@@ -156,6 +156,7 @@ Page({
         logic: [],
         plans: [],
         backtop: false,
+        scrollTop: 0,
         wishVisible: false,
         wishCodeText: '获取验证码',
         form: {
@@ -191,6 +192,34 @@ Page({
             url: '/page/preference/list/index',
         })
     },
+    onPageScroll(e) {
+        if (!this.data.sticky) return
+
+        const { top, height } = this.data.sticky
+        const isFixed = e.scrollTop >= top
+
+        this.setData({
+            scrollTop: e.scrollTop,
+            isFixed,
+        })
+    },
+    updateDataChange(isForce) {
+        console.log('updateDataChange', this.data.sticky && !isForce)
+        if (this.data.sticky && !isForce) return
+
+        const className = '.i-sticky-item';
+        const query = wx.createSelectorQuery().in(this);
+        query.select( className ).boundingClientRect((res)=>{
+                if( res ){
+                    this.setData({
+                        sticky: {
+                            top: res.top,
+                            height: res.height,
+                        },
+                    })
+                }
+        }).exec()
+    },
     onShareAppMessage() {},
     onLoad(options) {
         console.log(options)
@@ -200,6 +229,9 @@ Page({
         const { style } = wx.getStorageSync('searchVal') || {}
         this.getList(style)
         this.setData({ globalData: app.globalData })
+    },
+    onReady() {
+        // this.updateDataChange()
     },
     onPullDownRefresh() {
         this.getList(this.data.searchVal.style, true)
@@ -212,13 +244,13 @@ Page({
      * @param {String} 车辆类型
      * @param {Boolean} 是否强制更新
      */
-    getList(cartype = this.data.searchVal.style, isForce) {
+    getList(cartype = this.data.searchVal.style, isForce, cb) {
         const store_id = this.options.id
         const noChanged = !isForce
 
         if (noChanged) {
             if (this.data.brandList[cartype]) {
-                this.setCars({...this.data.searchVal, style: cartype})
+                this.setCars({...this.data.searchVal, style: cartype}, cb)
                 return
             }
         } else {
@@ -288,7 +320,10 @@ Page({
                 newcarList,
                 usedcarList,
                 allList: [...logisticsList, ...newcarList, ...usedcarList],
-            }, () => this.setCars({ ...this.data.searchVal, style: cartype }))
+            }, () => {
+                this.updateDataChange()
+                this.setCars({ ...this.data.searchVal, style: cartype }, cb)
+            })
 
             wx.stopPullDownRefresh()
         }, (data, ret) => {
@@ -323,7 +358,7 @@ Page({
 
         this.setData({ carBrandList })
     },
-    setFilter(style) {
+    setFilter(style, cb) {
         let items = [...defaultItems]
         const searchVal = {...defaultSearchValue, style }
         
@@ -344,13 +379,19 @@ Page({
             searchVal,
             backdrop: false,
             list: [],
-        }, () => this.getList(style))
+        }, () => this.getList(style, false, cb))
     },
     onChange(e) {
         console.log(e)
-        this.setFilter(e.detail.key)
+        this.setFilter(e.detail.key, () => {
+            const { sticky } = this.data
+            if (sticky) {
+                this.setData({ scrollTop: sticky.top })
+                wx.pageScrollTo({ scrollTop: sticky.top, duration: 0 })
+            }
+        })
     },
-    setCars(searchVal = this.data.searchVal) {
+    setCars(searchVal = this.data.searchVal, cb) {
         const { sort, brand, style, name, payment, monthly } = searchVal
 
         console.log('searchVal', searchVal)
@@ -410,7 +451,7 @@ Page({
         this.setData({
             searchVal,
             list,
-        })
+        }, cb)
     },
     onTag(e) {
         const { meta } = e.currentTarget.dataset
