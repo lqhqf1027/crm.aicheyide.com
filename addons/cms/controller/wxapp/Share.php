@@ -105,8 +105,8 @@ class Share extends Base
         //搜索栏内容
         $cities_name = $this->request->post('cities_name');
 
-        if (!$cities_name) {
-            $this->error('缺少参数,请求失败', 'error');
+        if($cities_name==''){
+            $this->success('请求成功', ['searchCityList' => []]);
         }
 
         //获取搜索的数据
@@ -118,11 +118,8 @@ class Share extends Base
             ])
             ->select();
 
-        if ($searchCityList) {
-            $this->success('请求成功', ['searchCity' => $searchCityList]);
-        } else {
-            $this->error();
-        }
+            $this->success('请求成功', ['searchCityList' => $searchCityList]);
+
 
     }
 
@@ -431,7 +428,7 @@ specialimages,popularity')
         if ($different_schemes) {
             //为其他方案封面图片加入CDN
             foreach ($different_schemes as $k => $v) {
-                $different_schemes[$k]['type'] = 'new';
+                unset($different_schemes[$k]['models_main_images'],$different_schemes[$k]['models_name'],$different_schemes[$k]['price']);
             }
             $plans['different_schemes'] = $different_schemes;
         } else {
@@ -814,7 +811,7 @@ specialimages,popularity')
                 'b.id' => ['neq', $plan_id],
                 'b.sales_id' => null
             ])
-            ->field('b.id,b.payment,b.monthly,b.models_main_images,a.name as models_name,a.price')
+            ->field('b.id,b.payment,b.monthly,b.nperlist,b.models_main_images,a.name as models_name,a.price')
             ->select();
 
     }
