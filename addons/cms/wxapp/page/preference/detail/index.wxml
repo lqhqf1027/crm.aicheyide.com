@@ -45,8 +45,11 @@
         <wux-cell hover-class="none" is-link extra="查看地图" bind:click="openLocation">
             <view class="title">门店地址</view>
         </wux-cell>
-        <wux-cell hover-class="none">
+        <wux-cell hover-class="none" bind:click="toStore">
             <wux-media thumb="https://static.aicheyide.com/ucuj/store/logo/859694614246574276.png" thumbStyle="border-radius: 50%" title="{{ plan.companystore.store_name }}" label="{{ plan.companystore.store_address }}"></wux-media>
+            <view class="store__info">
+                <view class="store__link wux-text--center">进入门店</view>
+            </view>
         </wux-cell>
     </wux-cell-group>
 

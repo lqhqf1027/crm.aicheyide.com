@@ -22,7 +22,7 @@ Page({
         this.getList()
     },
 	getList() {
-        app.request('/my/coupons', {}, (data, ret) => {
+        const cb = () => app.request('/my/coupons', {}, (data, ret) => {
             console.log(data)
             const { used, notUsed, overdues } = data.coupons
             this.setData({
@@ -60,6 +60,8 @@ Page({
             console.log(data)
             app.error(ret.msg)
         })
+
+        app.checkConfig(cb, this)
     },
     onChange(e) {
         const { key } = e.detail
