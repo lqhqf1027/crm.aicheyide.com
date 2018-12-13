@@ -172,7 +172,7 @@ Page({
 
         return {
             title: shares.index_share_title,
-            path: '/page/index/index',
+            path: '/page/preference/list/index',
             imageUrl: shares.index_share_img,
         }
     },
