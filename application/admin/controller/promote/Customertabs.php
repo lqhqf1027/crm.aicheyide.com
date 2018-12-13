@@ -683,19 +683,24 @@ class Customertabs extends Backend
             }
             $row = [];
             $temp = array_combine($fields, $values);
-            // pr($temp);
-            // die;
+//             pr($temp);
+//             die;
             foreach ($temp as $k => $v) {
                 if (isset($fieldArr[$k]) && $k !== '') {
                     $row[$fieldArr[$k]] = $v;
                 }
             }
-            // pr($row);
-            // die;
+//             pr($row);
+//             die;
+             if(!$row['platform_id']||!$row['phone']){
+                  continue;
+             }
             if ($row) {
                 $insert[] = $row;
             }
+
         }
+//        pr($insert);die();
         if (!$insert) {
             $this->error(__('No rows were updated'));
         }
