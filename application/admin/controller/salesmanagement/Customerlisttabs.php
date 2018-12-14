@@ -211,7 +211,7 @@ class Customerlisttabs extends Backend
                 } else if ($customerlevel == null) {
                     //超级管理员
                     if (in_array($authId, $getUserId['admin'])) {
-                        $query->where(['phone' => ['not in', $noPhone], 'customerlevel' => null]);
+                        $query->where(['phone' => ['not in', $noPhone], 'backoffice_id' => ['neq',''], 'sales_id' => ['neq',''], 'customerlevel' => null]);
                     } //当前销售
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['phone' => ['not in', $noPhone], 'sales_id' => $authId, 'customerlevel' => null]);
@@ -275,7 +275,7 @@ class Customerlisttabs extends Backend
                 } else if ($customerlevel == null) {
                     //超级管理员
                     if (in_array($authId, $getUserId['admin'])) {
-                        $query->where(['phone' => ['not in', $noPhone], 'customerlevel' => null]);
+                        $query->where(['phone' => ['not in', $noPhone], 'backoffice_id' => ['neq',''], 'sales_id' => ['neq',''],  'customerlevel' => null]);
                     } //当前销售
                     else if (in_array($authId, $getUserId['sale'])) {
                         $query->where(['phone' => ['not in', $noPhone], 'sales_id' => $authId, 'customerlevel' => null]);

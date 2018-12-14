@@ -116,7 +116,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'margin', title: __('保证金（元）'), operate: 'BETWEEN', operate: false},
                         {field: 'tail_section', title: __('尾款（元）'), operate: 'BETWEEN', operate: false},
                         {field: 'gps', title: __('GPS（元）'), operate: false},
-                        {field: 'guide_price', title: __('厂商指导价（元）'), operate: false},
                         {field: 'note', title: __('销售方案备注'), operate: false},
                         {
                             field: 'createtime',
