@@ -172,7 +172,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //数据实时统计
                 headlines.on('load-success.bs.table', function (e, data) {
 
-                        $('#badge_new_toutiao').text(data.total);
+                        // $('#badge_new_toutiao').text(data.total);
                 })
                 add_data('.add-headline', headlines, 'promote/Customertabs/add_headline');
                 batch_share('.btn-selected-headline', headlines);
@@ -256,7 +256,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //数据实时统计
                 baidus.on('load-success.bs.table', function (e, data) {
-                    $('#badge_new_baidu').text(data.total);
+                    // $('#badge_new_baidu').text(data.total);
                 })
 
 
@@ -346,7 +346,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 //数据实时统计
                 sameCity.on('load-success.bs.table', function (e, data) {
 
-                  $('#badge_new_58').text(data.total);
+                //   $('#badge_new_58').text(data.total);
                 })
                 add_data('.add-same_city', sameCity, 'promote/Customertabs/add_same_city');
 
@@ -430,7 +430,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                 //数据实时统计
                 musics.on('load-success.bs.table', function (e, data) {
-                    $('#badge_new_douyin').text(data.total);
+                    // $('#badge_new_douyin').text(data.total);
 
                 })
 

@@ -5,6 +5,9 @@ namespace app\admin\controller\cms;
 use app\common\controller\Backend;
 use think\Db;
 
+use app\admin\model\CompanyStore;
+use app\admin\model\Cities;
+
 /**
  *
  *
@@ -23,6 +26,52 @@ class Subscribe extends Backend
         parent::_initialize();
         $this->model = new \app\admin\model\Subscribe;
         $this->view->assign("stateList", $this->model->getStateList());
+
+        $storeList = [];
+        $disabledIds = [];
+        $cities_all = collection(Cities::where('pid', 'NEQ', '0')->order("id desc")->field(['id,cities_name as name'])->select())->toArray();
+        $store_all = collection(CompanyStore::order("id desc")->field(['id, city_id, store_name as name'])->select())->toArray();
+        $all = array_merge($cities_all, $store_all);
+        // pr($all);
+        // die;
+        foreach ($all as $k => $v) {
+
+            $state = ['opened' => true];
+
+            if (!$v['city_id']) {
+            
+                $disabledIds[] = $v['id'];
+                $storeList[] = [
+                    'id'     => $v['id'],
+                    'parent' => '#',
+                    'text'   => __($v['name']),
+                    'state'  => $state
+                ];
+            }
+
+            foreach ($cities_all as $key => $value) {
+                
+                if ($v['city_id'] == $value['id']) {
+                    
+                    $storeList[] = [
+                        'id'     => $v['id'],
+                        'parent' => $value['id'],
+                        'text'   => __($v['name']),
+                        'state'  => $state
+                    ];
+                }
+                   
+            }
+            
+        }
+        // pr($storeList);
+        // die;
+        // $tree = Tree::instance()->init($all, 'city_id');
+        // $storeOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
+        // pr($storeOptions);
+        // die;
+        // $this->view->assign('storeOptions', $storeOptions);
+        $this->assignconfig('storeList', $storeList);
     }
 
     /**
@@ -62,7 +111,7 @@ class Subscribe extends Backend
                 }, 'usedplan' => function ($query) {
                     $query->withField('newpayment,monthlypaymen,periods,models_id,store_id');
                 }, 'energyplan' => function ($query) {
-                    $query->withField('payment,monthly,nperlist,models_id');
+                    $query->withField('payment,monthly,nperlist,models_id,store_id');
                 }])
                 ->where($where)
                 ->order($sort, $order)
@@ -76,6 +125,7 @@ class Subscribe extends Backend
                     $list[$k]['plan'] = $v['newplan'];
                     $list[$k]['plan']['models_name'] = $this->getModels($v['newplan']['models_id']);
                     $list[$k]['plan']['company_name'] = $this->getStore($v['newplan']['store_id']);
+                    // $list[$k]['newplan']['store_id'] = $v['newplan']['store_id'];
                 }
                 if ($v['usedplan']['newpayment']) {
                     $v['usedplan']['payment'] = $v['usedplan']['newpayment'];
@@ -84,11 +134,13 @@ class Subscribe extends Backend
                     $list[$k]['plan'] = $v['usedplan'];
                     $list[$k]['plan']['models_name'] = $this->getModels($v['usedplan']['models_id']);
                     $list[$k]['plan']['company_name'] = $this->getStore($v['usedplan']['store_id']);
+                    // $list[$k]['usedplan']['store_id'] = $v['usedplan']['store_id'];
                 }
                 if ($v['energyplan']['payment']) {
                     $list[$k]['plan'] = $v['energyplan'];
                     $list[$k]['plan']['models_name'] = $this->getModels($v['energyplan']['models_id']);
                     $list[$k]['plan']['company_name'] = $this->getStore($v['energyplan']['store_id']);
+                    // $list[$k]['energyplan']['store_id'] = $v['energyplan']['store_id'];
                 }
 
             }

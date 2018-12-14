@@ -26,7 +26,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
-                sortName: 'id',
+                sortName: 'brand.name',
                 columns: [
                     [
                         {checkbox: true},
@@ -34,7 +34,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'brand.name', title: '所属品牌'},
                         
                         {field: 'name', title: __('Name')},
-                        {field: 'standard_price', title: __('Standard_price'), operate:'BETWEEN'},
+                        // {field: 'standard_price', title: __('Standard_price'), operate:'BETWEEN'},
                         {field: 'price', title: __('厂商指导价')},
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', formatter: Table.api.formatter.datetime},
