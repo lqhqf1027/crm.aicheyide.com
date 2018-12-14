@@ -79,15 +79,15 @@ class Share extends Base
      */
     public function cityList()
     {
-        if (Cache::get('cityList')) {
-            $this->success('请求成功', Cache::get('cityList'));
-        }
+//        if (Cache::get('cityList')) {
+//            $this->success('请求成功', Cache::get('cityList'));
+//        }
 
         $province = self::getCityList();
-        Cache::set('cityList', $province);
+//        Cache::set('cityList', $province);
 
         if ($province) {
-            $this->success('请求成功', ['cityList' => $province]);
+            $this->success('请求成功', $province);
         } else {
             $this->error();
         }
@@ -105,7 +105,7 @@ class Share extends Base
         //搜索栏内容
         $cities_name = $this->request->post('cities_name');
 
-        if($cities_name==''){
+        if ($cities_name == '') {
             $this->success('请求成功', ['searchCityList' => []]);
         }
 
@@ -118,7 +118,7 @@ class Share extends Base
             ])
             ->select();
 
-            $this->success('请求成功', ['searchCityList' => $searchCityList]);
+        $this->success('请求成功', ['searchCityList' => $searchCityList]);
 
 
     }
@@ -279,7 +279,7 @@ class Share extends Base
             if ($result == 0) {
                 $mobile = json_decode($data, true)['phoneNumber'];
             } else {
-                $this->error('手机号解密失败', json_decode($data, true) );
+                $this->error('手机号解密失败', json_decode($data, true));
             }
         }
         if (!$user_id || !$plan_id || !$cartype) {
@@ -360,7 +360,7 @@ class Share extends Base
         $mobile = $this->request->post('mobile');
         $code = $this->request->post('code');
 
-        if (!$fill_models || !$expectant_city ||!$mobile || !$code) {
+        if (!$fill_models || !$expectant_city || !$mobile || !$code) {
             $this->error('缺少参数,请求失败', 'error');
         }
 
@@ -428,7 +428,7 @@ specialimages,popularity')
         if ($different_schemes) {
             //为其他方案封面图片加入CDN
             foreach ($different_schemes as $k => $v) {
-                unset($different_schemes[$k]['models_main_images'],$different_schemes[$k]['models_name'],$different_schemes[$k]['price']);
+                unset($different_schemes[$k]['models_main_images'], $different_schemes[$k]['models_name'], $different_schemes[$k]['price']);
             }
             $plans['different_schemes'] = $different_schemes;
         } else {
@@ -683,6 +683,22 @@ specialimages,popularity')
 
         if ($tableName == 'subscribe') {
             $data['cartype'] = $cartype;
+
+            switch ($cartype) {
+                case 'new':
+                    $planTables = 'plan_acar';
+                    break;
+                case 'used':
+                    $planTables = 'secondcar_rental_models_info';
+                    break;
+                case 'logistics':
+                    $planTables = 'cms_logistics_project';
+                    break;
+            }
+
+            $data['store_ids'] = Db::name($planTables)
+                ->where('id', $plan_id)
+                ->value('store_id');
         }
 
         if ($score) {

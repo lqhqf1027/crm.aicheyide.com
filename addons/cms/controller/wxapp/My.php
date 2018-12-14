@@ -71,7 +71,7 @@ class My extends Base
 
         //我的预约
         $subscribe = $this->collectionIndex($user_id, 'subscribe');
-
+        $this->success($subscribe);
         //我的收藏
         $collections = $this->collectionIndex($user_id, 'collections');
 
@@ -305,7 +305,6 @@ class My extends Base
                     }]);
                 }]);
             }])->select();
-
 
         $newCollect = [];
         $usdCollect = [];
