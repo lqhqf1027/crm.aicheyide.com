@@ -47,10 +47,15 @@ class User extends Base
         $config = get_addon_config('cms');
         $code = $this->request->post("code");
         $rawData = $this->request->post("rawData");
+
         if (!$code || !$rawData) {
             $this->error("参数不正确");
         }
         $userInfo = (array)json_decode($rawData, true);
+
+        if($userInfo['nickName']){
+            $userInfo['nickName'] = self::emoji_encode($userInfo['nickName']);
+        }
 
         $params = [
             'appid'      => $config['wxappid'],
@@ -89,7 +94,9 @@ class User extends Base
                 $ret = Service::connect($platform, $result, $extend);
                 if ($ret) {
                     $auth = Auth::instance();
-                    $this->success("登录成功", ['userInfo' => $auth->getUserinfo(),'openid'=>$json['openid'],'session_key'=>$json['session_key']]);
+                    $users = $auth->getUserinfo();
+                    $users['nickname'] = self::emoji_decode($users['nickname']);
+                    $this->success("登录成功", ['userInfo' => $users,'openid'=>$json['openid'],'session_key'=>$json['session_key']]);
                 } else {
                     $this->error("连接失败");
                 }
@@ -99,6 +106,30 @@ class User extends Base
         }
 
         return;
+    }
+
+    public static function emoji_encode($nickname)
+    {
+        $strEncode = '';
+        $length = mb_strlen($nickname, 'utf-8');
+        for ($i = 0; $i < $length; $i++) {
+            $_tmpStr = mb_substr($nickname, $i, 1, 'utf-8');
+            if (strlen($_tmpStr) >= 4) {
+                $strEncode .= '[[EMOJI:' . rawurlencode($_tmpStr) . ']]';
+            } else {
+                $strEncode .= $_tmpStr;
+            }
+        }
+        return $strEncode;
+    }
+
+    public  static function emoji_decode($str)
+    {
+        $strDecode = preg_replace_callback('|\[\[EMOJI:(.*?)\]\]|', function ($matches) {
+            return rawurldecode($matches[1]);
+        }, $str);
+
+        return $strDecode;
     }
 
     /**

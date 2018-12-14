@@ -31,7 +31,6 @@ class Common extends Base
         if (!$city_id) {
             $this->error('缺少参数,请求失败', 'error');
         }
-
         //预约缓存
         if (!Cache::get('appointment')) {
             Cache::set('appointment', Index::appointment());
@@ -57,6 +56,17 @@ class Common extends Base
             'upload' => $upload
         ];
 
+        $shares = Db::name('config')
+            ->where('group','share')
+            ->field('name,value')
+            ->select();
+
+        $sharesAll = [];
+        $shares[0]['value'] = json_decode($shares[0]['value'],true);
+        $sharesAll['index_share_title'] = $shares[0]['value']['index_share_title'];
+        $sharesAll['index_share_img'] = $shares[1]['value'];
+        $sharesAll['share_moments_bk_img'] = $shares[2]['value'];
+
         $data = [
             'carType' => [
                 'new' => [
@@ -73,7 +83,7 @@ class Common extends Base
             //品牌
             'brandList' => Index::getBrand(),
             //分享
-            'shares' => Share::getConfigShare(),
+            'shares' => $sharesAll,
             //预约
             'appointment' => Cache::get('appointment')
         ];

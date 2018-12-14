@@ -3,6 +3,7 @@
 namespace app\admin\controller\user;
 
 use app\common\controller\Backend;
+use addons\cms\controller\wxapp\User as AddonsUser;
 use think\Db;
 /**
  * 会员管理
@@ -72,6 +73,7 @@ class User extends Backend
             foreach ($list as $k => $v)
             {
                 $v->hidden(['password', 'salt']);
+                $list[$k]['nickname'] = AddonsUser::emoji_decode($list[$k]['nickname']);
             }
             $result = array("total" => $total, "rows" => $list);
 

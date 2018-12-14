@@ -64,14 +64,23 @@ class Store extends Base
 
             ]
         )->where(['status' => 'normal', 'pid' => ['neq', 0]])->select())->toArray();
+        $firstCity = [];
         foreach ($data as $key => $value) {
-            $new['list'][$value['province_letter']][] = [
+            $arrList = [
                 'id' => $value['id'],
                 'province_letter' => $value['province_letter'],
                 'cities_name' => $value['cities_name'],
                 'store_list' => $value['store_list']
             ];
+            if ($value['province_letter'] == 'C') {
+                $firstCity['C'] = [$arrList];
+                continue;
+            }
+
+            $new['list'][$value['province_letter']][] = $arrList;
+
         }
+        $new['list'] = array_merge($firstCity, $new['list']);
         $this->success('查询成功', $new);
     }
 
@@ -154,33 +163,32 @@ class Store extends Base
         }
 
         $coupon_received = Coupon::where([
-            'id'=>$coupon_id,
-            'remaining_amount' =>['GT',0],
+            'id' => $coupon_id,
+            'remaining_amount' => ['GT', 0],
 //            'release_datetime' =>['GT',time()],
-            'ismenu'=>1
-        ])->where('release_datetime > :time or release_datetime is null',['time'=>time()])
-        ->field('user_id,limit_collar,remaining_amount')
-        ->find();
+            'ismenu' => 1
+        ])->where('release_datetime > :time or release_datetime is null', ['time' => time()])
+            ->field('user_id,limit_collar,remaining_amount')
+            ->find();
 //$this->success($coupon_received);
-        if(!$coupon_received){
+        if (!$coupon_received) {
             $this->error('优惠券已超过领取截止日期或已发放完了');
         }
 
-        $user_id_arr = array_count_values(array_filter(explode(',',$coupon_received['user_id'])));
+        $user_id_arr = array_count_values(array_filter(explode(',', $coupon_received['user_id'])));
 
-        if($user_id_arr[$user_id] && $user_id_arr[$user_id]>=$coupon_received['limit_collar']){
-              $this->error('该优惠券您只能领取:'.$coupon_received['limit_collar'].'份',$coupon_received['limit_collar']);
+        if ($user_id_arr[$user_id] && $user_id_arr[$user_id] >= $coupon_received['limit_collar']) {
+            $this->error('该优惠券您只能领取:' . $coupon_received['limit_collar'] . '份', $coupon_received['limit_collar']);
         }
 
         $res = Coupon::update([
-            'id' =>$coupon_id,
-            'user_id' => $coupon_received['user_id']?$coupon_received['user_id'].$user_id.',':','.$user_id.',',
-            'remaining_amount' => intval($coupon_received['remaining_amount'])-1
+            'id' => $coupon_id,
+            'user_id' => $coupon_received['user_id'] ? $coupon_received['user_id'] . $user_id . ',' : ',' . $user_id . ',',
+            'remaining_amount' => intval($coupon_received['remaining_amount']) - 1
         ]);
 
-        $res?$this->success('领取优惠券成功'):$this->error('领取优惠券失败');
+        $res ? $this->success('领取优惠券成功') : $this->error('领取优惠券失败');
     }
-
 
 
 }
