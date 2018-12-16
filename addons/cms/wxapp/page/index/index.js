@@ -1,3 +1,7 @@
+import { $wuxActionSheet } from '../../assets/libs/wux/index'
+import Poster from '../../assets/libs/wxa-plugin-canvas/poster/poster'
+import { updateConfig } from '../../utils/util'
+
 const app = getApp()
 const isTel = (value) => /^1[3456789]\d{9}$/.test(value)
 const defaultItems = [{
@@ -135,10 +139,10 @@ Page({
         tabs: [{
             type: 'new',
             car_type_name: '新车',
-        },{
+        }, {
             type: 'used',
             car_type_name: '二手车',
-        },{
+        }, {
             type: 'logistics',
             car_type_name: '新能源车',
         }],
@@ -162,19 +166,70 @@ Page({
             mobile: '',
             code: '',
         },
+        posterConfig: {},
+    },
+    showActionSheet() {
+        $wuxActionSheet().showSheet({
+            theme: 'wx',
+            buttons: [{
+                    text: '转发',
+                    openType: 'share',
+                },
+                {
+                    text: '生成海报',
+                },
+            ],
+            buttonClicked: (index, item) => {
+                if (index === 1) {
+                    this.onPosterCreate()
+                }
+
+                return true
+            },
+            cancelText: '取消',
+            cancel() {},
+        })
+    },
+    onPosterCreate() {
+        const { index_share_bk_qrcode, share_moments_bk_img } = app.globalData.shares || {}
+        const { userInfo } = app.getGlobalData() || {}
+        const { nickname, avatar } = userInfo || {}
+        const qrcode = app.cdnurl(index_share_bk_qrcode)
+        const bgcolor = app.cdnurl(share_moments_bk_img)
+
+        if (!index_share_bk_qrcode || !share_moments_bk_img || !avatar) {
+            app.showLoginModal(function() {}, function() {}, true)
+            return
+        }
+
+        this.setData({
+            isPoster: true,
+            posterConfig: updateConfig(nickname, avatar, qrcode, bgcolor)
+        }, () => Poster.create())
+    },
+    onPosterSuccess(e) {
+        console.log('onPosterSuccess', e)
+        const { detail } = e
+        wx.previewImage({
+            current: detail,
+            urls: [detail]
+        })
+    },
+    onPosterFail(e) {
+        console.log('onPosterFail', e)
+    },
+    onShareAppMessage() {
+        const { index_share_title, index_share_img } = app.globalData.shares || {}
+
+        return {
+            title: index_share_title,
+            path: '/page/preference/list/index',
+            imageUrl: app.cdnurl(index_share_img),
+        }
     },
     onLoad: function() {
         this.setData({ globalData: app.globalData })
         wx.setStorageSync('city', app.globalData.city)
-    },
-    onShareAppMessage: function() {
-        var shares = this.data.shares || {}
-
-        return {
-            title: shares.index_share_title,
-            path: '/page/preference/list/index',
-            imageUrl: shares.index_share_img,
-        }
     },
     onShow: function() {
         const { style } = wx.getStorageSync('searchVal') || {}
@@ -193,10 +248,10 @@ Page({
 
         // 判断是否已授权，否则提示
         if (!userInfo || !userInfo.id) {
-            app.showLoginModal(function(){}, function(){}, true)
+            app.showLoginModal(function() {}, function() {}, true)
             return
         }
-        
+
         wx.navigateTo({
             url: '/page/city/index',
         })
@@ -354,7 +409,7 @@ Page({
     setFilter(style) {
         let items = [...defaultItems]
         const searchVal = {...defaultSearchValue, style }
-        
+
         if (style === 'used') {
             items = items.filter((n) => n.value !== '4').map((n) => {
                 if (n.value === '1') {
@@ -362,7 +417,7 @@ Page({
                         children: n.children.filter((m) => m.value !== '13'),
                     })
                 }
-                
+
                 return n
             })
         }
@@ -587,7 +642,7 @@ Page({
      * 获取验证码
      */
     getWishCode() {
-        if (this.disabled || this.timeout)  return
+        if (this.disabled || this.timeout) return
 
         // 验证手机号码
         if (!this.data.form.mobile) {
@@ -629,7 +684,7 @@ Page({
 
         // 判断是否已授权，否则提示
         if (!userInfo || !userInfo.id) {
-            app.showLoginModal(function(){}, function(){}, true)
+            app.showLoginModal(function() {}, function() {}, true)
             return
         }
 
@@ -643,7 +698,8 @@ Page({
         const { value } = e.detail
         const isMobile = model === 'form.mobile' ? isTel(value) : isTel(this.data.form.mobile)
 
-        this.setData({ [model]: value, isMobile })
+        this.setData({
+            [model]: value, isMobile })
     },
     onSubmit() {
         const { fill_models, expectant_city, mobile, code } = this.data.form

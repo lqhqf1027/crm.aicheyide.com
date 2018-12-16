@@ -1,3 +1,7 @@
+import { $wuxActionSheet } from '../../../assets/libs/wux/index'
+import Poster from '../../../assets/libs/wxa-plugin-canvas/poster/poster'
+import { updateConfig } from '../../../utils/util'
+
 var app = getApp()
 
 Page({
@@ -22,6 +26,66 @@ Page({
         brand_id: '',
         city: app.globalData.city,
         deviceHeight: '100%',
+        posterConfig: {},
+    },
+    showActionSheet() {
+        $wuxActionSheet().showSheet({
+            theme: 'wx',
+            buttons: [{
+                    text: '转发',
+                    openType: 'share',
+                },
+                {
+                    text: '生成海报',
+                },
+            ],
+            buttonClicked: (index, item) => {
+                if (index === 1) {
+                    this.onPosterCreate()
+                }
+
+                return true
+            },
+            cancelText: '取消',
+            cancel() {},
+        })
+    },
+    onPosterCreate() {
+        const { index_share_bk_qrcode, share_moments_bk_img } = app.globalData.shares || {}
+        const { userInfo } = app.getGlobalData() || {}
+        const { nickname, avatar } = userInfo || {}
+        const qrcode = app.cdnurl(index_share_bk_qrcode)
+        const bgcolor = app.cdnurl(share_moments_bk_img)
+
+        if (!index_share_bk_qrcode || !share_moments_bk_img || !avatar) {
+            app.showLoginModal(function() {}, function() {}, true)
+            return
+        }
+
+        this.setData({
+            isPoster: true,
+            posterConfig: updateConfig(nickname, avatar, qrcode, bgcolor)
+        }, () => Poster.create())
+    },
+    onPosterSuccess(e) {
+        console.log('onPosterSuccess', e)
+        const { detail } = e
+        wx.previewImage({
+            current: detail,
+            urls: [detail]
+        })
+    },
+    onPosterFail(e) {
+        console.log('onPosterFail', e)
+    },
+    onShareAppMessage() {
+        const { index_share_title, index_share_img } = app.globalData.shares || {}
+
+        return {
+            title: index_share_title,
+            path: '/page/preference/list/index',
+            imageUrl: app.cdnurl(index_share_img),
+        }
     },
     channel: 0,
     page: 1,
@@ -33,15 +97,6 @@ Page({
     onLoad: function() {
         this.getSystemInfo()
         wx.setStorageSync('city', app.globalData.city)
-    },
-    onShareAppMessage: function() {
-        var shares = this.data.shares || {}
-
-        return {
-            title: shares.index_share_title,
-            path: '/page/preference/list/index',
-            imageUrl: shares.index_share_img,
-        }
     },
     onShow: function() {
         this.setGlobalData()
@@ -68,9 +123,10 @@ Page({
         })
 
         const cb = () => app.request('/common/init?noAuth=1', { city_id: city.id }, function(data, ret) {
-            app.globalData.config = data.config; 
+            app.globalData.config = data.config;
             app.globalData.bannerList = data.bannerList;
-            
+            app.globalData.shares = data.shares;
+
             wx.setStorageSync('config', data.config)
 
             that.setData({
@@ -87,7 +143,7 @@ Page({
             })
 
             wx.stopPullDownRefresh()
-            
+
             //如果需要一进入小程序就要求授权登录,可在这里发起调用
             // app.check(function(ret) {
             //     callback()
@@ -186,10 +242,10 @@ Page({
 
         // 判断是否已授权，否则提示
         if (!userInfo || !userInfo.id) {
-            app.showLoginModal(function(){}, function(){}, true)
+            app.showLoginModal(function() {}, function() {}, true)
             return
         }
-        
+
         wx.navigateTo({
             url: '/page/city/index',
         })

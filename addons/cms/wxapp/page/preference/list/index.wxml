@@ -11,7 +11,7 @@
             </view>
         </view>
         <view class="page_hd_phone">
-            <button class="button-clear" open-type="share">
+            <button class="button-clear" bindtap="showActionSheet">
                 <icon class="fa fa-share-square"></icon>
                 <view class="button-text">分享</view>
             </button>
@@ -192,4 +192,6 @@
             </block>
         </swiper>
     </wux-card>
+    <wux-actionsheet id="wux-actionsheet" />
+    <poster id="poster" preload config="{{ posterConfig }}" bind:success="onPosterSuccess" bind:fail="onPosterFail" wx:if="{{ isPoster }}" />
 </view>
