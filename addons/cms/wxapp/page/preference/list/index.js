@@ -58,7 +58,7 @@ Page({
         const bgcolor = app.cdnurl(share_moments_bk_img)
 
         if (!index_share_bk_qrcode || !share_moments_bk_img || !avatar) {
-            app.showLoginModal(function(){}, function(){}, true)
+            app.showLoginModal(function() {}, function() {}, true)
             return
         }
 
@@ -123,10 +123,10 @@ Page({
         })
 
         const cb = () => app.request('/common/init?noAuth=1', { city_id: city.id }, function(data, ret) {
-            app.globalData.config = data.config; 
+            app.globalData.config = data.config;
             app.globalData.bannerList = data.bannerList;
             app.globalData.shares = data.shares;
-            
+
             wx.setStorageSync('config', data.config)
 
             that.setData({
@@ -143,7 +143,7 @@ Page({
             })
 
             wx.stopPullDownRefresh()
-            
+
             //如果需要一进入小程序就要求授权登录,可在这里发起调用
             // app.check(function(ret) {
             //     callback()
@@ -242,10 +242,10 @@ Page({
 
         // 判断是否已授权，否则提示
         if (!userInfo || !userInfo.id) {
-            app.showLoginModal(function(){}, function(){}, true)
+            app.showLoginModal(function() {}, function() {}, true)
             return
         }
-        
+
         wx.navigateTo({
             url: '/page/city/index',
         })

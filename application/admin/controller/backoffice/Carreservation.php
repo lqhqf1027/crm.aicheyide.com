@@ -362,9 +362,8 @@ class Carreservation extends Backend
             list($where, $sort, $order, $offset, $limit) = $this->buildparams('username', true);
 
             $can_use_id = $this->getUserId();
-            if (in_array($this->auth->id, $can_use_id['admin'])) {
 
-                $total = $this->model
+            $total = $this->model
                     ->with(['admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
@@ -373,10 +372,23 @@ class Carreservation extends Backend
                         $query->withField('licenseplatenumber,vin');
                     }])
                     ->where($where)
+                    ->where(function ($query) use ($can_use_id){
+                        $back = null;
+                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                            $back = $this->auth->id;
+                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                            $back = ['in',$this->sales_name()];
+                        }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                            $back = ['neq','null'];
+                        }
+                        $query->where([
+                            'backoffice_id' => $back
+                        ]);
+                    })
                     ->order($sort, $order)
                     ->count();
 
-                $list = $this->model
+            $list = $this->model
                     ->with(['admin' => function ($query) {
                         $query->withField('nickname');
                     }, 'models' => function ($query) {
@@ -385,53 +397,24 @@ class Carreservation extends Backend
                         $query->withField('licenseplatenumber,vin');
                     }])
                     ->where($where)
+                    ->where(function ($query) use ($can_use_id){
+                        $back = null;
+                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
+                            $back = $this->auth->id;
+                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
+                            $back = ['in',$this->sales_name()];
+                        }else if(in_array($this->auth->id, $can_use_id['admin'])){
+                            $back = ['neq','null'];
+                        }
+                        $query->where([
+                            'backoffice_id' => $back
+                        ]);
+                    })
                     ->order($sort, $order)
                     ->limit($offset, $limit)
                     ->select();
 
-            } else if (in_array($this->auth->id, $can_use_id['backoffice']) || in_array($this->auth->id, $can_use_id['manager'])) {
-                $total = $this->model
-                    ->with(['admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }, 'carrentalmodelsinfo' => function ($query) {
-                        $query->withField('licenseplatenumber,vin');
-                    }])
-                    ->where(function ($query) use ($can_use_id){
-                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
-                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
-                        }
-                    })
-                    ->where($where)
-                    ->order($sort, $order)
-                    ->count();
-
-                $list = $this->model
-                    ->with(['admin' => function ($query) {
-                        $query->withField('nickname');
-                    }, 'models' => function ($query) {
-                        $query->withField('name,models_name');
-                    }, 'carrentalmodelsinfo' => function ($query) {
-                        $query->withField('licenseplatenumber,vin');
-                    }])
-                    ->where(function ($query) use ($can_use_id){
-                        if(in_array($this->auth->id, $can_use_id['backoffice'])){
-                            $query->where('backoffice_id',$this->auth->id);
-                        }else if(in_array($this->auth->id, $can_use_id['manager'])){
-                            $all_sale = $this->sales_name();
-                            $query->where('backoffice_id','in',$all_sale);
-                        }
-                    })
-                    ->where($where)
-                    ->order($sort, $order)
-                    ->limit($offset, $limit)
-                    ->select();
-
-            }
+            
 
             foreach ($list as $k => $v) {
                 $v->visible(['id', 'order_no', 'username', 'phone', 'id_card', 'cash_pledge', 'rental_price', 'tenancy_term', 'genderdata', 'review_the_data', 'createtime', 'delivery_datetime']);

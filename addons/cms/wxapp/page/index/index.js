@@ -139,10 +139,10 @@ Page({
         tabs: [{
             type: 'new',
             car_type_name: '新车',
-        },{
+        }, {
             type: 'used',
             car_type_name: '二手车',
-        },{
+        }, {
             type: 'logistics',
             car_type_name: '新能源车',
         }],
@@ -198,7 +198,7 @@ Page({
         const bgcolor = app.cdnurl(share_moments_bk_img)
 
         if (!index_share_bk_qrcode || !share_moments_bk_img || !avatar) {
-            app.showLoginModal(function(){}, function(){}, true)
+            app.showLoginModal(function() {}, function() {}, true)
             return
         }
 
@@ -248,10 +248,10 @@ Page({
 
         // 判断是否已授权，否则提示
         if (!userInfo || !userInfo.id) {
-            app.showLoginModal(function(){}, function(){}, true)
+            app.showLoginModal(function() {}, function() {}, true)
             return
         }
-        
+
         wx.navigateTo({
             url: '/page/city/index',
         })
@@ -409,7 +409,7 @@ Page({
     setFilter(style) {
         let items = [...defaultItems]
         const searchVal = {...defaultSearchValue, style }
-        
+
         if (style === 'used') {
             items = items.filter((n) => n.value !== '4').map((n) => {
                 if (n.value === '1') {
@@ -417,7 +417,7 @@ Page({
                         children: n.children.filter((m) => m.value !== '13'),
                     })
                 }
-                
+
                 return n
             })
         }
@@ -642,7 +642,7 @@ Page({
      * 获取验证码
      */
     getWishCode() {
-        if (this.disabled || this.timeout)  return
+        if (this.disabled || this.timeout) return
 
         // 验证手机号码
         if (!this.data.form.mobile) {
@@ -684,7 +684,7 @@ Page({
 
         // 判断是否已授权，否则提示
         if (!userInfo || !userInfo.id) {
-            app.showLoginModal(function(){}, function(){}, true)
+            app.showLoginModal(function() {}, function() {}, true)
             return
         }
 
@@ -698,7 +698,8 @@ Page({
         const { value } = e.detail
         const isMobile = model === 'form.mobile' ? isTel(value) : isTel(this.data.form.mobile)
 
-        this.setData({ [model]: value, isMobile })
+        this.setData({
+            [model]: value, isMobile })
     },
     onSubmit() {
         const { fill_models, expectant_city, mobile, code } = this.data.form

@@ -43,10 +43,10 @@ class Customertabs extends Backend
     {
         $this->loadlang('customer/customerresource');
         $this->view->assign([
-//            'toutiao_total'=>$this->model->with('platform')->where(['name'=>'今日头条'])->count(),
-//            'total_58'=>$this->model->with('platform')->where(['name'=>'58同城'])->count(),
-//            'baidu_total'=>$this->model->with('platform')->where(['name'=>'百度'])->count(),
-//            'douyin_total'=>$this->model->with('platform')->where(['name'=>'抖音'])->count()
+           'toutiao_total'=>$this->model->with('platform')->where(['name'=>'今日头条', 'backoffice_id' => ['neq',null]])->count(),
+           'total_58'=>$this->model->with('platform')->where(['name'=>'58同城', 'backoffice_id' => ['neq',null]])->count(),
+           'baidu_total'=>$this->model->with('platform')->where(['name'=>'百度', 'backoffice_id' => ['neq',null]])->count(),
+           'douyin_total'=>$this->model->with('platform')->where(['name'=>'抖音', 'backoffice_id' => ['neq',null]])->count()
         ]);
         return $this->view->fetch();
 
