@@ -61,12 +61,13 @@ class Common extends Base
             ->field('name,value')
             ->select();
 
+//        $this->success($shares);
         $sharesAll = [];
         $shares[0]['value'] = json_decode($shares[0]['value'],true);
         $sharesAll['index_share_title'] = $shares[0]['value']['index_share_title'];
         $sharesAll['index_share_img'] = $shares[1]['value'];
         $sharesAll['share_moments_bk_img'] = $shares[2]['value'];
-
+        $sharesAll['index_share_bk_qrcode'] = $shares[3]['value'];
         $data = [
             'carType' => [
                 'new' => [
