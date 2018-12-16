@@ -2,6 +2,8 @@
     "navigationBarTitleText": "友车友家",
     "enablePullDownRefresh": true,
     "usingComponents": {
+        "poster": "../../../assets/libs/wxa-plugin-canvas/poster/index",
+        "wux-actionsheet": "../../../assets/libs/wux/actionsheet/index",
         "wux-popup": "../../../assets/libs/wux/popup/index",
         "wux-card": "../../../assets/libs/wux/card/index",
         "wux-grids": "../../../assets/libs/wux/grids/index",

@@ -13,8 +13,10 @@ const getCtx = (selector, ctx = getCurrentPages()[getCurrentPages().length - 1])
     return componentCtx
 }
 
+const $wuxActionSheet = (selector = '#wux-actionsheet', ctx) => getCtx(selector, ctx)
 const $wuxBackdrop = (selector = '#wux-backdrop', ctx) => getCtx(selector, ctx)
 
 export {
+	$wuxActionSheet,
     $wuxBackdrop,
 }

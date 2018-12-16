@@ -1,3 +1,7 @@
+import { $wuxActionSheet } from '../../assets/libs/wux/index'
+import Poster from '../../assets/libs/wxa-plugin-canvas/poster/poster'
+import { updateConfig } from '../../utils/util'
+
 const app = getApp()
 const isTel = (value) => /^1[3456789]\d{9}$/.test(value)
 const defaultItems = [{
@@ -162,19 +166,70 @@ Page({
             mobile: '',
             code: '',
         },
+        posterConfig: {},
+    },
+    showActionSheet() {
+        $wuxActionSheet().showSheet({
+            theme: 'wx',
+            buttons: [{
+                    text: '转发',
+                    openType: 'share',
+                },
+                {
+                    text: '生成海报',
+                },
+            ],
+            buttonClicked: (index, item) => {
+                if (index === 1) {
+                    this.onPosterCreate()
+                }
+
+                return true
+            },
+            cancelText: '取消',
+            cancel() {},
+        })
+    },
+    onPosterCreate() {
+        const { index_share_bk_qrcode, share_moments_bk_img } = app.globalData.shares || {}
+        const { userInfo } = app.getGlobalData() || {}
+        const { nickname, avatar } = userInfo || {}
+        const qrcode = app.cdnurl(index_share_bk_qrcode)
+        const bgcolor = app.cdnurl(share_moments_bk_img)
+
+        if (!index_share_bk_qrcode || !share_moments_bk_img || !avatar) {
+            app.showLoginModal(function(){}, function(){}, true)
+            return
+        }
+
+        this.setData({
+            isPoster: true,
+            posterConfig: updateConfig(nickname, avatar, qrcode, bgcolor)
+        }, () => Poster.create())
+    },
+    onPosterSuccess(e) {
+        console.log('onPosterSuccess', e)
+        const { detail } = e
+        wx.previewImage({
+            current: detail,
+            urls: [detail]
+        })
+    },
+    onPosterFail(e) {
+        console.log('onPosterFail', e)
+    },
+    onShareAppMessage() {
+        const { index_share_title, index_share_img } = app.globalData.shares || {}
+
+        return {
+            title: index_share_title,
+            path: '/page/preference/list/index',
+            imageUrl: app.cdnurl(index_share_img),
+        }
     },
     onLoad: function() {
         this.setData({ globalData: app.globalData })
         wx.setStorageSync('city', app.globalData.city)
-    },
-    onShareAppMessage: function() {
-        var shares = this.data.shares || {}
-
-        return {
-            title: shares.index_share_title,
-            path: '/page/preference/list/index',
-            imageUrl: shares.index_share_img,
-        }
     },
     onShow: function() {
         const { style } = wx.getStorageSync('searchVal') || {}

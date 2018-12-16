@@ -33,6 +33,7 @@ App({
         } else {
             this.request('/common/init?noAuth=1', { city_id: city.id }, (data, ret) => {
                 this.globalData.config = data.config;
+                this.globalData.shares = data.shares;
                 page && page.setData({ 'globalData.config': data.config })
                 wx.setStorageSync('config', data.config)
                 if (typeof cb === 'function') {

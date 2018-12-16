@@ -13,7 +13,7 @@
                 </view>
             </view>
             <view class="page_hd_phone">
-                <button class="button-clear" open-type="share">
+                <button class="button-clear" bindtap="showActionSheet">
                     <icon class="fa fa-share-square"></icon>
                     <view class="button-text">分享</view>
                 </button>
@@ -136,6 +136,8 @@
         <view class="wish__bd">没有合适的车型？提交心愿单帮你找</view>
         <view class="wish__ft"></view>
     </view>
+    <wux-actionsheet id="wux-actionsheet" />
+    <poster id="poster" preload config="{{ posterConfig }}" bind:success="onPosterSuccess" bind:fail="onPosterFail" wx:if="{{ isPoster }}" />
 </view>
 
 <wux-popup closable zIndex="2000" title="意向车型" position="center" visible="{{ wishVisible }}" bind:close="onWishClose">
