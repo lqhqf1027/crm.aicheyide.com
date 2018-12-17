@@ -5,7 +5,7 @@
             <view class="wux-actionsheet__title" wx:if="{{ titleText }}">{{ titleText }}</view>
             <block wx:for="{{ buttons }}" wx:key="">
                 <button class="wux-actionsheet__button wux-actionsheet__button--option {{ item.classNmae }}" hover-class="wux-actionsheet__button--hover" open-type="{{ item.openType }}" data-index="{{ index }}" catchtap="buttonClicked">
-                    {{ item.text }}
+                    <image class="wux-actionsheet__icon" src="{{ item.icon }}" wx:if="{{ item.icon }}" />{{ item.text }}
                 </button>
             </block>
             <button class="wux-actionsheet__button wux-actionsheet__button--destructive" wx:if="{{ destructiveText }}" catchtap="destructiveButtonClicked">{{ destructiveText }}</button>

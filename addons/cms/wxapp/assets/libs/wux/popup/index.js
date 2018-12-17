@@ -3,7 +3,7 @@ import { $wuxBackdrop } from '../index'
 const prefixCls = 'wux-animate'
 
 Component({
-    externalClasses: ['wux-class'],
+    externalClasses: ['wux-class', 'wux-content-class', 'wux-header-class', 'wux-body-class'],
     options: {
         multipleSlots: true,
     },

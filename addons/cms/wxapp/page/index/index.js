@@ -172,11 +172,13 @@ Page({
         $wuxActionSheet().showSheet({
             theme: 'wx',
             buttons: [{
-                    text: '转发',
+                    text: '立即分享',
+                    icon: '/assets/images/wx.jpg',
                     openType: 'share',
                 },
                 {
-                    text: '生成海报',
+                    text: '生成海报，保存分享',
+                    icon: '/assets/images/share.jpg',
                 },
             ],
             buttonClicked: (index, item) => {
@@ -209,14 +211,30 @@ Page({
     },
     onPosterSuccess(e) {
         console.log('onPosterSuccess', e)
-        const { detail } = e
-        wx.previewImage({
-            current: detail,
-            urls: [detail]
+        this.setData({
+            posterVisible: true,
+            posterUrl: e.detail,
         })
+        // const { detail } = e
+        // wx.previewImage({
+        //     current: detail,
+        //     urls: [detail]
+        // })
     },
     onPosterFail(e) {
         console.log('onPosterFail', e)
+    },
+    onPosterClose() {
+        this.setData({ posterVisible: false })
+    },
+    onPosterSaveImage() {
+        wx.saveImageToPhotosAlbum({
+            filePath: this.data.posterUrl,
+            success: () => {
+                app.success('保存成功')
+                this.onPosterClose()
+            },
+        })
     },
     onShareAppMessage() {
         const { index_share_title, index_share_img } = app.globalData.shares || {}
