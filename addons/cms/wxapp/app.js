@@ -1,3 +1,6 @@
+// 请注意常量的命名必须是App
+const App = require('./utils/ald-stat.js').App;
+
 // 默认城市
 var defaultCity = {
     cities_name: '成都',
