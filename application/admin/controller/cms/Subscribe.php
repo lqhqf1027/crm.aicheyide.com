@@ -7,6 +7,7 @@ use think\Db;
 
 use app\admin\model\CompanyStore;
 use app\admin\model\Cities;
+use addons\cms\controller\wxapp\User as AddonsUser;
 
 /**
  *
@@ -120,6 +121,7 @@ class Subscribe extends Backend
 
             $list = collection($list)->toArray();
             foreach ($list as $k => $v) {
+                $list[$k]['user']['nickname'] = AddonsUser::emoji_decode($list[$k]['user']['nickname']);
 
                 if ($v['newplan']['payment']) {
                     $list[$k]['plan'] = $v['newplan'];
