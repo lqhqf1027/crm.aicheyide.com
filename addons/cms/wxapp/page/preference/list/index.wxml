@@ -194,4 +194,10 @@
     </wux-card>
     <wux-actionsheet id="wux-actionsheet" />
     <poster id="poster" preload config="{{ posterConfig }}" bind:success="onPosterSuccess" bind:fail="onPosterFail" wx:if="{{ isPoster }}" />
+    <wux-popup wux-content-class="poster-content" wux-header-class="poster-header" wux-body-class="poster-body" zIndex="2000" position="center" visible="{{ posterVisible }}" bind:close="onPosterClose">
+        <view class="popup-inner">
+            <image class="poster-image" src="{{ posterUrl }}" mode="widthFix" />
+            <wux-button wux-class="poster-btn" block type="assertive" bind:click="onPosterSaveImage">保存图片</wux-button>
+        </view>
+    </wux-popup>
 </view>

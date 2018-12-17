@@ -6,6 +6,7 @@
         "wux-actionsheet": "../../assets/libs/wux/actionsheet/index",
         "wux-animation-group": "../../assets/libs/wux/animation-group/index",
         "wux-popup": "../../../assets/libs/wux/popup/index",
+        "wux-button": "../../../assets/libs/wux/button/index",
         "wux-input": "../../../assets/libs/wux/input/index",
         "wux-cell-group": "../../assets/libs/wux/cell-group/index",
         "wux-cell": "../../assets/libs/wux/cell/index",

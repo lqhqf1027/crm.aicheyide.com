@@ -39,23 +39,12 @@ const dateFormat = (val, fmt = 'yyyy-MM-dd') => {
 const updateConfig = (nickname = '', avatar = '', qrcode = '', bgcolor = '') => {
     return {
         width: 750,
-        height: 1334,
+        height: 1017,
         backgroundColor: '#fff',
         debug: false,
-        blocks: [
-            {
-                width: 264,
-                height: 264,
-                x: 250,
-                y: 930,
-                borderWidth: 8,
-                borderColor: '#0d89eb',
-                borderRadius: 20,
-            },
-        ],
         texts: [
             {
-                x: 250,
+                x: 200,
                 y: 80,
                 text: nickname,
                 fontSize: 36,
@@ -65,25 +54,24 @@ const updateConfig = (nickname = '', avatar = '', qrcode = '', bgcolor = '') => 
         images: [
             {
                 width: 750,
-                height: 1334,
+                height: 1017,
                 x: 0,
                 y: 0,
                 url: bgcolor,
             },
             {
-                width: 136,
-                height: 136,
-                x: 84,
+                width: 100,
+                height: 100,
+                x: 60,
                 y: 40,
                 borderRadius: 20,
                 url: avatar,
             },
             {
-                width: 256,
-                height: 256,
-                x: 254,
-                y: 934,
-                borderRadius: 10,
+                width: 218,
+                height: 254,
+                x: 500,
+                y: 740,
                 url: qrcode,
             },
         ],

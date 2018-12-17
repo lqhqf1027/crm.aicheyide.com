@@ -193,3 +193,22 @@ page {
     transform: none;
     transform-origin: 0 0
 }
+
+.poster-content {
+    background-color: transparent !important;
+}
+
+.poster-header, 
+.poster-body {
+    padding: 0 !important;
+}
+
+.poster-image {
+    display: flex;
+    width: 100%;
+}
+
+.poster-btn {
+    margin: 30rpx 0 0 !important;
+    border-radius: 0 !important;
+}
