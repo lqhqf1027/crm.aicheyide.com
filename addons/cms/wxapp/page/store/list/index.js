@@ -55,6 +55,12 @@ Page({
             url: `/page/store/detail/index?id=${id}`,
         })
     },
+    onShow: function () {
+      this.getList();
+    },
+    onPullDownRefresh() {
+      this.getList();
+    },
     previewImage(e) {
         const { url } = e.currentTarget.dataset
 
