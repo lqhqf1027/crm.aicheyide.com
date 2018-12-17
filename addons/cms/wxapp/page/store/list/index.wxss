@@ -110,13 +110,16 @@
 
 .store-btn {
     display: inline-block;
-    width: 144rpx;
+    width: 200rpx;
     font-size: 22rpx;
     text-align: center;
+    
     background-color: #ff9600;
-    border-radius: 22rpx;
-    padding: 6rpx;
+    /* border-radius: 22rpx; */
+    /* padding: 6rpx; */
     box-sizing: border-box;
+    height: 60rpx;
+    line-height: 60rpx;
 }
 
 .store-count {

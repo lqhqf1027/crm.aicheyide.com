@@ -18,7 +18,10 @@
                     <view class="store-content">
                         <view class="store-title">{{ item.store_name }}</view>
                         <view class="store-address wux-mt--10">{{ item.store_address }}</view>
-                        <view class="store-btn wux-mt--20" data-id="{{ item.id }}" bindtap="onOpenDetail">进入门店</view>
+                        <view class="store-btn wux-mt--20" data-id="{{ item.id }}" bindtap="onOpenDetail">
+                        进入门店 ><!--  <icon class="fa fa-angle-right fa-2x"></icon> -->
+                         
+                        </view>
                         <view class="store-count wux-mt--20">发现{{ item.logistics_count_count + item.planacar_count_count + item.usedcar_count_count }}款好车</view>
                         <image class="store-qrcode wux-pull-right" src="{{ cdn_url + item.store_qrcode }}" data-url="{{ cdn_url + item.store_qrcode }}" bindtap="previewImage"></image>
                     </view>

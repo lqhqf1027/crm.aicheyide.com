@@ -16,7 +16,7 @@
                 <view class="button-text">分享</view>
             </button>
             <button class="button-clear" bindtap="makePhoneCall">
-                <icon class="fa fa-volume-control-phone"></icon>
+                <icon class="fa fa-phone-square"></icon>
                 <view class="button-text">7*24h</view>
             </button>
         </view>
