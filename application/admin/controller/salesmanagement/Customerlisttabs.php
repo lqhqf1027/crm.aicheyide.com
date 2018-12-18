@@ -129,8 +129,6 @@ class Customerlisttabs extends Backend
     public function index()
     {
 
-
-
         $this->loadlang('salesmanagement/customerlisttabs');
 
 

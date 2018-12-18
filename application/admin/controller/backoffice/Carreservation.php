@@ -978,4 +978,47 @@ class Carreservation extends Backend
         return $this->view->fetch();
     }
 
+
+    public function amountPublic($ids,$type)
+    {
+        $tables = null;
+        switch ($type){
+            case 'secondfull':
+                $tables = 'second_full_order';
+                break;
+            case 'rental':
+                $tables = 'second_sales_order';
+                break;
+            case 'full':
+                $tables = 'full_parment_order';
+                break;
+            case 'second':
+                $tables = 'second_sales_order';
+                break;
+            case 'new':
+                $tables = 'sales_order';
+                break;
+        }
+
+        $data = Db::name($tables)->where('id', $ids)->find();
+
+        //车型
+        $models_name = Db::name('models')->where('id', $data['models_id'])->value('name');
+
+        $admin_name = Db::name('admin')->where('id', $data['admin_id'])->value('nickname');
+
+        $data = secondfullcar_amount($models_name, $admin_name, $data['username']);
+
+        $email = new Email;
+        // $receiver = "haoqifei@cdjycra.club";
+        $receiver = Db::name('admin')->where('rule_message', $type=='secondfull'?'message15':'message14')->value('email');
+        $result_s = $email
+            ->to($receiver)
+            ->subject($data['subject'])
+            ->message($data['message'])
+            ->send();
+
+        return $result_s;
+    }
+
 }
