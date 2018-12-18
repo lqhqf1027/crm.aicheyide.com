@@ -9,7 +9,7 @@ use think\Collection;
 use think\Db;
 use app\admin\model\CompanyStore;
 
-use addons\cms\controller\wxapp\Index as Wxappindex;
+use addons\cms\controller\wxapp\Share as Wxappshare;
 
 /**
  * 城市列管理
@@ -234,7 +234,7 @@ class Cities extends Backend
                     }
                     $result = $this->model->allowField(true)->save($params);
                     if ($result !== false) {
-                       Cache::set('cityList',Wxappindex::getCityList());
+                       Cache::set('cityList',Wxappshare::getCityList());
 
                         $this->success();
                     } else {

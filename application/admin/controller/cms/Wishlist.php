@@ -4,6 +4,8 @@ namespace app\admin\controller\cms;
 
 use app\common\controller\Backend;
 
+use addons\cms\controller\wxapp\User as AddonsUser;
+
 /**
  * 心愿单
  *
@@ -62,9 +64,11 @@ class Wishlist extends Backend
                     ->limit($offset, $limit)
                     ->select();
 
-            foreach ($list as $row) {
+            foreach ($list as $k => $row) {
                 
                 $row->getRelation('user')->visible(['nickname']);
+
+                $list[$k]['user']['nickname'] = AddonsUser::emoji_decode($list[$k]['user']['nickname']);
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);

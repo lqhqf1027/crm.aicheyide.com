@@ -178,12 +178,12 @@ class Newplan extends Backend
                     $list[$key]['models']['name'] = $list[$key]['models']['name'] . " " . $list[$key]['models']['models_name'];
                 }
 
-                if (in_array($list[$key]['models_id'], $models_ids)) {
-                    unset($list[$key]);
-                }
-                else{
-                    $models_ids[] = $list[$key]['models_id'];
-                }
+                // if (in_array($list[$key]['models_id'], $models_ids)) {
+                //     unset($list[$key]);
+                // }
+                // else{
+                //     $models_ids[] = $list[$key]['models_id'];
+                // }
 
             }
             

@@ -9,8 +9,18 @@
             </em>
         </div>
         <ul class="nav nav-tabs" >
-            <li class="active text-center" ><a href="#newprepare_match" data-toggle="tab" >新车匹配 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_newprepare_match">{$total}</small></span></a></li>
-            <li><a href="#secondprepare_match" data-toggle="tab"  class="text-center" >二手车匹配 &nbsp;<span class="pull-right-container"><small class="badge pull-right bg-red" id="badge_secondprepare_match">{$total1}</small></span></a></li>
+            <li class="active text-center" ><a href="#newprepare_match" data-toggle="tab" >新车匹配 &nbsp;<span class="pull-right-container">
+                {if $total eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_newprepare_match">{$total}</small>
+                {/if}
+            </span></a></li>
+            <li><a href="#secondprepare_match" data-toggle="tab"  class="text-center" >二手车匹配 &nbsp;<span class="pull-right-container">
+                {if $total1 eq 0}
+                {else /}
+                <small class="badge pull-right bg-red" id="badge_secondprepare_match">{$total1}</small>
+                {/if}
+            </span></a></li>
         </ul>
     </div>
     <div class="panel-body">
