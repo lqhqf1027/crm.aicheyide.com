@@ -9,7 +9,7 @@ Page({
         activeIndex: 0,
     },
     onLoad() {
-        this.getList()
+        // this.getList()
     },
     getList() {
         app.request('/store/store_show?noAuth=1', {}, (data, ret) => {
@@ -27,6 +27,8 @@ Page({
                 list,
                 store: list,
             })
+
+            wx.stopPullDownRefresh()
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)

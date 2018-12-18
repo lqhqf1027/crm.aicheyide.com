@@ -318,7 +318,7 @@ image.quiet {
 .card__cover {
     display: block;
     width: 100%;
-    height: 250rpx;
+    height: 260rpx;
 }
 
 .car__title {
