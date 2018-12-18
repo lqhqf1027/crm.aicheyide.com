@@ -299,6 +299,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 Toastr.success("失败");
             });
 
+            //门店下的车型
+            $(document).on("change", "#c-store_id", function () {
+
+                $('#c-models_id_text').val('');
+            });
+            $("#c-models_id").data("params", function (obj) {
+
+                return {custom: {store_id: $('#c-store_id').val()}};
+
+            });
+
             //门店下的类别
             $(document).on("change", "#c-store_id", function () {
 
@@ -332,6 +343,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         },
         firstadd: function () {
+
+            //门店下的车型
+            $(document).on("change", "#c-store_id", function () {
+
+                $('#c-models_id_text').val('');
+            });
+            $("#c-models_id").data("params", function (obj) {
+
+                return {custom: {store_id: $('#c-store_id').val()}};
+
+            });
 
             //门店下的类别
             $(document).on("change", "#c-store_id", function () {
