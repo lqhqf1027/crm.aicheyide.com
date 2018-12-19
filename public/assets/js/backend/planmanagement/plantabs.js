@@ -306,7 +306,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
             $("#c-models_id").data("params", function (obj) {
 
-                return {custom: {store_id: $('#c-store_id').val()}};
+                return {custom: {store_ids: $('#c-store_id').val()}};
 
             });
 
@@ -351,7 +351,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
             $("#c-models_id").data("params", function (obj) {
 
-                return {custom: {store_id: $('#c-store_id').val()}};
+                return {custom: {store_ids: $('#c-store_id').val()}};
 
             });
 
