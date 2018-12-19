@@ -19,6 +19,8 @@ class Subject extends Backend
     protected $model = null;
     protected $multiFields = 'shelfismenu';
 
+    protected $noNeedRight = ['*'];
+
     public function _initialize()
     {
         parent::_initialize();
