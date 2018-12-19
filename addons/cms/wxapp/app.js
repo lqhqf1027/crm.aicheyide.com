@@ -374,5 +374,6 @@ App({
         productTabList: [],
         city: defaultCity,
         empty_carimg: 'https://static.aicheyide.com/ucuj/empty_carimg/a61b35e9de2a9396470023d505c3e30.png',
+        phoneNumber: '4007166882',
     }
 })

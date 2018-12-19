@@ -112,11 +112,11 @@ Page({
             fixed: e && e.scrollTop,
         })
     },
-    onLoad: function() {
+    onLoad() {
         this.getSystemInfo()
         wx.setStorageSync('city', app.globalData.city)
     },
-    onShow: function() {
+    onShow() {
         this.setGlobalData()
     },
     onPullDownRefresh() {
@@ -209,7 +209,7 @@ Page({
             that.setData({
                 visible: true,
                 brand_id: id,
-                [`brandPlan.${id}`]: data || [],
+                [`brandPlan.${id}`]: (data || []).map((n) => ({ ...n, payment: parseFloat(n.payment / 10000).toFixed(2) })),
             })
         }, function(data, ret) {
             console.log(data)
@@ -270,7 +270,7 @@ Page({
     },
     makePhoneCall() {
         wx.makePhoneCall({
-            phoneNumber: '4001886061'
+            phoneNumber: app.globalData.phoneNumber
         })
     },
     getSystemInfo() {

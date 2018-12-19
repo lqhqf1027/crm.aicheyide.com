@@ -1,3 +1,20 @@
+.scroll-view {
+    height: 260rpx;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap
+}
+
+.scroll-view .car__box {
+    display: inline-flex;
+}
+
+.scroll-view .car__more {
+    transform: translateY(-30%);
+    display: inline-flex;
+    width: 300rpx;
+}
+
 .page {
     /* width: 750rpx; */
     display: flex;
@@ -31,7 +48,8 @@
 
 .page .page_hd .page_hd_position {
     box-sizing: border-box;
-    width: 16%;
+    /*width: 16%;*/
+    margin-right: 20rpx;
     height: 60rpx;
     line-height: 60rpx;
     position: relative;
@@ -49,7 +67,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 68%;
+    /*width: 68%;*/
+    flex: 1;
     height: 60rpx;
     border-radius: 30rpx;
     background-color: #f2f2f2;
