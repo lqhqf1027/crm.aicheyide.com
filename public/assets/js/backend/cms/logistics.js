@@ -43,7 +43,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'models_main_images', title: __('Models_main_images'), formatter: Table.api.formatter.images},
                         {field: 'modelsimages', title: __('Modelsimages'), formatter: Table.api.formatter.images},
                         
-                        {field: 'flashviewismenu', title: __('Flashviewismenu'),formatter: Controller.api.formatter.toggle,searchList:{"1":"是","0":"否"}},
+                        // {field: 'flashviewismenu', title: __('Flashviewismenu'),formatter: Controller.api.formatter.toggle,searchList:{"1":"是","0":"否"}},
                         {field: 'recommendismenu', title: __('Recommendismenu'),formatter: Controller.api.formatter.toggle1,searchList:{"1":"是","0":"否"}},
                         
                         {field: 'subjectismenu', title: __('Subjectismenu'),formatter: Controller.api.formatter.toggle2,searchList:{"1":"是","0":"否"}},

@@ -49,12 +49,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'weigh', title: __('权重（排序）')},
                         {field: 'models_main_images', title: __('封面图片'), formatter: Table.api.formatter.images},
                         {field: 'modelsimages', title: __('车型亮点'), formatter: Table.api.formatter.images},
-                        {
-                            field: 'flashviewismenu',
-                            title: __('是否为首页轮播'),
-                            events: Controller.api.events.operate,
-                            formatter: Controller.api.formatter.toggle1, searchList: {"1": "是", "0": "否"}
-                        },
+                        // {
+                        //     field: 'flashviewismenu',
+                        //     title: __('是否为首页轮播'),
+                        //     events: Controller.api.events.operate,
+                        //     formatter: Controller.api.formatter.toggle1, searchList: {"1": "是", "0": "否"}
+                        // },
                         {
                             field: 'recommendismenu',
                             title: __('是否为推荐'),
