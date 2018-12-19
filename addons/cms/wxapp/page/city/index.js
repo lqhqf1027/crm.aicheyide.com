@@ -26,7 +26,7 @@ Page({
             for (let i = 0; i < cities.length; i++) {
                 for (let j = 0; j < cities[i]['list'].length; j++) {
                     for (let k = 0; k < cities[i]['list'][j]['citys'].length; k++) {
-                        if (tags.length < 5) {
+                        if (tags.length < 10) {
                             tags.push(cities[i]['list'][j]['citys'][k])
                         } else {
                             break

@@ -76,7 +76,8 @@
 
 .page .page_hd .page_hd_position {
     box-sizing: border-box;
-    width: 16%;
+    /*width: 16%;*/
+    margin-right: 20rpx;
     height: 60rpx;
     line-height: 60rpx;
     position: relative;
@@ -94,7 +95,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 68%;
+    /*width: 68%;*/
+    flex: 1;
     height: 60rpx;
     border-radius: 30rpx;
     background-color: #f2f2f2;

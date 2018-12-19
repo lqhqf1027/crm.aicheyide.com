@@ -245,11 +245,13 @@ Page({
             imageUrl: app.cdnurl(index_share_img),
         }
     },
-    onLoad: function() {
+    onLoad() {
         this.setData({ globalData: app.globalData })
-        wx.setStorageSync('city', app.globalData.city)
+        if (!wx.getStorageSync('city')) {
+            wx.setStorageSync('city', app.globalData.city)
+        }
     },
-    onShow: function() {
+    onShow() {
         const { style } = wx.getStorageSync('searchVal') || {}
         this.getList(style)
     },
@@ -276,7 +278,7 @@ Page({
     },
     makePhoneCall() {
         wx.makePhoneCall({
-            phoneNumber: '4001886061'
+            phoneNumber: app.globalData.phoneNumber
         })
     },
     onBrand(e) {

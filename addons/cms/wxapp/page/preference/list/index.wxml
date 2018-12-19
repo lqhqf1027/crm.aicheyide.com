@@ -72,7 +72,7 @@
                     <wux-media wux-class="brandPlan__media" thumb="{{ item.models_main_images ? item.models_main_images : globalData.empty_carimg }}" thumbStyle="width: 200rpx; height: 120rpx" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
                         <view class="brandPlan__title wux-ellipsis wux-text--left">{{ item.models_name }}</view>
                         <view class="wux-clearfix">
-                            <view class="brandPlan__title brandPlan__title--payment wux-pull-left wux-mt--10">首付 {{ item.payment / 10000 }} 万</view>
+                            <view class="brandPlan__title brandPlan__title--payment wux-pull-left wux-mt--10">首付 {{ item.payment }} 万</view>
                             <view class="brandPlan__title brandPlan__title--monthly wux-pull-right wux-mt--10">月供 {{ item.monthly }} 元</view>
                             <view class="brandPlan__address">
                                 <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
@@ -97,22 +97,27 @@
             <image class="card__image" src="https://static.aicheyide.com/ucuj/Project_title_img/project_2.png" />
             <view class="card__more" bindtap="toMore">更多+</view>
         </view>
-        <swiper slot="body" style="height: 260rpx" display-multiple-items="2.5" bindchange="bindchange">
+        <scroll-view slot="body" scroll-x class="scroll-view">
             <block wx:for="{{ carType.new.recommendList }}" wx:key="">
-                <swiper-item class="swiper-item">
-                    <view class="car__box">
-                        <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
-                            <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" />
-                            <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
-                            <view class="wux-clearfix">
-                                <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
-                                <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
-                            </view>
+                <view class="car__box">
+                    <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
+                        <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" />
+                        <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
+                        <view class="wux-clearfix">
+                            <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                            <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
                         </view>
                     </view>
+                </view>
+            </block>
+        </scroll-view>
+        <!-- <swiper slot="body" style="height: 260rpx" display-multiple-items="2.5" bindchange="bindchange">
+            <block wx:for="{{ carType.new.recommendList }}" wx:key="">
+                <swiper-item class="swiper-item">
+                    
                 </swiper-item>
             </block>
-        </swiper>
+        </swiper> -->
     </wux-card>
     <!-- 专题特卖 -->
     <block wx:for="{{ carType.new.specialList }}" wx:for-item="card" wx:key="" wx:if="{{ carType.new.specialList && carType.new.specialList.length }}">
@@ -123,28 +128,24 @@
             </view>
             <view slot="body">
                 <image class="card__cover wux-mb--10" src="{{ globalData.config.upload.cdnurl + card.coverimages }}" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial" />
-                <swiper style="height: 260rpx" display-multiple-items="2.5" bindchange="bindchange">
+                <scroll-view slot="body" scroll-x class="scroll-view">
                     <block wx:for="{{ card.plan }}" wx:key="">
-                        <swiper-item class="swiper-item">
-                            <view class="car__box">
-                                <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
-                                    <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" />
-                                    <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
-                                    <view class="wux-clearfix">
-                                        <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
-                                        <view class="car__title car__title--monthly wux-pull-right" style='color:#696969'>月供 {{ item.monthly }} 元</view>
-                                    </view>
+                        <view class="car__box">
+                            <view class="car" data-id="{{ item.id }}" data-type="{{ item.type }}" bindtap="onOpenDetail">
+                                <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" />
+                                <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
+                                <view class="wux-clearfix">
+                                    <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                                    <view class="car__title car__title--monthly wux-pull-right" style='color:#696969'>月供 {{ item.monthly }} 元</view>
                                 </view>
                             </view>
-                        </swiper-item>
-                    </block>
-                    <swiper-item class="swiper-item">
-                        <view class="car__more" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial">
-                            <view>查看更多</view>
-                            <view class="car__text">See More</view>
                         </view>
-                    </swiper-item>
-                </swiper>
+                    </block>
+                    <view class="car__more" data-id="{{ card.id }}" data-title="{{ card.title }}" bindtap="onSpecial">
+                        <view>查看更多</view>
+                        <view class="car__text">See More</view>
+                    </view>
+                </scroll-view>
             </view>
         </wux-card>
         <view class="wux-mt--10 scroll-y" wx:else>
