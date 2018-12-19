@@ -6,6 +6,9 @@ use app\common\controller\Backend;
 use think\Db;
 use think\Session;
 use fast\Py;
+
+use app\admin\model\CompanyStore;
+use app\admin\model\Cities;
 /**
  * 车型列管理
  *
@@ -31,6 +34,53 @@ class Models extends Backend
         $list = Db::name('brand')->field('id,name')->select();
                      
         $this->assign('brandlist',$list);
+
+        $storeList = [];
+        $disabledIds = [];
+        $cities_all = collection(Cities::where('pid', 'NEQ', '0')->order("id desc")->field(['id,cities_name as name'])->select())->toArray();
+        $store_all = collection(CompanyStore::order("id desc")->field(['id, city_id, store_name as name'])->select())->toArray();
+        $all = array_merge($cities_all, $store_all);
+        // pr($all);
+        // die;
+        foreach ($all as $k => $v) {
+
+            $state = ['opened' => true];
+
+            if (!$v['city_id']) {
+            
+                $disabledIds[] = $v['id'];
+                $storeList[] = [
+                    'id'     => $v['id'],
+                    'parent' => '#',
+                    'text'   => __($v['name']),
+                    'state'  => $state
+                ];
+            }
+
+            foreach ($cities_all as $key => $value) {
+                
+                if ($v['city_id'] == $value['id']) {
+                    
+                    $storeList[] = [
+                        'id'     => $v['id'],
+                        'parent' => $value['id'],
+                        'text'   => __($v['name']),
+                        'state'  => $state
+                    ];
+                }
+                   
+            }
+            
+        }
+        // pr($storeList);
+        // die;
+        // $tree = Tree::instance()->init($all, 'city_id');
+        // $storeOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
+        // pr($storeOptions);
+        // die;
+        // $this->view->assign('storeOptions', $storeOptions);
+        $this->assignconfig('storeList', $storeList);
+
     }
     
 
@@ -65,7 +115,7 @@ class Models extends Backend
                     ->select();
 
             foreach ($list as $key => $row) {
-                $row->visible(['id','name','standard_price','status','createtime','updatetime','price']);
+                $row->visible(['id','name','standard_price','status','createtime','updatetime','price','city_store']);
                 $row->visible(['brand']);
                 $row->getRelation('brand')->visible(['name']);
                 $row->visible(['series']);
@@ -73,6 +123,11 @@ class Models extends Backend
                 $row->visible(['model']);
                 $row->getRelation('model')->visible(['name']);
                 $list[$key]['name'] = $list[$key]['name'] . " " . $list[$key]['models_name'];
+                //城市门店
+                $CompanyStore = CompanyStore::where('id', $row['store_ids'])->find();
+                $city_name = Cities::where('id', $CompanyStore['city_id'])->value('cities_name');
+                $list[$key]['city_store'] = $city_name . "+" . $CompanyStore['store_name'];
+                
             }
             $list = collection($list)->toArray();
             $result = array("total" => $total, "rows" => $list);
