@@ -135,9 +135,15 @@ class Secondvehicleinformation extends Backend
 
                 $row->visible(['id', 'licenseplatenumber','bond', 'kilometres', 'companyaccount', 'newpayment', 'monthlypaymen', 'periods', 'totalprices', 'drivinglicenseimages', 'vin',
                     'engine_number', 'expirydate', 'annualverificationdate', 'carcolor', 'aeratedcard', 'volumekeys', 'Parkingposition', 'shelfismenu', 'vehiclestate', 'note',
-                    'createtime', 'updatetime', 'status_data', 'department', 'admin_name']);
+                    'createtime', 'updatetime', 'status_data', 'department', 'admin_name','city_store']);
                 $row->visible(['models']);
                 $row->getRelation('models')->visible(['name', 'models_name']);
+
+                //城市门店
+                $CompanyStore = CompanyStore::where('id', $row['store_id'])->find();
+                $city_name = Cities::where('id', $CompanyStore['city_id'])->value('cities_name');
+                $list[$k]['city_store'] = $city_name . "+" . $CompanyStore['store_name'];
+
                 
                 if($list[$k]['models']['models_name']) {
                     $list[$k]['models']['name'] = $list[$k]['models']['name'] . " " . $list[$k]['models']['models_name'];
@@ -306,8 +312,7 @@ class Secondvehicleinformation extends Backend
     public function add()
     {
         $this->view->assign([
-            'store' => $this->getStore(),
-            'car_models' => $this->getInfo()
+            'store' => $this->getStore()
         ]);
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
@@ -350,9 +355,59 @@ class Secondvehicleinformation extends Backend
      */
     public function getStore()
     {
-        $res = Db::name("cms_company_store")->where('statuss', 'normal')->select();
+        $companyStore = Db::name("cms_company_store")
+            ->field("id as store_id,store_name,city_id")
+            ->select();
+            
+        //城市下没有门店，就不显示在下拉列表
+        foreach ($companyStore as $key => $value) {
+            $ids[] = $value['city_id'];
+        }
+        
+        $cities = Db::name("cms_cities")
+            ->where('pid', 'NEQ', '0')
+            ->where('id', 'in', $ids)
+            ->field("id,cities_name")
+            ->select();
 
-        return $res;
+        foreach ($cities as $k => $v) {
+            $cities[$k]['store'] = array();
+            foreach ($companyStore as $key => $value) {
+
+                if ($v['id'] == $value['city_id']) {
+                    array_push($cities[$k]['store'], $value);
+                }
+            }
+
+        }
+
+        return $cities;
+
+    }
+
+    /**门店下的车型
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getModels()
+    {
+        $this->model = model('Models');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
+           
+        }
+
     }
 
     /**车型对应车辆
@@ -438,7 +493,6 @@ class Secondvehicleinformation extends Backend
         }
         $this->view->assign([
             'store' => $this->getStore(),
-            'car_models' => $this->getInfo(),
             'row' => $row
         ]);
         return $this->view->fetch();

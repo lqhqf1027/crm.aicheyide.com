@@ -59,6 +59,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id'),operate:false},
                         // {field: 'sales_id', title: __('Sales_id')},
+                        {field: 'city_store', title: __('城市门店'), operate: false},
                         {field: 'licenseplatenumber', title: __('Licenseplatenumber'), formatter:function(value,row,index){
                             return row.status_data==''?row.licenseplatenumber:row.licenseplatenumber+' <span class="label label-danger">该车在签单流程中, 销售员：' + row.department + '--' + row.admin_name + '</span>';
                         }},
@@ -500,9 +501,33 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         
         add: function () {
+
+            //门店下的车型
+            $(document).on("change", "#c-store_id", function () {
+
+                $('#c-models_id_text').val('');
+            });
+            $("#c-models_id").data("params", function (obj) {
+
+                return {custom: {store_ids: $('#c-store_id').val()}};
+
+            });
+
             Controller.api.bindevent();
         },
         edit: function () {
+
+            //门店下的车型
+            $(document).on("change", "#c-store_id", function () {
+
+                $('#c-models_id_text').val('');
+            });
+            $("#c-models_id").data("params", function (obj) {
+
+                return {custom: {store_ids: $('#c-store_id').val()}};
+
+            });
+            
             Controller.api.bindevent();
         },
         api: {

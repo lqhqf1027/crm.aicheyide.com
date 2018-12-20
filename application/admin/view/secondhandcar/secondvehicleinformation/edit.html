@@ -9,20 +9,32 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
         <div class="col-xs-12 col-sm-8">
-        
-                <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
-                    
-                    <option value="" style="display: none">未选择任何项</option>
-                    {foreach name="$store" item="vo"}
-                    {eq name="$vo.id" value="$row.store_id"}
-                    <option value="{$vo.id}" selected>{$vo.store_name}</option>
-                    {else /}
-                    <option value="{$vo.id}">{$vo.store_name}</option>
-                    {/eq}
-                    {/foreach}
-                
-                </select>
-            
+
+            <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
+                <option value=" " style='display: none'>未选中任何项</option>
+                {volist name="store" id="vo" }
+                <option disabled>{$vo.cities_name}</option>
+                {volist name="vo.store" id="store_vo"}
+                {eq name="$store_vo.store_id" value="$row.store_id"}
+                <option value="{$store_vo.store_id}" selected>{$store_vo.store_name}</option>
+                {else /}
+                <option value="{$store_vo.store_id}">{$store_vo.store_name}</option>
+                {/eq}
+                {/volist}
+                {/volist}
+
+            </select>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-models_id" data-rule="required" data-source="secondhandcar/secondvehicleinformation/getModels" 
+                data-params='{"custom[store_ids]":"0"}' class="form-control selectpage form-control" name="row[models_id]" type="text" value="{$row.models_id}">
+
         </div>
     </div>
     <div class="form-group">
@@ -43,7 +55,7 @@
             <input id="c-engine_number" class="form-control" name="row[engine_number]" type="text" value="{$row.engine_number}">
         </div>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Models_id')}:</label>
         <div class="col-xs-12 col-sm-8">
 
@@ -63,7 +75,7 @@
             </select>
 
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Kilometres')}:</label>
         <div class="col-xs-12 col-sm-8">
