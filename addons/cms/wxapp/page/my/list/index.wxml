@@ -107,6 +107,14 @@
                 </view>
             </button>
         </wux-grid>
+         <wux-grid>
+            <button class="button-clear" bindtap="toPrize">
+                <view>
+                    <image src="/assets/images/prize.png" style="width: 60rpx; height: 60rpx" />
+                    <view class="grid__name">我的奖品</view>
+                </view>
+            </button>
+        </wux-grid>
     </wux-grids>
     <!-- <view class="wish">
         <view class="wish__hd">
