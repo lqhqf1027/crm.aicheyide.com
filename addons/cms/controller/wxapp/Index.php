@@ -144,10 +144,20 @@ class Index extends Base
 
     }
 
-
+    /**
+     * 大转盘接口
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function prizeShow()
     {
         $city_id = $this->request->post('city_id');
+        $user_id = $this->request->post('user_id');
+
+        if (!$city_id || !$user_id) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
 
         $prize = Prize::field('id,prize_name,prize_image,win_prize_number,total_surplus')
             ->where([
@@ -166,23 +176,34 @@ class Index extends Base
             unset($v['total_surplus']);
         }
 
+        //活动开始时间
         $starttime = strtotime(Share::ConfigData([
             'name' => 'starttime'
         ])['value']);
 
+        //活动结束时间
         $endtime = strtotime(Share::ConfigData([
             'name' => 'endtime'
         ])['value']);
 
-        $this->success(['starttime' => $starttime, 'endtime' => $endtime, 'prizeList' => $prize]);
+        //判断今天有没有转过转盘
+        $is_prize = PrizeRecord::where('user_id',$user_id)->whereTime('awardtime','today')->find();
+        $is_prize = $is_prize?1:0;
+        $this->success(['is_prize'=>$is_prize,'starttime' => $starttime, 'endtime' => $endtime, 'prizeList' => $prize]);
     }
 
-    public function test()
+    /**
+     * 大转盘指针停止接口
+     * @throws \think\Exception
+     */
+    public function prizeResult()
     {
         $user_id = $this->request->post('user_id');
         $prize_id = $this->request->post('prize_id');
 
-//        $this->success($user_id.' '.$prize_id);
+        if (!$prize_id || !$user_id) {
+            $this->error('缺少参数,请求失败', 'error');
+        }
 
         $res = PrizeRecord::create([
             'prize_id' => $prize_id,
@@ -190,9 +211,10 @@ class Index extends Base
         ]);
 
         if ($res) {
+
             Prize::where('id', $prize_id)->setDec('total_surplus');
-            $this->success('领取奖品成功','success');
-        }else{
+            $this->success('领取奖品成功', 'success');
+        } else {
             $this->error('领取奖品失败');
         }
     }
