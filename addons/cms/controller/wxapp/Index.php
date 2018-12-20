@@ -11,6 +11,8 @@ use think\Config;
 use addons\cms\model\Models;
 use addons\cms\model\Subject;
 use addons\cms\model\Subscribe;
+use addons\cms\model\Prize;
+use addons\cms\model\PrizeRecord;
 use addons\cms\model\CompanyStore as companyStoreModel;
 
 /**
@@ -140,6 +142,59 @@ class Index extends Base
             $this->error();
         }
 
+    }
+
+
+    public function prizeShow()
+    {
+        $city_id = $this->request->post('city_id');
+
+        $prize = Prize::field('id,prize_name,prize_image,win_prize_number,total_surplus')
+            ->where([
+                'status' => 'normal',
+                'city_id' => $city_id
+            ])->select();
+
+        foreach ($prize as $k => $v) {
+            if ($v['total_surplus'] == 0 && $v['win_prize_number'] != 0) {
+                Prize::update([
+                    'id' => $v['id'],
+                    'win_prize_number' => 0
+                ]);
+                $v['win_prize_number'] = 0;
+            }
+            unset($v['total_surplus']);
+        }
+
+        $starttime = strtotime(Share::ConfigData([
+            'name' => 'starttime'
+        ])['value']);
+
+        $endtime = strtotime(Share::ConfigData([
+            'name' => 'endtime'
+        ])['value']);
+
+        $this->success(['starttime' => $starttime, 'endtime' => $endtime, 'prizeList' => $prize]);
+    }
+
+    public function test()
+    {
+        $user_id = $this->request->post('user_id');
+        $prize_id = $this->request->post('prize_id');
+
+//        $this->success($user_id.' '.$prize_id);
+
+        $res = PrizeRecord::create([
+            'prize_id' => $prize_id,
+            'user_id' => $user_id
+        ]);
+
+        if ($res) {
+            Prize::where('id', $prize_id)->setDec('total_surplus');
+            $this->success('领取奖品成功','success');
+        }else{
+            $this->error('领取奖品失败');
+        }
     }
 
     /**
@@ -334,14 +389,14 @@ class Index extends Base
             } else {
                 $v['cities_name'] = null;
             }
-            $v['models']['name'] = $v['models']['name'].' '.$v['models']['models_name'];
+            $v['models']['name'] = $v['models']['name'] . ' ' . $v['models']['models_name'];
 
-            unset($v['companystore'],$v['models']['models_name']);
+            unset($v['companystore'], $v['models']['models_name']);
         }
 
         $subject['planList'] = $all;
 
-        $this->success('请求成功',$subject);
+        $this->success('请求成功', $subject);
     }
 
 
