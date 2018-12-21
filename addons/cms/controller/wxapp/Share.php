@@ -10,6 +10,7 @@ namespace addons\cms\controller\wxapp;
 
 use addons\cms\model\Brand;
 use addons\cms\model\Logistics;
+use addons\cms\model\RentalModelsInfo;
 use think\Cache;
 use think\Db;
 use think\Config;
@@ -61,6 +62,9 @@ class Share extends Base
                 break;
             case 'logistics':
                 $data = $this->logistics_details($plan_id, $user_id, $cartype);
+                break;
+            case 'rent':
+                $data = $this->rent_details($plan_id, $user_id, $cartype);
                 break;
             default:
                 $this->error('参数错误', '');
@@ -192,12 +196,16 @@ class Share extends Base
             case 'logistics':
                 $tables = new Logistics();
                 break;
+            case 'rent':
+                break;
             default:
                 $this->error('cartype参数错误');
         }
 
         //人气值加1000
-        $tables->where('id', $plan_id)->setInc('popularity', 1000);
+        if($cartype!='rent'){
+            $tables->where('id', $plan_id)->setInc('popularity', 1000);
+        }
 
         $integral = self::integral($user_id, $fabulousScore);
 
@@ -565,6 +573,27 @@ specialimages,popularity')
 
     }
 
+    public function rent_details($plan_id, $user_id, $cartype)
+    {
+        $info = RentalModelsInfo::field('id,modelsimages,models_main_images,manysixmonths')
+            ->with(['models' => function ($models) {
+                $models->withField('id,name,models_name');
+            }, 'companystore' => function ($companystore) {
+                $companystore->withField('id,city_id,store_name,store_address,phone,longitude,latitude');
+            }])->find($plan_id);
+
+        //用户ID
+        $info['users'] = $this->userPhone($user_id);
+        $info['models']['name'] = $info['models']['name'] . ' ' . $info['models']['models_name'];
+        unset($info['models']['models_name']);
+
+        //是否点赞丶收藏丶预约
+        $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
+
+        $info = array_merge($info->toArray(), $collectionFabulousAppointment);
+
+        return ['plan'=>$info];
+    }
     /**
      * 用户电话
      * @param $user_id
@@ -694,13 +723,16 @@ specialimages,popularity')
                 case 'logistics':
                     $planTables = 'cms_logistics_project';
                     break;
+                case 'rent':
+                    $planTables = 'car_rental_models_info';
+                    break;
             }
 
             $data['store_ids'] = Db::name($planTables)
                 ->where('id', $plan_id)
                 ->value('store_id');
-        }
 
+        }
         if ($score) {
             $data['score'] = intval($score);
         }
@@ -852,17 +884,19 @@ specialimages,popularity')
                     'id' => $store_id ? $store_id : ['neq', 'null'],
                     'statuss' => 'normal',
                 ])->with([$withPlan => function ($query) use ($withPlan) {
-                    $where = $withPlan == 'usedcarCount' ? ['shelfismenu' => 1] : ['ismenu' => 1];
+                    $where = $withPlan == 'usedcarCount' || $withPlan == 'rentalmodelsinfo' ? ['shelfismenu' => 1] : ['ismenu' => 1];
 
                     $order = $withPlan == 'logisticsCount' ? '' : 'weigh desc';
 
-                    $query->where($where)->order($order)->with(['models' => function ($models) {
-                        $models->withField('id,name,brand_id,price,models_name');
+                    $query->where($where)->order($order)->with(['models' => function ($models) use ($withPlan) {
+                        $field = $withPlan=='rentalmodelsinfo'?'id,name,brand_id,price,models_name,vehicle_configuration':'id,name,brand_id,price,models_name';
+                        $models->withField($field);
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
                     }]);
                 }]);
             }])->select($city_id ? $city_id : null);
+
 
         foreach ($info as $k => $v) {
             if ($v['store_list']) {
@@ -870,6 +904,7 @@ specialimages,popularity')
                 break;
             }
         }
+//                return $info;
         return self::handleNewUsed($info, $duplicate, $type);
     }
 
@@ -888,7 +923,7 @@ specialimages,popularity')
             return [];
         }
 
-        $check = [];
+        $needArr = $checkModelId = $checkPayment = [];
 
         //得到所有的品牌列表
         if (Cache::get('brandList')) {
@@ -908,6 +943,9 @@ specialimages,popularity')
             case 'logistics':
                 $planKey = 'logistics_count';
                 break;
+            case 'rent':
+                $planKey = 'rentalmodelsinfo';
+                break;
             default:
                 $planKey = null;
                 break;
@@ -918,41 +956,57 @@ specialimages,popularity')
                 foreach ($v[$planKey] as $kk => $vv) {
                     if ($duplicate) {
 
-                        if (in_array($vv['models']['id'], $check)) {
-                            continue;
+                        if (in_array($vv['models']['id'], $checkModelId)) {
+                            if ($checkPayment[$vv['models']['id']] < $vv['payment']) {
+                                continue;
+                            } else {
+                                $checkPayment[$vv['models']['id']] = $vv['payment'];
+
+                                foreach ($needArr as $key => $value) {
+                                    if ($vv['models']['id'] == $value['models']['id']) {
+                                        unset($needArr[$key]);
+                                    }
+                                }
+                            }
+
                         } else {
-                            $check[] = $vv['models']['id'];
+                            $checkModelId[$vv['models']['id']] = $vv['models']['id'];
+                            $checkPayment[$vv['models']['id']] = $vv['payment'];
                         }
 
                     }
-//                    if ($vv['popularity']) {
-//                        $vv['popularity'] = floatval($vv['popularity']) * 100;
-//                    }
+
                     $vv['models']['name'] = $vv['models']['name'] . ' ' . $vv['models']['models_name'];
                     unset($vv['models']['models_name']);
                     $vv['city'] = ['id' => $info['id'], 'cities_name' => $info['cities_name']];
                     $data = $vv['label'];
                     $vv['label'] = $data;
 
-                    //方案加入到对应的品牌数组
-                    foreach ($brand as $key => $value) {
-                        if (empty($value['planList'])) {
-                            $brand[$key]['planList'] = array();
-                        }
-
-                        if ($value['id'] == $vv['models']['brand_id']) {
-                            $arr = $brand[$key]['planList'];
-                            $arr[] = $vv;
-                            $brand[$key]['planList'] = $arr;
-                        }
-
+                    if(!empty($vv['models']['vehicle_configuration'])){
+                        $vv['models']['vehicle_configuration'] = json_decode($vv['models']['vehicle_configuration'],true);
+                        $vv['models']['vehicle_configuration'] = ['车身'=>$vv['models']['vehicle_configuration']['车身'],'变速箱'=>$vv['models']['vehicle_configuration']['变速箱']];
                     }
+                    $needArr[] = $vv;
 
                 }
             }
 
         }
+        $needArr = array_values($needArr);
+        foreach ($needArr as $k => $v) {
+            foreach ($brand as $key => $value) {
+                if (empty($value['planList'])) {
+                    $brand[$key]['planList'] = array();
+                }
 
+                if ($value['id'] == $v['models']['brand_id']) {
+                    $arr = $brand[$key]['planList'];
+                    $arr[] = $v;
+                    $brand[$key]['planList'] = $arr;
+                }
+
+            }
+        }
         //如果品牌列表没有【planList】键，表示该城市门店无方案
         if (!isset($brand[0]['planList'])) {
             return [];
@@ -1060,6 +1114,9 @@ specialimages,popularity')
                 break;
             case 'logistics':
                 $planField = 'logistics_project_id';
+                break;
+            case 'rent':
+                $planField = 'car_rental_models_info_id';
                 break;
             default:
                 return false;

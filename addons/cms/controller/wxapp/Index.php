@@ -155,7 +155,7 @@ class Index extends Base
         $city_id = $this->request->post('city_id');
         $user_id = $this->request->post('user_id');
 
-        if (!$city_id || !$user_id) {
+        if (!$city_id) {
             $this->error('缺少参数,请求失败', 'error');
         }
 
@@ -187,9 +187,9 @@ class Index extends Base
         ])['value']);
 
         //判断今天有没有转过转盘
-        $is_prize = PrizeRecord::where('user_id',$user_id)->whereTime('awardtime','today')->find();
-        $is_prize = $is_prize?1:0;
-        $this->success(['is_prize'=>$is_prize,'starttime' => $starttime, 'endtime' => $endtime, 'prizeList' => $prize]);
+        $is_prize = PrizeRecord::where('user_id', $user_id)->whereTime('awardtime', 'today')->find();
+        $is_prize = $is_prize ? 1 : 0;
+        $this->success('请求成功', ['is_prize' => $is_prize, 'starttime' => $starttime, 'endtime' => $endtime, 'prizeList' => $prize]);
     }
 
     /**
@@ -292,7 +292,6 @@ class Index extends Base
      */
     public static function getAllStylePlan($city_id)
     {
-
         //得到品牌-方案数组
         $res = Share::getVariousTypePlan($city_id, '', 'planacarIndex', 'new');
 
@@ -308,12 +307,29 @@ class Index extends Base
         if (!$info) {
             return false;
         }
-
+        $checkModelId = $checkPayment = [];
         //将返回的方案根据类别划分
         foreach ($info as $k => $v) {
 
             if ($v['recommendismenu']) {
-                $recommendList[] = ['id' => $v['id'], 'models_main_images' => $v['models_main_images'], 'models_name' => $v['models']['name'],
+
+                if (in_array($v['models']['id'], $checkModelId)) {
+                    if ($checkPayment[$v['models']['id']] < $v['payment']) {
+                        continue;
+                    } else {
+                        $checkPayment[$v['models']['id']] = $v['payment'];
+                            foreach ($recommendList as $kk => $vv) {
+                                if ($vv['models_id'] == $v['models']['id']) {
+                                    unset($recommendList[$kk]);
+                                }
+                            }
+                    }
+                } else {
+                    $checkModelId[$v['models']['id']] = $v['models']['id'];
+                    $checkPayment[$v['models']['id']] = $v['payment'];
+                }
+
+                $recommendList[] = ['id' => $v['id'], 'models_main_images' => $v['models_main_images'], 'models_id' => $v['models']['id'], 'models_name' => $v['models']['name'],
                     'payment' => $v['payment'], 'monthly' => $v['monthly'], 'type' => $v['type']];
             }
             if ($v['specialismenu']) {
@@ -322,7 +338,6 @@ class Index extends Base
             }
 
         }
-
         //获取专题表信息
         $specialList = Subject::field('id,title,coverimages,plan_id')
             ->where([
@@ -364,7 +379,7 @@ class Index extends Base
 
         }
         return [
-            'recommendList' => $recommendList,
+            'recommendList' => array_values($recommendList),
             'specialList' => $specialList,
             'specialfieldList' => $specialfieldList,
         ];

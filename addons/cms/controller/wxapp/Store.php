@@ -140,6 +140,10 @@ class Store extends Base
                 $plans = Share::getVariousTypePlan('', true, 'logisticsCount', 'logistics', $store_id);
                 $type_name = '新能源车';
                 break;
+            case 'rent':
+                $plans = Share::getVariousTypePlan('', false, 'rentalmodelsinfo', 'rent', $store_id);
+                $type_name = '租车';
+                break;
             default:
                 $this->error('cartype参数错误');
         }

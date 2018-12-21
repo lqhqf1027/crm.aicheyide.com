@@ -89,12 +89,17 @@ class CompanyStore extends Model
         payment,monthly,models_main_images,popularity,ismenu');
     }
 
+    public function rentalmodelsinfo()
+    {
+        return $this->hasMany('RentalModelsInfo', 'store_id', 'id')->field('id,store_id,
+        shelfismenu,modelsimages,models_main_images,manysixmonths');
+    }
+
     public static function getCarList($store_id)
     {
         return self::with([
             ['planacarCount', 'usedcarCount', 'logisticsCount']
         ])->select(['store_id' => $store_id]);
-
 
     }
 

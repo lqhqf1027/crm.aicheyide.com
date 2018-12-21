@@ -39,7 +39,7 @@ class My extends Base
         }
         //积分
         $score = $this->scores($user_id);
-        $score = $score?$score:0;
+        $score = $score ? $score : 0;
 
         $sign = $this->checkSignTime($user_id, 'today');
 
@@ -51,21 +51,20 @@ class My extends Base
         ])->count();
 
         //拥有优惠券数量
-        $coupon = Coupon::all(function ($q) use ($user_id){
+        $coupon = Coupon::all(function ($q) use ($user_id) {
             $q->where([
-                'user_id'=>['like','%,' . $user_id . ',%'],
-                'use_id'=>['not like','%,' . $user_id . ',%'],
-//                'validity_datetime'=>['GT',time()]
+                'user_id' => ['like', '%,' . $user_id . ',%'],
+                'use_id' => ['not like', '%,' . $user_id . ',%'],
             ])
-                ->where('validity_datetime > :time or validity_datetime is null',['time'=>time()])
+                ->where('validity_datetime > :time or validity_datetime is null', ['time' => time()])
                 ->field('id,user_id');
         });
 
         $couponCount = 0;
-        if($coupon){
-            foreach ($coupon as $k=>$v){
+        if ($coupon) {
+            foreach ($coupon as $k => $v) {
                 $filter = array_count_values(array_filter(explode(',', $v['user_id'])));
-                $couponCount+=$filter[$user_id];
+                $couponCount += $filter[$user_id];
             }
         }
 
@@ -73,6 +72,7 @@ class My extends Base
         $subscribe = $this->collectionIndex($user_id, 'subscribe');
         //我的收藏
         $collections = $this->collectionIndex($user_id, 'collections');
+
 
         $this->success('请求成功', ['sign' => $sign,
             'score' => $score,
@@ -225,7 +225,7 @@ class My extends Base
     {
         $user_id = $this->request->post('user_id');
         $message_id = $this->request->post('message_id');
-        $isRead = $this->request->post('isRead')?1:2;
+        $isRead = $this->request->post('isRead') ? 1 : 2;
         if (!$user_id || !$message_id || !$isRead) {
             $this->error('缺少参数,请求失败', 'error');
         }
@@ -233,7 +233,7 @@ class My extends Base
             $q->where('id', $message_id)->field('id,title,content,analysis,createtime,use_id');
         });
 
-        if ($isRead==2) {
+        if ($isRead == 2) {
             $updateUses = $message['use_id'] == '' ? ',' . $user_id . ',' : $message['use_id'] . $user_id . ',';
 
             //如果未读,更新为已读
@@ -302,12 +302,18 @@ class My extends Base
                     }, $table => function ($collections) use ($user_id) {
                         $collections->where('user_id', $user_id)->withField('id');
                     }]);
+                }, 'rentalmodelsinfo' => function ($query) use ($user_id, $table) {
+                    $query->with(['models' => function ($models) {
+                        $models->withField('id,name,brand_id,price,models_name');
+                    }, $table => function ($collections) use ($user_id) {
+                        $collections->where('user_id', $user_id)->withField('id');
+                    }]);
                 }]);
             }])->select();
-
         $newCollect = [];
         $usdCollect = [];
         $logisticsCollect = [];
+        $rentCollect = [];
         foreach ($info as $k => $v) {
             if (!$v['store_list']) {
                 unset($info[$k]);
@@ -344,25 +350,38 @@ class My extends Base
                         $logisticsCollect[] = $vv;
                     }
                 }
+
+                if ($value['rentalmodelsinfo']) {
+                    foreach ($value['rentalmodelsinfo'] as $kk => $vv) {
+                        $vv['models']['name'] = $vv['models']['name'] . ' ' . $vv['models']['models_name'];
+                        $vv['city'] = ['id' => $v['id'], 'cities_name' => $v['cities_name']];
+                        unset($vv['store_id'], $vv['brand_id'], $vv['models']['models_name']);
+                        $rentCollect[] = $vv;
+                    }
+                }
             }
 
         }
-
         return ['carSelectList' => [
             [
                 'type' => 'new',
                 'type_name' => '新车',
-                'planList' => $newCollect ? $this->arraySort($newCollect) : $newCollect
+                'planList' => $newCollect ? $this->arraySort($newCollect, $table) : $newCollect
             ],
             [
                 'type' => 'used',
                 'type_name' => '二手车',
-                'planList' => $usdCollect ? $this->arraySort($usdCollect) : $usdCollect
+                'planList' => $usdCollect ? $this->arraySort($usdCollect, $table) : $usdCollect
             ],
             [
                 'type' => 'logistics',
                 'type_name' => '新能源车',
-                'planList' => $logisticsCollect ? $this->arraySort($logisticsCollect) : $logisticsCollect
+                'planList' => $logisticsCollect ? $this->arraySort($logisticsCollect, $table) : $logisticsCollect
+            ],
+            [
+                'type' => 'rent',
+                'type_name' => '租车',
+                'planList' => $rentCollect ? $this->arraySort($rentCollect, $table) : $rentCollect
             ]
         ]];
     }
@@ -372,18 +391,17 @@ class My extends Base
      * @param $arrays
      * @return array
      */
-    public function arraySort($arrays)
+    public function arraySort($arrays, $tables)
     {
         $arr = array();
         foreach ($arrays as $k => $v) {
-            $arr[] = $v['collections']['id'];
+            $arr[] = $v[$tables]['id'];
         }
         rsort($arr);
-
         $newArr = [];
         foreach ($arr as $v) {
             foreach ($arrays as $key => $value) {
-                if ($value['collections']['id'] == $v) {
+                if ($value[$tables]['id'] == $v) {
                     $newArr[] = $value;
                 }
             }
@@ -406,7 +424,7 @@ class My extends Base
 //            'validity_datetime' => ['GT', $time],
             'user_id' => ['like', '%,' . $user_id . ',%'],
             'use_id' => ['not like', '%,' . $user_id . ',%']
-        ],'validity_datetime > '.$time.' or validity_datetime is null');
+        ], 'validity_datetime > ' . $time . ' or validity_datetime is null');
         //已使用
         $used = $this->getCoupon($user_id, [
             'user_id&use_id' => ['like', '%,' . $user_id . ',%'],
@@ -417,7 +435,7 @@ class My extends Base
             'user_id' => ['like', '%,' . $user_id . ',%'],
             'use_id' => ['not like', '%,' . $user_id . ',%'],
             'validity_datetime' => ['LT', $time],
-            'validity_datetime' =>['neq','null']
+            'validity_datetime' => ['neq', 'null']
         ]);
 
         $this->success('请求成功', ['coupons' => [
@@ -436,10 +454,10 @@ class My extends Base
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getCoupon($user_id, $where,$else=null)
+    public function getCoupon($user_id, $where, $else = null)
     {
         $coupons = Coupon::where($where)
-            ->where($else?$else:'')
+            ->where($else ? $else : '')
             ->order('validity_datetime')
             ->field('id,coupon_name,display_diagramimages,coupon_amount,threshold,models_ids,createtime,
             validity_datetime,user_id')
