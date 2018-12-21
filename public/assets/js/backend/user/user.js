@@ -123,8 +123,18 @@ define(['jquery', 'bootstrap', 'backend',  'addtabs', 'table', 'echarts', 'echar
                 ]
             });
 
+            /**
+             * 刷新表格渲染
+             */
+            table.on('load-success.bs.table', function (e, data) {
+                $('#badge_order_acar').text(data.total);
+                // console.log($('#badge_order_acar'));
+                    
+            })
+
             // 为表格绑定事件
             Table.api.bindevent(table);
+
         },
         add: function () {
             Controller.api.bindevent();
