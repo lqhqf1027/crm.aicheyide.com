@@ -32,16 +32,20 @@ class Carselection extends Base
         $plans =$type_name = null;
         switch ($cartype){
             case 'new':
-                $plans =  Share::getVariousTypePlan($city_id, true, 'planacarIndex', 'new');
+                $plans =  Share::getVariousTypePlan($city_id, true, 'planacarIndex', $cartype);
                 $type_name = '新车';
                 break;
             case 'used':
-                $plans =  Share::getVariousTypePlan($city_id, true, 'usedcarCount', 'used');
+                $plans =  Share::getVariousTypePlan($city_id, false, 'usedcarCount', $cartype);
                 $type_name = '二手车';
                 break;
             case 'logistics':
-                $plans =  Share::getVariousTypePlan($city_id, true, 'logisticsCount', 'logistics');
+                $plans =  Share::getVariousTypePlan($city_id, true, 'logisticsCount', $cartype);
                 $type_name = '新能源车';
+                break;
+            case 'rent':
+                $plans =  Share::getVariousTypePlan($city_id, false, 'rentalmodelsinfo', $cartype);
+                $type_name = '租车';
                 break;
             default:
                 $this->error('cartype参数错误');
