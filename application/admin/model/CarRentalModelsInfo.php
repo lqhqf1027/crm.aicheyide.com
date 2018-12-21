@@ -48,4 +48,11 @@ class CarRentalModelsInfo extends Model
     {
         return $this->belongsTo('Admin','sales_id','id',[],'LEFT')->setEagerlyType(0);
     }
+
+    //关联标签
+    public function label()
+    {
+        return $this->belongsTo('Label','label_id','id',[],'LEFT')->setEagerlyType(0);
+    }
+    
 }

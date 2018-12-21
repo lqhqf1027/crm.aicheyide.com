@@ -2,24 +2,33 @@
 
    
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
         <div class="col-xs-12 col-sm-8">
 
-            <select id="c-models_id" data-rule="required" class="form-control selectpicker" name="row[models_id]">
+            <select id="c-store_id" data-rule="required" class="form-control selectpicker" name="row[store_id]">
                 <option value=" " style='display: none'>未选中任何项</option>
-                {volist name="car_models" id="vo"}
-                <option disabled>{$vo.name}</option>
-                {volist name="vo.models" id="model_vo"}
-                {eq name="$model_vo.models_id" value="$row.models_id"}
-                <option value="{$model_vo.models_id}" selected>{$model_vo.models_name}</option>
+                {volist name="store" id="vo" }
+                <option disabled>{$vo.cities_name}</option>
+                {volist name="vo.store" id="store_vo"}
+                {eq name="$store_vo.store_id" value="$row.store_id"}
+                <option value="{$store_vo.store_id}" selected>{$store_vo.store_name}</option>
                 {else /}
-                <option value="{$model_vo.models_id}">{$model_vo.models_name}</option>
+                <option value="{$store_vo.store_id}">{$store_vo.store_name}</option>
                 {/eq}
-
                 {/volist}
                 {/volist}
 
             </select>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('销售车型/方案')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-models_id" data-rule="required" data-source="cms/logistics/getModels" 
+                data-params='{"custom[store_ids]":"0"}' class="form-control selectpage form-control" name="row[models_id]" type="text" value="{$row.models_id}">
 
         </div>
     </div>
@@ -58,25 +67,6 @@
         <label class="control-label col-xs-12 col-sm-2">{:__('Total_price')}:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-total_price" class="form-control form-control" step="0.01" name="row[total_price]" type="number" value="{$row.total_price}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('选择门店名称')}:</label>
-        <div class="col-xs-12 col-sm-8">
-
-            <select id="c-store_id" class="form-control selectpicker" name="row[store_id]">
-
-                <option value="" style="display: none">未选择任何项</option>
-                {foreach name="$store" item="vo"}
-                {eq name="$vo.id" value="$row.store_id"}
-                <option value="{$vo.id}" selected>{$vo.store_name}</option>
-                {else /}
-                <option value="{$vo.id}">{$vo.store_name}</option>
-                {/eq}
-                {/foreach}
-
-            </select>
-
         </div>
     </div>
 

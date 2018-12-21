@@ -5,6 +5,9 @@ namespace app\admin\controller\cms;
 use app\common\controller\Backend;
 use think\Db;
 
+use app\admin\model\CompanyStore;
+use app\admin\model\Cities;
+
 /**
  * 物流车方案
  *
@@ -28,6 +31,54 @@ class Logistics extends Backend
         $this->model = new \app\admin\model\Logistics;
         $this->view->assign("nperlistList", $this->model->getNperlistList());
         $this->view->assign("acarStatusList", $this->model->getAcarStatusList());
+
+        $storeList = [];
+        $disabledIds = [];
+        $cities_all = collection(Cities::where('pid', 'NEQ', '0')->order("id desc")->field(['id,cities_name as name'])->select())->toArray();
+        $store_all = collection(CompanyStore::order("id desc")->field(['id, city_id, store_name as name'])->select())->toArray();
+        $all = array_merge($cities_all, $store_all);
+        // pr($all);
+        // die;
+        foreach ($all as $k => $v) {
+
+            $state = ['opened' => true];
+
+            if (!$v['city_id']) {
+            
+                $disabledIds[] = $v['id'];
+                $storeList[] = [
+                    'id'     => $v['id'],
+                    'parent' => '#',
+                    'text'   => __($v['name']),
+                    'state'  => $state
+                ];
+            }
+
+            foreach ($cities_all as $key => $value) {
+                
+                if ($v['city_id'] == $value['id']) {
+                    
+                    $storeList[] = [
+                        'id'     => $v['id'],
+                        'parent' => $value['id'],
+                        'text'   => __($v['name']),
+                        'state'  => $state
+                    ];
+                }
+                   
+            }
+            
+        }
+        // pr($storeList);
+        // die;
+        // $tree = Tree::instance()->init($all, 'city_id');
+        // $storeOptions = $tree->getTree(0, "<option value=@id @selected @disabled>@spacer@name</option>", '', $disabledIds);
+        // pr($storeOptions);
+        // die;
+        // $this->view->assign('storeOptions', $storeOptions);
+        $this->assignconfig('storeList', $storeList);
+
+
     }
     
     /**
@@ -121,8 +172,7 @@ class Logistics extends Backend
         }
         $this->view->assign([
             'subject' => $this->getSubject(),
-            'store'  => $this->getStore(),
-            'car_models' => $this->getInfo(),
+            'store'  => $this->getStore()
         ]);
 
         return $this->view->fetch();
@@ -171,10 +221,72 @@ class Logistics extends Backend
         $this->view->assign([
             "row" => $row,
             'subject' => $this->getSubject(),
-            'store'  => $this->getStore(),
-            'car_models' => $this->getInfo(),
+            'store'  => $this->getStore()
         ]);
         return $this->view->fetch();
+    }
+
+    /**得到门店
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getStore()
+    {
+        $companyStore = Db::name("cms_company_store")
+            ->field("id as store_id,store_name,city_id")
+            ->select();
+            
+        //城市下没有门店，就不显示在下拉列表
+        foreach ($companyStore as $key => $value) {
+            $ids[] = $value['city_id'];
+        }
+        
+        $cities = Db::name("cms_cities")
+            ->where('pid', 'NEQ', '0')
+            ->where('id', 'in', $ids)
+            ->field("id,cities_name")
+            ->select();
+
+        foreach ($cities as $k => $v) {
+            $cities[$k]['store'] = array();
+            foreach ($companyStore as $key => $value) {
+
+                if ($v['id'] == $value['city_id']) {
+                    array_push($cities[$k]['store'], $value);
+                }
+            }
+
+        }
+
+        return $cities;
+
+    }
+
+    /**门店下的车型
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getModels()
+    {
+        $this->model = model('Models');
+        // //当前是否为关联查询
+        // $this->relationSearch = true;
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
+        if ($this->request->isAjax())
+        {
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField'))
+            {
+                return $this->selectpage();
+            }
+           
+        }
+
     }
 
 
@@ -186,54 +298,4 @@ class Logistics extends Backend
         return $result;
     }
 
-
-    //门店名称
-    public function getStore()
-    {
-        $result = Db::name('cms_company_store')->select();
-
-        return $result;
-    }
-
-    /**车型对应车辆
-     * @return false|\PDOStatement|string|\think\Collection
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function getInfo()
-    {
-        $models = Db::name("models")
-            ->field("id as models_id,name as models_name,brand_id")
-            ->select();
-            
-        //品牌下没有车型，就不显示在下拉列表
-        foreach ($models as $key => $value) {
-            $ids[] = $value['brand_id'];
-        }
-        
-        $brand = Db::name("brand")
-            ->where('pid', '0')
-            ->where('id', 'in', $ids)
-            ->field("id,name")
-            ->select();
-
-        // pr($brand);
-        // die;
-
-        foreach ($brand as $k => $v) {
-            $brand[$k]['models'] = array();
-            foreach ($models as $key => $value) {
-
-                if ($v['id'] == $value['brand_id']) {
-
-                    array_push($brand[$k]['models'], $value);
-                }
-            }
-
-        }
-
-        return $brand;
-
-    }
 }

@@ -610,7 +610,10 @@ class Vehicleinformation extends Backend
                         $this->model->validate($validate);
                     }
                     $result = $this->model->allowField(true)->save($params);
-                    if ($result !== false) {
+                    $planId = Db::name('car_rental_models_info')->getLastInsID();
+                   
+                    $result_ss = Db::name('car_rental_models_info')->where('id', $planId)->update(['weigh' => $planId]);
+                    if ($result !== false && $result_ss) {
                         $this->success();
                     } else {
                         $this->error($this->model->getError());
