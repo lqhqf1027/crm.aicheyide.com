@@ -9,6 +9,7 @@
         "page/index/index",
         "page/city/index",
         "page/search/index",
+        "page/prize/index",
         "page/news/list/index",
         "page/store/list/index",
         "page/store/detail/index",

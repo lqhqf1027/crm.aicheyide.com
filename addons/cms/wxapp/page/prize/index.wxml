@@ -1,0 +1,4 @@
+<import src="../components/wheel/wheel.wxml" />
+
+<image src="/page/components/wheel/images/bg.png" bindload="onImageLoad" style="{{ imageStyle }}" />
+<template is="wheel" data="{{ ...wheel }}" />
