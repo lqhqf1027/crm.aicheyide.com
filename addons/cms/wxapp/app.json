@@ -18,6 +18,7 @@
         "page/my/list/index",
         "page/my/score/index",
         "page/my/coupon/index",
+        "page/my/prize/index",
         "page/my/setting/index"
     ],
     "window": {
