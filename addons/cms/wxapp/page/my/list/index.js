@@ -164,6 +164,11 @@ Page({
             url: '/page/my/coupon/index',
         })
     },
+    toPrize() {
+        wx.navigateTo({
+            url: '/page/my/prize/index',
+        })
+    },
     integral() {
         app.integral('sign', function(data) {
             app.success(data)

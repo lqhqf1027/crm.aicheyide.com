@@ -284,10 +284,15 @@ Page({
         })
     },
     onImage(e) {
-        const { title } = e.currentTarget.dataset
-        console.log(title)
+        const { title, url } = e.currentTarget.dataset.value
 
-        if (title === '疯狂汽车节') {
+        console.log(title, url)
+
+        if (!!url) {
+            wx.navigateTo({
+                url,
+            })
+        } else if (title === '疯狂汽车节') {
             wx.navigateTo({
                 url: '/page/preference/image/index',
             })
