@@ -14,14 +14,14 @@ class Prize extends Backend
     
     /**
      * Prize模型对象
-     * @var \app\common\model\Prize
+     * @var \app\admin\model\Prize
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\common\model\Prize;
+        $this->model = new \app\admin\model\Prize;
         $this->view->assign("statusList", $this->model->getStatusList());
     }
     
