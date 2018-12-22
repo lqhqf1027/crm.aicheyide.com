@@ -159,7 +159,7 @@ class Index extends Base
             $this->error('缺少参数,请求失败', 'error');
         }
 
-        $prize = Prize::field('id,prize_name,prize_image,win_prize_number,total_surplus')
+        $prize = Prize::field('id,prize_name,prize_image,win_prize_number,total_surplus,flag')
             ->where([
                 'status' => 'normal',
                 'city_id' => $city_id
