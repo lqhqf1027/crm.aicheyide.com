@@ -20,7 +20,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
-                sortName: 'id',
+                sortName: 'flag',
                 columns: [
                     [
                         {checkbox: true},
@@ -31,7 +31,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'rules', title: __('Rules')},
                         {field: 'total_payment', title: __('Total_payment')},
                         {field: 'total_surplus', title: __('Total_surplus')},
-                        {field: 'city_id', title: __('City_id')},
+                        {field: 'prize_detail_image', title: __('Prize_detail_image'), formatter: Table.api.formatter.image},
+                        {field: 'flag', title: __('Flag'), formatter: Table.api.formatter.flag},
                         {field: 'status', title: __('Status'), searchList: {"normal":__('Normal'),"hidden":__('Hidden')}, formatter: Table.api.formatter.status},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]

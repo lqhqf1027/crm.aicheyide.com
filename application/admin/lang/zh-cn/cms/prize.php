@@ -8,6 +8,7 @@ return [
     'Rules'  =>  '使用规则说明',
     'Total_payment'  =>  '发放总量',
     'Total_surplus'  =>  '剩余总量',
-    'City_id'  =>  '城市ID',
+    'Prize_detail_image'  =>  '奖品详情图',
+    'Flag'  =>  '索引标记',
     'Status'  =>  '状态'
 ];

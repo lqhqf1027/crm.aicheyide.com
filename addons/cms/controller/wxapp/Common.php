@@ -44,7 +44,7 @@ class Common extends Base
 //        $list = Block::getBlockList(['name' => 'focus', 'row' => 5]);
         $list = Db::name('cms_block')->where(['name' => 'focus', 'status' => 'normal'])->select();
         foreach ($list as $index => $item) {
-            $bannerList[] = ['id'=>$item['id'],'image' => $item['image'], 'url' => '/', 'title' => $item['title']];
+            $bannerList[] = ['id'=>$item['id'],'image' => $item['image'], 'url' => $item['url'], 'title' => $item['title']];
         }
 
 
