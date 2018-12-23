@@ -79,9 +79,6 @@ class Wheel {
     }
 
     start (isForce) {
-        this.isAuto = true
-        clearInterval(this.autoPlayTimer)
-
         let { deg, awardNumer, singleAngle, speed, isStart, disabled, hasMobile, mode } = this
         if ((isStart || disabled || !hasMobile) && !isForce) return
         this.isStart = true
