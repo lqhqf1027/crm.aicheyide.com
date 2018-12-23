@@ -17,4 +17,8 @@ class PrizeRecord extends Model
     protected $autoWriteTimestamp = true;
     protected $createTime = 'awardtime';
     protected $updateTime = false;
+
+    public  function prizeData(){
+        return $this->belongsTo('Prize','prize_id','id');
+    }
 }

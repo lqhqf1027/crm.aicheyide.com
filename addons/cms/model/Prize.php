@@ -14,4 +14,7 @@ use think\Model;
 class Prize extends Model
 {
    protected $name = 'cms_prize';
+    public  function cityName(){
+        return $this->belongsTo('Cities','city_id','id')->field('cities_name,id');
+    }
 }

@@ -29,7 +29,9 @@ swiper {
 .text-grey {
 	color: #CECECE;
 }
-
+.text-green {
+	color: green;
+}
 .media-box {
 	position: relative;
 }

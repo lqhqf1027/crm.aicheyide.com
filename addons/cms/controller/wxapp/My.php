@@ -11,6 +11,8 @@ use addons\cms\model\User;
 use addons\cms\model\UserSign;
 use addons\cms\model\Message;
 use app\common\model\Addon;
+use addons\cms\model\PrizeRecord;
+
 use think\Db;
 
 /**
@@ -472,6 +474,25 @@ class My extends Base
         return $coupons;
     }
 
+    /**
+     * Notes:  我的奖品列表
+     * User: glen9
+     * Date: 2018/12/22
+     * Time: 15:56
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public  function prizeList(){
+        $user_id = $this->request->post('user_id');
+        if(!$user_id) $this->error('缺少参数或参数错误','error');
+        $prizeData = PrizeRecord::with(['prizeData'=>function($q){
+            $q->withField(['id','prize_name','prize_image','rules','city_id'])->with(['cityName'=>function(){
+
+            }]);
+        }])->where('user_id',$user_id)->select();
+        $this->success('请求成功',$prizeData);
+    }
     /**
      * 我发表的评论
      */
