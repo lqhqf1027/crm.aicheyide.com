@@ -33,8 +33,8 @@ Page({
                     title: '提示',
                     content: `"抽奖成功"，礼品为：${prize.prize_name}，已放入"我的->我的奖品"`,
                     showCancel: false,
-                    success: res => {
-                        this.wheel.reset()
+                    success: (res) => {
+                        // this.wheel.reset()
                         if (res.confirm) {
                             console.log('用户点击确定')
                         } else if (res.cancel) {

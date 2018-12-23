@@ -65,6 +65,7 @@
 
 .grid__name {
     font-size: 26rpx;
+    line-height: 1;
     color: #666;
     margin-top: 14rpx;
 }
