@@ -12,6 +12,8 @@ use addons\cms\model\Models;
 use addons\cms\model\Subject;
 use addons\cms\model\Subscribe;
 use addons\cms\model\Prize;
+use app\common\model\User;
+
 use addons\cms\model\PrizeRecord;
 use addons\cms\model\CompanyStore as companyStoreModel;
 
@@ -154,11 +156,9 @@ class Index extends Base
     {
         $city_id = $this->request->post('city_id');
         $user_id = $this->request->post('user_id');
-
         if (!$city_id) {
             $this->error('缺少参数,请求失败', 'error');
         }
-
         $prize = Prize::field('id,prize_name,prize_image,win_prize_number,total_surplus,flag')
             ->where([
                 'status' => 'normal',
@@ -185,11 +185,14 @@ class Index extends Base
         $endtime = strtotime(Share::ConfigData([
             'name' => 'endtime'
         ])['value']);
+        if ($user_id) {
+            $mobile = User::get(['id' => $user_id])->mobile; //判断手机是否存在
+        }
 
         //判断今天有没有转过转盘
         $is_prize = PrizeRecord::where('user_id', $user_id)->whereTime('awardtime', 'today')->find();
         $is_prize = $is_prize ? 1 : 0;
-        $this->success('请求成功', ['is_prize' => $is_prize, 'starttime' => $starttime, 'endtime' => $endtime, 'prizeList' => $prize]);
+        $this->success('请求成功', ['is_prize' => $is_prize, 'starttime' => $starttime, 'endtime' => $endtime, 'prizeList' => $prize, 'mobile' => $mobile]);
     }
 
     /**
@@ -200,14 +203,36 @@ class Index extends Base
     {
         $user_id = $this->request->post('user_id');
         $prize_id = $this->request->post('prize_id');
+//        $moblie = $this->request->post('moblie');//判断是否有手机号
 
         if (!$prize_id || !$user_id) {
             $this->error('缺少参数,请求失败', 'error');
         }
+        //如果有授权登陆 但是没有 授权手机号
+
+        $mobile = User::get(['id' => $user_id])->mobile; //有手机号，直接抽奖
+        if (!checkPhoneNumberValidate($mobile)) {  //如果没有手机号 必须传递 手机号解密三大参数  iv 、encryptedData 、 sessionKey参数
+            $iv = $this->request->post('iv');
+            $encryptedData = $this->request->post('encryptedData');
+            $sessionKey = $this->request->post('sessionKey');
+            if ($sessionKey && $iv && $sessionKey) {
+                $pc = new WxBizDataCrypt('wxf789595e37da2838', $sessionKey);
+                $result = $pc->decryptData($encryptedData, $iv, $data);
+                if ($result == 0) {  //如果解密成功 ，将手机号更新到用户表
+                    $mobile = json_decode($data, true)['phoneNumber'];
+                    User::update(['id' => $user_id, 'mobile' => $mobile]);
+                } else {
+                    $this->error('手机号解密失败', json_decode($data, true));
+                }
+            } else {
+                $this->error('缺少手机解密参数,请求失败', 'error');
+            }
+        }
 
         $res = PrizeRecord::create([
             'prize_id' => $prize_id,
-            'user_id' => $user_id
+            'user_id' => $user_id,
+            'conversion_code' => self::make_password(4)
         ]);
 
         if ($res) {
@@ -217,6 +242,32 @@ class Index extends Base
         } else {
             $this->error('领取奖品失败');
         }
+    }
+
+    /**
+     * Notes: 随机生成兑换码
+     * User: glen9
+     * Date: 2018/12/22
+     * Time: 13:53
+     * @param int $length
+     * @param $user_id 兑换码连接user_id
+     * @return string
+     */
+    public static function make_password($length = 4)
+    {
+        // 密码字符集，可任意添加你需要的字符
+        $chars = array('A', 'B', 'C', 'D',
+            'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N',
+            'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        // 在 $chars 中随机取 $length 个数组元素键名
+        $keys = array_rand($chars, $length);
+        $password = '';
+        for ($i = 0; $i < $length; $i++) {
+            // 将 $length 个数组元素连接成字符串
+            $password .= $chars[$keys[$i]];
+        }
+        return $password;
     }
 
     /**
@@ -318,11 +369,11 @@ class Index extends Base
                         continue;
                     } else {
                         $checkPayment[$v['models']['id']] = $v['payment'];
-                            foreach ($recommendList as $kk => $vv) {
-                                if ($vv['models_id'] == $v['models']['id']) {
-                                    unset($recommendList[$kk]);
-                                }
+                        foreach ($recommendList as $kk => $vv) {
+                            if ($vv['models_id'] == $v['models']['id']) {
+                                unset($recommendList[$kk]);
                             }
+                        }
                     }
                 } else {
                     $checkModelId[$v['models']['id']] = $v['models']['id'];
