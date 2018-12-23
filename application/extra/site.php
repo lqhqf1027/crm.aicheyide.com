@@ -4,7 +4,7 @@ return array (
   'name' => '爱车易得CRM',
   'beian' => ' 蜀 ICP备 17036095号',
   'cdnurl' => '',
-  'version' => '1.5.8',
+  'version' => '1.7.6',
   'timezone' => 'Asia/Shanghai',
   'forbiddenip' => '',
   'languages' => 
@@ -28,11 +28,12 @@ return array (
     'user' => 'User',
     'example' => 'Example',
     'message' => '员工权限配置',
-    'pushtemplate' => '推送模板',
     'integral' => '积分管理',
     'share' => '小程序分享配置',
-    'cartype' => '车辆类型',
     'companystore' => '门店',
+    'coupon' => '优惠券',
+    'prize' => '大转盘抽奖配置',
+    'activity' => '活动中心',
   ),
   'mail_type' => '1',
   'mail_smtp_host' => 'smtp.mxhichina.com',
@@ -76,9 +77,7 @@ return array (
     'message31' => '银川分公司',
     'message32' => '昆明分公司',
     'message33' => '（渠道）',
-  ),
-  'push' => 
-  array (
+    'message34' => '石河子分公司',
   ),
   'integral' => 
   array (
@@ -88,16 +87,14 @@ return array (
   ),
   'share' => 
   array (
-    'index_share_title' => '欢迎来到友车友家',
-    'index_share_img' => 'https://static.aicheyide.com/uploads/20180807/3d6ccb359998725eb9669ca72f88d74e.jpg',
+    'index_share_title' => '租车买车维修保养一站式汽车服务，尽在友车友家！',
   ),
-  'cartype' => 
-  array (
-    'new' => '新车',
-    'used' => '二手车',
-  ),
-  'companystore' => 
-  array (
-  ),
-  'company' => '/uploads/20181120/e1202687c911b503200dc3b67816963a.png',
+  'company' => '/uploads/20181217/0b2b4fae5709a93da400c3c7ca252529.jpg',
+  'coupon' => '0',
+  'index_share_img' => '/uploads/20181216/dda01785d2c03d4cc45f2ed97468e714.png',
+  'share_moments_bk_img' => '/uploads/20181221/22337551a73ffadc6e95e6b7db9475d0.png',
+  'index_share_bk_qrcode' => '/uploads/20181217/54e6ec10decba4c666da67341e543b58.jpg',
+  'starttime' => '2018-12-20 15:59:34',
+  'endtime' => '2018-12-29 16:00:44',
+  'zhuanpan' => '/uploads/20181223/bd28da4404aca3c3294e68c80659b51a.png',
 );
