@@ -6,6 +6,7 @@ const app = getApp()
 Page({
     data: {
         is_prize: 0,
+        globalData: {},
     },
 	onLoad() {
 		this.getList()
@@ -77,7 +78,9 @@ Page({
         app.request('/index/prizeShow?noAuth=1', { city_id: city.id }, (data, ret) => {
             console.log(data)
             this.setData({
+                globalData: app.globalData,
                 is_prize: data.is_prize,
+                zhuanpan_bk_img: data.zhuanpan_bk_img,
                 prizeList: data.prizeList,
             }, () => {
                 this.initWheel(data.prizeList.length, 1, data.is_prize === 0, !!data.mobile)

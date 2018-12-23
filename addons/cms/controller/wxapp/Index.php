@@ -192,7 +192,16 @@ class Index extends Base
         //判断今天有没有转过转盘
         $is_prize = PrizeRecord::where('user_id', $user_id)->whereTime('awardtime', 'today')->find();
         $is_prize = $is_prize ? 1 : 0;
-        $this->success('请求成功', ['is_prize' => $is_prize, 'starttime' => $starttime, 'endtime' => $endtime, 'prizeList' => $prize, 'mobile' => $mobile]);
+        $this->success(
+            '请求成功',
+            [
+            'is_prize' => $is_prize,
+            'starttime' => $starttime,
+            'endtime' => $endtime,
+            'zhuanpan_bk_img'=>Share::ConfigData(['name'=>'zhuanpan'])['value'], //转盘背景图
+            'prizeList' => $prize,
+            'mobile' => $mobile
+            ]);
     }
 
     /**
