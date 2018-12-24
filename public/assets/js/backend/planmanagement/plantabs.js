@@ -39,7 +39,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     // console.log(arr);
                     Controller.merge(arr, table1);
                     //靠左对齐
-                    var td = $("#table1 td:nth-child(4)");
+                    var td = $("#table1 td:nth-child(5)");
 
                     for (var i = 0; i<td.length;i++) {
             
