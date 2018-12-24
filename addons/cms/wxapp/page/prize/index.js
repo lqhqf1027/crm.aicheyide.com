@@ -20,7 +20,13 @@ Page({
      * @return   {[type]} [description]
      */
     initWheel(areaNumber = 6, awardNumer = 1, is_prize = true, hasMobile = false) {
-        const mobile = !app.getGlobalData().session_key ? true : hasMobile
+        let mobile = !app.getGlobalData().session_key ? true : hasMobile
+
+        // 禁用状态，默认 hasMobile = true，避免触发手机号授权
+        if (!is_prize) {
+            mobile = true
+        }
+
         this.wheel = new Wheel(this, {
             hasMobile: mobile,
             disabled: !is_prize,
@@ -57,6 +63,7 @@ Page({
                             this.prizeResult(params)
                         },
                         fail: () => {
+                            console.log('session_key 已过期')
                             app.showLoginModal(function(){}, function(){}, true)
                         },
                     })
@@ -92,7 +99,7 @@ Page({
      * 领奖
      */
     prizeResult(params = {}) {
-        console.log('prizeResult', params)
+        console.log('prizeResult--解密参数', params)
 
         // 未授权登录
         if (!app.getGlobalData().session_key) {
@@ -111,7 +118,7 @@ Page({
         // return
 
         // 奖品不存在
-        if (!prize || is_prize !== 0) return
+        if (!prize || is_prize !== 0 || this.disabled) return
 
         // 奖品概率全部为 0
         const hasPrize = prizeList && prizeList.filter((n) => parseFloat(n['win_prize_number']) > 0).length
@@ -125,6 +132,8 @@ Page({
             return
         }
 
+        // 避免连续点击重复抽奖
+        this.disabled = true
 
         app.request('/index/prizeResult', { ...params, prize_id: prize.id }, (data, ret) => {
             console.log(data)
@@ -136,6 +145,7 @@ Page({
         }, (data, ret) => {
             console.log(data)
             app.error(ret.msg)
+            this.disabled = false
         })
     },
     onImageLoad(e) {
