@@ -13,10 +13,16 @@ Page({
 	},
     /**
      * 初始化转盘
+     * @param    {Number} areaNumber [奖品总个数]
+     * @param    {Number} awardNumer [中奖奖品索引]
+     * @param    {Boolean} is_prize   [显示不同的按钮]
+     * @param    {Boolean} hasMobile  [当用户未授权登录时，默认 hasMobile = true，用于触发 onStart 及唤起之后的授权登录提示]
+     * @return   {[type]} [description]
      */
     initWheel(areaNumber = 6, awardNumer = 1, is_prize = true, hasMobile = false) {
+        const mobile = !app.getGlobalData().session_key ? true : hasMobile
         this.wheel = new Wheel(this, {
-            hasMobile,
+            hasMobile: mobile,
             disabled: !is_prize,
             prizeUrl: '/page/components/wheel/images/wheel.png',
             btnUrl: `/page/components/wheel/images/${is_prize ? 'btn_yellow' : 'btn_grey'}.png`,
@@ -34,14 +40,6 @@ Page({
                     title: '提示',
                     content: `抽奖成功 ，礼品为：${prize.prize_name}，已放入"我的->我的奖品"`,
                     showCancel: false,
-                    success: res => {
-                        // this.wheel.reset()
-                        if (res.confirm) {
-                            console.log('用户点击确定')
-                        } else if (res.cancel) {
-                            console.log('用户点击取消')
-                        }
-                    }
                 })
             },
             getPhoneNumber: (e) => {
@@ -96,17 +94,28 @@ Page({
     prizeResult(params = {}) {
         console.log('prizeResult', params)
 
+        // 未授权登录
+        if (!app.getGlobalData().session_key) {
+            app.showLoginModal(function(){}, function(){}, true)
+            return
+        }
+
         const { prizeList, is_prize } = this.data
         const areaNumber = prizeList.length
         const prize = new getRand(prizeList, 'win_prize_number')
 
+        // test
         // this.initWheel(areaNumber, prize.flag, true, true)
         // this.wheel.start(true)
 
         // return
 
+        // 奖品不存在
         if (!prize || is_prize !== 0) return
-        if (!prizeList.filter((n) => parseFloat(n['win_prize_number']) > 0).length) {
+
+        // 奖品概率全部为 0
+        const hasPrize = prizeList && prizeList.filter((n) => parseFloat(n['win_prize_number']) > 0).length
+        if (!hasPrize) {
             wx.showModal({
                 title: '提示',
                 content: '哦嚯，奖品被抽光了！',
