@@ -121,10 +121,14 @@ App({
         //调用登录接口
         wx.login({
             success: function(res) {
+                console.log("login--code", res.code)
+
                 if (res.code) {
                     //发起网络请求
                     wx.getUserInfo({
                         success: function(ures) {
+                            console.log("getUserInfo", ures)
+
                             wx.showLoading({ title: '加载中' });
                             wx.request({
                                 url: that.apiUrl + 'user/login?noAuth=1',
@@ -138,6 +142,7 @@ App({
                                     "Content-Type": "application/x-www-form-urlencoded",
                                 },
                                 success: function(lres) {
+                                    console.log("login", lres)
                                     wx.hideLoading();
                                     var response = lres.data
                                     if (response.code == 1) {
