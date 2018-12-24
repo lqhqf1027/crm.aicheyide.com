@@ -7,7 +7,7 @@ Page({
     data: {
         is_prize: 0,
     },
-	onLoad() {
+	onShow() {
 		this.getList()
 	},
     /**
@@ -103,6 +103,16 @@ Page({
         // return
 
         if (!prize || is_prize !== 0) return
+        if (!prizeList.filter((n) => parseFloat(n['win_prize_number']) > 0).length) {
+            wx.showModal({
+                title: '提示',
+                content: '哦嚯，奖品被抽光了！',
+                showCancel: false,
+            })
+
+            return
+        }
+
 
         app.request('/index/prizeResult', { ...params, prize_id: prize.id }, (data, ret) => {
             console.log(data)
