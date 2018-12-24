@@ -275,6 +275,7 @@ App({
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             success: function(res) {
+                console.log("success:", res);
                 that.loading(false);
                 var code, msg, json;
                 if (res.statusCode === 200) {
@@ -287,6 +288,9 @@ App({
                 } else {
                     json = typeof res.data === 'object' ? res.data : { code: 0, msg: '发生一个未知错误', data: null };
                     typeof error === 'function' && error(json.data, json);
+
+                    wx.setStorageSync('token', '');
+                    wx.setStorageSync('globalData', '');
                 }
             },
             fail: function(res) {
