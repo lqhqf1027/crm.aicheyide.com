@@ -779,6 +779,7 @@ class Plantabs extends Backend
             foreach ($temp as $k => $v) {
                 if (isset($fieldArr[$k]) && $k !== '') {
                     $row[$fieldArr[$k]] = $v;
+                    $row['popularity'] = rand(1000,9999);
                 }
             }
 

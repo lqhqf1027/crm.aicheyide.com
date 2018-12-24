@@ -31,52 +31,6 @@ class Index extends Base
     }
 
     /**
-     * 首页数据接口，返回各种类型方案丶品牌列表丶城市列表以及配置分享信息
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function index()
-    {
-        $city_id = $this->request->post('city_id');                              //参数：城市ID
-        if (!$city_id) {
-            $this->error('缺少参数,请求失败', 'error');
-        }
-
-        //预约缓存
-        if (!Cache::get('appointment')) {
-            Cache::set('appointment', $this->appointment());
-        }
-
-//        if(!Cache::get('brandIndex')){
-//            Cache::set('brandIndex',$this->getBrand());
-//        }
-
-        //返回所有类型的方案
-        $useful = $this->getAllStylePlan($city_id);
-
-        $data = ['carType' => [
-            'new' => [
-                //为你推荐
-                'recommendList' => $useful['recommendList'],
-                //专题
-                'specialList' => $useful['specialList'],
-                //专场
-                'specialfieldList' => $useful['specialfieldList']
-            ],
-        ],
-            //品牌
-            'brandList' => $this->getBrand(),
-            //分享
-            'shares' => Share::getConfigShare(),
-            //预约
-            'appointment' => Cache::get('appointment')
-        ];
-
-        $this->success('请求成功', $data);
-    }
-
-    /**
      * 点击品牌侧滑栏接口
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -165,6 +119,8 @@ class Index extends Base
                 'city_id' => $city_id
             ])->select();
 
+        $sum = 0;
+
         foreach ($prize as $k => $v) {
             if ($v['total_surplus'] == 0 && $v['win_prize_number'] != 0) {
                 Prize::update([
@@ -173,8 +129,12 @@ class Index extends Base
                 ]);
                 $v['win_prize_number'] = 0;
             }
+            $sum+=intval($v['total_surplus']);
             unset($v['total_surplus']);
         }
+
+        //是否还有奖品可抽
+        $havePrize = $sum>0?1:0;
 
         //活动开始时间
         $starttime = strtotime(Share::ConfigData([
@@ -196,6 +156,7 @@ class Index extends Base
             '请求成功',
             [
             'is_prize' => $is_prize,
+            'havePrize'=> $havePrize,
             'starttime' => $starttime,
             'endtime' => $endtime,
             'zhuanpan_bk_img'=>Share::ConfigData(['name'=>'zhuanpan'])['value'], //转盘背景图
@@ -213,7 +174,6 @@ class Index extends Base
         $user_id = $this->request->post('user_id');
         $prize_id = $this->request->post('prize_id');
 //        $moblie = $this->request->post('moblie');//判断是否有手机号
-
         if (!$prize_id || !$user_id) {
             $this->error('缺少参数,请求失败', 'error');
         }
@@ -224,7 +184,7 @@ class Index extends Base
             $iv = $this->request->post('iv');
             $encryptedData = $this->request->post('encryptedData');
             $sessionKey = $this->request->post('sessionKey');
-            if ($sessionKey && $iv && $sessionKey) {
+            if ($sessionKey && $iv && $encryptedData) {
                 $pc = new WxBizDataCrypt('wxf789595e37da2838', $sessionKey);
                 $result = $pc->decryptData($encryptedData, $iv, $data);
                 if ($result == 0) {  //如果解密成功 ，将手机号更新到用户表
@@ -245,8 +205,12 @@ class Index extends Base
         ]);
 
         if ($res) {
+            $total_surplus = Prize::get($prize_id)->total_surplus;
 
-            Prize::where('id', $prize_id)->setDec('total_surplus');
+            if($total_surplus>0){
+                Prize::where('id', $prize_id)->setDec('total_surplus');
+            }
+
             $this->success('领取奖品成功', 'success');
         } else {
             $this->error('领取奖品失败');

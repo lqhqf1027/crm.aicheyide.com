@@ -577,7 +577,7 @@ specialimages,popularity')
     {
         $info = RentalModelsInfo::field('id,modelsimages,models_main_images,manysixmonths')
             ->with(['models' => function ($models) {
-                $models->withField('id,name,models_name');
+                $models->withField('id,name,models_name,vehicle_configuration');
             }, 'companystore' => function ($companystore) {
                 $companystore->withField('id,city_id,store_name,store_address,phone,longitude,latitude');
             }])->find($plan_id);
@@ -586,6 +586,11 @@ specialimages,popularity')
         $info['users'] = $this->userPhone($user_id);
         $info['models']['name'] = $info['models']['name'] . ' ' . $info['models']['models_name'];
         unset($info['models']['models_name']);
+
+        $info['models']['vehicle_configuration'] = json_decode($info['models']['vehicle_configuration'],true);
+
+        $info['models']['vehicle_configuration'] = '省油 丨 舒适 丨 '.$info['models']['vehicle_configuration']['变速箱']['abbreviation'].' | '
+            .$info['models']['vehicle_configuration']['车身']['numberOfDoors'].'门'.$info['models']['vehicle_configuration']['车身']['numberOfSeats'].'座'.$info['models']['vehicle_configuration']['车身']['bodyStructure'];
 
         //是否点赞丶收藏丶预约
         $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
@@ -984,7 +989,9 @@ specialimages,popularity')
 
                     if(!empty($vv['models']['vehicle_configuration'])){
                         $vv['models']['vehicle_configuration'] = json_decode($vv['models']['vehicle_configuration'],true);
-                        $vv['models']['vehicle_configuration'] = ['车身'=>$vv['models']['vehicle_configuration']['车身'],'变速箱'=>$vv['models']['vehicle_configuration']['变速箱']];
+                        $vv['models']['vehicle_configuration'] = '省油 丨 舒适 丨 '.$vv['models']['vehicle_configuration']['变速箱']['abbreviation'].' | '
+                            .$vv['models']['vehicle_configuration']['车身']['numberOfDoors'].'门'.$vv['models']['vehicle_configuration']['车身']['numberOfSeats'].'座'.$vv['models']['vehicle_configuration']['车身']['bodyStructure'];
+//                        $vv['models']['vehicle_configuration'] = ['车身'=>$vv['models']['vehicle_configuration']['车身'],'变速箱'=>$vv['models']['vehicle_configuration']['变速箱']];
                     }
                     $needArr[] = $vv;
 
