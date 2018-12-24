@@ -34,7 +34,7 @@ class CompanyStore extends Model
      */
     public function secondcarinfo()
     {
-        return $this->hasOne('SecondcarRentalModelsInfo', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
+        return $this->hasOne('UsedCar', 'store_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
     /**
@@ -55,7 +55,7 @@ class CompanyStore extends Model
     {
 
         return $this->hasMany('PlanAcar', 'store_id', 'id')
-            ->field('id,store_id,label_id,monthly,payment,weigh,models_main_images');
+            ->field('id,store_id,label_id,monthly,payment,weigh,models_main_images,models_id');
     }
 
     /**
@@ -76,7 +76,7 @@ class CompanyStore extends Model
     public function usedcarCount()
     {
         return $this->hasMany('UsedCar', 'store_id', 'id')
-            ->field('id,store_id,kilometres,newpayment,models_main_images,car_licensedate,shelfismenu,popularity,totalprices');
+            ->field('id,store_id,kilometres,newpayment,models_main_images,car_licensedate,shelfismenu,popularity,totalprices,models_id');
     }
 
     /**
@@ -86,7 +86,7 @@ class CompanyStore extends Model
     public function logisticsCount()
     {
         return $this->hasMany('Logistics', 'store_id', 'id')->field('id,store_id,
-        payment,monthly,models_main_images,popularity,ismenu');
+        payment,monthly,models_main_images,popularity,ismenu,models_id');
     }
 
     public function rentalmodelsinfo()
