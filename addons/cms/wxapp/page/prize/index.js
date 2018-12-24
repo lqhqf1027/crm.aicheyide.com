@@ -6,6 +6,7 @@ const app = getApp()
 Page({
     data: {
         is_prize: 0,
+        globalData: {},
     },
 	onShow() {
 		this.getList()
@@ -31,9 +32,9 @@ Page({
 
                 wx.showModal({
                     title: '提示',
-                    content: `"抽奖成功"，礼品为：${prize.prize_name}，已放入"我的->我的奖品"`,
+                    content: `抽奖成功 ，礼品为：${prize.prize_name}，已放入"我的->我的奖品"`,
                     showCancel: false,
-                    success: (res) => {
+                    success: res => {
                         // this.wheel.reset()
                         if (res.confirm) {
                             console.log('用户点击确定')
@@ -77,7 +78,9 @@ Page({
         app.request('/index/prizeShow?noAuth=1', { city_id: city.id }, (data, ret) => {
             console.log(data)
             this.setData({
+                globalData: app.globalData,
                 is_prize: data.is_prize,
+                zhuanpan_bk_img: data.zhuanpan_bk_img,
                 prizeList: data.prizeList,
             }, () => {
                 this.initWheel(data.prizeList.length, 1, data.is_prize === 0, !!data.mobile)
