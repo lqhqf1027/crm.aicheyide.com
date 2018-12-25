@@ -902,14 +902,12 @@ specialimages,popularity')
                 }]);
             }])->select($city_id ? $city_id : null);
 
-
         foreach ($info as $k => $v) {
             if ($v['store_list']) {
                 $info = $v;
                 break;
             }
         }
-//                return $info;
         return self::handleNewUsed($info, $duplicate, $type);
     }
 
@@ -959,6 +957,7 @@ specialimages,popularity')
         foreach ($info['store_list'] as $k => $v) {
             if ($v[$planKey]) {
                 foreach ($v[$planKey] as $kk => $vv) {
+
                     if ($duplicate) {
 
                         if (in_array($vv['models']['id'], $checkModelId)) {
@@ -1000,6 +999,9 @@ specialimages,popularity')
 
         }
         $needArr = array_values($needArr);
+
+        shuffle($brand);
+
         foreach ($needArr as $k => $v) {
             foreach ($brand as $key => $value) {
                 if (empty($value['planList'])) {
