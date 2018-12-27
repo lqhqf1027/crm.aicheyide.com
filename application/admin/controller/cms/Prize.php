@@ -28,25 +28,45 @@ class Prize extends Backend
         $this->view->assign("statusList", $this->model->getStatusList());
     }
 
+    /**
+     * 定时任务
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * @throws \think\exception\PDOException
+     */
     public function reset_prize()
     {
-//        Db::name('car_new_user_info')
-//            ->where('id',1)
-//        ->setField('sales_order_id',55);
+        $time = time();
+        $block = new \app\admin\model\Block();
+        $endtime = strtotime(Db::name('config')
+            ->where('name', 'endtime')
+            ->value('value'));
+        if ($time >= $endtime) {
 
-        $total_payment = Db::name('cms_prize')
-            ->where('status', 'normal')
-            ->field('id,total_payment')
-            ->select();
-
-        foreach ($total_payment as $k=>$v){
-            Db::name('cms_prize')
-            ->update([
-                'id'=>$v['id'],
-                'total_surplus'=>$v['total_payment'],
-                'win_prize_number'=>$v['total_payment'],
-            ]);
+            $block->where('title', '转盘抽奖')
+                ->setField('status', 'hidden');
         }
+
+        $blockStatus = $block->where('title', '转盘抽奖')->find();
+
+        if($blockStatus->status=='normal'){
+            $total_payment = Db::name('cms_prize')
+                ->where('status', 'normal')
+                ->field('id,total_payment')
+                ->select();
+
+            foreach ($total_payment as $k => $v) {
+                Db::name('cms_prize')
+                    ->update([
+                        'id' => $v['id'],
+                        'total_surplus' => $v['total_payment'],
+                        'win_prize_number' => $v['total_payment'],
+                    ]);
+            }
+        }
+
 
     }
 
