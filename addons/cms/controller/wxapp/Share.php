@@ -295,7 +295,8 @@ class Share extends Base
                 $this->error('手机号解密失败', json_decode($data, true));
             }
         }
-        if (!$user_id || !$plan_id || !$cartype || !$store_id || !$models_name) {
+//        || !$store_id || !$models_name
+        if (!$user_id || !$plan_id || !$cartype) {
             $this->error('缺少参数,请求失败', 'error');
         }
         if ($code) {
@@ -332,32 +333,32 @@ class Share extends Base
                 if (Cache::get('appointment')) {
                     Cache::rm('appointment');
                 }
-
-                $url = 'https://open.ucpaas.com/ol/sms/sendsms';
-                $client = new Client();
-
-                $response = $client->request('POST', $url, [
-                    'json' => [
-                        'sid' => self::$Ucpass['accountsid'],
-                        'token' => self::$Ucpass['token'],
-                        'appid' => self::$Ucpass['appid'],
-                        'templateid' => '415120',
-                        'param' => substr($mobile, -4) . ',' . $models_name,
-                        'mobile' => CompanyStore::get($store_id)->mobile,
-                        'uid' => $user_id
-                    ]
-                ]);
-
-                if ($response) {
-                    $result = json_decode($response->getBody(), true);
-                    if ($result['code'] == '000000') {
                         $this->success('预约成功', 'success');
-                    } else {
-                        $this->error('给该门店发送短信失败');
-                    }
-                } else {
-                    $this->error('请求短信接口失败');
-                }
+//                $url = 'https://open.ucpaas.com/ol/sms/sendsms';
+//                $client = new Client();
+//
+//                $response = $client->request('POST', $url, [
+//                    'json' => [
+//                        'sid' => self::$Ucpass['accountsid'],
+//                        'token' => self::$Ucpass['token'],
+//                        'appid' => self::$Ucpass['appid'],
+//                        'templateid' => '415120',
+//                        'param' => substr($mobile, -4) . ',' . $models_name,
+//                        'mobile' => CompanyStore::get($store_id)->mobile,
+//                        'uid' => $user_id
+//                    ]
+//                ]);
+//
+//                if ($response) {
+//                    $result = json_decode($response->getBody(), true);
+//                    if ($result['code'] == '000000') {
+//                        $this->success('预约成功', 'success');
+//                    } else {
+//                        $this->error('给该门店发送短信失败');
+//                    }
+//                } else {
+//                    $this->error('请求短信接口失败');
+//                }
         }
 
 
