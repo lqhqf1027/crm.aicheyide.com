@@ -11,6 +11,7 @@ use app\common\model\Config as ConfigModel;
 use think\Exception;
 
 
+
 /**
  * 管理员管理
  *
@@ -99,11 +100,57 @@ class Admin extends Backend
       
         $this->assignconfig("siteList", $siteList['message']['list']);
 
-    //    dump($groupdata);
+        // dump($groupdata);
         $this->view->assign('groupdata', $groupdata);
         $this->assignconfig("admin", ['id' => $this->auth->id]);
         $this->view->assign('groupdata', $groupdata);
         $this->assignconfig("admin", ['id' => $this->auth->id]);
+
+
+
+        // //组织架构列表
+        // $groupList = [];
+        // $disabledIds = [];
+        // $authgroup = [];
+
+        // $this->childrenGroupIds = $this->auth->getChildrenGroupIds(true);
+
+        // $group_all = collection(AuthGroup::where('id', 'in', $this->childrenGroupIds)->select())->toArray();
+        // // $auth_all = collection(AuthGroup::where('pid', '1')->select())->toArray();
+        // // pr($group_all);
+        // // die;
+        // foreach ($group_all as $k => $v) {
+
+        //     $state = ['opened' => true];
+
+        //     $disabledIds[] = $v['id'];
+            
+        //     $groupList[] = [
+        //         'id'     => $v['id'],
+        //         'parent' => '#',
+        //         'text'   => __($v['name']),
+        //         'state'  => $state
+        //     ];
+          
+
+        //     foreach ($group_all as $key => $value) {
+                
+        //         if ($v['id'] == $value['pid']) {
+        //             $groupList[] = [
+        //                 'id'     => $value['id'],
+        //                 'parent' => $v['id'],
+        //                 'text'   => __($v['name']),
+        //                 'state'  => $state
+        //             ];
+        //         }
+                   
+        //     }
+            
+        // }
+        // // pr($authgroup);
+        // // die;
+        // $this->assignconfig('groupList', $groupList);
+
     }
 
     /**

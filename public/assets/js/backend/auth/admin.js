@@ -57,6 +57,65 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
+
+            $(document).on("click", "a.btn-channel", function () {
+                $("#archivespanel").toggleClass("col-md-9", $("#channelbar").hasClass("hidden"));
+                $("#channelbar").toggleClass("hidden");
+            });
+
+            require(['jstree'], function () {
+                //全选和展开
+                $(document).on("click", "#checkall", function () {
+                    $("#channeltree").jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
+                });
+                $(document).on("click", "#expandall", function () {
+                    $("#channeltree").jstree($(this).prop("checked") ? "open_all" : "close_all");
+                });
+                $('#channeltree').on("changed.jstree", function (e, data) {
+                    console.log(data);
+                    console.log(data.selected);
+                    var options = table.bootstrapTable('getOptions');
+                    options.pageNumber = 1;
+                    options.queryParams = function (params) {
+                        params.filter = JSON.stringify(data.selected.length > 0 ? {rule_message: data.selected.join(",")} : {});
+                        params.op = JSON.stringify(data.selected.length > 0 ? {rule_message: 'in'} : {});
+                        return params;
+                    };
+                    table.bootstrapTable('refresh', {});
+                    return false;
+                });
+                $('#channeltree').jstree({
+                    "themes": {
+                        "stripes": true
+                    },
+                    "checkbox": {
+                        "keep_selected_style": false,
+                    },
+                    "types": {
+                        "channel": {
+                            "icon": "fa fa-th",
+                        },
+                        "list": {
+                            "icon": "fa fa-list",
+                        },
+                        "link": {
+                            "icon": "fa fa-link",
+                        },
+                        "disabled": {
+                            "check_node": false,
+                            "uncheck_node": false
+                        }
+                    },
+                    'plugins': ["types", "checkbox"],
+                    "core": {
+                        "multiple": true,
+                        'check_callback': true,
+                        "data": Config.groupList
+                    }
+                });
+            });
+
+
         },
         add: function () {
             Form.api.bindevent($("form[role=form]"));
