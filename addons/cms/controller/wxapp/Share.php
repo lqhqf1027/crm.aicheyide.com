@@ -333,7 +333,7 @@ class Share extends Base
                 if (Cache::get('appointment')) {
                     Cache::rm('appointment');
                 }
-                        $this->success('预约成功', 'success');
+                $this->success('预约成功', 'success');
 //                $url = 'https://open.ucpaas.com/ol/sms/sendsms';
 //                $client = new Client();
 //
@@ -488,13 +488,19 @@ specialimages,popularity')
             $reallyOther = [];
 
             shuffle($allModel);
-
+            $checkOther = [];
             foreach ($allModel as $k => $v) {
-                if ($k > 7) {
-                    break;
+
+                if (in_array($v['models_name'], $checkOther)) {
+                    continue;
                 }
+                $checkOther[] = $v['models_name'];
+
                 $v['type'] = 'new';
                 $reallyOther[] = $v;
+                if (count($reallyOther) >= 8) {
+                    break;
+                }
             }
 
 
