@@ -77,8 +77,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     var options = table.bootstrapTable('getOptions');
                     options.pageNumber = 1;
                     options.queryParams = function (params) {
-                        params.filter = JSON.stringify(data.selected.length > 0 ? {rule_message: data.selected.join(",")} : {});
-                        params.op = JSON.stringify(data.selected.length > 0 ? {rule_message: 'in'} : {});
+                        params.filter = JSON.stringify(data.selected.length > 0 ? {group_id: data.selected.join(",")} : {});
+                        params.op = JSON.stringify(data.selected.length > 0 ? {group_id: 'in'} : {});
                         return params;
                     };
                     table.bootstrapTable('refresh', {});
