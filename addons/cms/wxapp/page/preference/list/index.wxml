@@ -104,7 +104,7 @@
                         <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" />
                         <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                         <view class="wux-clearfix">
-                            <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                            <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment < 10000 ? item.payment + ' 元' : item.payment / 10000 + ' 万' }}</view>
                             <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
                         </view>
                     </view>
@@ -135,7 +135,7 @@
                                 <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" />
                                 <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                                 <view class="wux-clearfix">
-                                    <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                                    <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment < 10000 ? item.payment + ' 元' : item.payment / 10000 + ' 万' }}</view>
                                     <view class="car__title car__title--monthly wux-pull-right" style='color:#696969'>月供 {{ item.monthly }} 元</view>
                                 </view>
                             </view>
@@ -161,7 +161,7 @@
                                     <image class="car__image" src="{{ globalData.config.upload.cdnurl + item.models_main_images }}" />
                                     <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                                     <view class="wux-clearfix">
-                                        <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                                        <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment < 10000 ? item.payment + '元' : item.payment / 10000 + '万' }}</view>
                                         <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
                                     </view>
                                 </view>
