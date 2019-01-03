@@ -399,9 +399,9 @@ App({
         }
         msg = typeof msg == 'undefined' || typeof msg == 'boolean' ? '加载中' : msg;
         this.globalData.loading = true;
-        if (this.si) {
-            return;
-        }
+        // if (this.si) {
+        //     return;
+        // }
         this.si = setTimeout(function() {
             wx.showLoading({
                 title: msg

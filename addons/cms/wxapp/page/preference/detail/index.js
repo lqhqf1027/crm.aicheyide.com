@@ -186,9 +186,13 @@ Page({
         const { code, mobile } = this.data
         const plan_id = this.options.id
         const cartype = this.options.type
+        const store_id = this.data.plan && this.data.plan.companystore.id
+        const models_name = this.data.plan && this.data.plan.models.name
         const params = {
             plan_id,
             cartype,
+            store_id,
+            models_name,
         }
 
         // 判断是否已预约
