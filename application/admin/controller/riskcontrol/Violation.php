@@ -400,26 +400,21 @@ class Violation extends Backend
             ->setCellValue('V' . $myrow, '违章状态');
 
         // 关键数据
-        $data = json_decode($data, true);
+        // $data = json_decode($data, true);
         $myrow = $myrow + 1; //刚刚设置的行变量
         $mynum = 1;//序号
          //遍历接收的数据，并写入到对应的单元格内
         foreach ($data as $key => $value) {
-            $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A' . $myrow, $mynum)
-                ->setCellValue('B' . $myrow, $value['username'])
-                ->setCellValue('C' . $myrow, $value['phone'])
-                ->setCellValue('D' . $myrow, $value['companyaccount'])
-                ->setCellValue('E' . $myrow, $value['license_plate_number'])
-                ->setCellValue('F' . $myrow, $value['engine_number'])
-                ->setCellValue('G' . $myrow, $value['frame_number'])
-                ->setCellValue('H' . $myrow, $value['start_renttime'])
-                ->setCellValue('I' . $myrow, $value['end_renttime'])
-                ->setCellValue('J' . $myrow, $value['status'])
-                ->setCellValue('K' . $myrow, $value['import_time'])
-                ->setCellValue('L' . $myrow, $value['total_violation'])
-                ->setCellValue('M' . $myrow, $value['total_deduction'])
-                ->setCellValue('N' . $myrow, $value['total_fine']);
+
+            if ($value['status'] == 1) {
+                $status = "按揭";
+            }
+            if ($value['status'] == 2) {
+                $status = "租车";
+            }
+            if ($value['status'] == 3) {
+                $status = "全款车";
+            }
 
             $details = json_decode($value['peccancy_detail'], true);
 
@@ -431,6 +426,20 @@ class Violation extends Backend
                     $handle = "未处理";
                 }
                 $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue('A' . $myrow, $mynum)
+                    ->setCellValue('B' . $myrow, $value['username'])
+                    ->setCellValue('C' . $myrow, $value['phone'])
+                    ->setCellValue('D' . $myrow, $value['companyaccount'])
+                    ->setCellValue('E' . $myrow, $value['license_plate_number'])
+                    ->setCellValue('F' . $myrow, $value['engine_number'])
+                    ->setCellValue('G' . $myrow, $value['frame_number'])
+                    ->setCellValue('H' . $myrow, $value['start_renttime'])
+                    ->setCellValue('I' . $myrow, $value['end_renttime'])
+                    ->setCellValue('J' . $myrow, $status)
+                    ->setCellValue('K' . $myrow, date("Y-m-d", $value['import_time']))
+                    ->setCellValue('L' . $myrow, $value['total_violation'])
+                    ->setCellValue('M' . $myrow, $value['total_deduction'])
+                    ->setCellValue('N' . $myrow, $value['total_fine'])
                     ->setCellValue('O' . $myrow, $v['date'])
                     ->setCellValue('P' . $myrow, $v['wzcity'])
                     ->setCellValue('Q' . $myrow, $v['wzcity'])
@@ -439,48 +448,22 @@ class Violation extends Backend
                     ->setCellValue('T' . $myrow, $v['fen'])
                     ->setCellValue('U' . $myrow, $v['money'])
                     ->setCellValue('V' . $myrow, $handle);
+                
+                $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高 不能批量的设置 这种感觉 if（has（蛋）！=0）{疼();}*/
+                $myrow++;
+                $mynum++;
             }
             $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高 不能批量的设置 这种感觉 if（has（蛋）！=0）{疼();}*/
             $myrow++;
             $mynum++;
         }
-        $mynumdata=$myrow-1; //获取主要数据结束的行号
-        $objPHPExcel->setActiveSheetIndex(0)->getstyle('A3:P' . $mynumdata)->getAlignment()->setHorizontal(\PHPExcel_style_Alignment::HORIZONTAL_CENTER);/*设置格式 水平居中*/
-        /*设置数据的边框 手册上写的方法只显示竖线 非常坑爹 所以采用网上搜来的方法*/
-        $style_array = array(
-            'borders' => array(
-                'allborders' => array(
-                    'style' => \PHPExcel_Style_Border::BORDER_THIN
-                )
-            ));
-        $objPHPExcel->getActiveSheet()->getStyle('A3:P' . $mynumdata)->applyFromArray($style_array);
-        /*设置数据的格式*/
-        $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
-        $objPHPExcel->getActiveSheet()->mergeCells('A'.$myrow.':P'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A' . $myrow,'供应单位：'.$name);
-        $myrow++; $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
-        $objPHPExcel->getActiveSheet()->mergeCells('A'.$myrow.':C'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('A' . $myrow,'收料员：');
-        $objPHPExcel->getActiveSheet()->mergeCells('D'.$myrow.':J'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('D' . $myrow,'复核：');
-        $objPHPExcel->getActiveSheet()->mergeCells('K'.$myrow.':P'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('K' . $myrow,'确认签字：');
-        $myrow++; $objPHPExcel->getActiveSheet()->getRowDimension('' . $myrow)->setRowHeight(20);/*设置行高*/
-        $objPHPExcel->getActiveSheet()->mergeCells('I'.$myrow.':K'.$myrow);//合并下一行的单元格
-        $objPHPExcel->setActiveSheetIndex(0) ->setCellValue('I' . $myrow,'日期：');
-        $objPHPExcel->getActiveSheet()->getStyle('A1:P' . $myrow)->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);/*垂直居中*/
-        //关键数据结束
 
-
-        /*设置表相关的信息*/
-        $objPHPExcel->getActiveSheet()->setTitle($buytime); //活动表的名称
-        $objPHPExcel->setActiveSheetIndex(0);//设置第一张表为活动表
         //纸张方向和大小 为A4横向
         $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(\PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
         $objPHPExcel->getActiveSheet()->getPageSetup()->setPaperSize(\PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
         //浏览器交互 导出
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="楼主教我的导出excel这弄得真是666.xlsx"');
+        header('Content-Disposition: attachment;filename="客户违章详情.xlsx"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
