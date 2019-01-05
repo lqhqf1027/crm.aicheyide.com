@@ -171,6 +171,7 @@ class Violation extends Backend
                         $total_fraction = 0;     //总扣分
                         $total_money = 0;        //总罚款
                         $flag = -1;
+                        $field['total_violation'] = 0;//违章次数
                         if ($data['result']['lists']) {
                             foreach ($data['result']['lists'] as $key => $value) {
                                 if ($value['fen']) {
@@ -188,6 +189,9 @@ class Violation extends Backend
                                 if ($value['handled'] == 0) {
                                     $flag = -2;
                                 }
+
+                                //违章次数
+                                $field['total_violation']++;
 
                             }
                             $field['peccancy_detail'] = json_encode($data['result']['lists']);
@@ -252,6 +256,7 @@ class Violation extends Backend
                     $total_fraction = 0;     //总扣分
                     $total_money = 0;        //总罚款
                     $flag = -1;
+                    $field['total_violation'] = 0;//违章次数
                     if ($data['result']['lists']) {
                         foreach ($data['result']['lists'] as $key => $value) {
                             if ($value['fen']) {
@@ -269,6 +274,8 @@ class Violation extends Backend
                             if ($value['handled'] == 0) {
                                 $flag = -2;
                             }
+                            //违章次数
+                            $field['total_violation']++;
 
                         }
                         $field['peccancy_detail'] = json_encode($data['result']['lists']);
