@@ -48,42 +48,27 @@ class Store extends Base
             [
                 'storeList' => function ($q) {
                     $q->where(['statuss' => 'normal']);
-//                        ->with(
-//                        [
-//                            'planacar_count' => function ($q) {
-//                                $q->where(['ismenu' => 1, 'sales_id' => null]); //新车统计
-//                            },
-//                            'usedcar_count' => function ($q) {
-//                                $q->where(['shelfismenu' => 1, 'status_data' => '']);//二手车统计
-//                            },
-//                            'logistics_count' => function ($q) {
-//                                $q->where(['ismenu' => 1]);//新能源车统计
-//                            }
-//                        ]
-//                    );
+
                 },
 
             ]
         )->where(['status' => 'normal', 'pid' => ['neq', 0]])->select())->toArray();
         $firstCity = [];
 
-        foreach ($data as $key=>$value){
-            if($value['store_list']){
-                foreach ($data[$key]['store_list'] as $k=>$v){
-                    $data[$key]['store_list'][$k]['planacar_count_count'] = $this->tt($value['id'],$v['id'],'plan_acar');
-                    $data[$key]['store_list'][$k]['usedcar_count_count'] = $this->tt($value['id'],$v['id'],'secondcar_rental_models_info');
-                    $data[$key]['store_list'][$k]['logistics_count_count'] = $this->tt($value['id'],$v['id'],'cms_logistics_project');
+        foreach ($data as $key => $value) {
+
+            if ($value['store_list']) {
+                foreach ($data[$key]['store_list'] as $k => $v) {
+                    $data[$key]['store_list'][$k]['planacar_count_count'] = $this->countPlan($value['id'], $v['id'], 'plan_acar');
+                    $data[$key]['store_list'][$k]['usedcar_count_count'] = $this->countPlan($value['id'], $v['id'], 'secondcar_rental_models_info');
+                    $data[$key]['store_list'][$k]['logistics_count_count'] = $this->countPlan($value['id'], $v['id'], 'cms_logistics_project');
 
 
                 }
             }
 
         }
-//$this->success($data);
         foreach ($data as $key => $value) {
-
-
-
 
             $arrList = [
                 'id' => $value['id'],
@@ -104,17 +89,25 @@ class Store extends Base
         $this->success('查询成功', $new);
     }
 
-    public function tt($city_id,$store_id,$planName)
+    /**
+     * 统计方案根据车型去重数量
+     * @param $city_id
+     * @param $store_id
+     * @param $planName
+     * @return int|string
+     * @throws \think\Exception
+     */
+    public function countPlan($city_id, $store_id, $planName)
     {
-        $check = $planName=='secondcar_rental_models_info'?'c.shelfismenu':'c.ismenu';
+        $check = $planName == 'secondcar_rental_models_info' ? 'c.shelfismenu' : 'c.ismenu';
         return $num = Db::name('cms_cities')
             ->alias('a')
-            ->join('cms_company_store b','a.id = b.city_id')
-            ->join($planName.' c','b.id = c.store_id')
+            ->join('cms_company_store b', 'a.id = b.city_id')
+            ->join($planName . ' c', 'b.id = c.store_id')
             ->where([
-                'a.id'=> $city_id,
-                'b.id'=>$store_id,
-                $check=>1,
+                'a.id' => $city_id,
+                'b.id' => $store_id,
+                $check => 1,
             ])
             ->count('distinct c.models_id');
     }

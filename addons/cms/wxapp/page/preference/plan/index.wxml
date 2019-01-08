@@ -4,13 +4,9 @@
             <view class="plans-title">方案{{ index + 1 }}</view>
             <view class="title">先用后买</view>
             <view class="payment">
-                <!-- <view class="payment-item" wx:if="{{ plan.label && plan.label.name === '免首付' }}">
-                    <view class="payment-label payment-label--del">首付{{ plan.payment / 10000 }}万</view>
-                    <view class="payment-money">0元</view>
-                </view> -->
                 <view class="payment-item">
                     <view class="payment-label">首付</view>
-                    <view class="payment-money">{{ item.payment / 10000 }}万</view>
+                    <view class="payment-money">{{ item.payment < 10000 ? item.payment + '元' : item.payment / 10000 + '万' }}</view>
                 </view>
                 <view class="payment-item">
                     <view class="payment-label">月供</view>

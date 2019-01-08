@@ -22,12 +22,12 @@
         <wux-cell hover-class="none">
             <view class="payment">
                 <view class="payment-item" wx:if="{{ plan.label && plan.label.name === '免首付' }}">
-                    <view class="payment-label payment-label--del">首付{{ plan.payment / 10000 }}万</view>
+                    <view class="payment-label payment-label--del">首付{{ plan.payment < 10000 ? plan.payment + '元' : plan.payment / 10000 + '万' }}</view>
                     <view class="payment-money">0元</view>
                 </view>
                 <view class="payment-item" wx:else>
                     <view class="payment-label">首付</view>
-                    <view class="payment-money">{{ plan.payment / 10000 }}万</view>
+                    <view class="payment-money">{{ plan.payment < 10000 ? plan.payment + '元' : plan.payment / 10000 + '万' }}</view>
                 </view>
                 <view class="payment-item">
                     <view class="payment-label">月供</view>
@@ -95,7 +95,7 @@
                         <image class="car__image" src="{{ item.models_main_images ? (globalData.config.upload.cdnurl + item.models_main_images) : globalData.empty_carimg }}" />
                         <view class="car__title wux-ellipsis">{{ item.models_name }}</view>
                         <view class="wux-clearfix">
-                            <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment / 10000 }} 万</view>
+                            <view class="car__title car__title--payment wux-pull-left">首付 {{ item.payment < 10000 ? item.payment + ' 元' : item.payment / 10000 + ' 万' }}</view>
                             <view class="car__title car__title--monthly wux-pull-right">月供 {{ item.monthly }} 元</view>
                         </view>
                     </view>

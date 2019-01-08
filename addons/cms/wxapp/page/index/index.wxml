@@ -105,7 +105,7 @@
             <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2" wx:if="{{ item.models }}">厂商指导价 {{ item.models.price / 10000 }} W</view>
             <image class="car__label" src="{{ globalData.config.upload.cdnurl + item.label.lableimages }}" wx:if="{{ item.label }}" />
             <view class="wux-clearfix" style='height:50rpx;line-height:50rpx'>
-                <view class=" car__title--payment wux-pull-left wux-mr--20  {{ item.label && item.label.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment / 10000 }} 万</view>
+                <view class=" car__title--payment wux-pull-left wux-mr--20  {{ item.label && item.label.name === '免首付' ? 'car__title--del' : '' }}">首付 {{ item.payment < 10000 ? item.payment + ' 元' : item.payment / 10000 + ' 万' }}</view>
                 <view class=" car__title--monthly wux-pull-left ">月供 {{ item.monthly }} 元</view>
                 <view class=" car__title--monthly wux-pull-right " style='color:#696969'>
                     <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
@@ -122,7 +122,7 @@
             <view class="media__desc media__desc--price wux-mt--5 wux-ellipsis--l2">{{ common.getDateString(item.car_licensedate) + '/' + common.getDistance(item.kilometres) + '公里' }}</view>
             <view class="wux-clearfix">
                 <view class="blod media__desc media__desc--monthly wux-pull-left wux-mr--10" wx:if="{{ item.totalprices }}">{{ item.totalprices / 10000 }} 万</view>
-                <view class="blod media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ item.newpayment / 10000 }} 万</view>
+                <view class="blod media__desc media__desc--payment wux-pull-left wux-mr--10">首付 {{ item.newpayment < 10000 ? item.newpayment + ' 元' : item.newpayment / 10000 + ' 万' }}</view>
                 <view class="media__desc wux-pull-right">
                     <view class="fa fa-map-marker"></view> {{ item.city.cities_name }}
                 </view>

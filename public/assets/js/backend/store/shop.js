@@ -31,6 +31,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                         {field: 'store_address', title: __('Store_address')},
                         {field: 'phone', title: __('Phone')},
+                        {field: 'mobile', title: __('预约接收短信通知手机号')},
                         {field: 'store_img', title: __('Store_img'),formatter:Table.api.formatter.images,operate: false},
                         {field: 'store_qrcode', title: __('Store_qrcode'),formatter:Table.api.formatter.image,operate: false},
                         {field: 'planacar', title: __('正在销售方案车辆（台）'),formatter:function (v,r,i) {

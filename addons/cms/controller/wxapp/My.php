@@ -490,7 +490,7 @@ class My extends Base
             $q->withField(['id','prize_name','prize_image','rules','city_id'])->with(['cityName'=>function(){
 
             }]);
-        }])->where('user_id',$user_id)->select();
+        }])->where('user_id',$user_id)->order(['is_use','id'=> 'desc'])->select();
         $this->success('请求成功',$prizeData);
     }
     /**

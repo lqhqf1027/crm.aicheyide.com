@@ -294,7 +294,7 @@ class Index extends Base
         $brandList = array_values(array_unique($brandList));
 
         //不常用品牌放在最后
-        $notOften = ['东风'];
+        $notOften = ['东风','铃木'];
         $notOftenCity = [];
         foreach ($brandList as $k => $v) {
             if (in_array($v['name'], $notOften)) {
@@ -372,7 +372,7 @@ class Index extends Base
         //根据专题获取方案
         foreach ($specialList as $k => $v) {
 //            $specialList[$k]['plan_id'] = json_decode($v['plan_id'], true);
-            $plan_arr = [];
+            $plan_arr =$duplicates  = [];
             foreach ($specialList[$k]['plan_id']['plan_id'] as $key => $value) {
 
                 $plan = Db::name('plan_acar')
@@ -385,6 +385,12 @@ class Index extends Base
                     ])
                     ->field('a.id,b.name as models_name,a.payment,a.monthly,a.models_main_images')
                     ->find();
+
+                if(!in_array($plan['models_name'],$duplicates)){
+                    $duplicates[] = $plan['models_name'];
+                }else{
+                    continue;
+                }
 
 
                 if ($plan) {
@@ -442,7 +448,16 @@ class Index extends Base
                 $label->withField('id,name,lableimages,rotation_angle');
             }])->where('ismenu', 1)->select($plan_ids);
 
+        $check = [];
         foreach ($all as $k => $v) {
+
+            if(in_array($v['models']['id'],$check)){
+                unset($all[$k]);
+                continue;
+            }else{
+                $check[] = $v['models']['id'];
+            }
+
             if ($v['companystore']['city_id']) {
                 $v['cities_name'] = Db::name('cms_cities')
                     ->where('id', $v['companystore']['city_id'])
@@ -454,7 +469,6 @@ class Index extends Base
 
             unset($v['companystore'], $v['models']['models_name']);
         }
-
         $subject['planList'] = $all;
 
         $this->success('请求成功', $subject);

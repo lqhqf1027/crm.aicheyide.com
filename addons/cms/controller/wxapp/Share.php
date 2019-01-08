@@ -9,6 +9,7 @@
 namespace addons\cms\controller\wxapp;
 
 use addons\cms\model\Brand;
+use addons\cms\model\CompanyStore;
 use addons\cms\model\Logistics;
 use addons\cms\model\RentalModelsInfo;
 use think\Cache;
@@ -25,6 +26,7 @@ use app\common\model\User;
 use addons\cms\model\SecondcarRentalModelsInfo;
 use fast\Http;
 use GuzzleHttp\Client;
+use think\Exception;
 
 class Share extends Base
 {
@@ -203,7 +205,7 @@ class Share extends Base
         }
 
         //人气值加1000
-        if($cartype!='rent'){
+        if ($cartype != 'rent') {
             $tables->where('id', $plan_id)->setInc('popularity', 1000);
         }
 
@@ -273,6 +275,9 @@ class Share extends Base
         $user_id = $this->request->post('user_id');
         $plan_id = $this->request->post('plan_id');
         $cartype = $this->request->post('cartype');
+        $store_id = $this->request->post('store_id');
+        $models_name = $this->request->post('models_name');
+
         //如果是走的手机号码验证 必须传递 mobile  和code参数
         $mobile = $this->request->post('mobile');
         $code = $this->request->post('code');
@@ -290,6 +295,7 @@ class Share extends Base
                 $this->error('手机号解密失败', json_decode($data, true));
             }
         }
+//        || !$store_id || !$models_name
         if (!$user_id || !$plan_id || !$cartype) {
             $this->error('缺少参数,请求失败', 'error');
         }
@@ -310,6 +316,8 @@ class Share extends Base
             User::where('id', $user_id)->update([
                 'mobile' => $mobile
             ]);
+        } else {
+            $mobile = User::get($user_id)->mobile;
         }
 
         $res = $this->getFabulousCollection($user_id, $plan_id, $cartype, 'subscribe');
@@ -326,7 +334,34 @@ class Share extends Base
                     Cache::rm('appointment');
                 }
                 $this->success('预约成功', 'success');
+//                $url = 'https://open.ucpaas.com/ol/sms/sendsms';
+//                $client = new Client();
+//
+//                $response = $client->request('POST', $url, [
+//                    'json' => [
+//                        'sid' => self::$Ucpass['accountsid'],
+//                        'token' => self::$Ucpass['token'],
+//                        'appid' => self::$Ucpass['appid'],
+//                        'templateid' => '415120',
+//                        'param' => substr($mobile, -4) . ',' . $models_name,
+//                        'mobile' => CompanyStore::get($store_id)->mobile,
+//                        'uid' => $user_id
+//                    ]
+//                ]);
+//
+//                if ($response) {
+//                    $result = json_decode($response->getBody(), true);
+//                    if ($result['code'] == '000000') {
+//                        $this->success('预约成功', 'success');
+//                    } else {
+//                        $this->error('给该门店发送短信失败');
+//                    }
+//                } else {
+//                    $this->error('请求短信接口失败');
+//                }
         }
+
+
     }
 
     /**
@@ -453,13 +488,19 @@ specialimages,popularity')
             $reallyOther = [];
 
             shuffle($allModel);
-
+            $checkOther = [];
             foreach ($allModel as $k => $v) {
-                if ($k > 7) {
-                    break;
+
+                if (in_array($v['models_name'], $checkOther)) {
+                    continue;
                 }
+                $checkOther[] = $v['models_name'];
+
                 $v['type'] = 'new';
                 $reallyOther[] = $v;
+                if (count($reallyOther) >= 8) {
+                    break;
+                }
             }
 
 
@@ -587,18 +628,19 @@ specialimages,popularity')
         $info['models']['name'] = $info['models']['name'] . ' ' . $info['models']['models_name'];
         unset($info['models']['models_name']);
 
-        $info['models']['vehicle_configuration'] = json_decode($info['models']['vehicle_configuration'],true);
+        $info['models']['vehicle_configuration'] = json_decode($info['models']['vehicle_configuration'], true);
 
-        $info['models']['vehicle_configuration'] = '省油 丨 舒适 丨 '.$info['models']['vehicle_configuration']['变速箱']['abbreviation'].' | '
-            .$info['models']['vehicle_configuration']['车身']['numberOfDoors'].'门'.$info['models']['vehicle_configuration']['车身']['numberOfSeats'].'座'.$info['models']['vehicle_configuration']['车身']['bodyStructure'];
+        $info['models']['vehicle_configuration'] = '省油丨舒适丨' . $info['models']['vehicle_configuration']['变速箱']['abbreviation'] . '丨'
+            . $info['models']['vehicle_configuration']['车身']['numberOfDoors'] . '门' . $info['models']['vehicle_configuration']['车身']['numberOfSeats'] . '座' . $info['models']['vehicle_configuration']['车身']['bodyStructure'];
 
         //是否点赞丶收藏丶预约
         $collectionFabulousAppointment = $this->collectionFabulousAppointment($user_id, $plan_id, $cartype);
 
         $info = array_merge($info->toArray(), $collectionFabulousAppointment);
 
-        return ['plan'=>$info];
+        return ['plan' => $info];
     }
+
     /**
      * 用户电话
      * @param $user_id
@@ -894,7 +936,7 @@ specialimages,popularity')
                     $order = $withPlan == 'logisticsCount' ? '' : 'weigh desc';
 
                     $query->where($where)->order($order)->with(['models' => function ($models) use ($withPlan) {
-                        $field = $withPlan=='rentalmodelsinfo'?'id,name,brand_id,price,models_name,vehicle_configuration':'id,name,brand_id,price,models_name';
+                        $field = $withPlan == 'rentalmodelsinfo' ? 'id,name,brand_id,price,models_name,vehicle_configuration' : 'id,name,brand_id,price,models_name';
                         $models->withField($field);
                     }, 'label' => function ($label) {
                         $label->withField('name,lableimages,rotation_angle');
@@ -902,14 +944,12 @@ specialimages,popularity')
                 }]);
             }])->select($city_id ? $city_id : null);
 
-
         foreach ($info as $k => $v) {
             if ($v['store_list']) {
                 $info = $v;
                 break;
             }
         }
-//                return $info;
         return self::handleNewUsed($info, $duplicate, $type);
     }
 
@@ -959,6 +999,7 @@ specialimages,popularity')
         foreach ($info['store_list'] as $k => $v) {
             if ($v[$planKey]) {
                 foreach ($v[$planKey] as $kk => $vv) {
+
                     if ($duplicate) {
 
                         if (in_array($vv['models']['id'], $checkModelId)) {
@@ -987,10 +1028,10 @@ specialimages,popularity')
                     $data = $vv['label'];
                     $vv['label'] = $data;
 
-                    if(!empty($vv['models']['vehicle_configuration'])){
-                        $vv['models']['vehicle_configuration'] = json_decode($vv['models']['vehicle_configuration'],true);
-                        $vv['models']['vehicle_configuration'] = '省油 丨 舒适 丨 '.$vv['models']['vehicle_configuration']['变速箱']['abbreviation'].' | '
-                            .$vv['models']['vehicle_configuration']['车身']['numberOfDoors'].'门'.$vv['models']['vehicle_configuration']['车身']['numberOfSeats'].'座'.$vv['models']['vehicle_configuration']['车身']['bodyStructure'];
+                    if (!empty($vv['models']['vehicle_configuration'])) {
+                        $vv['models']['vehicle_configuration'] = json_decode($vv['models']['vehicle_configuration'], true);
+                        $vv['models']['vehicle_configuration'] = '省油丨舒适丨' . $vv['models']['vehicle_configuration']['变速箱']['abbreviation'] . '丨'
+                            . $vv['models']['vehicle_configuration']['车身']['numberOfDoors'] . '门' . $vv['models']['vehicle_configuration']['车身']['numberOfSeats'] . '座' . $vv['models']['vehicle_configuration']['车身']['bodyStructure'];
 //                        $vv['models']['vehicle_configuration'] = ['车身'=>$vv['models']['vehicle_configuration']['车身'],'变速箱'=>$vv['models']['vehicle_configuration']['变速箱']];
                     }
                     $needArr[] = $vv;
@@ -1000,6 +1041,9 @@ specialimages,popularity')
 
         }
         $needArr = array_values($needArr);
+
+        shuffle($brand);
+
         foreach ($needArr as $k => $v) {
             foreach ($brand as $key => $value) {
                 if (empty($value['planList'])) {
