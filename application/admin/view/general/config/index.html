@@ -4,9 +4,15 @@
         .edit-form tr th:first-child,.edit-form tr td:first-child{
             width:20%;
         }
-        .edit-form tr th:last-child,.edit-form tr td:last-child{
+        .edit-form tr th:nth-last-of-type(-n+2),.edit-form tr td:nth-last-of-type(-n+2){
             display: none;
         }
+    }
+    .edit-form table > tbody > tr td a.btn-delcfg{
+        visibility: hidden;
+    }
+    .edit-form table > tbody > tr:hover td a.btn-delcfg{
+        visibility: visible;
     }
 </style>
 <div class="panel panel-default panel-intro">
@@ -45,13 +51,13 @@
                                             <div class="col-sm-8 col-xs-12">
                                                 {switch $item.type}
                                                 {case string}
-                                                <input type="text" name="row[{$item.name}]" value="{$item.value}" class="form-control" data-rule="{$item.rule}" data-tip="{$item.tip}" {$item.extend} />
+                                                <input {$item.extend} type="text" name="row[{$item.name}]" value="{$item.value}" class="form-control" data-rule="{$item.rule}" data-tip="{$item.tip}" />
                                                 {/case}
                                                 {case text}
-                                                <textarea name="row[{$item.name}]" class="form-control" data-rule="{$item.rule}" rows="5" data-tip="{$item.tip}" {$item.extend}>{$item.value}</textarea>
+                                                <textarea {$item.extend} name="row[{$item.name}]" class="form-control" data-rule="{$item.rule}" rows="5" data-tip="{$item.tip}">{$item.value}</textarea>
                                                 {/case}
                                                 {case editor}
-                                                <textarea name="row[{$item.name}]" id="editor-{$item.name}" class="form-control editor" data-rule="{$item.rule}" rows="5" data-tip="{$item.tip}" {$item.extend}>{$item.value}</textarea>
+                                                <textarea {$item.extend} name="row[{$item.name}]" id="editor-{$item.name}" class="form-control editor" data-rule="{$item.rule}" rows="5" data-tip="{$item.tip}">{$item.value}</textarea>
                                                 {/case}
                                                 {case array}
                                                 <dl class="fieldlist" data-name="row[{$item.name}]">
@@ -64,10 +70,11 @@
                                                 </dl>
                                                 {/case}
                                                 {case datetime}
-                                                <input type="text" name="row[{$item.name}]" value="{$item.value}" class="form-control datetimepicker" data-tip="{$item.tip}" data-rule="{$item.rule}" {$item.extend} />
+                                                <input {$item.extend} type="text" name="row[{$item.name}]" value="{$item.value}" class="form-control datetimepicker" data-tip="{$item.tip}" data-rule="{$item.rule}" />
                                                 {/case}
                                                 {case number}
-                                                <input type="number" name="row[{$item.name}]" value="{$item.value}" class="form-control" data-tip="{$item.tip}" data-rule="{$item.rule}" {$item.extend} />
+                                                <input {$item.extend} type="number" name="row[{$item.name}]" value="{$item.value}" class="form-control" data-tip="{$item.tip}" data-rule="{$item.rule}" />
+
                                                 {/case}
                                                 {case checkbox}
                                                 {foreach name="item.content" item="vo"}
@@ -81,7 +88,7 @@
                                                 {/case}
                                                 {case value="select" break="0"}{/case}
                                                 {case value="selects"}
-                                                <select name="row[{$item.name}]{$item.type=='selects'?'[]':''}" class="form-control selectpicker" data-tip="{$item.tip}" {$item.type=='selects'?'multiple':''}>
+                                                <select {$item.extend} name="row[{$item.name}]{$item.type=='selects'?'[]':''}" class="form-control selectpicker" data-tip="{$item.tip}" {$item.type=='selects'?'multiple':''}>
                                                     {foreach name="item.content" item="vo"}
                                                     <option value="{$key}" {in name="key" value="$item.value"}selected{/in}>{$vo}</option>
                                                     {/foreach}
@@ -104,6 +111,12 @@
                                                     <span><button type="button" id="fachoose-{$item.name}" class="btn btn-primary fachoose" data-input-id="c-{$item.name}" data-multiple="{$item.type=='file'?'false':'true'}"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
                                                 </div>
                                                 {/case}
+                                                {case switch}
+                                                <input id="c-{$item.name}" name="row[{$item.name}]" type="hidden" value="{:$item.value?1:0}">
+                                                <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-{$item.name}" data-yes="1" data-no="0" >
+                                                    <i class="fa fa-toggle-on text-success {if !$item.value}fa-flip-horizontal text-gray{/if} fa-2x"></i>
+                                                </a>
+                                                {/case}
                                                 {case bool}
                                                 <label for="row[{$item.name}]-yes"><input id="row[{$item.name}]-yes" name="row[{$item.name}]" type="radio" value="1" {$item.value?'checked':''} data-tip="{$item.tip}" /> {:__('Yes')}</label> 
                                                 <label for="row[{$item.name}]-no"><input id="row[{$item.name}]-no" name="row[{$item.name}]" type="radio" value="0" {$item.value?'':'checked'} data-tip="{$item.tip}" /> {:__('No')}</label>
@@ -115,6 +128,7 @@
 
                                     </td>
                                     <td>{php}echo "{\$site.". $item['name'] . "}";{/php}</td>
+                                    <td><a href="javascript:;" class="btn-delcfg text-muted" data-name="{$item.name}"><i class="fa fa-times"></i></a></td>
                                 </tr>
                                 {/foreach}
                             </tbody>
@@ -125,6 +139,7 @@
                                         <button type="submit" class="btn btn-success btn-embossed">{:__('OK')}</button>
                                         <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
                                     </td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                             </tfoot>

@@ -9,8 +9,6 @@ use fast\Random;
 use fast\Tree;
 use app\common\model\Config as ConfigModel;
 use think\Exception;
-
-
 /**
  * 管理员管理
  *
@@ -227,8 +225,7 @@ class Admin extends Backend
                     'username' => 'require|max:50|unique:admin,username,' . $row->id,
                     'email'    => 'require|email|unique:admin,email,' . $row->id
                 ]);
-                $result = $row->save($params);
-//                $result = $row->validate('Admin.edit')->save($params);
+                $result = $row->validate('Admin.edit')->save($params);
                 if ($result === false)
                 {
                     $this->error($row->getError());

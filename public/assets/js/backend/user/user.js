@@ -81,8 +81,6 @@ define(['jquery', 'bootstrap', 'backend',  'addtabs', 'table', 'echarts', 'echar
 
             // 使用刚指定的配置项和数据显示图表。
             newEchart.setOption(option);
-
-
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
@@ -122,7 +120,6 @@ define(['jquery', 'bootstrap', 'backend',  'addtabs', 'table', 'echarts', 'echar
                     ]
                 ]
             });
-
             /**
              * 刷新表格渲染
              */

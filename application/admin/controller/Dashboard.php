@@ -9,9 +9,6 @@ use think\Db;
 use think\Cache;
 
 use app\admin\model\Dashboard as DashboardModel;
-
-
-
 /**
  * 控制台
  *
@@ -242,7 +239,7 @@ class Dashboard extends Backend
                 'total_deduction_little'   => $total_deduction_little,
                 'total_deduction_more'     => $total_deduction_more,
                 'total_deduction_many'     => $total_deduction_many
-             
+
         ]);
 
         return $this->view->fetch();

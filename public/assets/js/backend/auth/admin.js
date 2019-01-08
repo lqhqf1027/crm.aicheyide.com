@@ -36,6 +36,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'groups_text', title: __('Group'), operate:false, formatter: Table.api.formatter.label},
                         {field: 'email', title: __('Email')},
                         {field: 'status', title: __("Status"), formatter: Table.api.formatter.status},
+<<<<<<< HEAD
                         {field: 'openid', title: __('Openid')},
                         {field: 'rule_message', title: '所属角色',formatter:function(value, row, index){
                             for(var i in Config.siteList[0].value){
@@ -44,6 +45,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                }
                             }
                         }}, 
+=======
+>>>>>>> fastadmin/master
                         {field: 'logintime', title: __('Login time'), formatter: Table.api.formatter.datetime, operate: 'RANGE', addclass: 'datetimerange', sortable: true},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: function (value, row, index) {
                                 if(row.id == Config.admin.id){

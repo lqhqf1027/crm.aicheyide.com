@@ -8,6 +8,7 @@
 #/public/assets/addons/*
 /public/uploads/*
 #/application/config.php
+
 .idea
 composer.lock
 *.log
@@ -17,3 +18,4 @@ composer.lock
 /runtime
 #/application/extra/addons.php
 #/public/assets/js/addons.js
+

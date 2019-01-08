@@ -258,10 +258,10 @@ return [
     //FastAdmin配置
     'fastadmin'              => [
         //是否开启前台会员中心
-        'usercenter'          => true,
+        'usercenter'          => false,
         //登录验证码
         'login_captcha'       => false,
-        //登录失败超过10则1天后重试
+        //登录失败超过10次则1天后重试
         'login_failure_retry' => true,
         //是否同一账号同一时间只能在一个地方登录
         'login_unique'        => false,
@@ -272,25 +272,8 @@ return [
         //自动检测更新
         'checkupdate'         => false,
         //版本号
-        'version'             => '1.0.0.20180806_beta',
+        'version'             => '1.0.0.20181210_beta',
         //API接口地址
         'api_url'             => 'https://api.fastadmin.net',
     ],
-    'wechat'                =>[
-        'APPID'=>'wx1652e82587881bf1',
-        'APPSECRET'=>'f32dc3059381d77379d80c5e6ee12a38'
-    ],
-    //共享api
-    'big_data_api'             => [
-        'share' => [
-            'post_url'=>'https://www.zhichengcredit.com/echo-center/api/echoApi/v3',
-            'userid'=>'junyi_testusr',
-            'rc4'=>'12b39127a265ce21' 
-        ],
-        'fuwang' => [
-            'post_url'=>'https://www.zhichengcredit.com/echo-center/api/mixedRiskQuery/queryMixedRiskList/v3',
-            'userid'=>'junyi_testusr',
-            'rc4'=>'12b39127a265ce21', 
-        ]
-    ]
 ];

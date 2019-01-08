@@ -1,7 +1,7 @@
 <?php
 
 namespace app\admin\model;
-
+use fast\Tree;
 use think\Model;
 
 class UserRule extends Model
@@ -41,11 +41,18 @@ class UserRule extends Model
 
     public static function getTreeList($selected = [])
     {
-        $ruleList = collection(self::where('status', 'normal')->select())->toArray();
+        $ruleList = collection(self::where('status', 'normal')->order('weigh desc,id desc')->select())->toArray();
         $nodeList = [];
+        Tree::instance()->init($ruleList);
+        $ruleList = Tree::instance()->getTreeList(Tree::instance()->getTreeArray(0), 'name');
+        $hasChildrens = [];
         foreach ($ruleList as $k => $v)
         {
-            $state = array('selected' => $v['ismenu'] ? false : in_array($v['id'], $selected));
+            if ($v['haschild'])
+                $hasChildrens[] = $v['id'];
+        }
+        foreach ($ruleList as $k => $v) {
+            $state = array('selected' => in_array($v['id'], $selected) && !in_array($v['id'], $hasChildrens));
             $nodeList[] = array('id' => $v['id'], 'parent' => $v['pid'] ? $v['pid'] : '#', 'text' => __($v['title']), 'type' => 'menu', 'state' => $state);
         }
         return $nodeList;

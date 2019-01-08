@@ -1,3 +1,4 @@
+
 <?php
 
 // +----------------------------------------------------------------------
@@ -14,17 +15,17 @@ use think\Env;
 
 return [
       // 数据库类型
-      'type'            => Env::get('database.type', 'mysql'),
+      'type'            => Env::get('database.type'),
       // 服务器地址
-      'hostname'        => Env::get('database.hostname', '120.78.135.109'),
+      'hostname'        => Env::get('database.hostname'),
       // 数据库名
-      'database'        => Env::get('database.database', 'crm'),
+      'database'        => Env::get('database.database'),
       // 用户名
-      'username'        => Env::get('database.username', 'root'),
+      'username'        => Env::get('database.username'),
       // 密码
-      'password'        => Env::get('database.password', 'aicheyide'),
+      'password'        => Env::get('database.password'),
       // 端口
-      'hostport'        => Env::get('database.hostport', ''),
+      'hostport'        => Env::get('database.hostport'),
     // 连接dsn
     'dsn'             => '',
     // 数据库连接参数
@@ -54,3 +55,4 @@ return [
     // 是否需要进行SQL性能分析
     'sql_explain'     => false,
 ];
+
