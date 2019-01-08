@@ -161,39 +161,3 @@ if (!function_exists('build_heading')) {
         return $result;
     }
 }
-
-if (!function_exists('goeary_push')) {
-
-    /**
-     * go eary 推送
-     *
-     * @param string $channel 一个推送和接受的信号
-     * @param string $content 推送的内容
-     * @return string
-     */
-    function goeary_push($channel = NULL, $content = NULL)
-    {
-        //请求地址
-        $uri = "http://goeasy.io/goeasy/publish";
-        // 参数数组
-        $data = [
-            'appkey'  => "BC-04084660ffb34fd692a9bd1a40d7b6c2",
-            'channel' => $channel,
-            'content' => $content
-        ];
-        $ch = curl_init ();
-        curl_setopt ( $ch, CURLOPT_URL, $uri );//地址
-        curl_setopt ( $ch, CURLOPT_POST, 1 );//请求方式为post
-        curl_setopt ( $ch, CURLOPT_HEADER, 0 );//不打印header信息
-        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );//返回结果转成字符串
-        curl_setopt ( $ch, CURLOPT_POSTFIELDS, $data );//post传输的数据。
-        $return = curl_exec ( $ch );
-        curl_close ( $ch );
-        
-    }
-}
-
-
-
-
-

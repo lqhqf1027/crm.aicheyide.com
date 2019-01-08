@@ -14,8 +14,6 @@ class User extends Backend
 {
 
     protected $relationSearch = true;
-    protected $noNeedLogin = ['registerAccount'];
-
     /**
      * @var \app\admin\model\User
      */

@@ -43,13 +43,15 @@ class Auth extends \fast\Auth
             $this->setError('Username is incorrect');
             return false;
         }
-
         $admin = Admin::get(['username' => $username, 'status' => 'normal']);
         if (!$admin) {
             $this->setError('该账户已被停用');
             return false;
         }
-
+        if ($admin['status'] == 'hidden') {
+            $this->setError('Admin is forbidden');
+            return false;
+        }
         if (Config::get('fastadmin.login_failure_retry') && $admin->loginfailure >= 10 && time() - $admin->updatetime < 86400) {
             $this->setError('Please try again after 1 day');
             return false;
@@ -141,6 +143,7 @@ class Auth extends \fast\Auth
      * 检测当前控制器和方法是否匹配传递的数组
      *
      * @param array $arr 需要验证权限的数组
+     * @return bool
      */
     public function match($arr = [])
     {
@@ -354,9 +357,7 @@ class Auth extends \fast\Auth
         $module = request()->module();
         // 生成菜单的badge
         foreach ($params as $k => $v) {
-
             $url = $k;
-
             if (is_array($v)) {
                 $nums = isset($v[0]) ? $v[0] : 0;
                 $color = isset($v[1]) ? $v[1] : $colorArr[(is_numeric($nums) ? $nums : strlen($nums)) % $colorNums];
@@ -391,12 +392,13 @@ class Auth extends \fast\Auth
             $v['pinyin'] = $pinyin->permalink($v['title'], '');
             $v['title'] = __($v['title']);
             $selected = $v['name'] == $fixedPage ? $v : $selected;
-            $referer = $v['url'] == $refererUrl ? $v : $referer;
+            $referer = url($v['url']) == $refererUrl ? $v : $referer;
         }
         if ($selected == $referer) {
             $referer = [];
         }
-
+        $selected && $selected['url'] = url($selected['url']);
+        $referer && $referer['url'] = url($referer['url']);
         $select_id = $selected ? $selected['id'] : 0;
         $menu = $nav = '';
         if (Config::get('fastadmin.multiplenav')) {
@@ -432,15 +434,13 @@ class Auth extends \fast\Auth
                 $nav .= '<li role="presentation" id="tab_' . $referer['id'] . '" class="active"><a href="#con_' . $referer['id'] . '" node-id="' . $referer['id'] . '" aria-controls="' . $referer['id'] . '" role="tab" data-toggle="tab"><i class="' . $referer['icon'] . ' fa-fw"></i> <span>' . $referer['title'] . '</span> </a> <i class="close-tab fa fa-remove"></i></li>';
             }
         }
-
-
         return [$menu, $nav, $selected, $referer];
     }
 
     /**
      * 设置错误信息
      *
-     * @param $error 错误信息
+     * @param string $error 错误信息
      * @return Auth
      */
     public function setError($error)

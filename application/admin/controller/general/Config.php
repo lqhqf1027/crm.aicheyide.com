@@ -85,10 +85,10 @@ class Config extends Backend
                     if ($result !== false) {
                         try {
                             $this->refreshFile();
-                            $this->success();
                         } catch (Exception $e) {
                             $this->error($e->getMessage());
                         }
+                        $this->success();
                     } else {
                         $this->error($this->model->getError());
                     }
@@ -126,15 +126,30 @@ class Config extends Backend
                 $this->model->allowField(true)->saveAll($configList);
                 try {
                     $this->refreshFile();
-                    $this->success();
                 } catch (Exception $e) {
                     $this->error($e->getMessage());
                 }
+                $this->success();
             }
             $this->error(__('Parameter %s can not be empty', ''));
         }
     }
-
+    public function del($ids = "")
+    {
+        $name = $this->request->request('name');
+        $config = ConfigModel::getByName($name);
+        if ($config) {
+            try {
+                $config->delete();
+                $this->refreshFile();
+            } catch (Exception $e) {
+                $this->error($e->getMessage());
+            }
+            $this->success();
+        } else {
+            $this->error(__('Invalid parameters'));
+        }
+    }
     /**
      * 刷新配置文件
      */

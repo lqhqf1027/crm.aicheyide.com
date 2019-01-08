@@ -19,24 +19,17 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
 
             //快捷搜索
             $(".menuresult").width($("form.sidebar-form > .input-group").width());
-            var isAndroid = /(android)/i.test(navigator.userAgent);
             var searchResult = $(".menuresult");
             $("form.sidebar-form").on("blur", "input[name=q]", function () {
                 searchResult.addClass("hide");
-                if (isAndroid) {
-                    $.AdminLTE.options.sidebarSlimScroll = true;
-                }
             }).on("focus", "input[name=q]", function () {
-                if (isAndroid) {
-                    $.AdminLTE.options.sidebarSlimScroll = false;
-                }
                 if ($("a", searchResult).size() > 0) {
                     searchResult.removeClass("hide");
                 }
             }).on("keyup", "input[name=q]", function () {
                 searchResult.html('');
                 var val = $(this).val();
-                var html = new Array();
+                var html = [];
                 if (val != '') {
                     $("ul.sidebar-menu li a[addtabs]:not([href^='javascript:;'])").each(function () {
                         if ($("span:first", this).text().indexOf(val) > -1 || $(this).attr("py").indexOf(val) > -1 || $(this).attr("pinyin").indexOf(val) > -1) {
@@ -58,6 +51,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
             $("form.sidebar-form").on('mousedown click', '.menuresult a[data-url]', function () {
                 Backend.api.addtabs($(this).data("url"));
             });
+
 
             //读取FastAdmin的更新信息
             // $.ajax({
@@ -110,6 +104,41 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
             //     });
             // }
 
+            //读取首次登录推荐插件列表
+            if (localStorage.getItem("fastep") == "installed") {
+                $.ajax({
+                    url: Config.fastadmin.api_url + '/addon/recommend',
+                    type: 'post',
+                    dataType: 'jsonp',
+                    success: function (ret) {
+                        require(['template'], function (Template) {
+                            var install = function (name, title) {
+                                Fast.api.ajax({
+                                    url: 'addon/install',
+                                    data: {name: name, faversion: Config.fastadmin.version}
+                                }, function (data, ret) {
+                                    Fast.api.refreshmenu();
+                                });
+                            };
+                            $(document).on('click', '.btn-install', function () {
+                                $(this).prop("disabled", true).addClass("disabled");
+                                $("input[name=addon]:checked").each(function () {
+                                    install($(this).data("name"));
+                                });
+                                return false;
+                            });
+                            $(document).on('click', '.btn-notnow', function () {
+                                Layer.closeAll();
+                            });
+                            Layer.open({
+                                type: 1, skin: 'layui-layer-page', area: ["860px", "620px"], title: '',
+                                content: Template.render(ret.tpl, {addonlist: ret.rows})
+                            });
+                            localStorage.setItem("fastep", "dashboard");
+                        });
+                    }
+                });
+            }
             //版本检测
             var checkupdate = function (ignoreversion, tips) {
                 $.ajax({
@@ -122,7 +151,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                             Layer.open({
                                 title: __('Discover new version'),
                                 maxHeight: 400,
-                                content: '<h5 style="background-color:#f7f7f7; font-size:14px; padding: 10px;">' + __('Your current version') + ':' + ret.data.version + '，' + __('New version') + ':' + ret.data.newversion + '</h5><span class="label label-danger">'+__('Release notes')+'</span><br/>' + ret.data.upgradetext,
+                                content: '<h5 style="background-color:#f7f7f7; font-size:14px; padding: 10px;">' + __('Your current version') + ':' + ret.data.version + '，' + __('New version') + ':' + ret.data.newversion + '</h5><span class="label label-danger">' + __('Release notes') + '</span><br/>' + ret.data.upgradetext,
                                 btn: [__('Go to download'), __('Ignore this version'), __('Do not remind again')],
                                 btn2: function (index, layero) {
                                     localStorage.setItem("ignoreversion", ret.data.newversion);
@@ -209,8 +238,6 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                     doc.requestFullscreen ? doc.requestFullscreen() : doc.mozRequestFullScreen ? doc.mozRequestFullScreen() : doc.webkitRequestFullscreen ? doc.webkitRequestFullscreen() : doc.msRequestFullscreen && doc.msRequestFullscreen();
                 }
             });
-
-
             var multiplenav = Config.fastadmin.multiplenav;
             var firstnav = $("#firstnav .nav-addtabs");
             var nav = multiplenav ? $("#secondnav .nav-addtabs") : firstnav;
@@ -303,10 +330,8 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
 
             //这一行需要放在点击左侧链接事件之前
             var addtabs = Config.referer ? localStorage.getItem("addtabs") : null;
-
-            //绑定tabs事件,如果需要点击强制刷新iframe,则请将iframeForceRefresh置为true
-            nav.addtabs({iframeHeight: "100%", iframeForceRefresh: false, nav: nav});
-
+            //绑定tabs事件,如果需要点击强制刷新iframe,则请将iframeForceRefresh置为true,iframeForceRefreshTable只强制刷新表格
+            nav.addtabs({iframeHeight: "100%", iframeForceRefresh: false, iframeForceRefreshTable: true, nav: nav});
             if ($("ul.sidebar-menu li.active a").size() > 0) {
                 $("ul.sidebar-menu li.active a").trigger("click");
             } else {

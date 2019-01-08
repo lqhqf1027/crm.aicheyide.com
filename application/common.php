@@ -4,7 +4,6 @@
 error_reporting(E_PARSE | E_ERROR | E_WARNING);
 
 use think\Request;
-
 if (!function_exists('__')) {
 
     /**
@@ -119,18 +118,18 @@ if (!function_exists('is_really_writable')) {
         }
         if (is_dir($file)) {
             $file = rtrim($file, '/') . '/' . md5(mt_rand());
-            if (($fp = @fopen($file, 'ab')) === false) {
-                return false;
+            if (($fp = @fopen($file, 'ab')) === FALSE) {
+                return FALSE;
             }
             fclose($fp);
             @chmod($file, 0777);
             @unlink($file);
-            return true;
-        } elseif (!is_file($file) or ($fp = @fopen($file, 'ab')) === false) {
-            return false;
+            return TRUE;
+        } elseif (!is_file($file) OR ($fp = @fopen($file, 'ab')) === FALSE) {
+            return FALSE;
         }
         fclose($fp);
-        return true;
+        return TRUE;
     }
 
 }
@@ -148,8 +147,7 @@ if (!function_exists('rmdirs')) {
         if (!is_dir($dirname))
             return false;
         $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dirname, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
+            new RecursiveDirectoryIterator($dirname, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($files as $fileinfo) {
@@ -176,10 +174,10 @@ if (!function_exists('copydirs')) {
         if (!is_dir($dest)) {
             mkdir($dest, 0755, true);
         }
-        foreach ($iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::SELF_FIRST
-        ) as $item) {
+        foreach (
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $item
+        ) {
             if ($item->isDir()) {
                 $sontDir = $dest . DS . $iterator->getSubPathName();
                 if (!is_dir($sontDir)) {
@@ -273,8 +271,6 @@ if (!function_exists('addtion')) {
     }
 
 }
-
-
 /**
  * 对象转数组
  *
