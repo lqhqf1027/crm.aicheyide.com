@@ -32,6 +32,24 @@ class Carreservation extends Backend
 
     public function index()
     {
+        $this->view->assign([
+            'total' => Db::name('sales_order')
+                ->where('review_the_data', '=', 'inhouse_handling')
+                ->count(),
+
+            'total1' => Db::name('rental_order')
+                ->where('review_the_data', '=', '')
+                ->count(),
+            'total2' => Db::name('second_sales_order')
+                ->where('review_the_data', '=', 'is_reviewing_true')
+                ->count(),
+            'total3' => Db::name('full_parment_order')
+                ->where('review_the_data', '=', 'inhouse_handling')
+                ->count(),
+            'total4' => Db::name('second_full_order')
+                ->where('review_the_data', '=', 'inhouse_handling')
+                ->count(),
+        ]);
         return $this->view->fetch();
     }
 
