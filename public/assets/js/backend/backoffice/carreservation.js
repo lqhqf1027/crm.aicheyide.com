@@ -60,9 +60,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'createtime', title: __('订车日期'), operate: 'RANGE', addclass: 'datetimerange', formatter: Table.api.formatter.datetime },
                             {field: 'admin.nickname', title: __('销售员')},
                             {field: 'username', title: __('客户姓名')},
-                            {field: 'id_card', title: __('身份证号')},
-                            {field: 'city', title: __('居住地址'),operate:false},
-                            {field: 'detailed_address', title: __('详细地址'),operate:false},
+                            // {field: 'id_card', title: __('身份证号')},
+                            // {field: 'city', title: __('居住地址'),operate:false},
+                            // {field: 'detailed_address', title: __('详细地址'),operate:false},
                             {field: 'phone', title: __('联系电话')},
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'planacar.payment', title: __('首付(元)'),operate:false},
@@ -998,8 +998,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 newcarEntry.on('load-success.bs.table',function(e,data){ 
 
                     $(".btn-newactual_amount").data("area", ["50%", "40%"]);
-                    var newcarEntry =  $('#badge_newcar_entry').text(data.total); 
-                    newcarEntry = parseInt($('#badge_newcar_entry').text());
+                    // var newcarEntry =  $('#badge_newcar_entry').text(data.total); 
+                    // newcarEntry = parseInt($('#badge_newcar_entry').text());
                     
                    
                 })
@@ -1044,9 +1044,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'admin.nickname', title: __('销售员')},
                             {field: 'plansecond.companyaccount', title: __('所属公司户')},
                             {field: 'username', title: __('客户姓名')},
-                            {field: 'id_card', title: __('身份证号')},
-                            {field: 'city', title: __('居住地址'),operate:false},
-                            {field: 'detailed_address', title: __('详细地址'),operate:false},
+                            // {field: 'id_card', title: __('身份证号')},
+                            // {field: 'city', title: __('居住地址'),operate:false},
+                            // {field: 'detailed_address', title: __('详细地址'),operate:false},
                             {field: 'phone', title: __('联系电话')},
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'plansecond.newpayment', title: __('首付(元)'),operate:false},
@@ -1431,8 +1431,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 secondcarEntry.on('load-success.bs.table',function(e,data){ 
 
                     $(".btn-secondactual_amount").data("area", ["50%", "40%"]);
-                    var secondcarEntry =  $('#badge_secondcar_entry').text(data.total); 
-                    secondcarEntry = parseInt($('#badge_secondcar_entry').text());
+                    // var secondcarEntry =  $('#badge_secondcar_entry').text(data.total); 
+                    // secondcarEntry = parseInt($('#badge_secondcar_entry').text());
                     
                    
                 })
@@ -1476,10 +1476,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'planfull.full_total_price', title: __('车款总价(元)'),operate:false},
                             {field: 'username', title: __('客户姓名')},
-                            {field: 'id_card', title: __('身份证号')},
+                            // {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系电话')},
-                            {field: 'city', title: __('居住地址'),operate:false},
-                            {field: 'detailed_address', title: __('详细地址'),operate:false},
+                            // {field: 'city', title: __('居住地址'),operate:false},
+                            // {field: 'detailed_address', title: __('详细地址'),operate:false},
                            
                             {
                                 field: 'operate', title: __('Operate'), table: fullcarEntry,
@@ -1574,8 +1574,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 fullcarEntry.on('load-success.bs.table',function(e,data){ 
 
                     $(".btn-fullactual_amount").data("area", ["50%", "40%"]);
-                    var fullcarEntry =  $('#badge_fullcar_entry').text(data.total); 
-                    fullcarEntry = parseInt($('#badge_fullcar_entry').text());
+                    // var fullcarEntry =  $('#badge_fullcar_entry').text(data.total); 
+                    // fullcarEntry = parseInt($('#badge_fullcar_entry').text());
                     
                    
                 })
@@ -1621,7 +1621,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'carrentalmodelsinfo.licenseplatenumber', title: __('车牌号')},
                             {field: 'carrentalmodelsinfo.vin', title: __('车架号')},
                             {field: 'username', title: __('客户姓名')},
-                            {field: 'id_card', title: __('身份证号')},
+                            // {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系电话')},
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'cash_pledge', title: __('押金（元）'),operate:false},
@@ -1975,8 +1975,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 rentalcarEntry.on('load-success.bs.table',function(e,data){ 
 
                     $(".btn-rentalactual_amount").data("area", ["50%", "40%"]);
-                    var secondcarEntry =  $('#badge_rentalcar_entry').text(data.total); 
-                    secondcarEntry = parseInt($('#badge_rentalcar_entry').text());
+                    // var secondcarEntry =  $('#badge_rentalcar_entry').text(data.total); 
+                    // secondcarEntry = parseInt($('#badge_rentalcar_entry').text());
                     
                    
                 })
@@ -2020,10 +2020,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {field: 'models.name', title: __('订车车型')},
                             {field: 'plansecondfull.totalprices', title: __('车款总价(元)'),operate:false},
                             {field: 'username', title: __('客户姓名')},
-                            {field: 'id_card', title: __('身份证号')},
+                            // {field: 'id_card', title: __('身份证号')},
                             {field: 'phone', title: __('联系电话')},
-                            {field: 'city', title: __('居住地址'),operate:false},
-                            {field: 'detailed_address', title: __('详细地址'),operate:false},
+                            // {field: 'city', title: __('居住地址'),operate:false},
+                            // {field: 'detailed_address', title: __('详细地址'),operate:false},
                            
                             {
                                 field: 'operate', title: __('Operate'), table: secondfullcarEntry,
@@ -2118,8 +2118,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 secondfullcarEntry.on('load-success.bs.table',function(e,data){ 
 
                     $(".btn-secondfullactual_amount").data("area", ["50%", "40%"]);
-                    var secondfullcarEntry =  $('#badge_secondfullcar_entry').text(data.total); 
-                    secondfullcarEntry = parseInt($('#badge_fullcar_entry').text());
+                    // var secondfullcarEntry =  $('#badge_secondfullcar_entry').text(data.total); 
+                    // secondfullcarEntry = parseInt($('#badge_fullcar_entry').text());
                     
                    
                 })
